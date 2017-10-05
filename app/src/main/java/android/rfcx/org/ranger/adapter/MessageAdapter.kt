@@ -2,11 +2,13 @@ package android.rfcx.org.ranger.adapter
 
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.Message
+import android.rfcx.org.ranger.util.DateHelper
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_message.view.*
+import java.util.*
 
 /**
  * Created by Jingjoeh on 10/5/2017 AD.
@@ -40,6 +42,10 @@ class MessageViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     fun bind(message: Message) {
         itemView.itemMessageFromTextView.text = message.from.firstname
         itemView.itemMessageTextView.text = message.text
-        itemView.itemMessageLocationTextView.text = message.coords.lat.toString()
+        val latLon: String = StringBuilder(message.coords.lat.toString())
+                .append(",")
+                .append(message.coords.lon.toString()).toString()
+        itemView.itemMessageLocationTextView.text = latLon
+        itemView.itemTimeTextView.text = DateHelper.getMessageDateTime(message.time)
     }
 }

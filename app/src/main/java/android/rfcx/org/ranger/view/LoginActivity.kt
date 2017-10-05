@@ -1,5 +1,7 @@
 package android.rfcx.org.ranger.view
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.rfcx.org.ranger.BuildConfig
@@ -11,14 +13,15 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
+    companion object {
+        fun startActivity(context: Context) {
+            context.startActivity(Intent(context, LoginActivity::class.java))
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        if (BuildConfig.DEBUG){
-            loginEmailEditText.setText("jingjoeh@gmail.com")
-            loginPasswordEditText.setText("j!ngj0eH.Rfc")
-        }
 
         loginButton.setOnClickListener {
             val email = loginEmailEditText.text.toString()

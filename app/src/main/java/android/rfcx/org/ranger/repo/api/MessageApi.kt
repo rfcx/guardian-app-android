@@ -29,8 +29,8 @@ class MessageApi {
             return
         }
         val authUser = "user/" + loginRes.guid
-        ApiManager.getInstance().apiRest.getMessage(authUser,  loginRes.tokens[0].token,
-               loginRes.guid, "ranger-warning").enqueue(object : Callback<List<Message>> {
+        ApiManager.getInstance().apiRest.getMessage(authUser, loginRes.tokens[0].token,
+                loginRes.guid, "ranger-warning").enqueue(object : Callback<List<Message>> {
             override fun onFailure(call: Call<List<Message>>?, t: Throwable?) {
                 onMessageCallBack.onFailed(t, null)
             }
@@ -46,6 +46,12 @@ class MessageApi {
                         }
 
                     } else {
+
+                        if (response.code() == 401) {
+                            onMessageCallBack.onFailed(TokenExpireException(),null)
+                            return
+                        }
+
                         if (response.errorBody() != null) {
                             val error: ErrorResponse = GsonProvider.getInstance().gson.
                                     fromJson(response.errorBody()!!.string(), ErrorResponse::class.java)
@@ -61,9 +67,10 @@ class MessageApi {
         })
 
     }
+
+    interface OnMessageCallBack {
+        fun onFailed(t: Throwable?, message: String?)
+        fun onSuccess(messages: List<Message>)
+    }
 }
 
-interface OnMessageCallBack {
-    fun onFailed(t: Throwable?, message: String?)
-    fun onSuccess(messages: List<Message>)
-}
