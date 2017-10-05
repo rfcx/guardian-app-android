@@ -15,6 +15,7 @@ class RangerApplication : Application() {
         if (BuildConfig.USE_STETHO) {
             Stetho.initialize(Stetho.newInitializerBuilder(this)
                     .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                    .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                     .build())
         }
     }

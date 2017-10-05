@@ -14,9 +14,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        debug{
+        debug {
             buildConfigField 'boolean', 'USE_STETHO', 'true'
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org"'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org/v1/"'
         }
         release {
             minifyEnabled false
@@ -29,6 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     /* stetho */

@@ -2,7 +2,10 @@ package android.rfcx.org.ranger.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.rfcx.org.ranger.BuildConfig
 import android.rfcx.org.ranger.R
+import android.rfcx.org.ranger.entity.LoginResponse
+import android.rfcx.org.ranger.repo.api.LoginApi
 import android.view.View
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -12,6 +15,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        if (BuildConfig.DEBUG){
+            loginEmailEditText.setText("jingjoeh@gmail.com")
+            loginPasswordEditText.setText("j!ngj0eH.Rfc")
+        }
 
         loginButton.setOnClickListener {
             val email = loginEmailEditText.text.toString()
@@ -36,8 +43,34 @@ class LoginActivity : AppCompatActivity() {
 
     private fun doLogin(email: String, password: String) {
         loginProgress.visibility = View.VISIBLE
+        loginErrorTextView.visibility = View.INVISIBLE
         loginButton.isEnabled = false
         loginEmailEditText.isEnabled = false
         loginPasswordEditText.isEnabled = false
+
+        LoginApi().login(this@LoginActivity, email, password, 0, object : LoginApi.OnLoginCallback {
+            override fun onFailed(t: Throwable?, message: String?) {
+                loginFailed(message)
+            }
+
+            override fun onSuccess(loginResponse: LoginResponse?) {
+                loginSuccess()
+            }
+
+        })
+    }
+
+    private fun loginFailed(errorMessage: String?) {
+        loginProgress.visibility = View.INVISIBLE
+        loginButton.isEnabled = true
+        loginEmailEditText.isEnabled = true
+        loginPasswordEditText.isEnabled = true
+        loginErrorTextView.text = errorMessage
+        loginErrorTextView.visibility = View.VISIBLE
+    }
+
+    private fun loginSuccess() {
+        MessageListActivity.startActivity(this@LoginActivity)
+        finish()
     }
 }
