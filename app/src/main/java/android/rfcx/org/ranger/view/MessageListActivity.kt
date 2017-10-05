@@ -2,9 +2,11 @@ package android.rfcx.org.ranger.view
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
+import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
 import android.rfcx.org.ranger.entity.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.MessageApi
@@ -15,7 +17,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_message_list.*
 
-class MessageListActivity : AppCompatActivity() {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
+
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     lateinit var messageAdapter: MessageAdapter
 
@@ -43,14 +46,13 @@ class MessageListActivity : AppCompatActivity() {
         }
     }
 
-
     private fun initToolbar() {
         setSupportActionBar(messageToolbar)
         supportActionBar?.title = getString(R.string.app_name)
     }
 
     private fun initAdapter() {
-        messageAdapter = MessageAdapter()
+        messageAdapter = MessageAdapter(this@MessageListActivity)
         messageRecyclerView.setHasFixedSize(true)
         messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
         messageRecyclerView.adapter = messageAdapter
@@ -60,7 +62,7 @@ class MessageListActivity : AppCompatActivity() {
         messageSwipeRefresh.isRefreshing = true
 
         MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
-            override fun onSuccess(messages : List<Message>) {
+            override fun onSuccess(messages: List<Message>) {
                 messageSwipeRefresh.isRefreshing = false
                 messageAdapter.updateMessages(messages)
             }
@@ -77,6 +79,17 @@ class MessageListActivity : AppCompatActivity() {
             }
         }
         )
+    }
+
+    override fun onMessageItemClick(position: Int) {
+        val message: Message? = messageAdapter.getItemAt(position)
+        message?.let {
+            val intent = Intent(android.content.Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?q="
+                            + message.coords.lat + ","
+                            + message.coords.lon))
+            startActivity(intent)
+        }
     }
 
     private fun checkGoogleApiAvailability() {
