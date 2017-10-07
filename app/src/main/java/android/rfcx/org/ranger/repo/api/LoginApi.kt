@@ -39,9 +39,15 @@ class LoginApi {
 
                     } else {
                         if (response.errorBody() != null) {
-                            val error: ErrorResponse = GsonProvider.getInstance().gson.
-                                    fromJson(response.errorBody()!!.string(), ErrorResponse::class.java)
-                            loginCallback.onFailed(null, error.message)
+
+                            try {
+                                val error: ErrorResponse = GsonProvider.getInstance().gson.
+                                        fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                                loginCallback.onFailed(null, error.message)
+                            } catch (e: Exception) {
+                                loginCallback.onFailed(null, context.getString(R.string.error_common))
+                            }
+
                         } else {
                             loginCallback.onFailed(null, context.getString(R.string.error_common))
                         }

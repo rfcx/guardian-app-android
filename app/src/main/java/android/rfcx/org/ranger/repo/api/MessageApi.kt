@@ -48,14 +48,18 @@ class MessageApi {
                     } else {
 
                         if (response.code() == 401) {
-                            onMessageCallBack.onFailed(TokenExpireException(),null)
+                            onMessageCallBack.onFailed(TokenExpireException(), null)
                             return
                         }
 
                         if (response.errorBody() != null) {
-                            val error: ErrorResponse = GsonProvider.getInstance().gson.
-                                    fromJson(response.errorBody()!!.string(), ErrorResponse::class.java)
-                            onMessageCallBack.onFailed(null, error.message)
+                            try {
+                                val error: ErrorResponse = GsonProvider.getInstance().gson.
+                                        fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                                onMessageCallBack.onFailed(null, error.message)
+                            } catch (e: Exception) {
+                                onMessageCallBack.onFailed(null, context.getString(R.string.error_common))
+                            }
                         } else {
                             onMessageCallBack.onFailed(null, context.getString(R.string.error_common))
                         }
