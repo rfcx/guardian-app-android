@@ -17,6 +17,7 @@
 		android:layout_marginStart="@dimen/margin_padding_large"
 		android:hint="@string/email"
 		android:inputType="textEmailAddress"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/loginPasswordEditText"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
@@ -25,6 +26,7 @@
 		app:layout_constraintVertical_chainStyle="packed"/>
 
 	<EditText
+		android:visibility="invisible"
 		android:id="@+id/loginPasswordEditText"
 		style="@style/RangerEdit"
 		android:layout_width="0dp"
@@ -40,6 +42,7 @@
 		app:layout_constraintTop_toBottomOf="@+id/loginEmailEditText"/>
 
 	<Button
+		android:visibility="invisible"
 		android:id="@+id/loginButton"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"

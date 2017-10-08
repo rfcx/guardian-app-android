@@ -14,6 +14,8 @@ import android.rfcx.org.ranger.entity.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.service.SendLocationLocationService
+import android.rfcx.org.ranger.util.PrefKey
+import android.rfcx.org.ranger.util.PreferenceHelper
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
@@ -86,6 +88,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             override fun onFailed(t: Throwable?, message: String?) {
                 messageSwipeRefresh.isRefreshing = false
                 if (t is TokenExpireException) {
+                    PreferenceHelper.getInstance(this@MessageListActivity).remove(PrefKey.LOGIN_RESPONSE)
                     LoginActivity.startActivity(this@MessageListActivity)
                     finish()
                     return

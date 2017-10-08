@@ -40,5 +40,9 @@ class PreferenceHelper(context: Context) {
         return GsonProvider.getInstance().gson.fromJson(objectJson, objClass)
     }
 
+    fun remove(key: String) {
+        sharedPreferences.edit().remove(key).apply()
+    }
+
 
 }

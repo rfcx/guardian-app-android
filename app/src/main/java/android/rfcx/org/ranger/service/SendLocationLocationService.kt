@@ -9,6 +9,8 @@ import android.os.IBinder
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.SendLocationApi
 import android.rfcx.org.ranger.util.DateHelper
+import android.rfcx.org.ranger.util.PrefKey
+import android.rfcx.org.ranger.util.PreferenceHelper
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import com.google.android.gms.location.*
@@ -77,6 +79,7 @@ class SendLocationLocationService : Service() {
             override fun onFailed(t: Throwable?, message: String?) {
                 Log.w("sendLocation", if (message.isNullOrEmpty()) "Error" else message)
                 if (t != null && t is TokenExpireException) {
+                    PreferenceHelper.getInstance(this@SendLocationLocationService).remove(PrefKey.LOGIN_RESPONSE)
                     mLocationNotificationManager?.stopLocationNotification()
                     mLocationNotificationManager?.startReLoginNotification()
                 }

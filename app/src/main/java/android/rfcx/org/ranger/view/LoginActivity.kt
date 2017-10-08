@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.repo.api.LoginApi
+import android.rfcx.org.ranger.util.PrefKey
+import android.rfcx.org.ranger.util.PreferenceHelper
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_login.*
@@ -21,6 +23,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        if (isLoggedin()) loginSuccess()
+        else {
+            loginEmailEditText.visibility = View.VISIBLE
+            loginPasswordEditText.visibility = View.VISIBLE
+            loginButton.visibility = View.VISIBLE
+        }
 
         loginButton.setOnClickListener {
             val email = loginEmailEditText.text.toString()
@@ -74,5 +83,16 @@ class LoginActivity : AppCompatActivity() {
     private fun loginSuccess() {
         MessageListActivity.startActivity(this@LoginActivity)
         finish()
+    }
+
+    private fun isLoggedin(): Boolean {
+
+        val login: LoginResponse? = PreferenceHelper.getInstance(this)
+                .getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java);
+
+        if (login != null) {
+            return true
+        }
+        return false
     }
 }
