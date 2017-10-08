@@ -10,5 +10,9 @@
 
 	<!-- common error -->
 	<string name="error_common">An error occurred, Please try again</string>
+	<string name="re_login">Please re login.</string>
 
+	<string name="location_permission_msg">Ranger would like to use your location.</string>
+	<string name="go_to_setting">Setting</string>
+	<string name="user_location">Ranger use your location service.</string>
 </resources>

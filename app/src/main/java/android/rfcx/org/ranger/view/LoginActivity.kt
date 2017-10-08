@@ -2,12 +2,11 @@ package android.rfcx.org.ranger.view
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.rfcx.org.ranger.BuildConfig
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.repo.api.LoginApi
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_login.*
 

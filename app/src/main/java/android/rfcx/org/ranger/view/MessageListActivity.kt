@@ -1,25 +1,34 @@
 package android.rfcx.org.ranger.view
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
 import android.rfcx.org.ranger.entity.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.MessageApi
+import android.rfcx.org.ranger.service.SendLocationLocationService
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_message_list.*
 
+
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var messageAdapter: MessageAdapter
 
     companion object {
@@ -32,6 +41,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
     override fun onStart() {
         super.onStart()
         checkGoogleApiAvailability()
+
+        if (!checkPermissions()) {
+            Log.w("Permission", "grant")
+            requestPermissions()
+        } else {
+            statLocationService()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,5 +118,52 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             googleApiAvailability.showErrorDialogFragment(this, statusCode, REQUEST_CODE_GOOGLE_AVAILABILITY)
         }
     }
+
+
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(this@MessageListActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermissions() {
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MessageListActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+
+        if (!shouldProvideRationale) {
+            val dialogBuilder: AlertDialog.Builder =
+                    AlertDialog.Builder(this@MessageListActivity).apply {
+                        setTitle(null)
+                        setMessage(R.string.location_permission_msg)
+                        setPositiveButton(R.string.go_to_setting) { _, _ ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:" + packageName))
+                            intent.addCategory(Intent.CATEGORY_DEFAULT)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                    }
+            dialogBuilder.create().show()
+
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_PERMISSIONS_REQUEST_CODE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                statLocationService()
+            }
+        }
+    }
+
+    private fun statLocationService() {
+        startService(Intent(this@MessageListActivity, SendLocationLocationService::class.java))
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package android.rfcx.org.ranger.repo.retofit
 
+import android.rfcx.org.ranger.entity.CheckInResult
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.entity.Message
 import retrofit2.Call
@@ -20,5 +21,15 @@ interface ApiRestInterface {
     fun getMessage(@Header("x-auth-user") authUser: String,
                    @Header("x-auth-token") authToken: String,
                    @Query("to") userGuID: String,
-                   @Query("type") type: String) : Call<List<Message>>
+                   @Query("type") type: String): Call<List<Message>>
+
+    @FormUrlEncoded
+    @POST("users/checkin")
+    fun updateLocation(@Header("x-auth-user") authUser: String,
+                       @Header("x-auth-token") authToken: String,
+                       @Field("latitude") latitude: Double,
+                       @Field("longitude") longitude: Double,
+                       @Field("time") time: String): Call<CheckInResult>
+
+
 }

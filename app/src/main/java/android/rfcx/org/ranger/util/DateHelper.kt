@@ -21,6 +21,17 @@ class DateHelper {
                 ""
             }
         }
+
+        fun getIsoTime(): String {
+            // pattern 2008-09-15T15:53:00+05:00
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            return try {
+                val d = Date(System.currentTimeMillis())
+                return sdf.format(d)
+            } catch (e: Exception) {
+                ""
+            }
+        }
     }
 
 }
