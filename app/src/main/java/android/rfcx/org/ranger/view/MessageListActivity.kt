@@ -1,11 +1,14 @@
 package android.rfcx.org.ranger.view
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
@@ -22,16 +25,19 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_message_list.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, ServiceConnection {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var messageAdapter: MessageAdapter
+    private var sendLocationService: SendLocationLocationService? = null
 
     companion object {
         fun startActivity(context: Context) {
@@ -64,6 +70,31 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unbindService(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.ranger_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_logout -> {
+                logout()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initToolbar() {
         setSupportActionBar(messageToolbar)
         supportActionBar?.title = getString(R.string.app_name)
@@ -88,9 +119,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             override fun onFailed(t: Throwable?, message: String?) {
                 messageSwipeRefresh.isRefreshing = false
                 if (t is TokenExpireException) {
-                    PreferenceHelper.getInstance(this@MessageListActivity).remove(PrefKey.LOGIN_RESPONSE)
-                    LoginActivity.startActivity(this@MessageListActivity)
-                    finish()
+                    logout()
                     return
                 }
                 val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
@@ -98,6 +127,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             }
         }
         )
+    }
+
+    private fun logout() {
+        try {
+            sendLocationService?.stopSelf()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        PreferenceHelper.getInstance(this@MessageListActivity).remove(PrefKey.LOGIN_RESPONSE)
+        LoginActivity.startActivity(this@MessageListActivity)
+        finish()
     }
 
     override fun onMessageItemClick(position: Int) {
@@ -165,7 +205,21 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
     }
 
     private fun statLocationService() {
-        startService(Intent(this@MessageListActivity, SendLocationLocationService::class.java))
+
+        val serviceIntent = Intent(this, SendLocationLocationService::class.java)
+        // Start service
+        // Bind service
+        this.bindService(serviceIntent, this, Context.BIND_AUTO_CREATE)
+        this.startService(serviceIntent)
+    }
+
+    override fun onServiceDisconnected(p0: ComponentName?) {
+
+    }
+
+    override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
+        val binder = service as SendLocationLocationService.SendLocationLocationServiceBinder
+        sendLocationService = binder.service
     }
 
 

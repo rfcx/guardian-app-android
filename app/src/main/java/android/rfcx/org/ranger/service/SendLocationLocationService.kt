@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Binder
 import android.os.IBinder
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.SendLocationApi
@@ -20,7 +21,7 @@ import com.google.android.gms.location.*
  * Created by Jingjoeh on 10/7/2017 AD.
  */
 class SendLocationLocationService : Service() {
-
+    private val binder = SendLocationLocationServiceBinder()
     private val intervalLocationUpdate: Long = 5 * 60 * 1000
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var locationCallback: LocationCallback? = null
@@ -28,7 +29,7 @@ class SendLocationLocationService : Service() {
 
 
     override fun onBind(p0: Intent?): IBinder? {
-        return null
+        return binder
     }
 
     override fun onCreate() {
@@ -61,6 +62,12 @@ class SendLocationLocationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         fusedLocationClient?.removeLocationUpdates(locationCallback)
+        try {
+            mLocationNotificationManager?.stopLocationNotification()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
 
@@ -85,6 +92,12 @@ class SendLocationLocationService : Service() {
                 }
             }
         })
+    }
+
+    inner class SendLocationLocationServiceBinder : Binder() {
+        val service: SendLocationLocationService
+            get() = this@SendLocationLocationService
+
     }
 
 }

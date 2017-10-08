@@ -15,4 +15,6 @@
 	<string name="location_permission_msg">Ranger would like to use your location.</string>
 	<string name="go_to_setting">Setting</string>
 	<string name="user_location">Ranger use your location service.</string>
+
+	<string name="menu_logout">Logout</string>
 </resources>
