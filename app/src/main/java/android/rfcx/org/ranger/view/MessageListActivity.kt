@@ -1,18 +1,17 @@
 package android.rfcx.org.ranger.view
 
 import android.Manifest
-import android.content.ComponentName
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.IBinder
 import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
+import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.MessageApi
@@ -27,16 +26,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.RadioGroup
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_message_list.*
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.os.SystemClock
-import android.rfcx.org.ranger.service.MessageReciver
+import kotlinx.android.synthetic.main.dialog_report.view.*
+import java.util.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, ServiceConnection {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
@@ -58,7 +58,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
             Log.w("Permission", "grant")
             requestPermissions()
         } else {
-            statLocationService()
+
         }
     }
 
@@ -68,21 +68,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         initToolbar()
         initAdapter()
         getMessageList()
-        startAlarmForMessageNotification()
+        Log.d("UUID", UUID.randomUUID().toString())
 
         messageSwipeRefresh.setOnRefreshListener {
             getMessageList()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            unbindService(this)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
+        fab.setOnClickListener { showReportDialog() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -128,7 +119,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
                     return
                 }
                 val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
-                Snackbar.make(messageParentView, error, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
             }
         }
         )
@@ -204,40 +195,44 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                statLocationService()
+//                statLocationService()
             }
         }
     }
 
-    private fun statLocationService() {
+    private fun showReportDialog() {
 
-        val serviceIntent = Intent(this, SendLocationLocationService::class.java)
-        // Start service
-        // Bind service
-        this.bindService(serviceIntent, this, Context.BIND_AUTO_CREATE)
-        this.startService(serviceIntent)
+        val builder = AlertDialog.Builder(this@MessageListActivity)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_report, null)
+        builder.setTitle(R.string.report_title)
+        builder.setView(dialogView)
+        builder.setPositiveButton(R.string.report_title, null)
+        builder.setNegativeButton(R.string.cancel, null)
+
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            button.setOnClickListener {
+                if (dialogView.radioReportGroup.checkedRadioButtonId == -1) {
+                    dialogView.reportHaveNoSelected.visibility = View.VISIBLE
+                } else {
+                    dialogView.reportHaveNoSelected.visibility = View.GONE
+                    when {
+                        dialogView.chainsawRadio.isChecked -> sendReport(ReportType.Chainsaw)
+                        dialogView.gunshotRadio.isChecked -> sendReport(ReportType.Gunshot)
+                        dialogView.vehicleRadio.isChecked -> sendReport(ReportType.Vehicle)
+                    }
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        dialog.show()
     }
 
-    override fun onServiceDisconnected(p0: ComponentName?) {
-
+    private fun sendReport(reportType: ReportType) {
+        // TODO implement send report API
     }
 
-    override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
-        val binder = service as SendLocationLocationService.SendLocationLocationServiceBinder
-        sendLocationService = binder.service
-    }
-
-    // start alarm for get message list and show when there have new message (repeat every 60 sec).
-    private fun startAlarmForMessageNotification() {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this@MessageListActivity, MessageReciver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
-
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime(),
-                60 * 1000,
-                pendingIntent)
-
-    }
 
 }
