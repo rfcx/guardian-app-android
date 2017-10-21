@@ -13,7 +13,7 @@ import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
-import android.rfcx.org.ranger.entity.Message
+import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.service.SendLocationLocationService
@@ -30,6 +30,10 @@ import android.view.MenuItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_message_list.*
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.os.SystemClock
+import android.rfcx.org.ranger.service.MessageService
 
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, ServiceConnection {
@@ -64,6 +68,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         initToolbar()
         initAdapter()
         getMessageList()
+        startAlarm()
 
         messageSwipeRefresh.setOnRefreshListener {
             getMessageList()
@@ -145,8 +150,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         message?.let {
             val intent = Intent(android.content.Intent.ACTION_VIEW,
                     Uri.parse("http://maps.google.com/maps?q="
-                            + message.coords.lat + ","
-                            + message.coords.lon))
+                            + message.coords?.lat + ","
+                            + message.coords?.lon))
             startActivity(intent)
         }
     }
@@ -222,5 +227,16 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         sendLocationService = binder.service
     }
 
+    private fun startAlarm(){
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this@MessageListActivity, MessageService::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
+
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                60*1000,
+                pendingIntent)
+
+    }
 
 }

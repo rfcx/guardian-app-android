@@ -2,7 +2,7 @@ package android.rfcx.org.ranger.repo.retofit
 
 import android.rfcx.org.ranger.entity.CheckInResult
 import android.rfcx.org.ranger.entity.LoginResponse
-import android.rfcx.org.ranger.entity.Message
+import android.rfcx.org.ranger.entity.message.Message
 import retrofit2.Call
 import retrofit2.http.*
 

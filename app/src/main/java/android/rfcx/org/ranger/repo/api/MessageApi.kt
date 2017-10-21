@@ -4,7 +4,7 @@ import android.content.Context
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.ErrorResponse
 import android.rfcx.org.ranger.entity.LoginResponse
-import android.rfcx.org.ranger.entity.Message
+import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.repo.ApiManager
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.util.GsonProvider
