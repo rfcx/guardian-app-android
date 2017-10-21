@@ -88,7 +88,7 @@ class SendLocationLocationService : Service() {
                 if (t != null && t is TokenExpireException) {
                     PreferenceHelper.getInstance(this@SendLocationLocationService).remove(PrefKey.LOGIN_RESPONSE)
                     mLocationNotificationManager?.stopLocationNotification()
-                    mLocationNotificationManager?.startReLoginNotification()
+                    mLocationNotificationManager?.startReLoginNotification(this@SendLocationLocationService)
                 }
             }
         })

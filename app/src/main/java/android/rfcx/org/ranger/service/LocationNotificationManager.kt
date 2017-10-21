@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.rfcx.org.ranger.R
-import android.rfcx.org.ranger.view.LoginActivity
+import android.rfcx.org.ranger.util.NotificationHelper
 import android.rfcx.org.ranger.view.MessageListActivity
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v7.app.NotificationCompat
@@ -20,9 +20,7 @@ import android.widget.RemoteViews
  */
 class LocationNotificationManager : BroadcastReceiver {
     private val notificationLocationChanelId = "Use Location"
-    private val nofificationDefaultChanelId = "Default"
     private val notificationLocationId = 1111
-    private val notificationReLoginId = 1112
     private val actionCloseNotification = "actionCloseNotification"
 
     private var mMylocationService: SendLocationLocationService? = null
@@ -68,8 +66,8 @@ class LocationNotificationManager : BroadcastReceiver {
         mMylocationService?.stopSelf()
     }
 
-    fun startReLoginNotification() {
-        notificationManager?.notify(notificationReLoginId, createShouldReLoginNotification())
+    fun startReLoginNotification(context: Context) {
+        NotificationHelper.getInstance().showLoginNotification(context)
     }
 
     private fun getNotification(): Notification {
@@ -101,20 +99,6 @@ class LocationNotificationManager : BroadcastReceiver {
         return builder.build()
     }
 
-    private fun createShouldReLoginNotification(): Notification {
-        val openAppIntent = Intent(mMylocationService, LoginActivity::class.java)
-        openAppIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val openLoginPagePendingIntent = PendingIntent.getActivity(mMylocationService, 0,
-                openAppIntent, PendingIntent.FLAG_ONE_SHOT)
-        val builder = NotificationCompat.Builder(mMylocationService)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(mMylocationService!!.getString(R.string.app_name))
-                .setContentText(mMylocationService!!.getString(R.string.re_login))
-                .setChannelId(nofificationDefaultChanelId)
-                .setAutoCancel(true)
-                .setContentIntent(openLoginPagePendingIntent)
 
-        return builder.build()
-    }
 
 }

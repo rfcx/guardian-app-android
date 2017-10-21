@@ -32,7 +32,7 @@
 			android:name=".service.SendLocationLocationService"
 			android:exported="false"/>
 
-		<receiver android:name=".service.MessageService"/>
+		<receiver android:name=".service.MessageReciver"/>
 	</application>
 
 </manifest>

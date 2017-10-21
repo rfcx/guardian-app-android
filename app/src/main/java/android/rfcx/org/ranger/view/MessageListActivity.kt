@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_message_list.*
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.os.SystemClock
-import android.rfcx.org.ranger.service.MessageService
+import android.rfcx.org.ranger.service.MessageReciver
 
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, ServiceConnection {
@@ -68,7 +68,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         initToolbar()
         initAdapter()
         getMessageList()
-        startAlarm()
+        startAlarmForMessageNotification()
 
         messageSwipeRefresh.setOnRefreshListener {
             getMessageList()
@@ -227,14 +227,15 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Ser
         sendLocationService = binder.service
     }
 
-    private fun startAlarm(){
+    // start alarm for get message list and show when there have new message (repeat every 60 sec).
+    private fun startAlarmForMessageNotification() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this@MessageListActivity, MessageService::class.java)
+        val intent = Intent(this@MessageListActivity, MessageReciver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
 
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(),
-                60*1000,
+                60 * 1000,
                 pendingIntent)
 
     }
