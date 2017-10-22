@@ -34,6 +34,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -91,6 +92,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
                 requestPermissions()
             }
         }
+
+        messageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (dy > 0)
+                    fab.hide()
+                else if (dy < 0)
+                    fab.show()
+
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -205,7 +217,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             googleApiAvailability.showErrorDialogFragment(this, statusCode, REQUEST_CODE_GOOGLE_AVAILABILITY)
         }
     }
-    
+
     private fun checkPermissions(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(this@MessageListActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
