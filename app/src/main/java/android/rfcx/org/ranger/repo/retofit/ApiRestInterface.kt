@@ -1,6 +1,7 @@
 package android.rfcx.org.ranger.repo.retofit
 
 import android.rfcx.org.ranger.entity.CheckInResult
+import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.entity.message.Message
 import retrofit2.Call
@@ -31,5 +32,8 @@ interface ApiRestInterface {
                        @Field("longitude") longitude: Double,
                        @Field("time") time: String): Call<CheckInResult>
 
-
+    @GET("events/event")
+    fun getEvents(@Header("x-auth-user") authUser: String,
+                  @Header("x-auth-token") authToken: String,
+                  @Query("limit") limit: Int): Call<EventResponse>
 }

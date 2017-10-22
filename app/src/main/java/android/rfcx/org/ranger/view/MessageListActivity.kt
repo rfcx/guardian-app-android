@@ -2,7 +2,6 @@ package android.rfcx.org.ranger.view
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -11,9 +10,11 @@ import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
+import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
+import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.service.SendLocationLocationService
 import android.rfcx.org.ranger.util.PrefKey
@@ -27,10 +28,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.RadioGroup
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
 import java.util.*
@@ -101,6 +100,23 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         messageRecyclerView.setHasFixedSize(true)
         messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
         messageRecyclerView.adapter = messageAdapter
+    }
+
+    private fun getEvents() {
+        EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
+            override fun onSuccess(event: EventResponse) {
+                Log.d("Events", event.events?.size.toString())
+            }
+
+            override fun onFailed(t: Throwable?, message: String?) {
+                if (t is TokenExpireException) {
+                    logout()
+                    return
+                }
+                val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
+                Snackbar.make(messageParentView, error, Snackbar.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun getMessageList() {
