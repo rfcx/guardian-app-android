@@ -1,13 +1,7 @@
-package android.rfcx.org.ranger.entity.event
+package android.rfcx.org.ranger.entity
 
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
-import java.util.*
-
-/**
- * Created by Jingjoeh on 10/5/2017 AD.
- */
-
 
 open class Event : RealmObject() {
 
@@ -17,14 +11,14 @@ open class Event : RealmObject() {
     @SerializedName("audio_guid")
     var audioGUID: String = ""
 
-    var latitude: String = ""
-    var longitude: String = ""
+    var latitude: Float = 0.0f
+    var longitude: Float = 0.0f
 
     @SerializedName("begins_at")
-    var beginsAt: Date? = null
+    var beginsAt: String = ""
 
     @SerializedName("ends_at")
-    var endAt: Date? = null
+    var endAt: String = ""
 
     var type: String = ""
     var value: String = ""
@@ -38,6 +32,5 @@ open class Event : RealmObject() {
 
     var site: String = ""
     var timezone: String = ""
-
 
 }
