@@ -25,5 +25,6 @@
 	<string name="report_vehicle_button">Vehicles</string>
 	<string name="report_title">Report</string>
 	<string name="report_no_have_select_type">Please select type you want to report.</string>
+	<string name="report_send_success">Sent report success.</string>
 
 </resources>

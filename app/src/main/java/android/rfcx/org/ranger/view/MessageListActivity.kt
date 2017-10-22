@@ -1,6 +1,7 @@
 package android.rfcx.org.ranger.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,10 +14,16 @@ import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.message.Message
+import android.rfcx.org.ranger.entity.report.Attributes
+import android.rfcx.org.ranger.entity.report.Data
+import android.rfcx.org.ranger.entity.report.Report
+import android.rfcx.org.ranger.entity.report.ReportData
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
+import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.service.SendLocationLocationService
+import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.PrefKey
 import android.rfcx.org.ranger.util.PreferenceHelper
 import android.support.design.widget.Snackbar
@@ -30,6 +37,8 @@ import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
 import java.util.*
@@ -67,12 +76,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         initToolbar()
         initAdapter()
         getMessageList()
-        Log.d("UUID", UUID.randomUUID().toString())
 
         messageSwipeRefresh.setOnRefreshListener {
             getMessageList()
         }
-        fab.setOnClickListener { showReportDialog() }
+        fab.setOnClickListener {
+            if (checkPermissions()) {
+                showReportDialog()
+            } else {
+                requestPermissions()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -173,8 +187,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
             googleApiAvailability.showErrorDialogFragment(this, statusCode, REQUEST_CODE_GOOGLE_AVAILABILITY)
         }
     }
-
-
+    
     private fun checkPermissions(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(this@MessageListActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -246,8 +259,35 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         dialog.show()
     }
 
+    @SuppressLint("MissingPermission")
     private fun sendReport(reportType: ReportType) {
-        // TODO implement send report API
+
+        if (!checkPermissions()) {
+            return
+        }
+        val time = DateHelper.getIsoTime()
+
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnCompleteListener { task ->
+            if (task.isSuccessful && task.result != null) {
+
+                // create body
+                val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude)
+                val reportData = ReportData(UUID.randomUUID().toString(), reportType.name, reportAttributes)
+                val data = Data(reportData)
+                val report = Report(data)
+
+                SendReportApi().sendReport(this@MessageListActivity, report, object : SendReportApi.SendReportCallback {
+                    override fun onSuccess() {
+                        Snackbar.make(rootView, R.string.report_send_success, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailed(t: Throwable?, message: String?) {
+                        Snackbar.make(rootView, if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!, Snackbar.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
     }
 
 

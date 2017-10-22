@@ -4,6 +4,8 @@ import android.rfcx.org.ranger.entity.CheckInResult
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.entity.message.Message
+import android.rfcx.org.ranger.entity.report.Report
+import android.rfcx.org.ranger.entity.report.SendReportResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -36,4 +38,9 @@ interface ApiRestInterface {
     fun getEvents(@Header("x-auth-user") authUser: String,
                   @Header("x-auth-token") authToken: String,
                   @Query("limit") limit: Int): Call<EventResponse>
+
+    @POST("reports")
+    fun sendReport(@Header("x-auth-user") authUser: String,
+                   @Header("x-auth-token") authToken: String,
+                   @Body report : Report) :Call<SendReportResponse>
 }
