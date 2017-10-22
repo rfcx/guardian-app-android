@@ -10,13 +10,31 @@ import java.util.*
 class DateHelper {
 
     companion object {
-        private val messageInputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        private val messageOutputFormat = "yyyy-MM-dd-HH:mm"
+        private val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        private val dateFormat = "yyyy-MM-dd-HH:mm"
+        private val timeFormat = "HH:mm"
+
+        fun getDateTime(input: String?): Date {
+            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
+            return sdf.parse(input)
+        }
+
         fun getMessageDateTime(input: String): String {
-            val sdf = SimpleDateFormat(messageInputFormat, Locale.getDefault())
+            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
             return try {
                 val d: Date = sdf.parse(input)
-                val sdf2 = SimpleDateFormat(messageOutputFormat, Locale.getDefault())
+                val sdf2 = SimpleDateFormat(dateFormat, Locale.getDefault())
+                sdf2.format(d)
+            } catch (e: Exception) {
+                ""
+            }
+        }
+
+        fun getEventTime(input: String): String {
+            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
+            return try {
+                val d: Date = sdf.parse(input)
+                val sdf2 = SimpleDateFormat(timeFormat, Locale.getDefault())
                 sdf2.format(d)
             } catch (e: Exception) {
                 ""
@@ -28,7 +46,7 @@ class DateHelper {
             return try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.getDefault())
                 val d = Date(System.currentTimeMillis())
-                Log.d("getIsoTime",sdf.format(d))
+                Log.d("getIsoTime", sdf.format(d))
                 return sdf.format(d)
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -10,6 +10,9 @@ import android.provider.Settings
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
+import android.rfcx.org.ranger.adapter.entity.BaseItem
+import android.rfcx.org.ranger.adapter.entity.EventItem
+import android.rfcx.org.ranger.adapter.entity.MessageItem
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.message.Message
@@ -17,6 +20,7 @@ import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.service.SendLocationLocationService
+import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.PrefKey
 import android.rfcx.org.ranger.util.PreferenceHelper
 import android.support.design.widget.Snackbar
@@ -33,6 +37,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
@@ -102,10 +107,20 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         messageRecyclerView.adapter = messageAdapter
     }
 
-    private fun getEvents() {
+    private fun getEvents(messageItems: MutableList<MessageItem>) {
         EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
             override fun onSuccess(event: EventResponse) {
-                Log.d("Events", event.events?.size.toString())
+                messageSwipeRefresh.isRefreshing = false
+                val eventItems: ArrayList<EventItem>? = event.events?.mapTo(ArrayList()) {
+                    EventItem(it, BaseItem.ITEM_EVENT_TYPE, DateHelper.getDateTime(it.beginsAt))
+                }
+
+                val baseItems: ArrayList<BaseItem> = ArrayList()
+                baseItems.addAll(messageItems)
+                if (eventItems != null) {
+                    baseItems.addAll(eventItems)
+                }
+                messageAdapter.updateMessages(baseItems)
             }
 
             override fun onFailed(t: Throwable?, message: String?) {
@@ -125,7 +140,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
             override fun onSuccess(messages: List<Message>) {
                 messageSwipeRefresh.isRefreshing = false
-                messageAdapter.updateMessages(messages)
+                val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
+                    MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
+                }
+
+                getEvents(messageItems)
             }
 
             override fun onFailed(t: Throwable?, message: String?) {
