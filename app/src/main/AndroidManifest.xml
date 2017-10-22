@@ -33,7 +33,7 @@
 			android:exported="false"/>
 
 		<receiver
-			android:name=".service.MessageReciver"
+			android:name=".service.MessageReceiver"
 			android:exported="false"/>
 		<receiver
 			android:name=".service.SenLocationReceiver"

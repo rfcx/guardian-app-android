@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.rfcx.org.ranger.R
+import android.rfcx.org.ranger.entity.Event
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.view.LoginActivity
 import android.support.v4.app.NotificationManagerCompat
@@ -17,6 +18,7 @@ import java.util.*
 class NotificationHelper {
     private val notificationDefaultChanelId = "Default"
     private val notificationMessageChanelId = "Message"
+    private val notificationAlertChanelId = "Alert"
     private val notificationReLoginId = 1112
 
     companion object {
@@ -48,6 +50,26 @@ class NotificationHelper {
         notificationManager?.notify(Random().nextInt(10), builder.build())
     }
 
+    fun showAlertNotification(context: Context,event: Event) {
+
+      /*  val intent = Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?q="
+                        + message.coords?.lat + ","
+                        + message.coords?.lon))
+        val openMessagePending = PendingIntent.getActivity(context, 0,
+                intent, PendingIntent.FLAG_ONE_SHOT)*/
+
+        val builder = NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_alert)
+                .setContentTitle(event.value)
+                .setContentText(event.site)
+                .setAutoCancel(true)
+                .setChannelId(notificationAlertChanelId)
+
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager?.notify(Random().nextInt(10), builder.build())
+    }
+
 
     fun showLoginNotification(context: Context) {
         val openAppIntent = Intent(context, LoginActivity::class.java)
@@ -65,5 +87,7 @@ class NotificationHelper {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.notify(notificationReLoginId, builder.build())
     }
+
+
 
 }
