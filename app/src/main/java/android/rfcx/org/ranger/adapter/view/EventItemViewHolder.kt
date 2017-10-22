@@ -1,4 +1,4 @@
-package android.rfcx.org.ranger.adapter
+package android.rfcx.org.ranger.adapter.view
 
 import android.rfcx.org.ranger.entity.Event
 import android.rfcx.org.ranger.util.DateHelper
@@ -15,12 +15,13 @@ class EventItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     fun bind(event: Event) {
         itemView.tvEventValue.text = event.value
         itemView.tvEventSite.text = event.site
-        itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getMessageDateTime(event.beginsAt),
-                DateHelper.getMessageDateTime(event.endAt))
+        itemView.tvEventDate.text =  DateHelper.getEventDate(event.beginsAt)
+        itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getEventTime(event.beginsAt),
+                DateHelper.getEventTime(event.endAt))
 
         // create text latLng
         val latLng: String = StringBuilder(event.latitude.toString())
-                .append(",")
+                .append(", ")
                 .append(event.longitude.toString()).toString()
 
         itemView.tvEventLocation.text = latLng

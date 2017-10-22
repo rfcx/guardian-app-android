@@ -11,13 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_large"
         android:layout_marginTop="@dimen/margin_padding_normal"
+        android:textColor="@color/yellow"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Site" />
 
     <TextView
-        android:id="@+id/tvEventTime"
+        android:id="@+id/tvEventDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_padding_large"
@@ -25,15 +26,28 @@
         android:textSize="@dimen/text_x_small"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvEventSite"
         app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Date" />
+
+    <TextView
+        android:id="@+id/tvEventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_large"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_xx_small"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvEventValue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEventDate"
         tools:text="Time" />
+
 
     <TextView
         android:id="@+id/tvEventValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_padding_large"
+        android:layout_marginTop="@dimen/margin_padding_small"
         android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_normal"
         app:layout_constraintStart_toStartOf="@+id/tvEventSite"
         app:layout_constraintTop_toBottomOf="@+id/tvEventSite"
         tools:text="value" />

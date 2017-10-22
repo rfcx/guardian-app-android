@@ -4,6 +4,7 @@ import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.entity.BaseItem
 import android.rfcx.org.ranger.adapter.entity.EventItem
 import android.rfcx.org.ranger.adapter.entity.MessageItem
+import android.rfcx.org.ranger.adapter.view.EventItemViewHolder
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.util.DateHelper
 import android.support.v7.widget.RecyclerView

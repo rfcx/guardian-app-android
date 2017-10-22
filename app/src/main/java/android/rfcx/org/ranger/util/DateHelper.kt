@@ -11,7 +11,8 @@ class DateHelper {
 
     companion object {
         private val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        private val dateFormat = "yyyy-MM-dd-HH:mm"
+        private val dateTimeFormat = "yyyy-MM-dd-HH:mm"
+        private val dateFormat = "yyyy-MM-dd"
         private val timeFormat = "HH:mm"
 
         fun getDateTime(input: String?): Date {
@@ -23,7 +24,7 @@ class DateHelper {
             val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
             return try {
                 val d: Date = sdf.parse(input)
-                val sdf2 = SimpleDateFormat(dateFormat, Locale.getDefault())
+                val sdf2 = SimpleDateFormat(dateTimeFormat, Locale.getDefault())
                 sdf2.format(d)
             } catch (e: Exception) {
                 ""
@@ -40,6 +41,18 @@ class DateHelper {
                 ""
             }
         }
+
+        fun getEventDate(input: String): String {
+            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
+            return try {
+                val d: Date = sdf.parse(input)
+                val sdf2 = SimpleDateFormat(dateFormat, Locale.getDefault())
+                sdf2.format(d)
+            } catch (e: Exception) {
+                ""
+            }
+        }
+
 
         fun getIsoTime(): String {
             // pattern 2008-09-15T15:53:00+05:00
