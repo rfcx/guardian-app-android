@@ -33,7 +33,7 @@
 			android:exported="false"/>
 
 		<receiver
-			android:name=".service.MessageReceiver"
+			android:name=".service.PullingAlertMessageReceiver"
 			android:exported="false"/>
 		<receiver
 			android:name=".service.SendLocationReceiver"

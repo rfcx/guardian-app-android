@@ -17,7 +17,7 @@
     </entry>
 
     <entry>
-        <key>duration_refresh_caching</key>
+        <key>notification_polling_frequency_duration</key>
         <!-- 1 min in sec-->
         <value>60</value>
     </entry>

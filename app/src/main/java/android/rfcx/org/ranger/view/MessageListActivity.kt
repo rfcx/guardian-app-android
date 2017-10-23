@@ -29,12 +29,13 @@ import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.repo.api.SendReportApi
-import android.rfcx.org.ranger.service.MessageReceiver
+import android.rfcx.org.ranger.service.PullingAlertMessageReceiver
 import android.rfcx.org.ranger.service.SaveLocationService
 import android.rfcx.org.ranger.service.SendLocationReceiver
 import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.PrefKey
 import android.rfcx.org.ranger.util.PreferenceHelper
+import android.rfcx.org.ranger.util.RemoteConfigKey
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
@@ -70,10 +71,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     companion object {
 
         // Ranger remote config
-        private val REMOTE_REFRESH_CACHING = "duration_refresh_caching"
-        private val REMOTE_ENABLE_NOTI_MESSAGE = "enable_notification_message"
-        private val REMOTE_ENABLE_NOTI_EVENT = "enable_notification_event"
-        private val REMOTE_ENABLE_NOTI_EVENT_ALERT = "enable_notification_event_alert"
+
 
         fun startActivity(context: Context) {
             val intent = Intent(context, MessageListActivity::class.java)
@@ -145,10 +143,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             Log.d(this@MessageListActivity.localClassName, "Fetch remote successful!")
             rangerRemote.activateFetched() // active config
 
-            Log.d("Ranger remote", REMOTE_REFRESH_CACHING + ": " + rangerRemote.getString(REMOTE_REFRESH_CACHING))
-            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_MESSAGE))
-            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT))
-            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT_ALERT))
+            Log.d("Ranger remote", RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
+            Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
+            Log.d("Ranger remote", RemoteConfigKey.REMOTE_SHOW_EVENT_LIST + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST))
+            Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
         }
 
         //TODO: Update view
@@ -375,20 +373,20 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         }
     }
 
-    // start Alarm manger for repeat to call MessageReceiver every 60 sec.
+    // start Alarm manger for repeat to call PullingAlertMessageReceiver every 60 sec.
     private fun startAlarmForMessageNotification() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this@MessageListActivity, MessageReceiver::class.java)
+        val intent = Intent(this@MessageListActivity, PullingAlertMessageReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
 
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(),
-                rangerRemote.getLong(REMOTE_REFRESH_CACHING) * 1000,
+                rangerRemote.getLong(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION) * 1000,
                 pendingIntent)
     }
 
     private fun startAlarmForSendLocation() {
-        Log.d("Start Service","Start Service")
+        Log.d("Start Service", "Start Service")
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this@MessageListActivity, SendLocationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
