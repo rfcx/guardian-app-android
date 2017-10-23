@@ -2,12 +2,17 @@
 <defaultsMap>
 
     <entry>
-        <key>enable_message</key>
+        <key>enable_notification_message</key>
         <value>true</value>
     </entry>
 
     <entry>
-        <key>enable_event_alert</key>
+        <key>enable_notification_event</key>
+        <value>true</value>
+    </entry>
+
+    <entry>
+        <key>enable_notification_event_alert</key>
         <value>true</value>
     </entry>
 

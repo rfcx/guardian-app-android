@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.Settings
+import android.rfcx.org.ranger.BuildConfig
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.MessageAdapter
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
@@ -46,17 +47,22 @@ import android.view.View
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.dialog_report.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void> {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var messageAdapter: MessageAdapter
+    private lateinit var rangerRemote: FirebaseRemoteConfig
     private var sendLocationService: SendLocationLocationService? = null
 
     companion object {
@@ -83,6 +89,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         setContentView(R.layout.activity_message_list)
         initToolbar()
         initAdapter()
+        initRemoteConfig()
         getMessageList()
         startAlarmForMessageNotification()
         messageSwipeRefresh.setOnRefreshListener {
@@ -123,6 +130,18 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    //region {@link addOnCompleteListener.onComplete} implementation
+    override fun onComplete(task: Task<Void>) {
+        if (task.isSuccessful) {
+            Log.d(this@MessageListActivity.packageName, "Fetch remote successful!")
+            rangerRemote.activateFetched() // active config
+        }
+
+        //TODO: Update view
+
+    }
+    // end region
+
     private fun initToolbar() {
         setSupportActionBar(messageToolbar)
         supportActionBar?.title = getString(R.string.app_name)
@@ -135,7 +154,29 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
         messageRecyclerView.adapter = messageAdapter
     }
 
-    private fun getEvents(messageItems: MutableList<MessageItem>) {
+    private fun initRemoteConfig() {
+        rangerRemote = FirebaseRemoteConfig.getInstance()
+
+        // config for debug
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build()
+
+        rangerRemote.setConfigSettings(configSettings)
+        rangerRemote.setDefaults(R.xml.ranger_remote_config_defualt)
+    }
+
+    private fun fetchRangerRemote() {
+        Log.d(this@MessageListActivity.packageName, "Start fetch remote config!")
+        // cache config
+        var cacheExpiration: Long = 3600 // 1 hour
+        if (rangerRemote.info.configSettings.isDeveloperModeEnabled) {
+            cacheExpiration = 0
+        }
+        rangerRemote.fetch(cacheExpiration).addOnCompleteListener(this)
+    }
+
+    private fun getEvents(messageItems: MutableList<MessageItem>?) {
         EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
             override fun onSuccess(event: EventResponse) {
                 messageSwipeRefresh.isRefreshing = false
@@ -144,10 +185,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
                 }
 
                 val baseItems: ArrayList<BaseItem> = ArrayList()
-                baseItems.addAll(messageItems)
-                if (eventItems != null) {
-                    baseItems.addAll(eventItems)
-                }
+                messageItems?.let { baseItems.addAll(it) }
+                eventItems?.let { baseItems.addAll(it) }
+
                 messageAdapter.updateMessages(baseItems)
             }
 
@@ -335,7 +375,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener {
                 pendingIntent)
 
     }
-
 
 
 }
