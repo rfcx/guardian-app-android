@@ -61,11 +61,19 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+
     lateinit var messageAdapter: MessageAdapter
     private lateinit var rangerRemote: FirebaseRemoteConfig
     private var sendLocationService: SendLocationLocationService? = null
 
     companion object {
+
+        // Ranger remote config
+        private val REMOTE_REFRESH_CACHING = "duration_refresh_caching"
+        private val REMOTE_ENABLE_NOTI_MESSAGE = "enable_notification_message"
+        private val REMOTE_ENABLE_NOTI_EVENT = "enable_notification_event"
+        private val REMOTE_ENABLE_NOTI_EVENT_ALERT = "enable_notification_event_alert"
+
         fun startActivity(context: Context) {
             val intent = Intent(context, MessageListActivity::class.java)
             context.startActivity(intent)
@@ -133,8 +141,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     //region {@link addOnCompleteListener.onComplete} implementation
     override fun onComplete(task: Task<Void>) {
         if (task.isSuccessful) {
-            Log.d(this@MessageListActivity.packageName, "Fetch remote successful!")
+            Log.d(this@MessageListActivity.localClassName, "Fetch remote successful!")
             rangerRemote.activateFetched() // active config
+
+            Log.d("Ranger remote", REMOTE_REFRESH_CACHING + ": " + rangerRemote.getString(REMOTE_REFRESH_CACHING))
+            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_MESSAGE))
+            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT+ ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT))
+            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT_ALERT+ ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT_ALERT))
         }
 
         //TODO: Update view
@@ -164,9 +177,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
         rangerRemote.setConfigSettings(configSettings)
         rangerRemote.setDefaults(R.xml.ranger_remote_config_defualt)
-    }
 
-    private fun fetchRangerRemote() {
         Log.d(this@MessageListActivity.packageName, "Start fetch remote config!")
         // cache config
         var cacheExpiration: Long = 3600 // 1 hour
@@ -192,6 +203,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             }
 
             override fun onFailed(t: Throwable?, message: String?) {
+                messageSwipeRefresh.isRefreshing = false
                 if (t is TokenExpireException) {
                     logout()
                     return
@@ -207,7 +219,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
         MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
             override fun onSuccess(messages: List<Message>) {
-                messageSwipeRefresh.isRefreshing = false
                 val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
                     MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
                 }
@@ -371,7 +382,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(),
-                60 * 1000,
+                rangerRemote.getLong(REMOTE_REFRESH_CACHING) * 1000,
                 pendingIntent)
 
     }
