@@ -69,10 +69,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     private var mSaveLocationService: SaveLocationService? = null
 
     companion object {
-
-        // Ranger remote config
-
-
         fun startActivity(context: Context) {
             val intent = Intent(context, MessageListActivity::class.java)
             context.startActivity(intent)
@@ -90,10 +86,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         initToolbar()
         initAdapter()
         initRemoteConfig()
-        getMessageList()
+        fetchRangerRemoteConfig()
         startAlarmForMessageNotification()
         messageSwipeRefresh.setOnRefreshListener {
-            getMessageList()
+            fetchRangerRemoteConfig()
         }
         fab.setOnClickListener {
             if (checkPermissions()) {
@@ -148,9 +144,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_SHOW_EVENT_LIST + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
         }
-
-        //TODO: Update view
-
+        getMessageList()
     }
     // end region
 
@@ -176,7 +170,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
         rangerRemote.setConfigSettings(configSettings)
         rangerRemote.setDefaults(R.xml.ranger_remote_config_defualt)
+    }
 
+    private fun fetchRangerRemoteConfig() {
         Log.d(this@MessageListActivity.packageName, "Start fetch remote config!")
         // cache config
         var cacheExpiration: Long = 3600 // 1 hour
@@ -187,6 +183,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     private fun getEvents(messageItems: MutableList<MessageItem>?) {
+        if (!rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST)){
+            messageSwipeRefresh.isRefreshing = false
+            messageAdapter.updateMessages(messageItems)
+            return
+        }
+
         EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
             override fun onSuccess(event: EventResponse) {
                 messageSwipeRefresh.isRefreshing = false

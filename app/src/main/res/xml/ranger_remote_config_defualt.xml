@@ -22,4 +22,9 @@
         <value>60</value>
     </entry>
 
+    <entry>
+        <key>show_event_list</key>
+        <value>true</value>
+    </entry>
+
 </defaultsMap>
