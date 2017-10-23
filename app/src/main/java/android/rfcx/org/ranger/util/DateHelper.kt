@@ -1,6 +1,5 @@
 package android.rfcx.org.ranger.util
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,7 +58,6 @@ class DateHelper {
             return try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.getDefault())
                 val d = Date(System.currentTimeMillis())
-                Log.d("getIsoTime", sdf.format(d))
                 return sdf.format(d)
             } catch (e: Exception) {
                 e.printStackTrace()

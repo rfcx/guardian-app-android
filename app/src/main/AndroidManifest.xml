@@ -29,18 +29,17 @@
 		</activity>
 
 		<service
-			android:name=".service.SendLocationLocationService"
+			android:name=".service.SaveLocationService"
 			android:exported="false"/>
 
 		<receiver
 			android:name=".service.MessageReceiver"
 			android:exported="false"/>
 		<receiver
-			android:name=".service.SenLocationReceiver"
+			android:name=".service.SendLocationReceiver"
 			android:exported="false"/>
 
-		<activity android:name=".view.ReportActivity">
-		</activity>
+
 	</application>
 
 </manifest>

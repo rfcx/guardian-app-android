@@ -30,7 +30,8 @@ import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.service.MessageReceiver
-import android.rfcx.org.ranger.service.SendLocationLocationService
+import android.rfcx.org.ranger.service.SaveLocationService
+import android.rfcx.org.ranger.service.SendLocationReceiver
 import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.PrefKey
 import android.rfcx.org.ranger.util.PreferenceHelper
@@ -64,7 +65,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     lateinit var messageAdapter: MessageAdapter
     private lateinit var rangerRemote: FirebaseRemoteConfig
-    private var sendLocationService: SendLocationLocationService? = null
+    private var mSaveLocationService: SaveLocationService? = null
 
     companion object {
 
@@ -83,13 +84,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     override fun onStart() {
         super.onStart()
         checkGoogleApiAvailability()
-
-        if (!checkPermissions()) {
-            Log.w("Permission", "grant")
-            requestPermissions()
-        } else {
-
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +115,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                 super.onScrolled(recyclerView, dx, dy)
             }
         })
+
+        if (!checkPermissions()) {
+            Log.w("Permission", "grant")
+            requestPermissions()
+        } else {
+            startAlarmForSendLocation()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -146,8 +147,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
             Log.d("Ranger remote", REMOTE_REFRESH_CACHING + ": " + rangerRemote.getString(REMOTE_REFRESH_CACHING))
             Log.d("Ranger remote", REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_MESSAGE))
-            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT+ ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT))
-            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT_ALERT+ ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT_ALERT))
+            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT))
+            Log.d("Ranger remote", REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(REMOTE_ENABLE_NOTI_EVENT_ALERT))
         }
 
         //TODO: Update view
@@ -241,7 +242,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     private fun logout() {
         try {
-            sendLocationService?.stopSelf()
+            mSaveLocationService?.stopSelf()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -308,7 +309,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                statLocationService()
+                startAlarmForSendLocation()
             }
         }
     }
@@ -384,7 +385,18 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                 SystemClock.elapsedRealtime(),
                 rangerRemote.getLong(REMOTE_REFRESH_CACHING) * 1000,
                 pendingIntent)
+    }
 
+    private fun startAlarmForSendLocation() {
+        Log.d("Start Service","Start Service")
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this@MessageListActivity, SendLocationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
+
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                (60) * 1000,
+                pendingIntent)
     }
 
 
