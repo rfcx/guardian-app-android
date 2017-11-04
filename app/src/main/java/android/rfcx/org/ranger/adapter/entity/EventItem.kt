@@ -1,6 +1,6 @@
 package android.rfcx.org.ranger.adapter.entity
 
-import android.rfcx.org.ranger.entity.Event
+import android.rfcx.org.ranger.entity.event.Event
 import java.util.*
 
 /**

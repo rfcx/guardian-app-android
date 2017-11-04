@@ -1,5 +1,6 @@
 package android.rfcx.org.ranger.entity
 
+import android.rfcx.org.ranger.entity.event.Event
 import io.realm.RealmList
 import io.realm.RealmObject
 

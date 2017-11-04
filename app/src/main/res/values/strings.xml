@@ -27,4 +27,11 @@
 	<string name="report_no_have_select_type">Please select type you want to report.</string>
 	<string name="report_send_success">Sent report success.</string>
 
+	<string name="alert_title_format">Is this a %s?</string>
+	<string name="alert_yes_button">Yes</string>
+	<string name="alert_no_button">No</string>
+	<string name="alert_state_loading">Loading…</string>
+	<string name="alert_state_playing">Playing…</string>
+	<string name="alert_state_replay">Replay</string>
+
 </resources>

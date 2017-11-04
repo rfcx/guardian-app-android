@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.firebase:firebase-jobdispatcher:0.8.2'
 
     /* firebase */
+    implementation 'com.android.support:support-v4:26.1.0'
     compile 'com.google.firebase:firebase-config:11.4.2'
 
     /* stetho */

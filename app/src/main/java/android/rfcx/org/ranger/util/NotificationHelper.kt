@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.rfcx.org.ranger.R
-import android.rfcx.org.ranger.entity.Event
+import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.view.LoginActivity
 import android.support.v4.app.NotificationManagerCompat

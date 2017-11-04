@@ -33,7 +33,7 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             BaseItem.ITEM_EVENT_TYPE -> {
                 val itemView = inflater.inflate(R.layout.item_event, parent, false)
-                EventItemViewHolder(itemView)
+                EventItemViewHolder(itemView, onMessageItemClickListener)
             }
 
             else -> {
@@ -76,17 +76,17 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    fun getItemAt(position: Int): Message? {
+    fun getItemAt(position: Int): BaseItem? {
         if (position > items.size || position < 0) {
             return null
         }
 
-        return (items[position] as MessageItem).message
+        return (items[position])
     }
 
 }
 
-class MessageViewHolder(itemView: View?, var onMessageItemClickListener: OnMessageItemClickListener) :
+class MessageViewHolder(itemView: View?, private var onMessageItemClickListener: OnMessageItemClickListener) :
         RecyclerView.ViewHolder(itemView) {
 
     fun bind(message: Message) {
@@ -99,7 +99,7 @@ class MessageViewHolder(itemView: View?, var onMessageItemClickListener: OnMessa
         itemView.itemTimeTextView.text = DateHelper.getMessageDateTime(message.time)
 
         itemView.setOnClickListener {
-            onMessageItemClickListener.onMessageItemClick(layoutPosition)
+            onMessageItemClickListener.onMessageItemClick(adapterPosition)
         }
 
     }

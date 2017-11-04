@@ -183,7 +183,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     private fun getEvents(messageItems: MutableList<MessageItem>?) {
-        if (!rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST)){
+        if (!rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST)) {
             messageSwipeRefresh.isRefreshing = false
             messageAdapter.updateMessages(messageItems)
             return
@@ -252,14 +252,19 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     override fun onMessageItemClick(position: Int) {
-        val message: Message? = messageAdapter.getItemAt(position)
-        message?.let {
-            val intent = Intent(android.content.Intent.ACTION_VIEW,
-                    Uri.parse("http://maps.google.com/maps?q="
-                            + message.coords?.lat + ","
-                            + message.coords?.lon))
-            startActivity(intent)
+        val item: BaseItem? = messageAdapter.getItemAt(position)
+        if (item is MessageItem) {
+            item.message.let {
+                val intent = Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?q="
+                                + it.coords?.lat + ","
+                                + it.coords?.lon))
+                startActivity(intent)
+            }
+        } else if (item is EventItem) {
+            AlertDialogFragment.newInstance(item.event).show(supportFragmentManager, null)
         }
+
     }
 
     private fun checkGoogleApiAvailability() {
@@ -342,6 +347,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         }
 
         dialog.show()
+    }
+
+    private fun showAlertPopup() {
+
     }
 
     @SuppressLint("MissingPermission")

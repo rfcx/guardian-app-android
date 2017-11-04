@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.rfcx.org.ranger.BuildConfig
 import android.rfcx.org.ranger.R
-import android.rfcx.org.ranger.entity.Event
+import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.repo.TokenExpireException
