@@ -33,10 +33,7 @@ import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.service.PullingAlertMessageReceiver
 import android.rfcx.org.ranger.service.SaveLocationService
 import android.rfcx.org.ranger.service.SendLocationReceiver
-import android.rfcx.org.ranger.util.DateHelper
-import android.rfcx.org.ranger.util.PrefKey
-import android.rfcx.org.ranger.util.PreferenceHelper
-import android.rfcx.org.ranger.util.RemoteConfigKey
+import android.rfcx.org.ranger.util.*
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
@@ -60,7 +57,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void> ,AlertDialogFragment.OnAlertConfirmCallback {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void>, AlertDialogFragment.OnAlertConfirmCallback {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
@@ -261,6 +258,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                                 + it.coords?.lat + ","
                                 + it.coords?.lon))
                 startActivity(intent)
+
+                Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOenedMessage(it))
+
+                RealmHelper.getInstance().updateOpenedMessage(it)
             }
         } else if (item is EventItem) {
             showAlertPopup(item.event)
@@ -269,7 +270,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     override fun onCurrentAlert(event: Event) {
-       // todo
+        RealmHelper.getInstance().updateConfirmedEvent(event)
     }
 
     override fun onIncorrectAlert(event: Event) {
@@ -359,6 +360,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     private fun showAlertPopup(event: Event) {
+        Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOenedEvent(event))
+        RealmHelper.getInstance().updateOpenedEvent(event)
         AlertDialogFragment.newInstance(event).show(supportFragmentManager, null)
     }
 

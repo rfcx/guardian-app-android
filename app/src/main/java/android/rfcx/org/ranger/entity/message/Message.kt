@@ -19,4 +19,7 @@ open class Message : RealmObject() {
     var coords: Coords? = null
     var isOpened: Boolean = false
 
+    companion object {
+       val  messageGUID = "guid"
+    }
 }

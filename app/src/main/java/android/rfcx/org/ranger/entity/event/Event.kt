@@ -8,8 +8,7 @@ import io.realm.annotations.PrimaryKey
 
 open class Event() : RealmObject(), Parcelable {
     @PrimaryKey
-    @SerializedName("event_guid")
-    var eventGUID: String = ""
+    var event_guid: String = ""
 
     @SerializedName("audio_guid")
     var audioGUID: String = ""
@@ -41,7 +40,7 @@ open class Event() : RealmObject(), Parcelable {
     var audio: Audio? = null
 
     constructor(parcel: Parcel) : this() {
-        eventGUID = parcel.readString()
+        event_guid = parcel.readString()
         audioGUID = parcel.readString()
         latitude = parcel.readFloat()
         longitude = parcel.readFloat()
@@ -58,7 +57,7 @@ open class Event() : RealmObject(), Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(eventGUID)
+        parcel.writeString(event_guid)
         parcel.writeString(audioGUID)
         parcel.writeFloat(latitude)
         parcel.writeFloat(longitude)
@@ -86,6 +85,9 @@ open class Event() : RealmObject(), Parcelable {
         override fun newArray(size: Int): Array<Event?> {
             return arrayOfNulls(size)
         }
+
+        val eventGUID = "event_guid"
     }
+
 
 }
