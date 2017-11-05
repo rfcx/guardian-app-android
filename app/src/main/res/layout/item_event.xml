@@ -3,7 +3,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="@dimen/margin_padding_small">
+	android:padding="@dimen/margin_padding_normal">
 
 	<FrameLayout
 		android:id="@+id/iconLayout"
