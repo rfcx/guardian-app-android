@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_padding_normal">
 
-    <TextView
-        android:id="@+id/itemMessageFromTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="From Who" />
+    <ImageView
+        android:id="@+id/itemMessageIconImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/margin_padding_small"
+        android:src="@drawable/ic_text_message" />
 
-    <TextView
-        android:id="@+id/itemTimeTextView"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/itemMessageContentLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_x_small"
-        app:layout_constraintBaseline_toBaselineOf="@+id/itemMessageFromTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Time" />
+        android:layout_toEndOf="@+id/itemMessageIconImageView">
 
-    <TextView
-        android:id="@+id/itemMessageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        app:layout_constraintStart_toStartOf="@+id/itemMessageFromTextView"
-        app:layout_constraintTop_toBottomOf="@+id/itemMessageFromTextView"
-        tools:text="Message replace on this" />
+        <TextView
+            android:id="@+id/itemMessageFromTextView"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:layout_toStartOf="@+id/itemTimeTextView"
+            android:textStyle="bold"
+            tools:text="From Who" />
 
-    <TextView
-        android:id="@+id/itemMessageLocationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:drawableStart="@drawable/ic_location_24dp"
-        app:layout_constraintStart_toStartOf="@+id/itemMessageTextView"
-        app:layout_constraintTop_toBottomOf="@+id/itemMessageTextView"
-        tools:text="12.1,100.2" />
+        <TextView
+            android:id="@+id/itemTimeTextView"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/itemMessageFromTextView"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_x_small"
+            tools:text="Time" />
+
+        <TextView
+            android:id="@+id/itemMessageTextView"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemMessageFromTextView"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            tools:text="Message replace on this" />
+
+        <TextView
+            android:id="@+id/itemMessageLocationTextView"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemMessageTextView"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:drawableStart="@drawable/ic_location_24dp"
+            android:gravity="center_vertical"
+            tools:text="12.1,100.2" />
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/itemMessageContentLayout"
         android:layout_marginTop="@dimen/margin_padding_normal"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@+id/itemMessageLocationTextView" />
-
-</android.support.constraint.ConstraintLayout>
+        android:background="@color/divider" />
+</RelativeLayout>

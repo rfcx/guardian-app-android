@@ -270,9 +270,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                 RealmHelper.getInstance().updateOpenedMessage(it)
             }
         } else if (item is EventItem) {
+            RealmHelper.getInstance().updateOpenedEvent(item.event)
             showAlertPopup(item.event)
         }
 
+        messageAdapter.notifyDataSetChanged()
     }
 
     override fun onCurrentAlert(event: Event) {

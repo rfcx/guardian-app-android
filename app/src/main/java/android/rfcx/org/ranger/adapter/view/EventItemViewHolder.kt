@@ -1,8 +1,12 @@
 package android.rfcx.org.ranger.adapter.view
 
+import android.graphics.Typeface
+import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
 import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.util.DateHelper
+import android.rfcx.org.ranger.util.RealmHelper
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.item_event.view.*
@@ -14,6 +18,12 @@ import kotlinx.android.synthetic.main.item_event.view.*
 
 class EventItemViewHolder(itemView: View?, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(event: Event) {
+        
+        val isOpened = RealmHelper.getInstance().isOpenedEvent(event)
+
+        itemView.ivEventIcon.setColorFilter(ContextCompat.getColor(itemView.context,
+                if (isOpened) R.color.divider else R.color.orange))
+        itemView.tvEventSite.typeface = if (isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
         itemView.tvEventValue.text = event.value
         itemView.tvEventSite.text = event.site
         itemView.tvEventDate.text = DateHelper.getEventDate(event.beginsAt)
@@ -25,7 +35,7 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
                 .append(", ")
                 .append(event.longitude.toString()).toString()
 
-        itemView.tvEventLocation.text = latLng
+//        itemView.tvEventLocation.text = latLng
 
         itemView.setOnClickListener {
             onMessageItemClickListener.onMessageItemClick(adapterPosition)

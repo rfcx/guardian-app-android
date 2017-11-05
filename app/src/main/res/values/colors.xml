@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#2FB04A</color>
-	<color name="colorPrimaryDark">#ff2c9a46</color>
-	<color name="colorAccent">#ff2c9a46</color>
+    <color name="colorPrimary">#2FB04A</color>
+    <color name="colorPrimaryDark">#ff2c9a46</color>
+    <color name="colorAccent">#ff2c9a46</color>
 
-	<!-- Text color -->
+    <!-- Text color -->
 	<color name="text_primary">#212121</color>
 	<color name="text_secondary">#757575</color>
 	<color name="text_error">#FFE41A1A</color>
 	<color name="text_white">#FFFFFF</color>
 
-	<color name="divider">#757575</color>
+    <color name="divider">#757575</color>
     <color name="yellow">#ffdd00</color>
+    <color name="orange">#f57003</color>
 </resources>
