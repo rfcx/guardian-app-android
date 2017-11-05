@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@drawable/login_bg"
+	android:background="@color/colorPrimary"
+	android:gravity="center"
+	android:orientation="vertical"
 	tools:context="android.rfcx.org.ranger.view.LoginActivity">
+
+	<ImageView
+		android:id="@+id/logoImg"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:contentDescription="@string/app_name"
+		android:src="@drawable/app_logo_step4" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:fontFamily="@font/rg2014b"
+		android:gravity="center"
+		android:text="@string/app_name"
+		android:textAllCaps="true"
+		android:textColor="@color/text_white"
+		android:textSize="40sp" />
 
 	<EditText
 		android:id="@+id/loginEmailEditText"
 		style="@style/RangerEdit"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginTop="@dimen/margin_padding_large"
 		android:hint="@string/email"
 		android:inputType="textEmailAddress"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toTopOf="@+id/loginPasswordEditText"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.5"
-		app:layout_constraintVertical_chainStyle="packed"/>
+		android:visibility="invisible" />
 
 	<EditText
-		android:visibility="invisible"
 		android:id="@+id/loginPasswordEditText"
 		style="@style/RangerEdit"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginStart="@dimen/margin_padding_large"
 		android:layout_marginTop="@dimen/margin_padding_large"
 		android:hint="@string/password"
 		android:inputType="textPassword"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginEmailEditText"/>
+		android:visibility="invisible" />
 
 	<Button
-		android:visibility="invisible"
 		android:id="@+id/loginButton"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginStart="@dimen/margin_padding_large"
@@ -54,19 +63,14 @@
 		android:text="@string/login"
 		android:textColor="@android:color/white"
 		android:textStyle="bold"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginPasswordEditText"/>
+		android:visibility="invisible" />
 
 	<ProgressBar
 		android:id="@+id/loginProgress"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_large"
-		android:visibility="invisible"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginButton"/>
+		android:visibility="invisible" />
 
 	<TextView
 		android:id="@+id/loginErrorTextView"
@@ -78,9 +82,7 @@
 		android:gravity="center"
 		android:textColor="@color/text_error"
 		android:visibility="invisible"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginButton"
-		tools:text="Error Login"/>
+		tools:text="Error Login" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
+

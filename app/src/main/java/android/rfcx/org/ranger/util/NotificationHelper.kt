@@ -77,7 +77,7 @@ class NotificationHelper {
         val openLoginPagePendingIntent = PendingIntent.getActivity(context, 0,
                 openAppIntent, PendingIntent.FLAG_ONE_SHOT)
         val builder = NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(context.getString(R.string.re_login))
                 .setChannelId(notificationDefaultChanelId)

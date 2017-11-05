@@ -148,7 +148,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     private fun initToolbar() {
         setSupportActionBar(messageToolbar)
-        supportActionBar?.title = getString(R.string.app_name)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun initAdapter() {
