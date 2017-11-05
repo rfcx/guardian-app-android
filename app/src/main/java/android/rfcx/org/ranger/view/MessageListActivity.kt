@@ -20,6 +20,7 @@ import android.rfcx.org.ranger.adapter.entity.EventItem
 import android.rfcx.org.ranger.adapter.entity.MessageItem
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.ReportType
+import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.entity.report.Attributes
 import android.rfcx.org.ranger.entity.report.Data
@@ -262,7 +263,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                 startActivity(intent)
             }
         } else if (item is EventItem) {
-            AlertDialogFragment.newInstance(item.event).show(supportFragmentManager, null)
+            showAlertPopup(item.event)
         }
 
     }
@@ -288,7 +289,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MessageListActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
 
-        if (!shouldProvideRationale) {
+        if (shouldProvideRationale) {
             val dialogBuilder: AlertDialog.Builder =
                     AlertDialog.Builder(this@MessageListActivity).apply {
                         setTitle(null)
@@ -349,8 +350,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         dialog.show()
     }
 
-    private fun showAlertPopup() {
-
+    private fun showAlertPopup(event: Event) {
+        AlertDialogFragment.newInstance(event).show(supportFragmentManager, null)
     }
 
     @SuppressLint("MissingPermission")

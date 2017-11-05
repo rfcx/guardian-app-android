@@ -17,5 +17,6 @@ open class Message : RealmObject() {
     var from: From? = null
     var to: To? = null
     var coords: Coords? = null
+    var isOpened: Boolean = false
 
 }

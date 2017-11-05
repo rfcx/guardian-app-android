@@ -4,9 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 open class Event() : RealmObject(), Parcelable {
-
+    @PrimaryKey
     @SerializedName("event_guid")
     var eventGUID: String = ""
 
@@ -35,7 +36,9 @@ open class Event() : RealmObject(), Parcelable {
     var site: String = ""
     var timezone: String = ""
 
-    var audio :Audio? =null
+    var isOpened: Boolean = false
+    var isConfirmed: Boolean = false
+    var audio: Audio? = null
 
     constructor(parcel: Parcel) : this() {
         eventGUID = parcel.readString()
