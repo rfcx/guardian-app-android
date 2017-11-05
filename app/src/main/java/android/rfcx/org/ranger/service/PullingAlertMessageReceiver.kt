@@ -106,9 +106,9 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                 realm.beginTransaction()
                 val oldEvent: RealmResults<Event> = realm.where(Event::class.java).findAll()
                 val oldEventId: ArrayList<String> = ArrayList()
-                oldEvent.mapTo(oldEventId) { it.eventGUID }
+                oldEvent.mapTo(oldEventId) { it.event_guid }
 
-                val result: List<Event> = events.filter { it -> it.eventGUID !in oldEventId }
+                val result: List<Event> = events.filter { it -> it.event_guid !in oldEventId }
                 for (alert in result) {
                     NotificationHelper.getInstance().showAlertNotification(context, alert)
                 }
