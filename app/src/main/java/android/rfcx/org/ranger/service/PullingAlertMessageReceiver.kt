@@ -47,10 +47,10 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
         }
 
         // check config on firebase , pulling event
-        if(rangerRemote.getBoolean(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
+        if (rangerRemote.getBoolean(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
             pullingMessage(context)
 
-        if(rangerRemote.getBoolean(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
+        if (rangerRemote.getBoolean(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
             pullingEvent(context)
 
 
@@ -80,8 +80,7 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                     }
                 }
 
-                oldMessages.deleteAllFromRealm()
-                realm.insert(messages)
+                realm.insertOrUpdate(messages)
                 realm.commitTransaction()
                 realm.close()
             }
@@ -114,8 +113,7 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                     NotificationHelper.getInstance().showAlertNotification(context, alert)
                 }
 
-                oldEvent.deleteAllFromRealm()
-                realm.insert(events)
+                realm.insertOrUpdate(events)
                 realm.commitTransaction()
                 realm.close()
             }
