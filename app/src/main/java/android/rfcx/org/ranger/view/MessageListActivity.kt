@@ -190,6 +190,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
             override fun onSuccess(event: EventResponse) {
                 messageSwipeRefresh.isRefreshing = false
+                event.events?.let{
+                    RealmHelper.getInstance().saveEvent(it)
+                }
+               
                 val eventItems: ArrayList<EventItem>? = event.events?.mapTo(ArrayList()) {
                     EventItem(it, BaseItem.ITEM_EVENT_TYPE, DateHelper.getDateTime(it.beginsAt))
                 }
@@ -218,6 +222,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
         MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
             override fun onSuccess(messages: List<Message>) {
+
+                RealmHelper.getInstance().saveMessage(messages)
                 val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
                     MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
                 }
@@ -259,7 +265,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                                 + it.coords?.lon))
                 startActivity(intent)
 
-                Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOenedMessage(it))
+                Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedMessage(it))
 
                 RealmHelper.getInstance().updateOpenedMessage(it)
             }
@@ -360,7 +366,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     private fun showAlertPopup(event: Event) {
-        Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOenedEvent(event))
+        Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
         RealmHelper.getInstance().updateOpenedEvent(event)
         AlertDialogFragment.newInstance(event).show(supportFragmentManager, null)
     }

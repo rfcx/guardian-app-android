@@ -3,6 +3,7 @@ package android.rfcx.org.ranger.util
 import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.message.Message
 import io.realm.Realm
+import io.realm.RealmList
 
 /**
  * Created by Jingjoeh on 11/5/2017 AD.
@@ -44,7 +45,7 @@ class RealmHelper {
         realm.close()
     }
 
-    fun isOenedMessage(message: Message): Boolean {
+    fun isOpenedMessage(message: Message): Boolean {
         val realm = Realm.getDefaultInstance()
         val realmMessage: Message? = realm.where(Message::class.java)
                 .equalTo(Message.messageGUID, message.guid).findFirst()
@@ -55,7 +56,7 @@ class RealmHelper {
         return false
     }
 
-    fun isOenedEvent(event: Event): Boolean {
+    fun isOpenedEvent(event: Event): Boolean {
         val realm = Realm.getDefaultInstance()
         val realmEvent: Event? = realm.where(Event::class.java)
                 .equalTo(Event.eventGUID, event.event_guid).findFirst()
@@ -73,5 +74,29 @@ class RealmHelper {
             return realmEvent.isConfirmed
         }
         return false
+    }
+
+    fun saveMessage(messages: List<Message>) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.insertOrUpdate(messages)
+        realm.commitTransaction()
+        realm.close()
+    }
+
+    fun saveEvent(event: List<Event>) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.insertOrUpdate(event)
+        realm.commitTransaction()
+        realm.close()
+    }
+
+    fun saveEvent(event: RealmList<Event>) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.insertOrUpdate(event)
+        realm.commitTransaction()
+        realm.close()
     }
 }
