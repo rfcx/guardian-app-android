@@ -1,5 +1,6 @@
 package android.rfcx.org.ranger.view
 
+import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -18,6 +19,14 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
 
     private var event: Event? = null
     private var mediaPlayer: MediaPlayer? = null
+    private var onAlertConfirmCallback: OnAlertConfirmCallback? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnAlertConfirmCallback) {
+            onAlertConfirmCallback = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +46,11 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
             rePlay()
         }
 
-        alertNoButton.setOnClickListener{
+        alertNoButton.setOnClickListener {
             dismissAllowingStateLoss()
         }
 
-        alertYesButton.setOnClickListener{
+        alertYesButton.setOnClickListener {
             report()
         }
     }
@@ -57,6 +66,12 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        if (onAlertConfirmCallback != null)
+            onAlertConfirmCallback = null
     }
 
     private fun getBundle() {
@@ -99,7 +114,7 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         }
     }
 
-    private fun report(){
+    private fun report() {
         // todo report to API
     }
 
@@ -130,5 +145,8 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         }
     }
 
-
+    interface OnAlertConfirmCallback {
+        fun onCurrentAlert(event: Event)
+        fun onIncorrectAlert(event: Event)
+    }
 }

@@ -60,7 +60,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void> {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void> ,AlertDialogFragment.OnAlertConfirmCallback {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
@@ -266,6 +266,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             showAlertPopup(item.event)
         }
 
+    }
+
+    override fun onCurrentAlert(event: Event) {
+       // todo
+    }
+
+    override fun onIncorrectAlert(event: Event) {
+        // todo
     }
 
     private fun checkGoogleApiAvailability() {
