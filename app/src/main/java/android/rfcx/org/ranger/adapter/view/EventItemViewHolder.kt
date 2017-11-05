@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.item_event.view.*
 
 class EventItemViewHolder(itemView: View?, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(event: Event) {
-        
-        val isOpened = RealmHelper.getInstance().isOpenedEvent(event)
 
+        val isOpened = RealmHelper.getInstance().isOpenedEvent(event)
+        val isConfirm = RealmHelper.getInstance().isConfirmedEvent(event)
         itemView.ivEventIcon.setColorFilter(ContextCompat.getColor(itemView.context,
                 if (isOpened) R.color.divider else R.color.orange))
         itemView.tvEventSite.typeface = if (isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
@@ -29,6 +29,8 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
         itemView.tvEventDate.text = DateHelper.getEventDate(event.beginsAt)
         itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getEventTime(event.beginsAt),
                 DateHelper.getEventTime(event.endAt))
+
+       itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
 
         // create text latLng
         val latLng: String = StringBuilder(event.latitude.toString())
