@@ -6,4 +6,9 @@
 		android:title="@string/menu_logout">
 	</item>
 
+	<item
+		android:id="@+id/menu_ranger_group"
+		android:title="@string/menu_ranger_group">
+	</item>
+
 </menu>

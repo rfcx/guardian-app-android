@@ -19,6 +19,7 @@
 	<string name="user_location">Ranger use your location service.</string>
 
 	<string name="menu_logout">Logout</string>
+	<string name="menu_ranger_group">What\'s your group?</string>
 
 	<string name="report_chainsaw_button">Chainsaws</string>
 	<string name="report_gunshot_button">Gunshots</string>

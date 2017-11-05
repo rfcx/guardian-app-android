@@ -48,6 +48,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -57,7 +58,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void>, AlertDialogFragment.OnAlertConfirmCallback {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void>, AlertDialogFragment.OnAlertConfirmCallback, OnFailureListener {
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
@@ -127,6 +128,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             R.id.menu_logout -> {
                 logout()
             }
+
+            R.id.menu_ranger_group -> {
+                Snackbar.make(messageParentView,
+                        rangerRemote.getString(RemoteConfigKey.REMOTE_USER_GROUP),
+                        Snackbar.LENGTH_LONG).show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -136,13 +143,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         if (task.isSuccessful) {
             Log.d(this@MessageListActivity.localClassName, "Fetch remote successful!")
             rangerRemote.activateFetched() // active config
-
+            Log.d("Ranger remote", RemoteConfigKey.REMOTE_USER_GROUP + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_USER_GROUP))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_SHOW_EVENT_LIST + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
         }
         getMessageList()
+    }
+
+    override fun onFailure(e: java.lang.Exception) {
+      e.printStackTrace()
     }
     // end region
 
@@ -178,6 +189,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             cacheExpiration = 0
         }
         rangerRemote.fetch(cacheExpiration).addOnCompleteListener(this)
+                .addOnFailureListener(this@MessageListActivity)
     }
 
     private fun getEvents(messageItems: MutableList<MessageItem>?) {

@@ -5,6 +5,7 @@ package android.rfcx.org.ranger.util
  */
  class RemoteConfigKey {
     companion object {
+        public val REMOTE_USER_GROUP = "user_group"
         public val REMOTE_NOTI_FREQUENCY_DURATION = "notification_polling_frequency_duration"
         public val REMOTE_ENABLE_NOTI_MESSAGE = "enable_notification_message"
         public val REMOTE_SHOW_EVENT_LIST = "show_event_list"
