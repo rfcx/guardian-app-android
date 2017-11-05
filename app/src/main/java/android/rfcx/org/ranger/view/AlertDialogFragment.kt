@@ -47,11 +47,11 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         }
 
         alertNoButton.setOnClickListener {
-            dismissAllowingStateLoss()
+            report(false)
         }
 
         alertYesButton.setOnClickListener {
-            report()
+            report(true)
         }
     }
 
@@ -114,7 +114,14 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         }
     }
 
-    private fun report() {
+    private fun report(isCurrentAlert: Boolean) {
+        if(isCurrentAlert){
+            onAlertConfirmCallback?.onCurrentAlert(event!!)
+        }else{
+            onAlertConfirmCallback?.onIncorrectAlert(event!!)
+        }
+
+        dismissAllowingStateLoss()
         // todo report to API
     }
 

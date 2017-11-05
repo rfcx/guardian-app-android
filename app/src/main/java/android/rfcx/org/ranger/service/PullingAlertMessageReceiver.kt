@@ -12,6 +12,7 @@ import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.util.NotificationHelper
+import android.rfcx.org.ranger.util.RealmHelper
 import android.rfcx.org.ranger.util.RemoteConfigKey
 import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -69,7 +70,6 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
             override fun onSuccess(messages: List<Message>) {
                 Log.d(TAG, messages.size.toString())
                 val realm = Realm.getDefaultInstance()
-                realm.beginTransaction()
                 val oldMessages: RealmResults<Message> = realm.where(Message::class.java).findAll()
                 val oldMessageId: ArrayList<String> = ArrayList()
                 oldMessages.mapTo(oldMessageId) { it.guid }
@@ -79,10 +79,7 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                         NotificationHelper.getInstance().showMessageNotification(context, message)
                     }
                 }
-
-                realm.insertOrUpdate(messages)
-                realm.commitTransaction()
-                realm.close()
+                RealmHelper.getInstance().saveMessage(messages)
             }
 
         })
@@ -103,7 +100,6 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                 if (events == null || events.isEmpty())
                     return
                 val realm = Realm.getDefaultInstance()
-                realm.beginTransaction()
                 val oldEvent: RealmResults<Event> = realm.where(Event::class.java).findAll()
                 val oldEventId: ArrayList<String> = ArrayList()
                 oldEvent.mapTo(oldEventId) { it.event_guid }
@@ -112,10 +108,7 @@ class PullingAlertMessageReceiver : BroadcastReceiver() {
                 for (alert in result) {
                     NotificationHelper.getInstance().showAlertNotification(context, alert)
                 }
-
-                realm.insertOrUpdate(events)
-                realm.commitTransaction()
-                realm.close()
+                RealmHelper.getInstance().saveEvent(events)
             }
 
         })

@@ -79,7 +79,10 @@ class RealmHelper {
     fun saveMessage(messages: List<Message>) {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        realm.insertOrUpdate(messages)
+        for (message in messages) {
+            message.isOpened = isOpenedMessage(message)
+            realm.insertOrUpdate(message)
+        }
         realm.commitTransaction()
         realm.close()
     }
@@ -92,10 +95,14 @@ class RealmHelper {
         realm.close()
     }
 
-    fun saveEvent(event: RealmList<Event>) {
+    fun saveEvent(events: RealmList<Event>) {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        realm.insertOrUpdate(event)
+        for (event in events) {
+            event.isOpened = isOpenedEvent(event)
+            event.isConfirmed = isConfirmedEvent(event)
+            realm.insertOrUpdate(event)
+        }
         realm.commitTransaction()
         realm.close()
     }

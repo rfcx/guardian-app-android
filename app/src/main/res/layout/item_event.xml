@@ -1,70 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/margin_padding_small">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="@dimen/margin_padding_small">
 
-    <ImageView
-        android:id="@+id/ivEventIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="@dimen/margin_padding_small"
-        android:src="@drawable/ic_target" />
+	<FrameLayout
+		android:id="@+id/iconLayout"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_marginEnd="@dimen/margin_padding_small">
 
-    <RelativeLayout
-        android:id="@+id/layoutEventContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/ivEventIcon">
+		<ImageView
+			android:id="@+id/ivEventIcon"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:contentDescription="@string/app_name"
+			android:src="@drawable/ic_target" />
 
-        <TextView
-            android:id="@+id/tvEventSite"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_small"
-            android:textStyle="bold"
-            tools:text="Site" />
-
-        <TextView
-            android:id="@+id/tvEventDate"
-            style="@style/TextAppearance.AppCompat.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tvEventSite"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/text_secondary"
-            tools:text="Date" />
+		<ImageView
+			android:id="@+id/ivEventConfirm"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_gravity="center"
+			android:contentDescription="@string/app_name"
+			android:src="@drawable/ic_check_24dp" />
+	</FrameLayout>
 
 
-        <TextView
-            android:id="@+id/tvEventValue"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvEventSite"
-            android:layout_marginStart="@dimen/margin_padding_small"
-            tools:text="value" />
+	<RelativeLayout
+		android:id="@+id/layoutEventContent"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toEndOf="@+id/iconLayout">
 
-        <TextView
-            android:id="@+id/tvEventTime"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvEventValue"
-            android:layout_marginTop="@dimen/margin_padding_small"
-            android:drawableStart="@drawable/ic_access_time"
-            android:drawablePadding="@dimen/margin_padding_small"
-            android:gravity="center_vertical"
-            tools:text="15:00 - 15:02" />
-    </RelativeLayout>
+		<TextView
+			android:id="@+id/tvEventSite"
+			style="@style/TextAppearance.AppCompat.Subhead"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:textStyle="bold"
+			tools:text="Site" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/layoutEventContent"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:background="@color/colorPrimaryDark" />
+		<TextView
+			android:id="@+id/tvEventDate"
+			style="@style/TextAppearance.AppCompat.Small"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBaseline="@+id/tvEventSite"
+			android:layout_alignParentEnd="true"
+			android:textColor="@color/text_secondary"
+			tools:text="Date" />
+
+
+		<TextView
+			android:id="@+id/tvEventValue"
+			style="@style/TextAppearance.AppCompat.Body1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/tvEventSite"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			tools:text="value" />
+
+		<TextView
+			android:id="@+id/tvEventTime"
+			style="@style/TextAppearance.AppCompat.Body1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/tvEventValue"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:drawablePadding="@dimen/margin_padding_small"
+			android:drawableStart="@drawable/ic_access_time"
+			android:gravity="center_vertical"
+			tools:text="15:00 - 15:02" />
+	</RelativeLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_below="@+id/layoutEventContent"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:background="@color/colorPrimaryDark" />
 
 </RelativeLayout>

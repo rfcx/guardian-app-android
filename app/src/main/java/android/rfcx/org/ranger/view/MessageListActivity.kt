@@ -279,6 +279,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     override fun onCurrentAlert(event: Event) {
         RealmHelper.getInstance().updateConfirmedEvent(event)
+        messageAdapter.notifyDataSetChanged()
     }
 
     override fun onIncorrectAlert(event: Event) {
