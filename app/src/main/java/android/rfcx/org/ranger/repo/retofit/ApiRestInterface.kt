@@ -3,6 +3,7 @@ package android.rfcx.org.ranger.repo.retofit
 import android.rfcx.org.ranger.entity.CheckInResult
 import android.rfcx.org.ranger.entity.EventResponse
 import android.rfcx.org.ranger.entity.LoginResponse
+import android.rfcx.org.ranger.entity.ReviewEventResponse
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.entity.report.Report
 import android.rfcx.org.ranger.entity.report.SendReportResponse
@@ -42,5 +43,12 @@ interface ApiRestInterface {
     @POST("reports")
     fun sendReport(@Header("x-auth-user") authUser: String,
                    @Header("x-auth-token") authToken: String,
-                   @Body report : Report) :Call<SendReportResponse>
+                   @Body report: Report): Call<SendReportResponse>
+
+    @POST("events/{event_guid}/{review_confirmed}")
+    fun reviewEvent(@Header("x-auth-user") authUser: String,
+                    @Header("x-auth-token") authToken: String,
+                    @Path("event_guid") eventGuID: String,
+                    @Path("review_confirmed") reviewConfirm: String)
+            : Call<ReviewEventResponse>
 }

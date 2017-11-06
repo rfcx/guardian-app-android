@@ -29,6 +29,7 @@ import android.rfcx.org.ranger.entity.report.ReportData
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
+import android.rfcx.org.ranger.repo.api.ReviewEventApi
 import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.service.PullingAlertMessageReceiver
 import android.rfcx.org.ranger.service.SaveLocationService
@@ -153,7 +154,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     }
 
     override fun onFailure(e: java.lang.Exception) {
-      e.printStackTrace()
+        e.printStackTrace()
     }
     // end region
 
@@ -202,10 +203,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
             override fun onSuccess(event: EventResponse) {
                 messageSwipeRefresh.isRefreshing = false
-                event.events?.let{
+                event.events?.let {
                     RealmHelper.getInstance().saveEvent(it)
                 }
-               
+
                 val eventItems: ArrayList<EventItem>? = event.events?.mapTo(ArrayList()) {
                     EventItem(it, BaseItem.ITEM_EVENT_TYPE, DateHelper.getDateTime(it.beginsAt))
                 }
@@ -292,10 +293,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
     override fun onCurrentAlert(event: Event) {
         RealmHelper.getInstance().updateConfirmedEvent(event)
         messageAdapter.notifyDataSetChanged()
+        reportEvent(event, true)
     }
 
     override fun onIncorrectAlert(event: Event) {
-        // todo
+        reportEvent(event, false)
     }
 
     private fun checkGoogleApiAvailability() {
@@ -415,6 +417,24 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
                 })
             }
         }
+    }
+
+    private fun reportEvent(event: Event, isConfirmEvent: Boolean) {
+        ReviewEventApi().reViewEvent(this@MessageListActivity, event,
+                isConfirmEvent, object : ReviewEventApi.ReviewEventCallback {
+            override fun onSuccess() {
+                Log.d("reportEvent", "onSuccess $isConfirmEvent")
+                if (!isConfirmEvent) {
+                    //refresh list if user report reject
+                    getMessageList()
+                }
+            }
+
+            override fun onFailed(t: Throwable?, message: String?) {
+                Log.d("reportEvent", "onFailed $message")
+            }
+
+        })
     }
 
     // start Alarm manger for repeat to call PullingAlertMessageReceiver every 60 sec.
