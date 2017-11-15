@@ -30,21 +30,21 @@ class NotificationHelper {
     }
 
     fun showMessageNotification(context: Context, message: Message) {
-
+/*
         val intent = Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse("http://maps.google.com/maps?q="
                         + message.coords?.lat + ","
                         + message.coords?.lon))
         val openMessagePending = PendingIntent.getActivity(context, 0,
-                intent, PendingIntent.FLAG_ONE_SHOT)
+                intent, PendingIntent.FLAG_ONE_SHOT)*/
 
         val builder = NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_message)
+                .setSmallIcon(R.drawable.ic_text_message)
                 .setContentTitle(message.from?.firstname)
                 .setContentText(message.text)
                 .setAutoCancel(true)
                 .setChannelId(notificationMessageChanelId)
-                .setContentIntent(openMessagePending)
+//                .setContentIntent(openMessagePending)
 
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.notify(Random().nextInt(10), builder.build())
@@ -60,7 +60,7 @@ class NotificationHelper {
                 intent, PendingIntent.FLAG_ONE_SHOT)*/
 
         val builder = NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_alert)
+                .setSmallIcon(R.drawable.ic_alert_noti)
                 .setContentTitle(event.value)
                 .setContentText(event.site)
                 .setAutoCancel(true)
@@ -69,7 +69,6 @@ class NotificationHelper {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.notify(Random().nextInt(10), builder.build())
     }
-
 
     fun showLoginNotification(context: Context) {
         val openAppIntent = Intent(context, LoginActivity::class.java)
@@ -87,7 +86,4 @@ class NotificationHelper {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.notify(notificationReLoginId, builder.build())
     }
-
-
-
 }

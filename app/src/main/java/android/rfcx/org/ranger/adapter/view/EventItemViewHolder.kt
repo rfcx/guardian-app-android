@@ -21,8 +21,7 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
 
         val isOpened = RealmHelper.getInstance().isOpenedEvent(event)
         val isConfirm = RealmHelper.getInstance().isConfirmedEvent(event)
-        itemView.ivEventIcon.setColorFilter(ContextCompat.getColor(itemView.context,
-                if (isOpened) R.color.divider else R.color.orange))
+
         itemView.tvEventSite.typeface = if (isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
         itemView.tvEventValue.text = event.value
         itemView.tvEventSite.text = event.site
@@ -30,7 +29,8 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
         itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getEventTime(event.beginsAt),
                 DateHelper.getEventTime(event.endAt))
 
-       itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
+        setEventIcon(event.value, isOpened)
+        itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
 
         // create text latLng
         val latLng: String = StringBuilder(event.latitude.toString())
@@ -41,6 +41,33 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
 
         itemView.setOnClickListener {
             onMessageItemClickListener.onMessageItemClick(adapterPosition)
+        }
+    }
+
+
+    private fun setEventIcon(eventValue: String, isOpened: Boolean) {
+        when {
+            Event.chainsaw.equals(eventValue, true) -> {
+                itemView.ivEventIcon.setImageResource(
+                        if (isOpened) R.drawable.chainsaw_grey else R.drawable.chainsaw_orange
+                )
+            }
+            Event.gunshot.equals(eventValue, true) -> {
+                itemView.ivEventIcon.setImageResource(
+                        if (isOpened) R.drawable.gun_grey else R.drawable.gun_orange
+                )
+            }
+            Event.vehicle.equals(eventValue, true) -> {
+                itemView.ivEventIcon.setImageResource(
+                        if (isOpened) R.drawable.vehicle_grey else R.drawable.vehicle_orange
+                )
+            }
+            else -> {
+                itemView.ivEventIcon.setImageResource(
+                        if (isOpened) R.drawable.event_grey else R.drawable.event_orange
+                )
+
+            }
         }
     }
 }

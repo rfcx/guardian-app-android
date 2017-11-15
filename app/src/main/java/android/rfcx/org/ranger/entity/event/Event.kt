@@ -87,6 +87,10 @@ open class Event() : RealmObject(), Parcelable {
         }
 
         val eventGUID = "event_guid"
+        // Event value
+        val chainsaw = "chainsaw"
+        val gunshot = "gunshot"
+        val vehicle ="vehicle"
     }
 
 

@@ -16,7 +16,7 @@
 			android:layout_width="48dp"
 			android:layout_height="48dp"
 			android:contentDescription="@string/app_name"
-			android:src="@drawable/ic_target" />
+			android:src="@drawable/event_orange" />
 
 		<ImageView
 			android:id="@+id/ivEventConfirm"
