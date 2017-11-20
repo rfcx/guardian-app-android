@@ -31,7 +31,11 @@ android {
 
         }
         develop {
-            applicationIdSuffix ".dev"
+            applicationIdSuffix".dev"
+        }
+
+        groupC{
+            applicationIdSuffix".groupc"
         }
     }
 
