@@ -1,7 +1,6 @@
 package android.rfcx.org.ranger.view
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -19,18 +18,12 @@ import android.rfcx.org.ranger.adapter.entity.BaseItem
 import android.rfcx.org.ranger.adapter.entity.EventItem
 import android.rfcx.org.ranger.adapter.entity.MessageItem
 import android.rfcx.org.ranger.entity.EventResponse
-import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.message.Message
-import android.rfcx.org.ranger.entity.report.Attributes
-import android.rfcx.org.ranger.entity.report.Data
-import android.rfcx.org.ranger.entity.report.Report
-import android.rfcx.org.ranger.entity.report.ReportData
 import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.repo.api.EventsApi
 import android.rfcx.org.ranger.repo.api.MessageApi
 import android.rfcx.org.ranger.repo.api.ReviewEventApi
-import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.service.PullingAlertMessageReceiver
 import android.rfcx.org.ranger.service.SaveLocationService
 import android.rfcx.org.ranger.service.SendLocationReceiver
@@ -44,19 +37,14 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
-import kotlinx.android.synthetic.main.dialog_report.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void>, AlertDialogFragment.OnAlertConfirmCallback, OnFailureListener {
@@ -92,8 +80,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             fetchRangerRemoteConfig()
         }
         fab.setOnClickListener {
-            if (checkPermissions()) {
-                showReportDialog()
+            if (this@MessageListActivity.isLocationAllow()) {
+                ReportEventDialogFragment.newInstance().show(supportFragmentManager, ReportEventDialogFragment.tag)
             } else {
                 requestPermissions()
             }
@@ -110,7 +98,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
             }
         })
 
-        if (!checkPermissions()) {
+        if (!this.isLocationAllow()) {
             Log.w("Permission", "grant")
             requestPermissions()
         } else {
@@ -311,12 +299,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         }
     }
 
-    private fun checkPermissions(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(this@MessageListActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-        return permissionState == PackageManager.PERMISSION_GRANTED
-    }
-
     private fun requestPermissions() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MessageListActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -352,71 +334,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
         }
     }
 
-    private fun showReportDialog() {
-
-        val builder = AlertDialog.Builder(this@MessageListActivity)
-        val dialogView = layoutInflater.inflate(R.layout.dialog_report, null)
-        builder.setTitle(R.string.report_title)
-        builder.setView(dialogView)
-        builder.setPositiveButton(R.string.report_title, null)
-        builder.setNegativeButton(R.string.cancel, null)
-
-        val dialog = builder.create()
-        dialog.setOnShowListener {
-            val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-            button.setOnClickListener {
-                if (dialogView.radioReportGroup.checkedRadioButtonId == -1) {
-                    dialogView.reportHaveNoSelected.visibility = View.VISIBLE
-                } else {
-                    dialogView.reportHaveNoSelected.visibility = View.GONE
-                    when {
-                        dialogView.chainsawRadio.isChecked -> sendReport(ReportType.Chainsaw)
-                        dialogView.gunshotRadio.isChecked -> sendReport(ReportType.Gunshot)
-                        dialogView.vehicleRadio.isChecked -> sendReport(ReportType.Vehicle)
-                    }
-                    dialog.dismiss()
-                }
-            }
-        }
-
-        dialog.show()
-    }
-
     private fun showAlertPopup(event: Event) {
         Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
         RealmHelper.getInstance().updateOpenedEvent(event)
         AlertDialogFragment.newInstance(event).show(supportFragmentManager, null)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun sendReport(reportType: ReportType) {
-
-        if (!checkPermissions()) {
-            return
-        }
-        val time = DateHelper.getIsoTime()
-
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation.addOnCompleteListener { task ->
-            if (task.isSuccessful && task.result != null) {
-
-                // create body
-                val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude)
-                val reportData = ReportData(UUID.randomUUID().toString(), reportType.name, reportAttributes)
-                val data = Data(reportData)
-                val report = Report(data)
-
-                SendReportApi().sendReport(this@MessageListActivity, report, object : SendReportApi.SendReportCallback {
-                    override fun onSuccess() {
-                        Snackbar.make(rootView, R.string.report_send_success, Snackbar.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailed(t: Throwable?, message: String?) {
-                        Snackbar.make(rootView, if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!, Snackbar.LENGTH_SHORT).show()
-                    }
-                })
-            }
-        }
     }
 
     private fun reportEvent(event: Event, isConfirmEvent: Boolean) {

@@ -13,6 +13,7 @@
 	<string name="re_login">Please re login.</string>
 
 	<string name="cancel">Cancel</string>
+	<string name="back">Back</string>
 
 	<string name="location_permission_msg">Ranger would like to use your location.</string>
 	<string name="go_to_setting">Setting</string>
@@ -23,10 +24,16 @@
 
 	<string name="report_chainsaw_button">Chainsaws</string>
 	<string name="report_gunshot_button">Gunshots</string>
+	<string name="report_trespasser_button">Trespassers</string>
 	<string name="report_vehicle_button">Vehicles</string>
 	<string name="report_title">Report</string>
 	<string name="report_no_have_select_type">Please select type you want to report.</string>
+	<string name="report_no_have_select_sight">Please select sighting.</string>
 	<string name="report_send_success">Sent report success.</string>
+	<string name="report_select_sighting">Select sighting</string>
+	<string name="report_immediate_button">Immediate area (nearby)</string>
+	<string name="report_not_far_away_button">Not far away (but not visible)</string>
+	<string name="report_very_far_button">Very far (faintly heard)</string>
 
 	<string name="alert_title_format">Is this a %s?</string>
 	<string name="alert_yes_button">Yes</string>
