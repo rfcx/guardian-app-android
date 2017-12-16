@@ -33,12 +33,11 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         getBundle()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_alert_dialog, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_alert_dialog, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initPlayer()
@@ -75,7 +74,7 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
     }
 
     private fun getBundle() {
-        event = arguments.getParcelable(keyEventArgs)
+        event = arguments?.getParcelable(keyEventArgs)
         if (event == null) {
             dismissAllowingStateLoss()
         }
@@ -115,9 +114,9 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
     }
 
     private fun report(isCurrentAlert: Boolean) {
-        if(isCurrentAlert){
+        if (isCurrentAlert) {
             onAlertConfirmCallback?.onCurrentAlert(event!!)
-        }else{
+        } else {
             onAlertConfirmCallback?.onIncorrectAlert(event!!)
         }
 

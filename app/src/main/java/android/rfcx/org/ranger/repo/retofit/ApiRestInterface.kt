@@ -38,6 +38,7 @@ interface ApiRestInterface {
     @GET("events/event")
     fun getEvents(@Header("x-auth-user") authUser: String,
                   @Header("x-auth-token") authToken: String,
+                  @Query("site_id") siteId : String,
                   @Query("limit") limit: Int): Call<EventResponse>
 
     @POST("reports")

@@ -8,8 +8,8 @@ import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.entity.message.Message
 import android.rfcx.org.ranger.view.LoginActivity
+import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import android.support.v7.app.NotificationCompat
 import java.util.*
 
 /**

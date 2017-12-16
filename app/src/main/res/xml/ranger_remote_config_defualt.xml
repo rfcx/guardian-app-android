@@ -32,4 +32,9 @@
         <value>none</value>
     </entry>
 
+    <entry>
+        <key>site_id</key>
+        <value>0</value> <!-- default site id = 0 -->
+    </entry>
+
 </defaultsMap>
