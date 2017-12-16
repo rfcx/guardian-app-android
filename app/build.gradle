@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
     flavorDimensions "mode"
     defaultConfig {
         applicationId "android.rfcx.org.ranger"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,27 +31,33 @@ android {
 
         }
         develop {
-            applicationIdSuffix".dev"
+            applicationIdSuffix ".dev"
         }
 
-        groupC{
-            applicationIdSuffix".groupc"
+        groupC {
+            applicationIdSuffix ".groupc"
         }
+
+        internal {
+            applicationIdSuffix ".internal"
+        }
+
+
     }
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.google.android.gms:play-services-location:11.4.2'
+    implementation 'com.google.android.gms:play-services-location:11.6.2'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.2'
 
     /* firebase */
-    implementation 'com.android.support:support-v4:26.1.0'
-    compile 'com.google.firebase:firebase-config:11.4.2'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.google.firebase:firebase-config:11.6.2'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'
@@ -60,7 +66,7 @@ dependencies {
     /* retrofit */
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
