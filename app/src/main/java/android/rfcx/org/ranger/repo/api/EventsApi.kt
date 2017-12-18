@@ -50,7 +50,7 @@ class EventsApi {
             rangerRemote.activateFetched()
         }
 
-        val siteID = (rangerRemote.getString(RemoteConfigKey.REMOTE_SITE_ID))
+        val siteID = (rangerRemote.getString(RemoteConfigKey.REMOTE_SITE_ID)).trim()
 
         val authUser = "user/" + loginRes.guid
         ApiManager.getInstance().apiRest.getEvents(authUser, loginRes.tokens[0].token, siteID, limit)

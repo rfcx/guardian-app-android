@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
 
-    <entry>
-        <key>enable_notification_message</key>
-        <value>true</value>
-    </entry>
+	<entry>
+		<key>enable_notification_message</key>
+		<value>true</value>
+	</entry>
 
-    <entry>
-        <key>enable_notification_event</key>
-        <value>true</value>
-    </entry>
+	<entry>
+		<key>enable_notification_event</key>
+		<value>true</value>
+	</entry>
 
-    <entry>
-        <key>enable_notification_event_alert</key>
-        <value>true</value>
-    </entry>
+	<entry>
+		<key>enable_notification_event_alert</key>
+		<value>true</value>
+	</entry>
 
-    <entry>
-        <key>notification_polling_frequency_duration</key>
-        <!-- 1 min in sec-->
-        <value>60</value>
-    </entry>
+	<entry>
+		<key>notification_polling_frequency_duration</key>
+		<!-- 1 min in sec-->
+		<value>60</value>
+	</entry>
 
-    <entry>
-        <key>show_event_list</key>
-        <value>true</value>
-    </entry>
+	<entry>
+		<key>show_event_list</key>
+		<value>true</value>
+	</entry>
 
-    <entry>
-        <key>user_group</key>
-        <value>none</value>
-    </entry>
+	<entry>
+		<key>user_group</key>
+		<value>none</value>
+	</entry>
 
-    <entry>
-        <key>site_id</key>
-        <value>0</value> <!-- default site id = 0 -->
-    </entry>
+	<entry>
+		<key>site_id</key>
+		<value /> <!-- default site id is empty -->
+	</entry>
 
 </defaultsMap>

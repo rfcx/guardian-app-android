@@ -10,7 +10,7 @@ class RemoteConfigKey {
         val REMOTE_ENABLE_NOTI_MESSAGE = "enable_notification_message"
         val REMOTE_SHOW_EVENT_LIST = "show_event_list"
         val REMOTE_ENABLE_NOTI_EVENT_ALERT = "enable_notification_event_alert"
-        val REMOTE_SITE_ID = "site_id";
+        val REMOTE_SITE_ID = "site_id"
     }
 
 }
