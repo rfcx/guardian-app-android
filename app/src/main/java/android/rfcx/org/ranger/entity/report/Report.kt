@@ -6,22 +6,27 @@ package android.rfcx.org.ranger.entity.report
 
 
 data class Report(
-		val data: Data
+        val data: Data
 )
 
 data class Data(
-		val data: ReportData
+        val data: ReportData
 )
 
 data class ReportData(
-		val id: String, //ffd5625d-f0cf-43cd-ad28-0851cbe8447a
-		val type: String, //chainsaw
-		val attributes: Attributes
+        val id: String, //ffd5625d-f0cf-43cd-ad28-0851cbe8447a
+        val type: String, //chainsaw
+        val attributes: Attributes
 )
 
 data class Attributes(
-		val start_time: String, //2017-10-05T13:06:21.000Z
-		val end_time: String, //2017-10-05T13:06:21.000Z
-		val lat: Double, //37.774929
-		val lon: Double //-122.419416
+        val start_time: String, //2017-10-05T13:06:21.000Z
+        val end_time: String, //2017-10-05T13:06:21.000Z
+        val lat: Double, //37.774929
+        val lon: Double, //-122.419416
+
+        /* 0 is immediate area (nearby)
+           5 is not far away (but not visible)
+           100 very far (faintly heard) */
+        val distance: Int
 )

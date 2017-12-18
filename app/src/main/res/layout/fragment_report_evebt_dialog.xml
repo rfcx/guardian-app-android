@@ -81,7 +81,7 @@
 			android:text="@string/report_not_far_away_button" />
 
 		<RadioButton
-			android:id="@+id/veryFarRadio1"
+			android:id="@+id/veryFarRadio"
 			style="@style/RadioButtonStyle"
 			android:layout_marginTop="@dimen/margin_padding_normal"
 			android:text="@string/report_very_far_button" />
@@ -108,7 +108,6 @@
 		style="@style/PositiveButton"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:text="@string/report_select_sighting"
 		app:layout_constraintBottom_toBottomOf="@+id/reportNegativeButton"

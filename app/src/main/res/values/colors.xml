@@ -13,4 +13,6 @@
     <color name="divider">#757575</color>
     <color name="yellow">#ffdd00</color>
     <color name="orange">#f57003</color>
+
+	<color name="transparent">@android:color/transparent</color>
 </resources>

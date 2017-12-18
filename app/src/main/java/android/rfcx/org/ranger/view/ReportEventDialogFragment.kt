@@ -1,8 +1,10 @@
 package android.rfcx.org.ranger.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.rfcx.org.ranger.R
+import android.rfcx.org.ranger.entity.ReportSight
 import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.report.Attributes
 import android.rfcx.org.ranger.entity.report.Data
@@ -12,6 +14,7 @@ import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.isLocationAllow
 import android.support.v4.app.DialogFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +26,17 @@ import java.util.*
 /**
  * Created by Jingjoeh on 12/16/2017 AD.
  */
-class ReportEventDialogFragment : DialogFragment() {
+class ReportEventDialogFragment : BaseDialogFragment() {
 
     private var currentView: CurrentView = CurrentView.SELECT_TYPE
+    private var onReportEventCallBack: OnReportEventCallBack? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnReportEventCallBack) {
+            onReportEventCallBack = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +68,8 @@ class ReportEventDialogFragment : DialogFragment() {
                     reportHaveNoSelected.text = getString(R.string.report_no_have_select_sight)
                     reportHaveNoSelected.visibility = View.VISIBLE
                 } else {
-                    // TODO report event
+                    reportHaveNoSelected.visibility = View.INVISIBLE
+                    validateInputToSendReport()
                 }
             }
         }
@@ -88,12 +100,45 @@ class ReportEventDialogFragment : DialogFragment() {
     }
 
 
-    @SuppressLint("MissingPermission")
-    private fun sendReport(reportType: ReportType) {
-
-        if (this.context!!.isLocationAllow()) {
+    private fun validateInputToSendReport() {
+        val reportType: ReportType? =
+                when {
+                    chainsawRadio.isChecked -> ReportType.Chainsaw
+                    gunshotRadio.isChecked -> ReportType.Gunshot
+                    trespasserRadio.isChecked -> ReportType.Trespasser
+                    vehicleRadio.isChecked -> ReportType.Vehicle
+                    else -> null
+                }
+        if (reportType == null) {
+            initView(CurrentView.SELECT_TYPE)
             return
         }
+
+        val reportSight: ReportSight? =
+                when {
+                    immediateRadio.isChecked -> ReportSight.Immediate
+                    notFarAwayRadio.isChecked -> ReportSight.NotFarAway
+                    veryFarRadio.isChecked -> ReportSight.VeryFar
+                    else -> null
+                }
+
+        if (reportSight == null) {
+            initView(CurrentView.SELECT_SIGHT)
+            return
+        }
+
+        sendReport(reportType, reportSight)
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private fun sendReport(reportType: ReportType, reportSight: ReportSight) {
+
+        if (context == null) return
+        if (!context!!.isLocationAllow()) {
+            return
+        }
+        showProgress()
         val time = DateHelper.getIsoTime()
 
         val fusedLocationClient = activity?.let { LocationServices.getFusedLocationProviderClient(it) }
@@ -101,18 +146,28 @@ class ReportEventDialogFragment : DialogFragment() {
             if (task.isSuccessful && task.result != null) {
 
                 // create body
-                val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude)
+                val distance = when (reportSight) {
+                    ReportSight.Immediate -> 0
+                    ReportSight.NotFarAway -> 50
+                    ReportSight.VeryFar -> 100
+                }
+                val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude, distance)
                 val reportData = ReportData(UUID.randomUUID().toString(), reportType.name, reportAttributes)
                 val data = Data(reportData)
                 val report = Report(data)
+
                 context?.let {
                     SendReportApi().sendReport(it, report, object : SendReportApi.SendReportCallback {
                         override fun onSuccess() {
-
+                            hideProgress()
+                            onReportEventCallBack?.onReportSuccess()
+                            dismissAllowingStateLoss()
                         }
 
                         override fun onFailed(t: Throwable?, message: String?) {
-
+                            hideProgress()
+                            reportHaveNoSelected.text = message
+                            reportHaveNoSelected.visibility = View.VISIBLE
                         }
                     })
                 }
@@ -122,6 +177,10 @@ class ReportEventDialogFragment : DialogFragment() {
 
     enum class CurrentView {
         SELECT_TYPE, SELECT_SIGHT
+    }
+
+    interface OnReportEventCallBack {
+        fun onReportSuccess()
     }
 
     companion object {

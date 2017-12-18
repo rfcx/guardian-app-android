@@ -4,5 +4,12 @@ package android.rfcx.org.ranger.entity
  * Created by Jingjoeh on 10/22/2017 AD.
  */
 enum class ReportType {
-    Chainsaw, Gunshot, Vehicle
+    Chainsaw, Gunshot, Vehicle,Trespasser
+}
+
+enum class ReportSight {
+    /* 0 is immediate area (nearby)
+          5 is not far away (but not visible)
+          100 very far (faintly heard) */
+    Immediate, NotFarAway, VeryFar
 }

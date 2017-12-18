@@ -47,7 +47,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnCompleteListener<Void>, AlertDialogFragment.OnAlertConfirmCallback, OnFailureListener {
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
+        OnCompleteListener<Void>,
+        AlertDialogFragment.OnAlertConfirmCallback,
+        OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
+
 
     private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
@@ -286,6 +290,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnC
 
     override fun onIncorrectAlert(event: Event) {
         reportEvent(event, false)
+    }
+
+
+    override fun onReportSuccess() {
+        Snackbar.make(messageParentView, R.string.report_send_success, Snackbar.LENGTH_LONG).show()
     }
 
     private fun checkGoogleApiAvailability() {

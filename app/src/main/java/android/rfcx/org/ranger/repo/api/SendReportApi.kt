@@ -12,6 +12,7 @@ import android.rfcx.org.ranger.repo.TokenExpireException
 import android.rfcx.org.ranger.util.GsonProvider
 import android.rfcx.org.ranger.util.PrefKey
 import android.rfcx.org.ranger.util.PreferenceHelper
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +34,7 @@ class SendReportApi {
         }
 
         val authUser = "user/" + loginRes.guid
+        Log.d("SendReportApi", report.toString())
         ApiManager.getInstance().apiRest.sendReport(authUser, loginRes.tokens[0].token, report)
                 .enqueue(object : Callback<SendReportResponse> {
                     override fun onFailure(call: Call<SendReportResponse>?, t: Throwable?) {
