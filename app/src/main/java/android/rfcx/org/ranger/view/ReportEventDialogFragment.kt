@@ -7,14 +7,12 @@ import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.ReportSight
 import android.rfcx.org.ranger.entity.ReportType
 import android.rfcx.org.ranger.entity.report.Attributes
-import android.rfcx.org.ranger.entity.report.Data
 import android.rfcx.org.ranger.entity.report.Report
 import android.rfcx.org.ranger.entity.report.ReportData
 import android.rfcx.org.ranger.repo.api.SendReportApi
 import android.rfcx.org.ranger.util.DateHelper
 import android.rfcx.org.ranger.util.isLocationAllow
 import android.support.v4.app.DialogFragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,10 +101,10 @@ class ReportEventDialogFragment : BaseDialogFragment() {
     private fun validateInputToSendReport() {
         val reportType: ReportType? =
                 when {
-                    chainsawRadio.isChecked -> ReportType.Chainsaw
-                    gunshotRadio.isChecked -> ReportType.Gunshot
-                    trespasserRadio.isChecked -> ReportType.Trespasser
-                    vehicleRadio.isChecked -> ReportType.Vehicle
+                    chainsawRadio.isChecked -> ReportType.chainsaw
+                    gunshotRadio.isChecked -> ReportType.gunshot
+                    trespasserRadio.isChecked -> ReportType.trespasser
+                    vehicleRadio.isChecked -> ReportType.vehicle
                     else -> null
                 }
         if (reportType == null) {
@@ -153,8 +151,8 @@ class ReportEventDialogFragment : BaseDialogFragment() {
                 }
                 val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude, distance)
                 val reportData = ReportData(UUID.randomUUID().toString(), reportType.name, reportAttributes)
-                val data = Data(reportData)
-                val report = Report(data)
+
+                val report = Report(reportData)
 
                 context?.let {
                     SendReportApi().sendReport(it, report, object : SendReportApi.SendReportCallback {
