@@ -24,6 +24,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'boolean', 'USE_STETHO', 'false'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/v1/"'
         }
     }
     productFlavors {
