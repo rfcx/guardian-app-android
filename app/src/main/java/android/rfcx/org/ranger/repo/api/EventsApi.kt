@@ -53,7 +53,7 @@ class EventsApi {
         val siteID = (rangerRemote.getString(RemoteConfigKey.REMOTE_SITE_ID)).trim()
 
         val authUser = "user/" + loginRes.guid
-        ApiManager.getInstance().apiRest.getEvents(authUser, loginRes.tokens[0].token, siteID, limit)
+        ApiManager.getInstance().apiRest.getEvents(authUser, loginRes.tokens[0].token, siteID, "begins_at", "DESC",limit)
                 .enqueue(object : Callback<EventResponse> {
                     override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
                         onEventsCallBack.onFailed(t, null)
@@ -62,7 +62,6 @@ class EventsApi {
                     override fun onResponse(call: Call<EventResponse>?, response: Response<EventResponse>?) {
                         response?.let {
                             if (it.isSuccessful) {
-
                                 if (it.body() != null) {
                                     onEventsCallBack.onSuccess(it.body()!!)
                                 } else {

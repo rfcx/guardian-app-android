@@ -8,6 +8,10 @@ import android.rfcx.org.ranger.repo.api.SendLocationApi
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
+import android.support.v4.content.ContextCompat.startForegroundService
+import android.os.Build
+
+
 
 /**
  * Created by Jingjoeh on 10/21/2017 AD.
@@ -18,7 +22,11 @@ class SendLocationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        context?.startService(Intent(context, SaveLocationService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context?.startForegroundService(Intent(context, SaveLocationService::class.java))
+        } else {
+            context?.startService(Intent(context, SaveLocationService::class.java))
+        }
 
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()

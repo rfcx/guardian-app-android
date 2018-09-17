@@ -64,7 +64,7 @@ class SaveLocationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.e("LocationLocationService", "onDestroy")
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
+        locationCallback?.let { fusedLocationClient?.removeLocationUpdates(it) }
     }
 
 
