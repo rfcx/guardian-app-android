@@ -20,12 +20,12 @@ interface ApiRestInterface {
     fun login(@Field("email") email: String,
               @Field("password") pass: String,
               @Field("extended_expiration") loginRemember: Int): Call<List<LoginResponse>>
-
-    @GET("messages")
-    fun getMessage(@Header("x-auth-user") authUser: String,
-                   @Header("x-auth-token") authToken: String,
-                   @Query("to") userGuID: String,
-                   @Query("type") type: String): Call<List<Message>>
+	
+	
+	@GET("messages")
+	fun getMessage(@Header("Authorization") authUser: String,
+	               @Query("to") email: String,
+	               @Query("type") type: String): Call<List<Message>>
 
     @FormUrlEncoded
     @POST("users/checkin")

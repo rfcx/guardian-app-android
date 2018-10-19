@@ -14,18 +14,12 @@ import java.util.*
 /**
  * Created by Jingjoeh on 10/5/2017 AD.
  */
-class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+	
+	private var items: MutableList<BaseItem> = ArrayList()
 
-    private var onMessageItemClickListener: OnMessageItemClickListener
-
-    constructor(onMessageItemClickListener: OnMessageItemClickListener) {
-        this.onMessageItemClickListener = onMessageItemClickListener
-    }
-
-    private var items: MutableList<BaseItem> = ArrayList()
-
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
 
             BaseItem.ITEM_EVENT_TYPE -> {
@@ -44,10 +38,10 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return items[position].itemType
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
 
-        when (holder?.itemViewType) {
+        when (holder.itemViewType) {
             BaseItem.ITEM_MESSAGE_TYPE -> {
                 (holder as MessageViewHolder).bind((item as MessageItem).message)
             }

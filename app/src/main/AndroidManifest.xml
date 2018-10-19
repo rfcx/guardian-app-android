@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="android.rfcx.org.ranger">
-
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
+	xmlns:tools="http://schemas.android.com/tools"
+	package="android.rfcx.org.ranger">
+	
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	
 	<application
 		android:name="android.rfcx.org.RangerApplication"
-		android:allowBackup="true"
+		android:allowBackup="false"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme">
+		android:theme="@style/AppTheme"
+		tools:ignore="GoogleAppIndexingWarning">
 		<activity
 			android:name=".view.LoginActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.Translucent">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-
-				<category android:name="android.intent.category.LAUNCHER"/>
+				<action android:name="android.intent.action.MAIN" />
+				
+				<category android:name="android.intent.category.LAUNCHER" />
+			
 			</intent-filter>
 		</activity>
+		
 		<activity
 			android:name=".view.MessageListActivity"
-			android:screenOrientation="portrait">
-		</activity>
-
+			android:screenOrientation="portrait" />
+		
 		<service
 			android:name=".service.SaveLocationService"
-			android:exported="false"/>
-
+			android:exported="false" />
+		
 		<receiver
 			android:name=".service.PullingAlertMessageReceiver"
-			android:exported="false"/>
+			android:exported="false" />
 		<receiver
 			android:name=".service.SendLocationReceiver"
-			android:exported="false"/>
-
-
+			android:exported="false" />
+	
 	</application>
 
 </manifest>

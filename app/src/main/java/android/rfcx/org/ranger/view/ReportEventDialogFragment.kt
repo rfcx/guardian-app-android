@@ -149,7 +149,7 @@ class ReportEventDialogFragment : BaseDialogFragment() {
                     ReportSight.NotFarAway -> 50
                     ReportSight.VeryFar -> 100
                 }
-                val reportAttributes = Attributes(time, time, task.result.longitude, task.result.longitude, distance)
+                val reportAttributes = Attributes(time, time, task.result!!.longitude, task.result!!.longitude, distance)
                 val reportData = ReportData(UUID.randomUUID().toString(), reportType.name, reportAttributes)
 
                 val report = Report(reportData)
