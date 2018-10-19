@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.Settings
@@ -250,12 +251,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
     }
 
     private fun logout() {
-        try {
-            mSaveLocationService?.stopSelf()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        PreferenceHelper.getInstance(this@MessageListActivity).remove(PrefKey.LOGIN_RESPONSE)
+        PreferenceHelper.getInstance(this@MessageListActivity).clear()
         LoginActivity.startActivity(this@MessageListActivity)
         finish()
     }
@@ -319,7 +315,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
                         setMessage(R.string.location_permission_msg)
                         setPositiveButton(R.string.go_to_setting) { _, _ ->
                             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.parse("package:" + packageName))
+                                    Uri.parse("package:$packageName"))
                             intent.addCategory(Intent.CATEGORY_DEFAULT)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
@@ -328,8 +324,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
             dialogBuilder.create().show()
 
         } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_PERMISSIONS_REQUEST_CODE)
+	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+		                REQUEST_PERMISSIONS_REQUEST_CODE)
+	        }
         }
     }
 

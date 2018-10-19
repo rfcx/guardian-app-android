@@ -26,7 +26,7 @@ class SendLocationApi {
                 .getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java)
 
         if (loginRes == null) {
-            sendLocationCallBack.onFailed(TokenExpireException(), null)
+            sendLocationCallBack.onFailed(TokenExpireException(context), null)
             return
         }
 
@@ -52,7 +52,7 @@ class SendLocationApi {
                             } else {
 
                                 if (response.code() == 401) {
-                                    sendLocationCallBack.onFailed(TokenExpireException(), null)
+                                    sendLocationCallBack.onFailed(TokenExpireException(context), null)
                                     return
                                 }
 

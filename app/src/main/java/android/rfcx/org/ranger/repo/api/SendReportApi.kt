@@ -29,7 +29,7 @@ class SendReportApi {
                 .getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java)
 
         if (loginRes == null) {
-            sendReportCallback.onFailed(TokenExpireException(), null)
+            sendReportCallback.onFailed(TokenExpireException(context), null)
             return
         }
 
@@ -56,7 +56,7 @@ class SendReportApi {
                             } else {
 
                                 if (response.code() == 401) {
-                                    sendReportCallback.onFailed(TokenExpireException(), null)
+                                    sendReportCallback.onFailed(TokenExpireException(context), null)
                                     return
                                 }
 

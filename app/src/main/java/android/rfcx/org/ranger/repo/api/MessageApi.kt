@@ -25,7 +25,7 @@ class MessageApi {
 		val token = context.getTokenID()
 		val email = context.getEmail()
 		if (guid == null || token == null || email == null) {
-			onMessageCallBack.onFailed(TokenExpireException(), null)
+			onMessageCallBack.onFailed(TokenExpireException(context), null)
 			return
 		}
 		
@@ -50,7 +50,7 @@ class MessageApi {
 					} else {
 						
 						if (response.code() == 401) {
-							onMessageCallBack.onFailed(TokenExpireException(), null)
+							onMessageCallBack.onFailed(TokenExpireException(context), null)
 							return
 						}
 						

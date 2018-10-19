@@ -29,7 +29,7 @@ class ReviewEventApi {
                 .getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java)
 
         if (loginRes == null) {
-            reviewEventCallback.onFailed(TokenExpireException(), null)
+            reviewEventCallback.onFailed(TokenExpireException(context), null)
             return
         }
         val authUser = "user/" + loginRes.guid
@@ -52,7 +52,7 @@ class ReviewEventApi {
                             } else {
 
                                 if (response.code() == 401) {
-                                    reviewEventCallback.onFailed(TokenExpireException(), null)
+                                    reviewEventCallback.onFailed(TokenExpireException(context), null)
                                     return
                                 }
 
