@@ -10,6 +10,8 @@
 	<string name="login">Login</string>
 	<string name="pls_fill_email">Please fill email</string>
 	<string name="pls_fill_password">Please fill password</string>
+	<string name="user_are_not_ranger">You are not Ranger.</string>
+	<string name="an_error_occurred"> An error occurred, Please try again later</string>
 
 	<!-- common error -->
 	<string name="error_common">An error occurred, Please try again</string>
@@ -44,5 +46,6 @@
 	<string name="alert_state_loading">Loading…</string>
 	<string name="alert_state_playing">Playing…</string>
 	<string name="alert_state_replay">Replay</string>
+	
 
 </resources>

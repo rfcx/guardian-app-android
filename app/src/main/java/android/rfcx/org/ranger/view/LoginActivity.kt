@@ -103,20 +103,20 @@ class LoginActivity : AppCompatActivity() {
 										when {
 											defaultSite.isNullOrEmpty() -> {
 												// this user is not Ranger
-												loginFailed("You are not Ranger.")
+												loginFailed(getString(R.string.user_are_not_ranger))
 											}
-											guid.isNullOrEmpty() -> loginFailed("You are not Ranger.")
+											guid.isNullOrEmpty() -> loginFailed(getString(R.string.an_error_occurred))
 											
 											else -> loginSuccess(email, guid!!, defaultSite!!, it, credentials.accessToken!!)
 										}
 									} else {
-										loginFailed("You are not Ranger.")
+										loginFailed(getString(R.string.an_error_occurred))
 									}
 									
 								}
 							} catch (e: Exception) {
 								e.printStackTrace()
-								// TODO cannot parse jwt
+								loginFailed(getString(R.string.an_error_occurred))
 							}
 						}
 					}
