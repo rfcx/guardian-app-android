@@ -7,9 +7,7 @@ import android.rfcx.org.ranger.entity.ErrorResponse
 import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.repo.ApiManager
 import android.rfcx.org.ranger.repo.TokenExpireException
-import android.rfcx.org.ranger.util.GsonProvider
-import android.rfcx.org.ranger.util.PrefKey
-import android.rfcx.org.ranger.util.PreferenceHelper
+import android.rfcx.org.ranger.util.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,18 +18,19 @@ import retrofit2.Response
 class SendLocationApi {
 
     fun checkIn(context: Context, latitude: Double, longitude: Double, time: String, sendLocationCallBack: SendLocationCallBack) {
-
-
-        val loginRes: LoginResponse? = PreferenceHelper.getInstance(context)
-                .getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java)
-
-        if (loginRes == null) {
-            sendLocationCallBack.onFailed(TokenExpireException(context), null)
-            return
-        }
-
-        val authUser = "user/" + loginRes.guid
-        ApiManager.getInstance().apiRest.updateLocation(authUser, loginRes.tokens[0].token, latitude, longitude, time)
+	    
+	    val guid = context.getUserGuId()
+	    val token = context.getTokenID()
+	    val email = context.getEmail()
+	    if (guid == null || token == null || email == null) {
+		    sendLocationCallBack.onFailed(TokenExpireException(context), null)
+		    return
+	    }
+	
+	    //val authUser = "user/$guid"
+	    val authUser = "Bearer $token"
+	    
+        ApiManager.getInstance().apiRest.updateLocation(authUser, latitude, longitude, time)
                 .enqueue(object : Callback<CheckInResult> {
                     override fun onFailure(call: Call<CheckInResult>?, t: Throwable?) {
                         sendLocationCallBack.onFailed(t, t?.message)

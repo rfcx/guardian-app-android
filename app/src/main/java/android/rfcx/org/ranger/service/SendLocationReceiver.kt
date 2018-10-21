@@ -61,7 +61,7 @@ class SendLocationReceiver : BroadcastReceiver() {
                 rangerLocation.isSent = true
                 realm.copyToRealmOrUpdate(rangerLocation)
                 realm.commitTransaction()
-
+				realm.close()
                 Log.d(tag, "onSuccess ${rangerLocation.latitude} ${rangerLocation.longitude} ${rangerLocation.time}")
             }
 

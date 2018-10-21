@@ -31,10 +31,6 @@
 		<key>user_group</key>
 		<value>none</value>
 	</entry>
-
-	<entry>
-		<key>site_id</key>
-		<value /> <!-- default site id is empty -->
-	</entry>
+	
 
 </defaultsMap>

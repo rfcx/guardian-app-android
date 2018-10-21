@@ -82,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
 		
 		authentication
 				.login(email, password, "Username-Password-Authentication")
+				.setScope("openid email profile")
 				.setAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {

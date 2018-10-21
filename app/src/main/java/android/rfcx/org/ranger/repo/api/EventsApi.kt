@@ -5,13 +5,9 @@ import android.rfcx.org.ranger.BuildConfig
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.ErrorResponse
 import android.rfcx.org.ranger.entity.EventResponse
-import android.rfcx.org.ranger.entity.LoginResponse
 import android.rfcx.org.ranger.repo.ApiManager
 import android.rfcx.org.ranger.repo.TokenExpireException
-import android.rfcx.org.ranger.util.GsonProvider
-import android.rfcx.org.ranger.util.PrefKey
-import android.rfcx.org.ranger.util.PreferenceHelper
-import android.rfcx.org.ranger.util.RemoteConfigKey
+import android.rfcx.org.ranger.util.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import retrofit2.Call
@@ -23,15 +19,16 @@ class EventsApi {
 	
 	fun getEvents(context: Context, limit: Int, onEventsCallBack: OnEventsCallBack) {
 		
-		val loginRes: LoginResponse? = PreferenceHelper.getInstance(context)
-				.getObject(PrefKey.LOGIN_RESPONSE, LoginResponse::class.java)
-		
-		if (loginRes == null) {
+		val guid = context.getUserGuId()
+		val token = context.getTokenID()
+		val email = context.getEmail()
+		if (guid == null || token == null || email == null) {
 			onEventsCallBack.onFailed(TokenExpireException(context), null)
 			return
 		}
 		
-		
+		//val authUser = "user/$guid"
+		val authUser = "Bearer $token"
 		val rangerRemote = FirebaseRemoteConfig.getInstance()
 		// config for debug
 		val configSettings = FirebaseRemoteConfigSettings.Builder()
@@ -50,10 +47,9 @@ class EventsApi {
 			rangerRemote.activateFetched()
 		}
 		
-		val siteID = (rangerRemote.getString(RemoteConfigKey.REMOTE_SITE_ID)).trim()
+		val siteID = context.getSite()?.trim()
 		
-		val authUser = "user/" + loginRes.guid
-		ApiManager.getInstance().apiRest.getEvents(authUser, loginRes.tokens[0].token, siteID, "begins_at", "DESC", limit)
+		ApiManager.getInstance().apiRest.getEvents(authUser, siteID, "begins_at", "DESC", limit)
 				.enqueue(object : Callback<EventResponse> {
 					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
 						onEventsCallBack.onFailed(t, null)

@@ -21,7 +21,7 @@ android {
         debug {
             versionNameSuffix ".debug"
             buildConfigField 'boolean', 'USE_STETHO', 'true'
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org/v1/"'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/v1/"'
         }
         release {
             minifyEnabled false
