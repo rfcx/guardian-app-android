@@ -61,7 +61,7 @@ class NotificationHelper {
         val builder = NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_alert_noti)
                 .setContentTitle(event.value)
-                .setContentText(event.site)
+                .setContentText(event.guardianShortname + " " + DateHelper.getEventTime(event.endAt))
                 .setAutoCancel(true)
                 .setChannelId(notificationAlertChanelId)
 
