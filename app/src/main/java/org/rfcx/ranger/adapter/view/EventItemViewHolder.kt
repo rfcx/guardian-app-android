@@ -25,8 +25,7 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
         itemView.tvEventValue.text = event.value
         itemView.tvEventSite.text = event.guardianShortname
         itemView.tvEventDate.text = DateHelper.getEventDate(event.beginsAt)
-        itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getEventTime(event.beginsAt),
-                DateHelper.getEventTime(event.endAt))
+        itemView.tvEventTime.text = DateHelper.getEventTime(event)
 
         itemView.ivEventIcon.setImageResource(EventIcon(event).resId(isOpened))
         itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
