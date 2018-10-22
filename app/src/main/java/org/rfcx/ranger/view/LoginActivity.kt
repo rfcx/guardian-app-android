@@ -16,6 +16,9 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
 import io.jsonwebtoken.Jwts
 import kotlinx.android.synthetic.main.activity_login.*
+import org.rfcx.ranger.entity.Err
+import org.rfcx.ranger.entity.Ok
+import org.rfcx.ranger.entity.Result
 
 
 class LoginActivity : AppCompatActivity() {
@@ -62,7 +65,6 @@ class LoginActivity : AppCompatActivity() {
 	}
 	
 	private fun validateInput(email: String?, password: String?): Boolean {
-		
 		if (email.isNullOrEmpty()) {
 			loginEmailEditText.error = getString(R.string.pls_fill_email)
 			return false
@@ -86,40 +88,11 @@ class LoginActivity : AppCompatActivity() {
 				.setAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {
-						credentials.idToken?.let {
-							Log.d("credentials", credentials.idToken)
-							
-							// Parsing JWT Token
-							val i = it.lastIndexOf('.')
-							val withoutSignature = it.substring(0, i + 1)
-							try {
-								val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
-								if (untrusted.body[metaDataKey] != null) {
-									val metadata = untrusted.body[metaDataKey]
-									
-									if (metadata != null && metadata is HashMap<*, *>) {
-										val defaultSite: String? = metadata["defaultSite"] as String?
-										val guid: String? = metadata["guid"] as String?
-										
-										when {
-											defaultSite.isNullOrEmpty() -> {
-												// this user is not Ranger
-												loginFailed(getString(R.string.user_are_not_ranger))
-											}
-											guid.isNullOrEmpty() -> loginFailed(getString(R.string.an_error_occurred))
-											
-											else -> loginSuccess(email, guid!!, defaultSite!!, it, credentials.accessToken!!)
-										}
-									} else {
-										loginFailed(getString(R.string.an_error_occurred))
-									}
-									
-								}
-							} catch (e: Exception) {
-								e.printStackTrace()
-                                loginFailed(getString(R.string.an_error_occurred))
-							}
-						}
+                        val result = this@LoginActivity.verifyCredentials(credentials)
+                        when (result) {
+                            is Err -> { loginFailed(result.error) }
+                            is Ok -> { loginSuccess(result.value) }
+                        }
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
@@ -146,17 +119,53 @@ class LoginActivity : AppCompatActivity() {
 		
 	}
 	
-	private fun loginSuccess(email: String, guid: String, defaultSite: String, idToken: String, accessToken: String) {
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ID_TOKEN, idToken)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.GU_ID, guid)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.SITE, defaultSite)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, accessToken)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, email)
+	private fun loginSuccess(userAuthResponse: UserAuthResponse) {
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ID_TOKEN, userAuthResponse.idToken)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.GU_ID, userAuthResponse.guid)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.SITE, userAuthResponse.defaultSite)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, userAuthResponse.accessToken)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, userAuthResponse.email)
 		MessageListActivity.startActivity(this@LoginActivity)
 		finish()
 	}
+
+    private fun verifyCredentials(credentials: Credentials): Result<UserAuthResponse, String> {
+        val token = credentials.idToken
+        if (token == null) {
+            return Err(getString(R.string.an_error_occurred))
+        }
+
+        // Parsing JWT Token
+        val withoutSignature = token.substring(0, token.lastIndexOf('.') + 1)
+        try {
+            val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+            if (untrusted.body[metaDataKey] != null) {
+                val metadata = untrusted.body[metaDataKey]
+
+                if (metadata != null && metadata is HashMap<*, *>) {
+                    val defaultSite: String? = metadata["defaultSite"] as String?
+                    val guid: String? = metadata["guid"] as String?
+                    val email: String? = untrusted.body["email"] as String?
+
+                    when {
+                        defaultSite.isNullOrEmpty() -> {
+                            return Err(getString(R.string.user_are_not_ranger))
+                        }
+                        guid.isNullOrEmpty() || email.isNullOrEmpty() -> return Err(getString(R.string.an_error_occurred))
+
+                        else -> return Ok(UserAuthResponse(email!!, guid!!, defaultSite!!, token, credentials.accessToken!!))
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Err(getString(R.string.an_error_occurred))
+    }
 	
 	private fun isLogin(): Boolean {
 		return PreferenceHelper.getInstance(this@LoginActivity).getString(PrefKey.ID_TOKEN, "").isNotEmpty()
 	}
 }
+
+data class UserAuthResponse (val email: String, val guid: String, val defaultSite: String, val idToken: String, val accessToken: String)
