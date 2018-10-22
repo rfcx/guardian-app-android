@@ -10,8 +10,9 @@
 	<string name="login">Login</string>
 	<string name="pls_fill_email">Please fill email</string>
 	<string name="pls_fill_password">Please fill password</string>
-	<string name="user_are_not_ranger">You are not Ranger.</string>
-	<string name="an_error_occurred"> An error occurred, Please try again later</string>
+	<string name="incorrect_username_password">Incorrect username or password</string>
+	<string name="user_are_not_ranger">This is not an RFCx Ranger account</string>
+	<string name="an_error_occurred">Service unavailable</string>
 
 	<!-- common error -->
 	<string name="error_common">An error occurred, Please try again</string>

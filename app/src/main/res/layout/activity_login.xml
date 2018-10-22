@@ -76,11 +76,16 @@
 		android:id="@+id/loginErrorTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginStart="@dimen/margin_padding_large"
 		android:layout_marginTop="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:background="?attr/colorError"
 		android:gravity="center"
-		android:textColor="@color/text_error"
+		android:paddingStart="8sp"
+		android:paddingTop="2sp"
+		android:paddingEnd="8sp"
+		android:paddingBottom="2sp"
+		android:textColor="@color/text_white"
 		android:visibility="invisible"
 		tools:text="Error Login" />
 

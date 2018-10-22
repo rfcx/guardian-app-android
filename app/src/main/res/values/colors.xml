@@ -7,8 +7,8 @@
     <!-- Text color -->
 	<color name="text_primary">#212121</color>
 	<color name="text_secondary">#757575</color>
-	<color name="text_error">#FFE41A1A</color>
-	<color name="text_white">#FFFFFF</color>
+	<color name="text_error">#e41a1a</color>
+	<color name="text_white">#ffffff</color>
 
     <color name="divider">#757575</color>
     <color name="yellow">#ffdd00</color>

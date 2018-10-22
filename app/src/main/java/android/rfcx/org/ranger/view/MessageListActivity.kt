@@ -122,11 +122,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
             R.id.menu_logout -> {
                 logout()
             }
-
             R.id.menu_ranger_group -> {
-                Snackbar.make(messageParentView,
-                        rangerRemote.getString(RemoteConfigKey.REMOTE_USER_GROUP),
-                        Snackbar.LENGTH_LONG).show()
+                Snackbar.make(messageParentView, getSite() ?: "None", Snackbar.LENGTH_LONG).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -137,7 +134,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
         if (task.isSuccessful) {
             Log.d(this@MessageListActivity.localClassName, "Fetch remote successful!")
             rangerRemote.activateFetched() // active config
-            Log.d("Ranger remote", RemoteConfigKey.REMOTE_USER_GROUP + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_USER_GROUP))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
             Log.d("Ranger remote", RemoteConfigKey.REMOTE_SHOW_EVENT_LIST + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST))

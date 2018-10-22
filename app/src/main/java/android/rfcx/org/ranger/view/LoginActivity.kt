@@ -117,14 +117,19 @@ class LoginActivity : AppCompatActivity() {
 								}
 							} catch (e: Exception) {
 								e.printStackTrace()
-								loginFailed(getString(R.string.an_error_occurred))
+                                loginFailed(getString(R.string.an_error_occurred))
 							}
 						}
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
 						exception.printStackTrace()
-						loginFailed(exception.message)
+                        if (exception.code == "invalid_grant") {
+                            loginFailed(getString(R.string.incorrect_username_password))
+                        }
+                        else {
+                            loginFailed(exception.description)
+                        }
 					}
 				})
 	}
