@@ -92,7 +92,8 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
 
         val mp3Source = event?.audio?.mp3
         if (!mp3Source.isNullOrEmpty()) {
-            mediaPlayer?.setDataSource(context, Uri.parse(event?.audio?.mp3))
+            val insecureMp3Source = mp3Source!!.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+            mediaPlayer?.setDataSource(context, Uri.parse(insecureMp3Source))
             mediaPlayer?.prepareAsync()
         } else {
             dismissAllowingStateLoss()
