@@ -16,7 +16,7 @@
 
 	<!-- common error -->
 	<string name="error_common">An error occurred, Please try again</string>
-	<string name="re_login">Please re login.</string>
+	<string name="re_login">Please re-login.</string>
 
 	<string name="cancel">Cancel</string>
 	<string name="back">Back</string>

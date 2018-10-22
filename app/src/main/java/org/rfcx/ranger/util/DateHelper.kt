@@ -1,52 +1,73 @@
 package org.rfcx.ranger.util
 
+import org.rfcx.ranger.entity.event.Event
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Created by Jingjoeh on 10/5/2017 AD.
- */
 class DateHelper {
 
     companion object {
         private val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        private val dateTimeFormat = "yyyy-MM-dd-HH:mm"
+        private val dateTimeFormat = "yyyy-MM-dd HH:mm"
         private val dateFormat = "yyyy-MM-dd"
         private val timeFormat = "HH:mm"
 
-        fun getDateTime(input: String?): Date {
-            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
-            return sdf.parse(input)
+        private val inputSdf by lazy {
+            val sdf = SimpleDateFormat(inputFormat, Locale.ENGLISH)
+            sdf.timeZone = TimeZone.getTimeZone("UTC")
+            sdf
         }
+
+        private val outputDateTimeSdf by lazy {
+            val sdf = SimpleDateFormat(dateTimeFormat, Locale.getDefault())
+            sdf.timeZone = TimeZone.getDefault()
+            sdf
+        }
+
+        private val outputDateSdf by lazy {
+            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+            sdf.timeZone = TimeZone.getDefault()
+            sdf
+        }
+
+        private val outputTimeSdf by lazy {
+            val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
+            sdf.timeZone = TimeZone.getDefault()
+            sdf
+        }
+
+        fun getDateTime(input: String?): Date = inputSdf.parse(input)
+
 
         fun getMessageDateTime(input: String): String {
-            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
             return try {
-                val d: Date = sdf.parse(input)
-                val sdf2 = SimpleDateFormat(dateTimeFormat, Locale.getDefault())
-                sdf2.format(d)
+                val d: Date = inputSdf.parse(input)
+                outputDateTimeSdf.format(d)
             } catch (e: Exception) {
                 ""
             }
         }
 
-        fun getEventTime(input: String): String {
-            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
-            return try {
-                val d: Date = sdf.parse(input)
-                val sdf2 = SimpleDateFormat(timeFormat, Locale.getDefault())
-                sdf2.format(d)
+        fun getEventTime(event: Event): String {
+            val d1: Date
+            val d2: Date
+            try {
+                d1 = inputSdf.parse(event.beginsAt)
+                d2 = inputSdf.parse(event.endAt)
             } catch (e: Exception) {
-                ""
+                return ""
             }
+
+            if (event.beginsAt == event.endAt) {
+                return outputTimeSdf.format(d1)
+            }
+            return outputTimeSdf.format(d1) + "-" + outputTimeSdf.format(d2)
         }
 
         fun getEventDate(input: String): String {
-            val sdf = SimpleDateFormat(inputFormat, Locale.getDefault())
             return try {
-                val d: Date = sdf.parse(input)
-                val sdf2 = SimpleDateFormat(dateFormat, Locale.getDefault())
-                sdf2.format(d)
+                val d: Date = inputSdf.parse(input)
+                outputDateSdf.format(d)
             } catch (e: Exception) {
                 ""
             }
