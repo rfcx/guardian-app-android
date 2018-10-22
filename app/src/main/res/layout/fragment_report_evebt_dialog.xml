@@ -5,6 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:minWidth="320dp"
+	android:maxHeight="440dp"
 	android:padding="@dimen/margin_padding_large">
 
 	<TextView
