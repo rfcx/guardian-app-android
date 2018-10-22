@@ -6,7 +6,7 @@
 	android:background="@color/colorPrimary"
 	android:gravity="center"
 	android:orientation="vertical"
-	tools:context="android.rfcx.org.ranger.view.LoginActivity">
+	tools:context="android.rfcx.rfcx.ranger.view.LoginActivity">
 
 	<ImageView
 		android:id="@+id/logoImg"

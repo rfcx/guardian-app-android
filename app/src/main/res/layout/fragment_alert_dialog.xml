@@ -5,7 +5,7 @@
 	android:minWidth="300dp"
 	android:orientation="vertical"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context="android.rfcx.org.ranger.view.AlertDialogFragment">
+	tools:context="android.rfcx.rfcx.ranger.view.AlertDialogFragment">
 
 	<ImageView
 		android:id="@+id/alertIconImageView"
