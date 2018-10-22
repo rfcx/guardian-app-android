@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.entity.event.Event
+import android.rfcx.org.ranger.util.EventIcon
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
@@ -99,7 +100,11 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
     }
 
     private fun initView() {
-        alertTitleTextView.text = getString(R.string.alert_title_format, event?.value)
+        val event = event
+        if (event != null) {
+            alertIconImageView.setImageResource(EventIcon(event).resId())
+            alertTitleTextView.text = getString(R.string.alert_title_format, event.value)
+        }
     }
 
     private fun rePlay() {

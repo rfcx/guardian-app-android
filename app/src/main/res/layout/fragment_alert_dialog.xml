@@ -7,10 +7,19 @@
 	android:padding="@dimen/margin_padding_normal"
 	tools:context="android.rfcx.org.ranger.view.AlertDialogFragment">
 
+	<ImageView
+		android:id="@+id/alertIconImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentTop="true"
+		android:src="@drawable/event_orange"/>
+
 	<TextView
 		android:id="@+id/alertTitleTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_below="@+id/alertIconImageView"
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:text="@string/alert_title_format"
@@ -53,7 +62,7 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/stateLayout"
 		android:layout_centerHorizontal="true"
-		android:layout_marginTop="@dimen/margin_padding_large"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		android:orientation="horizontal">
 
 		<Button

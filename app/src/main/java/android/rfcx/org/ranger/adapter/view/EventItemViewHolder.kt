@@ -5,6 +5,7 @@ import android.rfcx.org.ranger.R
 import android.rfcx.org.ranger.adapter.OnMessageItemClickListener
 import android.rfcx.org.ranger.entity.event.Event
 import android.rfcx.org.ranger.util.DateHelper
+import android.rfcx.org.ranger.util.EventIcon
 import android.rfcx.org.ranger.util.RealmHelper
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -24,12 +25,12 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
 
         itemView.tvEventSite.typeface = if (isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
         itemView.tvEventValue.text = event.value
-        itemView.tvEventSite.text = event.site
+        itemView.tvEventSite.text = event.guardianShortname
         itemView.tvEventDate.text = DateHelper.getEventDate(event.beginsAt)
         itemView.tvEventTime.text = String.format("%s - %s", DateHelper.getEventTime(event.beginsAt),
                 DateHelper.getEventTime(event.endAt))
 
-        setEventIcon(event.value, isOpened)
+        itemView.ivEventIcon.setImageResource(EventIcon(event).resId(isOpened))
         itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
 
         // create text latLng
@@ -41,33 +42,6 @@ class EventItemViewHolder(itemView: View?, private var onMessageItemClickListene
 
         itemView.setOnClickListener {
             onMessageItemClickListener.onMessageItemClick(adapterPosition)
-        }
-    }
-
-
-    private fun setEventIcon(eventValue: String, isOpened: Boolean) {
-        when {
-            Event.chainsaw.equals(eventValue, true) -> {
-                itemView.ivEventIcon.setImageResource(
-                        if (isOpened) R.drawable.chainsaw_grey else R.drawable.chainsaw_orange
-                )
-            }
-            Event.gunshot.equals(eventValue, true) -> {
-                itemView.ivEventIcon.setImageResource(
-                        if (isOpened) R.drawable.gun_grey else R.drawable.gun_orange
-                )
-            }
-            Event.vehicle.equals(eventValue, true) -> {
-                itemView.ivEventIcon.setImageResource(
-                        if (isOpened) R.drawable.vehicle_grey else R.drawable.vehicle_orange
-                )
-            }
-            else -> {
-                itemView.ivEventIcon.setImageResource(
-                        if (isOpened) R.drawable.event_grey else R.drawable.event_orange
-                )
-
-            }
         }
     }
 }
