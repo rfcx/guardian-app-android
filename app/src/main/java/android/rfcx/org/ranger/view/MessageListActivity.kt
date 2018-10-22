@@ -123,7 +123,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
                 logout()
             }
             R.id.menu_ranger_group -> {
-                Snackbar.make(messageParentView, getSite() ?: "None", Snackbar.LENGTH_LONG).show()
+                val message = "You are connected to: " + (getSite() ?: "none")
+                Snackbar.make(messageParentView, message, Snackbar.LENGTH_LONG).show()
             }
         }
         return super.onOptionsItemSelected(item)
