@@ -1,10 +1,7 @@
 package org.rfcx.ranger.service
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -23,6 +20,7 @@ import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.repo.api.SendLocationApi
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.NotificationHelper
+import org.rfcx.ranger.view.SettingActivity
 
 /**
  * Created by Jingjoeh on 10/7/2017 AD.
@@ -109,6 +107,9 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun createLocationTrackerNotification(location: Location?): Notification {
+		val intent = Intent(this, SettingActivity::class.java)
+		val pendingIntent = PendingIntent.getActivity(this, 0,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {
 			setContentTitle(getString(R.string.notification_location_title))
 			location?.let {
@@ -120,6 +121,7 @@ class LocationTrackerService : Service() {
 			setSmallIcon(R.drawable.chainsaw_green)
 			setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_my_location_green_24dp))
 			setOnlyAlertOnce(true)
+			setContentIntent(pendingIntent)
 			priority = NotificationCompat.PRIORITY_HIGH
 		}.build()
 	}

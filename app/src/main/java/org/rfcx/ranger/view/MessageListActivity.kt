@@ -53,18 +53,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
 	
 	
-	private val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
-	private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-	
 	lateinit var messageAdapter: MessageAdapter
 	private lateinit var rangerRemote: FirebaseRemoteConfig
-	private var mLocationTrackerService: LocationTrackerService? = null
 	
 	companion object {
 		fun startActivity(context: Context) {
 			val intent = Intent(context, MessageListActivity::class.java)
 			context.startActivity(intent)
 		}
+		
+		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
+		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 	}
 	
 	override fun onStart() {
@@ -377,8 +376,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	}
 	
 	private fun startTrackerLocationService() {
-		val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
-		startService(intent)
+		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
+				!= SettingActivity.TRACKING_OFF) {
+			val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
+			startService(intent)
+		}
 	}
 	
 	

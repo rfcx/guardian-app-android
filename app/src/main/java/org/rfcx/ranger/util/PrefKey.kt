@@ -11,4 +11,6 @@ object PrefKey {
 	const val SITE = "${PREFIX}SITE"
 	const val EMAIL = "${PREFIX}EMAIL"
 	const val LOGIN_RESPONSE = "LOGIN_RESPONSE"
+	
+	const val ENABLE_LOCATION_TRACKING = "${PREFIX}ENABLE_LOCATION_TRACKING"
 }
