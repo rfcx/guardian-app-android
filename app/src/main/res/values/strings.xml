@@ -48,5 +48,7 @@
 	<string name="alert_state_playing">Playing…</string>
 	<string name="alert_state_replay">Replay</string>
 	
-
+	<!-- Notification -->
+	<string name="notification_location_title">Ranger Location</string>
+	<string name="notification_location_loading">Loading location…</string>
 </resources>
