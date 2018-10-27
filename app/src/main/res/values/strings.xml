@@ -51,4 +51,11 @@
 	<!-- Notification -->
 	<string name="notification_location_title">Ranger Location</string>
 	<string name="notification_location_loading">Loading location…</string>
+	
+	<!-- setting -->
+	<string name="setting_label">Setting</string>
+	<string name="app_version_label">Version %s</string>
+	<string name="location_tracking_label">Location Tracking</string>
+	<string name="location_tracking_on_label">On</string>
+	<string name="location_tracking_off_label">Off</string>
 </resources>

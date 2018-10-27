@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+	
 	<item
 		android:id="@+id/menu_ranger_group"
-		android:title="@string/menu_ranger_group">
-	</item>
-
+		android:title="@string/menu_ranger_group"/>
+	
+	<item
+		android:id="@+id/menu_setting"
+		android:title="@string/setting_label"/>
+	
 	<item
 		android:id="@+id/menu_logout"
-		android:title="@string/menu_logout">
-	</item>
+		android:title="@string/menu_logout"/>
 
 </menu>

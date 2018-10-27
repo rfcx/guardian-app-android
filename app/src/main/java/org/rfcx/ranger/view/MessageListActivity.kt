@@ -125,6 +125,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 				val message = "You are connected to: " + (getSite() ?: "none")
 				Snackbar.make(messageParentView, message, Snackbar.LENGTH_LONG).show()
 			}
+			R.id.menu_setting -> {
+				startActivity(Intent(this@MessageListActivity, SettingActivity::class.java))
+			}
 		}
 		return super.onOptionsItemSelected(item)
 	}

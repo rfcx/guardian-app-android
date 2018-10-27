@@ -31,6 +31,10 @@
 			android:name=".view.MessageListActivity"
 			android:screenOrientation="portrait" />
 		
+		<activity
+			android:name=".view.SettingActivity"
+			android:screenOrientation="portrait" />
+		
 		<service
 			android:name=".service.LocationTrackerService"
 			android:exported="false" />
@@ -38,7 +42,7 @@
 		<receiver
 			android:name=".service.PullingAlertMessageReceiver"
 			android:exported="false" />
-		
+	
 	</application>
 
 </manifest>
