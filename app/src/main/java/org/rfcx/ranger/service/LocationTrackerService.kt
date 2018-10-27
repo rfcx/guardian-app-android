@@ -55,6 +55,7 @@ class LocationTrackerService : Service() {
 				sentLocation(it)
 			}
 		}
+		
 	}
 	
 	override fun onBind(p0: Intent?): IBinder? {
@@ -79,16 +80,17 @@ class LocationTrackerService : Service() {
 		
 		val locationRequest = LocationRequest()
 		locationRequest.interval = intervalLocationUpdate
-		locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+		locationRequest.priority = LocationRequest.PRIORITY_LOW_POWER
 		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 		var lastLocation: Location? = null
 		fusedLocationClient?.lastLocation?.addOnSuccessListener {
 			Log.i(tag, "${it?.latitude} ${it?.longitude}")
 			lastLocation = it
-			sentLocation(it)
+			if (it != null) {
+				sentLocation(it)
+			}
 		}
 		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
-		
 		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation))
 	}
 	
@@ -96,7 +98,6 @@ class LocationTrackerService : Service() {
 		super.onDestroy()
 		locationCallback.let { fusedLocationClient?.removeLocationUpdates(it) }
 	}
-	
 	
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		return START_NOT_STICKY
