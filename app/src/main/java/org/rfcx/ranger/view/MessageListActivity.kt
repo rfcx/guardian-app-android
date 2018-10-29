@@ -11,20 +11,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.Settings
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.ActivityCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -49,7 +49,7 @@ import org.rfcx.ranger.util.*
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		OnCompleteListener<Void>,
-		AlertDialogFragment.OnAlertConfirmCallback,
+		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
 	
 	
@@ -108,7 +108,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			startTrackerLocationService()
 		}
 		
-		EventDialogFragment().show(supportFragmentManager, "hh")
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -344,7 +343,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	private fun showAlertPopup(event: Event) {
 		Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
 		RealmHelper.getInstance().updateOpenedEvent(event)
-		AlertDialogFragment.newInstance(event).show(supportFragmentManager, null)
+		EventDialogFragment.newInstance(event).show(supportFragmentManager, null)
 	}
 	
 	private fun reportEvent(event: Event, isConfirmEvent: Boolean) {

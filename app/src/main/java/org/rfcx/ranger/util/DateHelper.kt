@@ -64,7 +64,7 @@ class DateHelper {
             return outputTimeSdf.format(d1) + "-" + outputTimeSdf.format(d2)
         }
 
-        fun getEventDate(input: String): String {
+        fun getEventDate(input: String?): String {
             return try {
                 val d: Date = inputSdf.parse(input)
                 outputDateSdf.format(d)

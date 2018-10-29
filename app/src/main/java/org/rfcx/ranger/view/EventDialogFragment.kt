@@ -1,20 +1,202 @@
 package org.rfcx.ranger.view
 
+import android.content.Context
+import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.EventIcon
 
-class EventDialogFragment : DialogFragment() {
+
+class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
+	private var event: Event? = null
+	private var mediaPlayer: MediaPlayer? = null
+	private var onAlertConfirmCallback: OnAlertConfirmCallback? = null
+	
+	override fun onAttach(context: Context?) {
+		super.onAttach(context)
+		if (context is OnAlertConfirmCallback) {
+			onAlertConfirmCallback = context
+		}
+	}
 	
 	override fun onStart() {
 		super.onStart()
-		dialog.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+		dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+	}
+	
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		getBundle()
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_dialog_alert_event, container, false)
+	}
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		initPlayer()
+		setupMap()
+		initView()
+		
+		replayButton.setOnClickListener {
+			rePlay()
+		}
+		
+		okButton.setOnClickListener { report(true) }
+		cancelButton.setOnClickListener { report(false) }
+	}
+	
+	override fun onDestroy() {
+		super.onDestroy()
+		val mapFragment = fragmentManager
+				?.findFragmentById(R.id.mapView) as SupportMapFragment
+		fragmentManager?.beginTransaction()?.remove(mapFragment)?.commitAllowingStateLoss()
+		try {
+			if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+				mediaPlayer?.stop()
+			}
+			mediaPlayer?.release()
+			mediaPlayer = null
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
+	}
+	
+	override fun onDetach() {
+		super.onDetach()
+		if (onAlertConfirmCallback != null)
+			onAlertConfirmCallback = null
+	}
+	
+	private fun getBundle() {
+		event = arguments?.getParcelable(keyEventArgs)
+		if (event == null) {
+			dismissAllowingStateLoss()
+		}
+	}
+	
+	private fun initView() {
+		val event = event
+		if (event != null) {
+			eventTypeImageView.setImageResource(EventIcon(event).resId())
+		}
+	}
+	
+	private fun rePlay() {
+		try {
+			mediaPlayer?.start()
+			replayButton.visibility = View.INVISIBLE
+			soundAnimationView.playAnimation()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
+	}
+	
+	private fun report(isCurrentAlert: Boolean) {
+		if (isCurrentAlert) {
+			onAlertConfirmCallback?.onCurrentAlert(event!!)
+		} else {
+			onAlertConfirmCallback?.onIncorrectAlert(event!!)
+		}
+		dismissAllowingStateLoss()
+	}
+	
+	private fun initPlayer() {
+		mediaPlayer = MediaPlayer()
+		mediaPlayer?.setWakeMode(context,
+				PowerManager.PARTIAL_WAKE_LOCK)
+		mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+		mediaPlayer?.setOnPreparedListener(this@EventDialogFragment)
+		mediaPlayer?.setOnCompletionListener(this@EventDialogFragment)
+		mediaPlayer?.setOnErrorListener(this@EventDialogFragment)
+		
+		val mp3Source = event?.audio?.mp3
+		if (!mp3Source.isNullOrEmpty()) {
+			val insecureMp3Source = mp3Source!!.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+			context?.let {
+				mediaPlayer?.setDataSource(it, Uri.parse(insecureMp3Source))
+				mediaPlayer?.prepareAsync()
+			}
+		} else {
+			loadingSoundProgressBar.visibility = View.INVISIBLE
+		}
+	}
+	
+	override fun onError(player: MediaPlayer?, p1: Int, p2: Int): Boolean {
+		// TODO report to error
+		loadingSoundProgressBar.visibility = View.INVISIBLE
+		return false
+	}
+	
+	override fun onCompletion(player: MediaPlayer?) {
+		replayButton.visibility = View.VISIBLE
+		soundAnimationView.pauseAnimation()
+	}
+	
+	override fun onPrepared(player: MediaPlayer?) {
+		loadingSoundProgressBar.visibility = View.INVISIBLE
+		soundAnimationView.playAnimation()
+		mediaPlayer?.start()
+	}
+	
+	private fun setupMap() {
+		val mapFragment = fragmentManager
+				?.findFragmentById(R.id.mapView) as SupportMapFragment
+		mapFragment.getMapAsync(this)
+	}
+	
+	override fun onMapReady(googleMap: GoogleMap?) {
+		if (!isAdded) return
+		if (event?.latitude != null && event?.longitude != null) {
+			googleMap?.addMarker(MarkerOptions()
+					.position(LatLng(event!!.latitude!!, event!!.longitude!!))
+					.title(event?.value))
+			googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+					LatLng(event!!.latitude!!, event!!.longitude!!), 15f))
+			googleMap?.uiSettings?.isScrollGesturesEnabled = false
+			
+			googleMap?.setOnMapClickListener {
+				// Open map
+				val intent = Intent(Intent.ACTION_VIEW,
+						Uri.parse("http://maps.google.com/maps?q="
+								+ event!!.latitude!! + ","
+								+ event!!.longitude!!))
+				startActivity(intent)
+			}
+		}
+		
+	}
+	
+	companion object {
+		private const val keyEventArgs = "AlertDialogFragment.Event"
+		fun newInstance(event: Event): EventDialogFragment {
+			val fragment = EventDialogFragment()
+			val args = Bundle()
+			args.putParcelable(keyEventArgs, event)
+			fragment.arguments = args
+			return fragment
+		}
+	}
+	
+	interface OnAlertConfirmCallback {
+		fun onCurrentAlert(event: Event)
+		fun onIncorrectAlert(event: Event)
 	}
 }

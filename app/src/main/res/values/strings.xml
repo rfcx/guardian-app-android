@@ -3,6 +3,7 @@
 	
 	<string name="com_auth0_client_id">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
 	<string name="com_auth0_domain">rfcx.eu.auth0.com</string>
+	<string name="google_maps_key">AIzaSyB8_0Ctt0gqPQTC6lZlpRlB6yC00MYwX9g</string>
 
 	<!-- LoginActivity -->
 	<string name="email">Email</string>
