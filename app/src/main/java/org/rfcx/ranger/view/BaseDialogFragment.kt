@@ -2,7 +2,7 @@ package org.rfcx.ranger.view
 
 import android.app.ProgressDialog
 import org.rfcx.ranger.R
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 
 /**
  * Created by Jingjoeh on 12/18/2017 AD.

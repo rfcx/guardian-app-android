@@ -57,6 +57,7 @@ class RealmHelper {
     }
 
     fun isOpenedEvent(event: Event): Boolean {
+	    
         val realm = Realm.getDefaultInstance()
         val realmEvent: Event? = realm.where(Event::class.java)
                 .equalTo(Event.eventGUID, event.event_guid).findFirst()

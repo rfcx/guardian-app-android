@@ -3,7 +3,7 @@ package org.rfcx.ranger.util
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 
 /**
  * Created by Jingjoeh on 12/16/2017 AD.

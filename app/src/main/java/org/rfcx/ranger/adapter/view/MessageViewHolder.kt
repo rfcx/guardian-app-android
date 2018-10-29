@@ -7,15 +7,15 @@ import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.RealmHelper
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.item_message.view.*
 
 /**
  * Created by Jingjoeh on 11/5/2017 AD.
  */
-class MessageViewHolder(itemView: View?, private var onMessageItemClickListener: OnMessageItemClickListener) :
+class MessageViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) :
         RecyclerView.ViewHolder(itemView) {
 
     fun bind(message: Message) {

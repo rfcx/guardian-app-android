@@ -6,7 +6,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.EventIcon
 import org.rfcx.ranger.util.RealmHelper
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.item_event.view.*
 
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_event.view.*
  * Email: Anupharpae@gmail.com
  */
 
-class EventItemViewHolder(itemView: View?, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
+class EventItemViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(event: Event) {
 
         val isOpened = RealmHelper.getInstance().isOpenedEvent(event)

@@ -6,7 +6,7 @@ import org.rfcx.ranger.adapter.entity.EventItem
 import org.rfcx.ranger.adapter.entity.MessageItem
 import org.rfcx.ranger.adapter.view.EventItemViewHolder
 import org.rfcx.ranger.adapter.view.MessageViewHolder
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import java.util.*

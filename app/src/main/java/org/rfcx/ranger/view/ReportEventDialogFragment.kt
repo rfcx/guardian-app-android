@@ -12,7 +12,7 @@ import org.rfcx.ranger.entity.report.ReportData
 import org.rfcx.ranger.repo.api.SendReportApi
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.isLocationAllow
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

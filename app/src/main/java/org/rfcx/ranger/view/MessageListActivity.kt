@@ -11,12 +11,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.Settings
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -91,7 +91,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		}
 		
 		messageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-			override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+			override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 				if (dy > 0)
 					fab.hide()
 				else if (dy < 0)
@@ -107,6 +107,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		} else {
 			startTrackerLocationService()
 		}
+		
+		EventDialogFragment().show(supportFragmentManager, "hh")
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {

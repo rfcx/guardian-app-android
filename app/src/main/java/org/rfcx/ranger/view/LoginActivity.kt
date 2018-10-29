@@ -6,7 +6,7 @@ import android.os.Bundle
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.PrefKey
 import org.rfcx.ranger.util.PreferenceHelper
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.auth0.android.Auth0
