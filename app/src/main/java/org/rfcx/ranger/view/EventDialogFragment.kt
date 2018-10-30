@@ -10,6 +10,7 @@ import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,6 +47,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
 		return inflater.inflate(R.layout.fragment_dialog_alert_event, container, false)
 	}
 	
