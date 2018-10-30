@@ -144,6 +144,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	override fun onError(player: MediaPlayer?, p1: Int, p2: Int): Boolean {
 		// TODO report to error
 		loadingSoundProgressBar.visibility = View.INVISIBLE
+		soundAnimationView.pauseAnimation()
 		return false
 	}
 	
@@ -154,8 +155,12 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	override fun onPrepared(player: MediaPlayer?) {
 		loadingSoundProgressBar.visibility = View.INVISIBLE
-		soundAnimationView.playAnimation()
 		mediaPlayer?.start()
+		mediaPlayer?.let {
+			if (it.isPlaying) {
+				soundAnimationView.playAnimation()
+			}
+		}
 	}
 	
 	private fun setupMap() {
