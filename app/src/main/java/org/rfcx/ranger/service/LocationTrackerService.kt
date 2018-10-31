@@ -10,16 +10,18 @@ import android.location.Location
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import android.util.Log
 import com.google.android.gms.location.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.repo.api.SendLocationApi
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.NotificationHelper
+import org.rfcx.ranger.util.PrefKey
+import org.rfcx.ranger.util.PreferenceHelper
 import org.rfcx.ranger.view.SettingActivity
 
 /**
@@ -62,8 +64,10 @@ class LocationTrackerService : Service() {
 	
 	override fun onCreate() {
 		super.onCreate()
-		
-		startTracker()
+		// check login first
+		if (PreferenceHelper.getInstance(this).getString(PrefKey.ID_TOKEN, "").isNotEmpty()) {
+			startTracker()
+		}
 	}
 	
 	private fun startTracker() {

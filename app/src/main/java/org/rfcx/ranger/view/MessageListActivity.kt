@@ -1,15 +1,12 @@
 package org.rfcx.ranger.view
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.Menu
@@ -366,21 +363,19 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	
 	// start Alarm manger for repeat to call PullingAlertMessageReceiver every 60 sec.
 	private fun startAlarmForMessageNotification() {
-		val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-		val intent = Intent(this@MessageListActivity, PullingAlertMessageReceiver::class.java)
-		val pendingIntent = PendingIntent.getBroadcast(this@MessageListActivity, 0, intent, 0)
-		
-		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-				SystemClock.elapsedRealtime(),
-				rangerRemote.getLong(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION) * 1000,
-				pendingIntent)
+		PullingAlertMessageReceiver.startAlarmForMessageNotification(this@MessageListActivity,
+				rangerRemote.getLong(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
 	}
 	
 	private fun startTrackerLocationService() {
 		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
 				!= SettingActivity.TRACKING_OFF) {
 			val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
-			startService(intent)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				startForegroundService(intent)
+			}else{
+				startService(intent)
+			}
 		}
 	}
 	
