@@ -49,6 +49,7 @@ fun <T> responseParser(response: Response<T>?): Result<T, Exception> {
 fun responseErrorHandler(error: Exception, callback: ApiCallback, context: Context, exceptionMessagePrefix: String = "") {
     when (error) {
         is ResponseUnauthenticatedException -> {
+            Crashlytics.logException(error)
             callback.onFailed(TokenExpireException(context), null)
         }
         else -> {
