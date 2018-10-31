@@ -1,19 +1,20 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
+import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.ErrorResponse
 import org.rfcx.ranger.entity.EventResponse
-import org.rfcx.ranger.repo.ApiManager
-import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.util.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import org.rfcx.ranger.entity.Err
+import org.rfcx.ranger.entity.Ok
+import org.rfcx.ranger.repo.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 class EventsApi {
 	
@@ -27,7 +28,7 @@ class EventsApi {
 			return
 		}
 		
-		//val authUser = "user/$guid"
+
 		val authUser = "Bearer $token"
 		val rangerRemote = FirebaseRemoteConfig.getInstance()
 		// config for debug
@@ -52,46 +53,26 @@ class EventsApi {
 		ApiManager.getInstance().apiRest.getEvents(authUser, siteID, "begins_at", "DESC", limit)
 				.enqueue(object : Callback<EventResponse> {
 					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
+						Crashlytics.logException(t)
 						onEventsCallBack.onFailed(t, null)
 					}
 					
 					override fun onResponse(call: Call<EventResponse>?, response: Response<EventResponse>?) {
-						response?.let {
-							if (it.isSuccessful) {
-								if (it.body() != null) {
-									onEventsCallBack.onSuccess(it.body()!!)
-								} else {
-									onEventsCallBack.onFailed(null, context.getString(R.string.error_common))
-								}
-								
-							} else {
-								
-								if (response.code() == 401) {
-									onEventsCallBack.onFailed(TokenExpireException(context), null)
-									return
-								}
-								
-								if (response.errorBody() != null) {
-									try {
-										val error: ErrorResponse = GsonProvider.getInstance().gson.fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
-										onEventsCallBack.onFailed(null, error.message)
-									} catch (e: Exception) {
-										onEventsCallBack.onFailed(null, context.getString(R.string.error_common))
-									}
-								} else {
-									onEventsCallBack.onFailed(null, context.getString(R.string.error_common))
-								}
+						val result = responseParser(response)
+						when (result) {
+							is Ok -> {
+								onEventsCallBack.onSuccess(result.value)
 							}
-							
+							is Err -> {
+								responseErrorHandler(result.error, onEventsCallBack, context, "EventsApi")
+							}
 						}
 					}
-					
 				})
 		
 	}
 	
-	interface OnEventsCallBack {
-		fun onFailed(t: Throwable?, message: String?)
+	interface OnEventsCallBack: ApiCallback {
 		fun onSuccess(event: EventResponse)
 	}
 }

@@ -3,17 +3,15 @@ package org.rfcx.ranger.repo.api
 import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.CheckInResult
+import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.ErrorResponse
-import org.rfcx.ranger.repo.ApiManager
-import org.rfcx.ranger.repo.TokenExpireException
+import org.rfcx.ranger.entity.Ok
+import org.rfcx.ranger.repo.*
 import org.rfcx.ranger.util.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by Jingjoeh on 10/8/2017 AD.
- */
 class SendLocationApi {
 
     fun checkIn(context: Context, latitude: Double, longitude: Double, time: String, sendLocationCallBack: SendLocationCallBack) {
@@ -25,8 +23,7 @@ class SendLocationApi {
 		    sendLocationCallBack.onFailed(TokenExpireException(context), null)
 		    return
 	    }
-	
-	    //val authUser = "user/$guid"
+
 	    val authUser = "Bearer $token"
 	    
         ApiManager.getInstance().apiRest.updateLocation(authUser, latitude, longitude, time)
@@ -36,37 +33,14 @@ class SendLocationApi {
                     }
 
                     override fun onResponse(call: Call<CheckInResult>?, response: Response<CheckInResult>?) {
-                        response?.let {
-                            if (it.isSuccessful) {
-
-                                if (it.body() != null) {
-                                    if (it.body() != null) {
-                                        sendLocationCallBack.onSuccess()
-                                    } else {
-                                        sendLocationCallBack.onFailed(null, context.getString(R.string.error_common))
-                                    }
-                                }
-
-                            } else {
-
-                                if (response.code() == 401) {
-                                    sendLocationCallBack.onFailed(TokenExpireException(context), null)
-                                    return
-                                }
-
-                                if (response.errorBody() != null) {
-                                    try {
-                                        val error: ErrorResponse = GsonProvider.getInstance().gson.
-                                                fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
-                                        sendLocationCallBack.onFailed(null, error.message)
-                                    } catch (e: Exception) {
-                                        sendLocationCallBack.onFailed(null, context.getString(R.string.error_common))
-                                    }
-                                } else {
-                                    sendLocationCallBack.onFailed(null, context.getString(R.string.error_common))
-                                }
+                        val result = responseParser(response)
+                        when (result) {
+                            is Ok -> {
+                                sendLocationCallBack.onSuccess()
                             }
-
+                            is Err -> {
+                                responseErrorHandler(result.error, sendLocationCallBack, context, "SendLocationApi")
+                            }
                         }
                     }
 
@@ -74,8 +48,7 @@ class SendLocationApi {
     }
 
 
-    interface SendLocationCallBack {
+    interface SendLocationCallBack: ApiCallback {
         fun onSuccess()
-        fun onFailed(t: Throwable?, message: String?)
     }
 }

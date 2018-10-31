@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.fragment_alert_dialog.*
 
 
@@ -116,6 +117,7 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
             mediaPlayer?.start()
         } catch (e: Exception) {
             e.printStackTrace()
+            Crashlytics.logException(e)
         }
     }
 
@@ -130,7 +132,8 @@ class AlertDialogFragment : DialogFragment(), MediaPlayer.OnPreparedListener, Me
         // todo report to API
     }
 
-    override fun onError(player: MediaPlayer?, p1: Int, p2: Int): Boolean {
+    override fun onError(player: MediaPlayer?, what: Int, extra: Int): Boolean {
+        Crashlytics.logException(Exception("AlertDialogFragment: onError: what: $what, extra: $extra"));
         dismissAllowingStateLoss()
         return false
     }

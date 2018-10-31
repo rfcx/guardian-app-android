@@ -14,6 +14,7 @@ import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
+import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
 import kotlinx.android.synthetic.main.activity_login.*
 import org.rfcx.ranger.entity.Err
@@ -97,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
 					
 					override fun onFailure(exception: AuthenticationException) {
 						exception.printStackTrace()
+						Crashlytics.logException(exception);
                         if (exception.code == "invalid_grant") {
                             loginFailed(getString(R.string.incorrect_username_password))
                         }
@@ -159,6 +161,7 @@ class LoginActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+			Crashlytics.logException(e)
         }
         return Err(getString(R.string.an_error_occurred))
     }

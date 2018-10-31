@@ -10,7 +10,7 @@
 	<string name="an_error_occurred">Service unavailable</string>
 
 	<!-- common error -->
-	<string name="error_common">An error occurred, Please try again</string>
+	<string name="error_common">An error occurred. Please try again.</string>
 	<string name="re_login">Please re-login.</string>
 
 	<string name="cancel">Cancel</string>
