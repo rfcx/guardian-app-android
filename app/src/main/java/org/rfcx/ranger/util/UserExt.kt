@@ -17,7 +17,7 @@ fun Context.getToken(): String? {
 }
 
 fun Context.getSite(): String? {
-	val site = PreferenceHelper.getInstance(this).getString(PrefKey.SITE, "")
+	val site = PreferenceHelper.getInstance(this).getString(PrefKey.DEFAULT_SITE, "")
 	return if (site.isEmpty()) null else site
 }
 

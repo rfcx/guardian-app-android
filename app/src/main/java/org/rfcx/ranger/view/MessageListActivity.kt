@@ -16,12 +16,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -104,7 +106,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		} else {
 			startTrackerLocationService()
 		}
-		
+	}
+
+	override fun onResume() {
+		super.onResume()
+
+		CloudMessaging.subscribeIfRequired(this)
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -247,6 +254,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	}
 	
 	private fun logout() {
+		CloudMessaging.unsubscribe(this)
 		PreferenceHelper.getInstance(this@MessageListActivity).clear()
 		LoginActivity.startActivity(this@MessageListActivity)
 		finish()
