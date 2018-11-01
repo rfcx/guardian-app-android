@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_login.*
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.Result
+import org.rfcx.ranger.repo.api.EventsApi
+import org.rfcx.ranger.repo.api.UserTouchApi
 
 
 class LoginActivity : AppCompatActivity() {
@@ -127,8 +129,21 @@ class LoginActivity : AppCompatActivity() {
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.DEFAULT_SITE, userAuthResponse.defaultSite)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, userAuthResponse.accessToken)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, userAuthResponse.email)
-		MessageListActivity.startActivity(this@LoginActivity)
-		finish()
+
+		UserTouchApi().send(this, object : UserTouchApi.UserTouchCallback {
+			override fun onSuccess() {
+				MessageListActivity.startActivity(this@LoginActivity)
+				finish()
+			}
+
+			override fun onFailed(t: Throwable?, message: String?) {
+				Crashlytics.logException(t)
+
+				MessageListActivity.startActivity(this@LoginActivity)
+				finish()
+			}
+		})
+
 	}
 
     private fun verifyCredentials(credentials: Credentials): Result<UserAuthResponse, String> {

@@ -1,10 +1,9 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import org.rfcx.ranger.R
+import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.entity.CheckInResult
 import org.rfcx.ranger.entity.Err
-import org.rfcx.ranger.entity.ErrorResponse
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.repo.*
 import org.rfcx.ranger.util.*
@@ -29,6 +28,7 @@ class SendLocationApi {
         ApiManager.getInstance().apiRest.updateLocation(authUser, latitude, longitude, time)
                 .enqueue(object : Callback<CheckInResult> {
                     override fun onFailure(call: Call<CheckInResult>?, t: Throwable?) {
+                        Crashlytics.logException(t)
                         sendLocationCallBack.onFailed(t, t?.message)
                     }
 

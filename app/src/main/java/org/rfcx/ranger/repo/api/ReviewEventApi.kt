@@ -1,14 +1,12 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import org.rfcx.ranger.R
+import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.entity.Err
-import org.rfcx.ranger.entity.ErrorResponse
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.ReviewEventResponse
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.repo.*
-import org.rfcx.ranger.util.GsonProvider
 import org.rfcx.ranger.util.getEmail
 import org.rfcx.ranger.util.getTokenID
 import org.rfcx.ranger.util.getUserGuId
@@ -48,6 +46,7 @@ class ReviewEventApi {
 					}
 					
 					override fun onFailure(call: Call<ReviewEventResponse>?, t: Throwable?) {
+						Crashlytics.logException(t)
 						reviewEventCallback.onFailed(t, null)
 					}
 					

@@ -20,16 +20,12 @@ class EventsApi {
 	
 	fun getEvents(context: Context, limit: Int, onEventsCallBack: OnEventsCallBack) {
 		
-		val guid = context.getUserGuId()
 		val token = context.getTokenID()
-		val email = context.getEmail()
-		if (guid == null || token == null || email == null) {
+		if (token == null) {
 			onEventsCallBack.onFailed(TokenExpireException(context), null)
 			return
 		}
-		
 
-		val authUser = "Bearer $token"
 		val rangerRemote = FirebaseRemoteConfig.getInstance()
 		// config for debug
 		val configSettings = FirebaseRemoteConfigSettings.Builder()
@@ -50,7 +46,7 @@ class EventsApi {
 		
 		val siteID = context.getSite()?.trim()
 		
-		ApiManager.getInstance().apiRest.getEvents(authUser, siteID, "begins_at", "DESC", limit)
+		ApiManager.getInstance().apiRest.getEvents("Bearer $token", siteID, "begins_at", "DESC", limit)
 				.enqueue(object : Callback<EventResponse> {
 					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)

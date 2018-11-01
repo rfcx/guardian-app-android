@@ -1,15 +1,13 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.ErrorResponse
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
-import org.rfcx.ranger.util.GsonProvider
 import org.rfcx.ranger.util.getEmail
 import org.rfcx.ranger.util.getTokenID
 import org.rfcx.ranger.util.getUserGuId
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.repo.*
@@ -37,6 +35,7 @@ class SendReportApi {
 		ApiManager.getInstance().apiRest.sendReport(authUser, report)
 				.enqueue(object : Callback<SendReportResponse> {
 					override fun onFailure(call: Call<SendReportResponse>?, t: Throwable?) {
+						Crashlytics.logException(t)
 						sendReportCallback.onFailed(t, t?.message)
 					}
 					

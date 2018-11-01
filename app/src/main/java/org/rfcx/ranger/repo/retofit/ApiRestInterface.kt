@@ -1,18 +1,12 @@
 package org.rfcx.ranger.repo.retofit
 
-import org.rfcx.ranger.entity.CheckInResult
-import org.rfcx.ranger.entity.EventResponse
-import org.rfcx.ranger.entity.LoginResponse
-import org.rfcx.ranger.entity.ReviewEventResponse
+import org.rfcx.ranger.entity.*
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
 import retrofit2.Call
 import retrofit2.http.*
 
-/**
- * Created by Jingjoeh on 10/2/2017 AD.
- */
 interface ApiRestInterface {
 
     @FormUrlEncoded
@@ -50,4 +44,8 @@ interface ApiRestInterface {
                     @Path("event_guid") eventGuID: String,
                     @Path("review_confirmed") reviewConfirm: String)
             : Call<ReviewEventResponse>
+
+    @GET("users/touchapi")
+    fun userTouch(@Header("Authorization") authorization: String): Call<UserTouchResponse>
+
 }
