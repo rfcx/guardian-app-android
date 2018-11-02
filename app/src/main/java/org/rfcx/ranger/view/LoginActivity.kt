@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,8 @@ import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
+import com.auth0.android.provider.AuthCallback
+import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
@@ -25,8 +28,7 @@ import org.rfcx.ranger.repo.api.UserTouchApi
 
 
 class LoginActivity : AppCompatActivity() {
-	val metaDataKey = "https://rfcx.org/app_metadata"
-	
+
 	companion object {
 		fun startActivity(context: Context) {
 			context.startActivity(Intent(context, LoginActivity::class.java))
@@ -34,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
 	}
 	
 	private val auth0 by lazy {
-		val auth0 = Auth0(this)
+		val auth0 = Auth0(getString(R.string.auth0_client_id), getString(R.string.auth0_domain))
 		//auth0.isLoggingEnabled = true
 		auth0.isOIDCConformant = true
 		auth0
@@ -42,6 +44,10 @@ class LoginActivity : AppCompatActivity() {
 	
 	private val authentication by lazy {
 		AuthenticationAPIClient(auth0)
+	}
+
+	private val webAuthentication by lazy {
+		WebAuthProvider.init(auth0)
 	}
 	
 	
@@ -65,6 +71,10 @@ class LoginActivity : AppCompatActivity() {
 				doLogin(email, password)
 			}
 		}
+
+		facebookLoginButton.setOnClickListener {
+			doFacebookLogin()
+		}
 	}
 	
 	private fun validateInput(email: String?, password: String?): Boolean {
@@ -87,8 +97,8 @@ class LoginActivity : AppCompatActivity() {
 		
 		authentication
 				.login(email, password, "Username-Password-Authentication")
-				.setScope("openid email profile")
-				.setAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
+				.setScope(getString(R.string.auth0_scopes))
+				.setAudience(String.format("https://%s/userinfo", getString(R.string.auth0_domain)))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {
                         val result = this@LoginActivity.verifyCredentials(credentials)
@@ -107,6 +117,32 @@ class LoginActivity : AppCompatActivity() {
                         else {
                             loginFailed(exception.description)
                         }
+					}
+				})
+	}
+
+	private fun doFacebookLogin() {
+		webAuthentication
+				.withConnection("facebook")
+				.withScope(getString(R.string.auth0_scopes))
+				.withScheme(getString(R.string.auth0_scheme))
+				.withAudience(String.format("https://%s/userinfo", getString(R.string.auth0_domain)))
+				.start(this@LoginActivity, object : AuthCallback {
+					override fun onFailure(dialog: Dialog) {
+						loginFailed(null)
+					}
+
+					override fun onFailure(exception: AuthenticationException) {
+						Crashlytics.logException(exception)
+						loginFailed(exception.localizedMessage)
+					}
+
+					override fun onSuccess(credentials: Credentials) {
+						val result = this@LoginActivity.verifyCredentials(credentials)
+						when (result) {
+							is Err -> { loginFailed(result.error) }
+							is Ok -> { loginSuccess(result.value) }
+						}
 					}
 				})
 	}
@@ -153,6 +189,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Parsing JWT Token
+		val metaDataKey = getString(R.string.auth0_metadata_key)
         val withoutSignature = token.substring(0, token.lastIndexOf('.') + 1)
         try {
             val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)

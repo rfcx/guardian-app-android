@@ -89,5 +89,16 @@
 		android:visibility="invisible"
 		tools:text="Error Login" />
 
+	<Button
+			android:id="@+id/facebookLoginButton"
+			style="@style/LoginButton.FacebookButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginEnd="@dimen/margin_padding_large"
+			android:layout_marginStart="@dimen/margin_padding_large"
+			android:layout_marginTop="@dimen/margin_padding_large"
+			android:text="@string/connect_with_facebook" />
+
 </LinearLayout>
 

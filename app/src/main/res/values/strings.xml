@@ -3,6 +3,7 @@
 	<string name="email">Email</string>
 	<string name="password">Password</string>
 	<string name="login">Login</string>
+	<string name="connect_with_facebook">Connect with Facebook</string>
 	<string name="pls_fill_email">Please fill email</string>
 	<string name="pls_fill_password">Please fill password</string>
 	<string name="incorrect_username_password">Incorrect username or password</string>
