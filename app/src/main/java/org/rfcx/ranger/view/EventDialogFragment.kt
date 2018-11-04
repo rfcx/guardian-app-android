@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
@@ -194,7 +195,8 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		if (event?.latitude != null && event?.longitude != null) {
 			googleMap?.addMarker(MarkerOptions()
 					.position(LatLng(event!!.latitude!!, event!!.longitude!!))
-					.title(event?.value))
+					.title(event?.value)
+					.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin)))
 			googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 					LatLng(event!!.latitude!!, event!!.longitude!!), 15f))
 			googleMap?.uiSettings?.isScrollGesturesEnabled = false
