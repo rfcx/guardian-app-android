@@ -73,7 +73,7 @@
 		android:background="@color/transparent"
 		android:contentDescription="@string/app_name"
 		android:scaleType="fitXY"
-		android:src="@drawable/ic_replay_black_40dp"
+		app:srcCompat="@drawable/ic_replay_black_40dp"
 		android:tint="@color/grey_default"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="@+id/soundAnimationView"
@@ -129,7 +129,7 @@
 		android:contentDescription="@string/app_name"
 		android:padding="@dimen/margin_padding_small"
 		android:scaleType="centerCrop"
-		android:src="@drawable/ic_cross"
+		app:srcCompat="@drawable/ic_cross"
 		app:layout_constraintBottom_toTopOf="@+id/buttonGuideline"
 		app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuideline"
 		app:layout_constraintTop_toBottomOf="@+id/eventNameGuideline" />
@@ -146,7 +146,7 @@
 		android:contentDescription="@string/app_name"
 		android:padding="@dimen/margin_padding_small"
 		android:scaleType="centerCrop"
-		android:src="@drawable/ic_tick"
+		app:srcCompat="@drawable/ic_tick"
 		app:layout_constraintBottom_toTopOf="@+id/buttonGuideline"
 		app:layout_constraintStart_toStartOf="@+id/centerVerticalGuideline"
 		app:layout_constraintTop_toBottomOf="@+id/eventNameGuideline" />
