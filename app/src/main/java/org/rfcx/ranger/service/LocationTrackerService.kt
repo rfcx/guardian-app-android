@@ -122,8 +122,8 @@ class LocationTrackerService : Service() {
 				setContentText(getString(R.string.notification_location_loading))
 			}
 			
-			setSmallIcon(R.drawable.chainsaw_green)
-			setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_my_location_green_24dp))
+			setSmallIcon(R.drawable.ic_notification)
+			setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_large_tracking_location_img))
 			setOnlyAlertOnce(true)
 			setContentIntent(pendingIntent)
 			priority = NotificationCompat.PRIORITY_HIGH
