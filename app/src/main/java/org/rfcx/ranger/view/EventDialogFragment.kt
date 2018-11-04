@@ -2,6 +2,7 @@ package org.rfcx.ranger.view
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.EventIcon
+import org.rfcx.ranger.getIconRes
 
 
 class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
@@ -53,9 +55,9 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		initView()
 		initPlayer()
 		setupMap()
-		initView()
 		
 		replayButton.setOnClickListener {
 			rePlay()
@@ -95,9 +97,13 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	private fun initView() {
-		val event = event
-		if (event != null) {
-			eventTypeImageView.setImageResource(EventIcon(event).resId())
+		context?.let {
+			loadingSoundProgressBar.indeterminateDrawable
+					.setColorFilter(ContextCompat.getColor(it, R.color.grey_default), PorterDuff.Mode.SRC_IN)
+		}
+		
+		event?.let {
+			eventTypeImageView.setImageResource(it.getIconRes())
 		}
 	}
 	
@@ -106,6 +112,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 			mediaPlayer?.start()
 			replayButton.visibility = View.INVISIBLE
 			soundAnimationView.playAnimation()
+			soundAnimationView.visibility = View.VISIBLE
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
@@ -145,12 +152,14 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		// TODO report to error
 		loadingSoundProgressBar.visibility = View.INVISIBLE
 		soundAnimationView.pauseAnimation()
+		soundAnimationView.visibility = View.INVISIBLE
 		return false
 	}
 	
 	override fun onCompletion(player: MediaPlayer?) {
 		replayButton.visibility = View.VISIBLE
 		soundAnimationView.pauseAnimation()
+		soundAnimationView.visibility = View.INVISIBLE
 	}
 	
 	override fun onPrepared(player: MediaPlayer?) {
@@ -158,6 +167,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		mediaPlayer?.start()
 		mediaPlayer?.let {
 			if (it.isPlaying) {
+				soundAnimationView.visibility = View.VISIBLE
 				soundAnimationView.playAnimation()
 			}
 		}

@@ -51,7 +51,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:contentDescription="@string/app_name"
-			android:drawableStart="@drawable/ic_replay_black_24dp"
+			android:drawableStart="@drawable/ic_replay_black_40dp"
 			android:text="@string/alert_state_replay"
 			android:visibility="invisible" />
 

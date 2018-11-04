@@ -43,6 +43,7 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginEnd="8dp"
 		android:layout_marginBottom="8dp"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/soundWaveGuideline"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -52,8 +53,8 @@
 	
 	<ProgressBar
 		android:id="@+id/loadingSoundProgressBar"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
 		android:layout_marginStart="8dp"
 		android:layout_marginTop="8dp"
 		android:layout_marginEnd="8dp"
@@ -65,15 +66,14 @@
 	
 	<ImageButton
 		android:id="@+id/replayButton"
-		android:layout_width="70dp"
-		android:layout_height="70dp"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
 		android:adjustViewBounds="true"
 		android:background="@color/transparent"
 		android:contentDescription="@string/app_name"
-		android:padding="@dimen/margin_padding_large"
-		android:scaleType="centerCrop"
-		android:src="@drawable/ic_replay_black_24dp"
-		android:tint="@color/colorPrimary"
+		android:scaleType="fitXY"
+		android:src="@drawable/ic_replay_black_40dp"
+		android:tint="@color/grey_default"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toBottomOf="@+id/soundAnimationView"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -92,9 +92,10 @@
 		android:contentDescription="@string/app_name"
 		app:layout_constraintBottom_toTopOf="@+id/eventTypeGuideline"
 		app:layout_constraintEnd_toEndOf="parent"
+		android:tint="@color/grey_active"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="@+id/soundWaveGuideline"
-		tools:src="@drawable/vehicle_green" />
+		tools:src="@drawable/ic_gun" />
 	
 	<ImageButton
 		android:id="@+id/cancelButton"
