@@ -13,6 +13,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.util.isLocationAllow
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -46,6 +48,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		bindActionbar()
 		setupMap()
+		setupReportWhatAdapter()
 	}
 	
 	override fun onPause() {
@@ -57,7 +60,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		super.onResume()
 		if (!isLocationAllow()) {
 			requestPermissions()
-		}else{
+		} else {
 			getLocation()
 		}
 	}
@@ -82,6 +85,16 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		googleMap = p0
 		if (isLocationAllow()) getLocation()
 		
+	}
+	
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+	                                        grantResults: IntArray) {
+		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				// start location service
+				getLocation()
+			}
+		}
 	}
 	
 	private fun bindActionbar() {
@@ -153,15 +166,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		}
 	}
 	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-	                                        grantResults: IntArray) {
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				// start location service
-				getLocation()
-			}
-		}
+	private fun setupReportWhatAdapter() {
+		val layoutManager = GridLayoutManager(this@ReportActivity, 5)
+		reportTypeRecycler.layoutManager = layoutManager
+		reportTypeRecycler.adapter = ReportTypeAdapter()
 	}
+	
 	
 	companion object {
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
