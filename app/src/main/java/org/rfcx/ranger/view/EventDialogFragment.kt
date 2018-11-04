@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -38,11 +39,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		}
 	}
 	
-	override fun onStart() {
-		super.onStart()
-		dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-	}
-	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		getBundle()
@@ -65,6 +61,14 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		
 		okButton.setOnClickListener { report(true) }
 		cancelButton.setOnClickListener { report(false) }
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		// setup size of dialog
+		val width = resources.getDimensionPixelSize(R.dimen.dialog_min_width)
+		val height = resources.getDimensionPixelSize(R.dimen.dialog_height)
+		dialog.window?.setLayout(width, height)
 	}
 	
 	override fun onDestroy() {
@@ -96,6 +100,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		}
 	}
 	
+	@SuppressLint("SetTextI18n")
 	private fun initView() {
 		context?.let {
 			loadingSoundProgressBar.indeterminateDrawable
@@ -104,6 +109,11 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		
 		event?.let {
 			eventTypeImageView.setImageResource(it.getIconRes())
+			it.value?.let { value ->
+				if(value.isEmpty()) return
+				eventNameTextView.text = "${value.substring(0, 1).toUpperCase() + value.substring(1)}?"
+			}
+			
 		}
 	}
 	
