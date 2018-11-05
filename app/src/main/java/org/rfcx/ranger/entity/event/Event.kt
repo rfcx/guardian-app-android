@@ -96,6 +96,7 @@ open class Event() : RealmObject(), Parcelable {
 		const val gunshot = "gunshot"
 		const val vehicle = "vehicle"
 		const val people = "people"
+		const val other = "other"
 		
 	}
 	
