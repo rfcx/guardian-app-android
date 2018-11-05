@@ -55,4 +55,5 @@
 	<string name="location_tracking_label">Location Tracking</string>
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>
+    <string name="or">OR</string>
 </resources>

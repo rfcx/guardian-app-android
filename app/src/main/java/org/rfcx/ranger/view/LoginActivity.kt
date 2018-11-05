@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
 	
 	private fun doLogin(email: String, password: String) {
 		loginProgress.visibility = View.VISIBLE
-		loginErrorTextView.visibility = View.INVISIBLE
+		loginErrorTextView.visibility = View.GONE
 		loginButton.isEnabled = false
 		loginEmailEditText.isEnabled = false
 		loginPasswordEditText.isEnabled = false
@@ -149,7 +149,7 @@ class LoginActivity : AppCompatActivity() {
 	
 	private fun loginFailed(errorMessage: String?) {
 		runOnUiThread {
-			loginProgress.visibility = View.INVISIBLE
+			loginProgress.visibility = View.GONE
 			loginButton.isEnabled = true
 			loginEmailEditText.isEnabled = true
 			loginPasswordEditText.isEnabled = true
