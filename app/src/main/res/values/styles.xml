@@ -118,5 +118,9 @@
 	<style name="LoginButton.FacebookButton" parent="LoginButton">
 		<item name="android:drawableLeft">@drawable/ic_facebook</item>
 	</style>
+	
+	<style name="DialogAnim">
+		<item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
+	</style>
 
 </resources>

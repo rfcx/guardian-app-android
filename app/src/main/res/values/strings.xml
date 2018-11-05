@@ -31,7 +31,7 @@
 	<string name="report_title">Report</string>
 	<string name="report_no_have_select_type">Please select type you want to report.</string>
 	<string name="report_no_have_select_sight">Please select sighting.</string>
-	<string name="report_send_success">Sent report success.</string>
+	<string name="report_send_success">Report Successfully!</string>
 	<string name="report_select_sighting">Select sighting</string>
 	<string name="report_immediate_button">Immediate area (nearby)</string>
 	<string name="report_not_far_away_button">Not far away (but not visible)</string>
