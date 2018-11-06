@@ -42,7 +42,7 @@
 		android:id="@+id/settingLabelTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
 		android:layout_marginTop="@dimen/margin_padding_large"
 		android:text="@string/setting_label"
 		android:textColor="@color/text_white"
@@ -65,16 +65,16 @@
 	
 	<androidx.appcompat.widget.SwitchCompat
 		android:id="@+id/locationTrackingSwitch"
+		style="@style/SwitchCompatStyle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		tools:checked="true"
-		style="@style/SwitchCompatStyle"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:textOff="@string/location_tracking_off_label"
 		android:textOn="@string/location_tracking_on_label"
 		app:layout_constraintBottom_toBottomOf="@+id/textView"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:showText="true"
-		app:layout_constraintTop_toTopOf="@+id/textView" />
+		app:layout_constraintTop_toTopOf="@+id/textView"
+		app:showText="false"
+		tools:checked="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

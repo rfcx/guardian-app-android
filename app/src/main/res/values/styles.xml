@@ -98,8 +98,8 @@
 	
 	<style name="SwitchCompatStyle">
 		<item name="thumbTint">@color/switch_color</item>
-		<item name="trackTint">@color/switch_color</item>
-		<item name="showText">true</item>
+		<item name="trackTint">@color/switch_track_color</item>
+		<item name="showText">false</item>
 	</style>
 
 	<style name="LoginButton" parent="Widget.AppCompat.Button">
