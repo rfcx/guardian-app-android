@@ -17,7 +17,7 @@
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/reportButton"
 		app:layout_constraintTop_toBottomOf="@+id/toolbar">
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
@@ -79,5 +79,21 @@
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	
 	</ScrollView>
+	
+	<Button
+		android:id="@+id/reportButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginTop="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_large"
+		android:background="@drawable/bg_report_submit_button"
+		android:enabled="false"
+		android:foreground="?android:attr/selectableItemBackground"
+		android:text="@string/report_submit_button_label"
+		android:textColor="@android:color/white"
+		android:textStyle="bold"
+		app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

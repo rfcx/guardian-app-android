@@ -17,6 +17,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	
 	private val source = ArrayList<ReportTypeItem>()
 	private var selectedItem: Int = -1
+	var onMessageItemClickListener: OnMessageItemClickListener? = null
 	
 	init {
 		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_truck))
@@ -42,6 +43,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	override fun onMessageItemClick(position: Int) {
 		selectedItem = position
 		notifyDataSetChanged()
+		onMessageItemClickListener?.onMessageItemClick(position)
 	}
 	
 	fun getSelectedItem(): ReportTypeItem? {

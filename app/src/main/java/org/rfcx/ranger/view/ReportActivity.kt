@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,14 +25,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.util.isLocationAllow
+import org.rfcx.ranger.widget.WhenView
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	private var googleMap: GoogleMap? = null
 	private val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
 	private var fusedLocationClient: FusedLocationProviderClient? = null
+	private val reportAdapter = ReportTypeAdapter()
 	
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
@@ -49,6 +53,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		bindActionbar()
 		setupMap()
 		setupReportWhatAdapter()
+		setupWhenView()
 	}
 	
 	override fun onPause() {
@@ -169,7 +174,29 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun setupReportWhatAdapter() {
 		val layoutManager = GridLayoutManager(this@ReportActivity, 5)
 		reportTypeRecycler.layoutManager = layoutManager
-		reportTypeRecycler.adapter = ReportTypeAdapter()
+		reportTypeRecycler.adapter = reportAdapter
+		reportAdapter.onMessageItemClickListener = object : OnMessageItemClickListener {
+			override fun onMessageItemClick(position: Int) {
+				Log.d("onStateChange", reportAdapter.getSelectedItem()!!.type)
+				validateForm()
+			}
+		}
+	}
+	
+	private fun setupWhenView() {
+		whenView.onWhenViewStatChangedListener = object : WhenView.OnWhenViewStatChangedListener {
+			override fun onStateChange(state: WhenView.State) {
+				validateForm()
+				Log.d("onStateChange", state.name)
+			}
+			
+		}
+	}
+	
+	private fun validateForm() {
+		val reportTypeItem = reportAdapter.getSelectedItem()
+		val whenState = whenView.getState()
+		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE
 	}
 	
 	

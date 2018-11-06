@@ -38,6 +38,7 @@
 	<string name="report_very_far_button">Very far (faintly heard)</string>
 	<string name="report_what_label">WHAT?</string>
 	<string name="report_when_label">WHEN?</string>
+	<string name="report_submit_button_label">Submit</string>
 
 	<string name="alert_title_format">Is this a %s?</string>
 	<string name="alert_yes_button">Yes</string>
