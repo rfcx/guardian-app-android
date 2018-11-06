@@ -1,8 +1,10 @@
 package org.rfcx.ranger.view
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -22,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -40,7 +43,6 @@ import org.rfcx.ranger.repo.api.EventsApi
 import org.rfcx.ranger.repo.api.MessageApi
 import org.rfcx.ranger.repo.api.ReviewEventApi
 import org.rfcx.ranger.service.LocationTrackerService
-import org.rfcx.ranger.service.PullingAlertMessageReceiver
 import org.rfcx.ranger.util.*
 
 
@@ -61,6 +63,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
 	}
 	
 	override fun onStart() {
@@ -68,14 +71,20 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		checkGoogleApiAvailability()
 	}
 	
+	override fun onNewIntent(intent: Intent?) {
+		super.onNewIntent(intent)
+		// the activity open from another task eg. bypass from @LoginActivity by click notification -> reload the list.
+		getMessageList()
+	}
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_message_list)
+		
 		initToolbar()
 		initAdapter()
 		initRemoteConfig()
 		fetchRangerRemoteConfig()
-		startAlarmForMessageNotification()
 		messageSwipeRefresh.setOnRefreshListener {
 			fetchRangerRemoteConfig()
 		}
@@ -100,12 +109,24 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		} else {
 			startTrackerLocationService()
 		}
+		
+		
+		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+			Log.d("FirebaseInstanceId", it.token)
+		}
+		
 	}
 	
 	override fun onResume() {
 		super.onResume()
-		
 		CloudMessaging.subscribeIfRequired(this)
+		// register BroadcastReceiver
+		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
+	}
+	
+	override fun onPause() {
+		super.onPause()
+		unregisterReceiver(onEventNotificationReceived)
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -363,12 +384,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		})
 	}
 	
-	// start Alarm manger for repeat to call PullingAlertMessageReceiver every 60 sec.
-	private fun startAlarmForMessageNotification() {
-		PullingAlertMessageReceiver.startAlarmForMessageNotification(this@MessageListActivity,
-				rangerRemote.getLong(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
-	}
-	
 	private fun startTrackerLocationService() {
 		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
 				!= SettingActivity.TRACKING_OFF) {
@@ -381,5 +396,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		}
 	}
 	
-	
+	/**
+	 * BroadcastReceiver when receive message from FireBase Cloud Messaging @MyFireBaseMessagingService
+	 * Do -> reload list
+	 */
+	private val onEventNotificationReceived = object : BroadcastReceiver() {
+		override fun onReceive(p0: Context?, p1: Intent?) {
+			if (p1?.action == INTENT_FILTER_MESSAGE_BROADCAST)
+				getMessageList()
+		}
+	}
 }

@@ -5,13 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import org.rfcx.ranger.BuildConfig
-import org.rfcx.ranger.R
 import org.rfcx.ranger.util.PrefKey
 import org.rfcx.ranger.util.PreferenceHelper
-import org.rfcx.ranger.util.RemoteConfigKey
 import org.rfcx.ranger.view.SettingActivity
 
 class BootCompletedReceiver : BroadcastReceiver() {
@@ -27,18 +22,6 @@ class BootCompletedReceiver : BroadcastReceiver() {
 					context.startService(locationTrackerService)
 				}
 			}
-			
-			val rangerRemote = FirebaseRemoteConfig.getInstance()
-			// config for debug
-			val configSettings = FirebaseRemoteConfigSettings.Builder()
-					.setDeveloperModeEnabled(BuildConfig.DEBUG)
-					.build()
-			
-			rangerRemote.setConfigSettings(configSettings)
-			rangerRemote.setDefaults(R.xml.ranger_remote_config_defualt)
-			
-			PullingAlertMessageReceiver.startAlarmForMessageNotification(context,
-					rangerRemote.getLong(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
 		}
 	}
 }

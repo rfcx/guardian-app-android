@@ -30,6 +30,7 @@
 		
 		<activity
 			android:name=".view.MessageListActivity"
+			android:launchMode="singleTask"
 			android:screenOrientation="portrait" />
 		
 		<activity
@@ -44,9 +45,13 @@
 			android:name=".service.LocationTrackerService"
 			android:exported="false" />
 		
-		<receiver
-			android:name=".service.PullingAlertMessageReceiver"
-			android:exported="false" />
+		<service
+			android:name=".service.MyFireBaseMessagingService"
+			android:exported="false">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT" />
+			</intent-filter>
+		</service>
 		
 		<receiver android:name=".service.BootCompletedReceiver">
 			<intent-filter>
@@ -57,6 +62,10 @@
 		<meta-data
 			android:name="com.google.android.geo.API_KEY"
 			android:value="@string/google_maps_key" />
+		
+		<meta-data
+			android:name="com.google.firebase.messaging.default_notification_icon"
+			android:resource="@drawable/ic_notification" />
 	
 	</application>
 
