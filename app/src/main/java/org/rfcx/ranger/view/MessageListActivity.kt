@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view
 
 import android.Manifest
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -61,6 +62,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			context.startActivity(intent)
 		}
 		
+		private const val REQUEST_CODE_REPORT = 201
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
@@ -89,7 +91,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			fetchRangerRemoteConfig()
 		}
 		fab.setOnClickListener {
-			startActivity(Intent(this@MessageListActivity, ReportActivity::class.java))
+			startActivityForResult(Intent(this@MessageListActivity, ReportActivity::class.java),
+					REQUEST_CODE_REPORT)
 		}
 		
 		messageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -115,6 +118,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			Log.d("FirebaseInstanceId", it.token)
 		}
 		
+	}
+	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_CODE_REPORT && resultCode == Activity.RESULT_OK) {
+			ReportSuccessDIalogFragment().show(supportFragmentManager, null)
+		}
 	}
 	
 	override fun onResume() {

@@ -2,6 +2,8 @@ package org.rfcx.ranger.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -23,12 +25,19 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
+import org.rfcx.ranger.entity.report.Attributes
+import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.entity.report.ReportData
+import org.rfcx.ranger.repo.api.SendReportApi
+import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.isLocationAllow
 import org.rfcx.ranger.widget.WhenView
+import java.util.*
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
@@ -36,6 +45,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
 	private var fusedLocationClient: FusedLocationProviderClient? = null
 	private val reportAdapter = ReportTypeAdapter()
+	private var lastKnowLocation: Location? = null
 	
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
@@ -54,6 +64,11 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		setupMap()
 		setupReportWhatAdapter()
 		setupWhenView()
+		
+		reportButton.setOnClickListener {
+			submitReport()
+		}
+		
 	}
 	
 	override fun onPause() {
@@ -133,6 +148,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun markRangerLocation(location: Location) {
+		lastKnowLocation = location
 		googleMap?.clear()
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.addMarker(MarkerOptions()
@@ -199,6 +215,55 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE
 	}
 	
+	private fun submitReport() {
+		val reportTypeItem = reportAdapter.getSelectedItem()
+		val whenState = whenView.getState()
+		if (reportTypeItem == null || whenState == WhenView.State.NONE) {
+			validateForm()
+			return
+		}
+		
+		val time = DateHelper.getIsoTime()
+		val lat = lastKnowLocation?.latitude ?: 0.0
+		val lon = lastKnowLocation?.longitude ?: 0.0
+		val reportAttributes = Attributes(time, time, lat, lon, whenState.ageEstimate)
+		val reportData = ReportData(UUID.randomUUID().toString(), reportTypeItem.type, reportAttributes)
+		val report = Report(reportData)
+		
+		showProgress()
+		SendReportApi().sendReport(this@ReportActivity, report, object : SendReportApi.SendReportCallback {
+			override fun onSuccess() {
+				hideProgress()
+				setResult(Activity.RESULT_OK)
+				finish()
+			}
+			
+			override fun onFailed(t: Throwable?, message: String?) {
+				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
+				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
+			    hideProgress()
+			}
+		})
+	}
+	
+	private var progressDialog: ProgressDialog? = null
+	private fun showProgress() {
+		if (progressDialog == null || !progressDialog!!.isShowing) {
+			progressDialog = ProgressDialog(this@ReportActivity, R.style.ProgressDialogTheme)
+			progressDialog!!.setCancelable(false)
+			progressDialog!!.setProgressStyle(android.R.style.Widget_ProgressBar_Small)
+			progressDialog!!.show()
+		}
+	}
+	
+	private fun hideProgress() {
+		if (progressDialog != null) {
+			if (progressDialog!!.isShowing) {
+				progressDialog!!.dismiss()
+			}
+		}
+		progressDialog = null
+	}
 	
 	companion object {
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34

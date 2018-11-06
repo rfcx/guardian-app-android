@@ -8,7 +8,7 @@ fun Event.getIconRes(): Int {
 		Event.chainsaw -> R.drawable.ic_chainsaw
 		Event.gunshot -> R.drawable.ic_gun
 		Event.vehicle -> R.drawable.ic_truck
-		Event.people -> R.drawable.ic_people
+		Event.trespasser -> R.drawable.ic_people
 		else -> R.drawable.ic_other
 	}
 }

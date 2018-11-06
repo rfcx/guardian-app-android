@@ -129,8 +129,9 @@ class WhenView @JvmOverloads constructor(
 	
 	fun getState(): State = state
 	
-	enum class State {
-		NONE, LAST_MONTH, LAST_WEEK, LAST_24_HR, NOW
+	enum class State(val ageEstimate: Int) {
+		NONE(-1), LAST_MONTH(30), LAST_WEEK(20),
+		LAST_24_HR(10), NOW(0)
 	}
 	
 	interface OnWhenViewStatChangedListener {

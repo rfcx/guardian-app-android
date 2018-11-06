@@ -21,7 +21,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	
 	init {
 		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_truck))
-		source.add(ReportTypeItem(Event.people, R.drawable.ic_people))
+		source.add(ReportTypeItem(Event.trespasser, R.drawable.ic_people))
 		source.add(ReportTypeItem(Event.chainsaw, R.drawable.ic_chainsaw))
 		source.add(ReportTypeItem(Event.gunshot, R.drawable.ic_gun))
 		source.add(ReportTypeItem(Event.other, R.drawable.ic_other))

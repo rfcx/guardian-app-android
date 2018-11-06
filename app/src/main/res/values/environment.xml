@@ -8,5 +8,5 @@
     <string name="auth0_scopes">openid email profile</string>
     <string name="auth0_metadata_key">https://rfcx.org/app_metadata</string>
 
-    <string name="google_maps_key">AIzaSyB8_0Ctt0gqPQTC6lZlpRlB6yC00MYwX9g</string>
+    <string name="google_maps_key">AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s</string>
 </resources>

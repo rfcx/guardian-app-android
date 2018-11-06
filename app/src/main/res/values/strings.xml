@@ -61,7 +61,7 @@
 	
 	<string name="last_month">Last\nMonth</string>
 	<string name="last_week">Last\nWeek</string>
-	<string name="last_24_hours">24 hours</string>
+	<string name="last_24_hours">Last\n24 hours</string>
 	<string name="now">Now</string>
 	
 </resources>
