@@ -8,8 +8,8 @@
 	<dimen name="text_large">18sp</dimen>
 	<dimen name="text_medium">16sp</dimen>
 	<dimen name="text_small">14sp</dimen>
-	<dimen name="text_x_small">14sp</dimen>
-	<dimen name="text_xx_small">14sp</dimen>
+	<dimen name="text_x_small">12sp</dimen>
+	<dimen name="text_xx_small">10sp</dimen>
 	
 	<dimen name="dialog_min_width">268dp</dimen>
 	<dimen name="dialog_height">480dp</dimen>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="4dp">
+	
+	<View
+		android:id="@+id/lineDotView"
+		android:layout_width="0dp"
+		android:layout_height="2dp"
+		android:background="@color/grey_default"
+		app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+		app:layout_constraintEnd_toEndOf="@+id/guideline4"
+		app:layout_constraintStart_toStartOf="@+id/guideline"
+		app:layout_constraintTop_toTopOf="@+id/horizontalGuideline" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.05" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.4" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.72" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline4"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.95" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/horizontalGuideline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_begin="16dp" />
+	
+	<ImageView
+		android:id="@+id/lastMonth"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:background="@null"
+		android:contentDescription="@string/app_name"
+		android:scaleType="fitCenter"
+		android:src="@drawable/when_view"
+		app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+		app:layout_constraintDimensionRatio="1:1"
+		app:layout_constraintEnd_toEndOf="@id/guideline"
+		app:layout_constraintStart_toStartOf="@id/guideline"
+		app:layout_constraintTop_toTopOf="@+id/horizontalGuideline" />
+	
+	<ImageView
+		android:id="@+id/lastWeek"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:background="@null"
+		android:contentDescription="@string/app_name"
+		android:scaleType="fitCenter"
+		android:src="@drawable/when_view"
+		app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+		app:layout_constraintDimensionRatio="1:1"
+		app:layout_constraintEnd_toStartOf="@+id/guideline1"
+		app:layout_constraintStart_toStartOf="@+id/guideline1"
+		app:layout_constraintTop_toTopOf="@+id/horizontalGuideline" />
+	
+	<ImageView
+		android:id="@+id/today"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:layout_marginEnd="8dp"
+		android:background="@null"
+		android:contentDescription="@string/app_name"
+		android:scaleType="fitCenter"
+		android:scaleX="1"
+		android:scaleY="1"
+		android:src="@drawable/when_view"
+		app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+		app:layout_constraintDimensionRatio="1:1"
+		app:layout_constraintEnd_toStartOf="@+id/guideline3"
+		app:layout_constraintStart_toStartOf="@+id/guideline3"
+		app:layout_constraintTop_toTopOf="@+id/horizontalGuideline" />
+	
+	<ImageView
+		android:id="@+id/now"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:adjustViewBounds="true"
+		android:background="@null"
+		android:contentDescription="@string/app_name"
+		android:scaleType="fitCenter"
+		android:src="@drawable/when_view"
+		app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+		app:layout_constraintDimensionRatio="1:1"
+		app:layout_constraintEnd_toEndOf="@id/guideline4"
+		app:layout_constraintStart_toStartOf="@id/guideline4"
+		app:layout_constraintTop_toTopOf="@+id/horizontalGuideline" />
+	
+	<TextView
+		android:id="@+id/lastMonthText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:paddingStart="8dp"
+		android:paddingEnd="0dp"
+		android:text="@string/last_month"
+		android:textAllCaps="true"
+		android:textColor="@color/grey_default"
+		android:textSize="@dimen/text_xx_small"
+		app:layout_constraintEnd_toEndOf="@id/guideline"
+		app:layout_constraintStart_toStartOf="@id/guideline"
+		app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
+	
+	<TextView
+		android:id="@+id/lastWeekText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/last_week"
+		android:textAllCaps="true"
+		android:textColor="@color/grey_default"
+		android:textSize="@dimen/text_xx_small"
+		app:layout_constraintEnd_toStartOf="@+id/guideline1"
+		app:layout_constraintStart_toStartOf="@+id/guideline1"
+		app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
+	
+	<TextView
+		android:id="@+id/inADayText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/last_24_hours"
+		android:textAllCaps="true"
+		android:textColor="@color/grey_default"
+		android:textSize="@dimen/text_xx_small"
+		app:layout_constraintEnd_toStartOf="@+id/guideline3"
+		app:layout_constraintStart_toStartOf="@+id/guideline3"
+		app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
+	
+	
+	<TextView
+		android:id="@+id/nowTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="@string/now"
+		android:textAllCaps="true"
+		android:textColor="@color/grey_default"
+		android:textSize="@dimen/text_xx_small"
+		app:layout_constraintEnd_toEndOf="@id/guideline4"
+		app:layout_constraintStart_toStartOf="@id/guideline4"
+		app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

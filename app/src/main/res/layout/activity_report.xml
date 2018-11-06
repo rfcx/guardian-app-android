@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 	
@@ -27,7 +28,12 @@
 				android:id="@+id/mapView"
 				android:name="com.google.android.gms.maps.SupportMapFragment"
 				android:layout_width="match_parent"
-				android:layout_height="184dp" />
+				android:layout_height="160dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:layout_editor_absoluteX="0dp"
+				tools:layout_editor_absoluteY="0dp" />
 			
 			<TextView
 				android:id="@+id/reportTypeTextView"
@@ -37,7 +43,7 @@
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_what_label"
 				android:textColor="@color/text_primary"
-				android:textSize="@dimen/text_large"
+				android:textSize="@dimen/text_small"
 				android:textStyle="bold"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/mapView" />
@@ -47,6 +53,28 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
+			
+			<TextView
+				android:id="@+id/reportWhenTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:text="@string/report_when_label"
+				android:textColor="@color/text_primary"
+				android:textSize="@dimen/text_small"
+				android:textStyle="bold"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
+			
+			<org.rfcx.ranger.widget.WhenView
+				android:id="@+id/whenView"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
+		
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	

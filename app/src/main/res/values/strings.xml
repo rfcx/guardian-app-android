@@ -37,6 +37,7 @@
 	<string name="report_not_far_away_button">Not far away (but not visible)</string>
 	<string name="report_very_far_button">Very far (faintly heard)</string>
 	<string name="report_what_label">WHAT?</string>
+	<string name="report_when_label">WHEN?</string>
 
 	<string name="alert_title_format">Is this a %s?</string>
 	<string name="alert_yes_button">Yes</string>
@@ -56,4 +57,10 @@
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>
     <string name="or">OR</string>
+	
+	<string name="last_month">Last\nMonth</string>
+	<string name="last_week">Last\nWeek</string>
+	<string name="last_24_hours">24 hours</string>
+	<string name="now">Now</string>
+	
 </resources>

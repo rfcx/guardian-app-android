@@ -10,7 +10,7 @@
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:adjustViewBounds="true"
-		android:padding="@dimen/margin_padding_normal"
+		android:padding="@dimen/margin_padding_large"
 		android:scaleType="fitCenter"
 		app:layout_constraintDimensionRatio="1:1"
 		app:layout_constraintEnd_toEndOf="parent"
