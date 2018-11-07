@@ -16,6 +16,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="@dimen/text_xlarge"
             android:textStyle="bold"
+            android:textColor="@color/text_primary"
             tools:text="Hi, Ant!"
     />
 
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_secondary"
                 tools:text="Not tracking"/>
 
         <ImageView
@@ -68,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_medium"
+                android:textColor="@color/text_secondary"
                 tools:text="Tembe"/>
 
     </LinearLayout>

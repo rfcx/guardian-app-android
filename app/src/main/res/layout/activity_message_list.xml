@@ -8,7 +8,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:fitsSystemWindows="true"
-	tools:context="android.rfcx.rfcx.ranger.view.MessageListActivity">
+	tools:context=".view.MessageListActivity">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/messageParentView"

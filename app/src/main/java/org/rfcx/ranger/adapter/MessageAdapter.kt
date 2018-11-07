@@ -65,7 +65,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
             }
 
             BaseItem.ITEM_EVENT_TYPE -> {
-                (holder as EventItemViewHolder).bind((item as EventItem).event)
+                (holder as EventItemViewHolder).bind(context, (item as EventItem).event)
             }
         }
     }
