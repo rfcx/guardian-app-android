@@ -37,7 +37,7 @@
             android:layout_alignBaseline="@+id/itemMessageFromTextView"
             android:layout_alignParentEnd="true"
             android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_x_small"
+            android:textSize="@dimen/text_xsmall"
             tools:text="Time" />
 
         <TextView

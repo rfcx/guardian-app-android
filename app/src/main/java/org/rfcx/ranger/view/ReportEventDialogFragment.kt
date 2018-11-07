@@ -17,7 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.location.LocationServices
-import kotlinx.android.synthetic.main.fragment_report_evebt_dialog.*
+import kotlinx.android.synthetic.main.fragment_report_event_dialog.*
 import java.util.*
 
 
@@ -42,7 +42,7 @@ class ReportEventDialogFragment : BaseDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_report_evebt_dialog, container, false);
+        return inflater.inflate(R.layout.fragment_report_event_dialog, container, false);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

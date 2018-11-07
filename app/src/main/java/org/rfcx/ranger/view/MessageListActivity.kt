@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_message_list.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.MessageAdapter
+import org.rfcx.ranger.adapter.OnLocationTrackingChangeListener
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
@@ -47,7 +48,7 @@ import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnLocationTrackingChangeListener,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
@@ -112,8 +113,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		} else {
 			startTrackerLocationService()
 		}
-		
-		
+
 		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
 			Log.d("FirebaseInstanceId", it.token)
 		}
@@ -181,7 +181,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	}
 	
 	private fun initAdapter() {
-		messageAdapter = MessageAdapter(this@MessageListActivity)
+		messageAdapter = MessageAdapter(this@MessageListActivity, this@MessageListActivity)
 		messageRecyclerView.setHasFixedSize(true)
 		messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
 		messageRecyclerView.adapter = messageAdapter

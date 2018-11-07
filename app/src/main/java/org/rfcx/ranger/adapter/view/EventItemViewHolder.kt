@@ -10,11 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.item_event.view.*
 
-/**
- * Created by Anuphap Suwannamas on 10/22/2017 AD.
- * Email: Anupharpae@gmail.com
- */
-
 class EventItemViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(event: Event) {
 
@@ -30,11 +25,9 @@ class EventItemViewHolder(itemView: View, private var onMessageItemClickListener
         itemView.ivEventIcon.setImageResource(EventIcon(event).resId(isOpened))
         itemView.ivEventConfirm.visibility = if (isConfirm) View.VISIBLE else View.INVISIBLE
 
-        // create text latLng
-        val latLng: String = StringBuilder(event.latitude.toString())
-                .append(", ")
-                .append(event.longitude.toString()).toString()
-
+//        val latLng: String = StringBuilder(event.latitude.toString())
+//                .append(", ")
+//                .append(event.longitude.toString()).toString()
 //        itemView.tvEventLocation.text = latLng
 
         itemView.setOnClickListener {

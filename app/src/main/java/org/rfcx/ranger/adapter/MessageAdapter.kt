@@ -9,12 +9,11 @@ import org.rfcx.ranger.adapter.view.MessageViewHolder
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.rfcx.ranger.adapter.view.ProfileViewHolder
 import java.util.*
 
-/**
- * Created by Jingjoeh on 10/5/2017 AD.
- */
-class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickListener,
+                     private var onLocationTrackingChangeListener: OnLocationTrackingChangeListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	private var items: MutableList<BaseItem> = ArrayList()
 
@@ -22,24 +21,38 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
 
+            0 -> {
+                val itemView = inflater.inflate(R.layout.header_profile, parent, false)
+                ProfileViewHolder(itemView, onLocationTrackingChangeListener)
+            }
+
             BaseItem.ITEM_EVENT_TYPE -> {
                 val itemView = inflater.inflate(R.layout.item_event, parent, false)
                 EventItemViewHolder(itemView, onMessageItemClickListener)
             }
 
-            else -> {
+            BaseItem.ITEM_MESSAGE_TYPE -> {
                 val itemView = inflater.inflate(R.layout.item_message, parent, false)
                 MessageViewHolder(itemView, onMessageItemClickListener)
+            }
+
+            else -> {
+                throw Exception("Invalid viewType")
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].itemType
+        return if (position == 0) 0 else items[position-1].itemType
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = items[position]
+        if (position == 0) {
+            (holder as ProfileViewHolder).bind()
+            return
+        }
+
+        val item = items[position-1]
 
         when (holder.itemViewType) {
             BaseItem.ITEM_MESSAGE_TYPE -> {
@@ -48,12 +61,11 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
 
             BaseItem.ITEM_EVENT_TYPE -> {
                 (holder as EventItemViewHolder).bind((item as EventItem).event)
-
             }
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = items.size + 1
 
     fun updateMessages(items: List<BaseItem>?) {
         this.items.clear()
@@ -68,11 +80,11 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
     }
 
     fun getItemAt(position: Int): BaseItem? {
-        if (position > items.size || position < 0) {
+        if (position > items.size || position < 1) {
             return null
         }
 
-        return (items[position])
+        return (items[position-1])
     }
 
 }

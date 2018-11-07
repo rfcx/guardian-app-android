@@ -47,7 +47,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="8dp"
 		android:textColor="@color/text_white"
-		android:textSize="@dimen/text_x_small"
+		android:textSize="@dimen/text_xsmall"
 		app:layout_constraintEnd_toEndOf="@+id/rangerBrandingIcon"
 		app:layout_constraintStart_toStartOf="@+id/rangerBrandingIcon"
 		app:layout_constraintTop_toBottomOf="@+id/rangerBrandingText"
