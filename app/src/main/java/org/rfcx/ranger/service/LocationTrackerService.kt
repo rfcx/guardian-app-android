@@ -22,7 +22,7 @@ import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.NotificationHelper
 import org.rfcx.ranger.util.PrefKey
 import org.rfcx.ranger.util.PreferenceHelper
-import org.rfcx.ranger.view.SettingActivity
+import org.rfcx.ranger.view.SettingsActivity
 
 /**
  * Created by Jingjoeh on 10/7/2017 AD.
@@ -111,7 +111,7 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun createLocationTrackerNotification(location: Location?): Notification {
-		val intent = Intent(this, SettingActivity::class.java)
+		val intent = Intent(this, SettingsActivity::class.java)
 		val pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {

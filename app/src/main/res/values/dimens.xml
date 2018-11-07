@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<dimen name="margin_padding_xsmall">2dp</dimen>
 	<dimen name="margin_padding_small">4dp</dimen>
 	<dimen name="margin_padding_normal">8dp</dimen>
 	<dimen name="margin_padding_large">16dp</dimen>
+	<dimen name="margin_padding_xlarge">32dp</dimen>
 
 	<!-- Text size -->
 	<dimen name="text_large">18sp</dimen>

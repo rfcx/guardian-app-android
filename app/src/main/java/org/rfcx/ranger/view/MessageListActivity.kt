@@ -150,12 +150,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			R.id.menu_logout -> {
 				logout()
 			}
-			R.id.menu_ranger_group -> {
-				val message = "You are connected to: " + (getSite() ?: "none")
-				Snackbar.make(messageParentView, message, Snackbar.LENGTH_LONG).show()
-			}
-			R.id.menu_setting -> {
-				startActivity(Intent(this@MessageListActivity, SettingActivity::class.java))
+			R.id.menu_settings -> {
+				startActivity(Intent(this@MessageListActivity, SettingsActivity::class.java))
 			}
 		}
 		return super.onOptionsItemSelected(item)
@@ -396,7 +392,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	
 	private fun startTrackerLocationService() {
 		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
-				!= SettingActivity.TRACKING_OFF) {
+				!= SettingsActivity.TRACKING_OFF) {
 			val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 				startForegroundService(intent)

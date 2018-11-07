@@ -24,7 +24,7 @@ class EventItemViewHolder(itemView: View, private var onMessageItemClickListener
         itemView.tvEventSite.typeface = if (isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
         itemView.tvEventValue.text = event.value
         itemView.tvEventSite.text = event.guardianShortname
-        itemView.tvEventDate.text = DateHelper.getEventDate(event?.beginsAt)
+        itemView.tvEventDate.text = DateHelper.getEventDate(event.beginsAt)
         itemView.tvEventTime.text = DateHelper.getEventTime(event)
 
         itemView.ivEventIcon.setImageResource(EventIcon(event).resId(isOpened))

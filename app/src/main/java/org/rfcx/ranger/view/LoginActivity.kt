@@ -163,6 +163,7 @@ class LoginActivity : AppCompatActivity() {
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ID_TOKEN, userAuthResponse.idToken)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.GU_ID, userAuthResponse.guid)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.DEFAULT_SITE, userAuthResponse.defaultSite)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.SELECTED_GUARDIAN_GROUP, userAuthResponse.defaultSite)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, userAuthResponse.accessToken)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, userAuthResponse.email)
 

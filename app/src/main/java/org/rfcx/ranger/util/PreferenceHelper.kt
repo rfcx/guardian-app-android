@@ -2,6 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.util.*
 
 class PreferenceHelper(context: Context) {
 	
@@ -44,6 +45,18 @@ class PreferenceHelper(context: Context) {
 
 	fun getString(key: String): String? {
 		return sharedPreferences.getString(key, null)
+	}
+
+	fun getDate(key: String): Date? {
+		val secondsSinceEpoch = sharedPreferences.getLong(key, 0L)
+		if (secondsSinceEpoch == 0L) {
+			return null
+		}
+		return Date(secondsSinceEpoch)
+	}
+
+	fun putDate(key: String, date: Date) {
+		sharedPreferences.edit().putLong(key, date.time).apply()
 	}
 	
 	fun <E> getObject(key: String, objClass: Class<E>): E? {

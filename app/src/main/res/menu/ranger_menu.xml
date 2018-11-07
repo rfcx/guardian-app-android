@@ -2,11 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<item
-		android:id="@+id/menu_ranger_group"
-		android:title="@string/menu_ranger_group"/>
-	
-	<item
-		android:id="@+id/menu_setting"
+		android:id="@+id/menu_settings"
 		android:title="@string/setting_label"/>
 	
 	<item
