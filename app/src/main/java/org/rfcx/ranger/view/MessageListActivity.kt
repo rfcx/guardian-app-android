@@ -246,21 +246,21 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			}
 		})
 	}
-	
+
 	private fun getMessageList() {
 		messageSwipeRefresh.isRefreshing = true
-		
+
 		MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
 			override fun onSuccess(messages: List<Message>) {
-				
+
 				RealmHelper.getInstance().saveMessage(messages)
 				val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
 					MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
 				}
-				
+
 				getEvents(messageItems)
 			}
-			
+
 			override fun onFailed(t: Throwable?, message: String?) {
 				messageSwipeRefresh.isRefreshing = false
 				if (t is TokenExpireException) {
@@ -407,9 +407,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	 * Do -> reload list
 	 */
 	private val onEventNotificationReceived = object : BroadcastReceiver() {
-		override fun onReceive(p0: Context?, p1: Intent?) {
-			if (p1?.action == INTENT_FILTER_MESSAGE_BROADCAST)
+		override fun onReceive(context: Context?, intent: Intent?) {
+			if (intent?.action == INTENT_FILTER_MESSAGE_BROADCAST) {
 				getMessageList()
+			}
 		}
 	}
 }

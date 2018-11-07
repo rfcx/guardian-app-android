@@ -164,8 +164,7 @@ class SettingsActivity : AppCompatActivity() {
 	private fun reloadGuardianGroups() {
 		val database = RealmHelper.getInstance()
 		val lastUpdated = PreferenceHelper.getInstance(this).getDate(PrefKey.GUARDIAN_GROUPS_LAST_UPDATED)
-		//val cacheTimeMs = 24L * 3600000L // 24 hours
-		val cacheTimeMs = 0L
+		val cacheTimeMs = 24L * 3600000L // 24 hours
 		if (lastUpdated != null && lastUpdated.after(Date(System.currentTimeMillis() - cacheTimeMs))) {
 			Log.d("SettingsActivity", "using cache for guardian groups")
 			populateGuardianGroups(database.guardianGroups())
