@@ -25,6 +25,11 @@
 	<string name="menu_logout">Logout</string>
 	<string name="menu_ranger_group">My site</string>
 
+	<!-- message list -->
+	<string name="profile_welcome">Hi, %s!</string>
+	<string name="profile_onduty">On duty</string>
+	<string name="profile_nottracking">Not tracking</string>
+
 	<string name="report_chainsaw_button">Chainsaws</string>
 	<string name="report_gunshot_button">Gunshots</string>
 	<string name="report_trespasser_button">Trespassers</string>

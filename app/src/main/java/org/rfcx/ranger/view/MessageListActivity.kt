@@ -29,6 +29,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
+import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.MessageAdapter
@@ -111,7 +112,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			Log.w("Permission", "grant")
 			requestPermissions()
 		} else {
-			startTrackerLocationService()
+			LocationTracking.updateService(this)
 		}
 
 		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
@@ -132,6 +133,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
+
+		refreshHeader()
 	}
 	
 	override fun onPause() {
@@ -181,7 +184,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	}
 	
 	private fun initAdapter() {
-		messageAdapter = MessageAdapter(this@MessageListActivity, this@MessageListActivity)
+		messageAdapter = MessageAdapter(this@MessageListActivity, this@MessageListActivity, this@MessageListActivity)
 		messageRecyclerView.setHasFixedSize(true)
 		messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
 		messageRecyclerView.adapter = messageAdapter
@@ -273,6 +276,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		}
 		)
 	}
+
+	private fun refreshHeader() {
+		val preferences = PreferenceHelper.getInstance(this)
+		val site = preferences.getString(PrefKey.DEFAULT_SITE, "")
+		val nickname = preferences.getString(PrefKey.NICKNAME, site + " Ranger")
+		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
+	}
 	
 	private fun logout() {
 		CloudMessaging.unsubscribe(this)
@@ -301,6 +311,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		}
 		
 		messageAdapter.notifyDataSetChanged()
+	}
+
+	override fun onLocationTrackingChange(on: Boolean) {
+		if (!isLocationAllow() && on) {
+			requestPermissions()
+		} else {
+			LocationTracking.set(this, on)
+		}
 	}
 	
 	override fun onCurrentAlert(event: Event) {
@@ -356,16 +374,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		}
 	}
 	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-	                                        grantResults: IntArray) {
-		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				startTrackerLocationService()
-			}
-		}
-	}
-	
 	private fun showAlertPopup(event: Event) {
 		Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
 		RealmHelper.getInstance().updateOpenedEvent(event)
@@ -389,18 +397,19 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			
 		})
 	}
-	
-	private fun startTrackerLocationService() {
-		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
-				!= SettingsActivity.TRACKING_OFF) {
-			val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				startForegroundService(intent)
+
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+											grantResults: IntArray) {
+		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
+		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				LocationTracking.set(this, true)
 			} else {
-				startService(intent)
+				locationTrackingSwitch.isChecked = false
 			}
 		}
 	}
+
 	
 	/**
 	 * BroadcastReceiver when receive message from FireBase Cloud Messaging @MyFireBaseMessagingService

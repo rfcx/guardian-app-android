@@ -1,5 +1,6 @@
 package org.rfcx.ranger.adapter
 
+import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
@@ -12,10 +13,11 @@ import android.view.ViewGroup
 import org.rfcx.ranger.adapter.view.ProfileViewHolder
 import java.util.*
 
-class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickListener,
+class MessageAdapter(private val context: Context, private var onMessageItemClickListener: OnMessageItemClickListener,
                      private var onLocationTrackingChangeListener: OnLocationTrackingChangeListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	private var items: MutableList<BaseItem> = ArrayList()
+    private var headerInformation: HeaderInformation? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -48,7 +50,10 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == 0) {
-            (holder as ProfileViewHolder).bind()
+            val info = headerInformation
+            if (info != null) {
+                (holder as ProfileViewHolder).bind(context, info.nickname, info.location, info.isLocationTracking)
+            }
             return
         }
 
@@ -67,6 +72,13 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
 
     override fun getItemCount(): Int = items.size + 1
 
+    fun getItemAt(position: Int): BaseItem? {
+        if (position > items.size || position < 1) {
+            return null
+        }
+        return (items[position-1])
+    }
+
     fun updateMessages(items: List<BaseItem>?) {
         this.items.clear()
 
@@ -79,13 +91,11 @@ class MessageAdapter(private var onMessageItemClickListener: OnMessageItemClickL
         }
     }
 
-    fun getItemAt(position: Int): BaseItem? {
-        if (position > items.size || position < 1) {
-            return null
-        }
-
-        return (items[position-1])
+    fun updateHeader(nickname: String, location: String, isLocationTracking: Boolean) {
+        this.headerInformation = HeaderInformation(nickname, location, isLocationTracking)
+        notifyItemChanged(0)
     }
 
+    data class HeaderInformation(val nickname: String, val location: String, val isLocationTracking: Boolean)
 }
 

@@ -65,44 +65,15 @@ class SettingsActivity : AppCompatActivity() {
 	}
 	
 	private fun bindSwitchLocation() {
-		val state = PreferenceHelper.getInstance(this)
-				.getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
-		if (state.isEmpty()) {
-			// state never setting before
-			if (this.isLocationAllow()) {
-				// state on
-				PreferenceHelper.getInstance(this)
-						.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_ON)
-				locationTrackingSwitch.isChecked = true
-			} else {
-				PreferenceHelper.getInstance(this)
-						.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
-				locationTrackingSwitch.isChecked = false
-			}
-		} else {
-			locationTrackingSwitch.isChecked = state == TRACKING_ON
-		}
-		
-		// action on switch change
+
+		locationTrackingSwitch.isChecked = LocationTracking.isOn(this)
+
 		locationTrackingSwitch.setOnCheckedChangeListener { _, isChecked ->
-			if (isChecked) {
-				
-				// start service
-				if (isLocationAllow()) {
-					startService(Intent(this@SettingsActivity, LocationTrackerService::class.java))
-					PreferenceHelper.getInstance(this)
-							.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_ON)
-				} else {
-					// request location permission
-					locationTrackingSwitch.isChecked = false
-					requestPermissions()
-				}
+			if (!isLocationAllow() && isChecked) {
+				locationTrackingSwitch.isChecked = false
+				requestPermissions()
 			} else {
-				PreferenceHelper.getInstance(this)
-						.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
-				
-				// stop tracking location service
-				stopService(Intent(this@SettingsActivity, LocationTrackerService::class.java))
+				LocationTracking.set(this@SettingsActivity, isChecked)
 			}
 		}
 	}
@@ -151,10 +122,7 @@ class SettingsActivity : AppCompatActivity() {
 		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
 		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				// start location service
-				startService(Intent(this@SettingsActivity, LocationTrackerService::class.java))
-				PreferenceHelper.getInstance(this)
-						.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_ON)
+				LocationTracking.set(this, true)
 			} else {
 				locationTrackingSwitch.isChecked = false
 			}
@@ -225,8 +193,6 @@ class SettingsActivity : AppCompatActivity() {
 	}
 
 	companion object {
-		private const val TRACKING_ON = "on"
-		const val TRACKING_OFF = "off"
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 	}
 	
