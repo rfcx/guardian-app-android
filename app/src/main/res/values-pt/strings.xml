@@ -68,9 +68,9 @@
     <string name="guardian_group_label">Grupo de guardiões</string>
     <string name="guardian_group_none">Nenhum</string>
 
-    <string name="last_month">Último/Mês</string>
-    <string name="last_week">Última/Semana</string>
-    <string name="last_24_hours">Último/24 horas</string>
+    <string name="last_month">Último\nMês</string>
+    <string name="last_week">Última\nSemana</string>
+    <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
 
 </resources>
