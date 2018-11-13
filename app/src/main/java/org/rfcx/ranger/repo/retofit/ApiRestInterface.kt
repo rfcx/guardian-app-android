@@ -1,6 +1,7 @@
 package org.rfcx.ranger.repo.retofit
 
 import org.rfcx.ranger.entity.*
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
@@ -47,5 +48,8 @@ interface ApiRestInterface {
 
     @GET("users/touchapi")
     fun userTouch(@Header("Authorization") authorization: String): Call<UserTouchResponse>
+
+    @GET("guardians/groups")
+    fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
 
 }

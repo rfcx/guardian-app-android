@@ -12,6 +12,8 @@ class DateHelper {
         private val dateFormat = "yyyy-MM-dd"
         private val timeFormat = "HH:mm"
 
+        private val oneDayMs = 24L * 3600000L
+
         private val inputSdf by lazy {
             val sdf = SimpleDateFormat(inputFormat, Locale.ENGLISH)
             sdf.timeZone = TimeZone.getTimeZone("UTC")
@@ -50,18 +52,15 @@ class DateHelper {
 
         fun getEventTime(event: Event): String {
             val d1: Date
-            val d2: Date
             try {
                 d1 = inputSdf.parse(event.beginsAt)
-                d2 = inputSdf.parse(event.endAt)
             } catch (e: Exception) {
                 return ""
             }
-
-            if (event.beginsAt == event.endAt) {
-                return outputTimeSdf.format(d1)
+            if (d1.before(Date(System.currentTimeMillis()-oneDayMs))) {
+                return outputDateTimeSdf.format(d1)
             }
-            return outputTimeSdf.format(d1) + "-" + outputTimeSdf.format(d2)
+            return outputTimeSdf.format(d1)
         }
 
         fun getEventDate(input: String?): String {

@@ -12,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.item_message.view.*
 
-/**
- * Created by Jingjoeh on 11/5/2017 AD.
- */
 class MessageViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) :
         RecyclerView.ViewHolder(itemView) {
 

@@ -29,9 +29,11 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
+import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.MessageAdapter
+import org.rfcx.ranger.adapter.OnLocationTrackingChangeListener
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
@@ -47,7 +49,7 @@ import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnLocationTrackingChangeListener,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
@@ -110,10 +112,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			Log.w("Permission", "grant")
 			requestPermissions()
 		} else {
-			startTrackerLocationService()
+			LocationTracking.updateService(this)
 		}
-		
-		
+
 		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
 			Log.d("FirebaseInstanceId", it.token)
 		}
@@ -132,6 +133,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
+
+		refreshHeader()
 	}
 	
 	override fun onPause() {
@@ -150,12 +153,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			R.id.menu_logout -> {
 				logout()
 			}
-			R.id.menu_ranger_group -> {
-				val message = "You are connected to: " + (getSite() ?: "none")
-				Snackbar.make(messageParentView, message, Snackbar.LENGTH_LONG).show()
-			}
-			R.id.menu_setting -> {
-				startActivity(Intent(this@MessageListActivity, SettingActivity::class.java))
+			R.id.menu_settings -> {
+				startActivity(Intent(this@MessageListActivity, SettingsActivity::class.java))
 			}
 		}
 		return super.onOptionsItemSelected(item)
@@ -185,7 +184,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 	}
 	
 	private fun initAdapter() {
-		messageAdapter = MessageAdapter(this@MessageListActivity)
+		messageAdapter = MessageAdapter(this@MessageListActivity, this@MessageListActivity, this@MessageListActivity)
 		messageRecyclerView.setHasFixedSize(true)
 		messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
 		messageRecyclerView.adapter = messageAdapter
@@ -250,21 +249,21 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			}
 		})
 	}
-	
+
 	private fun getMessageList() {
 		messageSwipeRefresh.isRefreshing = true
-		
+
 		MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
 			override fun onSuccess(messages: List<Message>) {
-				
+
 				RealmHelper.getInstance().saveMessage(messages)
 				val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
 					MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
 				}
-				
+
 				getEvents(messageItems)
 			}
-			
+
 			override fun onFailed(t: Throwable?, message: String?) {
 				messageSwipeRefresh.isRefreshing = false
 				if (t is TokenExpireException) {
@@ -276,6 +275,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			}
 		}
 		)
+	}
+
+	private fun refreshHeader() {
+		val preferences = PreferenceHelper.getInstance(this)
+		val site = preferences.getString(PrefKey.DEFAULT_SITE, "")
+		val nickname = preferences.getString(PrefKey.NICKNAME, site + " Ranger")
+		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
@@ -305,6 +311,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		}
 		
 		messageAdapter.notifyDataSetChanged()
+	}
+
+	override fun onLocationTrackingChange(on: Boolean) {
+		if (!isLocationAllow() && on) {
+			requestPermissions()
+		} else {
+			LocationTracking.set(this, on)
+		}
 	}
 	
 	override fun onCurrentAlert(event: Event) {
@@ -360,16 +374,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 		}
 	}
 	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-	                                        grantResults: IntArray) {
-		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				startTrackerLocationService()
-			}
-		}
-	}
-	
 	private fun showAlertPopup(event: Event) {
 		Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
 		RealmHelper.getInstance().updateOpenedEvent(event)
@@ -393,27 +397,29 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener,
 			
 		})
 	}
-	
-	private fun startTrackerLocationService() {
-		if (PreferenceHelper.getInstance(this).getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
-				!= SettingActivity.TRACKING_OFF) {
-			val intent = Intent(this@MessageListActivity, LocationTrackerService::class.java)
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				startForegroundService(intent)
+
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+											grantResults: IntArray) {
+		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
+		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				LocationTracking.set(this, true)
 			} else {
-				startService(intent)
+				locationTrackingSwitch.isChecked = false
 			}
 		}
 	}
+
 	
 	/**
 	 * BroadcastReceiver when receive message from FireBase Cloud Messaging @MyFireBaseMessagingService
 	 * Do -> reload list
 	 */
 	private val onEventNotificationReceived = object : BroadcastReceiver() {
-		override fun onReceive(p0: Context?, p1: Intent?) {
-			if (p1?.action == INTENT_FILTER_MESSAGE_BROADCAST)
+		override fun onReceive(context: Context?, intent: Intent?) {
+			if (intent?.action == INTENT_FILTER_MESSAGE_BROADCAST) {
 				getMessageList()
+			}
 		}
 	}
 }

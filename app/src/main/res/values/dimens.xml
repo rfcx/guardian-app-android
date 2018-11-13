@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<dimen name="margin_padding_xsmall">2dp</dimen>
 	<dimen name="margin_padding_small">4dp</dimen>
 	<dimen name="margin_padding_normal">8dp</dimen>
 	<dimen name="margin_padding_large">16dp</dimen>
+	<dimen name="margin_padding_xlarge">32dp</dimen>
 
 	<!-- Text size -->
+	<dimen name="text_xlarge">22sp</dimen>
 	<dimen name="text_large">18sp</dimen>
 	<dimen name="text_medium">16sp</dimen>
 	<dimen name="text_small">14sp</dimen>
-	<dimen name="text_x_small">12sp</dimen>
-	<dimen name="text_xx_small">10sp</dimen>
+	<dimen name="text_xsmall">12sp</dimen>
+	<dimen name="text_xxsmall">10sp</dimen>
 	
 	<dimen name="dialog_min_width">268dp</dimen>
 	<dimen name="dialog_height">480dp</dimen>

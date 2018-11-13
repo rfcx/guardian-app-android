@@ -11,15 +11,15 @@ class CloudMessaging {
 
         fun subscribeIfRequired(context: Context) {
             val preferenceHelper = PreferenceHelper.getInstance(context)
-            val site = preferenceHelper.getString(PrefKey.DEFAULT_SITE)
-            if (!preferenceHelper.getBoolean(PrefKey.HAS_SUBSCRIBED_TO_DEFAULT_SITE) && site != null) {
+            val group = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
 
-                FirebaseMessaging.getInstance().subscribeToTopic(site).addOnCompleteListener {
+            if (!preferenceHelper.getBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP) && group != null) {
+                FirebaseMessaging.getInstance().subscribeToTopic(group).addOnCompleteListener {
                     if (it.isSuccessful()) {
-                        preferenceHelper.putBoolean(PrefKey.HAS_SUBSCRIBED_TO_DEFAULT_SITE, true)
+                        preferenceHelper.putBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, true)
                     } else {
-                        Crashlytics.logException(Exception("Unable to subscribe to cloud messaging for default site: ${site}"))
-                        Log.e("CloudMessaging", "Unable to subscribe to cloud messaging for default site")
+                        Crashlytics.logException(Exception("Unable to subscribe to cloud messaging for guardian group: ${group}"))
+                        Log.e("CloudMessaging", "Unable to subscribe to cloud messaging for guardian group")
                     }
                 }
             }
@@ -27,13 +27,14 @@ class CloudMessaging {
 
         fun unsubscribe(context: Context) {
             val preferenceHelper = PreferenceHelper.getInstance(context)
-            val site = preferenceHelper.getString(PrefKey.DEFAULT_SITE)
+            val group = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
+            preferenceHelper.putBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
 
-            if (site != null) {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(site).addOnCompleteListener {
+            if (group != null) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(group).addOnCompleteListener {
                     if (!it.isSuccessful()) {
-                        Crashlytics.logException(Exception("Unable to unsubscribe to cloud messaging for default site: ${site}"))
-                        Log.e("CloudMessaging", "Unable to subscribe to cloud messaging for default site")
+                        Crashlytics.logException(Exception("Unable to unsubscribe to cloud messaging for default site: ${group}"))
+                        Log.e("CloudMessaging", "Unable to unsubscribe to cloud messaging for default site")
                     }
                 }
             }

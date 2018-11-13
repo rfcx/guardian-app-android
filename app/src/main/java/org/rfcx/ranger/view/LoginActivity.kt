@@ -163,8 +163,12 @@ class LoginActivity : AppCompatActivity() {
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ID_TOKEN, userAuthResponse.idToken)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.GU_ID, userAuthResponse.guid)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.DEFAULT_SITE, userAuthResponse.defaultSite)
+		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.SELECTED_GUARDIAN_GROUP, userAuthResponse.defaultSite)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, userAuthResponse.accessToken)
 		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, userAuthResponse.email)
+		if (userAuthResponse.nickname != null) {
+			PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.NICKNAME, userAuthResponse.nickname)
+		}
 
 		UserTouchApi().send(this, object : UserTouchApi.UserTouchCallback {
 			override fun onSuccess() {
@@ -200,6 +204,7 @@ class LoginActivity : AppCompatActivity() {
                     val defaultSite: String? = metadata["defaultSite"] as String?
                     val guid: String? = metadata["guid"] as String?
                     val email: String? = untrusted.body["email"] as String?
+					val nickname: String? = untrusted.body["nickname"] as String?
 
                     when {
                         defaultSite.isNullOrEmpty() -> {
@@ -207,7 +212,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                         guid.isNullOrEmpty() || email.isNullOrEmpty() -> return Err(getString(R.string.an_error_occurred))
 
-                        else -> return Ok(UserAuthResponse(email!!, guid!!, defaultSite!!, token, credentials.accessToken!!))
+                        else -> return Ok(UserAuthResponse(email!!, guid!!, defaultSite!!, token, credentials.accessToken!!, nickname))
                     }
                 }
             }
@@ -223,4 +228,4 @@ class LoginActivity : AppCompatActivity() {
 	}
 }
 
-data class UserAuthResponse (val email: String, val guid: String, val defaultSite: String, val idToken: String, val accessToken: String)
+data class UserAuthResponse (val email: String, val guid: String, val defaultSite: String, val idToken: String, val accessToken: String, val nickname: String?)

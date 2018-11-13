@@ -4,10 +4,13 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 import io.realm.Realm
 import io.realm.RealmList
+import io.realm.RealmResults
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 
 /**
- * Created by Jingjoeh on 11/5/2017 AD.
+ * CRUD interface for Realm
  */
+
 class RealmHelper {
 
     companion object {
@@ -104,6 +107,19 @@ class RealmHelper {
             event.isConfirmed = isConfirmedEvent(event)
             realm.insertOrUpdate(event)
         }
+        realm.commitTransaction()
+        realm.close()
+    }
+
+    fun guardianGroups(): RealmResults<GuardianGroup> {
+        val realm = Realm.getDefaultInstance()
+        return realm.where(GuardianGroup::class.java).findAll()
+    }
+
+    fun saveGuardianGroups(groups: List<GuardianGroup>) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.insertOrUpdate(groups)
         realm.commitTransaction()
         realm.close()
     }
