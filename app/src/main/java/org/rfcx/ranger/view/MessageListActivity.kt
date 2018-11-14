@@ -2,10 +2,7 @@ package org.rfcx.ranger.view
 
 import android.Manifest
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -21,11 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -42,6 +43,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
+import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
 import org.rfcx.ranger.util.*
 
 
@@ -63,6 +65,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		private const val REQUEST_CODE_REPORT = 201
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
 	}
 	
@@ -104,23 +107,25 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			}
 		})
 		
-		if (!this.isLocationAllow()) {
-			Log.w("Permission", "grant")
-			requestPermissions()
-		} else {
-			LocationTracking.updateService(this)
+		if (LocationTracking.isOn(this)) {
+			if (!this.isLocationAllow()) {
+				requestPermissions()
+			} else {
+				checkLocationIsAllow()
+			}
 		}
-		
-		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-			Log.d("FirebaseInstanceId", it.token)
-		}
-		
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == REQUEST_CODE_REPORT && resultCode == Activity.RESULT_OK) {
 			ReportSuccessDIalogFragment().show(supportFragmentManager, null)
+		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
+			if (resultCode == Activity.RESULT_OK) {
+				LocationTracking.set(this@MessageListActivity, true)
+			} else {
+				LocationTracking.set(this@MessageListActivity, false)
+			}
 		}
 	}
 	
@@ -319,10 +324,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	}
 	
 	override fun onLocationTrackingChange(on: Boolean) {
-		if (!isLocationAllow() && on) {
-			requestPermissions()
+		if (on) {
+			if (!isLocationAllow()) {
+				requestPermissions()
+			} else {
+				checkLocationIsAllow()
+			}
 		} else {
-			LocationTracking.set(this, on)
+			LocationTracking.set(this, false)
 		}
 	}
 	
@@ -403,10 +412,39 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
 	                                        grantResults: IntArray) {
-		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
 		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				LocationTracking.set(this, true)
+				checkLocationIsAllow()
+			}
+		}
+	}
+	
+	/**
+	 * Checking phone is turn on location on setting
+	 */
+	private fun checkLocationIsAllow() {
+		val builder = LocationSettingsRequest.Builder()
+				.addLocationRequest(locationRequest)
+		val client: SettingsClient = LocationServices.getSettingsClient(this)
+		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+		task.addOnSuccessListener {
+			LocationTracking.set(this@MessageListActivity, true)
+		}
+		
+		task.addOnFailureListener { exception ->
+			if (exception is ResolvableApiException) {
+				// Location settings are not satisfied, but this can be fixed
+				// by showing the user a dialog.
+				LocationTracking.set(this@MessageListActivity, false)
+				try {
+					// Show the dialog by calling startResolutionForResult(),
+					// and check the result in onActivityResult().
+					exception.startResolutionForResult(this@MessageListActivity,
+							REQUEST_CHECK_LOCATION_SETTINGS)
+				} catch (sendEx: IntentSender.SendIntentException) {
+					// Ignore the error.
+					sendEx.printStackTrace()
+				}
 			}
 		}
 	}

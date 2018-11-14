@@ -2,32 +2,39 @@ package org.rfcx.ranger.view
 
 import android.Manifest
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import androidx.core.app.ActivityCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.guardian.GuardianGroup
-import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.adapter.guardian.GuardianGroupsAdapter
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.repo.api.GuardianGroupsApi
+import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class SettingsActivity : AppCompatActivity() {
-
+	
 	val guardianGroupsAdapter by lazy { GuardianGroupsAdapter(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,12 +46,19 @@ class SettingsActivity : AppCompatActivity() {
 		bindSwitchLocation()
 		bindGuardianGroupSpinner()
 	}
-
+	
 	override fun onResume() {
 		super.onResume()
-
+		updateSwitchLocation()
 		reloadGuardianGroups()
 		defaultSiteValueTextView.text = this.getSite()
+		/*if (LocationTracking.isOn(this)) {
+			if (!this.isLocationAllow()) {
+				requestPermissions()
+			} else {
+				checkLocationIsAllow()
+			}
+		}*/
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -52,6 +66,17 @@ class SettingsActivity : AppCompatActivity() {
 			android.R.id.home -> finish()
 		}
 		return super.onOptionsItemSelected(item)
+	}
+	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
+			if (resultCode == RESULT_OK) {
+				LocationTracking.set(this@SettingsActivity, true)
+			} else {
+				LocationTracking.set(this@SettingsActivity, false)
+			}
+		}
 	}
 	
 	private fun bindActionbar() {
@@ -64,25 +89,29 @@ class SettingsActivity : AppCompatActivity() {
 		}
 	}
 	
-	private fun bindSwitchLocation() {
-
+	private fun updateSwitchLocation() {
 		locationTrackingSwitch.isChecked = LocationTracking.isOn(this)
-
+	}
+	
+	private fun bindSwitchLocation() {
 		locationTrackingSwitch.setOnCheckedChangeListener { _, isChecked ->
-			if (!isLocationAllow() && isChecked) {
-				locationTrackingSwitch.isChecked = false
-				requestPermissions()
+			if (isChecked) {
+				if (!isLocationAllow()) {
+					requestPermissions()
+				} else {
+					checkLocationIsAllow()
+				}
 			} else {
-				LocationTracking.set(this@SettingsActivity, isChecked)
+				LocationTracking.set(this, false)
 			}
 		}
 	}
-
+	
 	private fun bindGuardianGroupSpinner() {
 		guardianGroupSpinner.adapter = guardianGroupsAdapter
 		guardianGroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onNothingSelected(p0: AdapterView<*>?) {}
-
+			
 			override fun onItemSelected(adapterView: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
 				val group = guardianGroupsAdapter.getItem(position)
 				guardianGroupSelected(group)
@@ -122,13 +151,14 @@ class SettingsActivity : AppCompatActivity() {
 		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
 		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				LocationTracking.set(this, true)
+				checkLocationIsAllow()
 			} else {
-				locationTrackingSwitch.isChecked = false
+				LocationTracking.set(this, false)
 			}
+			updateSwitchLocation()
 		}
 	}
-
+	
 	private fun reloadGuardianGroups() {
 		val database = RealmHelper.getInstance()
 		val lastUpdated = PreferenceHelper.getInstance(this).getDate(PrefKey.GUARDIAN_GROUPS_LAST_UPDATED)
@@ -138,11 +168,11 @@ class SettingsActivity : AppCompatActivity() {
 			populateGuardianGroups(database.guardianGroups())
 			return
 		}
-
+		
 		Log.d("SettingsActivity", "reloading guardian groups")
 		guardianGroupSpinner.visibility = View.INVISIBLE
 		guardianGroupProgress.visibility = View.VISIBLE
-
+		
 		GuardianGroupsApi().getAll(this, object : GuardianGroupsApi.OnGuardianGroupsCallback {
 			override fun onSuccess(groups: List<GuardianGroup>) {
 				Log.d("SettingsActivity", "got ${groups.size}")
@@ -152,12 +182,12 @@ class SettingsActivity : AppCompatActivity() {
 				guardianGroupSpinner.visibility = View.VISIBLE
 				guardianGroupProgress.visibility = View.INVISIBLE
 			}
+			
 			override fun onFailed(t: Throwable?, message: String?) {
 				Log.d("SettingsActivity", "failed: ${message}")
 				if (lastUpdated != null) {
 					populateGuardianGroups(database.guardianGroups())
-				}
-				else {
+				} else {
 					populateGuardianGroups(ArrayList())
 				}
 				guardianGroupSpinner.visibility = View.VISIBLE
@@ -165,10 +195,10 @@ class SettingsActivity : AppCompatActivity() {
 			}
 		})
 	}
-
+	
 	private fun populateGuardianGroups(groups: List<GuardianGroup>) {
 		guardianGroupsAdapter.setData(groups)
-
+		
 		val selectedValue = PreferenceHelper.getInstance(this).getString(PrefKey.SELECTED_GUARDIAN_GROUP)
 		if (selectedValue != null) {
 			val selectedIndex = groups.indexOfFirst { it.shortname == selectedValue }
@@ -177,23 +207,56 @@ class SettingsActivity : AppCompatActivity() {
 			}
 		}
 	}
-
+	
 	private fun guardianGroupSelected(group: GuardianGroup) {
 		Log.d("SettingsActivity", "selected group ${group.shortname} ${group.name}")
-
+		
 		val preferenceHelper = PreferenceHelper.getInstance(this)
 		val currentGroup = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
-
+		
 		if (currentGroup == null || currentGroup != group.shortname) {
 			CloudMessaging.unsubscribe(this)
 			preferenceHelper.putString(PrefKey.SELECTED_GUARDIAN_GROUP, group.shortname)
 		}
-
+		
 		CloudMessaging.subscribeIfRequired(this)
 	}
-
+	
+	/**
+	 * Checking phone is turn on location on setting
+	 */
+	private fun checkLocationIsAllow() {
+		val builder = LocationSettingsRequest.Builder()
+				.addLocationRequest(LocationTrackerService.locationRequest)
+		val client: SettingsClient = LocationServices.getSettingsClient(this)
+		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+		task.addOnSuccessListener {
+			LocationTracking.set(this@SettingsActivity, true)
+			updateSwitchLocation()
+		}
+		
+		task.addOnFailureListener { exception ->
+			if (exception is ResolvableApiException) {
+				// Location settings are not satisfied, but this can be fixed
+				// by showing the user a dialog.
+				LocationTracking.set(this@SettingsActivity, false)
+				try {
+					// Show the dialog by calling startResolutionForResult(),
+					// and check the result in onActivityResult().
+					exception.startResolutionForResult(this@SettingsActivity,
+							REQUEST_CHECK_LOCATION_SETTINGS)
+				} catch (sendEx: IntentSender.SendIntentException) {
+					// Ignore the error.
+					sendEx.printStackTrace()
+				}
+			}
+		}
+	}
+	
+	
 	companion object {
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 	}
 	
 }

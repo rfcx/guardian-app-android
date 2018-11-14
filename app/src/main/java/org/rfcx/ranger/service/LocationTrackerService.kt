@@ -25,7 +25,6 @@ import org.rfcx.ranger.util.PreferenceHelper
 import org.rfcx.ranger.view.SettingsActivity
 
 /**
- * Created by Jingjoeh on 10/7/2017 AD.
  *
  * Service work with location
  * update Ranger location to server.
@@ -36,11 +35,19 @@ class LocationTrackerService : Service() {
 		const val NOTIFICATION_LOCATION_ID = 22
 		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
 		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
+		private const val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
+		private const val fastestIntervalLocationUpdate: Long = 20 * 1000
+		
+		val locationRequest = LocationRequest().apply {
+			interval = intervalLocationUpdate
+			fastestInterval = fastestIntervalLocationUpdate
+			priority = LocationRequest.PRIORITY_LOW_POWER
+		}
 	}
 	
 	private val tag = LocationTrackerService::class.java.simpleName
 	private val binder = SendLocationLocationServiceBinder()
-	private val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
+	
 	private var fusedLocationClient: FusedLocationProviderClient? = null
 	
 	private var locationCallback: LocationCallback = object : LocationCallback() {
@@ -49,14 +56,25 @@ class LocationTrackerService : Service() {
 			Log.d(tag, "${locationResult?.lastLocation?.latitude} ${locationResult?.lastLocation?.longitude}")
 			
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-					createLocationTrackerNotification(locationResult?.lastLocation))
+					createLocationTrackerNotification(locationResult?.lastLocation,true))
 			
 			locationResult?.lastLocation?.let {
 				sentLocation(it)
 			}
 		}
 		
+		override fun onLocationAvailability(p0: LocationAvailability?) {
+			super.onLocationAvailability(p0)
+			if (p0?.isLocationAvailable == false) {
+				// user turn off location on setting
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
+						createLocationTrackerNotification(null,false))
+			}
+		}
+		
+		
 	}
+	
 	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
@@ -80,9 +98,6 @@ class LocationTrackerService : Service() {
 			createNotificationChannel()
 		}
 		
-		val locationRequest = LocationRequest()
-		locationRequest.interval = intervalLocationUpdate
-		locationRequest.priority = LocationRequest.PRIORITY_LOW_POWER
 		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 		var lastLocation: Location? = null
 		fusedLocationClient?.lastLocation?.addOnSuccessListener {
@@ -93,7 +108,7 @@ class LocationTrackerService : Service() {
 			}
 		}
 		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
-		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation))
+		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation, true))
 	}
 	
 	override fun onDestroy() {
@@ -110,16 +125,20 @@ class LocationTrackerService : Service() {
 			get() = this@LocationTrackerService
 	}
 	
-	private fun createLocationTrackerNotification(location: Location?): Notification {
+	private fun createLocationTrackerNotification(location: Location?, isLocationAvailability: Boolean): Notification {
 		val intent = Intent(this, SettingsActivity::class.java)
 		val pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {
 			setContentTitle(getString(R.string.notification_location_title))
-			location?.let {
-				setContentText("${it.latitude}, ${it.longitude}")
-			} ?: kotlin.run {
-				setContentText(getString(R.string.notification_location_loading))
+			if (isLocationAvailability) {
+				location?.let {
+					setContentText("${it.latitude}, ${it.longitude}")
+				} ?: kotlin.run {
+					setContentText(getString(R.string.notification_location_loading))
+				}
+			} else {
+				setContentText(getString(R.string.notification_location_not_availability))
 			}
 			
 			setSmallIcon(R.drawable.ic_notification)

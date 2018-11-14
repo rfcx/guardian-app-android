@@ -57,6 +57,7 @@
 	<!-- Notification -->
 	<string name="notification_location_title">Ranger Location</string>
 	<string name="notification_location_loading">Loading location…</string>
+	<string name="notification_location_not_availability">Please turn on device location!</string>
 	
 	<!-- Settings -->
 	<string name="setting_label">Settings</string>
