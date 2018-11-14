@@ -48,7 +48,7 @@ class NotificationHelper {
 		}
 		
 		val builder = notificationBuilderWithDefaults(context, NOTIFICATION_MESSAGE_CHANNEL_ID)
-				.setSmallIcon(R.drawable.ic_text_message)
+				.setSmallIcon(R.drawable.ic_notification)
 				.setContentTitle(message.from?.firstname)
 				.setContentText(message.text)
 				.setContentIntent(pendingIntent)

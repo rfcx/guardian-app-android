@@ -2,7 +2,6 @@ package org.rfcx.ranger.adapter.view
 
 import android.graphics.Typeface
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_message.view.*
 import org.rfcx.ranger.R
@@ -14,16 +13,18 @@ class MessageViewHolder(itemView: View, private var onMessageItemClickListener: 
 		RecyclerView.ViewHolder(itemView) {
 	
 	fun bind(message: Message) {
-		itemView.itemMessageIconImageView.setColorFilter(ContextCompat.getColor(itemView.context,
-				if (message.isOpened) R.color.divider else R.color.colorAccent))
-		itemView.itemMessageFromTextView.typeface = if (message.isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
-		itemView.itemMessageFromTextView.text = message.from?.firstname
-		itemView.itemMessageTextView.text = message.text
+		
+		itemView.itemMessageIconImageView.setImageResource(
+				if (message.isOpened) R.drawable.ic_message_read else R.drawable.ic_message_unread)
+		
+		
+		itemView.messageTextView.typeface = if (message.isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
+		itemView.messageTextView.text = message.text
 		val latLon: String = StringBuilder(message.coords?.lat.toString())
 				.append(",")
 				.append(message.coords?.lon.toString()).toString()
 		itemView.itemMessageLocationTextView.text = latLon
-		itemView.itemTimeTextView.text = DateHelper.getEventDate(message.time)
+		itemView.messageTimeTextView.text = DateHelper.getMessageDateTime(message.time)
 		
 		itemView.setOnClickListener {
 			onMessageItemClickListener.onMessageItemClick(adapterPosition)

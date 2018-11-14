@@ -279,7 +279,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 					}
 					
 					override fun onFailed(t: Throwable?, message: String?) {
-						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
+						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 					}
 				})
