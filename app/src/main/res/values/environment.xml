@@ -3,8 +3,9 @@
     <string name="app_name">Ranger</string>
 
     <string name="auth0_client_id">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
-    <string name="auth0_domain">rfcx.eu.auth0.com</string>
+    <string name="auth0_domain">auth.rfcx.org</string>
     <string name="auth0_scheme">rfcx</string>
+    <string name="auth0_audience">https://rfcx.eu.auth0.com/userinfo</string>
     <string name="auth0_scopes">openid email profile</string>
     <string name="auth0_metadata_key">https://rfcx.org/app_metadata</string>
 

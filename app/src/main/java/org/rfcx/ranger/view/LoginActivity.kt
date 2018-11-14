@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
 		authentication
 				.login(email, password, "Username-Password-Authentication")
 				.setScope(getString(R.string.auth0_scopes))
-				.setAudience(String.format("https://%s/userinfo", getString(R.string.auth0_domain)))
+				.setAudience(getString(R.string.auth0_audience))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {
                         val result = this@LoginActivity.verifyCredentials(credentials)
@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
 				.withConnection("facebook")
 				.withScope(getString(R.string.auth0_scopes))
 				.withScheme(getString(R.string.auth0_scheme))
-				.withAudience(String.format("https://%s/userinfo", getString(R.string.auth0_domain)))
+				.withAudience(getString(R.string.auth0_audience))
 				.start(this@LoginActivity, object : AuthCallback {
 					override fun onFailure(dialog: Dialog) {
 						loginFailed(null)
