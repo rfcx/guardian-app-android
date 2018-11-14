@@ -10,26 +10,26 @@
 	<string name="user_are_not_ranger">This is not an RFCx Ranger account</string>
 	<string name="an_error_occurred">Service unavailable</string>
 	<string name="or">OR</string>
-
+	
 	<!-- common error -->
 	<string name="error_common">An error occurred. Please try again.</string>
 	<string name="re_login">Please re-login.</string>
-
+	
 	<string name="cancel">Cancel</string>
 	<string name="back">Back</string>
-
+	
 	<string name="location_permission_msg">Ranger App would like to use your location</string>
 	<string name="go_to_setting">Settings</string>
 	<string name="user_location">Ranger App is getting your location</string>
-
+	
 	<string name="menu_logout">Logout</string>
 	<string name="menu_ranger_group">My site</string>
-
+	
 	<!-- message list -->
 	<string name="profile_welcome">Hi, %s!</string>
 	<string name="profile_onduty">On duty</string>
 	<string name="profile_nottracking">Not tracking</string>
-
+	
 	<string name="report_chainsaw_button">Chainsaws</string>
 	<string name="report_gunshot_button">Gunshots</string>
 	<string name="report_trespasser_button">Trespassers</string>
@@ -46,7 +46,7 @@
 	<string name="report_when_label">WHEN?</string>
 	<string name="report_submit_button_label">Submit</string>
 	<string name="report_record_label">RECORD NOTES (Optional)</string>
-
+	
 	<string name="alert_title_format">Is this a %s?</string>
 	<string name="alert_yes_button">Yes</string>
 	<string name="alert_no_button">No</string>
@@ -74,5 +74,6 @@
 	<string name="now">Now</string>
 	
 	<string name="tab_to_record_label">Tab and hold the right button to record sound</string>
-	
+	<string name="recent_title">Recent</string>
+	<string name="history_title">History</string>
 </resources>

@@ -29,7 +29,6 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
-import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.MessageAdapter
@@ -38,14 +37,11 @@ import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
 import org.rfcx.ranger.adapter.entity.MessageItem
-import org.rfcx.ranger.entity.EventResponse
+import org.rfcx.ranger.adapter.entity.TitlteItem
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
-import org.rfcx.ranger.repo.TokenExpireException
-import org.rfcx.ranger.repo.api.EventsApi
-import org.rfcx.ranger.repo.api.MessageApi
+import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
-import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 
 
@@ -78,7 +74,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		// the activity open from another task eg. bypass from @LoginActivity by click notification -> reload the list.
-		getMessageList()
+		fetchContentList()
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +110,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		} else {
 			LocationTracking.updateService(this)
 		}
-
+		
 		FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
 			Log.d("FirebaseInstanceId", it.token)
 		}
@@ -133,7 +129,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
-
+		
 		refreshHeader()
 	}
 	
@@ -170,7 +166,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			Log.d("Ranger remote", RemoteConfigKey.REMOTE_SHOW_EVENT_LIST + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST))
 			Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_EVENT_ALERT))
 		}
-		getMessageList()
+		fetchContentList()
 	}
 	
 	override fun onFailure(e: java.lang.Exception) {
@@ -213,74 +209,86 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 				.addOnFailureListener(this@MessageListActivity)
 	}
 	
-	private fun getEvents(messageItems: MutableList<MessageItem>?) {
-		if (!rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST)) {
-			messageSwipeRefresh.isRefreshing = false
-			messageAdapter.updateMessages(messageItems)
-			return
-		}
-		
-		EventsApi().getEvents(this@MessageListActivity, 10, object : EventsApi.OnEventsCallBack {
-			override fun onSuccess(event: EventResponse) {
-				messageSwipeRefresh.isRefreshing = false
-				event.events?.let {
-					RealmHelper.getInstance().saveEvent(it)
-				}
-				
-				val eventItems: ArrayList<EventItem>? = event.events?.mapTo(ArrayList()) {
-					EventItem(it, BaseItem.ITEM_EVENT_TYPE, DateHelper.getDateTime(it.beginsAt))
-				}
-				
-				val baseItems: ArrayList<BaseItem> = ArrayList()
-				messageItems?.let { baseItems.addAll(it) }
-				eventItems?.let { baseItems.addAll(it) }
-				
-				messageAdapter.updateMessages(baseItems)
-			}
-			
-			override fun onFailed(t: Throwable?, message: String?) {
-				messageSwipeRefresh.isRefreshing = false
-				if (t is TokenExpireException) {
-					logout()
-					return
-				}
-				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
-				Snackbar.make(messageParentView, error, Snackbar.LENGTH_LONG).show()
-			}
-		})
-	}
-
-	private fun getMessageList() {
+	private fun fetchContentList() {
 		messageSwipeRefresh.isRefreshing = true
-
-		MessageApi().getMessage(this@MessageListActivity, object : MessageApi.OnMessageCallBack {
-			override fun onSuccess(messages: List<Message>) {
-
-				RealmHelper.getInstance().saveMessage(messages)
-				val messageItems: MutableList<MessageItem> = messages.mapTo(ArrayList()) {
-					MessageItem(it, BaseItem.ITEM_MESSAGE_TYPE, DateHelper.getDateTime(it.time))
-				}
-
-				getEvents(messageItems)
-			}
-
-			override fun onFailed(t: Throwable?, message: String?) {
-				messageSwipeRefresh.isRefreshing = false
-				if (t is TokenExpireException) {
-					logout()
-					return
-				}
-				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
-				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
-			}
-		}
-		)
+		
+		MessageContentProvider.getMessageAndEvent(this,
+				rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST),
+				object : MessageContentProvider.OnContentCallBack {
+					override fun onContentLoaded(messages: List<Message>?, events: List<Event>?) {
+						
+						val baseItems: ArrayList<BaseItem> = ArrayList()
+						val recentList = ArrayList<BaseItem>()
+						val historyList = ArrayList<BaseItem>()
+						
+						messages?.let {
+							for (message in messages) {
+								val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
+								localMessage?.let {
+									message.isOpened = localMessage.isOpened
+								}
+								if (message.isOpened) {
+									historyList.add(MessageItem(message))
+								} else {
+									recentList.add(MessageItem(message))
+								}
+							}
+						}
+						
+						events?.let {
+							for (event in events) {
+								val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
+								localEvent?.let {
+									event.isConfirmed = localEvent.isConfirmed
+									event.isOpened = localEvent.isOpened
+								}
+								if (event.isOpened) {
+									historyList.add(EventItem(event))
+								} else {
+									recentList.add(EventItem(event))
+								}
+							}
+						}
+						
+						recentList.sortWith(compareByDescending {
+							when (it) {
+								is MessageItem -> DateHelper.getDateTime(it.message.time)
+								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
+								else -> {
+									0
+								}
+							}
+						})
+						
+						historyList.sortWith(compareByDescending {
+							when (it) {
+								is MessageItem -> DateHelper.getDateTime(it.message.time)
+								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
+								else -> {
+									0
+								}
+							}
+						})
+						
+						baseItems.add(TitlteItem(getString(R.string.recent_title)))
+						baseItems.addAll(recentList)
+						baseItems.add(TitlteItem(getString(R.string.history_title)))
+						baseItems.addAll(historyList)
+						messageAdapter.updateMessages(baseItems)
+						messageSwipeRefresh.isRefreshing = false
+					}
+					
+					override fun onFailed(t: Throwable?, message: String?) {
+						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
+						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
+					}
+				})
 	}
-
+	
 	private fun refreshHeader() {
 		val preferences = PreferenceHelper.getInstance(this)
 		val site = preferences.getString(PrefKey.DEFAULT_SITE, "")
-		val nickname = preferences.getString(PrefKey.NICKNAME, site + " Ranger")
+		val nickname = preferences.getString(PrefKey.NICKNAME, "$site Ranger")
 		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
 	}
 	
@@ -300,9 +308,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 								+ it.coords?.lat + ","
 								+ it.coords?.lon))
 				startActivity(intent)
-				
-				Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedMessage(it))
-				
 				RealmHelper.getInstance().updateOpenedMessage(it)
 			}
 		} else if (item is EventItem) {
@@ -312,7 +317,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		
 		messageAdapter.notifyDataSetChanged()
 	}
-
+	
 	override fun onLocationTrackingChange(on: Boolean) {
 		if (!isLocationAllow() && on) {
 			requestPermissions()
@@ -375,7 +380,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	}
 	
 	private fun showAlertPopup(event: Event) {
-		Log.d("onMessageItemClick", "Event is opened" + RealmHelper.getInstance().isOpenedEvent(event))
 		RealmHelper.getInstance().updateOpenedEvent(event)
 		EventDialogFragment.newInstance(event).show(supportFragmentManager, null)
 	}
@@ -384,10 +388,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		ReviewEventApi().reViewEvent(this@MessageListActivity, event,
 				isConfirmEvent, object : ReviewEventApi.ReviewEventCallback {
 			override fun onSuccess() {
-				Log.d("reportEvent", "onSuccess $isConfirmEvent")
 				if (!isConfirmEvent) {
 					//refresh list if user report reject
-					getMessageList()
+					fetchContentList()
 				}
 			}
 			
@@ -397,19 +400,17 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			
 		})
 	}
-
+	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-											grantResults: IntArray) {
+	                                        grantResults: IntArray) {
 		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
 		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				LocationTracking.set(this, true)
-			} else {
-				locationTrackingSwitch.isChecked = false
 			}
 		}
 	}
-
+	
 	
 	/**
 	 * BroadcastReceiver when receive message from FireBase Cloud Messaging @MyFireBaseMessagingService
@@ -418,7 +419,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	private val onEventNotificationReceived = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
 			if (intent?.action == INTENT_FILTER_MESSAGE_BROADCAST) {
-				getMessageList()
+				fetchContentList()
 			}
 		}
 	}
