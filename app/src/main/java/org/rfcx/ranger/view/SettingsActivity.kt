@@ -120,29 +120,9 @@ class SettingsActivity : AppCompatActivity() {
 	}
 	
 	private fun requestPermissions() {
-		val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@SettingsActivity,
-				Manifest.permission.ACCESS_FINE_LOCATION)
-		
-		if (!shouldProvideRationale) {
-			val dialogBuilder: AlertDialog.Builder =
-					AlertDialog.Builder(this@SettingsActivity).apply {
-						setTitle(null)
-						setMessage(R.string.location_permission_msg)
-						setPositiveButton(R.string.go_to_setting) { _, _ ->
-							val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-									Uri.parse("package:$packageName"))
-							intent.addCategory(Intent.CATEGORY_DEFAULT)
-							intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-							startActivity(intent)
-						}
-					}
-			dialogBuilder.create().show()
-			
-		} else {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-						REQUEST_PERMISSIONS_REQUEST_CODE)
-			}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+					REQUEST_PERMISSIONS_REQUEST_CODE)
 		}
 	}
 	
@@ -153,6 +133,23 @@ class SettingsActivity : AppCompatActivity() {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				checkLocationIsAllow()
 			} else {
+				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@SettingsActivity,
+						Manifest.permission.ACCESS_FINE_LOCATION)
+				if (!shouldProvideRationale) {
+					val dialogBuilder: AlertDialog.Builder =
+							AlertDialog.Builder(this@SettingsActivity).apply {
+								setTitle(null)
+								setMessage(R.string.location_permission_msg)
+								setPositiveButton(R.string.go_to_setting) { _, _ ->
+									val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+											Uri.parse("package:$packageName"))
+									intent.addCategory(Intent.CATEGORY_DEFAULT)
+									intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+									startActivity(intent)
+								}
+							}
+					dialogBuilder.create().show()
+				}
 				LocationTracking.set(this, false)
 			}
 			updateSwitchLocation()
