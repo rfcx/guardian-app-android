@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.media.MediaPlayer
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
@@ -35,6 +38,7 @@ import org.rfcx.ranger.entity.report.Attributes
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportData
 import org.rfcx.ranger.repo.api.SendReportApi
+import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.isLocationAllow
 import org.rfcx.ranger.util.isRecordAudioAllow
@@ -111,10 +115,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	override fun onStart() {
 		super.onStart()
-		if (!isLocationAllow()) {
-			requestPermissions()
-		} else {
-			getLocation()
+		googleMap?.let {
+			if (!isLocationAllow()) {
+				requestPermissions()
+			} else {
+				checkLocationIsAllow()
+			}
 		}
 	}
 	
@@ -127,6 +133,15 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 	}
 	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
+			if (resultCode == Activity.RESULT_OK) {
+				getLocation()
+			}
+		}
+	}
+	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 		when (item?.itemId) {
 			android.R.id.home -> finish()
@@ -136,8 +151,11 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	override fun onMapReady(p0: GoogleMap?) {
 		googleMap = p0
-		if (isLocationAllow()) getLocation()
-		
+		if (!isLocationAllow()) {
+			requestPermissions()
+		} else {
+			checkLocationIsAllow()
+		}
 	}
 	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
@@ -145,7 +163,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		if (requestCode == REQUEST_PERMISSIONS_LOCATION_REQUEST_CODE) {
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				// start location service
-				getLocation()
+				checkLocationIsAllow()
 			} else {
 				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@ReportActivity,
 						Manifest.permission.ACCESS_FINE_LOCATION)
@@ -221,6 +239,35 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
 	}
 	
+	/**
+	 * Checking phone is turn on location on setting
+	 */
+	private fun checkLocationIsAllow() {
+		val builder = LocationSettingsRequest.Builder()
+				.addLocationRequest(LocationTrackerService.locationRequest)
+		val client: SettingsClient = LocationServices.getSettingsClient(this)
+		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+		task.addOnSuccessListener {
+			getLocation()
+		}
+		
+		task.addOnFailureListener { exception ->
+			if (exception is ResolvableApiException) {
+				// Location settings are not satisfied, but this can be fixed
+				// by showing the user a dialog.
+				try {
+					// Show the dialog by calling startResolutionForResult(),
+					// and check the result in onActivityResult().
+					exception.startResolutionForResult(this@ReportActivity,
+							REQUEST_CHECK_LOCATION_SETTINGS)
+				} catch (sendEx: IntentSender.SendIntentException) {
+					// Ignore the error.
+					sendEx.printStackTrace()
+				}
+			}
+		}
+	}
+	
 	private fun markRangerLocation(location: Location) {
 		lastKnowLocation = location
 		googleMap?.clear()
@@ -277,6 +324,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		if (lastKnowLocation == null) {
 			if (!isLocationAllow()) {
 				requestPermissions()
+			} else if (isLocationAllow()) {
+				checkLocationIsAllow()
 			} else {
 				Snackbar.make(rootView, R.string.report_location_null, Snackbar.LENGTH_LONG).show()
 			}
@@ -415,6 +464,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	companion object {
 		private const val REQUEST_PERMISSIONS_LOCATION_REQUEST_CODE = 34
+		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 		private const val REQUEST_PERMISSIONS_RECORD_REQUEST_CODE = 36
 	}
 }
