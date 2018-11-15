@@ -2,6 +2,7 @@ package org.rfcx.ranger.adapter.view
 
 import android.graphics.Typeface
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_message.view.*
 import org.rfcx.ranger.R
@@ -14,9 +15,8 @@ class MessageViewHolder(itemView: View, private var onMessageItemClickListener: 
 	
 	fun bind(message: Message) {
 		
-		itemView.itemMessageIconImageView.setImageResource(
-				if (message.isOpened) R.drawable.ic_message_read else R.drawable.ic_message_unread)
-		
+		itemView.itemMessageIconImageView.setColorFilter(
+				ContextCompat.getColor(itemView.context, if (message.isOpened) R.color.grey_default else R.color.grey_active))
 		
 		itemView.messageTextView.typeface = if (message.isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
 		itemView.messageTextView.text = message.text

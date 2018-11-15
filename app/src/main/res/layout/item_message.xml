@@ -11,7 +11,8 @@
 		android:layout_height="48dp"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:contentDescription="@string/app_name"
-		android:src="@drawable/ic_message_unread" />
+		android:tint="@color/grey_active"
+		android:src="@drawable/ic_message" />
 	
 	<RelativeLayout
 		android:id="@+id/itemMessageContentLayout"
