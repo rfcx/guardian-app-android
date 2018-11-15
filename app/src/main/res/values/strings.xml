@@ -19,6 +19,7 @@
 	<string name="back">Back</string>
 	
 	<string name="location_permission_msg">Ranger App would like to use your location</string>
+	<string name="record_audio_permission_msg">Ranger App would like to record audio</string>
 	<string name="go_to_setting">Settings</string>
 	<string name="user_location">Ranger App is getting your location</string>
 	
@@ -46,6 +47,7 @@
 	<string name="report_when_label">WHEN?</string>
 	<string name="report_submit_button_label">Submit</string>
 	<string name="report_record_label">RECORD NOTES (Optional)</string>
+	<string name="report_location_null">Location not found. Please try again.</string>
 	
 	<string name="alert_title_format">Is this a %s?</string>
 	<string name="alert_yes_button">Yes</string>

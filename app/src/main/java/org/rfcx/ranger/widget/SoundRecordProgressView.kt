@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
@@ -67,27 +66,29 @@ class SoundRecordProgressView @JvmOverloads constructor(
 		actionButton = findViewById(R.id.actionButton)
 		desTextView = findViewById(R.id.tabToRecText)
 		
-		actionButton.setOnTouchListener(OnTouchListener { p0, p1 ->
-			if (state != SoundRecordState.NONE && state != SoundRecordState.RECORDING) return@OnTouchListener false
+		actionButton.setOnTouchListener(OnTouchListener { _, p1 ->
 			
-			if (p1?.action == MotionEvent.ACTION_DOWN) {
+			if (p1?.action == MotionEvent.ACTION_DOWN && state == SoundRecordState.NONE) {
 				state = SoundRecordState.RECORDING
 				return@OnTouchListener true
 				
-			} else if (p1?.action == MotionEvent.ACTION_UP) {
-				state = SoundRecordState.STOPPED
+			} else if (p1?.action == MotionEvent.ACTION_UP && state == SoundRecordState.RECORDING) {
+				state = SoundRecordState.STOPPED_RECORD
 				return@OnTouchListener true
 			}
 			false
 		})
 		
 		actionButton.setOnClickListener {
-			Toast.makeText(context, "actionButton", Toast.LENGTH_SHORT).show()
-			if (state == SoundRecordState.STOPPED) {
-				resetAnimate()
-				state = SoundRecordState.PLAYING
-			} else if (state == SoundRecordState.PLAYING) {
-				state = SoundRecordState.STOPPED
+			when (state) {
+				SoundRecordState.STOPPED_RECORD -> {
+					resetAnimate()
+					state = SoundRecordState.PLAYING
+				}
+				SoundRecordState.PLAYING -> state = SoundRecordState.STOP_PLAYING
+				SoundRecordState.STOP_PLAYING -> state = SoundRecordState.PLAYING
+				else -> {
+				}
 			}
 		}
 		
@@ -106,9 +107,9 @@ class SoundRecordProgressView @JvmOverloads constructor(
 	}
 	
 	private fun resetAnimate() {
-		(_recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
 		animateHandler.removeCallbacks(runnable)
 		soundWaveViewAdapter.reset()
+		(_recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
 	}
 	
 	override fun onDetachedFromWindow() {
@@ -119,10 +120,10 @@ class SoundRecordProgressView @JvmOverloads constructor(
 	private fun onStateChange() {
 		when (state) {
 			SoundRecordState.NONE -> {
+				stopAnimate()
 				desTextView.visibility = View.VISIBLE
 				cancelButton.visibility = View.GONE
 				actionButton.setImageResource(R.drawable.ic_record)
-				stopAnimate()
 				resetAnimate()
 			}
 			SoundRecordState.RECORDING -> {
@@ -131,7 +132,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 				actionButton.setImageResource(R.drawable.ic_stop_record)
 				startAnimate()
 			}
-			SoundRecordState.STOPPED -> {
+			SoundRecordState.STOPPED_RECORD -> {
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.VISIBLE
 				actionButton.setImageResource(R.drawable.ic_play)
@@ -144,6 +145,13 @@ class SoundRecordProgressView @JvmOverloads constructor(
 				resetAnimate()
 				startAnimate()
 			}
+			
+			SoundRecordState.STOP_PLAYING -> {
+				desTextView.visibility = View.GONE
+				cancelButton.visibility = View.VISIBLE
+				actionButton.setImageResource(R.drawable.ic_play)
+				stopAnimate()
+			}
 		}
 		
 		onStatChangeListener?.onStateChanged(state)
@@ -153,7 +161,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 }
 
 enum class SoundRecordState {
-	NONE, RECORDING, STOPPED, PLAYING
+	NONE, RECORDING, STOPPED_RECORD, PLAYING, STOP_PLAYING
 }
 
 class SoundWaveViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
