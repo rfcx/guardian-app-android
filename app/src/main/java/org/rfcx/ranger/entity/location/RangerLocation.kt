@@ -1,4 +1,4 @@
-package org.rfcx.ranger.entity
+package org.rfcx.ranger.entity.location
 
 import org.rfcx.ranger.util.DateHelper
 import io.realm.RealmObject

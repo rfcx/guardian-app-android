@@ -4,8 +4,7 @@ import android.content.Context
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.ErrorResponse
-import org.rfcx.ranger.entity.EventResponse
+import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.util.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings

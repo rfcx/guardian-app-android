@@ -1,22 +1,18 @@
-package org.rfcx.ranger.repo.retofit
+package org.rfcx.ranger.repo
 
-import org.rfcx.ranger.entity.*
+import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
+import org.rfcx.ranger.entity.user.UserTouchResponse
 import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiRestInterface {
 
-    @FormUrlEncoded
-    @POST("users/login")
-    fun login(@Field("email") email: String,
-              @Field("password") pass: String,
-              @Field("extended_expiration") loginRemember: Int): Call<List<LoginResponse>>
-	
-	
 	@GET("messages")
 	fun getMessage(@Header("Authorization") authUser: String,
 	               @Query("to") email: String,

@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.getIconRes
+import org.rfcx.ranger.util.getIconRes
 
 
 class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {

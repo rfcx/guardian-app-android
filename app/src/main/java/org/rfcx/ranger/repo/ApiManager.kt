@@ -1,7 +1,6 @@
 package org.rfcx.ranger.repo
 
 import org.rfcx.ranger.BuildConfig
-import org.rfcx.ranger.repo.retofit.ApiRestInterface
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -2,7 +2,7 @@ package org.rfcx.ranger.repo
 
 import android.content.Context
 
-import org.rfcx.ranger.entity.EventResponse
+import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.repo.api.EventsApi

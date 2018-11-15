@@ -1,4 +1,4 @@
-package org.rfcx.ranger.entity
+package org.rfcx.ranger.entity.event
 
 /**
  * Created by Jingjoeh on 11/6/2017 AD.

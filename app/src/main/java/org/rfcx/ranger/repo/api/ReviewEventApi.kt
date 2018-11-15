@@ -4,7 +4,7 @@ import android.content.Context
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.entity.ReviewEventResponse
+import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.repo.*
 import org.rfcx.ranger.util.getEmail

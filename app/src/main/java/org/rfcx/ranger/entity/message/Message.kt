@@ -1,7 +1,6 @@
 package org.rfcx.ranger.entity.message
 
 
-import org.rfcx.ranger.entity.Coords
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
