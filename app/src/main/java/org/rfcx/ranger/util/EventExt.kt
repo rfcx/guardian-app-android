@@ -1,5 +1,6 @@
-package org.rfcx.ranger
+package org.rfcx.ranger.util
 
+import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 
 fun Event.getIconRes(): Int {

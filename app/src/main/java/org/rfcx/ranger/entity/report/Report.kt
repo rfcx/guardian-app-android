@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName
  * Created by Jingjoeh on 10/22/2017 AD.
  */
 
-
 data class Report(
 		val data: ReportData
 )

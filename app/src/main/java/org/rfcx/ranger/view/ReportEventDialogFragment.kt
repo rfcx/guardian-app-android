@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.ReportSight
-import org.rfcx.ranger.entity.ReportType
+import org.rfcx.ranger.entity.report.ReportSight
+import org.rfcx.ranger.entity.report.ReportType
 import org.rfcx.ranger.entity.report.Attributes
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportData

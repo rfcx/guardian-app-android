@@ -1,4 +1,4 @@
-package org.rfcx.ranger.entity
+package org.rfcx.ranger.entity.report
 
 /**
  * Created by Jingjoeh on 10/22/2017 AD.

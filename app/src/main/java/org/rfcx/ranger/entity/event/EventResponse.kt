@@ -1,4 +1,4 @@
-package org.rfcx.ranger.entity
+package org.rfcx.ranger.entity.event
 
 import org.rfcx.ranger.entity.event.Event
 

@@ -2,7 +2,7 @@ package org.rfcx.ranger.repo.api
 
 import android.content.Context
 import com.crashlytics.android.Crashlytics
-import org.rfcx.ranger.entity.CheckInResult
+import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.repo.*
