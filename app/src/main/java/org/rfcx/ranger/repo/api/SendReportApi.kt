@@ -1,19 +1,22 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
+import android.net.Uri
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
-import org.rfcx.ranger.util.getEmail
 import org.rfcx.ranger.util.getTokenID
-import org.rfcx.ranger.util.getUserGuId
 import android.util.Log
 import com.crashlytics.android.Crashlytics
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.repo.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import okhttp3.MultipartBody
+import java.io.File
 
 class SendReportApi {
 
@@ -21,10 +24,8 @@ class SendReportApi {
 	
 	fun sendReport(context: Context, report: Report, sendReportCallback: SendReportCallback) {
 		
-		val guid = context.getUserGuId()
 		val token = context.getTokenID()
-		val email = context.getEmail()
-		if (guid == null || token == null || email == null) {
+		if (token == null) {
 			sendReportCallback.onFailed(TokenExpireException(context), null)
 			return
 		}
@@ -32,7 +33,7 @@ class SendReportApi {
 		val authUser = "Bearer $token"
 		
 		Log.d(tag, report.toString())
-		ApiManager.getInstance().apiRest.sendReport(authUser, report)
+		ApiManager.getInstance().apiRest.sendReport(authUser, createParts(report))
 				.enqueue(object : Callback<SendReportResponse> {
 					override fun onFailure(call: Call<SendReportResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)
@@ -53,6 +54,32 @@ class SendReportApi {
 					
 				})
 		
+	}
+
+	private fun createParts(report: Report): Map<String, RequestBody> {
+		val map = HashMap<String, RequestBody>()
+		map.put("value", createPartFromString(report.value))
+		map.put("site", createPartFromString(report.site))
+		map.put("reported_at", createPartFromString(report.reportedAt))
+		map.put("lat", createPartFromString(report.latitude.toString()))
+		map.put("long", createPartFromString(report.longitude.toString()))
+		map.put("age_estimate", createPartFromString(report.ageEstimate.toString()))
+		if (!report.audioLocation.isNullOrEmpty()) {
+			val uri = Uri.parse(report.audioLocation!!)
+			map.put("audio", createLocalFilePart("audio", uri, "audio").body())
+		}
+		return map
+	}
+
+	private fun createPartFromString(descriptionString: String): RequestBody {
+		return RequestBody.create(okhttp3.MultipartBody.FORM, descriptionString)
+	}
+
+
+	private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
+		val file = File(fileUri.path)
+		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)  // or "audio"
+		return MultipartBody.Part.createFormData(partName, file.getName(), requestFile)
 	}
 	
 	

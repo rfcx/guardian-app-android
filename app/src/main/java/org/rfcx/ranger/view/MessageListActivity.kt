@@ -50,7 +50,7 @@ import org.rfcx.ranger.util.*
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnLocationTrackingChangeListener,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
-		OnFailureListener, ReportEventDialogFragment.OnReportEventCallBack {
+		OnFailureListener {
 	
 	
 	lateinit var messageAdapter: MessageAdapter
@@ -343,11 +343,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	
 	override fun onIncorrectAlert(event: Event) {
 		reportEvent(event, false)
-	}
-	
-	
-	override fun onReportSuccess() {
-		Snackbar.make(messageParentView, R.string.report_send_success, Snackbar.LENGTH_LONG).show()
 	}
 	
 	private fun checkGoogleApiAvailability() {

@@ -1,11 +1,12 @@
 package org.rfcx.ranger.repo
 
+import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
-import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.SendReportResponse
 import org.rfcx.ranger.entity.user.UserTouchResponse
 import retrofit2.Call
@@ -33,8 +34,9 @@ interface ApiRestInterface {
                   @Query("limit") limit: Int): Call<EventResponse>
 
     @POST("reports")
+    @Multipart
     fun sendReport(@Header("Authorization") authUser: String,
-                   @Body report: Report): Call<SendReportResponse>
+                   @PartMap() partMap: Map<String, @JvmSuppressWildcards RequestBody>): Call<SendReportResponse>
 
     @POST("events/{event_guid}/{review_confirmed}")
     fun reviewEvent(@Header("Authorization") authUser: String,

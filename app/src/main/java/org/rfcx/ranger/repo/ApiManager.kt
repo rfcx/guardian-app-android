@@ -8,9 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by Jingjoeh on 10/2/2017 AD.
- */
 class ApiManager {
     var apiRest: ApiRestInterface
 

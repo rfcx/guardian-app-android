@@ -2,12 +2,14 @@ package org.rfcx.ranger.util
 
 object PrefKey {
 	private const val PREFIX = "org.rfcx.ranger:"
+
 	const val ID_TOKEN = "${PREFIX}ID_TOKEN"
 	const val ACCESS_TOKEN = "${PREFIX}ACCESS_TOKEN"
 	const val GU_ID = "${PREFIX}GU_ID"
-	const val DEFAULT_SITE = "${PREFIX}SITE"
 	const val EMAIL = "${PREFIX}EMAIL"
 	const val NICKNAME = "${PREFIX}NICKNAME"
+
+	const val DEFAULT_SITE = "${PREFIX}SITE"
 	const val HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP = "${PREFIX}HAS_SUBSCRIBED_TO_DEFAULT_SITE"
 	const val SELECTED_GUARDIAN_GROUP = "${PREFIX}SELECTED_GUARDIAN_GROUP"
 	const val GUARDIAN_GROUPS_LAST_UPDATED = "${PREFIX}GUARDIAN_GROUPS_LAST_UPDATED"

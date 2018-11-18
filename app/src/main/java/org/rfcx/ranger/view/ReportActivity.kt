@@ -34,20 +34,15 @@ import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
-import org.rfcx.ranger.entity.report.Attributes
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.entity.report.ReportData
 import org.rfcx.ranger.repo.api.SendReportApi
 import org.rfcx.ranger.service.LocationTrackerService
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.isLocationAllow
-import org.rfcx.ranger.util.isRecordAudioAllow
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
-import java.util.*
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val tag = ReportActivity::class.java.simpleName
@@ -331,13 +326,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			return
 		}
-		
+
+		val site = PreferenceHelper.getInstance(this).getString(PrefKey.DEFAULT_SITE, "")
 		val time = DateHelper.getIsoTime()
 		val lat = lastKnowLocation?.latitude ?: 0.0
 		val lon = lastKnowLocation?.longitude ?: 0.0
-		val reportAttributes = Attributes(time, time, lat, lon, whenState.ageEstimate)
-		val reportData = ReportData(UUID.randomUUID().toString(), reportTypeItem.type, reportAttributes)
-		val report = Report(reportData)
+		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate)
 		
 		showProgress()
 		SendReportApi().sendReport(this@ReportActivity, report, object : SendReportApi.SendReportCallback {
