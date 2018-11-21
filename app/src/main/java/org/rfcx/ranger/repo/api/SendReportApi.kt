@@ -31,9 +31,12 @@ class SendReportApi {
 		}
 
 		val authUser = "Bearer $token"
-		
-		Log.d(tag, report.toString())
-		ApiManager.getInstance().apiRest.sendReport(authUser, createParts(report))
+		val audioFileOrNull = if (!report.audioLocation.isNullOrEmpty()) createLocalFilePart("audio", Uri.parse(report.audioLocation!!), "audio/mpeg") else null
+
+		ApiManager.getInstance().apiRest.sendReport(authUser =  authUser, value = createPartFromString(report.value),
+				site = createPartFromString(report.site), reportedAt = createPartFromString(report.reportedAt),
+				latitude = createPartFromString(report.latitude.toString()), longitude = createPartFromString(report.longitude.toString()),
+				ageEstimate = createPartFromString(report.ageEstimate.toString()), audioFile = audioFileOrNull)
 				.enqueue(object : Callback<SendReportResponse> {
 					override fun onFailure(call: Call<SendReportResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)
@@ -51,30 +54,12 @@ class SendReportApi {
 							}
 						}
 					}
-					
 				})
-		
-	}
-
-	private fun createParts(report: Report): Map<String, RequestBody> {
-		val map = HashMap<String, RequestBody>()
-		map.put("value", createPartFromString(report.value))
-		map.put("site", createPartFromString(report.site))
-		map.put("reported_at", createPartFromString(report.reportedAt))
-		map.put("lat", createPartFromString(report.latitude.toString()))
-		map.put("long", createPartFromString(report.longitude.toString()))
-		map.put("age_estimate", createPartFromString(report.ageEstimate.toString()))
-		if (!report.audioLocation.isNullOrEmpty()) {
-			val uri = Uri.parse(report.audioLocation!!)
-			map.put("audio", createLocalFilePart("audio", uri, "audio/mpeg").body())
-		}
-		return map
 	}
 
 	private fun createPartFromString(descriptionString: String): RequestBody {
 		return RequestBody.create(okhttp3.MultipartBody.FORM, descriptionString)
 	}
-
 
 	private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
 		val file = File(fileUri.path)

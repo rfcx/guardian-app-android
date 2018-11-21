@@ -35,8 +35,11 @@ interface ApiRestInterface {
 
     @POST("reports")
     @Multipart
-    fun sendReport(@Header("Authorization") authUser: String,
-                   @PartMap() partMap: Map<String, @JvmSuppressWildcards RequestBody>): Call<SendReportResponse>
+    fun sendReport(@Header("Authorization") authUser: String, @Part("value") value: RequestBody,
+                   @Part("site") site: RequestBody, @Part("reported_at") reportedAt: RequestBody,
+                   @Part("lat") latitude: RequestBody, @Part("long") longitude: RequestBody,
+                   @Part("age_estimate") ageEstimate: RequestBody, @Part("distance") distanceEstimate: RequestBody? = null,
+                   @Part() audioFile: MultipartBody.Part? = null): Call<SendReportResponse>
 
     @POST("events/{event_guid}/{review_confirmed}")
     fun reviewEvent(@Header("Authorization") authUser: String,
