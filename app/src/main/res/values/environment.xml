@@ -6,7 +6,7 @@
     <string name="auth0_domain">auth.rfcx.org</string>
     <string name="auth0_scheme">rfcx</string>
     <string name="auth0_audience">https://rfcx.eu.auth0.com/userinfo</string>
-    <string name="auth0_scopes">openid email profile</string>
+    <string name="auth0_scopes">openid email profile offline_access</string>
     <string name="auth0_metadata_key">https://rfcx.org/app_metadata</string>
 
     <string name="google_maps_key">AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s</string>

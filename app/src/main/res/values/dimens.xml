@@ -16,4 +16,5 @@
 	
 	<dimen name="dialog_min_width">268dp</dimen>
 	<dimen name="dialog_height">480dp</dimen>
+    <dimen name="invitation_icon_size">56dp</dimen>
 </resources>

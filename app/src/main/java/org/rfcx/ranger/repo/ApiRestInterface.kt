@@ -9,6 +9,7 @@ import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.SendReportResponse
+import org.rfcx.ranger.entity.user.InvitationCodeResponse
 import org.rfcx.ranger.entity.user.UserTouchResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -19,7 +20,6 @@ interface ApiRestInterface {
 	fun getMessage(@Header("Authorization") authUser: String,
 	               @Query("to") email: String,
 	               @Query("type") type: String): Call<List<Message>>
-	
 	
 	@POST("users/checkin")
 	fun updateLocation(@Header("Authorization") authUser: String,

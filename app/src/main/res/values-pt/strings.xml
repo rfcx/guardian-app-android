@@ -75,4 +75,9 @@
     <string name="tab_to_record_label">Segure o botão para gravar notas</string>
     <string name="recent_title">Recente</string>
     <string name="history_title">História</string>
+
+    <!-- Invitation -->
+    <string name="invitation_title">Conecte-se a um site</string>
+    <string name="invitation_desc">Por favor insira o seu código de convite</string>
+    <string name="hint_code">Código de Convite</string>
 </resources>
