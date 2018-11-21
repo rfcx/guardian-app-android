@@ -300,6 +300,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				validateForm()
 			}
 		}
+		whenView.setState(WhenView.State.NOW)
 	}
 	
 	private fun validateForm() {

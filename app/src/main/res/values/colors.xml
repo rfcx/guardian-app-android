@@ -16,7 +16,8 @@
     <color name="orange">#f57003</color>
 
 	<color name="transparent">@android:color/transparent</color>
-	
+
+	<color name="grey">#D3D9E0</color>
 	<color name="grey_default">#98a0a9</color>
 	<color name="grey_active">#5f6777</color>
 </resources>

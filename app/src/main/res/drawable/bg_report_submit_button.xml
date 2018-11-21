@@ -6,7 +6,7 @@
 	</item>
 	
 	<item>
-		<color android:color="@color/grey_default" />
+		<color android:color="#A2D1A3" />
 	</item>
 
 </selector>

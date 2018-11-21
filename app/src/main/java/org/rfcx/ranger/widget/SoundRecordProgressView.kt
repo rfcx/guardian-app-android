@@ -129,19 +129,19 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			SoundRecordState.RECORDING -> {
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.GONE
-				actionButton.setImageResource(R.drawable.ic_stop_record)
+				actionButton.setImageResource(R.drawable.ic_record_stop)
 				startAnimate()
 			}
 			SoundRecordState.STOPPED_RECORD -> {
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.VISIBLE
-				actionButton.setImageResource(R.drawable.ic_play)
+				actionButton.setImageResource(R.drawable.ic_record_play)
 				stopAnimate()
 			}
 			SoundRecordState.PLAYING -> {
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.GONE
-				actionButton.setImageResource(R.drawable.ic_stop_record)
+				actionButton.setImageResource(R.drawable.ic_record_stop)
 				resetAnimate()
 				startAnimate()
 			}
@@ -149,7 +149,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			SoundRecordState.STOP_PLAYING -> {
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.VISIBLE
-				actionButton.setImageResource(R.drawable.ic_play)
+				actionButton.setImageResource(R.drawable.ic_record_play)
 				stopAnimate()
 			}
 		}

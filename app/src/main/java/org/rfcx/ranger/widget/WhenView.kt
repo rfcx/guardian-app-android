@@ -78,7 +78,7 @@ class WhenView @JvmOverloads constructor(
 		
 	}
 	
-	private fun setState(state: State) {
+	fun setState(state: State) {
 		reset()
 		this.state = state
 		onWhenViewStatChangedListener?.onStateChange(state)
