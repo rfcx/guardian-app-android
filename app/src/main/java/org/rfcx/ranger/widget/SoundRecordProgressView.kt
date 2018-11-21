@@ -31,7 +31,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 	
 	private var soundWaveViewAdapter = SoundWaveViewAdapter()
 	private val animateHandler = Handler()
-	private lateinit var _recyclerView: RecyclerView
+	private lateinit var _recyclerView: NoneTouchableRecycler
 	private var cancelButton: ImageButton
 	private var desTextView: TextView
 	private var actionButton: ImageButton
