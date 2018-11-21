@@ -72,11 +72,14 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		dialog.window?.setLayout(width, height)
 	}
 	
-	override fun onDestroy() {
-		super.onDestroy()
+	override fun onDestroyView() {
+		super.onDestroyView()
 		val mapFragment = fragmentManager
 				?.findFragmentById(R.id.mapView) as SupportMapFragment
 		fragmentManager?.beginTransaction()?.remove(mapFragment)?.commitAllowingStateLoss()
+	}
+	override fun onDestroy() {
+		super.onDestroy()
 		try {
 			if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
 				mediaPlayer?.stop()
