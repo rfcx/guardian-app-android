@@ -49,6 +49,9 @@ interface ApiRestInterface {
 	@GET("users/touchapi")
 	fun userTouch(@Header("Authorization") authorization: String): Call<UserTouchResponse>
 	
+	@POST("users/code")
+	fun sendInvitationCode(@Header("Authorization") authorization: String, @Field("code") code: String): Call<InvitationCodeResponse>
+	
 	@GET("guardians/groups")
 	fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
 	
