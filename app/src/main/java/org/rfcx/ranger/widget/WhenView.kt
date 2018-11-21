@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import org.rfcx.ranger.R
 
 class WhenView @JvmOverloads constructor(
@@ -88,18 +89,22 @@ class WhenView @JvmOverloads constructor(
 			}
 			State.LAST_MONTH -> {
 				text0?.setTypeface(text0?.typeface, Typeface.BOLD)
+				text0?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
 				image0?.selected()
 			}
 			State.LAST_WEEK -> {
 				text1?.setTypeface(text0?.typeface, Typeface.BOLD)
+				text1?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
 				image1?.selected()
 			}
 			State.LAST_24_HR -> {
 				text2?.setTypeface(text0?.typeface, Typeface.BOLD)
+				text2?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
 				image2?.selected()
 			}
 			State.NOW -> {
 				text3?.setTypeface(text0?.typeface, Typeface.BOLD)
+				text3?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
 				image3?.selected()
 			}
 		}
@@ -110,6 +115,11 @@ class WhenView @JvmOverloads constructor(
 		text1?.typeface = Typeface.DEFAULT
 		text2?.typeface = Typeface.DEFAULT
 		text3?.typeface = Typeface.DEFAULT
+
+		text0?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
+		text1?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
+		text2?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
+		text3?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
 		
 		image0?.noneSelect()
 		image1?.noneSelect()
