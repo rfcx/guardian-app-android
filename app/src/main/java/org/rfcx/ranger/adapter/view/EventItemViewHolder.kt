@@ -1,5 +1,6 @@
 package org.rfcx.ranger.adapter.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.view.View
@@ -14,6 +15,7 @@ import org.rfcx.ranger.util.EventIcon
 
 class EventItemViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) : RecyclerView.ViewHolder(itemView) {
 	
+	@SuppressLint("SetTextI18n")
 	fun bind(context: Context, event: Event) {
 		itemView.tvEventValue.typeface = if (event.isOpened) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
 		itemView.tvEventSite.setTextColor(
@@ -21,7 +23,7 @@ class EventItemViewHolder(itemView: View, private var onMessageItemClickListener
 		
 		itemView.tvEventValue.text = event.value
 		itemView.tvEventSite.text = event.guardianShortname
-		itemView.tvEventDate.text = DateHelper.getEventTime(event)
+		itemView.tvEventDate.text = "・${DateHelper.getEventTime(event)}"
 		
 		itemView.ivEventIcon.setImageResource(EventIcon(event).resId(event.isOpened))
 		itemView.ivEventConfirm.visibility = if (event.isConfirmed) View.VISIBLE else View.INVISIBLE

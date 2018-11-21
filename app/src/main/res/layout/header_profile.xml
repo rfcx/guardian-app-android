@@ -4,16 +4,17 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="@dimen/margin_padding_large">
+	android:paddingTop="@dimen/margin_padding_normal"
+	android:paddingStart="@dimen/margin_padding_normal"
+	android:paddingEnd="@dimen/margin_padding_normal"
+	android:paddingBottom="@dimen/margin_padding_small">
 	
 	<TextView
 		android:id="@+id/userNameTextView"
+		style="@style/Base.TextAppearance.AppCompat.Title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
 		android:textColor="@color/text_primary"
-		android:textSize="@dimen/text_xlarge"
-		android:textStyle="bold"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		tools:text="Hi, Ant!" />
@@ -23,7 +24,7 @@
 		style="@style/SwitchCompatStyle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_padding_small"
+		android:layout_marginBottom="@dimen/margin_padding_xsmall"
 		android:textOff="@string/location_tracking_off_label"
 		android:textOn="@string/location_tracking_on_label"
 		app:layout_constraintBottom_toBottomOf="parent"
@@ -34,8 +35,8 @@
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:layout_marginBottom="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_xsmall"
+		android:layout_marginBottom="@dimen/margin_padding_xsmall"
 		android:gravity="center_vertical"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -51,24 +52,24 @@
 			android:id="@+id/statusTextView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			style="@style/TextAppearance.AppCompat.Body1"
 			android:textColor="@color/text_secondary"
-			android:textSize="@dimen/text_medium"
 			tools:text="Not tracking" />
 		
 		<ImageView
 			android:id="@+id/locationImageView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginStart="@dimen/margin_padding_small"
 			app:srcCompat="@drawable/ic_location_24dp_grey" />
 		
 		<TextView
 			android:id="@+id/locationTextView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			style="@style/TextAppearance.AppCompat.Body1"
 			android:textColor="@color/text_secondary"
-			android:textSize="@dimen/text_medium"
 			tools:text="Tembe" />
 	
 	</LinearLayout>

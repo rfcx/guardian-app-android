@@ -6,7 +6,7 @@
 
     <!-- Text color -->
 	<color name="text_primary">#47525E</color>
-	<color name="text_secondary">#8492A6</color>
+	<color name="text_secondary">#969FAA</color>
 	<color name="text_error">#e41a1a</color>
 	<color name="text_white">#ffffff</color>
 	<color name="text_almost_white">#f0f0f0</color>

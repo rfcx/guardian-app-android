@@ -1,5 +1,6 @@
 package org.rfcx.ranger.adapter.view
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -13,6 +14,7 @@ import org.rfcx.ranger.util.DateHelper
 class MessageViewHolder(itemView: View, private var onMessageItemClickListener: OnMessageItemClickListener) :
 		RecyclerView.ViewHolder(itemView) {
 	
+	@SuppressLint("SetTextI18n")
 	fun bind(message: Message) {
 		
 		itemView.itemMessageIconImageView.setColorFilter(
@@ -24,7 +26,9 @@ class MessageViewHolder(itemView: View, private var onMessageItemClickListener: 
 				.append(",")
 				.append(message.coords?.lon.toString()).toString()
 		itemView.itemMessageLocationTextView.text = latLon
-		itemView.messageTimeTextView.text = DateHelper.getMessageDateTime(message.time)
+		itemView.itemMessageLocationTextView.setTextColor(ContextCompat.getColor(itemView.context,
+				if (message.isOpened) R.color.text_secondary else R.color.text_primary))
+		itemView.messageTimeTextView.text = "・${DateHelper.getMessageDateTime(message.time)}"
 		
 		itemView.setOnClickListener {
 			onMessageItemClickListener.onMessageItemClick(adapterPosition)
