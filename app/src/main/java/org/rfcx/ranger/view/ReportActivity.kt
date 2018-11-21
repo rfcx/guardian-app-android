@@ -332,13 +332,19 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val time = DateHelper.getIsoTime()
 		val lat = lastKnowLocation?.latitude ?: 0.0
 		val lon = lastKnowLocation?.longitude ?: 0.0
-		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate)
-		
+		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
+
 		showProgress()
 		SendReportApi().sendReport(this@ReportActivity, report, object : SendReportApi.SendReportCallback {
 			override fun onSuccess() {
 				hideProgress()
 				setResult(Activity.RESULT_OK)
+
+				recordFile?.let {
+					recordFile?.deleteOnExit()
+					recordFile = null
+				}
+
 				finish()
 			}
 			
@@ -417,18 +423,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun stopPlaying() {
 		player?.release()
 		player = null
-	}
-	
-	private fun uploadAudio() {
-		recordFile?.let {
-			// TODO upload audio to API
-			
-			// do something ...
-			
-			// delete file after upload successed
-			//	recordFile?.deleteOnExit()
-			//	recordFile = null
-		}
 	}
 	
 	private fun requestRecordAudioPermission() {
