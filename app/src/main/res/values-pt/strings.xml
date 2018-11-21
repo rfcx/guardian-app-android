@@ -15,22 +15,19 @@
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
     <string name="re_login">Por favor, conecte-se novamente.</string>
-
     <string name="cancel">Cancelar</string>
     <string name="back">Voltar</string>
-
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
+    <string name="record_audio_permission_msg">Ranger App gostaria de gravar áudio</string>
     <string name="go_to_setting">Definições</string>
     <string name="user_location">O aplicativo Ranger está procurando sua localização</string>
-
     <string name="menu_logout">Sair</string>
     <string name="menu_ranger_group">Minha localização</string>
-
+    
     <!-- message list -->
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
-
     <string name="report_chainsaw_button">Motoserras</string>
     <string name="report_gunshot_button">Tiros</string>
     <string name="report_trespasser_button">Invasores</string>
@@ -46,19 +43,21 @@
     <string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Enviar</string>
-
+    <string name="report_record_label">NOTAS DE REGISTRO (Opcional)</string>
+    <string name="report_location_null">Localização não encontrada. Por favor, tente novamente.</string>
     <string name="alert_title_format">Isto é um %s?</string>
     <string name="alert_yes_button">Sim</string>
     <string name="alert_no_button">Não</string>
     <string name="alert_state_loading">Carregando…</string>
     <string name="alert_state_playing">Reproduzindo…</string>
     <string name="alert_state_replay">Repetir</string>
-
+    
     <!-- Notification -->
     <string name="notification_location_title">Localização do Ranger</string>
     <string name="notification_location_loading">Carregando localização…</string>
 
     <!-- Settings -->
+    <string name="notification_location_not_availability">Por favor ligue a localização do dispositivo!</string>
     <string name="setting_label">Definições</string>
     <string name="app_version_label">Versão%s</string>
     <string name="location_tracking_label">Rastreamento de localização</string>
@@ -67,10 +66,13 @@
     <string name="default_site_label">Local</string>
     <string name="guardian_group_label">Grupo de guardiões</string>
     <string name="guardian_group_none">Nenhum</string>
-
+    
     <string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
 
+    <string name="tab_to_record_label">Toque e segure o botão direito para gravar o som</string>
+    <string name="recent_title">Recente</string>
+    <string name="history_title">História</string>
 </resources>
