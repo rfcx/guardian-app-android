@@ -76,7 +76,7 @@
 	<string name="last_24_hours">Last\n24 hours</string>
 	<string name="now">Now</string>
 	
-	<string name="tab_to_record_label">Tab and hold the right button to record sound</string>
+	<string name="tab_to_record_label">Tap and hold the button to record notes</string>
 	<string name="recent_title">Recent</string>
 	<string name="history_title">History</string>
 </resources>

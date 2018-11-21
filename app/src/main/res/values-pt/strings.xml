@@ -72,7 +72,7 @@
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
 
-    <string name="tab_to_record_label">Toque e segure o botão direito para gravar o som</string>
+    <string name="tab_to_record_label">Segure o botão para gravar notas</string>
     <string name="recent_title">Recente</string>
     <string name="history_title">História</string>
 </resources>
