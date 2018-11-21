@@ -66,7 +66,7 @@ class SendReportApi {
 		map.put("age_estimate", createPartFromString(report.ageEstimate.toString()))
 		if (!report.audioLocation.isNullOrEmpty()) {
 			val uri = Uri.parse(report.audioLocation!!)
-			map.put("audio", createLocalFilePart("audio", uri, "audio").body())
+			map.put("audio", createLocalFilePart("audio", uri, "audio/mpeg").body())
 		}
 		return map
 	}
@@ -78,8 +78,8 @@ class SendReportApi {
 
 	private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
 		val file = File(fileUri.path)
-		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)  // or "audio"
-		return MultipartBody.Part.createFormData(partName, file.getName(), requestFile)
+		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)
+		return MultipartBody.Part.createFormData(partName, file.name, requestFile)
 	}
 	
 	
