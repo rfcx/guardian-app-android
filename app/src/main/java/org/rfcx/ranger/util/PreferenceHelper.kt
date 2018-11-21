@@ -22,7 +22,7 @@ class PreferenceHelper(context: Context) {
 	init {
 		sharedPreferences = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 	}
-
+	
 	fun putBoolean(key: String, value: Boolean) {
 		sharedPreferences.edit().putBoolean(key, value).apply()
 	}
@@ -34,7 +34,7 @@ class PreferenceHelper(context: Context) {
 	fun putObject(key: String, value: Any) {
 		sharedPreferences.edit().putString(key, GsonProvider.getInstance().gson.toJson(value)).apply()
 	}
-
+	
 	fun getBoolean(key: String): Boolean {
 		return sharedPreferences.getBoolean(key, false)
 	}
@@ -42,11 +42,11 @@ class PreferenceHelper(context: Context) {
 	fun getString(key: String, defValue: String): String {
 		return sharedPreferences.getString(key, defValue)
 	}
-
+	
 	fun getString(key: String): String? {
 		return sharedPreferences.getString(key, null)
 	}
-
+	
 	fun getDate(key: String): Date? {
 		val secondsSinceEpoch = sharedPreferences.getLong(key, 0L)
 		if (secondsSinceEpoch == 0L) {
@@ -54,9 +54,17 @@ class PreferenceHelper(context: Context) {
 		}
 		return Date(secondsSinceEpoch)
 	}
-
+	
 	fun putDate(key: String, date: Date) {
 		sharedPreferences.edit().putLong(key, date.time).apply()
+	}
+	
+	fun putLong(key: String, long: Long) {
+		sharedPreferences.edit().putLong(key, long).apply()
+	}
+	
+	fun getLong(key: String, defValue: Long): Long {
+		return sharedPreferences.getLong(key, defValue)
 	}
 	
 	fun <E> getObject(key: String, objClass: Class<E>): E? {
@@ -71,5 +79,5 @@ class PreferenceHelper(context: Context) {
 	fun clear() {
 		sharedPreferences.edit().clear().apply()
 	}
-
+	
 }

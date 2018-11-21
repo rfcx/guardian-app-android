@@ -16,12 +16,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.location.RangerLocation
 import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.repo.api.SendLocationApi
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.NotificationHelper
-import org.rfcx.ranger.util.PrefKey
-import org.rfcx.ranger.util.PreferenceHelper
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.SettingsActivity
 
 /**
@@ -37,11 +35,12 @@ class LocationTrackerService : Service() {
 		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
 		private const val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
 		private const val fastestIntervalLocationUpdate: Long = 20 * 1000
+		private const val locationUploadRate: Long = 60 * 1000 // a minuit
 		
 		val locationRequest = LocationRequest().apply {
 			interval = intervalLocationUpdate
 			fastestInterval = fastestIntervalLocationUpdate
-			priority = LocationRequest.PRIORITY_LOW_POWER
+			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 		}
 	}
 	
@@ -56,11 +55,14 @@ class LocationTrackerService : Service() {
 			Log.d(tag, "${locationResult?.lastLocation?.latitude} ${locationResult?.lastLocation?.longitude}")
 			
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-					createLocationTrackerNotification(locationResult?.lastLocation,true))
+					createLocationTrackerNotification(locationResult?.lastLocation, true))
 			
 			locationResult?.lastLocation?.let {
-				sentLocation(it)
+				saveLocation(it)
 			}
+			
+			sentLocation()
+			
 		}
 		
 		override fun onLocationAvailability(p0: LocationAvailability?) {
@@ -68,7 +70,7 @@ class LocationTrackerService : Service() {
 			if (p0?.isLocationAvailable == false) {
 				// user turn off location on setting
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-						createLocationTrackerNotification(null,false))
+						createLocationTrackerNotification(null, false))
 			}
 		}
 		
@@ -104,11 +106,13 @@ class LocationTrackerService : Service() {
 			Log.i(tag, "${it?.latitude} ${it?.longitude}")
 			lastLocation = it
 			if (it != null) {
-				sentLocation(it)
+				saveLocation(it)
 			}
 		}
 		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
 		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation, true))
+		
+		sentLocation()
 	}
 	
 	override fun onDestroy() {
@@ -164,13 +168,30 @@ class LocationTrackerService : Service() {
 		return getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 	}
 	
-	private fun sentLocation(location: Location) {
-		SendLocationApi().checkIn(this, location.latitude, location.longitude, DateHelper.getIsoTime(), object : SendLocationApi.SendLocationCallBack {
+	private fun saveLocation(location: Location) {
+		RealmHelper.getInstance().saveLocation(
+				RangerLocation(latitude = location.latitude, longitude = location.longitude))
+	}
+	
+	private fun sentLocation() {
+		if(!isNetWorkAvailable()) return
+		val lastLocationUpload = PreferenceHelper.getInstance(this@LocationTrackerService).getLong(PrefKey.LASTED_LOCATION_UPLOAD, 0)
+		if (System.currentTimeMillis() - lastLocationUpload < locationUploadRate) {
+			return
+		}
+		// Store last upload location
+		PreferenceHelper.getInstance(this@LocationTrackerService).putLong(PrefKey.LASTED_LOCATION_UPLOAD, System.currentTimeMillis())
+		
+		val locations = RealmHelper.getInstance().getLocations()
+		if (locations.isEmpty()) return
+		SendLocationApi().checkIn(this, locations, object : SendLocationApi.SendLocationCallBack {
 			override fun onSuccess() {
-				// Success do nothing
+				// Remove locations are Sent!
+				RealmHelper.getInstance().removeSentLocation(locations)
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
+				Log.d(tag, t?.message)
 				if (t is TokenExpireException) {
 					NotificationHelper.getInstance().showLoginNotification(this@LocationTrackerService)
 					stopForeground(true)
