@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:paddingStart="@dimen/margin_padding_normal"
     android:paddingEnd="@dimen/margin_padding_normal"
     tools:context="org.rfcx.ranger.view.InvitationActivity">
@@ -21,39 +23,50 @@
         android:layout_width="@dimen/invitation_icon_size"
         android:layout_height="@dimen/invitation_icon_size"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
-        app:srcCompat="@drawable/ic_facebook" />
+        app:srcCompat="@drawable/ic_invitation" />
 
     <TextView
         android:id="@+id/tv_invitation_title"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
         android:layout_width="0dp"
-        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_normal"
-        app:layout_constraintTop_toBottomOf="@+id/iv_invitation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/invitation_title"
-        android:layout_height="wrap_content" />
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_invitation" />
+
+    <TextView
+        android:id="@+id/tv_invitation_desc"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_xsmall"
+        android:text="@string/invitation_desc"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tv_invitation_title" />
 
     <EditText
-        app:layout_constraintTop_toBottomOf="@+id/tv_invitation_title"
         android:id="@+id/input_invitation_code"
-        android:inputType="number"
+        style="@style/InvitationInput"
         android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_large"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Code"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:textColor="@android:color/white"
-        android:layout_height="wrap_content" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_invitation_desc" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/margin_padding_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:fabSize="normal"
         app:backgroundTint="@android:color/white"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_arrow_forward" />
 </androidx.constraintlayout.widget.ConstraintLayout>

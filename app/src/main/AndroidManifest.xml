@@ -40,7 +40,6 @@
             android:name=".view.ReportActivity"
             android:screenOrientation="portrait" />
 
-
         <activity android:name=".view.InvitationActivity"
             android:screenOrientation="portrait"/>
 

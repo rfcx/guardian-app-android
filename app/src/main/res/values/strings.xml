@@ -82,4 +82,6 @@
 
     <!-- Invitation -->
     <string name="invitation_title">Connect to a site</string>
+    <string name="invitation_desc">Please enter your invitation code</string>
+    <string name="hint_code">Code</string>
 </resources>
