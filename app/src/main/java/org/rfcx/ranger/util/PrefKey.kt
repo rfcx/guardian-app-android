@@ -5,6 +5,7 @@ object PrefKey {
 
 	const val ID_TOKEN = "${PREFIX}ID_TOKEN"
 	const val ACCESS_TOKEN = "${PREFIX}ACCESS_TOKEN"
+	const val REFRESH_TOKEN = "${PREFIX}REFRESH_TOKEN"
 	const val GU_ID = "${PREFIX}GU_ID"
 	const val EMAIL = "${PREFIX}EMAIL"
 	const val NICKNAME = "${PREFIX}NICKNAME"
