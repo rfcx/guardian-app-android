@@ -18,7 +18,7 @@
     <string name="cancel">Cancelar</string>
     <string name="back">Voltar</string>
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
-    <string name="record_audio_permission_msg">Ranger App gostaria de gravar áudio</string>
+    <string name="record_audio_permission_msg">O aplicativo Ranger gostaria de gravar áudio</string>
     <string name="go_to_setting">Definições</string>
     <string name="user_location">O aplicativo Ranger está procurando sua localização</string>
     <string name="menu_logout">Sair</string>
