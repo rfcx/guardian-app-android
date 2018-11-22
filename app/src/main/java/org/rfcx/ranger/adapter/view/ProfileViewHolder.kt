@@ -17,8 +17,8 @@ class ProfileViewHolder(itemView: View, private val onLocationTrackingChangeList
     fun bind(context: Context, nickname: String, location: String, isLocationTracking: Boolean) {
         itemView.userNameTextView.text = context.getString(R.string.profile_welcome, nickname.trim().capitalize())
         itemView.locationTextView.text = location.capitalize()
-        itemView.locationTrackingSwitch.isChecked = isLocationTracking
-        refresh(context, isLocationTracking)
+        itemView.locationTrackingSwitch.isChecked = onLocationTrackingChangeListener.isEnableTracking()
+        refresh(context, onLocationTrackingChangeListener.isEnableTracking())
 
         itemView.locationTrackingSwitch.setOnCheckedChangeListener { _, isChecked ->
             refresh(context, isChecked)

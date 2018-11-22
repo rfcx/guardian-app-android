@@ -51,10 +51,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener {
-	
-	
+
 	lateinit var messageAdapter: MessageAdapter
 	private lateinit var rangerRemote: FirebaseRemoteConfig
+	private var isTracking :Boolean = false
 	
 	companion object {
 		fun startActivity(context: Context) {
@@ -106,8 +106,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 				super.onScrolled(recyclerView, dx, dy)
 			}
 		})
-		
-		if (LocationTracking.isOn(this)) {
+
+		isTracking = LocationTracking.isOn(this)
+		if (isTracking) {
 			if (!this.isLocationAllow()) {
 				requestPermissions()
 			} else {
@@ -294,7 +295,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		val preferences = Preferences.getInstance(this)
 		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
 		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
+		isTracking = LocationTracking.isOn(this)
+		messageAdapter.updateHeader(nickname, site, isTracking)
 	}
 	
 	private fun logout() {
@@ -322,8 +324,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		
 		messageAdapter.notifyDataSetChanged()
 	}
-	
+
+	//region {@link }
+	override fun isEnableTracking(): Boolean = isTracking
+
 	override fun onLocationTrackingChange(on: Boolean) {
+		isTracking = on // update tracking
 		if (on) {
 			if (!isLocationAllow()) {
 				requestPermissions()

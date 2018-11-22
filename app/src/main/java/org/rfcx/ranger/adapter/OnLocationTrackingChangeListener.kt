@@ -5,5 +5,7 @@ package org.rfcx.ranger.adapter
  */
 
 interface OnLocationTrackingChangeListener {
+    fun isEnableTracking(): Boolean
+
     fun onLocationTrackingChange(on: Boolean)
 }
