@@ -31,8 +31,8 @@
 		<item name="android:minHeight">40dp</item>
 		<item name="android:paddingBottom">4dp</item>
 		<item name="android:paddingTop">4dp</item>
-		<item name="android:paddingEnd">@dimen/margin_padding_large</item>
-		<item name="android:paddingStart">@dimen/margin_padding_large</item>
+		<item name="android:paddingEnd">@dimen/margin_padding_normal</item>
+		<item name="android:paddingStart">@dimen/margin_padding_normal</item>
 	</style>
 	
 	<style name="TextAppearance.Design.Snackbar.Message" parent="android:TextAppearance" tools:override="true">
