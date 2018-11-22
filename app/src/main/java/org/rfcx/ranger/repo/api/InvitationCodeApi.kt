@@ -4,6 +4,7 @@ import android.content.Context
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
+import org.rfcx.ranger.entity.user.InvitationCodeRequest
 import org.rfcx.ranger.entity.user.InvitationCodeResponse
 import org.rfcx.ranger.repo.*
 import org.rfcx.ranger.util.getTokenID
@@ -24,7 +25,7 @@ class InvitationCodeApi {
             return
         }
 
-        ApiManager.getInstance().apiRest.sendInvitationCode("Bearer $token", code)
+        ApiManager.getInstance().apiRest.sendInvitationCode("Bearer $token", InvitationCodeRequest(code))
                 .enqueue(object : Callback<InvitationCodeResponse> {
                     override fun onFailure(call: Call<InvitationCodeResponse>, t: Throwable) {
                         Crashlytics.logException(t)

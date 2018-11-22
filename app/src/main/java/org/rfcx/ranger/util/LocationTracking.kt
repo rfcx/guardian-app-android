@@ -2,9 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.content.Intent
-import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.service.LocationTrackerService
-import org.rfcx.ranger.view.SettingsActivity
 
 /**
  * Keeps track of the status of location tracking
@@ -18,16 +16,16 @@ class LocationTracking {
         private val TRACKING_OFF = "off"
 
         fun isOn(context: Context): Boolean {
-            val preferences = PreferenceHelper.getInstance(context)
-            val state = preferences.getString(PrefKey.ENABLE_LOCATION_TRACKING, "")
+            val preferences = Preferences.getInstance(context)
+            val state = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, "")
             if (state.isEmpty()) {
                 // state never setting before
                 if (context.isLocationAllow()) {
                     // state on
-                    preferences.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_ON)
+                    preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_ON)
                     return true
                 } else {
-                    preferences.putString(PrefKey.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
+                    preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
                     return false
                 }
             } else {
@@ -36,8 +34,8 @@ class LocationTracking {
         }
 
         fun set(context: Context, on: Boolean) {
-            val preferences = PreferenceHelper.getInstance(context)
-            preferences.putString(PrefKey.ENABLE_LOCATION_TRACKING, if (on) TRACKING_ON else TRACKING_OFF)
+            val preferences = Preferences.getInstance(context)
+            preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, if (on) TRACKING_ON else TRACKING_OFF)
             updateService(context)
         }
 

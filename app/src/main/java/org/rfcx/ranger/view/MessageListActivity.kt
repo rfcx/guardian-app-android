@@ -291,15 +291,15 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	}
 	
 	private fun refreshHeader() {
-		val preferences = PreferenceHelper.getInstance(this)
-		val site = preferences.getString(PrefKey.DEFAULT_SITE, "")
-		val nickname = preferences.getString(PrefKey.NICKNAME, "$site Ranger")
+		val preferences = Preferences.getInstance(this)
+		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
+		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
 		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
 		CloudMessaging.unsubscribe(this)
-		PreferenceHelper.getInstance(this@MessageListActivity).clear()
+		Preferences.getInstance(this@MessageListActivity).clear()
 		LoginActivity.startActivity(this@MessageListActivity)
 		finish()
 	}

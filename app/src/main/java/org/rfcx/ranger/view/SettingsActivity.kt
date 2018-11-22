@@ -158,7 +158,7 @@ class SettingsActivity : AppCompatActivity() {
 	
 	private fun reloadGuardianGroups() {
 		val database = RealmHelper.getInstance()
-		val lastUpdated = PreferenceHelper.getInstance(this).getDate(PrefKey.GUARDIAN_GROUPS_LAST_UPDATED)
+		val lastUpdated = Preferences.getInstance(this).getDate(Preferences.GUARDIAN_GROUPS_LAST_UPDATED)
 		val cacheTimeMs = 24L * 3600000L // 24 hours
 		if (lastUpdated != null && lastUpdated.after(Date(System.currentTimeMillis() - cacheTimeMs))) {
 			Log.d("SettingsActivity", "using cache for guardian groups")
@@ -174,7 +174,7 @@ class SettingsActivity : AppCompatActivity() {
 			override fun onSuccess(groups: List<GuardianGroup>) {
 				Log.d("SettingsActivity", "got ${groups.size}")
 				database.saveGuardianGroups(groups)
-				PreferenceHelper.getInstance(this@SettingsActivity).putDate(PrefKey.GUARDIAN_GROUPS_LAST_UPDATED, Date())
+				Preferences.getInstance(this@SettingsActivity).putDate(Preferences.GUARDIAN_GROUPS_LAST_UPDATED, Date())
 				populateGuardianGroups(groups)
 				guardianGroupSpinner.visibility = View.VISIBLE
 				guardianGroupProgress.visibility = View.INVISIBLE
@@ -196,7 +196,7 @@ class SettingsActivity : AppCompatActivity() {
 	private fun populateGuardianGroups(groups: List<GuardianGroup>) {
 		guardianGroupsAdapter.setData(groups)
 		
-		val selectedValue = PreferenceHelper.getInstance(this).getString(PrefKey.SELECTED_GUARDIAN_GROUP)
+		val selectedValue = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		if (selectedValue != null) {
 			val selectedIndex = groups.indexOfFirst { it.shortname == selectedValue }
 			if (selectedIndex != -1) {
@@ -208,12 +208,12 @@ class SettingsActivity : AppCompatActivity() {
 	private fun guardianGroupSelected(group: GuardianGroup) {
 		Log.d("SettingsActivity", "selected group ${group.shortname} ${group.name}")
 		
-		val preferenceHelper = PreferenceHelper.getInstance(this)
-		val currentGroup = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
+		val preferenceHelper = Preferences.getInstance(this)
+		val currentGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		
 		if (currentGroup == null || currentGroup != group.shortname) {
 			CloudMessaging.unsubscribe(this)
-			preferenceHelper.putString(PrefKey.SELECTED_GUARDIAN_GROUP, group.shortname)
+			preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, group.shortname)
 		}
 		
 		CloudMessaging.subscribeIfRequired(this)

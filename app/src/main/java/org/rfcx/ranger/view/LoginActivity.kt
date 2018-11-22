@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.PrefKey
-import org.rfcx.ranger.util.PreferenceHelper
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -18,13 +15,13 @@ import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
-import io.jsonwebtoken.Jwts
 import kotlinx.android.synthetic.main.activity_login.*
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.entity.Result
-import org.rfcx.ranger.repo.api.EventsApi
+import org.rfcx.ranger.entity.user.UserAuthResponse
 import org.rfcx.ranger.repo.api.UserTouchApi
+import org.rfcx.ranger.util.CredentialKeeper
+import org.rfcx.ranger.util.CredentialVerifier
 
 
 class LoginActivity : AppCompatActivity() {
@@ -55,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login)
 		
-		if (isLogin()) {
+		if (CredentialKeeper(this).hasValidCredentials()) {
 			MessageListActivity.startActivity(this@LoginActivity)
 			finish()
 		} else {
@@ -94,14 +91,14 @@ class LoginActivity : AppCompatActivity() {
 		loginButton.isEnabled = false
 		loginEmailEditText.isEnabled = false
 		loginPasswordEditText.isEnabled = false
-		
+
 		authentication
 				.login(email, password, "Username-Password-Authentication")
 				.setScope(getString(R.string.auth0_scopes))
 				.setAudience(getString(R.string.auth0_audience))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {
-                        val result = this@LoginActivity.verifyCredentials(credentials)
+                        val result = CredentialVerifier(this@LoginActivity).verify(credentials)
                         when (result) {
                             is Err -> { loginFailed(result.error) }
                             is Ok -> { loginSuccess(result.value) }
@@ -138,7 +135,7 @@ class LoginActivity : AppCompatActivity() {
 					}
 
 					override fun onSuccess(credentials: Credentials) {
-						val result = this@LoginActivity.verifyCredentials(credentials)
+						val result = CredentialVerifier(this@LoginActivity).verify(credentials)
 						when (result) {
 							is Err -> { loginFailed(result.error) }
 							is Ok -> { loginSuccess(result.value) }
@@ -160,25 +157,12 @@ class LoginActivity : AppCompatActivity() {
 	}
 	
 	private fun loginSuccess(userAuthResponse: UserAuthResponse) {
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ID_TOKEN, userAuthResponse.idToken)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.GU_ID, userAuthResponse.guid)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.ACCESS_TOKEN, userAuthResponse.accessToken)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.REFRESH_TOKEN, userAuthResponse.refreshToken)
-		PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.EMAIL, userAuthResponse.email)
 
-		if (userAuthResponse.nickname != null) {
-			PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.NICKNAME, userAuthResponse.nickname)
-		}
-
-		val isRanger = userAuthResponse.roles.contains("rfcxUser") && userAuthResponse.defaultSite != null
-		if (isRanger) {
-			PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.DEFAULT_SITE, userAuthResponse.defaultSite!!)
-			PreferenceHelper.getInstance(this@LoginActivity).putString(PrefKey.SELECTED_GUARDIAN_GROUP, userAuthResponse.defaultSite!!)
-		}
+		CredentialKeeper(this@LoginActivity).save(userAuthResponse)
 
 		UserTouchApi().send(this, object : UserTouchApi.UserTouchCallback {
 			override fun onSuccess() {
-				if (isRanger) {
+				if (userAuthResponse.isRanger) {
 					MessageListActivity.startActivity(this@LoginActivity)
 				}
 				else {
@@ -192,70 +176,5 @@ class LoginActivity : AppCompatActivity() {
 				loginFailed(message ?: t?.localizedMessage)
 			}
 		})
-
-	}
-
-    private fun verifyCredentials(credentials: Credentials): Result<UserAuthResponse, String> {
-        val token = credentials.idToken
-        if (token == null) {
-            return Err(getString(R.string.an_error_occurred))
-        }
-
-        // Parsing JWT Token
-		val metaDataKey = getString(R.string.auth0_metadata_key)
-        val withoutSignature = token.substring(0, token.lastIndexOf('.') + 1)
-        try {
-            val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
-            if (untrusted.body[metaDataKey] == null) {
-				return Err(getString(R.string.an_error_occurred))
-			}
-
-			val metadata = untrusted.body[metaDataKey]
-			if (metadata == null || !(metadata is HashMap<*, *>)) {
-				return Err(getString(R.string.an_error_occurred))
-			}
-
-			val guid: String? = metadata["guid"] as String?
-			val email: String? = untrusted.body["email"] as String?
-			val nickname: String? = untrusted.body["nickname"] as String?
-			val defaultSite: String? = metadata["defaultSite"] as String?
-
-			var accessibleSites: Set<String> = setOf()
-			val accessibleSitesRaw = metadata["accessibleSites"]
-			if (accessibleSitesRaw != null && accessibleSitesRaw is ArrayList<*> && accessibleSitesRaw.size > 0 && accessibleSitesRaw[0] is String) {
-				accessibleSites = HashSet<String>(accessibleSitesRaw as ArrayList<String>) // TODO: is there a better way to do this @anuphap @jingjoeh
-			}
-
-			var roles: Set<String> = setOf()
-			val authorization = metadata["authorization"]
-			if (authorization != null && authorization is HashMap<*, *>) {
-				val rolesRaw = authorization["roles"]
-				if (rolesRaw != null && rolesRaw is ArrayList<*> && rolesRaw.size > 0 && rolesRaw[0] is String) {
-					roles = HashSet<String>(rolesRaw as ArrayList<String>)
-				}
-			}
-
-			when {
-				guid.isNullOrEmpty() || email.isNullOrEmpty() || credentials.accessToken.isNullOrEmpty() || credentials.refreshToken.isNullOrEmpty() -> {
-					return Err(getString(R.string.an_error_occurred))
-				}
-				else -> {
-					// TODO: force casts (!!) will disappear in kotlin 1.4 because smart casts understand isNullOrEmpty()
-					return Ok(UserAuthResponse(guid!!, email!!, nickname, token, credentials.accessToken!!, credentials.refreshToken!!, roles, accessibleSites, defaultSite))
-				}
-			}
-        } catch (e: Exception) {
-            e.printStackTrace()
-			Crashlytics.logException(e)
-        }
-        return Err(getString(R.string.an_error_occurred))
-    }
-	
-	private fun isLogin(): Boolean {
-		return PreferenceHelper.getInstance(this@LoginActivity).getString(PrefKey.ID_TOKEN, "").isNotEmpty()
 	}
 }
-
-data class UserAuthResponse (val guid: String, val email: String, val nickname: String?,
-							 val idToken: String, val accessToken: String, val refreshToken: String,
-							 val roles: Set<String> = setOf(), val accessibleSites: Set<String> = setOf(), val defaultSite: String? = null)

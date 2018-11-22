@@ -10,13 +10,13 @@ class CloudMessaging {
     companion object {
 
         fun subscribeIfRequired(context: Context) {
-            val preferenceHelper = PreferenceHelper.getInstance(context)
-            val group = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
+            val preferenceHelper = Preferences.getInstance(context)
+            val group = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
 
-            if (!preferenceHelper.getBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP) && group != null) {
+            if (!preferenceHelper.getBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP) && group != null) {
                 FirebaseMessaging.getInstance().subscribeToTopic(group).addOnCompleteListener {
                     if (it.isSuccessful()) {
-                        preferenceHelper.putBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, true)
+                        preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, true)
                     } else {
                         Crashlytics.logException(Exception("Unable to subscribe to cloud messaging for guardian group: ${group}"))
                         Log.e("CloudMessaging", "Unable to subscribe to cloud messaging for guardian group")
@@ -26,9 +26,9 @@ class CloudMessaging {
         }
 
         fun unsubscribe(context: Context) {
-            val preferenceHelper = PreferenceHelper.getInstance(context)
-            val group = preferenceHelper.getString(PrefKey.SELECTED_GUARDIAN_GROUP)
-            preferenceHelper.putBoolean(PrefKey.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
+            val preferenceHelper = Preferences.getInstance(context)
+            val group = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
+            preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
 
             if (group != null) {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(group).addOnCompleteListener {
