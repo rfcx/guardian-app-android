@@ -53,12 +53,12 @@ class LoginActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_login)
 		
 		if (CredentialKeeper(this).hasValidCredentials()) {
+			loginGroupView.visibility = View.INVISIBLE
+
 			MessageListActivity.startActivity(this@LoginActivity)
 			finish()
 		} else {
-			loginEmailEditText.visibility = View.VISIBLE
-			loginPasswordEditText.visibility = View.VISIBLE
-			loginButton.visibility = View.VISIBLE
+			loginGroupView.visibility = View.VISIBLE
 		}
 		
 		loginButton.setOnClickListener {
@@ -86,11 +86,12 @@ class LoginActivity : AppCompatActivity() {
 	}
 	
 	private fun doLogin(email: String, password: String) {
+		loginGroupView.visibility = View.GONE
 		loginProgress.visibility = View.VISIBLE
-		loginErrorTextView.visibility = View.GONE
-		loginButton.isEnabled = false
-		loginEmailEditText.isEnabled = false
-		loginPasswordEditText.isEnabled = false
+		loginErrorTextView.visibility = View.INVISIBLE
+//		loginButton.isEnabled = false
+//		loginEmailEditText.isEnabled = false
+//		loginPasswordEditText.isEnabled = false
 
 		authentication
 				.login(email, password, "Username-Password-Authentication")
@@ -119,6 +120,10 @@ class LoginActivity : AppCompatActivity() {
 	}
 
 	private fun doFacebookLogin() {
+		loginGroupView.visibility = View.GONE
+		loginProgress.visibility = View.VISIBLE
+		loginErrorTextView.visibility = View.INVISIBLE
+
 		webAuthentication
 				.withConnection("facebook")
 				.withScope(getString(R.string.auth0_scopes))
@@ -130,6 +135,11 @@ class LoginActivity : AppCompatActivity() {
 					}
 
 					override fun onFailure(exception: AuthenticationException) {
+						runOnUiThread{
+							loginProgress.visibility = View.INVISIBLE
+							loginGroupView.visibility = View.VISIBLE
+						}
+
 						Crashlytics.logException(exception)
 						loginFailed(exception.localizedMessage)
 					}
@@ -146,7 +156,9 @@ class LoginActivity : AppCompatActivity() {
 	
 	private fun loginFailed(errorMessage: String?) {
 		runOnUiThread {
-			loginProgress.visibility = View.GONE
+			loginGroupView.visibility = View.VISIBLE
+			loginProgress.visibility = View.INVISIBLE
+
 			loginButton.isEnabled = true
 			loginEmailEditText.isEnabled = true
 			loginPasswordEditText.isEnabled = true
@@ -162,6 +174,10 @@ class LoginActivity : AppCompatActivity() {
 
 		UserTouchApi().send(this, object : UserTouchApi.UserTouchCallback {
 			override fun onSuccess() {
+				runOnUiThread{
+					loginProgress.visibility = View.INVISIBLE
+				}
+
 				if (userAuthResponse.isRanger) {
 					MessageListActivity.startActivity(this@LoginActivity)
 				}
@@ -172,6 +188,10 @@ class LoginActivity : AppCompatActivity() {
 			}
 
 			override fun onFailed(t: Throwable?, message: String?) {
+				runOnUiThread{
+					loginProgress.visibility = View.INVISIBLE
+					loginGroupView.visibility = View.VISIBLE
+				}
 				Crashlytics.logException(t)
 				loginFailed(message ?: t?.localizedMessage)
 			}
