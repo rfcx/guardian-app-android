@@ -51,6 +51,7 @@
     <EditText
         android:id="@+id/input_invitation_code"
         style="@style/InvitationInput"
+        android:imeOptions="actionDone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_large"
@@ -73,6 +74,7 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_large"
         app:layout_constraintTop_toBottomOf="@id/input_invitation_code"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone" />

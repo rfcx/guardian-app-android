@@ -7,9 +7,7 @@ import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.repo.*
-import org.rfcx.ranger.util.getEmail
 import org.rfcx.ranger.util.getTokenID
-import org.rfcx.ranger.util.getUserGuId
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,11 +18,9 @@ class ReviewEventApi {
 	private var rejectEvent = "reject"
 	
 	fun reViewEvent(context: Context, event: Event, isReviewConfirm: Boolean, reviewEventCallback: ReviewEventCallback) {
-		
-		val guid = context.getUserGuId()
+
 		val token = context.getTokenID()
-		val email = context.getEmail()
-		if (guid == null || token == null || email == null) {
+		if (token == null) {
 			reviewEventCallback.onFailed(TokenExpireException(context), null)
 			return
 		}
@@ -49,7 +45,6 @@ class ReviewEventApi {
 						Crashlytics.logException(t)
 						reviewEventCallback.onFailed(t, null)
 					}
-					
 				})
 	}
 	

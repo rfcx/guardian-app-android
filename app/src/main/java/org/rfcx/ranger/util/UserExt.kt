@@ -3,15 +3,8 @@ package org.rfcx.ranger.util
 import android.content.Context
 import android.util.Log
 
-
 fun Context.getTokenID(): String? {
 	val idToken = Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "")
-	Log.d("getToken", idToken)
-	return if (idToken.isEmpty()) null else idToken
-}
-
-fun Context.getToken(): String? {
-	val idToken = Preferences.getInstance(this).getString(Preferences.ACCESS_TOKEN, "")
 	Log.d("getToken", idToken)
 	return if (idToken.isEmpty()) null else idToken
 }
@@ -24,9 +17,4 @@ fun Context.getSite(): String? {
 fun Context.getUserGuId(): String? {
 	val guId = Preferences.getInstance(this).getString(Preferences.USER_GUID, "")
 	return if (guId.isEmpty()) null else guId
-}
-
-fun Context.getEmail(): String? {
-	val email = Preferences.getInstance(this).getString(Preferences.EMAIL, "")
-	return if (email.isEmpty()) null else email
 }

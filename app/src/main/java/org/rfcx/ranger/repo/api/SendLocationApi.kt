@@ -8,9 +8,7 @@ import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.location.RangerLocation
 import org.rfcx.ranger.repo.*
-import org.rfcx.ranger.util.getEmail
 import org.rfcx.ranger.util.getTokenID
-import org.rfcx.ranger.util.getUserGuId
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,10 +17,8 @@ class SendLocationApi {
 	
 	fun checkIn(context: Context, locations: List<RangerLocation>, sendLocationCallBack: SendLocationCallBack) {
 		
-		val guid = context.getUserGuId()
 		val token = context.getTokenID()
-		val email = context.getEmail()
-		if (guid == null || token == null || email == null) {
+		if (token == null) {
 			sendLocationCallBack.onFailed(TokenExpireException(context), null)
 			return
 		}
@@ -47,7 +43,6 @@ class SendLocationApi {
 							}
 						}
 					}
-					
 				})
 	}
 	
