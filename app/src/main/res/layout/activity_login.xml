@@ -23,11 +23,11 @@
             app:constraint_referenced_ids="facebookLoginButton,layoutLineView,loginButton,loginPasswordEditText,loginEmailEditText,loginButton" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline15"
+            android:id="@+id/guideline10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.15" />
+            app:layout_constraintGuide_percent="0.10" />
 
         <ImageView
             android:id="@+id/logoImg"
@@ -37,7 +37,7 @@
             android:src="@drawable/app_logo_step4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline15" />
+            app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
         <TextView
             android:id="@+id/tvAppName"
@@ -63,6 +63,7 @@
             android:layout_marginTop="@dimen/margin_padding_large"
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:hint="@string/email"
+            android:imeOptions="actionNext"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +78,7 @@
             android:layout_marginTop="@dimen/margin_padding_large"
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:hint="@string/password"
+            android:imeOptions="actionDone"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
