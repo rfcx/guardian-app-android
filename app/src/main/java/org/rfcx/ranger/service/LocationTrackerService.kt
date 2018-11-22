@@ -40,7 +40,7 @@ class LocationTrackerService : Service() {
 		val locationRequest = LocationRequest().apply {
 			interval = intervalLocationUpdate
 			fastestInterval = fastestIntervalLocationUpdate
-			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+			priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
 		}
 	}
 	
@@ -52,7 +52,6 @@ class LocationTrackerService : Service() {
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
 			super.onLocationResult(locationResult)
-			Log.d(tag, "${locationResult?.lastLocation?.latitude} ${locationResult?.lastLocation?.longitude}")
 			
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
 					createLocationTrackerNotification(locationResult?.lastLocation, true))
@@ -68,11 +67,13 @@ class LocationTrackerService : Service() {
 		override fun onLocationAvailability(p0: LocationAvailability?) {
 			super.onLocationAvailability(p0)
 			if (p0?.isLocationAvailable == false) {
-				// user turn off location on setting
+				// user turn off location on setting or something
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
 						createLocationTrackerNotification(null, false))
 			}
 		}
+		
+		
 		
 		
 	}
