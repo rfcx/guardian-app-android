@@ -51,7 +51,9 @@
     <EditText
         android:id="@+id/input_invitation_code"
         style="@style/InvitationInput"
+        android:inputType="text"
         android:imeOptions="actionDone"
+        android:maxLines="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_large"
