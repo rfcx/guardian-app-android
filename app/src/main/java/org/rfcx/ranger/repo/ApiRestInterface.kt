@@ -9,6 +9,7 @@ import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.SendReportResponse
+import org.rfcx.ranger.entity.user.InvitationCodeRequest
 import org.rfcx.ranger.entity.user.InvitationCodeResponse
 import org.rfcx.ranger.entity.user.UserTouchResponse
 import retrofit2.Call
@@ -50,8 +51,8 @@ interface ApiRestInterface {
 	fun userTouch(@Header("Authorization") authorization: String): Call<UserTouchResponse>
 	
 	@POST("users/code")
-	fun sendInvitationCode(@Header("Authorization") authorization: String, @Field("code") code: String): Call<InvitationCodeResponse>
-	
+	fun sendInvitationCode(@Header("Authorization") authorization: String, @Body code: InvitationCodeRequest): Call<InvitationCodeResponse>
+
 	@GET("guardians/groups")
 	fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
 	

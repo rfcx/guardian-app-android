@@ -85,7 +85,7 @@ class LocationTrackerService : Service() {
 	override fun onCreate() {
 		super.onCreate()
 		// check login first
-		if (PreferenceHelper.getInstance(this).getString(PrefKey.ID_TOKEN, "").isNotEmpty()) {
+		if (Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "").isNotEmpty()) {
 			startTracker()
 		}
 	}
@@ -175,12 +175,12 @@ class LocationTrackerService : Service() {
 	
 	private fun sentLocation() {
 		if(!isNetWorkAvailable()) return
-		val lastLocationUpload = PreferenceHelper.getInstance(this@LocationTrackerService).getLong(PrefKey.LASTED_LOCATION_UPLOAD, 0)
+		val lastLocationUpload = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LASTED_LOCATION_UPLOAD, 0)
 		if (System.currentTimeMillis() - lastLocationUpload < locationUploadRate) {
 			return
 		}
 		// Store last upload location
-		PreferenceHelper.getInstance(this@LocationTrackerService).putLong(PrefKey.LASTED_LOCATION_UPLOAD, System.currentTimeMillis())
+		Preferences.getInstance(this@LocationTrackerService).putLong(Preferences.LASTED_LOCATION_UPLOAD, System.currentTimeMillis())
 		
 		val locations = RealmHelper.getInstance().getLocations()
 		if (locations.isEmpty()) return
@@ -191,7 +191,6 @@ class LocationTrackerService : Service() {
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
-				Log.d(tag, t?.message)
 				if (t is TokenExpireException) {
 					NotificationHelper.getInstance().showLoginNotification(this@LocationTrackerService)
 					stopForeground(true)

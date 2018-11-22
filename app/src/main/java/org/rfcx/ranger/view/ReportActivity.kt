@@ -328,7 +328,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			return
 		}
 
-		val site = PreferenceHelper.getInstance(this).getString(PrefKey.DEFAULT_SITE, "")
+		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
 		val time = DateHelper.getIsoTime()
 		val lat = lastKnowLocation?.latitude ?: 0.0
 		val lon = lastKnowLocation?.longitude ?: 0.0

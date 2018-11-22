@@ -1,5 +1,7 @@
 package org.rfcx.ranger.entity.location
+
 import com.google.gson.annotations.SerializedName
+
 data class CheckInResult(
     @SerializedName("created_at")
     val createdAt: String?,
