@@ -7,19 +7,24 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.location.LocationManager
+import android.location.LocationProvider
 import android.os.Binder
 import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.RangerLocation
 import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.repo.api.SendLocationApi
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.NotificationHelper
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.RealmHelper
+import org.rfcx.ranger.util.isNetWorkAvailable
 import org.rfcx.ranger.view.SettingsActivity
 
 /**
@@ -40,44 +45,44 @@ class LocationTrackerService : Service() {
 		val locationRequest = LocationRequest().apply {
 			interval = intervalLocationUpdate
 			fastestInterval = fastestIntervalLocationUpdate
-			priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 		}
+		
+		private const val LOCATION_INTERVAL = 1000L * 5L // 5 seconds
+		private const val LOCATION_DISTANCE = 0.5f// 0.5 meter
 	}
 	
 	private val tag = LocationTrackerService::class.java.simpleName
 	private val binder = SendLocationLocationServiceBinder()
 	
-	private var fusedLocationClient: FusedLocationProviderClient? = null
+	private var mLocationManager: LocationManager? = null
 	
-	private var locationCallback: LocationCallback = object : LocationCallback() {
-		override fun onLocationResult(locationResult: LocationResult?) {
-			super.onLocationResult(locationResult)
-			
-			getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-					createLocationTrackerNotification(locationResult?.lastLocation, true))
-			
-			locationResult?.lastLocation?.let {
+	private val locationListener = object : android.location.LocationListener {
+		
+		override fun onLocationChanged(p0: Location?) {
+			p0?.let {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
 				saveLocation(it)
 			}
-			
-			sentLocation()
-			
 		}
 		
-		override fun onLocationAvailability(p0: LocationAvailability?) {
-			super.onLocationAvailability(p0)
-			if (p0?.isLocationAvailable == false) {
-				// user turn off location on setting or something
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-						createLocationTrackerNotification(null, false))
+		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
 			}
 		}
 		
+		override fun onProviderEnabled(p0: String?) {
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+		}
 		
-		
+		override fun onProviderDisabled(p0: String?) {
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
+		}
 		
 	}
-	
 	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
@@ -101,24 +106,26 @@ class LocationTrackerService : Service() {
 			createNotificationChannel()
 		}
 		
-		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-		var lastLocation: Location? = null
-		fusedLocationClient?.lastLocation?.addOnSuccessListener {
-			Log.i(tag, "${it?.latitude} ${it?.longitude}")
-			lastLocation = it
-			if (it != null) {
-				saveLocation(it)
-			}
-		}
-		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
-		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation, true))
 		
-		sentLocation()
+		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		try {
+			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+			this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+			
+		} catch (ex: java.lang.SecurityException) {
+			ex.printStackTrace()
+			// Log.i(TAG, "fail to request location update, ignore", ex);
+		} catch (ex: IllegalArgumentException) {
+			ex.printStackTrace()
+			// Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+		}
+		
 	}
+	
 	
 	override fun onDestroy() {
 		super.onDestroy()
-		locationCallback.let { fusedLocationClient?.removeLocationUpdates(it) }
+		mLocationManager?.removeUpdates(locationListener)
 	}
 	
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -174,8 +181,9 @@ class LocationTrackerService : Service() {
 				RangerLocation(latitude = location.latitude, longitude = location.longitude))
 	}
 	
-	private fun sentLocation() {
-		if(!isNetWorkAvailable()) return
+	
+/*	private fun sentLocation() {
+		if (!isNetWorkAvailable()) return
 		val lastLocationUpload = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LASTED_LOCATION_UPLOAD, 0)
 		if (System.currentTimeMillis() - lastLocationUpload < locationUploadRate) {
 			return
@@ -199,6 +207,6 @@ class LocationTrackerService : Service() {
 				}
 			}
 		})
-	}
+	}*/
 	
 }
