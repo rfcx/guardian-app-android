@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.media.RingtoneManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -15,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
+import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.RangerLocation
 import org.rfcx.ranger.repo.TokenExpireException
@@ -58,10 +60,13 @@ class LocationTrackerService : Service() {
 			
 			locationResult?.lastLocation?.let {
 				saveLocation(it)
+
+				if (BuildConfig.DEBUG) {
+					playSound()
+				}
 			}
 			
 			sentLocation()
-			
 		}
 		
 		override fun onLocationAvailability(p0: LocationAvailability?) {
@@ -72,10 +77,6 @@ class LocationTrackerService : Service() {
 						createLocationTrackerNotification(null, false))
 			}
 		}
-		
-		
-		
-		
 	}
 	
 	
@@ -199,6 +200,17 @@ class LocationTrackerService : Service() {
 				}
 			}
 		})
+	}
+
+	// Just for debug mode
+	private fun playSound() {
+		try {
+			val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+			val r = RingtoneManager.getRingtone(this, notification)
+			r.play()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
 	}
 	
 }
