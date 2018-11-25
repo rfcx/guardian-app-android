@@ -30,6 +30,8 @@
     <string name="profile_welcome">Hi, %s!</string>
     <string name="profile_onduty">On duty</string>
     <string name="profile_nottracking">Not tracking</string>
+    <string name="network_online">online</string>
+    <string name="network_offline">offline</string>
 
     <string name="report_chainsaw_button">Chainsaws</string>
     <string name="report_gunshot_button">Gunshots</string>

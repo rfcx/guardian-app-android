@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -44,17 +46,23 @@ import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
 import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
+import org.rfcx.ranger.service.NetworkReceiver
+import org.rfcx.ranger.service.NetworkState
 import org.rfcx.ranger.util.*
 
 
 class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnLocationTrackingChangeListener,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
-		OnFailureListener {
+		OnFailureListener, NetworkReceiver.NetworkStateLister {
 
 	lateinit var messageAdapter: MessageAdapter
 	private lateinit var rangerRemote: FirebaseRemoteConfig
 	private var isTracking :Boolean = false
+	private var networkState :NetworkState = NetworkState.ONLINE
+
+	// broadcast receiver
+	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	
 	companion object {
 		fun startActivity(context: Context) {
@@ -67,13 +75,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
+		const val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 	}
 	
 	override fun onStart() {
 		super.onStart()
 		checkGoogleApiAvailability()
 	}
-	
+
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		// the activity open from another task eg. bypass from @LoginActivity by click notification -> reload the list.
@@ -135,13 +144,15 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
-		
+		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
+
 		refreshHeader()
 	}
 	
 	override fun onPause() {
 		super.onPause()
 		unregisterReceiver(onEventNotificationReceived)
+		unregisterReceiver(onNetworkReceived)
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -161,7 +172,18 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		}
 		return super.onOptionsItemSelected(item)
 	}
-	
+
+	//region {@link NetworkReceiver.NetworkStateLister} implementation
+	override fun onNetworkStateChange(state: NetworkState) {
+		Toast.makeText(this@MessageListActivity, state.toString(), Toast.LENGTH_SHORT).show()
+		this.networkState = state
+		when(state) {
+			NetworkState.ONLINE -> fetchContentList()
+			NetworkState.OFFLINE -> refreshHeader()
+		}
+	}
+	//endregion
+
 	//region {@link addOnCompleteListener.onComplete} implementation
 	override fun onComplete(task: Task<Void>) {
 		if (task.isSuccessful) {
@@ -325,8 +347,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		messageAdapter.notifyDataSetChanged()
 	}
 
-	//region {@link }
-	override fun isEnableTracking(): Boolean = isTracking
+	//region {@link OnLocationTrackingChangeListener }
+	override fun isEnableTracking(): Boolean = this.isTracking
+
+	override fun getNetworkState(): NetworkState = this.networkState
+
+	//endregion
 
 	override fun onLocationTrackingChange(on: Boolean) {
 		isTracking = on // update tracking
