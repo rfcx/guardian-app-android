@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,8 +34,9 @@ import kotlinx.android.synthetic.main.activity_message_list.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.MessageAdapter
-import org.rfcx.ranger.adapter.OnLocationTrackingChangeListener
+import org.rfcx.ranger.adapter.HeaderProtocol
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
+import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
 import org.rfcx.ranger.adapter.entity.MessageItem
@@ -51,7 +51,7 @@ import org.rfcx.ranger.service.NetworkState
 import org.rfcx.ranger.util.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnLocationTrackingChangeListener,
+class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProtocol,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, NetworkReceiver.NetworkStateLister {
@@ -60,6 +60,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	private lateinit var rangerRemote: FirebaseRemoteConfig
 	private var isTracking :Boolean = false
 	private var networkState :NetworkState = NetworkState.ONLINE
+	private var syncInfo :SyncInfo? = null
 
 	// broadcast receiver
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
@@ -130,6 +131,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == REQUEST_CODE_REPORT && resultCode == Activity.RESULT_OK) {
 			ReportSuccessDIalogFragment().show(supportFragmentManager, null)
+
+			// TODO: update sync information after save report
+			updateSyncInfo()
+			refreshHeader()
+
 		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
 			if (resultCode == Activity.RESULT_OK) {
 				LocationTracking.set(this@MessageListActivity, true)
@@ -138,13 +144,26 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 			}
 		}
 	}
-	
+
+	private fun updateSyncInfo() {
+		val sycnStatus = when (networkState) {
+			NetworkState.ONLINE -> {SyncInfo.Status.STARTING}
+			NetworkState.OFFLINE -> {SyncInfo.Status.WAITING_NETWORK}
+		}
+		val database = ReportDb()
+		val count = database.unsentCount()
+		Log.d("Report", "unsent $count")
+		syncInfo = SyncInfo(sycnStatus, count.toInt())
+	}
+
 	override fun onResume() {
 		super.onResume()
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
 		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
+
+		// TODO: setup syncservice
 
 		refreshHeader()
 	}
@@ -177,6 +196,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 	override fun onNetworkStateChange(state: NetworkState) {
 		Toast.makeText(this@MessageListActivity, state.toString(), Toast.LENGTH_SHORT).show()
 		this.networkState = state
+
+		// TODO: update sync info [delete later]
+		updateSyncInfo()
+
 		when(state) {
 			NetworkState.ONLINE -> fetchContentList()
 			NetworkState.OFFLINE -> refreshHeader()
@@ -349,9 +372,13 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, OnL
 
 	//region {@link OnLocationTrackingChangeListener }
 	override fun isEnableTracking(): Boolean = this.isTracking
-
 	override fun getNetworkState(): NetworkState = this.networkState
+	override fun getSyncInfo(): SyncInfo? = syncInfo
 
+	override fun onPressCancelSync() {
+		//TODO: handle on cancel sync reports
+		Toast.makeText(this, "press cancel sync", Toast.LENGTH_SHORT).show()
+	}
 	//endregion
 
 	override fun onLocationTrackingChange(on: Boolean) {

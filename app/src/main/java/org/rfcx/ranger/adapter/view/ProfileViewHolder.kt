@@ -1,27 +1,39 @@
 package org.rfcx.ranger.adapter.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.header_profile.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.OnLocationTrackingChangeListener
+import org.rfcx.ranger.adapter.HeaderProtocol
+import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.service.NetworkState
 
 /**
  * View holder for the header profile section (which shows the location tracking status)
  */
 
-class ProfileViewHolder(itemView: View, private val onLocationTrackingChangeListener: OnLocationTrackingChangeListener) :
+class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtocol) :
         RecyclerView.ViewHolder(itemView) {
 
     fun bind(context: Context, nickname: String, location: String, isLocationTracking: Boolean) {
 
         // setup data
-        val enableTracking = onLocationTrackingChangeListener.isEnableTracking()
-        val networkState = onLocationTrackingChangeListener.getNetworkState()
+        val enableTracking = headerProtocol.isEnableTracking()
+        val networkState = headerProtocol.getNetworkState()
+        val syncInfo = headerProtocol.getSyncInfo()
+        Log.d("Report", "ProfileViewHolder ${syncInfo?.status}")
+
+        if (syncInfo != null && syncInfo.countReport > 0) {
+            updateAlertBar(syncInfo)
+            itemView.layoutAlertBar.visibility = View.VISIBLE
+        } else {
+            itemView.layoutAlertBar.visibility = View.GONE
+        }
 
         itemView.userNameTextView.text = context.getString(R.string.profile_welcome, nickname.trim().capitalize())
         itemView.locationTextView.text = location.capitalize()
@@ -38,7 +50,37 @@ class ProfileViewHolder(itemView: View, private val onLocationTrackingChangeList
 
         itemView.locationTrackingSwitch.setOnCheckedChangeListener { _, isChecked ->
             refresh(context, isChecked)
-            onLocationTrackingChangeListener.onLocationTrackingChange(isChecked)
+            headerProtocol.onLocationTrackingChange(isChecked)
+        }
+
+        itemView.cancelButton.setOnClickListener { headerProtocol.onPressCancelSync() }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateAlertBar(syncInfo: SyncInfo) {
+        itemView.progressBarLoading.visibility = View.GONE
+        when (syncInfo.status) {
+            SyncInfo.Status.WAITING_NETWORK -> {
+                itemView.ivSyncState.setImageResource(R.drawable.ic_queue)
+                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
+                itemView.tvSyncDescription.text = "waiting for network to be uploaded..."
+            }
+            SyncInfo.Status.STARTING -> {
+                itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
+                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
+                itemView.tvSyncDescription.text = "starting to be uploaded..."
+            }
+            SyncInfo.Status.UPLOADING -> {
+                itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
+                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
+                itemView.progressBarLoading.visibility = View.VISIBLE
+                itemView.tvSyncDescription.text = "uploading..."
+            }
+            SyncInfo.Status.UPLOADED -> {
+                itemView.ivSyncState.setImageResource(R.drawable.ic_upload_done)
+                itemView.tvSyncLabel.text = "Upload complete!"
+                itemView.tvSyncDescription.text = ""
+            }
         }
     }
 
@@ -57,7 +99,7 @@ class ProfileViewHolder(itemView: View, private val onLocationTrackingChangeList
         itemView.tvNetworkState.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorPrimary))
         itemView.tvNetworkState.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_online, 0, 0, 0)
 
-        delayHandler.postDelayed(delayRunnable, 5000)
+        delayHandler.postDelayed(delayRunnable, 3000)
     }
 
     private fun refresh(context: Context, isLocationTracking: Boolean) {

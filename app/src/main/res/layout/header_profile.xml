@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/margin_padding_normal"
-    android:paddingTop="@dimen/margin_padding_normal"
-    android:paddingEnd="@dimen/margin_padding_normal"
     android:paddingBottom="@dimen/margin_padding_small">
 
     <TextView
@@ -14,6 +11,8 @@
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_normal"
         android:textColor="@color/text_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,21 +39,24 @@
         style="@style/SwitchCompatStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_padding_xsmall"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
         android:textOff="@string/location_tracking_off_label"
         android:textOn="@string/location_tracking_on_label"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:showText="false"
         tools:checked="false" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/layoutLocation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_normal"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
+        android:layout_marginEnd="@dimen/margin_padding_small"
         android:layout_marginBottom="@dimen/margin_padding_xsmall"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/locationTrackingSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userNameTextView">
 
@@ -90,5 +92,82 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/spaceView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_padding_normal"
+        app:layout_constraintTop_toBottomOf="@+id/layoutLocation" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutAlertBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spaceView">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_default"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivSyncState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_padding_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_queue" />
+
+        <TextView
+            android:id="@+id/tvSyncLabel"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/ivSyncState"
+            app:layout_constraintEnd_toStartOf="@+id/cancelButton"
+            app:layout_constraintStart_toEndOf="@+id/ivSyncState"
+            app:layout_constraintTop_toTopOf="@+id/ivSyncState"
+            tools:text="2 reports and 10+ location checkins" />
+
+        <TextView
+            android:id="@+id/tvSyncDescription"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cancelButton"
+            app:layout_constraintStart_toStartOf="@+id/tvSyncLabel"
+            app:layout_constraintTop_toBottomOf="@+id/tvSyncLabel"
+            tools:text="waiting for network to be uploaded..." />
+
+        <ProgressBar
+            android:id="@+id/progressBarLoading"
+            app:layout_constraintTop_toBottomOf="@+id/tvSyncDescription"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:indeterminateOnly="true"
+            android:visibility="gone"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/cancelButton"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            app:srcCompat="@drawable/ic_close_grey_600_24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
