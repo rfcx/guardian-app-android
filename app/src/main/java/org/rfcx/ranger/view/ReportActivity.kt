@@ -27,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
@@ -144,8 +145,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		return super.onOptionsItemSelected(item)
 	}
 	
-	override fun onMapReady(p0: GoogleMap?) {
-		googleMap = p0
+	override fun onMapReady(map: GoogleMap?) {
+		googleMap = map
+		googleMap?.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
 		if (!isLocationAllow()) {
 			requestPermissions()
 		} else {

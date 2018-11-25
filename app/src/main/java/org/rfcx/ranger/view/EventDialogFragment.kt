@@ -195,6 +195,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	override fun onMapReady(googleMap: GoogleMap?) {
 		if (!isAdded) return
+		googleMap?.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
 		if (event?.latitude != null && event?.longitude != null) {
 			googleMap?.addMarker(MarkerOptions()
 					.position(LatLng(event!!.latitude!!, event!!.longitude!!))
@@ -213,7 +214,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 				startActivity(intent)
 			}
 		}
-		
 	}
 	
 	companion object {
