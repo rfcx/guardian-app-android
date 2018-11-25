@@ -28,13 +28,15 @@ class CloudMessaging {
         fun unsubscribe(context: Context) {
             val preferenceHelper = Preferences.getInstance(context)
             val group = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
-            preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
 
             if (group != null) {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(group).addOnCompleteListener {
                     if (!it.isSuccessful()) {
                         Crashlytics.logException(Exception("Unable to unsubscribe to cloud messaging for default site: ${group}"))
                         Log.e("CloudMessaging", "Unable to unsubscribe to cloud messaging for default site")
+                    }
+                    else {
+                        preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
                     }
                 }
             }
