@@ -24,5 +24,7 @@ open class Report(
 		@SerializedName("distance")
 		var distanceEstimate: Int? = null, // unused on client
 		@Expose(serialize = false)
-		var audioLocation: String? = null // unused on server
+		var audioLocation: String? = null, // unused on server
+		@Expose(serialize = false)
+		var syncState: Int = 0 // local state: 0 unsent, 1 uploading, 2 uploaded (sync complete)
 ) : RealmObject()

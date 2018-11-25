@@ -22,7 +22,7 @@ class SendReportApi {
 
 	val tag = "SendReportApi"
 	
-	fun sendReport(context: Context, report: Report, sendReportCallback: SendReportCallback) {
+	fun send(context: Context, report: Report, sendReportCallback: SendReportCallback) {
 		
 		val token = context.getTokenID()
 		if (token == null) {

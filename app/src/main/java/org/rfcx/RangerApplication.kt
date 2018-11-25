@@ -4,16 +4,21 @@ import android.app.Application
 import com.facebook.stetho.Stetho
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.rfcx.ranger.service.DataSyncWorker
 
 class RangerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         Realm.init(this)
         val config = RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build()
         Realm.setDefaultConfiguration(config)
+
+
+        DataSyncWorker.startRecurring()
 
         if (BuildConfig.USE_STETHO) {
             Stetho.initialize(Stetho.newInitializerBuilder(this)
