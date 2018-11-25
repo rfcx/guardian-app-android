@@ -14,23 +14,17 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     fun save(report: Report) {
-        realm.use { realm ->
-            realm.executeTransaction {
-                it.insertOrUpdate(report)
-            }
+        realm.executeTransaction {
+            it.insertOrUpdate(report)
         }
     }
 
     fun lockUnsent(): List<Report> {
-        var lockedReports: List<Report> = listOf()
-        realm.use { realm ->
-            realm.executeTransaction {
-                val unsent = it.where(Report::class.java).equalTo("syncState", UNSENT).findAll()
-                unsent.setInt("syncState", SENDING)
-                lockedReports = unsent.toList()
-            }
+        val unsent = realm.where(Report::class.java).equalTo("syncState", UNSENT).findAll()
+        realm.executeTransaction {
+            unsent.setInt("syncState", SENDING)
         }
-        return lockedReports
+        return unsent.toList()
     }
 
     fun markUnsent(id: Int) {
@@ -42,28 +36,23 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     private fun mark(id: Int, syncState: Int) {
-        realm.use { realm ->
-            realm.executeTransaction {
-                val report = it.where(Report::class.java).equalTo("id", id).findFirst()
-                if (report != null) {
-                    report.syncState = syncState
-                    it.insertOrUpdate(report)
-                }
+        realm.executeTransaction {
+            val report = it.where(Report::class.java).equalTo("id", id).findFirst()
+            if (report != null) {
+                report.syncState = syncState
+                it.insertOrUpdate(report)
             }
         }
     }
 
     // Deletes sent reports, returns a list of files that can also be deleted
     fun deleteSent(): List<String> {
-        var audioFiles: List<String> = listOf()
-        realm.use { realm ->
-            realm.executeTransaction {
-                val reports = it.where(Report::class.java).equalTo("syncState", SENT).findAll()
-                audioFiles = reports.mapNotNull { it.audioLocation }
-                reports.deleteAllFromRealm()
-            }
+        val reports = realm.where(Report::class.java).equalTo("syncState", SENT).findAll()
+        val filenames = reports.mapNotNull { it.audioLocation }
+        realm.executeTransaction {
+            reports.deleteAllFromRealm()
         }
-        return audioFiles
+        return filenames
     }
 
     companion object {
