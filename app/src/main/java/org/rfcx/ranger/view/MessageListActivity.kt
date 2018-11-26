@@ -150,15 +150,15 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		}
 	}
 
-	private fun updateSyncInfo() {
-		val sycnStatus = when (networkState) {
-			NetworkState.ONLINE -> {SyncInfo.Status.STARTING}
-			NetworkState.OFFLINE -> {SyncInfo.Status.WAITING_NETWORK}
+	private fun updateSyncInfo(status: SyncInfo.Status? = null) {
+		val syncStatus = status ?: when (networkState) {
+			NetworkState.OFFLINE -> SyncInfo.Status.WAITING_NETWORK
+			NetworkState.ONLINE -> SyncInfo.Status.STARTING
 		}
+
 		val database = ReportDb()
 		val count = database.unsentCount()
-		Log.d("Report", "unsent $count")
-		syncInfo = SyncInfo(sycnStatus, count.toInt())
+		syncInfo = SyncInfo(syncStatus, count.toInt())
 
 		refreshHeader()
 	}
@@ -528,21 +528,23 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 					val currentWorkStatus = workStatusList?.getOrNull(0)
 					if (currentWorkStatus != null) {
 						when (currentWorkStatus.state) {
-							WorkInfo.State.ENQUEUED -> Log.d("MessageListActivity", "ReportSyncWorker: ENQUEUED")
-							WorkInfo.State.RUNNING -> Log.d("MessageListActivity", "ReportSyncWorker: RUNNING")
+							WorkInfo.State.RUNNING -> {
+								Log.d("MessageListActivity", "ReportSyncWorker: ENQUEUED/RUNNING")
+								updateSyncInfo(SyncInfo.Status.UPLOADING)
+							}
 							WorkInfo.State.SUCCEEDED -> {
 								Log.d("MessageListActivity", "ReportSyncWorker: SUCCEEDED")
+								updateSyncInfo(SyncInfo.Status.UPLOADED)
+							}
+							else -> {
 								updateSyncInfo()
 							}
-							WorkInfo.State.FAILED -> Log.d("MessageListActivity", "ReportSyncWorker: FAILED")
-							WorkInfo.State.BLOCKED -> Log.d("MessageListActivity", "ReportSyncWorker: BLOCKED")
-							WorkInfo.State.CANCELLED -> Log.d("MessageListActivity", "ReportSyncWorker: CANCELLED")
 						}
 					}
 					else {
 						Log.d("MessageListActivity", "ReportSyncWorker: NO WORK STATUS")
+						updateSyncInfo()
 					}
-
 				})
 	}
 }
