@@ -86,4 +86,12 @@
     <string name="invitation_title">Connect to a site</string>
     <string name="invitation_desc">Please enter your invitation code</string>
     <string name="hint_code">Code</string>
+
+    <!-- Report -->
+    <string name="sync_reports_label">%s reports</string>
+    <string name="sync_report_label">%s report</string>
+    <string name="sync_waiting_network">waiting for network to be uploaded…</string>
+    <string name="sync_starting">starting to be uploaded…</string>
+    <string name="sync_uploading">uploading…</string>
+    <string name="sync_complete">Upload complete!</string>
 </resources>

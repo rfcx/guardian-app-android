@@ -59,27 +59,32 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
     @SuppressLint("SetTextI18n")
     private fun updateAlertBar(syncInfo: SyncInfo) {
         itemView.progressBarLoading.visibility = View.GONE
+        itemView.cancelButton.visibility = View.VISIBLE
+        val label = itemView.context.getString(
+        if (syncInfo.countReport > 1) R.string.sync_reports_label else
+            R.string.sync_report_label, syncInfo.countReport.toString())
         when (syncInfo.status) {
             SyncInfo.Status.WAITING_NETWORK -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_queue)
-                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
-                itemView.tvSyncDescription.text = "waiting for network to be uploaded..."
+                itemView.tvSyncLabel.text = label
+                itemView.tvSyncDescription.text = itemView.context.getString(R.string.sync_waiting_network)
             }
             SyncInfo.Status.STARTING -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
-                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
-                itemView.tvSyncDescription.text = "starting to be uploaded..."
+                itemView.tvSyncLabel.text = label
+                itemView.tvSyncDescription.text = itemView.context.getText(R.string.sync_starting)
             }
             SyncInfo.Status.UPLOADING -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
-                itemView.tvSyncLabel.text = "${syncInfo.countReport} reports"
+                itemView.tvSyncLabel.text = label
                 itemView.progressBarLoading.visibility = View.VISIBLE
-                itemView.tvSyncDescription.text = "uploading..."
+                itemView.tvSyncDescription.text = itemView.context.getText(R.string.sync_uploading)
             }
             SyncInfo.Status.UPLOADED -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload_done)
                 itemView.tvSyncLabel.text = "Upload complete!"
                 itemView.tvSyncDescription.text = ""
+                itemView.cancelButton.visibility = View.INVISIBLE
             }
         }
     }
