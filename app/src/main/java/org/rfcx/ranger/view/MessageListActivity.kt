@@ -140,7 +140,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 
 			// TODO: update sync information after save report
 			updateSyncInfo()
-			refreshHeader()
 
 		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -160,6 +159,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		val count = database.unsentCount()
 		Log.d("Report", "unsent $count")
 		syncInfo = SyncInfo(sycnStatus, count.toInt())
+
+		refreshHeader()
 	}
 
 	override fun onResume() {
