@@ -53,13 +53,13 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
             headerProtocol.onLocationTrackingChange(isChecked)
         }
 
-        itemView.cancelButton.setOnClickListener { headerProtocol.onPressCancelSync() }
+//        itemView.cancelButton.setOnClickListener { headerProtocol.onPressCancelSync() }
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateAlertBar(syncInfo: SyncInfo) {
-        itemView.progressBarLoading.visibility = View.GONE
-        itemView.cancelButton.visibility = View.VISIBLE
+        itemView.progressBarLoading.visibility = View.INVISIBLE
+//        itemView.cancelButton.visibility = View.VISIBLE
         val label = itemView.context.getString(
         if (syncInfo.countReport > 1) R.string.sync_reports_label else
             R.string.sync_report_label, syncInfo.countReport.toString())
@@ -82,9 +82,9 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
             }
             SyncInfo.Status.UPLOADED -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload_done)
-                itemView.tvSyncLabel.text = "Upload complete!"
+                itemView.tvSyncLabel.text = itemView.context.getString(R.string.sync_complete)
                 itemView.tvSyncDescription.text = ""
-                itemView.cancelButton.visibility = View.INVISIBLE
+//                itemView.cancelButton.visibility = View.INVISIBLE
             }
         }
     }

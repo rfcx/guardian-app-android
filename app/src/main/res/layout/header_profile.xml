@@ -92,24 +92,19 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/spaceView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_padding_normal"
-        app:layout_constraintTop_toBottomOf="@+id/layoutLocation" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutAlertBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:background="@color/grey_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spaceView">
+        app:layout_constraintTop_toBottomOf="@+id/layoutLocation">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_default"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_30"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -130,7 +125,7 @@
             android:layout_marginEnd="@dimen/margin_padding_normal"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="@+id/ivSyncState"
-            app:layout_constraintEnd_toStartOf="@+id/cancelButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivSyncState"
             app:layout_constraintTop_toTopOf="@+id/ivSyncState"
             tools:text="2 reports and 10+ location checkins" />
@@ -143,32 +138,29 @@
             android:layout_marginEnd="@dimen/margin_padding_normal"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cancelButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvSyncLabel"
             app:layout_constraintTop_toBottomOf="@+id/tvSyncLabel"
+            app:layout_constraintBottom_toTopOf="@+id/progressBarLoading"
             tools:text="waiting for network to be uploaded..." />
 
-        <ProgressBar
+        <FrameLayout
             android:id="@+id/progressBarLoading"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminateOnly="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvSyncDescription" />
-
-        <ImageButton
-            android:id="@+id/cancelButton"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="@dimen/margin_padding_normal"
-            android:padding="@dimen/margin_padding_xsmall"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_close_grey_600_24dp" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ProgressBar
+                style="@style/CustomProgressBarHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:layout_marginBottom="-4dp"
+                android:indeterminate="true" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
