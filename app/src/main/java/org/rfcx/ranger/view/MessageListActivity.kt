@@ -43,6 +43,7 @@ import org.rfcx.ranger.adapter.entity.MessageItem
 import org.rfcx.ranger.adapter.entity.TitlteItem
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
+import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
 import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
