@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -170,8 +169,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
 		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
 
-		// TODO: setup syncservice
-
 		refreshHeader()
 	}
 	
@@ -201,15 +198,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 
 	//region {@link NetworkReceiver.NetworkStateLister} implementation
 	override fun onNetworkStateChange(state: NetworkState) {
-		Toast.makeText(this@MessageListActivity, state.toString(), Toast.LENGTH_SHORT).show()
 		this.networkState = state
 
-		// TODO: update sync info [delete later]
 		updateSyncInfo()
 
-		when(state) {
-			NetworkState.ONLINE -> fetchContentList()
-			NetworkState.OFFLINE -> refreshHeader()
+		if (state == NetworkState.ONLINE) {
+			fetchContentList()
 		}
 	}
 	//endregion
@@ -384,7 +378,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 
 	override fun onPressCancelSync() {
 		//TODO: handle on cancel sync reports
-		Toast.makeText(this, "press cancel sync", Toast.LENGTH_SHORT).show()
 	}
 	//endregion
 
