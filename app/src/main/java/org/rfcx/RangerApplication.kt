@@ -4,7 +4,7 @@ import android.app.Application
 import com.facebook.stetho.Stetho
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.rfcx.ranger.service.DataSyncWorker
+import org.rfcx.ranger.service.ReportCleanupWorker
 
 class RangerApplication : Application() {
 
@@ -17,8 +17,7 @@ class RangerApplication : Application() {
                 .build()
         Realm.setDefaultConfiguration(config)
 
-
-        DataSyncWorker.startRecurring()
+        ReportCleanupWorker.enqueuePeriodically()
 
         if (BuildConfig.USE_STETHO) {
             Stetho.initialize(Stetho.newInitializerBuilder(this)

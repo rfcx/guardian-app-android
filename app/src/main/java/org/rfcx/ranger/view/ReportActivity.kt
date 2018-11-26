@@ -19,8 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
@@ -38,8 +35,8 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.repo.api.SendReportApi
-import org.rfcx.ranger.service.DataSyncWorker
+import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.OnStatChangeListener
@@ -341,9 +338,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
 
 		ReportDb().save(report)
-
-		val workRequest = OneTimeWorkRequestBuilder<DataSyncWorker>().build()
-		WorkManager.getInstance().enqueue(workRequest)
+		ReportSyncWorker.enqueue()
 
 		finish()
 	}
