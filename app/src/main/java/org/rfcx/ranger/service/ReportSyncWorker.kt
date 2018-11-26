@@ -2,7 +2,9 @@ package org.rfcx.ranger.service
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.work.*
+import com.google.common.util.concurrent.ListenableFuture
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.repo.api.SendReportApi
@@ -70,6 +72,10 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().build()
             WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.APPEND, workRequest)
+        }
+
+        fun workInfos(): LiveData<List<WorkInfo>> {
+            return WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_KEY)
         }
     }
 }

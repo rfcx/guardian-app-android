@@ -15,8 +15,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ResolvableApiException
@@ -49,6 +51,7 @@ import org.rfcx.ranger.repo.api.ReviewEventApi
 import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
 import org.rfcx.ranger.service.NetworkReceiver
 import org.rfcx.ranger.service.NetworkState
+import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 
 
@@ -126,6 +129,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 				checkLocationIsAllow()
 			}
 		}
+
+		observeWork()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -513,5 +518,30 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 				fetchContentList()
 			}
 		}
+	}
+
+
+	private fun observeWork() {
+		ReportSyncWorker.workInfos().observe(this,
+				Observer<List<WorkInfo>> { workStatusList ->
+					val currentWorkStatus = workStatusList?.getOrNull(0)
+					if (currentWorkStatus != null) {
+						when (currentWorkStatus.state) {
+							WorkInfo.State.ENQUEUED -> Log.d("MessageListActivity", "ReportSyncWorker: ENQUEUED")
+							WorkInfo.State.RUNNING -> Log.d("MessageListActivity", "ReportSyncWorker: RUNNING")
+							WorkInfo.State.SUCCEEDED -> {
+								Log.d("MessageListActivity", "ReportSyncWorker: SUCCEEDED")
+								updateSyncInfo()
+							}
+							WorkInfo.State.FAILED -> Log.d("MessageListActivity", "ReportSyncWorker: FAILED")
+							WorkInfo.State.BLOCKED -> Log.d("MessageListActivity", "ReportSyncWorker: BLOCKED")
+							WorkInfo.State.CANCELLED -> Log.d("MessageListActivity", "ReportSyncWorker: CANCELLED")
+						}
+					}
+					else {
+						Log.d("MessageListActivity", "ReportSyncWorker: NO WORK STATUS")
+					}
+
+				})
 	}
 }
