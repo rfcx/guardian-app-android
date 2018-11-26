@@ -28,6 +28,8 @@
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
+    <string name="network_online">online</string>
+    <string name="network_offline">offline</string>
     <string name="report_chainsaw_button">Motoserras</string>
     <string name="report_gunshot_button">Tiros</string>
     <string name="report_trespasser_button">Invasores</string>
@@ -80,4 +82,12 @@
     <string name="invitation_title">Conectar a uma localidade.</string>
     <string name="invitation_desc">Por favor insira o seu código de convite</string>
     <string name="hint_code">Código</string>
+
+    <!-- Report -->
+    <string name="sync_reports_label">%s relatórios</string>
+    <string name="sync_report_label">%s relatório</string>
+    <string name="sync_waiting_network">Waiting for network…</string>
+    <string name="sync_starting">Starting upload…</string>
+    <string name="sync_uploading">Uploading…</string>
+    <string name="sync_complete">Upload complete!</string>
 </resources>

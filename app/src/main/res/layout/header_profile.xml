@@ -1,78 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingTop="@dimen/margin_padding_normal"
-	android:paddingStart="@dimen/margin_padding_normal"
-	android:paddingEnd="@dimen/margin_padding_normal"
-	android:paddingBottom="@dimen/margin_padding_small">
-	
-	<TextView
-		android:id="@+id/userNameTextView"
-		style="@style/Base.TextAppearance.AppCompat.Title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textColor="@color/text_primary"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="Hi, Ant!" />
-	
-	<androidx.appcompat.widget.SwitchCompat
-		android:id="@+id/locationTrackingSwitch"
-		style="@style/SwitchCompatStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_padding_xsmall"
-		android:textOff="@string/location_tracking_off_label"
-		android:textOn="@string/location_tracking_on_label"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:showText="false"
-		tools:checked="false" />
-	
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_xsmall"
-		android:layout_marginBottom="@dimen/margin_padding_xsmall"
-		android:gravity="center_vertical"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/userNameTextView">
-		
-		<ImageView
-			android:id="@+id/statusImageView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:srcCompat="@drawable/ic_radar_grey" />
-		
-		<TextView
-			android:id="@+id/statusTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_xsmall"
-			style="@style/TextAppearance.AppCompat.Body1"
-			android:textColor="@color/text_secondary"
-			tools:text="Not tracking" />
-		
-		<ImageView
-			android:id="@+id/locationImageView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			app:srcCompat="@drawable/ic_location_24dp_grey" />
-		
-		<TextView
-			android:id="@+id/locationTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			style="@style/TextAppearance.AppCompat.Body1"
-			android:textColor="@color/text_secondary"
-			tools:text="Tembe" />
-	
-	</LinearLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_padding_small">
 
+    <TextView
+        android:id="@+id/userNameTextView"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:textColor="@color/text_primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Hi, Ant!" />
 
+    <TextView
+        android:id="@+id/tvNetworkState"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_xsmall"
+        android:drawableStart="@drawable/ic_online"
+        android:drawablePadding="@dimen/margin_padding_xsmall"
+        android:gravity="center"
+        android:text="@string/network_online"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/userNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/userNameTextView" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/locationTrackingSwitch"
+        style="@style/SwitchCompatStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:textOff="@string/location_tracking_off_label"
+        android:textOn="@string/location_tracking_on_label"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:showText="false"
+        tools:checked="false" />
+
+    <LinearLayout
+        android:id="@+id/layoutLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_xsmall"
+        android:layout_marginEnd="@dimen/margin_padding_small"
+        android:layout_marginBottom="@dimen/margin_padding_xsmall"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toStartOf="@+id/locationTrackingSwitch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userNameTextView">
+
+        <ImageView
+            android:id="@+id/statusImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_radar_grey" />
+
+        <TextView
+            android:id="@+id/statusTextView"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:textColor="@color/text_secondary"
+            tools:text="Not tracking" />
+
+        <ImageView
+            android:id="@+id/locationImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            app:srcCompat="@drawable/ic_location_24dp_grey" />
+
+        <TextView
+            android:id="@+id/locationTextView"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            tools:text="Tembe" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutAlertBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:background="@color/grey_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutLocation">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_30"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivSyncState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_padding_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_queue" />
+
+        <TextView
+            android:id="@+id/tvSyncLabel"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/ivSyncState"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivSyncState"
+            app:layout_constraintTop_toTopOf="@+id/ivSyncState"
+            tools:text="2 reports and 10+ location checkins" />
+
+        <TextView
+            android:id="@+id/tvSyncDescription"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvSyncLabel"
+            app:layout_constraintTop_toBottomOf="@+id/tvSyncLabel"
+            app:layout_constraintBottom_toTopOf="@+id/progressBarLoading"
+            tools:text="waiting for network to be uploaded..." />
+
+        <FrameLayout
+            android:id="@+id/progressBarLoading"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ProgressBar
+                style="@style/CustomProgressBarHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:layout_marginBottom="-4dp"
+                android:indeterminate="true" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
