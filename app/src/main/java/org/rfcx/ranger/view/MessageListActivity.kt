@@ -192,6 +192,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			R.id.menu_settings -> {
 				startActivity(Intent(this@MessageListActivity, SettingsActivity::class.java))
 			}
+			
+			R.id.menu_check_in_history-> DiagnosticsLocationActivity.startIntent(this)
 		}
 		return super.onOptionsItemSelected(item)
 	}

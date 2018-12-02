@@ -43,7 +43,7 @@ class SettingsActivity : AppCompatActivity() {
 		
 		locationLisButton.visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.INVISIBLE
 		locationLisButton.setOnClickListener {
-			startActivity(Intent(this, LocationListActivity::class.java))
+			startActivity(Intent(this, DiagnosticsListFragment::class.java))
 		}
 		
 		bindActionbar()

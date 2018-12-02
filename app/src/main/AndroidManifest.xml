@@ -43,7 +43,7 @@
         <activity android:name=".view.InvitationActivity"
             android:screenOrientation="portrait"/>
 	    
-	    <activity android:name=".view.LocationListActivity"
+	    <activity android:name=".view.DiagnosticsLocationActivity"
 		    android:screenOrientation="portrait"/>
 
         <service

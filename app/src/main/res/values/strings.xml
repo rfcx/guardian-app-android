@@ -25,6 +25,7 @@
 
     <string name="menu_logout">Logout</string>
     <string name="menu_ranger_group">My site</string>
+	<string name="menu_check_in_history">Check in history</string>
 
     <!-- message list -->
     <string name="profile_welcome">Hi, %s!</string>
