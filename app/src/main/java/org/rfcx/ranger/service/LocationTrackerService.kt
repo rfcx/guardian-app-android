@@ -66,7 +66,7 @@ class LocationTrackerService : Service() {
 				}
 			}
 			
-			sentLocation()
+//			sentLocation()
 		}
 		
 		override fun onLocationAvailability(p0: LocationAvailability?) {
@@ -114,7 +114,7 @@ class LocationTrackerService : Service() {
 		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
 		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation, true))
 		
-		sentLocation()
+//		sentLocation()
 	}
 	
 	override fun onDestroy() {

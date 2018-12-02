@@ -42,6 +42,9 @@
 
         <activity android:name=".view.InvitationActivity"
             android:screenOrientation="portrait"/>
+	    
+	    <activity android:name=".view.LocationListActivity"
+		    android:screenOrientation="portrait"/>
 
         <service
             android:name=".service.LocationTrackerService"
