@@ -35,7 +35,8 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.repo.api.SendReportApi
+import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.OnStatChangeListener
@@ -144,8 +145,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		return super.onOptionsItemSelected(item)
 	}
 	
-	override fun onMapReady(p0: GoogleMap?) {
-		googleMap = p0
+	override fun onMapReady(map: GoogleMap?) {
+		googleMap = map
+		googleMap?.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
 		if (!isLocationAllow()) {
 			requestPermissions()
 		} else {
@@ -332,28 +334,13 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val time = DateHelper.getIsoTime()
 		val lat = lastKnowLocation?.latitude ?: 0.0
 		val lon = lastKnowLocation?.longitude ?: 0.0
+
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
 
-		showProgress()
-		SendReportApi().sendReport(this@ReportActivity, report, object : SendReportApi.SendReportCallback {
-			override fun onSuccess() {
-				hideProgress()
-				setResult(Activity.RESULT_OK)
+		ReportDb().save(report)
+		ReportSyncWorker.enqueue()
 
-				recordFile?.let {
-					recordFile?.deleteOnExit()
-					recordFile = null
-				}
-
-				finish()
-			}
-			
-			override fun onFailed(t: Throwable?, message: String?) {
-				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
-				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
-				hideProgress()
-			}
-		})
+		finish()
 	}
 	
 	private fun record() {

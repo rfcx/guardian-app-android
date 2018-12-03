@@ -32,7 +32,6 @@ class CredentialKeeper(val context: Context) {
         preferences.putStringSet(Preferences.ACCESSIBLE_SITES, user.accessibleSites)
         if (user.defaultSite != null) {
             preferences.putString(Preferences.DEFAULT_SITE, user.defaultSite)
-            preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP, user.defaultSite)
         }
     }
 

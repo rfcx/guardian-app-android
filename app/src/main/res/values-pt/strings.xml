@@ -28,6 +28,8 @@
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
+    <string name="network_online">online</string>
+    <string name="network_offline">offline</string>
     <string name="report_chainsaw_button">Motoserras</string>
     <string name="report_gunshot_button">Tiros</string>
     <string name="report_trespasser_button">Invasores</string>
@@ -43,8 +45,8 @@
     <string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Enviar</string>
-    <string name="report_record_label">NOTAS DE REGISTRO (Opcional)</string>
-    <string name="report_location_null">Localização não encontrada. Por favor, tente novamente.</string>
+    <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
+    <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
     <string name="alert_title_format">Isto é um %s?</string>
     <string name="alert_yes_button">Sim</string>
     <string name="alert_no_button">Não</string>
@@ -57,7 +59,7 @@
     <string name="notification_location_loading">Carregando localização…</string>
 
     <!-- Settings -->
-    <string name="notification_location_not_availability">Por favor ligue a localização do dispositivo!</string>
+    <string name="notification_location_not_availability">Ative a localização do dispositivo!</string>
     <string name="setting_label">Definições</string>
     <string name="app_version_label">Versão%s</string>
     <string name="location_tracking_label">Rastreamento de localização</string>
@@ -72,12 +74,20 @@
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
 
-    <string name="tab_to_record_label">Segure o botão para gravar notas</string>
+    <string name="tab_to_record_label">Toque e segure o botão para gravar áudio.</string>
     <string name="recent_title">Recente</string>
-    <string name="history_title">História</string>
+    <string name="history_title">Histórico</string>
 
     <!-- Invitation -->
-    <string name="invitation_title">Conecte-se a um site</string>
+    <string name="invitation_title">Conectar a uma localidade.</string>
     <string name="invitation_desc">Por favor insira o seu código de convite</string>
-    <string name="hint_code">Código de Convite</string>
+    <string name="hint_code">Código</string>
+
+    <!-- Report -->
+    <string name="sync_reports_label">%s relatórios</string>
+    <string name="sync_report_label">%s relatório</string>
+    <string name="sync_waiting_network">Waiting for network…</string>
+    <string name="sync_starting">Starting upload…</string>
+    <string name="sync_uploading">Uploading…</string>
+    <string name="sync_complete">Upload complete!</string>
 </resources>

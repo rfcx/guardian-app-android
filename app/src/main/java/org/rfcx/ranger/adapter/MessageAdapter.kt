@@ -16,7 +16,7 @@ import org.rfcx.ranger.adapter.view.TitleViewHolder
 import java.util.*
 
 class MessageAdapter(private val context: Context, private var onMessageItemClickListener: OnMessageItemClickListener,
-                     private var onLocationTrackingChangeListener: OnLocationTrackingChangeListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                     private var headerProtocol: HeaderProtocol) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	companion object {
 		const val VIEW_TYPE_HEADER = 0
@@ -34,7 +34,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 			
 			VIEW_TYPE_HEADER -> {
 				val itemView = inflater.inflate(R.layout.header_profile, parent, false)
-				ProfileViewHolder(itemView, onLocationTrackingChangeListener)
+				ProfileViewHolder(itemView, headerProtocol)
 			}
 			
 			VIEW_TYPE_EVENT -> {
