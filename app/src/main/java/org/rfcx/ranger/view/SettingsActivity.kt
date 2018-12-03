@@ -41,11 +41,6 @@ class SettingsActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_settings)
 		
-		locationLisButton.visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.INVISIBLE
-		locationLisButton.setOnClickListener {
-			startActivity(Intent(this, DiagnosticsListFragment::class.java))
-		}
-		
 		bindActionbar()
 		appVersionTextView.text = getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
 		bindSwitchLocation()

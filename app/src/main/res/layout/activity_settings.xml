@@ -132,14 +132,4 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="@+id/guardianGroupSpinner" />
 	
-	<Button
-		android:id="@+id/locationLisButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:text="@string/user_location"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/guardianGroupTextView" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
