@@ -139,10 +139,6 @@ class LocationTrackerService : Service() {
 		}
 	}
 	
-	fun stopTraker() {
-		stopForeground(true)
-	}
-	
 	override fun onDestroy() {
 		super.onDestroy()
 		Log.e(TAG, "onDestroy")
@@ -202,6 +198,8 @@ class LocationTrackerService : Service() {
 	private fun saveLocation(location: Location) {
 		RealmHelper.getInstance().saveLocation(
 				RangerLocation(latitude = location.latitude, longitude = location.longitude))
+		
+		sentLocation()
 	}
 
 
