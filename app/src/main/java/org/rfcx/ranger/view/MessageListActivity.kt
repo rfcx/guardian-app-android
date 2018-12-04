@@ -483,6 +483,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 		task.addOnSuccessListener {
 			LocationTracking.set(this@MessageListActivity, true)
+			refreshHeader()
 		}
 		
 		task.addOnFailureListener { exception ->
@@ -499,6 +500,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 					// Ignore the error.
 					sendEx.printStackTrace()
 				}
+				
+				refreshHeader()
 			}
 		}
 	}

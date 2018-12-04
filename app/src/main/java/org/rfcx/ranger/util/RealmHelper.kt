@@ -101,7 +101,7 @@ class RealmHelper {
 		return locations
 	}
 	
-	/*fun removeSentLocation(input: List<RangerLocation>) {
+	fun removeSentLocation(input: List<RangerLocation>) {
 		Realm.getDefaultInstance().use { realm ->
 			realm.executeTransaction {
 				for (location in input) {
@@ -111,5 +111,5 @@ class RealmHelper {
 				}
 			}
 		}
-	}*/
+	}
 }
