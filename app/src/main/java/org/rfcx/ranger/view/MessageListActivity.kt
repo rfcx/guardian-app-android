@@ -153,8 +153,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		}
 
 		val database = ReportDb()
+		val locationDb = RealmHelper.getInstance()
+		val countCheckIn = locationDb.getLocations().size
 		val count = database.unsentCount()
-		syncInfo = SyncInfo(syncStatus, count.toInt())
+		syncInfo = SyncInfo(syncStatus, count.toInt(), countCheckIn)
 
 		refreshHeader()
 	}
@@ -522,7 +524,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			}
 		}
 	}
-
 
 	private fun observeWork() {
 		ReportSyncWorker.workInfos().observe(this,
