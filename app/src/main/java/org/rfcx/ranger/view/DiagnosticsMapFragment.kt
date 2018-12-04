@@ -63,7 +63,7 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 		
 		// TODO filter lasted 6 hr location
 		val rangerLocations = RealmHelper.getInstance().getLocations()
-		
+		if(rangerLocations.isEmpty()) return
 		for (location in rangerLocations) {
 			polylineOptions.add(LatLng(location.latitude, location.longitude))
 			
