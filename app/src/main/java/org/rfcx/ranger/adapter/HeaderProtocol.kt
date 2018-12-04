@@ -19,6 +19,6 @@ interface HeaderProtocol {
  * @param status is current status of sync
  * @param countReport is count unsent
 */
-data class SyncInfo(val status: Status = Status.WAITING_NETWORK, val countReport: Int = 1) {
+data class SyncInfo(val status: Status = Status.WAITING_NETWORK, val countReport: Int = 1, val countCheckIn: Int = 0) {
     enum class Status { WAITING_NETWORK, STARTING, UPLOADING, UPLOADED }
 }

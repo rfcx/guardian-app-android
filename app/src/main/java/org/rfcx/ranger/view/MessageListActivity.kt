@@ -34,14 +34,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import kotlinx.android.synthetic.main.activity_message_list.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.MessageAdapter
 import org.rfcx.ranger.adapter.HeaderProtocol
+import org.rfcx.ranger.adapter.MessageAdapter
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.SyncInfo
-import org.rfcx.ranger.adapter.entity.BaseItem
-import org.rfcx.ranger.adapter.entity.EventItem
-import org.rfcx.ranger.adapter.entity.MessageItem
-import org.rfcx.ranger.adapter.entity.TitlteItem
+import org.rfcx.ranger.adapter.entity.*
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.localdb.ReportDb
@@ -156,8 +153,10 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		}
 
 		val database = ReportDb()
+		val locationDb = RealmHelper.getInstance()
+		val countCheckIn = locationDb.getLocations().size
 		val count = database.unsentCount()
-		syncInfo = SyncInfo(syncStatus, count.toInt())
+		syncInfo = SyncInfo(syncStatus, count.toInt(), countCheckIn)
 
 		refreshHeader()
 	}
@@ -323,11 +322,21 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 								}
 							}
 						})
-						
-						baseItems.add(TitlteItem(getString(R.string.recent_title)))
-						baseItems.addAll(recentList)
-						baseItems.add(TitlteItem(getString(R.string.history_title)))
-						baseItems.addAll(historyList)
+
+						if (recentList.isNotEmpty()) {
+							baseItems.add(TitlteItem(getString(R.string.recent_title)))
+							baseItems.addAll(recentList)
+						}
+
+						if (historyList.isNotEmpty()) {
+							baseItems.add(TitlteItem(getString(R.string.history_title)))
+							baseItems.addAll(historyList)
+						}
+
+						if (recentList.isNullOrEmpty() && historyList.isNullOrEmpty()) {
+							baseItems.add(EmptyItem())
+						}
+
 						messageAdapter.updateMessages(baseItems)
 						messageSwipeRefresh.isRefreshing = false
 					}
@@ -518,7 +527,6 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			}
 		}
 	}
-
 
 	private fun observeWork() {
 		ReportSyncWorker.workInfos().observe(this,

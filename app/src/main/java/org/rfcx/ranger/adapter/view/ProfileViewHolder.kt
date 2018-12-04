@@ -60,9 +60,15 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
     private fun updateAlertBar(syncInfo: SyncInfo) {
         itemView.progressBarLoading.visibility = View.INVISIBLE
 //        itemView.cancelButton.visibility = View.VISIBLE
-        val label = itemView.context.getString(
-        if (syncInfo.countReport > 1) R.string.sync_reports_label else
-            R.string.sync_report_label, syncInfo.countReport.toString())
+        val label = if (syncInfo.countCheckIn > 0) {
+            itemView.context.getString(
+                    if (syncInfo.countReport > 1) R.string.sync_reports_checkin_label else
+                        R.string.sync_reports_checkin_label, syncInfo.countReport.toString(), syncInfo.countCheckIn.toString())
+        }else {
+            itemView.context.getString(
+                    if (syncInfo.countReport > 1) R.string.sync_reports_label else
+                        R.string.sync_report_label, syncInfo.countReport.toString())
+        }
         when (syncInfo.status) {
             SyncInfo.Status.WAITING_NETWORK -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_queue)
