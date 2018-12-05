@@ -29,7 +29,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters)
         val checkins = db.unsent()
         val checkinIds = checkins.map { it.id }
         Log.d(TAG, "doWork: found ${checkinIds.size} unsent and sending")
-
+		if (checkins.isEmpty()) return Result.SUCCESS
         val result = api.sendSync(applicationContext, checkins)
         when (result) {
             is Ok -> {

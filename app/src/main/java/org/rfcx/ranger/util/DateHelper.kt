@@ -45,7 +45,14 @@ object DateHelper {
 		sdf
 	}
 	
-	fun getDateTime(input: String?): Date = inputSdf.parse(input)
+	fun getDateTime(input: String?): Date? {
+		return try {
+			inputSdf.parse(input)
+		} catch (e: java.lang.Exception) {
+			null
+		}
+		
+	}
 	
 	
 	fun getMessageDateTime(input: String): String {

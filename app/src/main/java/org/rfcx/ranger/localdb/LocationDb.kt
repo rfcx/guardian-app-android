@@ -28,7 +28,7 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     fun unsent(): List<CheckIn> {
-        return realm.where(CheckIn::class.java).equalTo("synced", false).findAll().createSnapshot().toList()
+        return realm.copyFromRealm(realm.where(CheckIn::class.java).equalTo("synced", false).findAll().createSnapshot().toList())
     }
 
     fun markSent(ids: List<Int>) {
