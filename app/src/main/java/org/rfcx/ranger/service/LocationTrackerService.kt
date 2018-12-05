@@ -23,18 +23,13 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.repo.TokenExpireException
-import org.rfcx.ranger.repo.api.SendLocationApi
-import org.rfcx.ranger.util.NotificationHelper
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.RealmHelper
-import org.rfcx.ranger.util.isNetWorkAvailable
 import org.rfcx.ranger.view.SettingsActivity
 
 /**
  *
  * Service work with location
- * update Ranger location to server.
+ * Save Ranger location to local db.
  */
 class LocationTrackerService : Service() {
 	
@@ -42,15 +37,13 @@ class LocationTrackerService : Service() {
 		const val NOTIFICATION_LOCATION_ID = 22
 		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
 		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
-		private const val locationUploadRate: Long = 60 * 1000 // a minuit
-		
 		val locationRequest = LocationRequest().apply {
 			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 		}
 		
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
-		
+		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
 		const val TAG = "LocationTrackerService"
 	}
 	
@@ -65,7 +58,7 @@ class LocationTrackerService : Service() {
 				Log.i(TAG, "${it.longitude} , ${it.longitude}")
 				saveLocation(it)
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
-
+				
 				if (BuildConfig.DEBUG) playSound()
 			}
 		}
@@ -74,7 +67,10 @@ class LocationTrackerService : Service() {
 			Log.d(TAG, "onStatusChanged $p0 $p1")
 			
 			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LASTEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
+					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+				}
+				
 			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
 			}
@@ -113,11 +109,10 @@ class LocationTrackerService : Service() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			createNotificationChannel()
 		}
-		val notification = createLocationTrackerNotification(null, true)
-		startForeground(NOTIFICATION_LOCATION_ID, notification)
 		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
 		} catch (ex: java.lang.SecurityException) {
 			ex.printStackTrace()
@@ -127,16 +122,6 @@ class LocationTrackerService : Service() {
 			Log.w(TAG, "gps provider does not exist " + ex.message)
 		}
 		
-		try {
-			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
-			this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
-		} catch (ex: java.lang.SecurityException) {
-			ex.printStackTrace()
-			Log.i(TAG, "fail to request location update, ignore", ex)
-		} catch (ex: IllegalArgumentException) {
-			ex.printStackTrace()
-			Log.d(TAG, "gps provider does not exist " + ex.message)
-		}
 	}
 	
 	override fun onDestroy() {
@@ -198,8 +183,8 @@ class LocationTrackerService : Service() {
 	private fun saveLocation(location: Location) {
 		LocationDb().save(CheckIn(latitude = location.latitude, longitude = location.longitude))
 		LocationSyncWorker.enqueue()
+		Preferences.getInstance(this).putLong(LASTEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
-
 	
 	// Just for debug mode
 	private fun playSound() {
