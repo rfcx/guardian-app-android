@@ -65,7 +65,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 			when (item) {
 				is EventItem -> VIEW_TYPE_EVENT
 				is MessageItem -> VIEW_TYPE_MESSAGE
-				is TitlteItem -> VIEW_TYPE_TITLE
+				is TitleItem -> VIEW_TYPE_TITLE
 				is EmptyItem -> VIEW_TYPE_EMPTY
 				else -> {
 					throw Exception("Invalid viewType")
@@ -95,7 +95,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 			}
 			
 			VIEW_TYPE_TITLE -> {
-				(holder as TitleViewHolder).bind((item as TitlteItem).title)
+				(holder as TitleViewHolder).bind((item as TitleItem).title)
 			}
 		}
 	}

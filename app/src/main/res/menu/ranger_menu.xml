@@ -6,7 +6,6 @@
 		android:title="@string/setting_label"/>
 	
 	<item
-		android:visible="false"
 		android:id="@+id/menu_check_in_history"
 		android:title="@string/menu_check_in_history"/>
 	

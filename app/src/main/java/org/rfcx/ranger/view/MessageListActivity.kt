@@ -41,6 +41,7 @@ import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.*
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
+import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
@@ -152,11 +153,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			NetworkState.ONLINE -> SyncInfo.Status.STARTING
 		}
 
-		val database = ReportDb()
-		val locationDb = RealmHelper.getInstance()
-		val countCheckIn = locationDb.getLocations().size
-		val count = database.unsentCount()
-		syncInfo = SyncInfo(syncStatus, count.toInt(), countCheckIn)
+		val locationCount = LocationDb().unsentCount()
+		val reportCount = ReportDb().unsentCount()
+		syncInfo = SyncInfo(syncStatus, reportCount, locationCount)
 
 		refreshHeader()
 	}
@@ -324,12 +323,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 						})
 
 						if (recentList.isNotEmpty()) {
-							baseItems.add(TitlteItem(getString(R.string.recent_title)))
+							baseItems.add(TitleItem(getString(R.string.recent_title)))
 							baseItems.addAll(recentList)
 						}
 
 						if (historyList.isNotEmpty()) {
-							baseItems.add(TitlteItem(getString(R.string.history_title)))
+							baseItems.add(TitleItem(getString(R.string.history_title)))
 							baseItems.addAll(historyList)
 						}
 
@@ -342,7 +341,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 					}
 					
 					override fun onFailed(t: Throwable?, message: String?) {
-						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message!!
+						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 					}
 				})

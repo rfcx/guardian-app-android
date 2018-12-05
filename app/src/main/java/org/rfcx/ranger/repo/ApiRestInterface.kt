@@ -5,7 +5,7 @@ import okhttp3.RequestBody
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.guardian.GuardianGroup
-import org.rfcx.ranger.entity.location.CheckIn
+import org.rfcx.ranger.entity.location.CheckInRequest
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.SendReportResponse
@@ -24,7 +24,7 @@ interface ApiRestInterface {
 	
 	@POST("users/checkin")
 	fun updateLocation(@Header("Authorization") authUser: String,
-	                   @Body checkInBody: CheckIn): Call<List<CheckInResult>>
+	                   @Body checkInRequestBody: CheckInRequest): Call<List<CheckInResult>>
 	
 	@GET("events/event")
 	fun getEvents(@Header("Authorization") authUser: String,

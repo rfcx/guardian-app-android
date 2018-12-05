@@ -21,7 +21,8 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.location.RangerLocation
+import org.rfcx.ranger.entity.location.CheckIn
+import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.repo.TokenExpireException
 import org.rfcx.ranger.repo.api.SendLocationApi
 import org.rfcx.ranger.util.NotificationHelper
@@ -61,16 +62,15 @@ class LocationTrackerService : Service() {
 		
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
-				saveLocation(it)
 				Log.i(TAG, "${it.longitude} , ${it.longitude}")
-				
+				saveLocation(it)
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
+
 				if (BuildConfig.DEBUG) playSound()
 			}
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-			
 			Log.d(TAG, "onStatusChanged $p0 $p1")
 			
 			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
@@ -196,39 +196,10 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun saveLocation(location: Location) {
-		RealmHelper.getInstance().saveLocation(
-				RangerLocation(latitude = location.latitude, longitude = location.longitude))
-		
-		sentLocation()
+		LocationDb().save(CheckIn(latitude = location.latitude, longitude = location.longitude))
+		LocationSyncWorker.enqueue()
 	}
 
-
-	private fun sentLocation() {
-		if (!isNetWorkAvailable()) return
-		val lastLocationUpload = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LASTED_LOCATION_UPLOAD, 0)
-		if (System.currentTimeMillis() - lastLocationUpload < locationUploadRate) {
-			return
-		}
-		// Store last upload location
-		Preferences.getInstance(this@LocationTrackerService).putLong(Preferences.LASTED_LOCATION_UPLOAD, System.currentTimeMillis())
-		
-		val locations = RealmHelper.getInstance().getLocations()
-		if (locations.isEmpty()) return
-		SendLocationApi().checkIn(this, locations, object : SendLocationApi.SendLocationCallBack {
-			override fun onSuccess() {
-				// Remove locations are Sent!
-				RealmHelper.getInstance().removeSentLocation(locations)
-			}
-			
-			override fun onFailed(t: Throwable?, message: String?) {
-				if (t is TokenExpireException) {
-					NotificationHelper.getInstance().showLoginNotification(this@LocationTrackerService)
-					stopForeground(true)
-					stopSelf()
-				}
-			}
-		})
-	}
 	
 	// Just for debug mode
 	private fun playSound() {

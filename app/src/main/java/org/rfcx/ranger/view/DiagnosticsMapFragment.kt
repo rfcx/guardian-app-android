@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import org.rfcx.ranger.R
+import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.RealmHelper
 
@@ -60,25 +61,24 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 			val color = ContextCompat.getColor(it, R.color.colorPrimary)
 			polylineOptions.color(color)
 		}
-		
-		// TODO filter lasted 6 hr location
-		val rangerLocations = RealmHelper.getInstance().getLocations()
-		if(rangerLocations.isEmpty()) return
-		for (location in rangerLocations) {
-			polylineOptions.add(LatLng(location.latitude, location.longitude))
-			
-			val latLng = LatLng(location.latitude, location.longitude)
-			
+
+		val checkins = LocationDb().all()
+		if(checkins.isEmpty()) return
+		for (checkin in checkins) {
+			val latLng = LatLng(checkin.latitude, checkin.longitude)
+			polylineOptions.add(latLng)
 			googleMap.addMarker(MarkerOptions()
 					.position(latLng)
-					.title(DateHelper.parse(location.time))
-					.snippet("${location.latitude},${location.latitude}")
+					.title(DateHelper.parse(checkin.time))
+					.snippet("${checkin.latitude},${checkin.latitude}")
 					.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin)))
 		}
 		googleMap.addPolyline(polylineOptions)
 		
-		val lastLocation = rangerLocations.last()
-		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				LatLng(lastLocation.latitude, lastLocation.longitude), 18f))
+		checkins.last()?.let {
+			googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+					LatLng(it.latitude, it.longitude), 18f))
+		}
+
 	}
 }

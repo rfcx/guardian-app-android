@@ -7,32 +7,32 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_location.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.location.RangerLocation
+import org.rfcx.ranger.entity.location.CheckIn
+import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.RealmHelper
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 	
-	private val locations = RealmHelper.getInstance().getLocations()
+	private val locations = LocationDb().all()
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder =
 			LocationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_location, parent, false))
 	
 	override fun getItemCount(): Int {
-		Log.d("getItemCount", locations.count().toString())
 		return locations.count()
 	}
 	
 	override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
-		holder.bind(locations[position])
+		locations[position]?.let { holder.bind(it) }
 	}
 	
 	
 	inner class LocationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		fun bind(location: RangerLocation) {
-			itemView.timeTextView.text = DateHelper.parse(location.time)
-			itemView.latitudeTextView.text = location.latitude.toString()
-			itemView.longitudeTextView.text = location.longitude.toString()
+		fun bind(checkin: CheckIn) {
+			itemView.timeTextView.text = DateHelper.parse(checkin.time)
+			itemView.latitudeTextView.text = checkin.latitude.toString()
+			itemView.longitudeTextView.text = checkin.longitude.toString()
 		}
 	}
 	
