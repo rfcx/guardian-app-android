@@ -5,7 +5,7 @@ import io.realm.RealmResults
 import org.rfcx.ranger.entity.location.CheckIn
 
 /**
- * TODO: Add a class description
+ * Data access for location data in the local realm db
  */
 
 class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {

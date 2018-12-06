@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- LoginActivity -->
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -88,14 +88,14 @@
     <string name="hint_code">Code</string>
 
     <!-- Report -->
-    <string name="sync_reports_checkin_label">%s reports %s location check-ins</string>
-    <string name="sync_reports_label">%s reports</string>
-    <string name="sync_report_label">%s report</string>
+    <string name="sync_reports_label">%d reports</string>
+    <string name="sync_report_label">%d report</string>
+    <string name="sync_checkins_label">%d location check-ins</string>
     <string name="sync_waiting_network">Waiting for network…</string>
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
-    <string name="empty_list_description">There is no incident occurred recently\nEnjoy your day :)</string>
+    <string name="empty_list_description">No incidents occurred recently\nEnjoy your day :)</string>
 
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
