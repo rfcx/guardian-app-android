@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
 		if (CredentialKeeper(this).hasValidCredentials()) {
 			loginGroupView.visibility = View.INVISIBLE
 
-			MessageListActivity.startActivity(this@LoginActivity)
+			MainActivity.startActivity(this@LoginActivity)
 			finish()
 		} else {
 			loginGroupView.visibility = View.VISIBLE
@@ -179,7 +179,7 @@ class LoginActivity : AppCompatActivity() {
 				}
 
 				if (userAuthResponse.isRanger) {
-					MessageListActivity.startActivity(this@LoginActivity)
+					MainActivity.startActivity(this@LoginActivity)
 				}
 				else {
 					this@LoginActivity.startActivity(Intent(this@LoginActivity, InvitationActivity::class.java))

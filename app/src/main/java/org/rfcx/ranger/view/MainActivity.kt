@@ -45,6 +45,7 @@ import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
+import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
 import org.rfcx.ranger.service.NetworkReceiver
 import org.rfcx.ranger.service.NetworkState
@@ -52,7 +53,7 @@ import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 
 
-class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProtocol,
+class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProtocol,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, NetworkReceiver.NetworkStateLister {
@@ -68,7 +69,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	
 	companion object {
 		fun startActivity(context: Context) {
-			val intent = Intent(context, MessageListActivity::class.java)
+			val intent = Intent(context, MainActivity::class.java)
 			context.startActivity(intent)
 		}
 		
@@ -103,7 +104,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			fetchRangerRemoteConfig()
 		}
 		fab.setOnClickListener {
-			startActivityForResult(Intent(this@MessageListActivity, ReportActivity::class.java),
+			startActivityForResult(Intent(this@MainActivity, ReportActivity::class.java),
 					REQUEST_CODE_REPORT)
 		}
 		
@@ -140,9 +141,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 
 		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
 			if (resultCode == Activity.RESULT_OK) {
-				LocationTracking.set(this@MessageListActivity, true)
+				LocationTracking.set(this@MainActivity, true)
 			} else {
-				LocationTracking.set(this@MessageListActivity, false)
+				LocationTracking.set(this@MainActivity, false)
 			}
 		}
 	}
@@ -188,7 +189,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 				logout()
 			}
 			R.id.menu_settings -> {
-				startActivity(Intent(this@MessageListActivity, SettingsActivity::class.java))
+				startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
 			}
 			
 			R.id.menu_check_in_history-> DiagnosticsLocationActivity.startIntent(this)
@@ -211,7 +212,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	//region {@link addOnCompleteListener.onComplete} implementation
 	override fun onComplete(task: Task<Void>) {
 		if (task.isSuccessful) {
-			Log.d(this@MessageListActivity.localClassName, "Fetch remote successful!")
+			Log.d(this@MainActivity.localClassName, "Fetch remote successful!")
 			rangerRemote.activateFetched() // active config
 			Log.d("Ranger remote", RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_NOTI_FREQUENCY_DURATION))
 			Log.d("Ranger remote", RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE + ": " + rangerRemote.getString(RemoteConfigKey.REMOTE_ENABLE_NOTI_MESSAGE))
@@ -232,9 +233,9 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	}
 	
 	private fun initAdapter() {
-		messageAdapter = MessageAdapter(this@MessageListActivity, this@MessageListActivity, this@MessageListActivity)
+		messageAdapter = MessageAdapter(this@MainActivity, this@MainActivity, this@MainActivity)
 		messageRecyclerView.setHasFixedSize(true)
-		messageRecyclerView.layoutManager = LinearLayoutManager(this@MessageListActivity)
+		messageRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
 		messageRecyclerView.adapter = messageAdapter
 	}
 	
@@ -251,14 +252,14 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	}
 	
 	private fun fetchRangerRemoteConfig() {
-		Log.d(this@MessageListActivity.packageName, "Start fetch remote config!")
+		Log.d(this@MainActivity.packageName, "Start fetch remote config!")
 		// cache config
 		var cacheExpiration: Long = 3600 // 1 hour
 		if (rangerRemote.info.configSettings.isDeveloperModeEnabled) {
 			cacheExpiration = 0
 		}
 		rangerRemote.fetch(cacheExpiration).addOnCompleteListener(this)
-				.addOnFailureListener(this@MessageListActivity)
+				.addOnFailureListener(this@MainActivity)
 	}
 	
 	private fun fetchContentList() {
@@ -357,8 +358,8 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	
 	private fun logout() {
 		CloudMessaging.unsubscribe(this)
-		Preferences.getInstance(this@MessageListActivity).clear()
-		LoginActivity.startActivity(this@MessageListActivity)
+		Preferences.getInstance(this@MainActivity).clear()
+		LoginActivity.startActivity(this@MainActivity)
 		finish()
 	}
 	
@@ -438,7 +439,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 	}
 	
 	private fun reportEvent(event: Event, isConfirmEvent: Boolean) {
-		ReviewEventApi().reViewEvent(this@MessageListActivity, event,
+		ReviewEventApi().reViewEvent(this@MainActivity, event,
 				isConfirmEvent, object : ReviewEventApi.ReviewEventCallback {
 			override fun onSuccess() {
 				if (!isConfirmEvent) {
@@ -460,11 +461,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				checkLocationIsAllow()
 			} else {
-				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MessageListActivity,
+				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
 						Manifest.permission.ACCESS_FINE_LOCATION)
 				if (!shouldProvideRationale) {
 					val dialogBuilder: AlertDialog.Builder =
-							AlertDialog.Builder(this@MessageListActivity).apply {
+							AlertDialog.Builder(this@MainActivity).apply {
 								setTitle(null)
 								setMessage(R.string.location_permission_msg)
 								setPositiveButton(R.string.go_to_setting) { _, _ ->
@@ -490,7 +491,7 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 		val client: SettingsClient = LocationServices.getSettingsClient(this)
 		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 		task.addOnSuccessListener {
-			LocationTracking.set(this@MessageListActivity, true)
+			LocationTracking.set(this@MainActivity, true)
 			refreshHeader()
 		}
 		
@@ -498,11 +499,11 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 			if (exception is ResolvableApiException) {
 				// Location settings are not satisfied, but this can be fixed
 				// by showing the user a dialog.
-				LocationTracking.set(this@MessageListActivity, false)
+				LocationTracking.set(this@MainActivity, false)
 				try {
 					// Show the dialog by calling startResolutionForResult(),
 					// and check the result in onActivityResult().
-					exception.startResolutionForResult(this@MessageListActivity,
+					exception.startResolutionForResult(this@MainActivity,
 							REQUEST_CHECK_LOCATION_SETTINGS)
 				} catch (sendEx: IntentSender.SendIntentException) {
 					// Ignore the error.
@@ -532,13 +533,12 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 				Observer<List<WorkInfo>> { workStatusList ->
 					val currentWorkStatus = workStatusList?.getOrNull(0)
 					if (currentWorkStatus != null) {
+						Log.d("MainActivity", "ReportSyncWorker: ${currentWorkStatus.state.name}")
 						when (currentWorkStatus.state) {
 							WorkInfo.State.RUNNING -> {
-								Log.d("MessageListActivity", "ReportSyncWorker: ENQUEUED/RUNNING")
 								updateSyncInfo(SyncInfo.Status.UPLOADING)
 							}
 							WorkInfo.State.SUCCEEDED -> {
-								Log.d("MessageListActivity", "ReportSyncWorker: SUCCEEDED")
 								updateSyncInfo(SyncInfo.Status.UPLOADED)
 							}
 							else -> {
@@ -548,6 +548,15 @@ class MessageListActivity : AppCompatActivity(), OnMessageItemClickListener, Hea
 					}
 					else {
 						Log.d("MessageListActivity", "ReportSyncWorker: NO WORK STATUS")
+						updateSyncInfo()
+					}
+				})
+
+		LocationSyncWorker.workInfos().observe(this,
+				Observer<List<WorkInfo>> { workStatusList ->
+					val currentWorkStatus = workStatusList?.getOrNull(0)
+					if (currentWorkStatus != null) {
+						Log.d("MainActivity", "LocationSyncWorker: ${currentWorkStatus.state.name}")
 						updateSyncInfo()
 					}
 				})

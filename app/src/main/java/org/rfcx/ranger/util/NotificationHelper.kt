@@ -13,7 +13,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.view.LoginActivity
-import org.rfcx.ranger.view.MessageListActivity
+import org.rfcx.ranger.view.MainActivity
 import java.util.*
 
 class NotificationHelper {
@@ -39,7 +39,7 @@ class NotificationHelper {
 	}
 	
 	fun showMessageNotification(context: Context, message: Message) {
-		val intent = Intent(context, MessageListActivity::class.java)
+		val intent = Intent(context, MainActivity::class.java)
 		val pendingIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_ONE_SHOT)
 		
@@ -77,7 +77,7 @@ class NotificationHelper {
 			createEventNotificationChannel(context)
 		}
 		
-		val intent = Intent(context, MessageListActivity::class.java)
+		val intent = Intent(context, MainActivity::class.java)
 		val pendingIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_ONE_SHOT)
 		

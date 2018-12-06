@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MessageListActivity"
+            android:name=".view.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
