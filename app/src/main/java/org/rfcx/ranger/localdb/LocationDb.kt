@@ -10,6 +10,10 @@ import org.rfcx.ranger.entity.location.CheckIn
 
 class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
 
+    init {
+        realm.refresh()
+    }
+
     fun save(checkin: CheckIn) {
         realm.executeTransaction {
             if (checkin.id == 0) {

@@ -1,6 +1,5 @@
 package org.rfcx.ranger.adapter.location
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.RealmHelper
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 	
