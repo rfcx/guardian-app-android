@@ -3,11 +3,12 @@ package org.rfcx.ranger.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
@@ -36,9 +37,12 @@ import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.service.LocationTrackerService
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.service.ReportSyncWorker
+import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.isLocationAllow
+import org.rfcx.ranger.util.isRecordAudioAllow
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -48,7 +52,6 @@ import java.io.IOException
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val tag = ReportActivity::class.java.simpleName
 	private var googleMap: GoogleMap? = null
-	private val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
 	private var fusedLocationClient: FusedLocationProviderClient? = null
 	private val reportAdapter = ReportTypeAdapter()
 	private var lastKnowLocation: Location? = null
@@ -56,6 +59,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
 	private var player: MediaPlayer? = null
+	private var locationManager: LocationManager? = null
 	
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
@@ -64,6 +68,28 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				markRangerLocation(it)
 			}
 		}
+	}
+	
+	private val locationListener = object : android.location.LocationListener {
+		
+		override fun onLocationChanged(p0: Location?) {
+			p0?.let {
+				markRangerLocation(it)
+			}
+		}
+		
+		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+		
+		}
+		
+		override fun onProviderEnabled(p0: String?) {
+		
+		}
+		
+		override fun onProviderDisabled(p0: String?) {
+		
+		}
+		
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,7 +173,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	override fun onMapReady(map: GoogleMap?) {
 		googleMap = map
-		googleMap?.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
+		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
 		if (!isLocationAllow()) {
 			requestPermissions()
 		} else {
@@ -224,16 +250,18 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
 		if (isDestroyed) return
-		val locationRequest = LocationRequest()
-		locationRequest.interval = intervalLocationUpdate
-		locationRequest.priority = LocationRequest.PRIORITY_LOW_POWER
-		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-		fusedLocationClient?.lastLocation?.addOnSuccessListener {
-			if (it != null) {
-				markRangerLocation(it)
-			}
+		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		try {
+			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
+			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
+			lastKnowLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+			lastKnowLocation?.let { markRangerLocation(it) }
+		} catch (ex: java.lang.SecurityException) {
+			ex.printStackTrace()
+		} catch (ex: IllegalArgumentException) {
+			ex.printStackTrace()
 		}
-		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
+		
 	}
 	
 	/**
@@ -276,6 +304,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))
 		googleMap?.uiSettings?.isScrollGesturesEnabled = false
+		validateForm()
 	}
 	
 	private fun requestPermissions() {
@@ -329,17 +358,17 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			return
 		}
-
+		
 		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
 		val time = DateHelper.getIsoTime()
 		val lat = lastKnowLocation?.latitude ?: 0.0
 		val lon = lastKnowLocation?.longitude ?: 0.0
-
+		
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
-
+		
 		ReportDb().save(report)
 		ReportSyncWorker.enqueue()
-
+		
 		finish()
 	}
 	
@@ -417,25 +446,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO),
 					REQUEST_PERMISSIONS_RECORD_REQUEST_CODE)
 		}
-	}
-	
-	private var progressDialog: ProgressDialog? = null
-	private fun showProgress() {
-		if (progressDialog == null || !progressDialog!!.isShowing) {
-			progressDialog = ProgressDialog(this@ReportActivity, R.style.ProgressDialogTheme)
-			progressDialog!!.setCancelable(false)
-			progressDialog!!.setProgressStyle(android.R.style.Widget_ProgressBar_Small)
-			progressDialog!!.show()
-		}
-	}
-	
-	private fun hideProgress() {
-		if (progressDialog != null) {
-			if (progressDialog!!.isShowing) {
-				progressDialog!!.dismiss()
-			}
-		}
-		progressDialog = null
 	}
 	
 	companion object {
