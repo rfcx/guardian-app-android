@@ -1,6 +1,7 @@
 package org.rfcx.ranger.util
 
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.guardian.GuardianGroup
@@ -20,6 +21,13 @@ class RealmHelper {
 				INSTANCE ?: synchronized(this) {
 					INSTANCE ?: RealmHelper().also { INSTANCE = it }
 				}
+
+		fun defaultConfig(): RealmConfiguration {
+			return RealmConfiguration.Builder()
+					.schemaVersion(1)
+					.deleteRealmIfMigrationNeeded()
+					.build()
+		}
 	}
 	
 	fun updateOpenedMessage(message: Message) {

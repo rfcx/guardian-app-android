@@ -6,6 +6,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
+import org.rfcx.ranger.util.RealmHelper
 
 class RangerApplication : Application() {
 	
@@ -13,17 +14,7 @@ class RangerApplication : Application() {
 		super.onCreate()
 		
 		Realm.init(this)
-		Realm.setDefaultConfiguration(defaultReamConfig())
-		
-		if (BuildConfig.VERSION_CODE == 12) {
-			// Remove old realm on next Release.
-			// TODO remove this when release a news version more than 12
-			val oldRealm = RealmConfiguration.Builder()
-					.name("default.realm")
-					.deleteRealmIfMigrationNeeded()
-					.build()
-			Realm.deleteRealm(oldRealm)
-		}
+		Realm.setDefaultConfiguration(RealmHelper.defaultConfig())
 		
 		ReportCleanupWorker.enqueuePeriodically()
 		LocationCleanupWorker.enqueuePeriodically()
@@ -34,14 +25,6 @@ class RangerApplication : Application() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
-	}
-	
-	private fun defaultReamConfig(): RealmConfiguration {
-		return RealmConfiguration.Builder()
-				.name("Ranger.Realm")
-				.schemaVersion(1)
-				.deleteRealmIfMigrationNeeded()
-				.build()
 	}
 	
 }
