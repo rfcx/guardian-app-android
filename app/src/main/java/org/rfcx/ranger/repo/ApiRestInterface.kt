@@ -28,7 +28,7 @@ interface ApiRestInterface {
 	
 	@GET("events/event")
 	fun getEvents(@Header("Authorization") authUser: String,
-	              @Query("sites[]") siteId: String?,
+	              @Query("guardian_groups[]") guardianGroup: String,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
 	              @Query("limit") limit: Int): Call<EventResponse>

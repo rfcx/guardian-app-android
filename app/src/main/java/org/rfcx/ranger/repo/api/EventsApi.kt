@@ -43,9 +43,13 @@ class EventsApi {
 			rangerRemote.activateFetched()
 		}
 		
-		val siteID = context.getSite()?.trim()
+		val group = context.getGuardianGroup()
+		if (group == null) {
+			onEventsCallBack.onFailed(null, context.getString(R.string.error_no_guardian_group_set))
+			return
+		}
 		
-		ApiManager.getInstance().apiRest.getEvents("Bearer $token", siteID, "begins_at", "DESC", limit)
+		ApiManager.getInstance().apiRest.getEvents("Bearer $token", group, "begins_at", "DESC", limit)
 				.enqueue(object : Callback<EventResponse> {
 					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)

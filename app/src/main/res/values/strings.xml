@@ -33,6 +33,9 @@
     <string name="profile_nottracking">Not tracking</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
+    <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+
+    <!-- report -->
     <string name="report_chainsaw_button">Chainsaws</string>
     <string name="report_gunshot_button">Gunshots</string>
     <string name="report_trespasser_button">Trespassers</string>
