@@ -56,7 +56,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters)
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()
-            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
+            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
         }
 
         fun workInfos(): LiveData<List<WorkInfo>> {

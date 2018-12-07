@@ -62,7 +62,7 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 			polylineOptions.color(color)
 		}
 
-		val checkins = LocationDb().all()
+		val checkins = LocationDb().allForDisplay()
 		if(checkins.isEmpty()) return
 		for (checkin in checkins) {
 			val latLng = LatLng(checkin.latitude, checkin.longitude)

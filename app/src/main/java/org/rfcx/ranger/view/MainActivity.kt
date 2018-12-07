@@ -346,6 +346,13 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 					}
 				})
+
+		if (LocationDb().unsentCount() > 0) {
+			LocationSyncWorker.enqueue()
+		}
+		if (ReportDb().unsentCount() > 0) {
+			ReportSyncWorker.enqueue()
+		}
 	}
 	
 	private fun refreshHeader() {

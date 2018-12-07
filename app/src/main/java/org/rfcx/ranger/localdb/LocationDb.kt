@@ -23,10 +23,6 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
         }
     }
 
-    fun all(maxAgeHours: Int = 6): RealmResults<CheckIn> {
-        return realm.where(CheckIn::class.java).greaterThan("timestamp", System.currentTimeMillis() - (maxAgeHours * 3600000)).findAll()
-    }
-
     fun unsentCount(): Long {
         return realm.where(CheckIn::class.java).equalTo("synced", false).count()
     }
@@ -41,4 +37,23 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
         }
     }
 
+    fun allForDisplay(): RealmResults<CheckIn> {
+        return realm.where(CheckIn::class.java).greaterThan("timestamp", System.currentTimeMillis() - (MAX_DISPLAY_AGE_HOURS * 3600000)).findAll()
+    }
+
+    fun deleteSynced(): Long {
+        val query = realm.where(CheckIn::class.java).lessThan("timestamp", System.currentTimeMillis() - (MIN_DELETION_AGE_HOURS * 3600000))
+        val count = query.count()
+        if (count > 0) {
+            realm.executeTransaction {
+                query.findAll().deleteAllFromRealm()
+            }
+        }
+        return count
+    }
+
+    companion object {
+        val MAX_DISPLAY_AGE_HOURS = 6
+        val MIN_DELETION_AGE_HOURS = 72
+    }
 }

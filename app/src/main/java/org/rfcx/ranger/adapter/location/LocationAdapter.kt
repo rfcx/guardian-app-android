@@ -12,7 +12,7 @@ import org.rfcx.ranger.util.DateHelper
 
 class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 	
-	private val locations = LocationDb().all()
+	private val locations = LocationDb().allForDisplay()
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder =
 			LocationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_location, parent, false))

@@ -25,6 +25,7 @@ class RangerApplication : Application() {
 		}
 		
 		ReportCleanupWorker.enqueuePeriodically()
+		LocationCleanupWorker.enqueuePeriodically()
 		
 		if (BuildConfig.USE_STETHO) {
 			Stetho.initialize(Stetho.newInitializerBuilder(this)
