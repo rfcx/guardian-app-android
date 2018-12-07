@@ -195,7 +195,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	override fun onMapReady(googleMap: GoogleMap?) {
 		if (!isAdded) return
-		googleMap?.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
+		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
 		if (event?.latitude != null && event?.longitude != null) {
 			googleMap?.addMarker(MarkerOptions()
 					.position(LatLng(event!!.latitude!!, event!!.longitude!!))
@@ -204,15 +204,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 			googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 					LatLng(event!!.latitude!!, event!!.longitude!!), 15f))
 			googleMap?.uiSettings?.isScrollGesturesEnabled = false
-			
-			googleMap?.setOnMapClickListener {
-				// Open map
-				val intent = Intent(Intent.ACTION_VIEW,
-						Uri.parse("http://maps.google.com/maps?q="
-								+ event!!.latitude!! + ","
-								+ event!!.longitude!!))
-				startActivity(intent)
-			}
 		}
 	}
 	
