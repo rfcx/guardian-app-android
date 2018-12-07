@@ -308,7 +308,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun validateForm() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
-		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE
+		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastKnowLocation != null
 	}
 	
 	private fun submitReport() {
