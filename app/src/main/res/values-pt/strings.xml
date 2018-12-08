@@ -84,8 +84,9 @@
     <string name="hint_code">Código</string>
 
     <!-- Report -->
-    <string name="sync_reports_label">%s relatórios</string>
-    <string name="sync_report_label">%s relatório</string>
+    <string name="sync_reports_label">%d relatórios</string>
+    <string name="sync_report_label">%d relatório</string>
+    <string name="sync_checkins_label">%d checkins</string>
     <string name="sync_waiting_network">Waiting for network…</string>
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>

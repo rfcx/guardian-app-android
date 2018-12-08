@@ -7,27 +7,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.location.LocationManager
+import android.location.LocationProvider
 import android.media.RingtoneManager
 import android.os.Binder
 import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.location.RangerLocation
-import org.rfcx.ranger.repo.TokenExpireException
-import org.rfcx.ranger.repo.api.SendLocationApi
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.entity.location.CheckIn
+import org.rfcx.ranger.localdb.LocationDb
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.SettingsActivity
 
 /**
  *
  * Service work with location
- * update Ranger location to server.
+ * Save Ranger location to local db.
  */
 class LocationTrackerService : Service() {
 	
@@ -35,50 +37,56 @@ class LocationTrackerService : Service() {
 		const val NOTIFICATION_LOCATION_ID = 22
 		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
 		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
-		private const val intervalLocationUpdate: Long = 30 * 1000 // 30 seconds
-		private const val fastestIntervalLocationUpdate: Long = 20 * 1000
-		private const val locationUploadRate: Long = 60 * 1000 // a minuit
-		
 		val locationRequest = LocationRequest().apply {
-			interval = intervalLocationUpdate
-			fastestInterval = fastestIntervalLocationUpdate
-			priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-		}
-	}
-	
-	private val tag = LocationTrackerService::class.java.simpleName
-	private val binder = SendLocationLocationServiceBinder()
-	
-	private var fusedLocationClient: FusedLocationProviderClient? = null
-	
-	private var locationCallback: LocationCallback = object : LocationCallback() {
-		override fun onLocationResult(locationResult: LocationResult?) {
-			super.onLocationResult(locationResult)
-			
-			getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-					createLocationTrackerNotification(locationResult?.lastLocation, true))
-			
-			locationResult?.lastLocation?.let {
-				saveLocation(it)
-
-				if (BuildConfig.DEBUG) {
-					playSound()
-				}
-			}
-			
-			sentLocation()
+			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 		}
 		
-		override fun onLocationAvailability(p0: LocationAvailability?) {
-			super.onLocationAvailability(p0)
-			if (p0?.isLocationAvailable == false) {
-				// user turn off location on setting or something
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID,
-						createLocationTrackerNotification(null, false))
-			}
-		}
+		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
+		private const val LOCATION_DISTANCE = 0f// 0 meter
+		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
+		const val TAG = "LocationTrackerService"
 	}
 	
+	private val binder = LocationTrackerServiceBinder()
+	
+	private var mLocationManager: LocationManager? = null
+	
+	private val locationListener = object : android.location.LocationListener {
+		
+		override fun onLocationChanged(p0: Location?) {
+			p0?.let {
+				Log.i(TAG, "${it.longitude} , ${it.longitude}")
+				saveLocation(it)
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
+				
+				if (BuildConfig.DEBUG) playSound()
+			}
+		}
+		
+		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+			Log.d(TAG, "onStatusChanged $p0 $p1")
+			
+			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LASTEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
+					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+				}
+				
+			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
+			}
+		}
+		
+		override fun onProviderEnabled(p0: String?) {
+			Log.d(TAG, "onProviderEnabled $p0")
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+		}
+		
+		override fun onProviderDisabled(p0: String?) {
+			Log.d(TAG, "onProviderDisabled $p0")
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
+		}
+		
+	}
 	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
@@ -92,41 +100,43 @@ class LocationTrackerService : Service() {
 		}
 	}
 	
+	
 	private fun startTracker() {
 		val check = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-		
 		if (!check) {
 			this.stopSelf()
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			createNotificationChannel()
 		}
-		
-		fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-		var lastLocation: Location? = null
-		fusedLocationClient?.lastLocation?.addOnSuccessListener {
-			Log.i(tag, "${it?.latitude} ${it?.longitude}")
-			lastLocation = it
-			if (it != null) {
-				saveLocation(it)
-			}
+		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		try {
+			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+		} catch (ex: java.lang.SecurityException) {
+			ex.printStackTrace()
+			Log.w(TAG, "fail to request location update, ignore", ex)
+		} catch (ex: IllegalArgumentException) {
+			ex.printStackTrace()
+			Log.w(TAG, "gps provider does not exist " + ex.message)
 		}
-		fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
-		this.startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(lastLocation, true))
 		
-		sentLocation()
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
-		locationCallback.let { fusedLocationClient?.removeLocationUpdates(it) }
+		Log.e(TAG, "onDestroy")
+		mLocationManager?.removeUpdates(locationListener)
 	}
 	
+	
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		super.onStartCommand(intent, flags, startId)
 		return START_NOT_STICKY
 	}
 	
-	inner class SendLocationLocationServiceBinder : Binder() {
+	inner class LocationTrackerServiceBinder : Binder() {
 		val trackerService: LocationTrackerService
 			get() = this@LocationTrackerService
 	}
@@ -171,37 +181,11 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun saveLocation(location: Location) {
-		RealmHelper.getInstance().saveLocation(
-				RangerLocation(latitude = location.latitude, longitude = location.longitude))
+		LocationDb().save(CheckIn(latitude = location.latitude, longitude = location.longitude))
+		LocationSyncWorker.enqueue()
+		Preferences.getInstance(this).putLong(LASTEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	
-	private fun sentLocation() {
-		if(!isNetWorkAvailable()) return
-		val lastLocationUpload = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LASTED_LOCATION_UPLOAD, 0)
-		if (System.currentTimeMillis() - lastLocationUpload < locationUploadRate) {
-			return
-		}
-		// Store last upload location
-		Preferences.getInstance(this@LocationTrackerService).putLong(Preferences.LASTED_LOCATION_UPLOAD, System.currentTimeMillis())
-		
-		val locations = RealmHelper.getInstance().getLocations()
-		if (locations.isEmpty()) return
-		SendLocationApi().checkIn(this, locations, object : SendLocationApi.SendLocationCallBack {
-			override fun onSuccess() {
-				// Remove locations are Sent!
-				RealmHelper.getInstance().removeSentLocation(locations)
-			}
-			
-			override fun onFailed(t: Throwable?, message: String?) {
-				if (t is TokenExpireException) {
-					NotificationHelper.getInstance().showLoginNotification(this@LocationTrackerService)
-					stopForeground(true)
-					stopSelf()
-				}
-			}
-		})
-	}
-
 	// Just for debug mode
 	private fun playSound() {
 		try {

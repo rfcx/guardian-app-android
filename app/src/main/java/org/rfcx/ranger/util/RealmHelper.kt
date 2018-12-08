@@ -1,10 +1,10 @@
 package org.rfcx.ranger.util
 
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.guardian.GuardianGroup
-import org.rfcx.ranger.entity.location.RangerLocation
 import org.rfcx.ranger.entity.message.Message
 
 /**
@@ -21,6 +21,13 @@ class RealmHelper {
 				INSTANCE ?: synchronized(this) {
 					INSTANCE ?: RealmHelper().also { INSTANCE = it }
 				}
+
+		fun defaultConfig(): RealmConfiguration {
+			return RealmConfiguration.Builder()
+					.schemaVersion(1)
+					.deleteRealmIfMigrationNeeded()
+					.build()
+		}
 	}
 	
 	fun updateOpenedMessage(message: Message) {
@@ -80,36 +87,5 @@ class RealmHelper {
 		realm.commitTransaction()
 		realm.close()
 	}
-	
-	fun saveLocation(rangerLocation: RangerLocation) {
-		Realm.getDefaultInstance().use { realm ->
-			realm.executeTransaction {
-				it.insertOrUpdate(rangerLocation)
-			}
-		}
-	}
-	
-	fun getLocations(): List<RangerLocation> {
-		val locations: ArrayList<RangerLocation> = ArrayList()
-		Realm.getDefaultInstance().use { realm ->
-			realm.executeTransaction {
-				val result = it.where(RangerLocation::class.java)
-						.findAll()
-				locations.addAll(it.copyFromRealm(result))
-			}
-		}
-		return locations
-	}
-	
-	fun removeSentLocation(input: List<RangerLocation>) {
-		Realm.getDefaultInstance().use { realm ->
-			realm.executeTransaction {
-				for (location in input) {
-					val shouldDelete = it.where(RangerLocation::class.java)
-							.equalTo("time", location.time).findAll()
-					shouldDelete?.deleteAllFromRealm()
-				}
-			}
-		}
-	}
+
 }

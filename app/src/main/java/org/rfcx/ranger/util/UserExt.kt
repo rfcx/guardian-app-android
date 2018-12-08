@@ -14,6 +14,11 @@ fun Context.getSite(): String? {
 	return if (site.isEmpty()) null else site
 }
 
+fun Context.getGuardianGroup(): String? {
+	val group = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
+	return if (group.isEmpty()) null else group
+}
+
 fun Context.getUserGuId(): String? {
 	val guId = Preferences.getInstance(this).getString(Preferences.USER_GUID, "")
 	return if (guId.isEmpty()) null else guId

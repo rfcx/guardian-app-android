@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MessageListActivity"
+            android:name=".view.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -42,6 +42,9 @@
 
         <activity android:name=".view.InvitationActivity"
             android:screenOrientation="portrait"/>
+	    
+	    <activity android:name=".view.DiagnosticsLocationActivity"
+		    android:screenOrientation="portrait"/>
 
         <service
             android:name=".service.LocationTrackerService"

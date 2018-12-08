@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- LoginActivity -->
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -25,6 +25,7 @@
 
     <string name="menu_logout">Logout</string>
     <string name="menu_ranger_group">My site</string>
+	<string name="menu_check_in_history">Check in history</string>
 
     <!-- message list -->
     <string name="profile_welcome">Hi, %s!</string>
@@ -32,6 +33,9 @@
     <string name="profile_nottracking">Not tracking</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
+    <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+
+    <!-- report -->
     <string name="report_chainsaw_button">Chainsaws</string>
     <string name="report_gunshot_button">Gunshots</string>
     <string name="report_trespasser_button">Trespassers</string>
@@ -87,10 +91,15 @@
     <string name="hint_code">Code</string>
 
     <!-- Report -->
-    <string name="sync_reports_label">%s reports</string>
-    <string name="sync_report_label">%s report</string>
+    <string name="sync_reports_label">%d reports</string>
+    <string name="sync_report_label">%d report</string>
+    <string name="sync_checkins_label">%d location check-ins</string>
     <string name="sync_waiting_network">Waiting for network…</string>
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
+    <string name="empty_list_description">No incidents occurred recently\nEnjoy your day :)</string>
+
+    <!-- Symbols -->
+    <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
 </resources>

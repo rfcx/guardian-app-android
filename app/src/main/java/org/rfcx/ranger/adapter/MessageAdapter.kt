@@ -5,14 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.entity.BaseItem
-import org.rfcx.ranger.adapter.entity.EventItem
-import org.rfcx.ranger.adapter.entity.MessageItem
-import org.rfcx.ranger.adapter.entity.TitlteItem
-import org.rfcx.ranger.adapter.view.EventItemViewHolder
-import org.rfcx.ranger.adapter.view.MessageViewHolder
-import org.rfcx.ranger.adapter.view.ProfileViewHolder
-import org.rfcx.ranger.adapter.view.TitleViewHolder
+import org.rfcx.ranger.adapter.entity.*
+import org.rfcx.ranger.adapter.view.*
 import java.util.*
 
 class MessageAdapter(private val context: Context, private var onMessageItemClickListener: OnMessageItemClickListener,
@@ -23,6 +17,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 		const val VIEW_TYPE_EVENT = 1
 		const val VIEW_TYPE_MESSAGE = 2
 		const val VIEW_TYPE_TITLE = 3
+		const val VIEW_TYPE_EMPTY = 4
 	}
 	
 	private var items: MutableList<BaseItem> = ArrayList()
@@ -51,6 +46,11 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 				val itemView = inflater.inflate(R.layout.item_title_holder, parent, false)
 				TitleViewHolder(itemView)
 			}
+
+			VIEW_TYPE_EMPTY -> {
+				val itemView = inflater.inflate(R.layout.item_empty_holder, parent, false)
+				EmptyViewHolder(itemView)
+			}
 			
 			else -> {
 				throw Exception("Invalid viewType")
@@ -65,7 +65,8 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 			when (item) {
 				is EventItem -> VIEW_TYPE_EVENT
 				is MessageItem -> VIEW_TYPE_MESSAGE
-				is TitlteItem -> VIEW_TYPE_TITLE
+				is TitleItem -> VIEW_TYPE_TITLE
+				is EmptyItem -> VIEW_TYPE_EMPTY
 				else -> {
 					throw Exception("Invalid viewType")
 				}
@@ -94,9 +95,8 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 			}
 			
 			VIEW_TYPE_TITLE -> {
-				(holder as TitleViewHolder).bind((item as TitlteItem).title)
+				(holder as TitleViewHolder).bind((item as TitleItem).title)
 			}
-			
 		}
 	}
 	

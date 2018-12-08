@@ -28,7 +28,7 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
         val syncInfo = headerProtocol.getSyncInfo()
         Log.d("Report", "ProfileViewHolder ${syncInfo?.status}")
 
-        if (syncInfo != null && syncInfo.countReport > 0) {
+        if (syncInfo != null && (syncInfo.countReport > 0 || syncInfo.countCheckIn > 2)) {
             updateAlertBar(syncInfo)
             itemView.layoutAlertBar.visibility = View.VISIBLE
         } else {
@@ -60,23 +60,28 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
     private fun updateAlertBar(syncInfo: SyncInfo) {
         itemView.progressBarLoading.visibility = View.INVISIBLE
 //        itemView.cancelButton.visibility = View.VISIBLE
-        val label = itemView.context.getString(
-        if (syncInfo.countReport > 1) R.string.sync_reports_label else
-            R.string.sync_report_label, syncInfo.countReport.toString())
+
+        val checkinText = if (syncInfo.countCheckIn > 1) itemView.context.getString(R.string.sync_checkins_label, syncInfo.countCheckIn) else null
+        val reportText = if (syncInfo.countReport > 0) {
+            itemView.context.getString(
+                    if (syncInfo.countReport > 1) R.string.sync_reports_label else R.string.sync_report_label, syncInfo.countReport)
+        } else null
+        val text = if (checkinText != null && reportText != null) "$reportText, $checkinText" else reportText ?: checkinText
+
         when (syncInfo.status) {
             SyncInfo.Status.WAITING_NETWORK -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_queue)
-                itemView.tvSyncLabel.text = label
+                itemView.tvSyncLabel.text = text
                 itemView.tvSyncDescription.text = itemView.context.getString(R.string.sync_waiting_network)
             }
             SyncInfo.Status.STARTING -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
-                itemView.tvSyncLabel.text = label
+                itemView.tvSyncLabel.text = text
                 itemView.tvSyncDescription.text = itemView.context.getText(R.string.sync_starting)
             }
             SyncInfo.Status.UPLOADING -> {
                 itemView.ivSyncState.setImageResource(R.drawable.ic_upload)
-                itemView.tvSyncLabel.text = label
+                itemView.tvSyncLabel.text = text
                 itemView.progressBarLoading.visibility = View.VISIBLE
                 itemView.tvSyncDescription.text = itemView.context.getText(R.string.sync_uploading)
             }

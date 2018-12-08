@@ -71,7 +71,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().build()
-            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.APPEND, workRequest)
+            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
         }
 
         fun workInfos(): LiveData<List<WorkInfo>> {

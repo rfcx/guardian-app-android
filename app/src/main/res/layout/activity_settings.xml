@@ -25,7 +25,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
+	
 	<TextView
 		android:id="@+id/rangerBrandingText"
 		android:layout_width="wrap_content"
@@ -78,29 +78,29 @@
 		app:layout_constraintTop_toTopOf="@+id/locationTrackingTextView"
 		app:showText="false"
 		tools:checked="true" />
-
+	
 	<TextView
-			android:id="@+id/defaultSiteTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_large"
-			android:layout_marginTop="@dimen/margin_padding_large"
-			android:text="@string/default_site_label"
-			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_medium"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/locationTrackingTextView" />
-
+		android:id="@+id/defaultSiteTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginTop="@dimen/margin_padding_large"
+		android:text="@string/default_site_label"
+		android:textColor="@color/text_white"
+		android:textSize="@dimen/text_medium"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/locationTrackingTextView" />
+	
 	<TextView
-			android:id="@+id/defaultSiteValueTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_large"
-			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_large"
-			app:layout_constraintBaseline_toBaselineOf="@+id/defaultSiteTextView"
-			app:layout_constraintEnd_toEndOf="parent" />
-
+		android:id="@+id/defaultSiteValueTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:textColor="@color/text_white"
+		android:textSize="@dimen/text_large"
+		app:layout_constraintBaseline_toBaselineOf="@+id/defaultSiteTextView"
+		app:layout_constraintEnd_toEndOf="parent" />
+	
 	<TextView
 		android:id="@+id/guardianGroupTextView"
 		android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
 		android:textSize="@dimen/text_medium"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/defaultSiteTextView" />
-
+	
 	<Spinner
 		android:id="@+id/guardianGroupSpinner"
 		android:layout_width="wrap_content"
@@ -121,15 +121,15 @@
 		app:layout_constraintBottom_toBottomOf="@+id/guardianGroupTextView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="@+id/guardianGroupTextView" />
-
+	
 	<ProgressBar
-			android:id="@+id/guardianGroupProgress"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
-			android:layout_marginEnd="@dimen/margin_padding_large"
-			app:layout_constraintBottom_toBottomOf="@+id/guardianGroupSpinner"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/guardianGroupSpinner"
-			android:visibility="invisible" />
-
+		android:id="@+id/guardianGroupProgress"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toBottomOf="@+id/guardianGroupSpinner"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/guardianGroupSpinner" />
+	
 </androidx.constraintlayout.widget.ConstraintLayout>

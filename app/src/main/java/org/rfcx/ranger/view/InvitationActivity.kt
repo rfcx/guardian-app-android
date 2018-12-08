@@ -41,7 +41,7 @@ class InvitationActivity : AppCompatActivity() {
             submit(inputInvitationCode.text.toString()) { success ->
 
                 if (success) {
-                    MessageListActivity.startActivity(this@InvitationActivity)
+                    MainActivity.startActivity(this@InvitationActivity)
                     finish()
                 }
                 else {
