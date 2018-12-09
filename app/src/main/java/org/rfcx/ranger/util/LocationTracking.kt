@@ -20,7 +20,7 @@ class LocationTracking {
             val state = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, "")
             if (state.isEmpty()) {
                 // state never setting before
-                if (context.isLocationAllow()) {
+                if (context.isUsingLocationAllowed()) {
                     // state on
                     preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_ON)
                     return true

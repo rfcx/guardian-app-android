@@ -41,8 +41,8 @@ import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.isLocationAllow
 import org.rfcx.ranger.util.isRecordAudioAllow
+import org.rfcx.ranger.util.isUsingLocationAllowed
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -138,7 +138,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onStart() {
 		super.onStart()
 		googleMap?.let {
-			if (!isLocationAllow()) {
+			if (!isUsingLocationAllowed()) {
 				requestPermissions()
 			} else {
 				checkLocationIsAllow()
@@ -174,7 +174,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onMapReady(map: GoogleMap?) {
 		googleMap = map
 		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-		if (!isLocationAllow()) {
+		if (!isUsingLocationAllowed()) {
 			requestPermissions()
 		} else {
 			checkLocationIsAllow()
@@ -349,9 +349,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		}
 		
 		if (lastKnowLocation == null) {
-			if (!isLocationAllow()) {
+			if (!isUsingLocationAllowed()) {
 				requestPermissions()
-			} else if (isLocationAllow()) {
+			} else if (isUsingLocationAllowed()) {
 				checkLocationIsAllow()
 			} else {
 				Snackbar.make(rootView, R.string.report_location_null, Snackbar.LENGTH_LONG).show()

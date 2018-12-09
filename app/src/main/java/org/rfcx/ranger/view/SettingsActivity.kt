@@ -37,6 +37,8 @@ import kotlin.collections.ArrayList
 class SettingsActivity : AppCompatActivity() {
 	
 	val guardianGroupsAdapter by lazy { GuardianGroupsAdapter(this) }
+
+	val locationPermissions by lazy { LocationPermissions(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -66,16 +68,13 @@ class SettingsActivity : AppCompatActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 
-		if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
-			updateLocationSwitch()
-		}
+		locationPermissions.handleActivityResult(requestCode, resultCode, data)
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			completedLocationPermissionsRequest(grantResults)
-		}
+
+		locationPermissions.handleRequestResult(requestCode, permissions, grantResults)
 	}
 	
 	private fun bindActionbar() {
@@ -119,33 +118,9 @@ class SettingsActivity : AppCompatActivity() {
 	}
 
 	private fun enableLocationTracking() {
-		if (!isLocationAllow()) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSIONS_REQUEST_CODE)
-			} else {
-				throw Exception("Invalid location permissions")
-			}
-		} else {
-			checkLocationPermissions()
-		}
-	}
-
-	private fun completedLocationPermissionsRequest(results: IntArray) {
-		LocationPermissions(this).handlePermissionsResult(results) { completed: Boolean ->
-			if (completed) {
-				checkLocationPermissions()
-			}
-			else {
-				updateLocationSwitch()
-			}
-		}
-	}
-
-	private fun checkLocationPermissions() {
-		LocationPermissions(this).check(REQUEST_CHECK_LOCATION_SETTINGS) { completed: Boolean ->
-			if (completed) {
-				updateLocationSwitch()
-			}
+		locationPermissions.check() { hasPermission: Boolean ->
+			LocationTracking.set(this, hasPermission)
+			updateLocationSwitch()
 		}
 	}
 
@@ -214,9 +189,6 @@ class SettingsActivity : AppCompatActivity() {
 	}
 
 	
-	companion object {
-		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
-	}
+
 	
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -24,61 +25,87 @@ import org.rfcx.ranger.service.LocationTrackerService
 
 class LocationPermissions(val activity: Activity) {
 
-    fun handlePermissionsResult(grantResults: IntArray, callback: (Boolean) -> Unit) {
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            callback(true)
+    var onCompletionCallback: ((Boolean) -> Unit)? = null
+
+    fun check(onCompletionCallback: (Boolean) -> Unit) {
+        this.onCompletionCallback = onCompletionCallback
+        if (!activity.isUsingLocationAllowed()) {
+            request()
         } else {
-            val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-            if (!shouldProvideRationale) {
-                val dialogBuilder: AlertDialog.Builder =
-                        AlertDialog.Builder(activity).apply {
-                            setTitle(null)
-                            setMessage(R.string.location_permission_msg)
-                            setPositiveButton(R.string.go_to_setting) { _, _ ->
-                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.parse("package:${activity.packageName}"))
-                                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                activity.startActivity(intent)
-                            }
-                        }
-                dialogBuilder.create().show()
-            }
-            LocationTracking.set(activity, false)
-            callback(false)
+            verifySettings()
         }
     }
 
-    fun check(requestIdentifier: Int, callback: (Boolean) -> Unit) {
+    private fun request() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSIONS_REQUEST_CODE)
+        } else {
+            throw Exception("Request permissions not required before API 23 (should never happen)")
+        }
+    }
+
+    fun handleRequestResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                if (!shouldProvideRationale) {
+                    val dialogBuilder: AlertDialog.Builder =
+                            AlertDialog.Builder(activity).apply {
+                                setTitle(null)
+                                setMessage(R.string.location_permission_msg)
+                                setPositiveButton(R.string.go_to_setting) { _, _ ->
+                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                            Uri.parse("package:${activity.packageName}"))
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    activity.startActivity(intent)
+                                }
+                            }
+                    dialogBuilder.create().show()
+                } else {
+                    onCompletionCallback?.invoke(false)
+                }
+            } else {
+                onCompletionCallback?.invoke(true)
+            }
+        }
+    }
+
+    private fun verifySettings() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(LocationTrackerService.locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(activity)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 
         task.addOnSuccessListener {
-            LocationTracking.set(activity, true)
-            callback(true)
+            onCompletionCallback?.invoke(true)
         }
 
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
-                // Location settings are not satisfied, but this can be fixed
-                // by showing the user a dialog.
-                LocationTracking.set(activity, false)
+                // Location settings are not satisfied, but this can be fixed by showing the user a dialog
                 try {
-                    // Show the dialog by calling startResolutionForResult(),
-                    // and check the result in onActivityResult().
-                    exception.startResolutionForResult(activity, requestIdentifier)
-                    callback(false)
+                    // Show the dialog and check the result in onActivityResult()
+                    exception.startResolutionForResult(activity, REQUEST_CHECK_LOCATION_SETTINGS)
                 } catch (sendEx: IntentSender.SendIntentException) {
                     // Ignore the error.
                     sendEx.printStackTrace()
-                    callback(true)
+                    onCompletionCallback?.invoke(false)
                 }
-            }
-            else {
-                callback(true)
+            } else {
+                onCompletionCallback?.invoke(false)
             }
         }
+    }
+
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
+            onCompletionCallback?.invoke(true) // TODO
+        }
+    }
+
+    companion object {
+        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+        private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
     }
 }

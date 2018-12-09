@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 
 		isTracking = LocationTracking.isOn(this)
 		if (isTracking) {
-			if (!this.isLocationAllow()) {
+			if (!this.isUsingLocationAllowed()) {
 				requestPermissions()
 			} else {
 				checkLocationIsAllow()
@@ -402,7 +402,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	override fun onLocationTrackingChange(on: Boolean) {
 		isTracking = on // update tracking
 		if (on) {
-			if (!isLocationAllow()) {
+			if (!isUsingLocationAllowed()) {
 				requestPermissions()
 			} else {
 				checkLocationIsAllow()
