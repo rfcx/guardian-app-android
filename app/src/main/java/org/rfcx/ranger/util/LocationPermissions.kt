@@ -25,7 +25,7 @@ import org.rfcx.ranger.service.LocationTrackerService
 
 class LocationPermissions(val activity: Activity) {
 
-    var onCompletionCallback: ((Boolean) -> Unit)? = null
+    private var onCompletionCallback: ((Boolean) -> Unit)? = null
 
     fun allowed(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
