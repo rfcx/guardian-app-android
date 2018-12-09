@@ -41,8 +41,8 @@ import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.isRecordAudioAllow
 import org.rfcx.ranger.util.isUsingLocationAllowed
+import org.rfcx.ranger.util.isRecordingAudioAllowed
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -373,7 +373,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun record() {
-		if (!isRecordAudioAllow()) {
+		if (!isRecordingAudioAllowed()) {
 			soundRecordProgressView.state = SoundRecordState.NONE
 			requestRecordAudioPermission()
 		} else {

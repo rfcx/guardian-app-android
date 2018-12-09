@@ -11,7 +11,7 @@ fun Context.isUsingLocationAllowed(): Boolean {
 	return permissionState == PackageManager.PERMISSION_GRANTED
 }
 
-fun Context.isRecordAudioAllow(): Boolean {
+fun Context.isRecordingAudioAllowed(): Boolean {
 	val permissionState = ActivityCompat.checkSelfPermission(this.applicationContext,
 			Manifest.permission.RECORD_AUDIO)
 	return permissionState == PackageManager.PERMISSION_GRANTED
