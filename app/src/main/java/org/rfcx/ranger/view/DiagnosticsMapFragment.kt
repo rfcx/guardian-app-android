@@ -17,7 +17,6 @@ import com.google.android.gms.maps.model.PolylineOptions
 import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.RealmHelper
 
 class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 	

@@ -3,7 +3,6 @@ package org.rfcx.ranger
 import android.app.Application
 import com.facebook.stetho.Stetho
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
 import org.rfcx.ranger.util.RealmHelper

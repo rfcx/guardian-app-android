@@ -61,8 +61,7 @@ class CredentialVerifier(val context: Context) {
                     return Err(getString(R.string.an_error_occurred))
                 }
                 else -> {
-                    // TODO: force casts (!!) will disappear in kotlin 1.4 because smart casts understand isNullOrEmpty()
-                    return Ok(UserAuthResponse(guid!!, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite))
+                    return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite))
                 }
             }
         } catch (e: Exception) {

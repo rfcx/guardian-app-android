@@ -44,7 +44,7 @@ class LocationTrackerService : Service() {
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
 		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
-		const val TAG = "LocationTrackerService"
+		private const val TAG = "LocationTrackerService"
 	}
 	
 	private val binder = LocationTrackerServiceBinder()

@@ -3,9 +3,6 @@ package org.rfcx.ranger.util
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
-/**
- * Created by Jingjoeh on 10/5/2017 AD.
- */
 class GsonProvider {
 
      var gson: Gson = GsonBuilder()

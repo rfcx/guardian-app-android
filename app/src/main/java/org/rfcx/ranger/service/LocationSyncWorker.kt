@@ -4,22 +4,17 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
-import com.google.common.util.concurrent.ListenableFuture
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.repo.api.SendReportApi
-import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.api.SendLocationApi
-import java.io.File
 
 
 /**
  * Background task for syncing the location tracking data to the server
  */
 
-class LocationSyncWorker(context: Context, params: WorkerParameters)
-    : Worker(context, params) {
+class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork(): Result {
         Log.d(TAG, "doWork")
@@ -51,8 +46,8 @@ class LocationSyncWorker(context: Context, params: WorkerParameters)
     }
 
     companion object {
-        private val TAG = "LocationSyncWorker"
-        private val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
+        private const val TAG = "LocationSyncWorker"
+        private const val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()

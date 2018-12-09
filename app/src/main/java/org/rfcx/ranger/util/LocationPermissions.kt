@@ -23,7 +23,7 @@ import org.rfcx.ranger.service.LocationTrackerService
  * Handle location permission requests and checks
  */
 
-class LocationPermissions(val activity: Activity) {
+class LocationPermissions(private val activity: Activity) {
 
     private var onCompletionCallback: ((Boolean) -> Unit)? = null
 

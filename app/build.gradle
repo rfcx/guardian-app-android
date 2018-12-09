@@ -63,8 +63,8 @@ dependencies {
 
     /* firebase */
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-core:16.0.5'
-    implementation 'com.google.firebase:firebase-config:16.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-config:16.1.2'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 

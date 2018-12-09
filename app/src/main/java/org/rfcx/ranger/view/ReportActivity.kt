@@ -18,7 +18,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -45,18 +47,18 @@ import java.io.File
 import java.io.IOException
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
-	private val tag = ReportActivity::class.java.simpleName
+
 	private var googleMap: GoogleMap? = null
-	private var fusedLocationClient: FusedLocationProviderClient? = null
 	private val reportAdapter = ReportTypeAdapter()
-	private var lastKnowLocation: Location? = null
-	
+
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
 	private var player: MediaPlayer? = null
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private var locationManager: LocationManager? = null
-	
+	private var lastLocation: Location? = null
+	private var fusedLocationClient: FusedLocationProviderClient? = null
+
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
 			super.onLocationResult(locationResult)
@@ -200,8 +202,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
-			lastKnowLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-			lastKnowLocation?.let { markRangerLocation(it) }
+			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+			lastLocation?.let { markRangerLocation(it) }
 		} catch (ex: java.lang.SecurityException) {
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
@@ -211,7 +213,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun markRangerLocation(location: Location) {
-		lastKnowLocation = location
+		lastLocation = location
 		googleMap?.clear()
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.addMarker(MarkerOptions()
@@ -247,7 +249,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun validateForm() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
-		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastKnowLocation != null
+		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastLocation != null
 	}
 	
 	private fun submitReport() {
@@ -258,7 +260,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			return
 		}
 		
-		if (lastKnowLocation == null) {
+		if (lastLocation == null) {
 			if (!locationPermissions.allowed()) {
 				locationPermissions.check { getLocation() }
 			} else {
@@ -269,8 +271,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
 		val time = DateHelper.getIsoTime()
-		val lat = lastKnowLocation?.latitude ?: 0.0
-		val lon = lastKnowLocation?.longitude ?: 0.0
+		val lat = lastLocation?.latitude ?: 0.0
+		val lon = lastLocation?.longitude ?: 0.0
 		
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
 		

@@ -4,11 +4,10 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
-import com.google.common.util.concurrent.ListenableFuture
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.repo.api.SendReportApi
 import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.repo.api.SendReportApi
 import java.io.File
 
 
@@ -66,8 +65,8 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
     }
 
     companion object {
-        private val TAG = "ReportSyncWorker"
-        private val UNIQUE_WORK_KEY = "ReportSyncWorkerUniqueKey"
+        private const val TAG = "ReportSyncWorker"
+        private const val UNIQUE_WORK_KEY = "ReportSyncWorkerUniqueKey"
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().build()

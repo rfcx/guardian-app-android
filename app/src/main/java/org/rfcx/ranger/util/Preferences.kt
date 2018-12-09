@@ -6,7 +6,6 @@ import java.util.*
 
 class Preferences(context: Context) {
 	
-	private val PREFS_NAME = "Rfcx.Ranger"
 	private var sharedPreferences: SharedPreferences
 	
 	companion object {
@@ -18,6 +17,7 @@ class Preferences(context: Context) {
 					INSTANCE ?: Preferences(context).also { INSTANCE = it }
 				}
 
+		private const val PREFERENCES_NAME = "Rfcx.Ranger"
 		private const val PREFIX = "org.rfcx.ranger:"
 
 		const val ID_TOKEN = "${PREFIX}ID_TOKEN"
@@ -37,7 +37,7 @@ class Preferences(context: Context) {
 	}
 	
 	init {
-		sharedPreferences = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+		sharedPreferences = context.applicationContext.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 	}
 
 	fun getBoolean(key: String): Boolean {

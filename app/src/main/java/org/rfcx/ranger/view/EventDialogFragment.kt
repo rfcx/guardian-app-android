@@ -2,7 +2,6 @@ package org.rfcx.ranger.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.getIconRes
-
 
 class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 	private var event: Event? = null

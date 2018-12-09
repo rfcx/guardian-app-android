@@ -1,38 +1,21 @@
 package org.rfcx.ranger.view
 
-import android.Manifest
 import android.content.Intent
-import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.location.Location
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.SettingsClient
-import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.guardian.GuardianGroupsAdapter
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.repo.api.GuardianGroupsApi
-import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.*
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class SettingsActivity : AppCompatActivity() {
 	
@@ -116,7 +99,7 @@ class SettingsActivity : AppCompatActivity() {
 	}
 
 	private fun enableLocationTracking() {
-		locationPermissions.check() { hasPermission: Boolean ->
+		locationPermissions.check { hasPermission: Boolean ->
 			LocationTracking.set(this, hasPermission)
 			updateLocationSwitch()
 		}
@@ -147,7 +130,7 @@ class SettingsActivity : AppCompatActivity() {
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
-				Log.d("SettingsActivity", "failed: ${message}")
+				Log.d("SettingsActivity", "failed: $message")
 				if (lastUpdated != null) {
 					populateGuardianGroups(database.guardianGroups())
 				} else {

@@ -11,7 +11,7 @@ import org.rfcx.ranger.util.GsonProvider
 import retrofit2.Response
 
 class ResponseParserException(message: String) : Exception(message)
-class ResponseUnauthenticatedException() : Exception()
+class ResponseUnauthenticatedException : Exception()
 
 fun <T> responseParser(response: Response<T>?): Result<T, Exception> {
 

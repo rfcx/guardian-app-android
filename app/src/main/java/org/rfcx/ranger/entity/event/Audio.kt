@@ -4,10 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import io.realm.RealmObject
 
-/**
- * Created by Jingjoeh on 11/4/2017 AD.
- */
- open class Audio() : RealmObject(), Parcelable{
+open class Audio() : RealmObject(), Parcelable{
     var mp3 :String = ""
     var opus : String = ""
     var png : String =""

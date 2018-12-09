@@ -4,17 +4,13 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.localdb.ReportDb
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 
 /**
  * Background task for tidying up the database after location syncing
  */
-
-class LocationCleanupWorker(context: Context, params: WorkerParameters)
-    : Worker(context, params) {
+class LocationCleanupWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork(): Result {
         // Delete locations older than 72 hours
