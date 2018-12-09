@@ -27,9 +27,14 @@ class LocationPermissions(val activity: Activity) {
 
     var onCompletionCallback: ((Boolean) -> Unit)? = null
 
+    fun allowed(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+
     fun check(onCompletionCallback: (Boolean) -> Unit) {
         this.onCompletionCallback = onCompletionCallback
-        if (!activity.isUsingLocationAllowed()) {
+        if (!allowed()) {
             request()
         } else {
             verifySettings()
@@ -44,7 +49,7 @@ class LocationPermissions(val activity: Activity) {
         }
     }
 
-    fun handleRequestResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun handleRequestResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(activity,
@@ -98,9 +103,9 @@ class LocationPermissions(val activity: Activity) {
         }
     }
 
-    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    fun handleActivityResult(requestCode: Int, resultCode: Int) {
         if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
-            onCompletionCallback?.invoke(true) // TODO
+            onCompletionCallback?.invoke(resultCode == Activity.RESULT_OK)
         }
     }
 

@@ -152,7 +152,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		
 		val mp3Source = event?.audio?.mp3
 		if (!mp3Source.isNullOrEmpty()) {
-			val insecureMp3Source = mp3Source!!.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+			val insecureMp3Source = mp3Source.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
 			context?.let {
 				mediaPlayer?.setDataSource(it, Uri.parse(insecureMp3Source))
 				mediaPlayer?.prepareAsync()

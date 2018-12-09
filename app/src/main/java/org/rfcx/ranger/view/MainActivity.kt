@@ -60,12 +60,12 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 
 	lateinit var messageAdapter: MessageAdapter
 	private lateinit var rangerRemote: FirebaseRemoteConfig
-	private var isTracking :Boolean = false
 	private var networkState :NetworkState = NetworkState.ONLINE
 	private var syncInfo :SyncInfo? = null
 
-	// broadcast receiver
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
+
+	private val locationPermissions by lazy { LocationPermissions(this) }
 	
 	companion object {
 		fun startActivity(context: Context) {
@@ -75,8 +75,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		
 		private const val REQUEST_CODE_REPORT = 201
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
-		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
 		const val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 	}
@@ -119,33 +117,26 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 			}
 		})
 
-		isTracking = LocationTracking.isOn(this)
-		if (isTracking) {
-			if (!this.isUsingLocationAllowed()) {
-				requestPermissions()
-			} else {
-				checkLocationIsAllow()
-			}
-		}
+		onLocationTrackingChange(LocationTracking.isOn(this))
 
 		observeWork()
 	}
-	
+
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
+
 		if (requestCode == REQUEST_CODE_REPORT && resultCode == Activity.RESULT_OK) {
 			ReportSuccessDIalogFragment().show(supportFragmentManager, null)
 
 			// TODO: update sync information after save report
 			updateSyncInfo()
-
-		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
-			if (resultCode == Activity.RESULT_OK) {
-				LocationTracking.set(this@MainActivity, true)
-			} else {
-				LocationTracking.set(this@MainActivity, false)
-			}
 		}
+
+		locationPermissions.handleActivityResult(requestCode, resultCode)
+	}
+
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		locationPermissions.handleRequestResult(requestCode, grantResults)
 	}
 
 	private fun updateSyncInfo(status: SyncInfo.Status? = null) {
@@ -359,8 +350,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		val preferences = Preferences.getInstance(this)
 		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
 		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		isTracking = LocationTracking.isOn(this)
-		messageAdapter.updateHeader(nickname, site, isTracking)
+		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
@@ -390,8 +380,8 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 
 	//region {@link OnLocationTrackingChangeListener }
-	override fun isEnableTracking(): Boolean = this.isTracking
-	override fun getNetworkState(): NetworkState = this.networkState
+	override fun isEnableTracking(): Boolean = LocationTracking.isOn(this)
+	override fun getNetworkState(): NetworkState = networkState
 	override fun getSyncInfo(): SyncInfo? = syncInfo
 
 	override fun onPressCancelSync() {
@@ -400,12 +390,9 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	//endregion
 
 	override fun onLocationTrackingChange(on: Boolean) {
-		isTracking = on // update tracking
 		if (on) {
-			if (!isUsingLocationAllowed()) {
-				requestPermissions()
-			} else {
-				checkLocationIsAllow()
+			locationPermissions.check { isAllowed: Boolean ->
+				LocationTracking.set(this, isAllowed)
 			}
 		} else {
 			LocationTracking.set(this, false)
@@ -433,13 +420,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		}
 	}
 	
-	private fun requestPermissions() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-					REQUEST_PERMISSIONS_REQUEST_CODE)
-		}
-	}
-	
 	private fun showAlertPopup(event: Event) {
 		RealmHelper.getInstance().updateOpenedEvent(event)
 		EventDialogFragment.newInstance(event).show(supportFragmentManager, null)
@@ -460,66 +440,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 			}
 			
 		})
-	}
-	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-	                                        grantResults: IntArray) {
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				checkLocationIsAllow()
-			} else {
-				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
-						Manifest.permission.ACCESS_FINE_LOCATION)
-				if (!shouldProvideRationale) {
-					val dialogBuilder: AlertDialog.Builder =
-							AlertDialog.Builder(this@MainActivity).apply {
-								setTitle(null)
-								setMessage(R.string.location_permission_msg)
-								setPositiveButton(R.string.go_to_setting) { _, _ ->
-									val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-											Uri.parse("package:$packageName"))
-									intent.addCategory(Intent.CATEGORY_DEFAULT)
-									intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-									startActivity(intent)
-								}
-							}
-					dialogBuilder.create().show()
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Checking phone is turn on location on setting
-	 */
-	private fun checkLocationIsAllow() {
-		val builder = LocationSettingsRequest.Builder()
-				.addLocationRequest(locationRequest)
-		val client: SettingsClient = LocationServices.getSettingsClient(this)
-		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-		task.addOnSuccessListener {
-			LocationTracking.set(this@MainActivity, true)
-			refreshHeader()
-		}
-		
-		task.addOnFailureListener { exception ->
-			if (exception is ResolvableApiException) {
-				// Location settings are not satisfied, but this can be fixed
-				// by showing the user a dialog.
-				LocationTracking.set(this@MainActivity, false)
-				try {
-					// Show the dialog by calling startResolutionForResult(),
-					// and check the result in onActivityResult().
-					exception.startResolutionForResult(this@MainActivity,
-							REQUEST_CHECK_LOCATION_SETTINGS)
-				} catch (sendEx: IntentSender.SendIntentException) {
-					// Ignore the error.
-					sendEx.printStackTrace()
-				}
-				
-				refreshHeader()
-			}
-		}
 	}
 	
 	

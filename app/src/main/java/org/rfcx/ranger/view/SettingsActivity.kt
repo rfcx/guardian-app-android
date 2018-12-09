@@ -36,9 +36,9 @@ import kotlin.collections.ArrayList
 
 class SettingsActivity : AppCompatActivity() {
 	
-	val guardianGroupsAdapter by lazy { GuardianGroupsAdapter(this) }
+	private val guardianGroupsAdapter by lazy { GuardianGroupsAdapter(this) }
 
-	val locationPermissions by lazy { LocationPermissions(this) }
+	private val locationPermissions by lazy { LocationPermissions(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -68,13 +68,11 @@ class SettingsActivity : AppCompatActivity() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 
-		locationPermissions.handleActivityResult(requestCode, resultCode, data)
+		locationPermissions.handleActivityResult(requestCode, resultCode)
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-		Log.d("onRequestPermission", "onRequestPermissionsResult: " + requestCode + permissions.toString())
-
-		locationPermissions.handleRequestResult(requestCode, permissions, grantResults)
+		locationPermissions.handleRequestResult(requestCode, grantResults)
 	}
 	
 	private fun bindActionbar() {
@@ -123,7 +121,6 @@ class SettingsActivity : AppCompatActivity() {
 			updateLocationSwitch()
 		}
 	}
-
 
 	private fun reloadGuardianGroups() {
 		val database = RealmHelper.getInstance()
@@ -187,8 +184,4 @@ class SettingsActivity : AppCompatActivity() {
 		
 		CloudMessaging.subscribeIfRequired(this)
 	}
-
-	
-
-	
 }

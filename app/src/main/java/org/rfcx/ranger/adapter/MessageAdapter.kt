@@ -78,7 +78,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 		if (position == 0) {
 			val info = headerInformation
 			if (info != null) {
-				(holder as ProfileViewHolder).bind(context, info.nickname, info.location, info.isLocationTracking)
+				(holder as ProfileViewHolder).bind(context, info.nickname, info.location)
 			}
 			return
 		}

@@ -20,7 +20,7 @@ import org.rfcx.ranger.service.NetworkState
 class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtocol) :
         RecyclerView.ViewHolder(itemView) {
 
-    fun bind(context: Context, nickname: String, location: String, isLocationTracking: Boolean) {
+    fun bind(context: Context, nickname: String, location: String) {
 
         // setup data
         val enableTracking = headerProtocol.isEnableTracking()
