@@ -14,18 +14,15 @@
     <!-- common error -->
     <string name="error_common">An error occurred. Please try again.</string>
     <string name="re_login">Please re-login.</string>
-
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
-
     <string name="location_permission_msg">Ranger App would like to use your location</string>
     <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
     <string name="go_to_setting">Settings</string>
     <string name="user_location">Ranger App is getting your location</string>
-
     <string name="menu_logout">Logout</string>
     <string name="menu_ranger_group">My site</string>
-	<string name="menu_check_in_history">Check in history</string>
+	<string name="menu_check_in_history">Check-in history</string>
 
     <!-- message list -->
     <string name="profile_welcome">Hi, %s!</string>
@@ -98,7 +95,7 @@
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
-    <string name="empty_list_description">No incidents occurred recently\nEnjoy your day :)</string>
+    <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
 
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
