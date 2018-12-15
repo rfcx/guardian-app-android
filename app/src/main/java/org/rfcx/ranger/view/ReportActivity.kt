@@ -1,24 +1,16 @@
 package org.rfcx.ranger.view
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -39,7 +31,7 @@ import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.LocationPermissions
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.isRecordingAudioAllowed
+import org.rfcx.ranger.util.RecordingPermissions
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -47,18 +39,18 @@ import java.io.File
 import java.io.IOException
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
-
+	
 	private var googleMap: GoogleMap? = null
 	private val reportAdapter = ReportTypeAdapter()
-
+	
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
 	private var player: MediaPlayer? = null
 	private val locationPermissions by lazy { LocationPermissions(this) }
+	private val recordPermissions by lazy { RecordingPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	private var fusedLocationClient: FusedLocationProviderClient? = null
-
+	
 	private var locationCallback: LocationCallback = object : LocationCallback() {
 		override fun onLocationResult(locationResult: LocationResult?) {
 			super.onLocationResult(locationResult)
@@ -74,6 +66,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				markRangerLocation(it)
 			}
 		}
+		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
 		override fun onProviderEnabled(p0: String?) {}
 		override fun onProviderDisabled(p0: String?) {}
@@ -117,50 +110,24 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		}
 	}
 	
-	override fun onPause() {
-		super.onPause()
-		fusedLocationClient?.removeLocationUpdates(locationCallback)
-	}
-	
 	override fun onDestroy() {
 		super.onDestroy()
+		locationManager?.removeUpdates(locationListener)
 		val map = supportFragmentManager?.findFragmentById(R.id.mapView) as SupportMapFragment?
 		map?.let {
 			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
 		}
 	}
-
+	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-
+		
 		locationPermissions.handleActivityResult(requestCode, resultCode)
 	}
-
+	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		locationPermissions.handleRequestResult(requestCode, grantResults)
-
-		if (requestCode == REQUEST_PERMISSIONS_RECORD_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@ReportActivity,
-						Manifest.permission.RECORD_AUDIO)
-
-				if (!shouldProvideRationale) {
-					val dialogBuilder: AlertDialog.Builder =
-							AlertDialog.Builder(this@ReportActivity).apply {
-								setTitle(null)
-								setMessage(R.string.record_audio_permission_msg)
-								setPositiveButton(R.string.go_to_setting) { _, _ ->
-									val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-											Uri.parse("package:$packageName"))
-									intent.addCategory(Intent.CATEGORY_DEFAULT)
-									intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-									startActivity(intent)
-								}
-							}
-					dialogBuilder.create().show()
-				}
-			}
-		}
+		recordPermissions.handleRequestResult(requestCode, grantResults)
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -179,7 +146,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 		}
 	}
-
+	
 	private fun bindActionbar() {
 		setSupportActionBar(toolbar)
 		supportActionBar?.apply {
@@ -283,9 +250,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun record() {
-		if (!isRecordingAudioAllowed()) {
+		if (!recordPermissions.allowed()) {
 			soundRecordProgressView.state = SoundRecordState.NONE
-			requestRecordAudioPermission()
+			recordPermissions.check { }
 		} else {
 			startRecord()
 		}
@@ -349,16 +316,5 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun stopPlaying() {
 		player?.release()
 		player = null
-	}
-	
-	private fun requestRecordAudioPermission() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO),
-					REQUEST_PERMISSIONS_RECORD_REQUEST_CODE)
-		}
-	}
-	
-	companion object {
-		private const val REQUEST_PERMISSIONS_RECORD_REQUEST_CODE = 36
 	}
 }
