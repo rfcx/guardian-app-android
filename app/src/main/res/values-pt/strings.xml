@@ -23,13 +23,17 @@
     <string name="user_location">O aplicativo Ranger está procurando sua localização</string>
     <string name="menu_logout">Sair</string>
     <string name="menu_ranger_group">Minha localização</string>
-    
+    <string name="menu_check_in_history">Histórico de check-in</string>
+
     <!-- message list -->
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
+    <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+
+    <!-- report -->
     <string name="report_chainsaw_button">Motoserras</string>
     <string name="report_gunshot_button">Tiros</string>
     <string name="report_trespasser_button">Invasores</string>
@@ -84,11 +88,13 @@
     <string name="hint_code">Código</string>
 
     <!-- Report -->
-    <string name="sync_reports_label">%d relatórios</string>
+    <string name="sync_reports_label">%d relatórios e lista</string>
     <string name="sync_report_label">%d relatório</string>
-    <string name="sync_checkins_label">%d checkins</string>
-    <string name="sync_waiting_network">Waiting for network…</string>
-    <string name="sync_starting">Starting upload…</string>
-    <string name="sync_uploading">Uploading…</string>
-    <string name="sync_complete">Upload complete!</string>
+    <string name="sync_checkins_label">%d localizações mais acessadas</string>
+    <string name="sync_waiting_network">esperando pela rede…</string>
+    <string name="sync_starting">Começando o upload…</string>
+    <string name="sync_uploading">Fazendo upload…</string>
+    <string name="sync_complete">Upload completo!</string>
+    <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
+
 </resources>
