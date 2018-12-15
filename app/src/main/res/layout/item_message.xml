@@ -16,7 +16,7 @@
 		android:layout_marginEnd="@dimen/margin_padding_normal"
 		android:contentDescription="@string/app_name"
 		android:tint="@color/grey_active"
-		app:srcCompat="@drawable/ic_message" />
+		android:src="@drawable/ic_message" />
 
 	<RelativeLayout
 		android:id="@+id/itemMessageContentLayout"

@@ -23,7 +23,7 @@
         android:layout_width="@dimen/invitation_icon_size"
         android:layout_height="@dimen/invitation_icon_size"
         app:layout_constraintTop_toTopOf="@+id/guideline15"
-        app:srcCompat="@drawable/ic_invitation" />
+        android:src="@drawable/ic_invitation" />
 
     <TextView
         android:id="@+id/tv_invitation_title"
@@ -70,7 +70,7 @@
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_arrow_forward" />
+        android:src="@drawable/ic_arrow_forward" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

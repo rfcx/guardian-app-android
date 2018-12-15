@@ -9,5 +9,5 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:adjustViewBounds="true"
-		app:srcCompat="@drawable/ic_sound_wave" />
+		android:src="@drawable/ic_sound_wave" />
 </LinearLayout>

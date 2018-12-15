@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/ic_mountains" />
+        android:src="@drawable/ic_mountains" />
 
     <TextView
         android:id="@+id/tv_empty_list"
