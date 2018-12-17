@@ -41,25 +41,26 @@
 		app:layout_constraintGuide_percent="0.5" />
 	
 	
-	<com.airbnb.lottie.LottieAnimationView
-		android:id="@+id/soundAnimationView"
-		android:layout_width="wrap_content"
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/spectrogramImageView"
+		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:adjustViewBounds="true"
-		android:visibility="invisible"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:scaleType="fitXY"
 		app:layout_constraintBottom_toTopOf="@+id/soundWaveGuideline"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:lottie_loop="true"
-		app:lottie_rawRes="@raw/sound_visualizer" />
+		app:layout_constraintTop_toTopOf="parent" />
 	
 	<ProgressBar
 		android:id="@+id/loadingSoundProgressBar"
 		android:layout_width="60dp"
 		android:layout_height="60dp"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		android:layout_margin="@dimen/margin_padding_small"
-		app:layout_constraintBottom_toBottomOf="@+id/soundAnimationView"
+		app:layout_constraintBottom_toBottomOf="@+id/spectrogramImageView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
@@ -68,6 +69,7 @@
 		android:id="@+id/replayButton"
 		android:layout_width="60dp"
 		android:layout_height="60dp"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		android:layout_margin="@dimen/margin_padding_small"
 		android:adjustViewBounds="true"
 		android:background="@color/transparent"
@@ -76,7 +78,7 @@
 		android:src="@drawable/ic_replay_black_40dp"
 		android:tint="@color/grey_default"
 		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="@+id/soundAnimationView"
+		app:layout_constraintBottom_toBottomOf="@+id/spectrogramImageView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />

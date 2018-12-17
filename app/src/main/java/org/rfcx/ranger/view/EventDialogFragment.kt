@@ -2,7 +2,6 @@ package org.rfcx.ranger.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -12,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 
 class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
@@ -71,11 +70,12 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	override fun onDestroyView() {
-		super.onDestroyView()
 		val mapFragment = fragmentManager
 				?.findFragmentById(R.id.mapView) as SupportMapFragment
 		fragmentManager?.beginTransaction()?.remove(mapFragment)?.commitAllowingStateLoss()
+		super.onDestroyView()
 	}
+	
 	override fun onDestroy() {
 		super.onDestroy()
 		try {
@@ -104,16 +104,19 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	@SuppressLint("SetTextI18n")
 	private fun initView() {
-		context?.let {
-			loadingSoundProgressBar.indeterminateDrawable
-					.setColorFilter(ContextCompat.getColor(it, R.color.grey_default), PorterDuff.Mode.SRC_IN)
-		}
 		
 		event?.let {
 			eventTypeImageView.setImageResource(it.getIconRes())
 			it.value?.let { value ->
-				if(value.isEmpty()) return
+				if (value.isEmpty()) return
 				eventNameTextView.text = "${value.substring(0, 1).toUpperCase() + value.substring(1)}?"
+			}
+			
+			// TODO FIX val of offset and duration
+			it.audioGUID?.let { audioGuID ->
+				GlideApp.with(spectrogramImageView)
+						.load(getSpectrogramImageUrl(audioGuID, 0, 30000))
+						.into(spectrogramImageView)
 			}
 			
 		}
@@ -123,8 +126,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		try {
 			mediaPlayer?.start()
 			replayButton.visibility = View.INVISIBLE
-			soundAnimationView.playAnimation()
-			soundAnimationView.visibility = View.VISIBLE
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
@@ -163,32 +164,29 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	override fun onError(player: MediaPlayer?, p1: Int, p2: Int): Boolean {
 		// TODO report to error
 		loadingSoundProgressBar.visibility = View.INVISIBLE
-		soundAnimationView.pauseAnimation()
-		soundAnimationView.visibility = View.INVISIBLE
+		spectrogramImageView.visibility = View.INVISIBLE
 		return false
 	}
 	
 	override fun onCompletion(player: MediaPlayer?) {
 		replayButton.visibility = View.VISIBLE
-		soundAnimationView.pauseAnimation()
-		soundAnimationView.visibility = View.INVISIBLE
+		
 	}
 	
 	override fun onPrepared(player: MediaPlayer?) {
 		loadingSoundProgressBar.visibility = View.INVISIBLE
 		mediaPlayer?.start()
-		mediaPlayer?.let {
-			if (it.isPlaying) {
-				soundAnimationView.visibility = View.VISIBLE
-				soundAnimationView.playAnimation()
-			}
-		}
 	}
 	
 	private fun setupMap() {
 		val mapFragment = fragmentManager
 				?.findFragmentById(R.id.mapView) as SupportMapFragment
 		mapFragment.getMapAsync(this)
+	}
+	
+	private fun getSpectrogramImageUrl(audioGuId: String, offset: Long, duration: Long): String {
+		return "https://assets.rfcx.org/audio/$audioGuId.png?width=512&height=256&offset=$offset&duration=$duration"
+		
 	}
 	
 	override fun onMapReady(googleMap: GoogleMap?) {
