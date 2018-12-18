@@ -5,7 +5,9 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
@@ -30,11 +32,22 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	private var mediaPlayer: MediaPlayer? = null
 	private var onAlertConfirmCallback: OnAlertConfirmCallback? = null
 	
+	private val playerTimeHandler: Handler = Handler()
+	private val delayTime = 100L
 	override fun onAttach(context: Context?) {
 		super.onAttach(context)
 		if (context is OnAlertConfirmCallback) {
 			onAlertConfirmCallback = context
 		}
+	}
+	
+	private val playerTimeRunnable = object : Runnable {
+		override fun run() {
+			// TODO update Progress
+			updateSoundProgress()
+			playerTimeHandler.postDelayed(this, delayTime)
+		}
+		
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,14 +83,17 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	override fun onDestroyView() {
-		val mapFragment = fragmentManager
-				?.findFragmentById(R.id.mapView) as SupportMapFragment
-		fragmentManager?.beginTransaction()?.remove(mapFragment)?.commitAllowingStateLoss()
+		val mapFragment = childFragmentManager
+				.findFragmentByTag(MAP_TAG)
+		mapFragment?.let {
+			childFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+		}
 		super.onDestroyView()
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
+		playerTimeHandler.removeCallbacks(playerTimeRunnable)
 		try {
 			if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
 				mediaPlayer?.stop()
@@ -104,7 +120,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	@SuppressLint("SetTextI18n")
 	private fun initView() {
-		
+		soundProgressSeekBar.isEnabled = false
 		event?.let {
 			eventTypeImageView.setImageResource(it.getIconRes())
 			it.value?.let { value ->
@@ -124,7 +140,9 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	private fun rePlay() {
 		try {
-			mediaPlayer?.start()
+			mediaPlayer?.start().also {
+				playerTimeHandler.postDelayed(playerTimeRunnable, delayTime)
+			}
 			replayButton.visibility = View.INVISIBLE
 		} catch (e: Exception) {
 			e.printStackTrace()
@@ -170,18 +188,27 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	override fun onCompletion(player: MediaPlayer?) {
 		replayButton.visibility = View.VISIBLE
-		
+		playerTimeHandler.removeCallbacks(playerTimeRunnable)
 	}
 	
 	override fun onPrepared(player: MediaPlayer?) {
 		loadingSoundProgressBar.visibility = View.INVISIBLE
-		mediaPlayer?.start()
+		mediaPlayer?.start().also {
+			playerTimeHandler.postDelayed(playerTimeRunnable, delayTime)
+		}
+		
 	}
 	
 	private fun setupMap() {
-		val mapFragment = fragmentManager
-				?.findFragmentById(R.id.mapView) as SupportMapFragment
-		mapFragment.getMapAsync(this)
+		var mapFragment: SupportMapFragment? = childFragmentManager.findFragmentByTag(MAP_TAG) as SupportMapFragment?
+		if (mapFragment == null) {
+			mapFragment = SupportMapFragment.newInstance()
+			childFragmentManager.beginTransaction()
+					.add(R.id.mapContainer, mapFragment, MAP_TAG)
+					.commitNow()
+			childFragmentManager.executePendingTransactions()
+		}
+		mapFragment?.getMapAsync(this)
 	}
 	
 	private fun getSpectrogramImageUrl(audioGuId: String, offset: Long, duration: Long): String {
@@ -203,6 +230,19 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		}
 	}
 	
+	private fun updateSoundProgress() {
+		mediaPlayer?.let {
+			val duration = it.duration
+			val currentDuration = it.currentPosition
+			soundProgressSeekBar.max = duration
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				soundProgressSeekBar.setProgress(currentDuration, true)
+			} else {
+				soundProgressSeekBar.progress = currentDuration
+			}
+		}
+	}
+	
 	companion object {
 		private const val keyEventArgs = "AlertDialogFragment.Event"
 		fun newInstance(event: Event): EventDialogFragment {
@@ -212,6 +252,8 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 			fragment.arguments = args
 			return fragment
 		}
+		
+		private const val MAP_TAG = "MAP_FRAGMENT"
 	}
 	
 	interface OnAlertConfirmCallback {

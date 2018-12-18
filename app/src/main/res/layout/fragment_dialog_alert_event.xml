@@ -54,12 +54,30 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 	
+	<androidx.appcompat.widget.AppCompatSeekBar
+		android:id="@+id/soundProgressSeekBar"
+		style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:paddingStart="0dp"
+		android:paddingEnd="0dp"
+		android:progress="0"
+		android:progressDrawable="@null"
+		android:thumb="@drawable/seek_bar_thumb"
+		app:layout_constraintBottom_toTopOf="@+id/soundWaveGuideline"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+	
 	<ProgressBar
 		android:id="@+id/loadingSoundProgressBar"
 		android:layout_width="60dp"
 		android:layout_height="60dp"
-		android:layout_marginTop="@dimen/margin_padding_small"
 		android:layout_margin="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		app:layout_constraintBottom_toBottomOf="@+id/spectrogramImageView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +87,8 @@
 		android:id="@+id/replayButton"
 		android:layout_width="60dp"
 		android:layout_height="60dp"
-		android:layout_marginTop="@dimen/margin_padding_small"
 		android:layout_margin="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		android:adjustViewBounds="true"
 		android:background="@color/transparent"
 		android:contentDescription="@string/app_name"
@@ -150,9 +168,8 @@
 		app:layout_constraintStart_toStartOf="@+id/centerVerticalGuideline"
 		app:layout_constraintTop_toBottomOf="@+id/eventNameGuideline" />
 	
-	<fragment
-		android:id="@+id/mapView"
-		android:name="com.google.android.gms.maps.SupportMapFragment"
+	<FrameLayout
+		android:id="@+id/mapContainer"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:layout_marginTop="@dimen/margin_padding_normal"
