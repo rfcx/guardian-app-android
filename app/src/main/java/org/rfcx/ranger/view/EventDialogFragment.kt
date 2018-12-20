@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -142,8 +144,13 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	}
 	
 	private fun rePlay() {
-		exoPlayer.seekTo(0)
-		exoPlayer.playWhenReady = true
+		Log.d("rePlay", "${exoPlayer.playbackState}")
+		if (exoPlayer.playbackState == Player.STATE_ENDED) {
+			exoPlayer.seekTo(0)
+			exoPlayer.playWhenReady = true
+		} else {
+			initPlayer()
+		}
 	}
 	
 	private fun report(isCurrentAlert: Boolean) {
@@ -157,11 +164,11 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	
 	private fun initPlayer() {
 		
-		val mp3Source = event?.audio?.opus
-		if (!mp3Source.isNullOrEmpty()) {
+		val opusSource = event?.audio?.opus
+		if (!opusSource.isNullOrEmpty()) {
 			val descriptorFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
 			
-			val insecureMp3Source = mp3Source.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+			val insecureMp3Source = opusSource.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
 			val mediaSource = ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(insecureMp3Source))
 			context?.let {
 				exoPlayer.playWhenReady = true
@@ -244,7 +251,10 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 		}
 		
 		override fun onPlayerError(error: ExoPlaybackException?) {
+			Toast.makeText(context, R.string.can_not_play_audio, Toast.LENGTH_SHORT).show()
 			loadingSoundProgressBar.visibility = View.INVISIBLE
+			replayButton.visibility = View.VISIBLE
+			Crashlytics.logException(error)
 		}
 	}
 	
