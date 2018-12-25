@@ -112,7 +112,7 @@ class LocationTrackerService : Service() {
 		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
-			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+//			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
 		} catch (ex: java.lang.SecurityException) {
 			ex.printStackTrace()

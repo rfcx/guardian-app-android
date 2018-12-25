@@ -168,7 +168,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
-			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
+//			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			lastLocation?.let { markRangerLocation(it) }
 		} catch (ex: java.lang.SecurityException) {
