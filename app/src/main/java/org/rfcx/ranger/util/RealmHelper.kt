@@ -21,10 +21,10 @@ class RealmHelper {
 				INSTANCE ?: synchronized(this) {
 					INSTANCE ?: RealmHelper().also { INSTANCE = it }
 				}
-
+		
 		fun defaultConfig(): RealmConfiguration {
 			return RealmConfiguration.Builder()
-					.schemaVersion(1)
+					.schemaVersion(2)
 					.deleteRealmIfMigrationNeeded()
 					.build()
 		}
@@ -41,15 +41,6 @@ class RealmHelper {
 	
 	fun updateOpenedEvent(event: Event) {
 		event.isOpened = true
-		val realm = Realm.getDefaultInstance()
-		realm.beginTransaction()
-		realm.insertOrUpdate(event)
-		realm.commitTransaction()
-		realm.close()
-	}
-	
-	fun updateConfirmedEvent(event: Event) {
-		event.isConfirmed = true
 		val realm = Realm.getDefaultInstance()
 		realm.beginTransaction()
 		realm.insertOrUpdate(event)
@@ -87,5 +78,5 @@ class RealmHelper {
 		realm.commitTransaction()
 		realm.close()
 	}
-
+	
 }

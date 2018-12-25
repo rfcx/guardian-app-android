@@ -36,8 +36,9 @@ open class Event() : RealmObject(), Parcelable {
 	var timezone: String? = ""
 	
 	var isOpened: Boolean = false
-	var isConfirmed: Boolean = false
 	var audio: Audio? = null
+	@SerializedName("reviewer_confirmed")
+	var reviewerConfirmed: Boolean? = null
 	
 	constructor(parcel: Parcel) : this() {
 		event_guid = parcel.readString()
@@ -54,8 +55,8 @@ open class Event() : RealmObject(), Parcelable {
 		site = parcel.readString()
 		timezone = parcel.readString()
 		isOpened = parcel.readByte() != 0.toByte()
-		isConfirmed = parcel.readByte() != 0.toByte()
 		audio = parcel.readParcelable(Audio::class.java.classLoader)
+		reviewerConfirmed = parcel.readValue(Boolean::class.java.classLoader) as Boolean
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -73,8 +74,8 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeString(site)
 		parcel.writeString(timezone)
 		parcel.writeByte(if (isOpened) 1 else 0)
-		parcel.writeByte(if (isConfirmed) 1 else 0)
 		parcel.writeParcelable(audio, flags)
+		parcel.writeValue(reviewerConfirmed)
 	}
 	
 	override fun describeContents(): Int {
