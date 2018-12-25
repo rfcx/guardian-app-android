@@ -89,14 +89,15 @@
 
     <!-- Report -->
     <string name="sync_reports_label">%d reports</string>
-    <string name="sync_report_label">%d report</string>
+    <string name="sync_report_label">%d report</string>d
     <string name="sync_checkins_label">%d location check-ins</string>
     <string name="sync_waiting_network">Waiting for network…</string>
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
     <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
-
+	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+	
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
 </resources>
