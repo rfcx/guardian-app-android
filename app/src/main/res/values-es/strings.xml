@@ -8,21 +8,15 @@
     <string name="pls_fill_email">Escriba su correo electrónico</string>
     <string name="pls_fill_password">Escriba su clave</string>
     <string name="incorrect_username_password">Usuario o clave incorrecta</string>
-    <string name="user_are_not_ranger">Esto no es una cuenta de RFCx Ranger</string>
     <string name="an_error_occurred">Servicio no disponible</string>
     <string name="or">O</string>
 
     <!-- common error -->
     <string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
-    <string name="re_login">Ingrese de nuevo.</string>
-    <string name="cancel">Cancelar</string>
-    <string name="back">Atrás</string>
     <string name="location_permission_msg">A Ranger App le gustaría usar tu ubicación</string>
     <string name="record_audio_permission_msg">A Ranger App le gustaria grabar un audio</string>
     <string name="go_to_setting">Configuración</string>
-    <string name="user_location">Rager App esta obteniendo tu ubicación</string>
     <string name="menu_logout">Salir</string>
-    <string name="menu_ranger_group">Mi sitio</string>
     <string name="menu_check_in_history">Ver el historial</string>
 
     <!-- message list -->
@@ -34,29 +28,13 @@
     <string name="error_no_guardian_group_set">Seleccionar grupo guardián en configuraciones</string>
 
     <!-- report -->
-    <string name="report_chainsaw_button">Motosierras</string>
-    <string name="report_gunshot_button">Disparos</string>
-    <string name="report_trespasser_button">Intrusos</string>
-    <string name="report_vehicle_button">Vehiculos</string>
     <string name="report_title">Reportar</string>
-    <string name="report_no_have_select_type">Por favor seleccione el tipo que desea reportar.</string>
-    <string name="report_no_have_select_sight">Por favor seleccione su observación.</string>
     <string name="report_send_success">¡Reporte exitoso!</string>
-    <string name="report_select_sighting">Seleccione observacion</string>
-    <string name="report_immediate_button">Zona inmediata (cerca)</string>
-    <string name="report_not_far_away_button">No muy lejos (pero no visible)</string>
-    <string name="report_very_far_button">Muy lejos (poco escuchable)</string>
     <string name="report_what_label">¿QUÉ?</string>
     <string name="report_when_label">¿CUÁNDO?</string>
     <string name="report_submit_button_label">Enviar</string>
     <string name="report_record_label">REGISTRO DE NOTAS (Opcional)</string>
     <string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
-    <string name="alert_title_format">Es un %s?</string>
-    <string name="alert_yes_button">Si</string>
-    <string name="alert_no_button">No</string>
-    <string name="alert_state_loading">Cargando…</string>
-    <string name="alert_state_playing">Reproduciendo…</string>
-    <string name="alert_state_replay">Repetir</string>
 
     <!-- Notification -->
     <string name="notification_location_title">Ubicación del Ranger</string>
@@ -71,7 +49,6 @@
     <string name="location_tracking_off_label">Apagando</string>
     <string name="default_site_label">Sitio</string>
     <string name="guardian_group_label">Grupo de Guardias</string>
-    <string name="guardian_group_none">Ninguno</string>
 
     <string name="last_month">Ultimo\nMes</string>
     <string name="last_week">Ultima\nSemana</string>
@@ -96,4 +73,6 @@
     <string name="sync_uploading">Cargando…</string>
     <string name="sync_complete">!Carga completa!</string>
     <string name="empty_list_description">No hay incidentes recientemente.\nDisfrute su día :)</string>
+    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+
 </resources>
