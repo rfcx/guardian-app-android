@@ -21,7 +21,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
         deleteSentReports()
         resendIfRequired()
 
-        return Result.SUCCESS
+        return Result.success()
     }
 
     private fun deleteSentReports() {
