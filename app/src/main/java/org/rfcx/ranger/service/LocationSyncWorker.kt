@@ -24,7 +24,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
         val checkins = db.unsent()
 
         if (checkins.isEmpty()) {
-            return Result.SUCCESS
+            return Result.success()
         }
 
         Log.d(TAG, "doWork: found ${checkins.size} unsent and sending")
@@ -35,14 +35,14 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
             is Ok -> {
                 Log.d(TAG, "doWork: success")
                 db.markSent(checkinIds)
-                return Result.SUCCESS
+                return Result.success()
             }
             is Err -> {
                 Log.d(TAG, "doWork: failed")
             }
         }
 
-        return Result.RETRY
+        return Result.retry()
     }
 
     companion object {

@@ -47,7 +47,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
 
         deleteSentReports()
 
-        return if (someFailed) Result.RETRY else Result.SUCCESS
+        return if (someFailed) Result.retry() else Result.success()
     }
 
     private fun deleteSentReports() {

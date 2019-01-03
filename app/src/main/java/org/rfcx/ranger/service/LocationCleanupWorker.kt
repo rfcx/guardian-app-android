@@ -17,7 +17,7 @@ class LocationCleanupWorker(context: Context, params: WorkerParameters) : Worker
         val count = LocationDb().deleteSynced()
         Log.d(TAG, "doWork: $count for deletion")
 
-        return Result.SUCCESS
+        return Result.success()
     }
 
     companion object {
