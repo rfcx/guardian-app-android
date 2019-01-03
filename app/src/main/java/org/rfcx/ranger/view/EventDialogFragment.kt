@@ -137,6 +137,8 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 			it.audioGUID?.let { audioGuID ->
 				GlideApp.with(spectrogramImageView)
 						.load(getSpectrogramImageUrl(audioGuID, 0, 90L * 1000))
+						.placeholder(R.drawable.spectrogram_place_holder)
+						.error(R.drawable.spectrogram_place_holder)
 						.into(spectrogramImageView)
 			}
 			
