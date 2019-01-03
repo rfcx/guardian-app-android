@@ -3,7 +3,7 @@ package org.rfcx.ranger.util
 import android.content.Context
 import android.net.ConnectivityManager
 
-internal fun Context?.isNetWorkAvailable(): Boolean {
+internal fun Context?.isNetworkAvailable(): Boolean {
 	if (this == null) return false
 	val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 	val activeNetwork = cm.activeNetworkInfo

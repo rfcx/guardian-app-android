@@ -1,11 +1,8 @@
 package org.rfcx.ranger.repo
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import io.realm.RealmObject
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig

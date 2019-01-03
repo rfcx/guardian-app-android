@@ -108,7 +108,7 @@ class LoginActivity : AppCompatActivity() {
 					
 					override fun onFailure(exception: AuthenticationException) {
 						exception.printStackTrace()
-						Crashlytics.logException(exception);
+						Crashlytics.logException(exception)
                         if (exception.code == "invalid_grant") {
                             loginFailed(getString(R.string.incorrect_username_password))
                         }

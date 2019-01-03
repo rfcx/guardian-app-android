@@ -1,14 +1,13 @@
 package org.rfcx.ranger.adapter.guardian
 
-import android.widget.ArrayAdapter
-import org.rfcx.ranger.entity.guardian.GuardianGroup
 import android.app.Activity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 
 
 /**

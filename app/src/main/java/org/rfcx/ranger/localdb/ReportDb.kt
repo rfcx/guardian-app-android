@@ -71,8 +71,8 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     companion object {
-        private val UNSENT = 0
-        private val SENDING = 1
-        private val SENT = 2
+        private const val UNSENT = 0
+        private const val SENDING = 1
+        private const val SENT = 2
     }
 }

@@ -19,15 +19,8 @@ class LocationTracking {
             val preferences = Preferences.getInstance(context)
             val state = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, "")
             if (state.isEmpty()) {
-                // state never setting before
-                if (context.isLocationAllow()) {
-                    // state on
-                    preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_ON)
-                    return true
-                } else {
-                    preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
-                    return false
-                }
+                preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, TRACKING_OFF)
+                return false
             } else {
                 return state == TRACKING_ON
             }
@@ -48,7 +41,5 @@ class LocationTracking {
             }
         }
     }
-
-
 
 }

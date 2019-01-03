@@ -5,55 +5,38 @@
     <string name="password">Senha</string>
     <string name="login">Usuário</string>
     <string name="connect_with_facebook">Conectar com o Facebook</string>
-    <string name="pls_fill_email">Conectar com o Facebook</string>
+    <string name="pls_fill_email">Por favor insira um email</string>
     <string name="pls_fill_password">Por favor insira a senha</string>
     <string name="incorrect_username_password">Usuário ou senha incorretos</string>
-    <string name="user_are_not_ranger">Esta não é uma conta do RFCx Ranger</string>
     <string name="an_error_occurred">Serviço indisponível</string>
     <string name="or">OU</string>
 
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
-    <string name="re_login">Por favor, conecte-se novamente.</string>
-    <string name="cancel">Cancelar</string>
-    <string name="back">Voltar</string>
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
     <string name="record_audio_permission_msg">O aplicativo Ranger gostaria de gravar áudio</string>
     <string name="go_to_setting">Definições</string>
-    <string name="user_location">O aplicativo Ranger está procurando sua localização</string>
     <string name="menu_logout">Sair</string>
-    <string name="menu_ranger_group">Minha localização</string>
-    
+    <string name="menu_check_in_history">Histórico de check-in</string>
+
     <!-- message list -->
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
-    <string name="report_chainsaw_button">Motoserras</string>
-    <string name="report_gunshot_button">Tiros</string>
-    <string name="report_trespasser_button">Invasores</string>
-    <string name="report_vehicle_button">Veículos</string>
+    <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+
+    <!-- report -->
+
     <string name="report_title">Relatório</string>
-    <string name="report_no_have_select_type">Por favor seleciona o tipo de relatório.</string>
-    <string name="report_no_have_select_sight">Por favor seleciona a vista.</string>
     <string name="report_send_success">Relatório enviado com sucesso!</string>
-    <string name="report_select_sighting">Selecionar vista</string>
-    <string name="report_immediate_button">Área imediata (nas proximidades)</string>
-    <string name="report_not_far_away_button">Não muito longe (mas nao visível)</string>
-    <string name="report_very_far_button">Muito longe (áudio baixo)</string>
     <string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Enviar</string>
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
-    <string name="alert_title_format">Isto é um %s?</string>
-    <string name="alert_yes_button">Sim</string>
-    <string name="alert_no_button">Não</string>
-    <string name="alert_state_loading">Carregando…</string>
-    <string name="alert_state_playing">Reproduzindo…</string>
-    <string name="alert_state_replay">Repetir</string>
-    
+
     <!-- Notification -->
     <string name="notification_location_title">Localização do Ranger</string>
     <string name="notification_location_loading">Carregando localização…</string>
@@ -67,8 +50,7 @@
     <string name="location_tracking_off_label">Desligado</string>
     <string name="default_site_label">Local</string>
     <string name="guardian_group_label">Grupo de guardiões</string>
-    <string name="guardian_group_none">Nenhum</string>
-    
+
     <string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
@@ -84,11 +66,14 @@
     <string name="hint_code">Código</string>
 
     <!-- Report -->
-    <string name="sync_reports_label">%d relatórios</string>
+    <string name="sync_reports_label">%d relatórios e lista</string>
     <string name="sync_report_label">%d relatório</string>
-    <string name="sync_checkins_label">%d checkins</string>
-    <string name="sync_waiting_network">Waiting for network…</string>
-    <string name="sync_starting">Starting upload…</string>
-    <string name="sync_uploading">Uploading…</string>
-    <string name="sync_complete">Upload complete!</string>
+    <string name="sync_checkins_label">%d localizações mais acessadas</string>
+    <string name="sync_waiting_network">esperando pela rede…</string>
+    <string name="sync_starting">Começando o upload…</string>
+    <string name="sync_uploading">Fazendo upload…</string>
+    <string name="sync_complete">Upload completo!</string>
+    <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
+    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+
 </resources>

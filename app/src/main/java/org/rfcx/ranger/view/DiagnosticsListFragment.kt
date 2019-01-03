@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkInfo
 import kotlinx.android.synthetic.main.fragment_diagnastic_list.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.location.LocationAdapter
 import org.rfcx.ranger.service.LocationSyncWorker
-import org.rfcx.ranger.service.ReportSyncWorker
 
 class DiagnosticsListFragment : Fragment() {
 	

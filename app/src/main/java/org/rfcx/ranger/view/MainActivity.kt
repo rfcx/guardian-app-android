@@ -1,30 +1,22 @@
 package org.rfcx.ranger.view
 
-import android.Manifest
 import android.app.Activity
-import android.content.*
-import android.content.pm.PackageManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
@@ -46,26 +38,24 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
 import org.rfcx.ranger.repo.api.ReviewEventApi
 import org.rfcx.ranger.service.LocationSyncWorker
-import org.rfcx.ranger.service.LocationTrackerService.Companion.locationRequest
 import org.rfcx.ranger.service.NetworkReceiver
 import org.rfcx.ranger.service.NetworkState
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 
-
 class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProtocol,
 		OnCompleteListener<Void>,
 		EventDialogFragment.OnAlertConfirmCallback,
 		OnFailureListener, NetworkReceiver.NetworkStateLister {
-
+	
 	lateinit var messageAdapter: MessageAdapter
 	private lateinit var rangerRemote: FirebaseRemoteConfig
-	private var isTracking :Boolean = false
-	private var networkState :NetworkState = NetworkState.ONLINE
-	private var syncInfo :SyncInfo? = null
-
-	// broadcast receiver
+	private var networkState: NetworkState = NetworkState.ONLINE
+	private var syncInfo: SyncInfo? = null
+	
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
+	
+	private val locationPermissions by lazy { LocationPermissions(this) }
 	
 	companion object {
 		fun startActivity(context: Context) {
@@ -75,8 +65,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		
 		private const val REQUEST_CODE_REPORT = 201
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
-		private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-		private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
 		const val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
 	}
@@ -85,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		super.onStart()
 		checkGoogleApiAvailability()
 	}
-
+	
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		// the activity open from another task eg. bypass from @LoginActivity by click notification -> reload the list.
@@ -118,56 +106,47 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				super.onScrolled(recyclerView, dx, dy)
 			}
 		})
-
-		isTracking = LocationTracking.isOn(this)
-		if (isTracking) {
-			if (!this.isLocationAllow()) {
-				requestPermissions()
-			} else {
-				checkLocationIsAllow()
-			}
-		}
-
+		
+		onLocationTrackingChange(LocationTracking.isOn(this))
+		
 		observeWork()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
+		
 		if (requestCode == REQUEST_CODE_REPORT && resultCode == Activity.RESULT_OK) {
-			ReportSuccessDIalogFragment().show(supportFragmentManager, null)
-
-			// TODO: update sync information after save report
+			ReportSuccessDialogFragment().show(supportFragmentManager, null)
 			updateSyncInfo()
-
-		} else if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
-			if (resultCode == Activity.RESULT_OK) {
-				LocationTracking.set(this@MainActivity, true)
-			} else {
-				LocationTracking.set(this@MainActivity, false)
-			}
 		}
+		
+		locationPermissions.handleActivityResult(requestCode, resultCode)
 	}
-
+	
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		locationPermissions.handleRequestResult(requestCode, grantResults)
+	}
+	
 	private fun updateSyncInfo(status: SyncInfo.Status? = null) {
 		val syncStatus = status ?: when (networkState) {
 			NetworkState.OFFLINE -> SyncInfo.Status.WAITING_NETWORK
 			NetworkState.ONLINE -> SyncInfo.Status.STARTING
 		}
-
+		
 		val locationCount = LocationDb().unsentCount()
 		val reportCount = ReportDb().unsentCount()
 		syncInfo = SyncInfo(syncStatus, reportCount, locationCount)
-
+		
 		refreshHeader()
 	}
-
+	
 	override fun onResume() {
 		super.onResume()
 		CloudMessaging.subscribeIfRequired(this)
 		// register BroadcastReceiver
 		registerReceiver(onEventNotificationReceived, IntentFilter(INTENT_FILTER_MESSAGE_BROADCAST))
 		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
-
+		
 		refreshHeader()
 	}
 	
@@ -192,23 +171,23 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
 			}
 			
-			R.id.menu_check_in_history-> DiagnosticsLocationActivity.startIntent(this)
+			R.id.menu_check_in_history -> DiagnosticsLocationActivity.startIntent(this)
 		}
 		return super.onOptionsItemSelected(item)
 	}
-
+	
 	//region {@link NetworkReceiver.NetworkStateLister} implementation
 	override fun onNetworkStateChange(state: NetworkState) {
 		this.networkState = state
-
+		
 		updateSyncInfo()
-
+		
 		if (state == NetworkState.ONLINE) {
 			fetchContentList()
 		}
 	}
 	//endregion
-
+	
 	//region {@link addOnCompleteListener.onComplete} implementation
 	override fun onComplete(task: Task<Void>) {
 		if (task.isSuccessful) {
@@ -292,7 +271,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 							for (event in events) {
 								val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
 								localEvent?.let {
-									event.isConfirmed = localEvent.isConfirmed
 									event.isOpened = localEvent.isOpened
 								}
 								if (event.isOpened) {
@@ -322,21 +300,21 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 								}
 							}
 						})
-
+						
 						if (recentList.isNotEmpty()) {
 							baseItems.add(TitleItem(getString(R.string.recent_title)))
 							baseItems.addAll(recentList)
 						}
-
+						
 						if (historyList.isNotEmpty()) {
 							baseItems.add(TitleItem(getString(R.string.history_title)))
 							baseItems.addAll(historyList)
 						}
-
+						
 						if (recentList.isNullOrEmpty() && historyList.isNullOrEmpty()) {
 							baseItems.add(EmptyItem())
 						}
-
+						
 						messageAdapter.updateMessages(baseItems)
 						messageSwipeRefresh.isRefreshing = false
 					}
@@ -346,7 +324,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 					}
 				})
-
+		
 		if (LocationDb().unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
 		}
@@ -359,8 +337,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		val preferences = Preferences.getInstance(this)
 		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
 		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		isTracking = LocationTracking.isOn(this)
-		messageAdapter.updateHeader(nickname, site, isTracking)
+		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
@@ -388,24 +365,22 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		
 		messageAdapter.notifyDataSetChanged()
 	}
-
+	
 	//region {@link OnLocationTrackingChangeListener }
-	override fun isEnableTracking(): Boolean = this.isTracking
-	override fun getNetworkState(): NetworkState = this.networkState
+	override fun isEnableTracking(): Boolean = LocationTracking.isOn(this)
+	
+	override fun getNetworkState(): NetworkState = networkState
 	override fun getSyncInfo(): SyncInfo? = syncInfo
-
+	
 	override fun onPressCancelSync() {
 		//TODO: handle on cancel sync reports
 	}
 	//endregion
-
+	
 	override fun onLocationTrackingChange(on: Boolean) {
-		isTracking = on // update tracking
 		if (on) {
-			if (!isLocationAllow()) {
-				requestPermissions()
-			} else {
-				checkLocationIsAllow()
+			locationPermissions.check { isAllowed: Boolean ->
+				LocationTracking.set(this, isAllowed)
 			}
 		} else {
 			LocationTracking.set(this, false)
@@ -413,8 +388,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 	
 	override fun onCurrentAlert(event: Event) {
-		RealmHelper.getInstance().updateConfirmedEvent(event)
-		messageAdapter.notifyDataSetChanged()
 		reportEvent(event, true)
 	}
 	
@@ -433,13 +406,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		}
 	}
 	
-	private fun requestPermissions() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-					REQUEST_PERMISSIONS_REQUEST_CODE)
-		}
-	}
-	
 	private fun showAlertPopup(event: Event) {
 		RealmHelper.getInstance().updateOpenedEvent(event)
 		EventDialogFragment.newInstance(event).show(supportFragmentManager, null)
@@ -449,77 +415,15 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		ReviewEventApi().reViewEvent(this@MainActivity, event,
 				isConfirmEvent, object : ReviewEventApi.ReviewEventCallback {
 			override fun onSuccess() {
-				if (!isConfirmEvent) {
-					//refresh list if user report reject
-					fetchContentList()
-				}
+				fetchContentList()
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
-				Log.d("reportEvent", "onFailed $message")
+				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
+				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 			}
 			
 		})
-	}
-	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-	                                        grantResults: IntArray) {
-		if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				checkLocationIsAllow()
-			} else {
-				val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
-						Manifest.permission.ACCESS_FINE_LOCATION)
-				if (!shouldProvideRationale) {
-					val dialogBuilder: AlertDialog.Builder =
-							AlertDialog.Builder(this@MainActivity).apply {
-								setTitle(null)
-								setMessage(R.string.location_permission_msg)
-								setPositiveButton(R.string.go_to_setting) { _, _ ->
-									val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-											Uri.parse("package:$packageName"))
-									intent.addCategory(Intent.CATEGORY_DEFAULT)
-									intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-									startActivity(intent)
-								}
-							}
-					dialogBuilder.create().show()
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Checking phone is turn on location on setting
-	 */
-	private fun checkLocationIsAllow() {
-		val builder = LocationSettingsRequest.Builder()
-				.addLocationRequest(locationRequest)
-		val client: SettingsClient = LocationServices.getSettingsClient(this)
-		val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-		task.addOnSuccessListener {
-			LocationTracking.set(this@MainActivity, true)
-			refreshHeader()
-		}
-		
-		task.addOnFailureListener { exception ->
-			if (exception is ResolvableApiException) {
-				// Location settings are not satisfied, but this can be fixed
-				// by showing the user a dialog.
-				LocationTracking.set(this@MainActivity, false)
-				try {
-					// Show the dialog by calling startResolutionForResult(),
-					// and check the result in onActivityResult().
-					exception.startResolutionForResult(this@MainActivity,
-							REQUEST_CHECK_LOCATION_SETTINGS)
-				} catch (sendEx: IntentSender.SendIntentException) {
-					// Ignore the error.
-					sendEx.printStackTrace()
-				}
-				
-				refreshHeader()
-			}
-		}
 	}
 	
 	
@@ -534,7 +438,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 			}
 		}
 	}
-
+	
 	private fun observeWork() {
 		ReportSyncWorker.workInfos().observe(this,
 				Observer<List<WorkInfo>> { workStatusList ->
@@ -552,13 +456,12 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 								updateSyncInfo()
 							}
 						}
-					}
-					else {
+					} else {
 						Log.d("MessageListActivity", "ReportSyncWorker: NO WORK STATUS")
 						updateSyncInfo()
 					}
 				})
-
+		
 		LocationSyncWorker.workInfos().observe(this,
 				Observer<List<WorkInfo>> { workStatusList ->
 					val currentWorkStatus = workStatusList?.getOrNull(0)

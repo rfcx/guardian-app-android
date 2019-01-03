@@ -21,7 +21,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
         deleteSentReports()
         resendIfRequired()
 
-        return Result.SUCCESS
+        return Result.success()
     }
 
     private fun deleteSentReports() {
@@ -41,7 +41,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
     private fun resendIfRequired() {
         val db = ReportDb()
         val unsent = db.unsentCount()
-        Log.d(TAG, "resendIfRequired: found ${unsent} unsent")
+        Log.d(TAG, "resendIfRequired: found $unsent unsent")
 
         // In case any failed sending, we can resend
         db.unlockSending()
@@ -51,8 +51,8 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
     }
 
     companion object {
-        private val TAG = "ReportCleanupWorker"
-        private val UNIQUE_WORK_KEY = "ReportCleanupWorkerUniqueKey"
+        private const val TAG = "ReportCleanupWorker"
+        private const val UNIQUE_WORK_KEY = "ReportCleanupWorkerUniqueKey"
 
         fun enqueuePeriodically() {
             val workRequest = PeriodicWorkRequestBuilder<ReportCleanupWorker>(15, TimeUnit.MINUTES).build()

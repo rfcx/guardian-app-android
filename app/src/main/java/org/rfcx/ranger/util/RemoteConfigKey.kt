@@ -1,8 +1,5 @@
 package org.rfcx.ranger.util
 
-/**
- * Created by Jingjoeh on 10/23/2017 AD.
- */
 object RemoteConfigKey {
 	const val REMOTE_NOTI_FREQUENCY_DURATION = "notification_polling_frequency_duration"
 	const val REMOTE_ENABLE_NOTI_MESSAGE = "enable_notification_message"

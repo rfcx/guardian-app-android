@@ -2,9 +2,6 @@ package org.rfcx.ranger.entity.message
 
 import io.realm.RealmObject
 
-/**
- * Created by Jingjoeh on 10/21/2017 AD.
- */
 open class From : RealmObject() {
     var guid: String = ""
     var email: String = ""

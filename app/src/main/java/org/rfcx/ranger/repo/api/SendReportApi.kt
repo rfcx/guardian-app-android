@@ -2,21 +2,23 @@ package org.rfcx.ranger.repo.api
 
 import android.content.Context
 import android.net.Uri
-import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.entity.report.SendReportResponse
-import org.rfcx.ranger.util.getTokenID
-import android.util.Log
 import com.crashlytics.android.Crashlytics
 import okhttp3.MediaType
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.rfcx.ranger.entity.Result
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.repo.*
+import org.rfcx.ranger.entity.Result
+import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.entity.report.SendReportResponse
+import org.rfcx.ranger.repo.ApiCallback
+import org.rfcx.ranger.repo.ApiManager
+import org.rfcx.ranger.repo.responseErrorHandler
+import org.rfcx.ranger.repo.responseParser
+import org.rfcx.ranger.util.getTokenID
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import okhttp3.MultipartBody
 import java.io.File
 
 class SendReportApi {

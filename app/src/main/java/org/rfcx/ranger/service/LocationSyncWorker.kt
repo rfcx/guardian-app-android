@@ -4,22 +4,17 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
-import com.google.common.util.concurrent.ListenableFuture
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.repo.api.SendReportApi
-import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.api.SendLocationApi
-import java.io.File
 
 
 /**
  * Background task for syncing the location tracking data to the server
  */
 
-class LocationSyncWorker(context: Context, params: WorkerParameters)
-    : Worker(context, params) {
+class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork(): Result {
         Log.d(TAG, "doWork")
@@ -29,7 +24,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters)
         val checkins = db.unsent()
 
         if (checkins.isEmpty()) {
-            return Result.SUCCESS
+            return Result.success()
         }
 
         Log.d(TAG, "doWork: found ${checkins.size} unsent and sending")
@@ -40,19 +35,19 @@ class LocationSyncWorker(context: Context, params: WorkerParameters)
             is Ok -> {
                 Log.d(TAG, "doWork: success")
                 db.markSent(checkinIds)
-                return Result.SUCCESS
+                return Result.success()
             }
             is Err -> {
                 Log.d(TAG, "doWork: failed")
             }
         }
 
-        return Result.RETRY
+        return Result.retry()
     }
 
     companion object {
-        private val TAG = "LocationSyncWorker"
-        private val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
+        private const val TAG = "LocationSyncWorker"
+        private const val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()

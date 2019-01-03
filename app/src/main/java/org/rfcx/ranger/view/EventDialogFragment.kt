@@ -2,19 +2,24 @@ package org.rfcx.ranger.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.PorterDuff
-import android.media.AudioManager
-import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.PowerManager
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.crashlytics.android.Crashlytics
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,19 +30,31 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 
-
-class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
+class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	private var event: Event? = null
-	private var mediaPlayer: MediaPlayer? = null
 	private var onAlertConfirmCallback: OnAlertConfirmCallback? = null
+	private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(this.context) }
+	private val playerTimeHandler: Handler = Handler()
+	private val delayTime = 100L
+	private val maxProgress = 100_000
 	
 	override fun onAttach(context: Context?) {
 		super.onAttach(context)
 		if (context is OnAlertConfirmCallback) {
 			onAlertConfirmCallback = context
 		}
+	}
+	
+	private val playerTimeRunnable = object : Runnable {
+		override fun run() {
+			// TODO update Progress
+			updateSoundProgress()
+			playerTimeHandler.postDelayed(this, delayTime)
+		}
+		
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,19 +90,20 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	override fun onDestroyView() {
+		val mapFragment = childFragmentManager
+				.findFragmentByTag(MAP_TAG)
+		mapFragment?.let {
+			childFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+		}
 		super.onDestroyView()
-		val mapFragment = fragmentManager
-				?.findFragmentById(R.id.mapView) as SupportMapFragment
-		fragmentManager?.beginTransaction()?.remove(mapFragment)?.commitAllowingStateLoss()
 	}
+	
 	override fun onDestroy() {
 		super.onDestroy()
+		playerTimeHandler.removeCallbacks(playerTimeRunnable)
 		try {
-			if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
-				mediaPlayer?.stop()
-			}
-			mediaPlayer?.release()
-			mediaPlayer = null
+			exoPlayer.removeListener(exoPlayerListener)
+			exoPlayer.release()
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
@@ -106,29 +124,32 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	
 	@SuppressLint("SetTextI18n")
 	private fun initView() {
-		context?.let {
-			loadingSoundProgressBar.indeterminateDrawable
-					.setColorFilter(ContextCompat.getColor(it, R.color.grey_default), PorterDuff.Mode.SRC_IN)
-		}
-		
+		soundProgressSeekBar.isEnabled = false
+		soundProgressSeekBar.max = maxProgress
 		event?.let {
 			eventTypeImageView.setImageResource(it.getIconRes())
 			it.value?.let { value ->
-				if(value.isEmpty()) return
+				if (value.isEmpty()) return
 				eventNameTextView.text = "${value.substring(0, 1).toUpperCase() + value.substring(1)}?"
+			}
+			
+			// TODO FIX val of offset and duration
+			it.audioGUID?.let { audioGuID ->
+				GlideApp.with(spectrogramImageView)
+						.load(getSpectrogramImageUrl(audioGuID, 0, 90L * 1000))
+						.into(spectrogramImageView)
 			}
 			
 		}
 	}
 	
 	private fun rePlay() {
-		try {
-			mediaPlayer?.start()
-			replayButton.visibility = View.INVISIBLE
-			soundAnimationView.playAnimation()
-			soundAnimationView.visibility = View.VISIBLE
-		} catch (e: Exception) {
-			e.printStackTrace()
+		Log.d("rePlay", "${exoPlayer.playbackState}")
+		if (exoPlayer.playbackState == Player.STATE_ENDED) {
+			exoPlayer.seekTo(0)
+			exoPlayer.playWhenReady = true
+		} else {
+			initPlayer()
 		}
 	}
 	
@@ -142,55 +163,40 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 	}
 	
 	private fun initPlayer() {
-		mediaPlayer = MediaPlayer()
-		mediaPlayer?.setWakeMode(context,
-				PowerManager.PARTIAL_WAKE_LOCK)
-		mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-		mediaPlayer?.setOnPreparedListener(this@EventDialogFragment)
-		mediaPlayer?.setOnCompletionListener(this@EventDialogFragment)
-		mediaPlayer?.setOnErrorListener(this@EventDialogFragment)
 		
-		val mp3Source = event?.audio?.mp3
-		if (!mp3Source.isNullOrEmpty()) {
-			val insecureMp3Source = mp3Source!!.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+		val opusSource = event?.audio?.opus
+		if (!opusSource.isNullOrEmpty()) {
+			val descriptorFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
+			
+			val insecureMp3Source = opusSource.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+			val mediaSource = ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(insecureMp3Source))
 			context?.let {
-				mediaPlayer?.setDataSource(it, Uri.parse(insecureMp3Source))
-				mediaPlayer?.prepareAsync()
+				exoPlayer.playWhenReady = true
+				exoPlayer.prepare(mediaSource)
+				exoPlayer.addListener(exoPlayerListener)
 			}
 		} else {
 			loadingSoundProgressBar.visibility = View.INVISIBLE
 		}
 	}
 	
-	override fun onError(player: MediaPlayer?, p1: Int, p2: Int): Boolean {
-		// TODO report to error
-		loadingSoundProgressBar.visibility = View.INVISIBLE
-		soundAnimationView.pauseAnimation()
-		soundAnimationView.visibility = View.INVISIBLE
-		return false
-	}
-	
-	override fun onCompletion(player: MediaPlayer?) {
-		replayButton.visibility = View.VISIBLE
-		soundAnimationView.pauseAnimation()
-		soundAnimationView.visibility = View.INVISIBLE
-	}
-	
-	override fun onPrepared(player: MediaPlayer?) {
-		loadingSoundProgressBar.visibility = View.INVISIBLE
-		mediaPlayer?.start()
-		mediaPlayer?.let {
-			if (it.isPlaying) {
-				soundAnimationView.visibility = View.VISIBLE
-				soundAnimationView.playAnimation()
-			}
-		}
-	}
-	
 	private fun setupMap() {
-		val mapFragment = fragmentManager
-				?.findFragmentById(R.id.mapView) as SupportMapFragment
-		mapFragment.getMapAsync(this)
+		var mapFragment: SupportMapFragment? = childFragmentManager.findFragmentByTag(MAP_TAG) as SupportMapFragment?
+		if (mapFragment == null) {
+			mapFragment = SupportMapFragment.newInstance()
+			childFragmentManager.beginTransaction()
+					.add(R.id.mapContainer, mapFragment, MAP_TAG)
+					.commitNow()
+			childFragmentManager.executePendingTransactions()
+		}
+		mapFragment?.getMapAsync(this)
+	}
+	
+	private fun getSpectrogramImageUrl(audioGuId: String, offset: Long, duration: Long): String {
+		return "https://assets.rfcx.org/audio/$audioGuId.png?width=512&height=256&offset=$offset&duration=$duration".also {
+			Log.d("getSpectrogramImageUrl", it)
+		}
+		
 	}
 	
 	override fun onMapReady(googleMap: GoogleMap?) {
@@ -207,6 +213,51 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 		}
 	}
 	
+	private fun updateSoundProgress() {
+		exoPlayer.let {
+			val duration = it.duration
+			val currentDuration = it.currentPosition
+			val progress = maxProgress * currentDuration / duration
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				soundProgressSeekBar?.setProgress(progress.toInt(), true)
+			} else {
+				soundProgressSeekBar?.progress = progress.toInt()
+			}
+		}
+	}
+	
+	private val exoPlayerListener = object : Player.EventListener {
+		override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+			when (playbackState) {
+				Player.STATE_BUFFERING -> {
+					replayButton.visibility = View.INVISIBLE
+					loadingSoundProgressBar.visibility = View.VISIBLE
+				}
+				Player.STATE_READY -> {
+					replayButton.visibility = View.INVISIBLE
+					loadingSoundProgressBar.visibility = View.INVISIBLE
+					playerTimeHandler.postDelayed(playerTimeRunnable, delayTime)
+				}
+				Player.STATE_IDLE -> {
+				
+				}
+				Player.STATE_ENDED -> {
+					replayButton.visibility = View.VISIBLE
+					playerTimeHandler.removeCallbacks(playerTimeRunnable)
+				}
+				
+			}
+			
+		}
+		
+		override fun onPlayerError(error: ExoPlaybackException?) {
+			Toast.makeText(context, R.string.can_not_play_audio, Toast.LENGTH_SHORT).show()
+			loadingSoundProgressBar.visibility = View.INVISIBLE
+			replayButton.visibility = View.VISIBLE
+			Crashlytics.logException(error)
+		}
+	}
+	
 	companion object {
 		private const val keyEventArgs = "AlertDialogFragment.Event"
 		fun newInstance(event: Event): EventDialogFragment {
@@ -216,6 +267,8 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback, MediaPlayer.On
 			fragment.arguments = args
 			return fragment
 		}
+		
+		private const val MAP_TAG = "MAP_FRAGMENT"
 	}
 	
 	interface OnAlertConfirmCallback {

@@ -26,14 +26,20 @@ class EventItemViewHolder(itemView: View, private var onMessageItemClickListener
 		itemView.tvEventDate.text = "・${DateHelper.getEventTime(event)}"
 		
 		itemView.ivEventIcon.setImageResource(EventIcon(event).resId(event.isOpened))
-		itemView.ivEventConfirm.visibility = if (event.isConfirmed) View.VISIBLE else View.INVISIBLE
-
-//        val latLng: String = StringBuilder(event.latitude.toString())
-//                .append(", ")
-//                .append(event.longitude.toString()).toString()
-//        itemView.tvEventLocation.text = latLng
+		if (event.reviewerConfirmed != null) {
+			if (event.reviewerConfirmed!!) {
+				itemView.ivEventConfirm.setImageResource(R.drawable.ic_check)
+				itemView.ivEventConfirm.setBackgroundResource(R.drawable.circle_green_stroke)
+			} else {
+				itemView.ivEventConfirm.setImageResource(R.drawable.ic_wrong)
+				itemView.ivEventConfirm.setBackgroundResource(R.drawable.circle_red_stroke)
+			}
+			itemView.ivEventConfirm.visibility = View.VISIBLE
+		} else {
+			itemView.ivEventConfirm.visibility = View.INVISIBLE
+		}
 		
-		itemView.setOnClickListener {
+		itemView.setOnClickListener  {
 			onMessageItemClickListener.onMessageItemClick(adapterPosition)
 		}
 	}

@@ -7,25 +7,16 @@
     <string name="pls_fill_email">Please fill email</string>
     <string name="pls_fill_password">Please fill password</string>
     <string name="incorrect_username_password">Incorrect username or password</string>
-    <string name="user_are_not_ranger">This is not an RFCx Ranger account</string>
     <string name="an_error_occurred">Service unavailable</string>
     <string name="or">OR</string>
 
     <!-- common error -->
     <string name="error_common">An error occurred. Please try again.</string>
-    <string name="re_login">Please re-login.</string>
-
-    <string name="cancel">Cancel</string>
-    <string name="back">Back</string>
-
     <string name="location_permission_msg">Ranger App would like to use your location</string>
     <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
     <string name="go_to_setting">Settings</string>
-    <string name="user_location">Ranger App is getting your location</string>
-
     <string name="menu_logout">Logout</string>
-    <string name="menu_ranger_group">My site</string>
-	<string name="menu_check_in_history">Check in history</string>
+	<string name="menu_check_in_history">Check-in history</string>
 
     <!-- message list -->
     <string name="profile_welcome">Hi, %s!</string>
@@ -36,30 +27,13 @@
     <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
 
     <!-- report -->
-    <string name="report_chainsaw_button">Chainsaws</string>
-    <string name="report_gunshot_button">Gunshots</string>
-    <string name="report_trespasser_button">Trespassers</string>
-    <string name="report_vehicle_button">Vehicles</string>
     <string name="report_title">Report</string>
-    <string name="report_no_have_select_type">Please select type you want to report.</string>
-    <string name="report_no_have_select_sight">Please select sighting.</string>
     <string name="report_send_success">Report successful!</string>
-    <string name="report_select_sighting">Select sighting</string>
-    <string name="report_immediate_button">Immediate area (nearby)</string>
-    <string name="report_not_far_away_button">Not far away (but not visible)</string>
-    <string name="report_very_far_button">Very far (faintly heard)</string>
     <string name="report_what_label">WHAT?</string>
     <string name="report_when_label">WHEN?</string>
     <string name="report_submit_button_label">Submit</string>
     <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
     <string name="report_location_null">Location not found. Please try again.</string>
-
-    <string name="alert_title_format">Is this a %s?</string>
-    <string name="alert_yes_button">Yes</string>
-    <string name="alert_no_button">No</string>
-    <string name="alert_state_loading">Loading…</string>
-    <string name="alert_state_playing">Playing…</string>
-    <string name="alert_state_replay">Replay</string>
 
     <!-- Notification -->
     <string name="notification_location_title">Ranger Location</string>
@@ -74,7 +48,6 @@
     <string name="location_tracking_off_label">Off</string>
     <string name="default_site_label">Site</string>
     <string name="guardian_group_label">Guardian group</string>
-    <string name="guardian_group_none">None</string>
 
     <string name="last_month">Last\nMonth</string>
     <string name="last_week">Last\nWeek</string>
@@ -98,8 +71,9 @@
     <string name="sync_starting">Starting upload…</string>
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
-    <string name="empty_list_description">No incidents occurred recently\nEnjoy your day :)</string>
-
+    <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
+	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+	
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
 </resources>

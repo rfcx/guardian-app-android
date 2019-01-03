@@ -53,7 +53,7 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     companion object {
-        val MAX_DISPLAY_AGE_HOURS = 6
-        val MIN_DELETION_AGE_HOURS = 72
+        const val MAX_DISPLAY_AGE_HOURS = 6
+        const val MIN_DELETION_AGE_HOURS = 72
     }
 }

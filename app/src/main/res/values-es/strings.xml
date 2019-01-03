@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LoginActivity -->
+    <string name="email">Correo electrónico</string>
+    <string name="password">Clave</string>
+    <string name="login">Entrar</string>
+    <string name="connect_with_facebook">Conectar con Facebook</string>
+    <string name="pls_fill_email">Escriba su correo electrónico</string>
+    <string name="pls_fill_password">Escriba su clave</string>
+    <string name="incorrect_username_password">Usuario o clave incorrecta</string>
+    <string name="an_error_occurred">Servicio no disponible</string>
+    <string name="or">O</string>
+
+    <!-- common error -->
+    <string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
+    <string name="location_permission_msg">A Ranger App le gustaría usar tu ubicación</string>
+    <string name="record_audio_permission_msg">A Ranger App le gustaria grabar un audio</string>
+    <string name="go_to_setting">Configuración</string>
+    <string name="menu_logout">Salir</string>
+    <string name="menu_check_in_history">Ver el historial</string>
+
+    <!-- message list -->
+    <string name="profile_welcome">¡Hola, %s!</string>
+    <string name="profile_onduty">En servicio</string>
+    <string name="profile_nottracking">No trastreando</string>
+    <string name="network_online">online</string>
+    <string name="network_offline">offline</string>
+    <string name="error_no_guardian_group_set">Seleccionar grupo guardián en configuraciones</string>
+
+    <!-- report -->
+    <string name="report_title">Reportar</string>
+    <string name="report_send_success">¡Reporte exitoso!</string>
+    <string name="report_what_label">¿QUÉ?</string>
+    <string name="report_when_label">¿CUÁNDO?</string>
+    <string name="report_submit_button_label">Enviar</string>
+    <string name="report_record_label">REGISTRO DE NOTAS (Opcional)</string>
+    <string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
+
+    <!-- Notification -->
+    <string name="notification_location_title">Ubicación del Ranger</string>
+    <string name="notification_location_loading">Cargando ubicación…</string>
+
+    <!-- Settings -->
+    <string name="notification_location_not_availability">!Por favor active la ubicación de su dispositivo!</string>
+    <string name="setting_label">Configuración</string>
+    <string name="app_version_label">v%s</string>
+    <string name="location_tracking_label">Seguimiento de la ubicación</string>
+    <string name="location_tracking_on_label">Encendido</string>
+    <string name="location_tracking_off_label">Apagando</string>
+    <string name="default_site_label">Sitio</string>
+    <string name="guardian_group_label">Grupo de Guardias</string>
+
+    <string name="last_month">Ultimo\nMes</string>
+    <string name="last_week">Ultima\nSemana</string>
+    <string name="last_24_hours">Ultimas\n24 horas</string>
+    <string name="now">Ahora</string>
+
+    <string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
+    <string name="recent_title">Reciente</string>
+    <string name="history_title">Historia</string>
+
+    <!-- Invitation -->
+    <string name="invitation_title">Conectarse a un sitio.</string>
+    <string name="invitation_desc">Por favor inserte su código de invitacion</string>
+    <string name="hint_code">Código</string>
+
+    <!-- Report -->
+    <string name="sync_reports_label">%d reportes</string>
+    <string name="sync_report_label">%d reporte</string>
+    <string name="sync_checkins_label">%d registros de ubicación</string>
+    <string name="sync_waiting_network">Esperando a la red…</string>
+    <string name="sync_starting">Iniciando carga…</string>
+    <string name="sync_uploading">Cargando…</string>
+    <string name="sync_complete">!Carga completa!</string>
+    <string name="empty_list_description">No hay incidentes recientemente.\nDisfrute su día :)</string>
+    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+
+</resources>

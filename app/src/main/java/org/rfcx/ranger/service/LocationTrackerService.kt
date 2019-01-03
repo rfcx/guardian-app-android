@@ -44,7 +44,7 @@ class LocationTrackerService : Service() {
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
 		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
-		const val TAG = "LocationTrackerService"
+		private const val TAG = "LocationTrackerService"
 	}
 	
 	private val binder = LocationTrackerServiceBinder()
@@ -112,7 +112,7 @@ class LocationTrackerService : Service() {
 		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
-			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+//			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
 		} catch (ex: java.lang.SecurityException) {
 			ex.printStackTrace()
