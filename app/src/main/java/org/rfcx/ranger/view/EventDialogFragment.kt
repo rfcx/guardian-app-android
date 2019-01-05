@@ -50,7 +50,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	
 	private val playerTimeRunnable = object : Runnable {
 		override fun run() {
-			// TODO update Progress
 			updateSoundProgress()
 			playerTimeHandler.postDelayed(this, delayTime)
 		}
@@ -79,14 +78,6 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 		
 		okButton.setOnClickListener { report(true) }
 		cancelButton.setOnClickListener { report(false) }
-	}
-	
-	override fun onResume() {
-		super.onResume()
-		// setup size of dialog
-		val width = resources.getDimensionPixelSize(R.dimen.dialog_min_width)
-		val height = resources.getDimensionPixelSize(R.dimen.dialog_height)
-		dialog.window?.setLayout(width, height)
 	}
 	
 	override fun onDestroyView() {

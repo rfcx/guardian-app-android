@@ -1,181 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="wrap_content"
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
 	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/soundWaveGuideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.20" />
+	<View
+		android:layout_width="@dimen/dialog_min_width"
+		android:layout_height="0dp" />
 	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/eventTypeGuideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.42" />
-	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/eventNameGuideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.51" />
-	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/buttonGuideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.68" />
-	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/centerVerticalGuideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		app:layout_constraintGuide_percent="0.5" />
-	
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/spectrogramImageView"
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:layout_marginEnd="@dimen/margin_padding_small"
-		android:scaleType="fitXY"
-		app:layout_constraintBottom_toTopOf="@+id/soundWaveGuideline"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		android:layout_height="@dimen/spectrogram_height"
+		android:layout_gravity="center"
+		android:layout_margin="@dimen/margin_padding_small">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/spectrogramImageView"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/spectrogram_height"
+			android:scaleType="fitXY"
+			android:src="@drawable/spectrogram_place_holder" />
+		
+		<androidx.appcompat.widget.AppCompatSeekBar
+			android:id="@+id/soundProgressSeekBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingStart="0dp"
+			android:paddingEnd="0dp"
+			android:progress="0"
+			android:progressDrawable="@null"
+			android:thumb="@drawable/seek_bar_thumb" />
+		
+		<ProgressBar
+			android:id="@+id/loadingSoundProgressBar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center" />
+		
+		<ImageView
+			android:id="@+id/replayButton"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="fitXY"
+			android:src="@drawable/ic_replay_black_40dp"
+			android:tint="@color/colorPrimaryDark"
+			android:visibility="invisible" />
 	
-	<androidx.appcompat.widget.AppCompatSeekBar
-		android:id="@+id/soundProgressSeekBar"
-		style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:layout_marginEnd="@dimen/margin_padding_small"
-		android:paddingStart="0dp"
-		android:paddingEnd="0dp"
-		android:progress="0"
-		android:progressDrawable="@null"
-		android:thumb="@drawable/seek_bar_thumb"
-		app:layout_constraintBottom_toTopOf="@+id/soundWaveGuideline"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-	
-	<ProgressBar
-		android:id="@+id/loadingSoundProgressBar"
-		android:layout_width="60dp"
-		android:layout_height="60dp"
-		android:layout_margin="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		app:layout_constraintBottom_toBottomOf="@+id/spectrogramImageView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-	
-	<ImageView
-		android:id="@+id/replayButton"
-		android:layout_width="60dp"
-		android:layout_height="60dp"
-		android:layout_margin="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:adjustViewBounds="true"
-		android:background="@color/transparent"
-		android:contentDescription="@string/app_name"
-		android:scaleType="fitXY"
-		android:src="@drawable/ic_replay_black_40dp"
-		android:tint="@color/colorPrimaryDark"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="@+id/spectrogramImageView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+	</FrameLayout>
 	
 	<ImageView
 		android:id="@+id/eventTypeImageView"
-		android:layout_width="wrap_content"
-		android:layout_height="0dp"
-		android:layout_margin="@dimen/margin_padding_small"
+		android:layout_width="@dimen/event_icon_width"
+		android:layout_height="wrap_content"
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/app_name"
 		android:tint="@color/grey_active"
-		app:layout_constraintBottom_toTopOf="@+id/eventTypeGuideline"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/soundWaveGuideline"
 		tools:src="@drawable/ic_gun" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/eventNameTextView"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_small"
 		android:gravity="center"
-		android:padding="@dimen/margin_padding_small"
 		android:textColor="@color/grey_active"
-		android:textSize="@dimen/text_large"
+		android:textSize="@dimen/text_xlarge"
 		android:textStyle="bold"
 		app:autoSizeMaxTextSize="24sp"
 		app:autoSizeMinTextSize="14sp"
 		app:autoSizeStepGranularity="2sp"
 		app:autoSizeTextType="uniform"
-		app:layout_constraintBottom_toTopOf="@id/eventNameGuideline"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/eventTypeGuideline"
 		tools:text="chainsaw?" />
 	
-	<ImageButton
-		android:id="@+id/cancelButton"
-		android:layout_width="wrap_content"
-		android:layout_height="0dp"
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_small"
-		android:layout_marginEnd="@dimen/margin_padding_xsmall"
-		android:layout_marginBottom="@dimen/margin_padding_small"
-		android:adjustViewBounds="true"
-		android:background="@color/transparent"
-		android:contentDescription="@string/app_name"
-		android:padding="@dimen/margin_padding_small"
-		android:scaleType="centerCrop"
-		android:src="@drawable/ic_cross"
-		app:layout_constraintBottom_toTopOf="@+id/buttonGuideline"
-		app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuideline"
-		app:layout_constraintTop_toBottomOf="@+id/eventNameGuideline" />
-	
-	<ImageButton
-		android:id="@+id/okButton"
-		android:layout_width="wrap_content"
-		android:layout_height="0dp"
-		android:layout_marginStart="@dimen/margin_padding_xsmall"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:layout_marginBottom="@dimen/margin_padding_small"
-		android:adjustViewBounds="true"
-		android:background="@color/transparent"
-		android:contentDescription="@string/app_name"
-		android:padding="@dimen/margin_padding_small"
-		android:scaleType="centerCrop"
-		android:src="@drawable/ic_tick"
-		app:layout_constraintBottom_toTopOf="@+id/buttonGuideline"
-		app:layout_constraintStart_toStartOf="@+id/centerVerticalGuideline"
-		app:layout_constraintTop_toBottomOf="@+id/eventNameGuideline" />
+		android:gravity="center"
+		android:orientation="horizontal">
+		
+		<ImageButton
+			android:id="@+id/cancelButton"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="centerCrop"
+			android:src="@drawable/ic_cross" />
+		
+		<ImageButton
+			android:id="@+id/okButton"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="centerCrop"
+			android:src="@drawable/ic_tick" />
+	</LinearLayout>
 	
 	<FrameLayout
 		android:id="@+id/mapContainer"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/buttonGuideline" />
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/event_map_height"
+		android:layout_margin="@dimen/margin_padding_small" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
