@@ -42,7 +42,7 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     fun deleteSynced(): Long {
-        val query = realm.where(CheckIn::class.java).lessThan("timestamp", System.currentTimeMillis() - (MIN_DELETION_AGE_HOURS * 3600000))
+        val query = realm.where(CheckIn::class.java).equalTo("synced", false).lessThan("timestamp", System.currentTimeMillis() - (MIN_DELETION_AGE_HOURS * 3600000))
         val count = query.count()
         if (count > 0) {
             realm.executeTransaction {
