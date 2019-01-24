@@ -21,13 +21,21 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
 
         val api = SendLocationApi()
         val db = LocationDb()
-        val checkins = db.unsent()
+        var checkins = db.unsent()
 
         if (checkins.isEmpty()) {
             return Result.success()
         }
 
-        Log.d(TAG, "doWork: found ${checkins.size} unsent and sending")
+        Log.d(TAG, "doWork: found ${checkins.size} unsent")
+
+        var jobResult = Result.success()
+        if (checkins.size > MAXIMUM_BATCH_SIZE) {
+            checkins = checkins.subList(0, MAXIMUM_BATCH_SIZE)
+            jobResult = Result.retry()
+        }
+
+        Log.d(TAG, "doWork: sending ${checkins.size}")
         val checkinIds = checkins.map { it.id }
 
         val result = api.sendSync(applicationContext, checkins)
@@ -35,7 +43,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
             is Ok -> {
                 Log.d(TAG, "doWork: success")
                 db.markSent(checkinIds)
-                return Result.success()
+                return jobResult
             }
             is Err -> {
                 Log.d(TAG, "doWork: failed")
@@ -48,6 +56,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
     companion object {
         private const val TAG = "LocationSyncWorker"
         private const val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
+        private const val MAXIMUM_BATCH_SIZE = 100
 
         fun enqueue() {
             val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()
