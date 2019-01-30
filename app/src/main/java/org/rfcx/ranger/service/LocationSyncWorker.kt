@@ -59,7 +59,8 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
         private const val MAXIMUM_BATCH_SIZE = 100
 
         fun enqueue() {
-            val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()
+            val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().setConstraints(constraints).build()
             WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
         }
 
