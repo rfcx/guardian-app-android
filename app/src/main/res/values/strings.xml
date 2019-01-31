@@ -76,4 +76,6 @@
 	
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
+    <string name="notifications">NOTIFICATIONS</string>
+    <string name="receive_event_notifications">Receive event notifications</string>
 </resources>

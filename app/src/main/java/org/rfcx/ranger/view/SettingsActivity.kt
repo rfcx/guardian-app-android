@@ -31,6 +31,7 @@ class SettingsActivity : AppCompatActivity() {
 		appVersionTextView.text = getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
 		bindLocationSwitch()
 		bindGuardianGroupSpinner()
+		bindNotificationsSwitch()
 	}
 	
 	override fun onResume() {
@@ -166,5 +167,20 @@ class SettingsActivity : AppCompatActivity() {
 		}
 		
 		CloudMessaging.subscribeIfRequired(this)
+	}
+
+	private fun bindNotificationsSwitch() {
+		eventNotificationsSwitch.isChecked = Preferences.getInstance(this).getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
+		eventNotificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
+			Preferences.getInstance(this).putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, isChecked)
+			if (isChecked) {
+				eventNotificationsSwitch.isEnabled = false
+				CloudMessaging.subscribeIfRequired(this, {
+					runOnUiThread { eventNotificationsSwitch.isEnabled = true }
+				})
+			} else {
+				CloudMessaging.unsubscribe(this)
+			}
+		}
 	}
 }
