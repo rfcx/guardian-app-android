@@ -7,6 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.*
 import org.rfcx.ranger.adapter.view.*
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.message.Message
+import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.RealmHelper
 import java.util.*
 
 class MessageAdapter(private val context: Context, private var onMessageItemClickListener: OnMessageItemClickListener,
@@ -109,14 +113,77 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 		return (items[position - 1])
 	}
 	
-	fun updateMessages(items: List<BaseItem>?) {
+	fun updateMessages(messages: List<Message>?, events: List<Event>?) {
 		this.items.clear()
-		if (items != null) {
-			this.items.addAll(items)
-			notifyDataSetChanged()
+
+		val recentList = ArrayList<BaseItem>()
+		val historyList = ArrayList<BaseItem>()
+
+		messages?.let {
+			for (message in messages) {
+				val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
+				localMessage?.let {
+					message.isOpened = localMessage.isOpened
+				}
+				if (message.isOpened) {
+					historyList.add(MessageItem(message))
+				} else {
+					recentList.add(MessageItem(message))
+				}
+			}
 		}
+
+		events?.let {
+			for (event in events) {
+				val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
+				localEvent?.let {
+					event.isOpened = localEvent.isOpened
+				}
+				if (event.isOpened) {
+					historyList.add(EventItem(event))
+				} else {
+					recentList.add(EventItem(event))
+				}
+			}
+		}
+
+		recentList.sortWith(compareByDescending {
+			when (it) {
+				is MessageItem -> DateHelper.getDateTime(it.message.time)
+				is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
+				else -> {
+					0
+				}
+			}
+		})
+
+		historyList.sortWith(compareByDescending {
+			when (it) {
+				is MessageItem -> DateHelper.getDateTime(it.message.time)
+				is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
+				else -> {
+					0
+				}
+			}
+		})
+
+		if (recentList.isNotEmpty()) {
+			this.items.add(TitleItem(context.getString(R.string.recent_title)))
+			this.items.addAll(recentList)
+		}
+
+		if (historyList.isNotEmpty()) {
+			this.items.add(TitleItem(context.getString(R.string.history_title)))
+			this.items.addAll(historyList)
+		}
+
+		if (recentList.isNullOrEmpty() && historyList.isNullOrEmpty()) {
+			this.items.add(EmptyItem())
+		}
+
+		notifyDataSetChanged()
 	}
-	
+
 	fun updateHeader(nickname: String, location: String, isLocationTracking: Boolean) {
 		this.headerInformation = HeaderInformation(nickname, location, isLocationTracking)
 		notifyItemChanged(0)

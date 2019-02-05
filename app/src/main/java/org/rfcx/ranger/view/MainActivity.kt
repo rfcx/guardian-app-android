@@ -248,74 +248,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST),
 				object : MessageContentProvider.OnContentCallBack {
 					override fun onContentLoaded(messages: List<Message>?, events: List<Event>?) {
-						
-						val baseItems: ArrayList<BaseItem> = ArrayList()
-						val recentList = ArrayList<BaseItem>()
-						val historyList = ArrayList<BaseItem>()
-						
-						messages?.let {
-							for (message in messages) {
-								val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
-								localMessage?.let {
-									message.isOpened = localMessage.isOpened
-								}
-								if (message.isOpened) {
-									historyList.add(MessageItem(message))
-								} else {
-									recentList.add(MessageItem(message))
-								}
-							}
-						}
-						
-						events?.let {
-							for (event in events) {
-								val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
-								localEvent?.let {
-									event.isOpened = localEvent.isOpened
-								}
-								if (event.isOpened) {
-									historyList.add(EventItem(event))
-								} else {
-									recentList.add(EventItem(event))
-								}
-							}
-						}
-						
-						recentList.sortWith(compareByDescending {
-							when (it) {
-								is MessageItem -> DateHelper.getDateTime(it.message.time)
-								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
-								else -> {
-									0
-								}
-							}
-						})
-						
-						historyList.sortWith(compareByDescending {
-							when (it) {
-								is MessageItem -> DateHelper.getDateTime(it.message.time)
-								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
-								else -> {
-									0
-								}
-							}
-						})
-						
-						if (recentList.isNotEmpty()) {
-							baseItems.add(TitleItem(getString(R.string.recent_title)))
-							baseItems.addAll(recentList)
-						}
-						
-						if (historyList.isNotEmpty()) {
-							baseItems.add(TitleItem(getString(R.string.history_title)))
-							baseItems.addAll(historyList)
-						}
-						
-						if (recentList.isNullOrEmpty() && historyList.isNullOrEmpty()) {
-							baseItems.add(EmptyItem())
-						}
-						
-						messageAdapter.updateMessages(baseItems)
+						messageAdapter.updateMessages(messages, events)
 						messageSwipeRefresh.isRefreshing = false
 					}
 					
@@ -324,7 +257,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 					}
 				})
-		
+
 		if (LocationDb().unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
 		}
