@@ -246,14 +246,10 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	private fun fetchContentList() {
 		messageSwipeRefresh.isRefreshing = true
 
-		MessageContentProvider.getMessage(this, object : MessageContentProvider.OnMessageCallback {
-			override fun onMessageLoaded(messages: List<Message>) {
-				if (rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST)) {
-					fetchEventList(messages)
-				} else {
-					messageAdapter.updateMessages(messages)
-					messageSwipeRefresh.isRefreshing = false
-				}
+		MessageContentProvider.getEvents(this, object : MessageContentProvider.OnEventsCallback {
+			override fun onEventsLoaded(events: List<Event>) {
+				messageAdapter.updateEvents(events)
+				messageSwipeRefresh.isRefreshing = false
 			}
 
 			override fun onFailed(t: Throwable?, message: String?) {
@@ -269,25 +265,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		if (ReportDb().unsentCount() > 0) {
 			ReportSyncWorker.enqueue()
 		}
-	}
-
-	private fun fetchEventList(messages: List<Message>) {
-		MessageContentProvider.getEvents(this, object : MessageContentProvider.OnEventsCallback {
-			override fun onEventsLoaded(events: List<Event>) {
-				messageAdapter.updateMessagesEvents(messages, events)
-				messageSwipeRefresh.isRefreshing = false
-			}
-
-			override fun onFailed(t: Throwable?, message: String?) {
-				// if error
-				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
-				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
-
-				// then update message
-				messageAdapter.updateMessages(messages)
-				messageSwipeRefresh.isRefreshing = false
-			}
-		})
 	}
 	
 	private fun refreshHeader() {

@@ -120,8 +120,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 		notifyItemsChanged()
 	}
 
-	fun updateMessagesEvents(messages: List<Message>, events: List<Event>) {
-		this.messages = messages
+	fun updateEvents(events: List<Event>) {
 		this.events = events
 		notifyItemsChanged()
 	}
