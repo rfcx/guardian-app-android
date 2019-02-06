@@ -1,9 +1,8 @@
 package org.rfcx.ranger.repo
 
 import android.content.Context
-
-import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.repo.api.EventsApi
 import org.rfcx.ranger.repo.api.MessageApi
@@ -24,17 +23,21 @@ object MessageContentProvider {
 					event.events?.let {
 						eventsResponse.addAll(it.toTypedArray())
 					}
-					if (isMessageLoaded)
+					if (isMessageLoaded) {
 						onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+					}
 				}
 				
 				override fun onFailed(t: Throwable?, message: String?) {
 					isEventLoaded = true
-					onContentCallBack.onFailed(t, message)
-					if (isMessageLoaded)
-						onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+					if (isMessageLoaded) {
+						if (messagesResponse.size > 0) {
+							onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+						} else {
+							onContentCallBack.onFailed(t, message)
+						}
+					}
 				}
-				
 			})
 		} else {
 			isEventLoaded = true
@@ -45,15 +48,20 @@ object MessageContentProvider {
 			override fun onSuccess(messages: List<Message>) {
 				isMessageLoaded = true
 				messagesResponse.addAll(messages)
-				if (isEventLoaded)
+				if (isEventLoaded) {
 					onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+				}
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
 				isMessageLoaded = true
-				onContentCallBack.onFailed(t, message)
-				if (isEventLoaded)
-					onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+				if (isEventLoaded) {
+					if (eventsResponse.size > 0) {
+						onContentCallBack.onContentLoaded(messagesResponse, eventsResponse)
+					} else {
+						onContentCallBack.onFailed(t, message)
+					}
+				}
 			}
 		})
 	}
