@@ -25,6 +25,8 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 	}
 	
 	private var items: MutableList<BaseItem> = ArrayList()
+	private var messages: List<Message> = arrayListOf()
+	private var events: List<Event> = arrayListOf()
 	private var headerInformation: HeaderInformation? = null
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -112,38 +114,45 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 		}
 		return (items[position - 1])
 	}
+
+	fun updateMessages(messages: List<Message>) {
+		this.messages = messages
+		notifyItemsChanged()
+	}
+
+	fun updateMessagesEvents(messages: List<Message>, events: List<Event>) {
+		this.messages = messages
+		this.events = events
+		notifyItemsChanged()
+	}
 	
-	fun updateMessages(messages: List<Message>?, events: List<Event>?) {
+	private fun notifyItemsChanged() {
 		this.items.clear()
 
 		val recentList = ArrayList<BaseItem>()
 		val historyList = ArrayList<BaseItem>()
 
-		messages?.let {
-			for (message in messages) {
-				val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
-				localMessage?.let {
-					message.isOpened = localMessage.isOpened
-				}
-				if (message.isOpened) {
-					historyList.add(MessageItem(message))
-				} else {
-					recentList.add(MessageItem(message))
-				}
+		for (message in messages) {
+			val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
+			localMessage?.let {
+				message.isOpened = localMessage.isOpened
+			}
+			if (message.isOpened) {
+				historyList.add(MessageItem(message))
+			} else {
+				recentList.add(MessageItem(message))
 			}
 		}
 
-		events?.let {
-			for (event in events) {
-				val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
-				localEvent?.let {
-					event.isOpened = localEvent.isOpened
-				}
-				if (event.isOpened) {
-					historyList.add(EventItem(event))
-				} else {
-					recentList.add(EventItem(event))
-				}
+		for (event in events) {
+			val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
+			localEvent?.let {
+				event.isOpened = localEvent.isOpened
+			}
+			if (event.isOpened) {
+				historyList.add(EventItem(event))
+			} else {
+				recentList.add(EventItem(event))
 			}
 		}
 

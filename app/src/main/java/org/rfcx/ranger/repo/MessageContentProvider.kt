@@ -57,8 +57,44 @@ object MessageContentProvider {
 			}
 		})
 	}
+
+	fun getMessage(context: Context, onMessageCallback: OnMessageCallback) {
+		MessageApi().getMessage(context, object : MessageApi.OnMessageCallBack {
+			override fun onSuccess(messages: List<Message>) {
+				onMessageCallback.onMessageLoaded(messages)
+			}
+
+			override fun onFailed(t: Throwable?, message: String?) {
+				onMessageCallback.onFailed(t, message)
+			}
+		})
+	}
+
+	fun getEvents(context: Context, onEventsCallback: OnEventsCallback) {
+		EventsApi().getEvents(context, 10, object: EventsApi.OnEventsCallBack {
+			override fun onSuccess(event: EventResponse) {
+				val eventsResponse = ArrayList<Event>()
+				event.events?.let {
+					eventsResponse.addAll(it.toTypedArray())
+				}
+				onEventsCallback.onEventsLoaded(eventsResponse)
+			}
+
+			override fun onFailed(t: Throwable?, message: String?) {
+				onEventsCallback.onFailed(t, message)
+			}
+		})
+	}
 	
 	interface OnContentCallBack : ApiCallback {
 		fun onContentLoaded(messages: List<Message>?, events: List<Event>?)
+	}
+
+	interface OnMessageCallback : ApiCallback {
+		fun onMessageLoaded(messages: List<Message>)
+	}
+
+	interface OnEventsCallback : ApiCallback {
+		fun onEventsLoaded(events: List<Event>)
 	}
 }
