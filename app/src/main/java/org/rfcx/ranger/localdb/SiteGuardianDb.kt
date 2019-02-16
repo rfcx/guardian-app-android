@@ -1,6 +1,5 @@
 package org.rfcx.ranger.localdb
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.guardian.GuardianGroup
@@ -22,19 +21,14 @@ class SiteGuardianDb(val realm: Realm = Realm.getDefaultInstance()) {
 
     fun saveSites(sites: List<Site>) {
         realm.beginTransaction()
-
         val toBeDeleted = realm.where(Site::class.java).not().`in`("id", sites.map({ it.id }).toTypedArray()).findAll()
-        Log.d("SiteGuardianDb", "saveSites: deleting ${toBeDeleted.size}")
         toBeDeleted.deleteAllFromRealm()
-
-        Log.d("SiteGuardianDb", "saveSites: updating ${sites.size}")
         realm.insertOrUpdate(sites)
-
         realm.commitTransaction()
     }
 
-    fun guardianGroup(id: String): GuardianGroup? {
-        return realm.where(GuardianGroup::class.java).equalTo("id", id).findFirst()
+    fun guardianGroup(shortname: String): GuardianGroup? {
+        return realm.where(GuardianGroup::class.java).equalTo("shortname", shortname).findFirst()
     }
 
     fun guardianGroups(): RealmResults<GuardianGroup> {
@@ -43,9 +37,11 @@ class SiteGuardianDb(val realm: Realm = Realm.getDefaultInstance()) {
 
     fun saveGuardianGroups(groups: List<GuardianGroup>) {
         realm.beginTransaction()
+        val toBeDeleted = realm.where(GuardianGroup::class.java).not()
+                .`in`("shortname", groups.map({ it.shortname }).toTypedArray()).findAll()
+        toBeDeleted.deleteAllFromRealm()
         realm.insertOrUpdate(groups)
         realm.commitTransaction()
-        realm.close()
     }
 
 }

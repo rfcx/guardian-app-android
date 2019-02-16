@@ -6,6 +6,7 @@ import io.realm.RealmConfiguration
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.guardian.Site
 import org.rfcx.ranger.localdb.SiteGuardianDb
 
@@ -131,6 +132,123 @@ class SiteGuardianDbTest {
         Assert.assertEquals(2, db.sites().size)
     }
 
+
+    @Test
+    fun canSaveOneGuardianGroup() {
+        // Arrange
+        val realm = realm()
+        val db = SiteGuardianDb(realm)
+        val group = randomGuardianGroup()
+
+        // Act
+        db.saveGuardianGroups(listOf(group))
+
+        // Assert
+        Assert.assertEquals(1, realm.where(GuardianGroup::class.java).count())
+    }
+
+    @Test
+    fun canSaveMultipleGuardianGroups() {
+        // Arrange
+        val realm = realm()
+        val db = SiteGuardianDb(realm)
+        val groups = listOf(randomGuardianGroup(), randomGuardianGroup(), randomGuardianGroup())
+
+        // Act
+        db.saveGuardianGroups(groups)
+
+        // Assert
+        Assert.assertEquals(groups.size, realm.where(GuardianGroup::class.java).count().toInt())
+    }
+
+    @Test
+    fun canGetGuardianGroup() {
+        // Arrange
+        val db = SiteGuardianDb(realm())
+        val group = randomGuardianGroup()
+        db.saveGuardianGroups(listOf(randomGuardianGroup(), randomGuardianGroup(), group, randomGuardianGroup()))
+
+        // Act
+        val result = db.guardianGroup(group.shortname)
+
+        // Assert
+        Assert.assertNotNull(result)
+        Assert.assertEquals(group.shortname, result?.shortname)
+        Assert.assertEquals(group.name, result?.name)
+        Assert.assertEquals(group.description, result?.description)
+    }
+
+    @Test
+    fun canUpdateGuardianGroup() {
+        // Arrange
+        val db = SiteGuardianDb(realm())
+        val group1 = randomGuardianGroup()
+        val group2 = randomGuardianGroup()
+        db.saveGuardianGroups(listOf(group1, group2))
+        val updatedGroup1 = randomGuardianGroup()
+        updatedGroup1.shortname = group1.shortname
+
+        // Act
+        db.saveGuardianGroups(listOf(updatedGroup1, group2))
+
+        // Assert
+        val result = db.guardianGroup(group1.shortname)
+        Assert.assertNotNull(result)
+        Assert.assertEquals(updatedGroup1.name, result?.name)
+        Assert.assertEquals(updatedGroup1.description, result?.description)
+    }
+
+    @Test
+    fun canReplaceGuardianGroups() {
+        // Arrange
+        val db = SiteGuardianDb(realm())
+        val group1 = randomGuardianGroup()
+        db.saveGuardianGroups(listOf(group1))
+        val group2 = randomGuardianGroup()
+        val group3 = randomGuardianGroup()
+        val group4 = randomGuardianGroup()
+
+        // Act
+        db.saveGuardianGroups(listOf(group2, group3, group4))
+
+        // Assert
+        Assert.assertNull(db.guardianGroup(group1.shortname))
+        Assert.assertEquals(3, db.guardianGroups().size)
+    }
+
+    @Test
+    fun canDeleteGuardianGroup() {
+        // Arrange
+        val db = SiteGuardianDb(realm())
+        val group = randomGuardianGroup()
+        db.saveGuardianGroups(listOf(group, randomGuardianGroup(), randomGuardianGroup(), randomGuardianGroup()))
+
+        // Act
+        db.saveGuardianGroups(listOf(randomGuardianGroup(), randomGuardianGroup(), randomGuardianGroup()))
+
+        // Assert
+        Assert.assertNull(db.guardianGroup(group.shortname))
+    }
+
+    @Test
+    fun canKeepOtherGuardianGroupsWhenDeleteOneGuardianGroup() {
+        // Arrange
+        val db = SiteGuardianDb(realm())
+        val group1 = randomGuardianGroup()
+        val group2 = randomGuardianGroup()
+        val groupToBeDeleted = randomGuardianGroup()
+        db.saveGuardianGroups(listOf(group1, group2, groupToBeDeleted))
+
+        // Act
+        db.saveGuardianGroups(listOf(group1, group2))
+
+        // Assert
+        Assert.assertNull(db.guardianGroup(groupToBeDeleted.shortname))
+        Assert.assertNotNull(db.guardianGroup(group1.shortname))
+        Assert.assertNotNull(db.guardianGroup(group2.shortname))
+        Assert.assertEquals(2, db.guardianGroups().size)
+    }
+
     private fun realm(): Realm {
         val config = RealmConfiguration.Builder()
                 .name("myrealm.realm")
@@ -145,6 +263,14 @@ class SiteGuardianDbTest {
         site.name = randomAlphanumeric(20)
         site.description = randomAlphanumeric(50)
         return site
+    }
+
+    private fun randomGuardianGroup(): GuardianGroup {
+        val group = GuardianGroup()
+        group.shortname = randomAlphanumeric(8)
+        group.name = randomAlphanumeric(20)
+        group.description = randomAlphanumeric(50)
+        return group
     }
 
 }
