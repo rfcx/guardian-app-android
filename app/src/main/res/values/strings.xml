@@ -48,6 +48,8 @@
     <string name="location_tracking_off_label">Off</string>
     <string name="default_site_label">Site</string>
     <string name="guardian_group_label">Guardian group</string>
+    <string name="notifications">Notifications</string>
+    <string name="receive_event_notifications">Receive event notifications</string>
 
     <string name="last_month">Last\nMonth</string>
     <string name="last_week">Last\nWeek</string>
@@ -76,6 +78,4 @@
 	
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
-    <string name="notifications">NOTIFICATIONS</string>
-    <string name="receive_event_notifications">Receive event notifications</string>
 </resources>

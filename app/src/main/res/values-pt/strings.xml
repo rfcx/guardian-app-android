@@ -25,10 +25,9 @@
     <string name="profile_nottracking">Não rastreando</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+    <string name="error_no_guardian_group_set">Definir grupo de guardiões nas configurações</string>
 
     <!-- report -->
-
     <string name="report_title">Relatório</string>
     <string name="report_send_success">Relatório enviado com sucesso!</string>
     <string name="report_what_label">O QUE?</string>
@@ -50,6 +49,8 @@
     <string name="location_tracking_off_label">Desligado</string>
     <string name="default_site_label">Local</string>
     <string name="guardian_group_label">Grupo de guardiões</string>
+    <string name="notifications">Notificações</string>
+    <string name="receive_event_notifications">Receba notificações de eventos</string>
 
     <string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
@@ -74,6 +75,6 @@
     <string name="sync_uploading">Fazendo upload…</string>
     <string name="sync_complete">Upload completo!</string>
     <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
-    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+    <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
 
 </resources>
