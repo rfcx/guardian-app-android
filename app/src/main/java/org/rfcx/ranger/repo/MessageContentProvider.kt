@@ -17,7 +17,7 @@ object MessageContentProvider {
 		val eventsResponse = ArrayList<Event>()
 		
 		if (loadEvent) {
-			EventsApi().getEvents(context, 10, object : EventsApi.OnEventsCallBack {
+			EventsApi().getEvents(context, 10, 1,object : EventsApi.OnEventsCallBack {
 				override fun onSuccess(event: EventResponse) {
 					isEventLoaded = true
 					event.events?.let {
@@ -78,14 +78,14 @@ object MessageContentProvider {
 		})
 	}
 
-	fun getEvents(context: Context, onEventsCallback: OnEventsCallback) {
-		EventsApi().getEvents(context, 10, object: EventsApi.OnEventsCallBack {
+	fun getEvents(context: Context, limit: Int, offset: Int, onEventsCallback: OnEventsCallback) {
+		EventsApi().getEvents(context, limit, offset, object : EventsApi.OnEventsCallBack {
 			override fun onSuccess(event: EventResponse) {
 				val eventsResponse = ArrayList<Event>()
 				event.events?.let {
 					eventsResponse.addAll(it.toTypedArray())
 				}
-				onEventsCallback.onEventsLoaded(eventsResponse)
+				onEventsCallback.onEventsLoaded(eventsResponse, event.total)
 			}
 
 			override fun onFailed(t: Throwable?, message: String?) {
@@ -93,7 +93,7 @@ object MessageContentProvider {
 			}
 		})
 	}
-	
+
 	interface OnContentCallBack : ApiCallback {
 		fun onContentLoaded(messages: List<Message>?, events: List<Event>?)
 	}
@@ -103,6 +103,6 @@ object MessageContentProvider {
 	}
 
 	interface OnEventsCallback : ApiCallback {
-		fun onEventsLoaded(events: List<Event>)
+		fun onEventsLoaded(events: List<Event>, totalItemCount: Int)
 	}
 }

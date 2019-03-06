@@ -12,6 +12,7 @@ import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.RealmHelper
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MessageAdapter(private val context: Context, private var onMessageItemClickListener: OnMessageItemClickListener,
                      private var headerProtocol: HeaderProtocol) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,7 +27,7 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 	
 	private var items: MutableList<BaseItem> = ArrayList()
 	private var messages: List<Message> = arrayListOf()
-	private var events: List<Event> = arrayListOf()
+	private var events: ArrayList<Event> = arrayListOf()
 	private var headerInformation: HeaderInformation? = null
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -121,7 +122,17 @@ class MessageAdapter(private val context: Context, private var onMessageItemClic
 	}
 
 	fun updateEvents(events: List<Event>) {
-		this.events = events
+		this.events.clear()
+		this.events.addAll(events)
+		notifyItemsChanged()
+	}
+
+	fun addEventsFromLoadMore(events: List<Event>) {
+		// force be opened
+		events.forEach {
+			it.isOpened = true
+		}
+		this.events.addAll(events)
 		notifyItemsChanged()
 	}
 	
