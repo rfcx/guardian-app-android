@@ -78,9 +78,44 @@
         app:layout_constraintTop_toTopOf="@+id/locationTrackingTextView"
         app:showText="false"
         tools:checked="true" />
-    
+
     <TextView
-        android:id="@+id/defaultSiteTextView"
+            android:id="@+id/guardianGroupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_large"
+            android:text="@string/guardian_group_label"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/locationTrackingTextView" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/guardianGroupSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="@+id/guardianGroupTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guardianGroupTextView"
+            app:layout_constraintTop_toTopOf="@+id/guardianGroupTextView" />
+
+    <ProgressBar
+            android:id="@+id/guardianGroupProgress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/guardianGroupSpinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guardianGroupSpinner" />
+
+    <TextView
+        android:id="@+id/siteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_large"
@@ -89,52 +124,21 @@
         android:textColor="@color/text_white"
         android:textSize="@dimen/text_medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/locationTrackingTextView" />
-    
+        app:layout_constraintTop_toBottomOf="@id/guardianGroupTextView" />
+
     <TextView
-        android:id="@+id/defaultSiteValueTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/text_large"
-        app:layout_constraintBaseline_toBaselineOf="@+id/defaultSiteTextView"
-        app:layout_constraintEnd_toEndOf="parent" />
-    
-    <TextView
-        android:id="@+id/guardianGroupTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_large"
-        android:text="@string/guardian_group_label"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/text_medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/defaultSiteTextView" />
-    
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/guardianGroupSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:gravity="end"
-        android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/guardianGroupTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guardianGroupTextView"
-        app:layout_constraintTop_toTopOf="@+id/guardianGroupTextView" />
-    
-    <ProgressBar
-        android:id="@+id/guardianGroupProgress"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/guardianGroupSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guardianGroupSpinner" />
+            android:id="@+id/siteValueTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            android:textAlignment="textEnd"
+            app:layout_constraintBaseline_toBaselineOf="@+id/siteTextView"
+            app:layout_constraintStart_toEndOf="@id/siteTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Tembe Territory"/>
 
     <TextView
             android:id="@+id/notificationsTextView"
@@ -146,7 +150,7 @@
             android:textColor="@color/text_almost_white"
             android:textSize="@dimen/text_xsmall"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guardianGroupTextView"/>
+            app:layout_constraintTop_toBottomOf="@id/siteTextView"/>
 
     <TextView
             android:id="@+id/eventNotificationsTextView"

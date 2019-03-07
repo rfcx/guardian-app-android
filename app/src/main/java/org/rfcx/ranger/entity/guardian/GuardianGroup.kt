@@ -1,5 +1,6 @@
 package org.rfcx.ranger.entity.guardian
 
+import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -14,4 +15,6 @@ open class GuardianGroup : RealmObject() {
     var name: String = ""
     var description: String = ""
     var guardians: RealmList<Guardian>? = null
+    @SerializedName("site")
+    var siteId: String = ""
 }

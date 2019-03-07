@@ -34,7 +34,6 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.adapter.entity.EventItem
 import org.rfcx.ranger.adapter.entity.MessageItem
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
@@ -268,10 +267,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 	
 	private fun refreshHeader() {
-		val preferences = Preferences.getInstance(this)
-		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
-		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
+		messageAdapter.updateHeader(getUserNickname(), getSiteName(), LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
@@ -356,7 +352,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
 				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 			}
-			
 		})
 	}
 	

@@ -12,6 +12,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.guardian.GuardianGroupsAdapter
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.repo.api.GuardianGroupsApi
 import org.rfcx.ranger.util.*
 import java.util.*
@@ -39,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
 		updateLocationSwitch()
 		reloadGuardianGroups()
-		defaultSiteValueTextView.text = this.getSite()
+		updateSiteName()
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -107,7 +108,7 @@ class SettingsActivity : AppCompatActivity() {
 	}
 
 	private fun reloadGuardianGroups() {
-		val database = RealmHelper.getInstance()
+		val database = SiteGuardianDb()
 		val lastUpdated = Preferences.getInstance(this).getDate(Preferences.GUARDIAN_GROUPS_LAST_UPDATED)
 		val cacheTimeMs = 24L * 3600000L // 24 hours
 		if (lastUpdated != null && lastUpdated.after(Date(System.currentTimeMillis() - cacheTimeMs))) {
@@ -165,7 +166,8 @@ class SettingsActivity : AppCompatActivity() {
 			CloudMessaging.unsubscribe(this)
 			preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, group.shortname)
 		}
-		
+
+		updateSiteName()
 		CloudMessaging.subscribeIfRequired(this)
 	}
 
@@ -182,5 +184,9 @@ class SettingsActivity : AppCompatActivity() {
 				CloudMessaging.unsubscribe(this)
 			}
 		}
+	}
+
+	private fun updateSiteName() {
+		siteValueTextView.text = getSiteName()
 	}
 }

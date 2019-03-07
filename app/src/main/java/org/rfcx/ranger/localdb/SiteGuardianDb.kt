@@ -42,6 +42,7 @@ class SiteGuardianDb(val realm: Realm = Realm.getDefaultInstance()) {
         toBeDeleted.deleteAllFromRealm()
         realm.insertOrUpdate(groups)
         realm.commitTransaction()
+        realm.refresh()
     }
 
 }
