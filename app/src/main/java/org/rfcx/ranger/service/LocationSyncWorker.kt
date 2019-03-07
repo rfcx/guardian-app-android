@@ -29,10 +29,11 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
 
         Log.d(TAG, "doWork: found ${checkins.size} unsent")
 
-        var jobResult = Result.success()
+        // When there is a lot of checkins (e.g. when the app has been offline for long periods)
+        // then only upload the first X checkins and requeue the job
         if (checkins.size > MAXIMUM_BATCH_SIZE) {
             checkins = checkins.subList(0, MAXIMUM_BATCH_SIZE)
-            jobResult = Result.retry()
+            enqueue()
         }
 
         Log.d(TAG, "doWork: sending ${checkins.size}")
@@ -43,14 +44,13 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
             is Ok -> {
                 Log.d(TAG, "doWork: success")
                 db.markSent(checkinIds)
-                return jobResult
+                return Result.success()
             }
             is Err -> {
                 Log.d(TAG, "doWork: failed")
+                return Result.retry()
             }
         }
-
-        return Result.retry()
     }
 
     companion object {
@@ -61,7 +61,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
         fun enqueue() {
             val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
             val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().setConstraints(constraints).build()
-            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
+            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
         }
 
         fun workInfos(): LiveData<List<WorkInfo>> {
