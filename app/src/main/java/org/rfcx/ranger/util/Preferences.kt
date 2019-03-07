@@ -30,18 +30,18 @@ class Preferences(context: Context) {
 		const val ACCESSIBLE_SITES = "${PREFIX}ACCESSIBLE_SITES"
 		const val DEFAULT_SITE = "${PREFIX}SITE"
 		const val HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP = "${PREFIX}HAS_SUBSCRIBED_TO_DEFAULT_SITE"
+		const val SHOULD_RECEIVE_EVENT_NOTIFICATIONS = "${PREFIX}SHOULD_RECEIVE_EVENT_NOTIFICATIONS"
 		const val SELECTED_GUARDIAN_GROUP = "${PREFIX}SELECTED_GUARDIAN_GROUP"
 		const val GUARDIAN_GROUPS_LAST_UPDATED = "${PREFIX}GUARDIAN_GROUPS_LAST_UPDATED"
 		const val ENABLE_LOCATION_TRACKING = "${PREFIX}ENABLE_LOCATION_TRACKING"
-		const val LASTED_LOCATION_UPLOAD = "${PREFIX}LASTED_LOCATION_UPLOAD"
 	}
 	
 	init {
 		sharedPreferences = context.applicationContext.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 	}
 
-	fun getBoolean(key: String): Boolean {
-		return sharedPreferences.getBoolean(key, false)
+	fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
+		return sharedPreferences.getBoolean(key, defaultValue)
 	}
 	
 	fun putBoolean(key: String, value: Boolean) {

@@ -30,8 +30,8 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.LocationPermissions
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RecordingPermissions
+import org.rfcx.ranger.util.getSiteName
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -235,8 +235,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			return
 		}
-		
-		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
+
+		val site = getSiteName()
 		val time = DateHelper.getIsoTime()
 		val lat = lastLocation?.latitude ?: 0.0
 		val lon = lastLocation?.longitude ?: 0.0

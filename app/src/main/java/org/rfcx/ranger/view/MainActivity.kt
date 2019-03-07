@@ -30,9 +30,10 @@ import org.rfcx.ranger.adapter.HeaderProtocol
 import org.rfcx.ranger.adapter.MessageAdapter
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.SyncInfo
-import org.rfcx.ranger.adapter.entity.*
+import org.rfcx.ranger.adapter.entity.BaseItem
+import org.rfcx.ranger.adapter.entity.EventItem
+import org.rfcx.ranger.adapter.entity.MessageItem
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.MessageContentProvider
@@ -243,88 +244,20 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	
 	private fun fetchContentList() {
 		messageSwipeRefresh.isRefreshing = true
-		
-		MessageContentProvider.getMessageAndEvent(this,
-				rangerRemote.getBoolean(RemoteConfigKey.REMOTE_SHOW_EVENT_LIST),
-				object : MessageContentProvider.OnContentCallBack {
-					override fun onContentLoaded(messages: List<Message>?, events: List<Event>?) {
-						
-						val baseItems: ArrayList<BaseItem> = ArrayList()
-						val recentList = ArrayList<BaseItem>()
-						val historyList = ArrayList<BaseItem>()
-						
-						messages?.let {
-							for (message in messages) {
-								val localMessage = RealmHelper.getInstance().findLocalMessage(message.guid)
-								localMessage?.let {
-									message.isOpened = localMessage.isOpened
-								}
-								if (message.isOpened) {
-									historyList.add(MessageItem(message))
-								} else {
-									recentList.add(MessageItem(message))
-								}
-							}
-						}
-						
-						events?.let {
-							for (event in events) {
-								val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
-								localEvent?.let {
-									event.isOpened = localEvent.isOpened
-								}
-								if (event.isOpened) {
-									historyList.add(EventItem(event))
-								} else {
-									recentList.add(EventItem(event))
-								}
-							}
-						}
-						
-						recentList.sortWith(compareByDescending {
-							when (it) {
-								is MessageItem -> DateHelper.getDateTime(it.message.time)
-								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
-								else -> {
-									0
-								}
-							}
-						})
-						
-						historyList.sortWith(compareByDescending {
-							when (it) {
-								is MessageItem -> DateHelper.getDateTime(it.message.time)
-								is EventItem -> DateHelper.getDateTime(it.event.beginsAt)
-								else -> {
-									0
-								}
-							}
-						})
-						
-						if (recentList.isNotEmpty()) {
-							baseItems.add(TitleItem(getString(R.string.recent_title)))
-							baseItems.addAll(recentList)
-						}
-						
-						if (historyList.isNotEmpty()) {
-							baseItems.add(TitleItem(getString(R.string.history_title)))
-							baseItems.addAll(historyList)
-						}
-						
-						if (recentList.isNullOrEmpty() && historyList.isNullOrEmpty()) {
-							baseItems.add(EmptyItem())
-						}
-						
-						messageAdapter.updateMessages(baseItems)
-						messageSwipeRefresh.isRefreshing = false
-					}
-					
-					override fun onFailed(t: Throwable?, message: String?) {
-						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
-						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
-					}
-				})
-		
+
+		MessageContentProvider.getEvents(this, object : MessageContentProvider.OnEventsCallback {
+			override fun onEventsLoaded(events: List<Event>) {
+				messageAdapter.updateEvents(events)
+				messageSwipeRefresh.isRefreshing = false
+			}
+
+			override fun onFailed(t: Throwable?, message: String?) {
+				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
+				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
+				messageSwipeRefresh.isRefreshing = false
+			}
+		})
+
 		if (LocationDb().unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
 		}
@@ -334,10 +267,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 	
 	private fun refreshHeader() {
-		val preferences = Preferences.getInstance(this)
-		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
-		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
+		messageAdapter.updateHeader(getUserNickname(), getSiteName(), LocationTracking.isOn(this))
 	}
 	
 	private fun logout() {
@@ -422,7 +352,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
 				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 			}
-			
 		})
 	}
 	

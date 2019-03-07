@@ -25,7 +25,7 @@
     <string name="profile_nottracking">No trastreando</string>
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">Seleccionar grupo guardián en configuraciones</string>
+    <string name="error_no_guardian_group_set">Establecer grupo guardián en configuraciones</string>
 
     <!-- report -->
     <string name="report_title">Reportar</string>
@@ -49,6 +49,8 @@
     <string name="location_tracking_off_label">Apagando</string>
     <string name="default_site_label">Sitio</string>
     <string name="guardian_group_label">Grupo de Guardias</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="receive_event_notifications">Recibir notificaciones de evento</string>
 
     <string name="last_month">Ultimo\nMes</string>
     <string name="last_week">Ultima\nSemana</string>
@@ -73,6 +75,6 @@
     <string name="sync_uploading">Cargando…</string>
     <string name="sync_complete">!Carga completa!</string>
     <string name="empty_list_description">No hay incidentes recientemente.\nDisfrute su día :)</string>
-    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+    <string name="can_not_play_audio">No se puede reproducir audio, inténtalo de nuevo más tarde.</string>
 
 </resources>

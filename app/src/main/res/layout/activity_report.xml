@@ -1,129 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/rootView"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-	
-	<androidx.appcompat.widget.Toolbar
-		android:id="@+id/toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="?android:actionBarSize"
-		android:background="@color/colorPrimary"
-		app:layout_constraintTop_toTopOf="parent"
-		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-	
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layout_constraintBottom_toTopOf="@+id/reportButton"
-		app:layout_constraintTop_toBottomOf="@+id/toolbar">
-		
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineHorizontal25"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				app:layout_constraintGuide_percent="0.25"/>
-			
-			<fragment
-				android:id="@+id/mapView"
-				android:name="com.google.android.gms.maps.SupportMapFragment"
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"
-				tools:layout_editor_absoluteX="0dp"
-				tools:layout_editor_absoluteY="0dp" />
-			
-			<TextView
-				android:id="@+id/reportTypeTextView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:text="@string/report_what_label"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
-				android:textColor="@color/text_primary"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/mapView" />
-			
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/reportTypeRecycler"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
-			
-			<TextView
-				android:id="@+id/reportWhenTextView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:text="@string/report_when_label"
-				android:textColor="@color/text_primary"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
-			
-			<org.rfcx.ranger.widget.WhenView
-				android:id="@+id/whenView"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:layout_constraintEnd_toEndOf="parent"
-				android:layout_marginStart="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-			<TextView
-				android:id="@+id/reportRecordTextView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
-				android:text="@string/report_record_label"
-				android:textColor="@color/text_primary"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/whenView" />
-			
-			<org.rfcx.ranger.widget.SoundRecordProgressView
-				android:id="@+id/soundRecordProgressView"
-				android:layout_width="match_parent"
-				android:layout_height="48dp"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:layout_marginBottom="@dimen/margin_padding_normal"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/reportButton"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-		</androidx.constraintlayout.widget.ConstraintLayout>
-	
-	</ScrollView>
-	
-	<Button
-		android:id="@+id/reportButton"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_report_submit_button"
-		android:enabled="false"
-		android:foreground="?android:attr/selectableItemBackground"
-		android:text="@string/report_submit_button_label"
-		android:textColor="@android:color/white"
-		android:textStyle="bold"
-		app:layout_constraintBottom_toBottomOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineHorizontal25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.25" />
+
+            <fragment
+                android:id="@+id/mapView"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <TextView
+                android:id="@+id/reportTypeTextView"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:text="@string/report_what_label"
+                android:textColor="@color/text_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mapView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reportTypeRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
+
+            <TextView
+                android:id="@+id/reportWhenTextView"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:text="@string/report_when_label"
+                android:textColor="@color/text_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
+
+            <org.rfcx.ranger.widget.WhenView
+                android:id="@+id/whenView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                android:layout_marginEnd="@dimen/margin_padding_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
+
+            <TextView
+                android:id="@+id/reportRecordTextView"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginTop="@dimen/margin_padding_xlarge"
+                android:text="@string/report_record_label"
+                android:textColor="@color/text_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/whenView" />
+
+            <org.rfcx.ranger.widget.SoundRecordProgressView
+                android:id="@+id/soundRecordProgressView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginTop="@dimen/margin_padding_small"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/reportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_padding_normal"
+        android:background="@drawable/bg_report_submit_button"
+        android:enabled="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/report_submit_button_label"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

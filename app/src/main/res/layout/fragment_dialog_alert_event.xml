@@ -1,119 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:gravity="center_horizontal"
-	android:orientation="vertical">
-	
-	<View
-		android:layout_width="@dimen/dialog_min_width"
-		android:layout_height="0dp" />
-	
-	<FrameLayout
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/spectrogram_height"
-		android:layout_gravity="center"
-		android:layout_margin="@dimen/margin_padding_small">
-		
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/spectrogramImageView"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/spectrogram_height"
-			android:scaleType="fitXY"
-			android:src="@drawable/spectrogram_place_holder" />
-		
-		<androidx.appcompat.widget.AppCompatSeekBar
-			android:id="@+id/soundProgressSeekBar"
-			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:paddingStart="0dp"
-			android:paddingEnd="0dp"
-			android:progress="0"
-			android:progressDrawable="@null"
-			android:thumb="@drawable/seek_bar_thumb" />
-		
-		<ProgressBar
-			android:id="@+id/loadingSoundProgressBar"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_gravity="center" />
-		
-		<ImageView
-			android:id="@+id/replayButton"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_gravity="center"
-			android:adjustViewBounds="true"
-			android:background="@color/transparent"
-			android:contentDescription="@string/app_name"
-			android:scaleType="fitXY"
-			android:src="@drawable/ic_replay_black_40dp"
-			android:tint="@color/colorPrimaryDark"
-			android:visibility="invisible" />
-	
-	</FrameLayout>
-	
-	<ImageView
-		android:id="@+id/eventTypeImageView"
-		android:layout_width="@dimen/event_icon_width"
-		android:layout_height="wrap_content"
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/app_name"
-		android:tint="@color/grey_active"
-		tools:src="@drawable/ic_gun" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/eventNameTextView"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:gravity="center"
-		android:textColor="@color/grey_active"
-		android:textSize="@dimen/text_xlarge"
-		android:textStyle="bold"
-		app:autoSizeMaxTextSize="24sp"
-		app:autoSizeMinTextSize="14sp"
-		app:autoSizeStepGranularity="2sp"
-		app:autoSizeTextType="uniform"
-		tools:text="chainsaw?" />
-	
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:gravity="center"
-		android:orientation="horizontal">
-		
-		<ImageButton
-			android:id="@+id/cancelButton"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:adjustViewBounds="true"
-			android:background="@color/transparent"
-			android:contentDescription="@string/app_name"
-			android:scaleType="centerCrop"
-			android:src="@drawable/ic_cross" />
-		
-		<ImageButton
-			android:id="@+id/okButton"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:adjustViewBounds="true"
-			android:background="@color/transparent"
-			android:contentDescription="@string/app_name"
-			android:scaleType="centerCrop"
-			android:src="@drawable/ic_tick" />
-	</LinearLayout>
-	
-	<FrameLayout
-		android:id="@+id/mapContainer"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/event_map_height"
-		android:layout_margin="@dimen/margin_padding_small" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="@dimen/dialog_min_width"
+        android:layout_height="0dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spectrogram_height"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_padding_small">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/spectrogramImageView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spectrogram_height"
+            android:scaleType="fitXY"
+            android:src="@drawable/spectrogram_place_holder" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/soundProgressSeekBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progress="0"
+            android:progressDrawable="@null"
+            android:thumb="@drawable/seek_bar_thumb" />
+
+        <ProgressBar
+            android:id="@+id/loadingSoundProgressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/replayButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@color/transparent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_replay_black_40dp"
+            android:tint="@color/colorPrimaryDark"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/eventTypeImageView"
+        android:layout_width="@dimen/event_icon_width"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:tint="@color/grey_active"
+        tools:src="@drawable/ic_gun" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/eventNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:gravity="center"
+        android:textColor="@color/grey_active"
+        android:textSize="@dimen/text_xlarge"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        tools:text="chainsaw?" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/cancelButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:adjustViewBounds="true"
+            android:background="@color/transparent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_cross" />
+
+        <ImageButton
+            android:id="@+id/okButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:adjustViewBounds="true"
+            android:background="@color/transparent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_tick" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/mapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/event_map_height"
+        android:layout_margin="@dimen/margin_padding_small" />
 
 </LinearLayout>

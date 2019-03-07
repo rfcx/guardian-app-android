@@ -21,13 +21,22 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
 
         val api = SendLocationApi()
         val db = LocationDb()
-        val checkins = db.unsent()
+        var checkins = db.unsent()
 
         if (checkins.isEmpty()) {
             return Result.success()
         }
 
-        Log.d(TAG, "doWork: found ${checkins.size} unsent and sending")
+        Log.d(TAG, "doWork: found ${checkins.size} unsent")
+
+        // When there is a lot of checkins (e.g. when the app has been offline for long periods)
+        // then only upload the first X checkins and requeue the job
+        if (checkins.size > MAXIMUM_BATCH_SIZE) {
+            checkins = checkins.subList(0, MAXIMUM_BATCH_SIZE)
+            enqueue()
+        }
+
+        Log.d(TAG, "doWork: sending ${checkins.size}")
         val checkinIds = checkins.map { it.id }
 
         val result = api.sendSync(applicationContext, checkins)
@@ -39,19 +48,20 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
             }
             is Err -> {
                 Log.d(TAG, "doWork: failed")
+                return Result.retry()
             }
         }
-
-        return Result.retry()
     }
 
     companion object {
         private const val TAG = "LocationSyncWorker"
         private const val UNIQUE_WORK_KEY = "LocationSyncWorkerUniqueKey"
+        private const val MAXIMUM_BATCH_SIZE = 100
 
         fun enqueue() {
-            val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().build()
-            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
+            val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            val workRequest = OneTimeWorkRequestBuilder<LocationSyncWorker>().setConstraints(constraints).build()
+            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
         }
 
         fun workInfos(): LiveData<List<WorkInfo>> {

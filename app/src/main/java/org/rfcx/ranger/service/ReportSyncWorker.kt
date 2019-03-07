@@ -69,8 +69,9 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
         private const val UNIQUE_WORK_KEY = "ReportSyncWorkerUniqueKey"
 
         fun enqueue() {
-            val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().build()
-            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
+            val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().setConstraints(constraints).build()
+            WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
         }
 
         fun workInfos(): LiveData<List<WorkInfo>> {

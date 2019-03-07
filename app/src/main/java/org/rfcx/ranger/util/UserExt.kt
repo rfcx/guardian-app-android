@@ -2,6 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.util.Log
+import org.rfcx.ranger.localdb.SiteGuardianDb
 
 fun Context.getTokenID(): String? {
 	val idToken = Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "")
@@ -9,9 +10,13 @@ fun Context.getTokenID(): String? {
 	return if (idToken.isEmpty()) null else idToken
 }
 
-fun Context.getSite(): String? {
-	val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
-	return if (site.isEmpty()) null else site
+fun Context.getSiteName(): String {
+	val defaultSiteName = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
+	val database = SiteGuardianDb()
+	val guardianGroupId = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
+	val siteId = database.guardianGroup(guardianGroupId)?.siteId ?: ""
+	val site = database.site(siteId)
+	return if (site != null) site.name else defaultSiteName.capitalize()
 }
 
 fun Context.getGuardianGroup(): String? {
@@ -22,4 +27,9 @@ fun Context.getGuardianGroup(): String? {
 fun Context.getUserGuId(): String? {
 	val guId = Preferences.getInstance(this).getString(Preferences.USER_GUID, "")
 	return if (guId.isEmpty()) null else guId
+}
+
+fun Context.getUserNickname(): String {
+	val nickname = Preferences.getInstance(this).getString(Preferences.NICKNAME)
+	return if (nickname != null && nickname.length > 0) nickname else "${getSiteName()} Ranger"
 }
