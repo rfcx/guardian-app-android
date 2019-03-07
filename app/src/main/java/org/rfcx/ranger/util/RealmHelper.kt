@@ -2,9 +2,7 @@ package org.rfcx.ranger.util
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.RealmResults
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.message.Message
 
 /**
@@ -64,19 +62,6 @@ class RealmHelper {
 			
 			event?.let { realm.copyFromRealm(event) }
 		}
-	}
-	
-	fun guardianGroups(): RealmResults<GuardianGroup> {
-		val realm = Realm.getDefaultInstance()
-		return realm.where(GuardianGroup::class.java).findAll()
-	}
-	
-	fun saveGuardianGroups(groups: List<GuardianGroup>) {
-		val realm = Realm.getDefaultInstance()
-		realm.beginTransaction()
-		realm.insertOrUpdate(groups)
-		realm.commitTransaction()
-		realm.close()
 	}
 	
 }

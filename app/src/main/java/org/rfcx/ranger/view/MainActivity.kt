@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 
 	private fun totalPage(): Int {
 		val page = totalItemCount.toFloat() / LIMIT_PER_PAGE
-		Log.d("LoadMore", "Calculator : $page")
 		return ceil(page.toDouble()).toInt()
 	}
 	private fun nextPage(): Int = ++currentOffset
@@ -240,9 +239,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
             val visibleItemCount = layoutManager.childCount
             val total = layoutManager.itemCount
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-			Log.d("LoadMore", "isLoading: $isLoading ;; isLastPage: ${isLastPage()}")
-
 			if (!isLoading && !isLastPage()) {
 				if ((visibleItemCount + firstVisibleItemPosition) >= total
 						&& firstVisibleItemPosition >= 0
@@ -308,7 +304,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 
 	private fun loadMoreEvents() {
-		Log.d("LoadMore", "<-- load more...")
+		Log.d(this@MainActivity.localClassName, "load more...")
 		isLoading = true
 		messageSwipeRefresh.isRefreshing = true
 
@@ -331,10 +327,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	}
 
 	private fun refreshHeader() {
-		val preferences = Preferences.getInstance(this)
-		val site = preferences.getString(Preferences.DEFAULT_SITE, "")
-		val nickname = preferences.getString(Preferences.NICKNAME, "$site Ranger")
-		messageAdapter.updateHeader(nickname, site, LocationTracking.isOn(this))
+		messageAdapter.updateHeader(getUserNickname(), getSiteName(), LocationTracking.isOn(this))
 	}
 
 	private fun logout() {
@@ -419,7 +412,6 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 				val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
 				Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 			}
-
 		})
 	}
 

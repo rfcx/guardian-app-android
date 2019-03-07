@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.guardian.Site
 import org.rfcx.ranger.entity.location.CheckInRequest
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
@@ -56,5 +57,10 @@ interface ApiRestInterface {
 
 	@GET("guardians/groups")
 	fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
-	
+
+	@GET("sites")
+	fun sites(@Header("Authorization") authorization: String): Call<List<Site>>
+
+	@GET("sites/{id}")
+	fun site(@Header("Authorization") authorization: String, @Path("id") id: String): Call<Site>
 }
