@@ -60,14 +60,18 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 
     // pagination
     private var isLoading: Boolean = false
-	private var currentOffset: Int = 1
+	private var currentOffset: Int = 0
 	private var totalItemCount: Int = 0
 
 	private fun totalPage(): Int {
 		val page = totalItemCount.toFloat() / LIMIT_PER_PAGE
 		return ceil(page.toDouble()).toInt()
 	}
-	private fun nextPage(): Int = ++currentOffset
+
+    private fun nextOffset(): Int {
+        currentOffset += LIMIT_PER_PAGE
+        return currentOffset
+    }
 
 	companion object {
 		fun startActivity(context: Context) {
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		private const val REQUEST_CODE_GOOGLE_AVAILABILITY = 100
 		const val INTENT_FILTER_MESSAGE_BROADCAST = "${BuildConfig.APPLICATION_ID}.MESSAGE_RECEIVE"
 		const val CONNECTIVITY_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
-		private const val LIMIT_PER_PAGE = 15
+		private const val LIMIT_PER_PAGE = 12
 	}
 
 	override fun onStart() {
@@ -278,7 +282,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		messageSwipeRefresh.isRefreshing = true
 
 		// reset offset
-		currentOffset = 1
+		currentOffset = 0
 
 		MessageContentProvider.getEvents(this, LIMIT_PER_PAGE, currentOffset,
 				object : MessageContentProvider.OnEventsCallback {
@@ -308,7 +312,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		isLoading = true
 		messageSwipeRefresh.isRefreshing = true
 
-		MessageContentProvider.getEvents(this, LIMIT_PER_PAGE, nextPage(),
+		MessageContentProvider.getEvents(this, LIMIT_PER_PAGE, nextOffset(),
 				object : MessageContentProvider.OnEventsCallback {
 					override fun onEventsLoaded(events: List<Event>, totalItemCount: Int) {
 						this@MainActivity.totalItemCount = totalItemCount // update total count
@@ -318,6 +322,9 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 					}
 
 					override fun onFailed(t: Throwable?, message: String?) {
+						// cancel next offset
+						currentOffset -= LIMIT_PER_PAGE
+
 						val error: String = if (message.isNullOrEmpty()) getString(R.string.error_common) else message
 						Snackbar.make(rootView, error, Snackbar.LENGTH_LONG).show()
 						messageSwipeRefresh.isRefreshing = false
