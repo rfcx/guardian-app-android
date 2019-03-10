@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LoginActivity -->
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="login">Masuk</string>
+    <string name="connect_with_facebook">Terhubung dengan Facebook</string>
+    <string name="pls_fill_email">Masukkan Email</string>
+    <string name="pls_fill_password">Masukkan kata sandi</string>
+    <string name="incorrect_username_password">Username dan kata sandi salah</string>
+    <string name="an_error_occurred">layanan tidak tersedia</string>
+    <string name="or">atau</string>
+
+    <!-- common error -->
+    <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
+    <string name="location_permission_msg">Aplikasi Ranger ingin menggunakan lokasi Anda</string>
+    <string name="record_audio_permission_msg">App Ranger ingin merekam audio</string>
+    <string name="go_to_setting">Pengaturan</string>
+    <string name="menu_logout">Keluar</string>
+    <string name="menu_check_in_history">Riwayat check-in</string>
+
+    <!-- message list -->
+    <string name="profile_welcome">Hai, %s!</string>
+    <string name="profile_onduty">Sedang mengerjakan</string>
+    <string name="profile_nottracking">Tidak melacak</string>
+    <string name="network_online">online</string>
+    <string name="network_offline">offline</string>
+    <string name="error_no_guardian_group_set">Atur grup Guardian di Pengaturan</string>
+
+    <!-- report -->
+    <string name="report_title">laporan</string>
+    <string name="report_send_success">laporan berhasil!</string>
+    <string name="report_what_label">APA?</string>
+    <string name="report_when_label">KAPAN?</string>
+    <string name="report_submit_button_label">menyerahkan</string>
+    <string name="report_record_label">CATATAN PEREKAM (Opsional)</string>
+    <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
+
+    <!-- Notification -->
+    <string name="notification_location_title">Lokasi Ranger</string>
+    <string name="notification_location_loading">Memuat lokasi…</string>
+    <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
+
+    <!-- Settings -->
+    <string name="setting_label">Pengaturan</string>
+    <string name="app_version_label">v%s</string>
+    <string name="location_tracking_label">Pelacakan lokasi</string>
+    <string name="location_tracking_on_label">Di</string>
+    <string name="location_tracking_off_label">Mati</string>
+    <string name="default_site_label">Tempat</string>
+    <string name="guardian_group_label">Kelompok Guardian</string>
+    <string name="notifications">Pemberitahuan</string>
+    <string name="receive_event_notifications">Terima Pemberitahuan acara</string>
+
+    <string name="last_month">Terakhir\nBulan</string>
+    <string name="last_week">Terakhir\nMinggu</string>
+    <string name="last_24_hours">Terakhir\n24 jam</string>
+    <string name="now">Sekarang</string>
+
+    <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
+    <string name="recent_title">Aktual</string>
+    <string name="history_title">Riwayat</string>
+
+    <!-- Invitation -->
+    <string name="invitation_title">Hubungkan ke suatu tempat</string>
+    <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
+    <string name="hint_code">Kode</string>
+
+    <!-- Report -->
+    <string name="sync_reports_label">%d laporan</string>
+    <string name="sync_report_label">%d laporan</string>
+    <string name="sync_checkins_label">%d checkin lokasi</string>
+    <string name="sync_waiting_network">Menunggu jaringan…</string>
+    <string name="sync_starting">Mulai mengunggah…</string>
+    <string name="sync_uploading">Mengunggah…</string>
+    <string name="sync_complete">Pengunggahan selesai!</string>
+    <string name="empty_list_description">Tidak ada insiden baru-baru ini.\nNikmati harimu :)</string>
+    <string name="can_not_play_audio">Tidak dapat memutar audio, silakan coba lagi nanti.</string>
+</resources>
