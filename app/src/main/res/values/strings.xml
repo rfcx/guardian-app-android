@@ -33,6 +33,7 @@
     <string name="report_when_label">WHEN?</string>
     <string name="report_submit_button_label">Submit</string>
     <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
+    <string name="report_attach_image_label">PHOTOS (Optional)</string>
     <string name="report_location_null">Location not found. Please try again.</string>
 
     <!-- Notification -->
@@ -78,4 +79,6 @@
 	
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
+    <string name="menu_camera">Camera</string>
+    <string name="menu_gallery">Gallery</string>
 </resources>

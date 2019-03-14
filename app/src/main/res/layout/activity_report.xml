@@ -23,6 +23,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_padding_normal"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.Guideline
@@ -85,6 +86,46 @@
                 app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
 
             <TextView
+                android:id="@+id/attachImageTextView"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginTop="@dimen/margin_padding_xlarge"
+                android:text="@string/report_attach_image_label"
+                android:textColor="@color/text_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/whenView" />
+
+            <ImageButton
+                android:id="@+id/attachImageButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:contentDescription="@string/report_record_label"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="@+id/attachImageTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/attachImageTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/attachImageRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                tools:orientation="horizontal"
+                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:listitem="@layout/adapter_report_image"
+                android:clipToPadding="false"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:paddingStart="@dimen/margin_padding_small"
+                android:paddingEnd="@dimen/margin_padding_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/attachImageTextView" />
+
+            <TextView
                 android:id="@+id/reportRecordTextView"
                 style="@style/Base.TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
@@ -94,16 +135,28 @@
                 android:text="@string/report_record_label"
                 android:textColor="@color/text_primary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/whenView" />
+                app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
+
+            <ImageButton
+                android:id="@+id/addAudioButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:contentDescription="@string/report_record_label"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="@+id/reportRecordTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/reportRecordTextView" />
 
             <org.rfcx.ranger.widget.SoundRecordProgressView
                 android:id="@+id/soundRecordProgressView"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginStart="@dimen/margin_padding_normal"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/margin_padding_small"
                 android:layout_marginEnd="@dimen/margin_padding_normal"
-                android:layout_marginBottom="@dimen/margin_padding_normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
