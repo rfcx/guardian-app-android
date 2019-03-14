@@ -63,15 +63,14 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	private var currentOffset: Int = 0
 	private var totalItemCount: Int = 0
 
-	private fun totalPage(): Int {
-		val page = totalItemCount.toFloat() / LIMIT_PER_PAGE
-		return ceil(page.toDouble()).toInt()
-	}
+	private val totalPage: Int
+		get() = ceil(totalItemCount.toFloat() / LIMIT_PER_PAGE).toInt()
 
-    private fun nextOffset(): Int {
-        currentOffset += LIMIT_PER_PAGE
-        return currentOffset
-    }
+	private val nextOffset: Int
+		get() {
+			currentOffset += LIMIT_PER_PAGE
+			return currentOffset
+		}
 
 	companion object {
 		fun startActivity(context: Context) {
@@ -253,7 +252,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
         }
     }
 
-	private fun isLastPage() : Boolean = currentOffset >= totalPage()
+	private fun isLastPage() : Boolean = currentOffset >= totalPage
 
 	private fun initRemoteConfig() {
 		rangerRemote = FirebaseRemoteConfig.getInstance()
@@ -312,7 +311,7 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 		isLoading = true
 		messageSwipeRefresh.isRefreshing = true
 
-		MessageContentProvider.getEvents(this, LIMIT_PER_PAGE, nextOffset(),
+		MessageContentProvider.getEvents(this, LIMIT_PER_PAGE, nextOffset,
 				object : MessageContentProvider.OnEventsCallback {
 					override fun onEventsLoaded(events: List<Event>, totalItemCount: Int) {
 						this@MainActivity.totalItemCount = totalItemCount // update total count
