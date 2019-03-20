@@ -8,6 +8,10 @@
 	<item
 		android:id="@+id/menu_check_in_history"
 		android:title="@string/menu_check_in_history"/>
+    
+    <item
+        android:id="@+id/menu_report_history"
+        android:title="@string/menu_report_history"/>
 	
 	<item
 		android:id="@+id/menu_logout"
