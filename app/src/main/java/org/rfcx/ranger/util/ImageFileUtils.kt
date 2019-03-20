@@ -1,13 +1,18 @@
 package org.rfcx.ranger.util
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
+import android.net.Uri
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 object ImageFileUtils {
     fun resizeImage(file: File): Bitmap? {
@@ -79,5 +84,19 @@ object ImageFileUtils {
             Log.i("RFCx Report", "remove file -> ${file.absolutePath}")
             file.deleteOnExit()
         }
+    }
+
+    fun findRealPath(context: Context, uri: Uri): String? {
+        val wholeID = DocumentsContract.getDocumentId(uri)
+        val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+        val column = arrayOf(MediaStore.Images.Media.DATA)
+        val sel = MediaStore.Images.Media._ID + "=?"
+        val cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, arrayOf(id), null) ?: null
+        val columnIndex = cursor?.getColumnIndex(column[0]) ?: 0
+        cursor?.moveToFirst()
+        val filePath = cursor?.getString(columnIndex)
+        cursor?.close()
+        return  filePath
     }
 }

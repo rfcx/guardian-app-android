@@ -8,6 +8,8 @@ import java.util.*
 object ReportUtils {
 
     const val FILE_CONTENT_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider"
+    const val REQUEST_TAKE_PHOTO = 4001
+    const val REQUEST_GALLERY = 5001
 
     // region Take a photo
     fun createReportImageFile(): File {

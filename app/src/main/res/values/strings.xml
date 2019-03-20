@@ -15,6 +15,7 @@
     <string name="location_permission_msg">Ranger App would like to use your location</string>
     <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
     <string name="camera_permission_msg">Ranger App would like to use your camera</string>
+    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
     <string name="go_to_setting">Settings</string>
     <string name="menu_logout">Logout</string>
 	<string name="menu_check_in_history">Check-in history</string>

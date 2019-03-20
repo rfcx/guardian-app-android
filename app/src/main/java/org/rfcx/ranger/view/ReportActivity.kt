@@ -39,7 +39,8 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.util.CameraPermissions.Companion.REQUEST_PERMISSION_IMAGE_CAPTURE
+import org.rfcx.ranger.util.ReportUtils.REQUEST_GALLERY
+import org.rfcx.ranger.util.ReportUtils.REQUEST_TAKE_PHOTO
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
@@ -58,6 +59,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val recordPermissions by lazy { RecordingPermissions(this) }
     private val cameraPermissions by lazy { CameraPermissions(this) }
+    private val galleryPermissions by lazy { GalleryPermissions(this) }
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
     private var photoSet = arrayListOf<Bitmap>()
@@ -120,12 +122,14 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onActivityResult(requestCode, resultCode, data)
         locationPermissions.handleActivityResult(requestCode, resultCode)
         handleTakePhotoResult(requestCode, resultCode)
+        handleGalleryResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         locationPermissions.handleRequestResult(requestCode, grantResults)
         recordPermissions.handleRequestResult(requestCode, grantResults)
         cameraPermissions.handleRequestResult(requestCode, grantResults)
+        galleryPermissions.handleRequestResult(requestCode, grantResults)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -359,7 +363,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         val bottomSheetView = layoutInflater.inflate(R.layout.buttom_sheet_attach_image_layout, null)
 
         bottomSheetView.menuGallery.setOnClickListener {
-            //            showImages()
+            openGallery()
         }
 
         bottomSheetView.menuTakePhoto.setOnClickListener {
@@ -400,14 +404,14 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         if (imageFile != null) {
             val photoURI = FileProvider.getUriForFile(this, ReportUtils.FILE_CONTENT_PROVIDER, imageFile!!)
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-            startActivityForResult(takePictureIntent, REQUEST_PERMISSION_IMAGE_CAPTURE)
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
         } else {
             // TODO: handle on can't create image file
         }
     }
 
     private fun handleTakePhotoResult(requestCode: Int, resultCode: Int) {
-        if (requestCode != REQUEST_PERMISSION_IMAGE_CAPTURE) return
+        if (requestCode != REQUEST_TAKE_PHOTO) return
 
         if (resultCode == Activity.RESULT_OK) {
             imageFile?.let {
@@ -423,5 +427,45 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
                 this@ReportActivity.imageFile = null
             }
         }
+    }
+
+    private fun openGallery() {
+        if (!galleryPermissions.allowed()) {
+            imageFile = null
+            galleryPermissions.check { }
+        } else {
+            startOpenGallery()
+        }
+    }
+
+    private fun startOpenGallery() {
+        val galleyIntent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleyIntent.type = "image/*"
+        galleyIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(galleyIntent, REQUEST_GALLERY)
+    }
+
+    private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        if (requestCode != REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
+
+        val pathList = mutableListOf<String>()
+        if (intentData.data != null) {
+            val imageUri = intentData.data!!
+            val path = ImageFileUtils.findRealPath(this@ReportActivity, imageUri)
+            path?.let { pathList.add(it) }
+        } else {
+            val clipData = intentData.clipData ?: return
+            for (index in 0 until clipData.itemCount) {
+                val item = clipData.getItemAt(index)
+                val path = ImageFileUtils.findRealPath(this@ReportActivity, item.uri)
+                path?.let { pathList.add(it) }
+            }
+        }
+
+        pathList.forEach { path ->
+            val image = ImageFileUtils.resizeImage(File(path))
+            image?.let { photoSet.add(it) }
+        }
+        showImages()
     }
 }

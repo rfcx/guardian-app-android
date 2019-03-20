@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="center"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:padding="@dimen/margin_padding_normal"
         android:text="@string/menu_camera" />
@@ -21,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="center"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:padding="@dimen/margin_padding_normal"
         android:text="@string/menu_gallery" />
