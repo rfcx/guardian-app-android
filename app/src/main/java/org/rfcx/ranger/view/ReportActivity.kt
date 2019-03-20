@@ -1,16 +1,21 @@
 package org.rfcx.ranger.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.LocationCallback
@@ -33,29 +38,29 @@ import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.ReportSyncWorker
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.LocationPermissions
-import org.rfcx.ranger.util.RecordingPermissions
-import org.rfcx.ranger.util.getSiteName
+import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.CameraPermissions.Companion.REQUEST_PERMISSION_IMAGE_CAPTURE
 import org.rfcx.ranger.widget.OnStatChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
-import kotlin.random.Random
 
 class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var googleMap: GoogleMap? = null
     private val reportAdapter = ReportTypeAdapter()
 
+    private var imageFile: File? = null
     private var recordFile: File? = null
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val recordPermissions by lazy { RecordingPermissions(this) }
+    private val cameraPermissions by lazy { CameraPermissions(this) }
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
+    private var photoSet = arrayListOf<Bitmap>()
 
     private lateinit var attachImageDialog: BottomSheetDialog
     private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -113,13 +118,14 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         locationPermissions.handleActivityResult(requestCode, resultCode)
+        handleTakePhotoResult(requestCode, resultCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         locationPermissions.handleRequestResult(requestCode, grantResults)
         recordPermissions.handleRequestResult(requestCode, grantResults)
+        cameraPermissions.handleRequestResult(requestCode, grantResults)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -353,11 +359,11 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         val bottomSheetView = layoutInflater.inflate(R.layout.buttom_sheet_attach_image_layout, null)
 
         bottomSheetView.menuGallery.setOnClickListener {
-            showImages()
+            //            showImages()
         }
 
         bottomSheetView.menuTakePhoto.setOnClickListener {
-            showImages()
+            takePhoto()
         }
 
         attachImageDialog = BottomSheetDialog(this@ReportActivity)
@@ -368,15 +374,54 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private val images get() = arrayListOf(R.drawable.thumbnail1, R.drawable.thumbnail2, R.drawable.thumbnail3)
-
     private fun showImages() {
-        val imageSet = arrayListOf(images[Random.nextInt(3)],
-                images[Random.nextInt(3)],
-                images[Random.nextInt(3)])
-        reportImageAdapter.images = imageSet
-        attachImageRecycler.visibility = View.VISIBLE
+        if (photoSet.isEmpty()) {
+            attachImageRecycler.visibility = View.GONE
+            return
+        }
 
+        reportImageAdapter.images = photoSet
+        attachImageRecycler.visibility = View.VISIBLE
         attachImageDialog.dismiss()
+    }
+
+    private fun takePhoto() {
+        if (!cameraPermissions.allowed()) {
+            imageFile = null
+            cameraPermissions.check { }
+        } else {
+            startTakePhoto()
+        }
+    }
+
+    private fun startTakePhoto() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        imageFile = ReportUtils.createReportImageFile()
+        if (imageFile != null) {
+            val photoURI = FileProvider.getUriForFile(this, ReportUtils.FILE_CONTENT_PROVIDER, imageFile!!)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            startActivityForResult(takePictureIntent, REQUEST_PERMISSION_IMAGE_CAPTURE)
+        } else {
+            // TODO: handle on can't create image file
+        }
+    }
+
+    private fun handleTakePhotoResult(requestCode: Int, resultCode: Int) {
+        if (requestCode != REQUEST_PERMISSION_IMAGE_CAPTURE) return
+
+        if (resultCode == Activity.RESULT_OK) {
+            imageFile?.let {
+                val bitmap = ImageFileUtils.resizeImage(it)
+                bitmap?.let { image -> photoSet.add(image) }
+                showImages()
+            }
+            Log.d("photoSet", "photo size: ${photoSet.size}")
+        } else {
+            // remove file image
+            imageFile?.let {
+                ImageFileUtils.removeFile(it)
+                this@ReportActivity.imageFile = null
+            }
+        }
     }
 }

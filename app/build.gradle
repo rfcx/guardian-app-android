@@ -23,6 +23,7 @@ android {
         debug {
             versionNameSuffix ".debug"
             buildConfigField 'boolean', 'USE_STETHO', 'true'
+            ext.enableCrashlytics = false
         }
         release {
             minifyEnabled false

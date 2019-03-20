@@ -1,5 +1,6 @@
 package org.rfcx.ranger.adapter
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import kotlinx.android.synthetic.main.adapter_report_image.view.*
 import org.rfcx.ranger.R
 
 class ReportImageAdapter : RecyclerView.Adapter<ReportImageAdapter.ReportImageAdapterViewHolder>() {
-    var images = arrayListOf<Int>()
+    var images = arrayListOf<Bitmap>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -27,8 +28,8 @@ class ReportImageAdapter : RecyclerView.Adapter<ReportImageAdapter.ReportImageAd
 
     inner class ReportImageAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView = itemView.imageReport
-        fun bind(resDrawable: Int) {
-            imageView.setImageResource(resDrawable)
+        fun bind(image: Bitmap) {
+            imageView.setImageBitmap(image)
         }
     }
 }
