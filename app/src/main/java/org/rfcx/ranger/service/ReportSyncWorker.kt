@@ -34,8 +34,9 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
             val result = api.sendSync(applicationContext, report)
             when (result) {
                 is Ok -> {
+                    val guid = result.value.guid
                     Log.d(TAG, "doWork: success ${report.id}")
-                    db.markSent(report.id)
+                    db.markSent(report.id, guid)
                 }
                 is Err -> {
                     Log.d(TAG, "doWork: failed ${report.id}")
@@ -45,7 +46,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
             }
         }
 
-        deleteSentReports()
+//        deleteSentReports()
 
         return if (someFailed) Result.retry() else Result.success()
     }

@@ -2,7 +2,6 @@ package org.rfcx.ranger.localdb
 
 import android.util.Log
 import io.realm.Realm
-import io.realm.RealmList
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 
@@ -26,7 +25,6 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
             // save attached image to be Report Image
             attachImages?.forEach { attachImage ->
                 val reportImage = ReportImage(reportId = report.id, imageUrl = attachImage)
-                Log.d("ReportDb", "save path in store -> reportId: ${reportImage.reportId} path: $attachImage")
                 it.insertOrUpdate(reportImage)
             }
         }
@@ -54,20 +52,29 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     fun markUnsent(id: Int) {
-        mark(id, UNSENT)
+        mark(id = id, syncState = UNSENT)
     }
 
-    fun markSent(id: Int) {
-        mark(id, SENT)
+    fun markSent(id: Int, guid: String) {
+        mark(id, guid, SENT)
     }
 
-    private fun mark(id: Int, syncState: Int) {
+    private fun mark(id: Int, guid:String? = null, syncState: Int) {
         realm.executeTransaction {
             val report = it.where(Report::class.java).equalTo("id", id).findFirst()
             if (report != null) {
+                report.guid = guid
                 report.syncState = syncState
             }
         }
+    }
+
+    fun getReport(guid: String) : Report?{
+        return realm.where(Report::class.java).equalTo(Report.FIELD_GUID, guid).findFirst()
+    }
+
+    fun getReport(id: Int) : Report?{
+        return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirst()
     }
 
     fun getReportImage(reportId: Int): List<ReportImage>? {

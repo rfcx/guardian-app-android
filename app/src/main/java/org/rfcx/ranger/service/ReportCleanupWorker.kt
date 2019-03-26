@@ -18,7 +18,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
     override fun doWork(): Result {
         Log.d(TAG, "doWork")
 
-        deleteSentReports()
+//        deleteSentReports()
         resendIfRequired()
 
         return Result.success()
