@@ -62,7 +62,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
     private val galleryPermissions by lazy { GalleryPermissions(this) }
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
-    private var photoSet = arrayListOf<Bitmap>()
+    private var attachImages :ArrayList<Pair<String,Bitmap>> = arrayListOf()
 
     private lateinit var attachImageDialog: BottomSheetDialog
     private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -269,9 +269,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         val lat = lastLocation?.latitude ?: 0.0
         val lon = lastLocation?.longitude ?: 0.0
 
-        val report = Report(value = reportTypeItem.type, site = site, reportedAt = time, latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate, audioLocation = recordFile?.canonicalPath)
+        val report = Report(value = reportTypeItem.type, site = site, reportedAt = time,
+                latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
+                audioLocation = recordFile?.canonicalPath)
 
-        ReportDb().save(report)
+        val attachImageList = attachImages.map { it.first }
+        ReportDb().save(report, attachImageList)
         ReportSyncWorker.enqueue()
 
         finish()
@@ -379,12 +382,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun showImages() {
-        if (photoSet.isEmpty()) {
+        if (attachImages.isEmpty()) {
             attachImageRecycler.visibility = View.GONE
             return
         }
 
-        reportImageAdapter.images = photoSet
+        reportImageAdapter.images = attachImages.map { it.second } // send images to adapter
         attachImageRecycler.visibility = View.VISIBLE
         attachImageDialog.dismiss()
     }
@@ -416,10 +419,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         if (resultCode == Activity.RESULT_OK) {
             imageFile?.let {
                 val bitmap = ImageFileUtils.resizeImage(it)
-                bitmap?.let { image -> photoSet.add(image) }
+                bitmap?.let { image -> attachImages.add(Pair(it.absolutePath, image)) }
                 showImages()
             }
-            Log.d("photoSet", "photo size: ${photoSet.size}")
+            Log.d("photoSet", "photo size: ${attachImages.size}")
         } else {
             // remove file image
             imageFile?.let {
@@ -464,7 +467,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 
         pathList.forEach { path ->
             val image = ImageFileUtils.resizeImage(File(path))
-            image?.let { photoSet.add(it) }
+            image?.let { attachImages.add(Pair(path, it)) }
         }
         showImages()
     }

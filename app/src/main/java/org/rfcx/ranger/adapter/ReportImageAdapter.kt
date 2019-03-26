@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.adapter_report_image.view.*
 import org.rfcx.ranger.R
 
 class ReportImageAdapter : RecyclerView.Adapter<ReportImageAdapter.ReportImageAdapterViewHolder>() {
-    var images = arrayListOf<Bitmap>()
+    var images = listOf<Bitmap>()
         set(value) {
             field = value
             notifyDataSetChanged()
