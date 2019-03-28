@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -62,7 +63,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
     private val galleryPermissions by lazy { GalleryPermissions(this) }
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
-    private var attachImages :ArrayList<Pair<String,Bitmap>> = arrayListOf()
+    private var attachImages: ArrayList<Pair<String, Bitmap>> = arrayListOf()
+
+    // data
+    private var report: Report? = null
 
     private lateinit var attachImageDialog: BottomSheetDialog
     private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -93,12 +97,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_report)
 
         bindActionbar()
-        setupMap()
-        setupReportWhatAdapter()
-        setupWhenView()
-        setupRecordSoundProgressView()
-        setupReportImages()
-        setupAttachImageDialog()
+        initReport()
 
         addAudioButton.setOnClickListener {
             onAddAudio()
@@ -107,6 +106,23 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
         reportButton.setOnClickListener {
             submitReport()
         }
+    }
+
+    private fun initReport() {
+        if (intent.hasExtra(EXTRA_REPORT_ID)) {
+            val reportId = intent.getIntExtra(EXTRA_REPORT_ID, 0)
+            report = ReportDb().getReport(reportId)
+            addAudioButton.visibility = View.INVISIBLE
+            reportButton.visibility = View.GONE
+            soundRecordProgressView.visibility = View.VISIBLE
+        }
+
+        setupMap()
+        setupReportWhatAdapter()
+        setupWhenView()
+        setupRecordSoundProgressView()
+        setupAttachImageDialog()
+        setupReportImages()
     }
 
     override fun onDestroy() {
@@ -167,6 +183,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         if (isDestroyed) return
+
+        if (report != null) {
+            markRangerLocation(Location("${report?.latitude}, ${report?.longitude}"))
+            return
+        }
+
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
@@ -204,6 +226,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
                 validateForm()
             }
         }
+
+        report?.let { reportAdapter.selectedItem = it.value.toEventPosition() }
     }
 
     private fun setupWhenView() {
@@ -212,7 +236,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
                 validateForm()
             }
         }
-        whenView.setState(WhenView.State.NOW)
+        // has report?
+        whenView.setState(WhenView.State.fromInt(report?.ageEstimate ?: 0) ?: WhenView.State.NOW)
     }
 
     private fun setupRecordSoundProgressView() {
@@ -355,6 +380,17 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
             layoutManager = LinearLayoutManager(this@ReportActivity, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
+
+        report?.let {
+            val reportImages = ReportDb().getReportImages(it.id)
+            reportImages?.forEach { reportImage ->
+                if (reportImage.imageUrl != null) {
+                    val image = BitmapFactory.decodeFile(reportImage.imageUrl)
+                    attachImages.add(Pair(reportImage.imageUrl ?: "", image))
+                }
+            }
+            showImages()
+        }
     }
 
     private fun onAddAudio() {
@@ -470,5 +506,15 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
             image?.let { attachImages.add(Pair(path, it)) }
         }
         showImages()
+    }
+
+    companion object {
+        private const val EXTRA_REPORT_ID = "extra_report_id"
+
+        fun startIntent(context: Context, reportId: Int) {
+            val intent = Intent(context, ReportActivity::class.java)
+            intent.putExtra(EXTRA_REPORT_ID, reportId)
+            context.startActivity(intent)
+        }
     }
 }

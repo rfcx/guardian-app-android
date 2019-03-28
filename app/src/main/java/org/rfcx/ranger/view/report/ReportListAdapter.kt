@@ -14,19 +14,21 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_empty_holder.view.*
 import kotlinx.android.synthetic.main.item_report_list.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.DateHelper
 
 class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(ReportListDiffUtil()) {
-	
+
 	companion object {
 		private const val reportViewType = 1
 		private const val emptyViewType = 2
 	}
 	
 	var onItemClick: ((Int) -> Unit?)? = null
-	
+
+	private val items = arrayListOf<ReportItemBase>()
 	private var reportEmptyItem: ReportEmptyItem? = null
 	
 	fun setEmptyView(@StringRes messageRes: Int, @DrawableRes icon: Int?) {
@@ -37,13 +39,19 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 		Log.d("setReports", "${reports.count()}")
 		if (reportEmptyItem == null)
 			throw java.lang.IllegalStateException("Please initial empty view, by using setEmptyView(@StringRes messageRes: Int, @DrawableRes icon: Int?)")
-		val items = arrayListOf<ReportItemBase>()
 		if (reports.isEmpty()) items.add(reportEmptyItem!!)
 		
 		items.addAll(reports.map {
 			ReportItem(it)
 		})
 		submitList(items)
+	}
+
+	fun getItemAt(position: Int): ReportItemBase? {
+		if (position > items.size || position < 1) {
+			return null
+		}
+		return (items[position - 1])
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

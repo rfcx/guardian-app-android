@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_report_list.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.view.ReportActivity
 
 class ReportListFragment : Fragment() {
 	
@@ -33,8 +34,12 @@ class ReportListFragment : Fragment() {
 	private fun setUpAdapter() {
 		reportAdapter.apply {
 			setEmptyView(R.string.report_list_empty_message, null)
-			onItemClick = {
+			onItemClick = { position ->
 				// TODO get report item n Open report detail
+				val reportId = reportAdapter.getItemAt(position)?.getId()
+				if (reportId != null) {
+					context?.let { ReportActivity.startIntent(it, reportId) }
+				}
 			}
 		}
 		context?.let {

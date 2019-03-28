@@ -141,7 +141,12 @@ class WhenView @JvmOverloads constructor(
 	
 	enum class State(val ageEstimate: Int) {
 		NONE(-1), LAST_MONTH(30), LAST_WEEK(20),
-		LAST_24_HR(10), NOW(0)
+		LAST_24_HR(10), NOW(0);
+
+		companion object {
+			private val map = State.values().associateBy(State::ageEstimate)
+			fun fromInt(ageEstimate: Int) = map[ageEstimate]
+		}
 	}
 	
 	interface OnWhenViewStatChangedListener {

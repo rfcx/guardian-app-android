@@ -16,7 +16,12 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	
 	
 	private val source = ArrayList<ReportTypeItem>()
-	private var selectedItem: Int = -1
+	var selectedItem: Int = -1
+		set(value) {
+			field = value
+			notifyDataSetChanged()
+		}
+
 	var onMessageItemClickListener: OnMessageItemClickListener? = null
 	
 	init {

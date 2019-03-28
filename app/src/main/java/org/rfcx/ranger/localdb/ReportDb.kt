@@ -77,7 +77,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
         return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirst()
     }
 
-    fun getReportImage(reportId: Int): List<ReportImage>? {
+    fun getReportImages(reportId: Int): List<ReportImage>? {
         return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAllAsync()
     }
 
