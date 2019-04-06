@@ -17,7 +17,7 @@ import retrofit2.Response
 
 class EventsApi {
 	
-	fun getEvents(context: Context, limit: Int, onEventsCallBack: OnEventsCallBack) {
+	fun getEvents(context: Context, limit: Int, offset: Int, onEventsCallBack: OnEventsCallBack) {
 		
 		val token = context.getTokenID()
 		if (token == null) {
@@ -49,7 +49,7 @@ class EventsApi {
 			return
 		}
 		
-		ApiManager.getInstance().apiRest.getEvents("Bearer $token", group, "begins_at", "DESC", limit)
+		ApiManager.getInstance().apiRest.getEvents("Bearer $token", group, "begins_at", "DESC", limit, offset)
 				.enqueue(object : Callback<EventResponse> {
 					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)

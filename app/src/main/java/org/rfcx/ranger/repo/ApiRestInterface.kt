@@ -27,12 +27,13 @@ interface ApiRestInterface {
 	fun updateLocation(@Header("Authorization") authUser: String,
 	                   @Body checkInRequestBody: CheckInRequest): Call<List<CheckInResult>>
 	
-	@GET("events/event")
+	@GET("events/event/datatable")
 	fun getEvents(@Header("Authorization") authUser: String,
 	              @Query("guardian_groups[]") guardianGroup: String,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
-	              @Query("limit") limit: Int): Call<EventResponse>
+	              @Query("limit") limit: Int,
+				  @Query("offset") offset: Int): Call<EventResponse>
 	
 	@POST("reports")
 	@Multipart
