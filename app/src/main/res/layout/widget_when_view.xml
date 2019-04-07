@@ -114,15 +114,13 @@
         android:id="@+id/lastMonthText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingStart="8dp"
+        android:gravity="start"
         android:paddingEnd="0dp"
         android:text="@string/last_month"
         android:textAllCaps="true"
         android:textColor="@color/grey_default"
         android:textSize="@dimen/text_xxsmall"
-        app:layout_constraintEnd_toEndOf="@id/guideline"
-        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/lastMonth"
         app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
 
     <TextView
@@ -156,13 +154,12 @@
         android:id="@+id/nowTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="end"
         android:text="@string/now"
         android:textAllCaps="true"
         android:textColor="@color/grey_default"
         android:textSize="@dimen/text_xxsmall"
-        app:layout_constraintEnd_toEndOf="@id/guideline4"
-        app:layout_constraintStart_toStartOf="@id/guideline4"
+        app:layout_constraintEnd_toEndOf="@id/now"
         app:layout_constraintTop_toBottomOf="@+id/lastMonth" />
 
 
