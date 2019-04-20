@@ -48,10 +48,7 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 	}
 
 	fun getItemAt(position: Int): ReportItemBase? {
-		if (position > items.size || position < 1) {
-			return null
-		}
-		return (items[position - 1])
+		return items[position]
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

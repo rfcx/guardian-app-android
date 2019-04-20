@@ -35,7 +35,6 @@ class ReportListFragment : Fragment() {
 		reportAdapter.apply {
 			setEmptyView(R.string.report_list_empty_message, null)
 			onItemClick = { position ->
-				// TODO get report item n Open report detail
 				val reportId = reportAdapter.getItemAt(position)?.getId()
 				if (reportId != null) {
 					context?.let { ReportActivity.startIntent(it, reportId) }
