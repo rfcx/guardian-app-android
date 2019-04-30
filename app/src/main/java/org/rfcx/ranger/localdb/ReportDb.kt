@@ -98,7 +98,9 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
 		val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
-		Log.d("saveGuIDtoImages", "${images.count()}")
+		images?.forEach {
+			Log.i("saveGuIDtoImages", "${it.imageUrl}")
+		}
 		realm.executeTransaction { transition ->
 			images?.forEach {
 				val image = it.apply {

@@ -10,6 +10,7 @@ import org.rfcx.ranger.entity.location.CheckInRequest
 import org.rfcx.ranger.entity.location.CheckInResult
 import org.rfcx.ranger.entity.message.Message
 import org.rfcx.ranger.entity.report.SendReportResponse
+import org.rfcx.ranger.entity.report.UploadImageResponse
 import org.rfcx.ranger.entity.user.InvitationCodeRequest
 import org.rfcx.ranger.entity.user.InvitationCodeResponse
 import org.rfcx.ranger.entity.user.UserTouchResponse
@@ -33,7 +34,7 @@ interface ApiRestInterface {
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
 	              @Query("limit") limit: Int,
-				  @Query("offset") offset: Int): Call<EventResponse>
+	              @Query("offset") offset: Int): Call<EventResponse>
 	
 	@POST("reports")
 	@Multipart
@@ -54,13 +55,21 @@ interface ApiRestInterface {
 	
 	@POST("users/code")
 	fun sendInvitationCode(@Header("Authorization") authorization: String, @Body code: InvitationCodeRequest): Call<InvitationCodeResponse>
-
+	
 	@GET("guardians/groups")
 	fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
-
+	
 	@GET("sites")
 	fun sites(@Header("Authorization") authorization: String): Call<List<Site>>
-
+	
 	@GET("sites/{id}")
 	fun site(@Header("Authorization") authorization: String, @Path("id") id: String): Call<Site>
+	
+	@POST("reports/{report_guid}/attachments")
+	@Multipart
+	fun uploadImages(@Header("Authorization") authUser: String,
+	                 @Path("report_guid") reportGuID: String,
+	                 @Part("type") type: RequestBody,
+	                 @Part("time") time: RequestBody,
+	                 @Part() audioFile: ArrayList<MultipartBody.Part>): Call<List<UploadImageResponse>>
 }
