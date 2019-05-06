@@ -6,10 +6,9 @@ import java.util.*
 
 object DateHelper {
 	
-	
 	private const val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	private const val dateTimeFormat = "yyyy-MM-dd HH:mm"
-	private const val dateTimeFormatSecond = "yyyy-MM-dd HH:mm:ss"
+	const val dateTimeFormatSecond = "yyyy-MM-dd HH:mm:ss"
 	private const val dateFormat = "yyyy-MM-dd"
 	private const val timeFormat = "HH:mm"
 	
@@ -116,6 +115,16 @@ object DateHelper {
 			val d = sdf.parse(isoTime)
 			val outputSdf = SimpleDateFormat(outputFormat, Locale.getDefault())
 			return outputSdf.format(d)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			""
+		}
+	}
+	
+	fun getCurrent(destinationFormat: String): String {
+		return try {
+			val sdf = SimpleDateFormat(destinationFormat, Locale.getDefault())
+			sdf.format(Calendar.getInstance().time)
 		} catch (e: Exception) {
 			e.printStackTrace()
 			""

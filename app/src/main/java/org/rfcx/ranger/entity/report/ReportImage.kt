@@ -13,6 +13,7 @@ open class ReportImage(
 		@Expose(serialize = false)
 		var imageUrl: String? = null,
 		@Expose(serialize = false)
+		var createAt: String = "", // 2015-05-13 12:53:55
 		var syncState: Int = 0) : RealmObject() {
 	
 	companion object {
