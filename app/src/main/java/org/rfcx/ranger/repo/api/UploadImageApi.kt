@@ -2,25 +2,25 @@ package org.rfcx.ranger.repo.api
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
+import id.zelory.compressor.Compressor
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Result
+import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.entity.report.UploadImageResponse
 import org.rfcx.ranger.repo.ApiManager
 import org.rfcx.ranger.repo.responseParser
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getTokenID
 import retrofit2.Response
 import java.io.File
-import id.zelory.compressor.Compressor
-import org.rfcx.ranger.entity.report.UploadImageResponse
 
 class UploadImageApi {
 	
-	fun sendSync(context: Context, reportGuID: String, images: List<String>): Result<List<UploadImageResponse>, Exception> {
+	fun sendSync(context: Context, reportImage: ReportImage): Result<List<UploadImageResponse>, Exception> {
 		
 		val token = context.getTokenID() ?: return Err(Exception("Null token"))
 		val authUser = "Bearer $token"
@@ -29,9 +29,7 @@ class UploadImageApi {
 		val attachments = arrayListOf<MultipartBody.Part>()
 		
 		val compressedList = arrayListOf<File>()
-		for (image in images) {
-			compressedList.add(compressFile(context, File(Uri.parse(image).path)))
-		}
+		compressedList.add(compressFile(context, File(reportImage.imageUrl)))
 		
 		for (file in compressedList) {
 			attachments.add(createLocalFilePart(file, "image/*"))
@@ -40,11 +38,20 @@ class UploadImageApi {
 		val response: Response<List<UploadImageResponse>>?
 		try {
 			Log.d("UploadImageApi", "Do try")
-			response = ApiManager.getInstance().apiRest.uploadImages(authUser, reportGuID, type, time, attachments).execute()
+			response = ApiManager.getInstance().apiRest.uploadImages(authUser, reportImage.guid!!, type, time, attachments).execute()
 		} catch (e: Exception) {
 			e.printStackTrace()
 			Log.d("UploadImageApi", e.message)
 			return Err(e)
+		}
+		
+		// remove file
+		for (cache in compressedList) {
+			try {
+				cache.deleteOnExit()
+			} catch (ignore: Exception) {
+				ignore.printStackTrace()
+			}
 		}
 		
 		return responseParser(response)
@@ -71,6 +78,4 @@ class UploadImageApi {
 		}
 		return compressed
 	}
-	
-	
 }
