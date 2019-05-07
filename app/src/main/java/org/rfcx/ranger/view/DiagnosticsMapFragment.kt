@@ -66,8 +66,7 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 			val marker = googleMap.addMarker(MarkerOptions()
 					.position(latLng)
 					.title(report.site)
-					.snippet("Time: ${report.reportedAt}\n" +
-							"LatLng: ${report.latitude},${report.latitude}"))
+					.snippet(DateHelper.parse(report.reportedAt)))
 			marker.tag = report
 		}
 
