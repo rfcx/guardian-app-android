@@ -2,6 +2,7 @@ package org.rfcx.ranger.localdb
 
 import android.util.Log
 import io.realm.Realm
+import io.realm.Sort
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.util.DateHelper
@@ -13,6 +14,10 @@ import org.rfcx.ranger.util.DateHelper
 class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	fun unsentCount(): Long {
 		return realm.where(Report::class.java).notEqualTo("syncState", SENT).count()
+	}
+	
+	fun sentCount(): Long {
+		return realm.where(Report::class.java).equalTo("syncState", SENT).count()
 	}
 	
 	fun save(report: Report, attachImages: List<String>? = null) {
@@ -86,7 +91,25 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	
 	// Deletes sent reports, returns a list of files that can also be deleted
 	fun deleteSent(): List<String> {
-		val reports = realm.where(Report::class.java).equalTo("syncState", SENT).findAll()
+		val unsentCount = unsentCount()
+		var keepSentReportLeft = KEEP_REPORT_COUNT - unsentCount
+		if (keepSentReportLeft < 0) keepSentReportLeft = 0
+		Log.d("deleteSent", "$keepSentReportLeft")
+		
+		val sentCount = sentCount()
+		val shouldDeleteCount = sentCount - keepSentReportLeft
+		Log.i("deleteSent", "$shouldDeleteCount")
+		if (shouldDeleteCount <= 0) return emptyList()
+		
+		val reports = realm.where(Report::class.java)
+				.equalTo("syncState", SENT)
+				.sort("id", Sort.ASCENDING)
+				.limit(shouldDeleteCount)
+				.findAll()
+		val imageDb = ReportImageDb()
+		reports.forEach {
+			imageDb.delete(it.id)
+		}
 		val filenames = reports.mapNotNull { it.audioLocation }
 		realm.executeTransaction {
 			reports.deleteAllFromRealm()
@@ -95,7 +118,9 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun getAllAsync(): List<Report> {
-		return realm.copyFromRealm(realm.where(Report::class.java).findAllAsync())
+		return realm.copyFromRealm(realm.where(Report::class.java)
+				.sort("id", Sort.DESCENDING)
+				.findAllAsync())
 	}
 	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
@@ -117,5 +142,6 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		const val UNSENT = 0
 		const val SENDING = 1
 		const val SENT = 2
+		private const val KEEP_REPORT_COUNT = 25
 	}
 }

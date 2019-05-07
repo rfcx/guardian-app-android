@@ -46,7 +46,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
 			}
 		}
 
-//        deleteSentReports()
+        deleteSentReports()
 		// upload attaches image
 		ImageUploadWorker.enqueue()
 		

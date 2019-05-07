@@ -51,6 +51,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 			}
 		}
 	}
+	
 	fun markUnsent(id: Int) {
 		mark(id = id, syncState = UNSENT)
 	}
@@ -58,6 +59,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 	fun markSent(id: Int) {
 		mark(id, SENT)
 	}
+	
 	private fun mark(id: Int, syncState: Int) {
 		realm.executeTransaction {
 			val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
@@ -67,14 +69,14 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 	}
 	
-	// Deletes sent reports, returns a list of files that can also be deleted
-	fun deleteSent(): List<String> {
-		val reports = realm.where(Report::class.java).equalTo("syncState", SENT).findAll()
-		val filenames = reports.mapNotNull { it.audioLocation }
+	fun delete(reportId: Int) {
+		val shouldDelete = realm.where(ReportImage::class.java)
+				.equalTo("reportId", reportId)
+				.findAll()
+		Log.d("ReportImageDb", "shouldDelete ${shouldDelete.count()}")
 		realm.executeTransaction {
-			reports.deleteAllFromRealm()
+			shouldDelete.deleteAllFromRealm()
 		}
-		return filenames
 	}
 	
 	fun getAllAsync(): List<Report> {
