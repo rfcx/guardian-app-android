@@ -157,12 +157,15 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	
 	private fun initPlayer() {
 		
-		val opusSource = event?.audio?.opus
-		if (!opusSource.isNullOrEmpty()) {
-			val descriptorFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
-			
-			val insecureMp3Source = opusSource.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
-			val mediaSource = ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(insecureMp3Source))
+		var audioUrl = event?.audio?.opus
+		if (!audioUrl.isNullOrEmpty()) {
+			val descriptorFactory =
+				DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
+
+			if (Build.VERSION.SDK_INT < 21) {
+				audioUrl = audioUrl.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
+			}
+			val mediaSource = ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(audioUrl))
 			context?.let {
 				exoPlayer.playWhenReady = true
 				exoPlayer.prepare(mediaSource)
