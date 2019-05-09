@@ -22,7 +22,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 			// save attached image to be Report Image
 			attachImages?.forEach { attachImage ->
 				val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-				val reportImage = ReportImage(imageId, reportId = report.id, imageUrl = attachImage, createAt = imageCreateAt)
+				val reportImage = ReportImage(imageId, guid = report.guid, reportId = report.id, imageUrl = attachImage, createAt = imageCreateAt)
 				it.insertOrUpdate(reportImage)
 			}
 		}
