@@ -120,7 +120,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		// take the new image
 		if (report == null) return
 		val newAttachImages = arrayListOf<String>()
-		val startNewImageIndex = if(reportImageAttachmentsCount==0) 0 else reportImageAttachmentsCount -1
+		val startNewImageIndex = if(reportImageAttachmentsCount==0) 0 else reportImageAttachmentsCount
 		val reportImageDb = ReportImageDb()
 		for (i in startNewImageIndex until attachImages.count()) {
 			newAttachImages.add(attachImages[i].first)

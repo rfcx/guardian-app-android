@@ -86,7 +86,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun getReportImages(reportId: Int): List<ReportImage>? {
-		return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAllAsync()
+		return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAll()
 	}
 	
 	// Deletes sent reports, returns a list of files that can also be deleted
