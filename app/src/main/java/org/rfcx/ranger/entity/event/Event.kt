@@ -41,7 +41,7 @@ open class Event() : RealmObject(), Parcelable {
 	var reviewerConfirmed: Boolean? = null
 	
 	constructor(parcel: Parcel) : this() {
-		event_guid = parcel.readString()
+		event_guid = parcel.readString() ?: ""
 		audioGUID = parcel.readString()
 		latitude = parcel.readValue(Double::class.java.classLoader) as? Double
 		longitude = parcel.readValue(Double::class.java.classLoader) as? Double

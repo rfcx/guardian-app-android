@@ -49,7 +49,7 @@ class Preferences(context: Context) {
 	}
 
 	fun getString(key: String, defValue: String): String {
-		return sharedPreferences.getString(key, defValue)
+		return sharedPreferences.getString(key, defValue) ?: defValue
 	}
 
 	fun getString(key: String): String? {
@@ -90,7 +90,7 @@ class Preferences(context: Context) {
 	}
 	
 	fun getStringSet(key: String): Set<String> {
-		return sharedPreferences.getStringSet(key, setOf())
+		return sharedPreferences.getStringSet(key, setOf()) ?: setOf()
 	}
 
 	fun putStringSet(key: String, value: Set<String>) {
