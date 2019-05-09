@@ -14,20 +14,20 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_empty_holder.view.*
 import kotlinx.android.synthetic.main.item_report_list.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.entity.BaseItem
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.DateHelper
 
 class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(ReportListDiffUtil()) {
-
+	
 	companion object {
 		private const val reportViewType = 1
 		private const val emptyViewType = 2
 	}
 	
 	var onItemClick: ((Int) -> Unit?)? = null
-
+	
 	private val items = arrayListOf<ReportItemBase>()
 	private var reportEmptyItem: ReportEmptyItem? = null
 	
@@ -46,7 +46,7 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 		})
 		submitList(items)
 	}
-
+	
 	fun getItemAt(position: Int): ReportItemBase? {
 		return items[position]
 	}
@@ -125,6 +125,15 @@ class ReportViewHolder(itemView: View, private val onItemClick: ((Int) -> Unit?)
 				ContextCompat.getColor(itemView.context,
 						if (report.syncState == ReportDb.SENT) android.R.color.holo_green_light else android.R.color.holo_orange_light))
 		
+		itemView.reportTypeImageView.setImageResource(
+				when (report.value) {
+					Event.vehicle -> R.drawable.ic_truck
+					Event.trespasser -> R.drawable.ic_people
+					Event.chainsaw -> R.drawable.ic_chainsaw
+					Event.gunshot -> R.drawable.ic_gun
+					else -> R.drawable.ic_other
+				}
+		)
 	}
 }
 
