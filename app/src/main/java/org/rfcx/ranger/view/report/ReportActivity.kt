@@ -14,13 +14,11 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -289,6 +287,20 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				}
 			}
 		}
+		if (isOnDetailView()) {
+			soundRecordProgressView.disableEdit()
+			report?.audioLocation?.let {
+				recordFile = File(it)
+			}
+			if (recordFile != null && recordFile!!.exists()) {
+				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+				soundRecordProgressView.visibility = View.VISIBLE
+				reportRecordTextView.visibility = View.VISIBLE
+			}else{
+				soundRecordProgressView.visibility = View.GONE
+				reportRecordTextView.visibility = View.GONE
+			}
+		}
 	}
 	
 	private fun validateForm() {
@@ -376,6 +388,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun startPlaying() {
 		if (recordFile == null) {
 			soundRecordProgressView.state = SoundRecordState.NONE
+			if (isOnDetailView()) {
+				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+			}
 			return
 		}
 		player = MediaPlayer().apply {
