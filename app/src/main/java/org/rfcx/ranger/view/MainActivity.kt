@@ -43,6 +43,7 @@ import org.rfcx.ranger.service.NetworkReceiver
 import org.rfcx.ranger.service.NetworkState
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.report.ReportListActivity
 import kotlin.math.ceil
 

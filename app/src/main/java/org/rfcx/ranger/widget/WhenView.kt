@@ -115,7 +115,7 @@ class WhenView @JvmOverloads constructor(
 		text1?.typeface = Typeface.DEFAULT
 		text2?.typeface = Typeface.DEFAULT
 		text3?.typeface = Typeface.DEFAULT
-
+		
 		text0?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
 		text1?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
 		text2?.setTextColor(ContextCompat.getColor(context, R.color.grey_default))
@@ -139,10 +139,21 @@ class WhenView @JvmOverloads constructor(
 	
 	fun getState(): State = state
 	
+	fun disable() {
+		image0?.setOnClickListener(null)
+		image1?.setOnClickListener(null)
+		image2?.setOnClickListener(null)
+		image3?.setOnClickListener(null)
+		text0?.setOnClickListener(null)
+		text1?.setOnClickListener(null)
+		text2?.setOnClickListener(null)
+		text3?.setOnClickListener(null)
+	}
+	
 	enum class State(val ageEstimate: Int) {
 		NONE(-1), LAST_MONTH(30), LAST_WEEK(20),
 		LAST_24_HR(10), NOW(0);
-
+		
 		companion object {
 			private val map = State.values().associateBy(State::ageEstimate)
 			fun fromInt(ageEstimate: Int) = map[ageEstimate]

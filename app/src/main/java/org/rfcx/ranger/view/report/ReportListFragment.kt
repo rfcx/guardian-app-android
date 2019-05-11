@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_report_list.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.view.ReportActivity
 
 class ReportListFragment : Fragment() {
 	

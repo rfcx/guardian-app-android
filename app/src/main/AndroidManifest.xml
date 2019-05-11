@@ -51,7 +51,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.ReportActivity"
+            android:name=".view.report.ReportActivity"
             android:screenOrientation="portrait" />
         
         <activity

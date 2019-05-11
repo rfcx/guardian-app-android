@@ -19,6 +19,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.view.report.ReportActivity
 
 class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 	

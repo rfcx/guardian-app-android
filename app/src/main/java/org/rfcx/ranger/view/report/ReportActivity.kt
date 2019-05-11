@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view
+package org.rfcx.ranger.view.report
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,13 +14,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -74,15 +74,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private lateinit var attachImageDialog: BottomSheetDialog
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
 	
-	private var locationCallback: LocationCallback = object : LocationCallback() {
-		override fun onLocationResult(locationResult: LocationResult?) {
-			super.onLocationResult(locationResult)
-			locationResult?.lastLocation?.let {
-				markRangerLocation(it)
-			}
-		}
-	}
-	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
@@ -120,7 +111,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		// take the new image
 		if (report == null) return
 		val newAttachImages = arrayListOf<String>()
-		val startNewImageIndex = if(reportImageAttachmentsCount==0) 0 else reportImageAttachmentsCount
+		val startNewImageIndex = if (reportImageAttachmentsCount == 0) 0 else reportImageAttachmentsCount
 		val reportImageDb = ReportImageDb()
 		for (i in startNewImageIndex until attachImages.count()) {
 			newAttachImages.add(attachImages[i].first)
@@ -180,6 +171,16 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onMapReady(map: GoogleMap?) {
 		googleMap = map
 		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+		
+		if (isOnDetailView()) {
+			report?.let {
+				val location = Location(LocationManager.GPS_PROVIDER)
+				location.latitude = it.latitude
+				location.longitude = it.longitude
+				markRangerLocation(location)
+			}
+			return
+		}
 		locationPermissions.check { isAllowed: Boolean ->
 			if (isAllowed) {
 				getLocation()
@@ -205,12 +206,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
 		if (isDestroyed) return
-		
-		if (report != null) {
-			markRangerLocation(Location("${report?.latitude}, ${report?.longitude}"))
-			return
-		}
-		
 		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
@@ -249,7 +244,13 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 		}
 		
-		report?.let { reportAdapter.selectedItem = it.value.toEventPosition() }
+		if (isOnDetailView()) {
+			report?.let {
+				reportAdapter.selectedItem = it.value.toEventPosition()
+				// Disable touch event
+				reportAdapter.disable()
+			}
+		}
 	}
 	
 	private fun setupWhenView() {
@@ -258,8 +259,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				validateForm()
 			}
 		}
-		// has report?
-		whenView.setState(WhenView.State.fromInt(report?.ageEstimate ?: 0) ?: WhenView.State.NOW)
+		if (isOnDetailView()) {
+			whenView.setState(WhenView.State.fromInt(report?.ageEstimate ?: 0) ?: WhenView.State.NOW)
+			whenView.disable()
+		}
 	}
 	
 	private fun setupRecordSoundProgressView() {
@@ -315,7 +318,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val time = DateHelper.getIsoTime()
 		val lat = lastLocation?.latitude ?: 0.0
 		val lon = lastLocation?.longitude ?: 0.0
-		
+		Log.d("getSiteName", getSiteName())
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time,
 				latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
 				audioLocation = recordFile?.canonicalPath)
@@ -545,4 +548,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			context.startActivity(intent)
 		}
 	}
+	
+	/**
+	 * return Boolean of showing exist report
+	 */
+	private fun isOnDetailView(): Boolean = report != null
 }

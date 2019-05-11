@@ -14,14 +14,14 @@ import org.rfcx.ranger.entity.event.Event
 
 class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessageItemClickListener {
 	
-	
 	private val source = ArrayList<ReportTypeItem>()
+	private var isDisable = false
 	var selectedItem: Int = -1
 		set(value) {
 			field = value
 			notifyDataSetChanged()
 		}
-
+	
 	var onMessageItemClickListener: OnMessageItemClickListener? = null
 	
 	init {
@@ -46,6 +46,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	}
 	
 	override fun onMessageItemClick(position: Int) {
+		if (isDisable) return
 		selectedItem = position
 		notifyDataSetChanged()
 		onMessageItemClickListener?.onMessageItemClick(position)
@@ -54,6 +55,11 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	fun getSelectedItem(): ReportTypeItem? {
 		if (selectedItem == -1) return null
 		return source[selectedItem]
+	}
+	
+	fun disable() {
+		onMessageItemClickListener = null
+		isDisable = true
 	}
 	
 }
