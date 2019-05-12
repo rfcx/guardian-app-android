@@ -143,6 +143,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		map?.let {
 			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
 		}
+		stopPlaying()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
