@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -63,7 +61,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	private var attachImages: ArrayList<Pair<String, Bitmap>> = arrayListOf()
+	private var attachImages = arrayListOf<String>()
 	
 	// data
 	private var report: Report? = null
@@ -112,7 +110,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val startNewImageIndex = if (reportImageAttachmentsCount == 0) 0 else reportImageAttachmentsCount
 		val reportImageDb = ReportImageDb()
 		for (i in startNewImageIndex until attachImages.count()) {
-			newAttachImages.add(attachImages[i].first)
+			newAttachImages.add(attachImages[i])
 		}
 		reportImageDb.save(report!!, newAttachImages)
 		ImageUploadWorker.enqueue()
@@ -297,7 +295,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
 				soundRecordProgressView.visibility = View.VISIBLE
 				reportRecordTextView.visibility = View.VISIBLE
-			}else{
+			} else {
 				soundRecordProgressView.visibility = View.GONE
 				reportRecordTextView.visibility = View.GONE
 			}
@@ -336,8 +334,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
 				audioLocation = recordFile?.canonicalPath)
 		
-		val attachImageList = attachImages.map { it.first }
-		ReportDb().save(report, attachImageList)
+		ReportDb().save(report, attachImages)
 		ReportSyncWorker.enqueue()
 		
 		finish()
@@ -422,13 +419,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			setHasFixedSize(true)
 		}
 		
-		report?.let {
+		report?.let { it ->
 			val reportImages = ReportDb().getReportImages(it.id)
 			reportImageAttachmentsCount = reportImages?.count() ?: 0
 			reportImages?.forEach { reportImage ->
-				if (reportImage.imageUrl != null) {
-					val image = BitmapFactory.decodeFile(reportImage.imageUrl)
-					attachImages.add(Pair(reportImage.imageUrl ?: "", image))
+				reportImage.imageUrl?.let { imagePath ->
+					attachImages.add(imagePath)
 				}
 			}
 			showImages()
@@ -438,6 +434,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun onAddAudio() {
 		addAudioButton.visibility = View.INVISIBLE
 		soundRecordProgressView.visibility = View.VISIBLE
+		scrollView.post {
+			scrollView.fullScroll(View.FOCUS_DOWN)
+		}
 	}
 	
 	private fun setupAttachImageDialog() {
@@ -465,7 +464,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			return
 		}
 		
-		reportImageAdapter.images = attachImages.map { it.second } // send images to adapter
+		reportImageAdapter.images = attachImages
 		attachImageRecycler.visibility = View.VISIBLE
 		attachImageDialog.dismiss()
 		
@@ -501,10 +500,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		if (resultCode == Activity.RESULT_OK) {
 			imageFile?.let {
-				val bitmap = ImageFileUtils.resizeImage(it)
-				bitmap?.let { image -> attachImages.add(Pair(it.absolutePath, image)) }
-				showImages()
+				attachImages.add(it.absolutePath)
 			}
+			showImages()
 			Log.d("photoSet", "photo size: ${attachImages.size}")
 		} else {
 			// remove file image
@@ -547,11 +545,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				path?.let { pathList.add(it) }
 			}
 		}
-		
-		pathList.forEach { path ->
-			val image = ImageFileUtils.resizeImage(File(path))
-			image?.let { attachImages.add(Pair(path, it)) }
-		}
+		attachImages.addAll(pathList)
 		showImages()
 	}
 	
