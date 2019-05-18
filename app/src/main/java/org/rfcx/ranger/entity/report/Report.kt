@@ -9,6 +9,8 @@ open class Report(
 		@PrimaryKey
 		@Expose(serialize = false)
 		var id: Int = 0,
+		@Expose(serialize = false)
+		var guid: String? = null,//  e.g. ec4dfe81-f10c-9592-b47a-14aada85112b
 		@SerializedName("value")
 		var value: String = "", // e.g. chainsaw
 		@SerializedName("site")
@@ -27,4 +29,10 @@ open class Report(
 		var audioLocation: String? = null, // unused on server
 		@Expose(serialize = false)
 		var syncState: Int = 0 // local state: 0 unsent, 1 uploading, 2 uploaded (sync complete)
-) : RealmObject()
+) : RealmObject() {
+
+	companion object {
+		const val FIELD_GUID = "guid"
+		const val FIELD_ID = "id"
+	}
+}

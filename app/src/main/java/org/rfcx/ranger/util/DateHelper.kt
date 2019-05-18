@@ -6,17 +6,16 @@ import java.util.*
 
 object DateHelper {
 	
-	
 	private const val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	private const val dateTimeFormat = "yyyy-MM-dd HH:mm"
-	private const val dateTimeFormatSecond = "yyyy-MM-dd HH:mm:ss"
+	const val dateTimeFormatSecond = "yyyy-MM-dd HH:mm:ss"
 	private const val dateFormat = "yyyy-MM-dd"
 	private const val timeFormat = "HH:mm"
 	
 	private const val oneDayMs = 24L * 3600000L
 	
 	private val inputSdf by lazy {
-		val sdf = SimpleDateFormat(inputFormat, Locale.ENGLISH)
+		val sdf = SimpleDateFormat(inputFormat, Locale.US)
 		sdf.timeZone = TimeZone.getTimeZone("UTC")
 		sdf
 	}
@@ -104,6 +103,28 @@ object DateHelper {
 			val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.getDefault())
 			val d = sdf.parse(isoTime)
 			return outputDateTimeSecondSdf.format(d)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			""
+		}
+	}
+	
+	fun parse(isoTime: String, outputFormat: String): String {
+		return try {
+			val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.getDefault())
+			val d = sdf.parse(isoTime)
+			val outputSdf = SimpleDateFormat(outputFormat, Locale.getDefault())
+			return outputSdf.format(d)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			""
+		}
+	}
+	
+	fun getCurrent(destinationFormat: String): String {
+		return try {
+			val sdf = SimpleDateFormat(destinationFormat, Locale.getDefault())
+			sdf.format(Calendar.getInstance().time)
 		} catch (e: Exception) {
 			e.printStackTrace()
 			""

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -26,7 +27,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			field = value
 			onStateChange()
 		}
-	
+	var isDisableEdit = false
 	var onStatChangeListener: OnStatChangeListener? = null
 	
 	private var soundWaveViewAdapter = SoundWaveViewAdapter()
@@ -118,8 +119,10 @@ class SoundRecordProgressView @JvmOverloads constructor(
 	}
 	
 	private fun onStateChange() {
+		Log.d("onStateChange", state.name)
 		when (state) {
 			SoundRecordState.NONE -> {
+				if (isDisableEdit) return
 				stopAnimate()
 				desTextView.visibility = View.VISIBLE
 				cancelButton.visibility = View.GONE
@@ -127,6 +130,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 				resetAnimate()
 			}
 			SoundRecordState.RECORDING -> {
+				if (isDisableEdit) return
 				desTextView.visibility = View.GONE
 				cancelButton.visibility = View.GONE
 				actionButton.setImageResource(R.drawable.ic_record_stop)
@@ -148,13 +152,22 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			
 			SoundRecordState.STOP_PLAYING -> {
 				desTextView.visibility = View.GONE
-				cancelButton.visibility = View.VISIBLE
+				if (!isDisableEdit) {
+					cancelButton.visibility = View.VISIBLE
+				}else{
+					cancelButton.visibility = View.GONE
+				}
 				actionButton.setImageResource(R.drawable.ic_record_play)
 				stopAnimate()
 			}
 		}
 		
 		onStatChangeListener?.onStateChanged(state)
+	}
+	
+	
+	fun disableEdit() {
+		isDisableEdit = true
 	}
 	
 	
