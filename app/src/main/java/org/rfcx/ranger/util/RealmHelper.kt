@@ -2,6 +2,7 @@ package org.rfcx.ranger.util
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.rfcx.ranger.RangerRealmlMigration
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 
@@ -15,16 +16,25 @@ class RealmHelper {
 		@Volatile
 		private var INSTANCE: RealmHelper? = null
 		
+		private const val schemaVersion = 3L
+		
 		fun getInstance(): RealmHelper =
 				INSTANCE ?: synchronized(this) {
 					INSTANCE ?: RealmHelper().also { INSTANCE = it }
 				}
 		
+		fun migrationConfig(): RealmConfiguration {
+			return RealmConfiguration.Builder().apply {
+				schemaVersion(schemaVersion)
+				migration(RangerRealmlMigration())
+			}.build()
+		}
+		
 		fun defaultConfig(): RealmConfiguration {
-			return RealmConfiguration.Builder()
-					.schemaVersion(2)
-					.deleteRealmIfMigrationNeeded()
-					.build()
+			return RealmConfiguration.Builder().apply {
+				schemaVersion(schemaVersion)
+				deleteRealmIfMigrationNeeded()
+			}.build()
 		}
 	}
 	
