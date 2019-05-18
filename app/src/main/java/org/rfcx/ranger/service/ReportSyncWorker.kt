@@ -45,45 +45,12 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
 				}
 			}
 		}
-
-        deleteSentReports()
+		
+		deleteSentReports()
 		// upload attaches image
 		ImageUploadWorker.enqueue()
 		
 		return if (someFailed) Result.retry() else Result.success()
-	}
-	
-	private fun deleteSentReports() {
-		val db = ReportDb()
-		val leftoverFiles = db.deleteSent()
-		
-		for (filename in leftoverFiles) {
-			Log.d(TAG, "deleteSentReports: $filename")
-			val file = File(filename)
-			if (file.exists()) {
-				val result = file.delete()
-				Log.d(TAG, "deleteSentReports success: $result")
-			}
-		}
-	}
-	
-	companion object {
-		private const val TAG = "ReportSyncWorker"
-		private const val UNIQUE_WORK_KEY = "ReportSyncWorkerUniqueKey"
-		
-		fun enqueue() {
-			val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-			val workRequest = OneTimeWorkRequestBuilder<ReportSyncWorker>().setConstraints(constraints).build()
-			WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
-		}
-		
-		fun workInfos(): LiveData<List<WorkInfo>> {
-			return WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_KEY)
-		}
-	}
-
-		 return if (someFailed) Result.retry() else Result.success()*/
-		return Result.success()
 	}
 	
 	private fun deleteSentReports() {
