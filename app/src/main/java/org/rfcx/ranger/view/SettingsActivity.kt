@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.rfcx.ranger.BuildConfig
@@ -21,7 +22,7 @@ import kotlin.collections.ArrayList
 class SettingsActivity : AppCompatActivity() {
 	
 	private val guardianGroupsAdapter by lazy { GuardianGroupsAdapter(this) }
-
+	
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
 	
 	override fun onResume() {
 		super.onResume()
-
+		
 		updateLocationSwitch()
 		reloadGuardianGroups()
 		updateSiteName()
@@ -52,10 +53,10 @@ class SettingsActivity : AppCompatActivity() {
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-
+		
 		locationPermissions.handleActivityResult(requestCode, resultCode)
 	}
-
+	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		locationPermissions.handleRequestResult(requestCode, grantResults)
 	}
@@ -81,7 +82,7 @@ class SettingsActivity : AppCompatActivity() {
 			}
 		}
 	}
-
+	
 	private fun bindLocationSwitch() {
 		locationTrackingSwitch.setOnCheckedChangeListener { _, isChecked ->
 			if (isChecked) {
@@ -91,22 +92,32 @@ class SettingsActivity : AppCompatActivity() {
 			}
 		}
 	}
-
+	
 	private fun updateLocationSwitch() {
 		locationTrackingSwitch.isChecked = LocationTracking.isOn(this)
 	}
-
+	
 	private fun disableLocationTracking() {
 		LocationTracking.set(this, false)
 	}
-
+	
 	private fun enableLocationTracking() {
-		locationPermissions.check { hasPermission: Boolean ->
-			LocationTracking.set(this, hasPermission)
+		if (isOnAirplaneMode()) {
+			AlertDialog.Builder(this)
+					.setTitle(R.string.in_air_plane_mode)
+					.setMessage(R.string.pls_off_air_plane_mode)
+					.setPositiveButton(R.string.common_ok, null)
+					.show()
+			LocationTracking.set(this, false)
 			updateLocationSwitch()
+		} else {
+			locationPermissions.check { hasPermission: Boolean ->
+				LocationTracking.set(this, hasPermission)
+				updateLocationSwitch()
+			}
 		}
 	}
-
+	
 	private fun reloadGuardianGroups() {
 		val database = SiteGuardianDb()
 		val lastUpdated = Preferences.getInstance(this).getDate(Preferences.GUARDIAN_GROUPS_LAST_UPDATED)
@@ -166,11 +177,11 @@ class SettingsActivity : AppCompatActivity() {
 			CloudMessaging.unsubscribe(this)
 			preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, group.shortname)
 		}
-
+		
 		updateSiteName()
 		CloudMessaging.subscribeIfRequired(this)
 	}
-
+	
 	private fun bindNotificationsSwitch() {
 		eventNotificationsSwitch.isChecked = Preferences.getInstance(this).getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
 		eventNotificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -185,7 +196,7 @@ class SettingsActivity : AppCompatActivity() {
 			}
 		}
 	}
-
+	
 	private fun updateSiteName() {
 		siteValueTextView.text = getSiteName()
 	}

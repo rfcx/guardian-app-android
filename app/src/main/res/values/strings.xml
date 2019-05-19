@@ -88,4 +88,8 @@
     <!-- Report list -->
     <string name="report_list_title">Report History</string>
     <string name="report_list_empty_message">Your report is empty.</string>
+    
+    <string name="in_air_plane_mode">You are in airplane mode</string>
+    <string name="pls_off_air_plane_mode">Please turn off airplane mode.</string>
+    <string name="common_ok">Ok</string>
 </resources>
