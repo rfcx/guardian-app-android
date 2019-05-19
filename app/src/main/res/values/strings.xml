@@ -9,15 +9,18 @@
     <string name="incorrect_username_password">Incorrect username or password</string>
     <string name="an_error_occurred">Service unavailable</string>
     <string name="or">OR</string>
-
+    
     <!-- common error -->
     <string name="error_common">An error occurred. Please try again.</string>
     <string name="location_permission_msg">Ranger App would like to use your location</string>
     <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
+    <string name="camera_permission_msg">Ranger App would like to use your camera</string>
+    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
     <string name="go_to_setting">Settings</string>
     <string name="menu_logout">Logout</string>
-	<string name="menu_check_in_history">Check-in history</string>
-
+    <string name="menu_check_in_history">Check-in history</string>
+    <string name="menu_report_history">Report history</string>
+    
     <!-- message list -->
     <string name="profile_welcome">Hi, %s!</string>
     <string name="profile_onduty">On duty</string>
@@ -25,7 +28,7 @@
     <string name="network_online">online</string>
     <string name="network_offline">offline</string>
     <string name="error_no_guardian_group_set">Set guardian group in Settings</string>
-
+    
     <!-- report -->
     <string name="report_title">Report</string>
     <string name="report_send_success">Report successful!</string>
@@ -33,13 +36,14 @@
     <string name="report_when_label">WHEN?</string>
     <string name="report_submit_button_label">Submit</string>
     <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
+    <string name="report_attach_image_label">PHOTOS (Optional)</string>
     <string name="report_location_null">Location not found. Please try again.</string>
-
+    
     <!-- Notification -->
     <string name="notification_location_title">Ranger Location</string>
     <string name="notification_location_loading">Loading location…</string>
     <string name="notification_location_not_availability">Please enable your device\'s location settings</string>
-
+    
     <!-- Settings -->
     <string name="setting_label">Settings</string>
     <string name="app_version_label">v%s</string>
@@ -50,21 +54,21 @@
     <string name="guardian_group_label">Guardian group</string>
     <string name="notifications">Notifications</string>
     <string name="receive_event_notifications">Receive event notifications</string>
-
+    
     <string name="last_month">Last\nMonth</string>
     <string name="last_week">Last\nWeek</string>
     <string name="last_24_hours">Last\n24 hours</string>
     <string name="now">Now</string>
-
+    
     <string name="tab_to_record_label">Tap and hold the button to record notes</string>
     <string name="recent_title">Recent</string>
     <string name="history_title">History</string>
-
+    
     <!-- Invitation -->
     <string name="invitation_title">Connect to a site</string>
     <string name="invitation_desc">Please enter your invitation code</string>
     <string name="hint_code">Code</string>
-
+    
     <!-- Report -->
     <string name="sync_reports_label">%d reports</string>
     <string name="sync_report_label">%d report</string>
@@ -74,8 +78,14 @@
     <string name="sync_uploading">Uploading…</string>
     <string name="sync_complete">Upload complete!</string>
     <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
-	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
-	
+    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+    
     <!-- Symbols -->
     <string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
+    <string name="menu_camera">Camera</string>
+    <string name="menu_gallery">Gallery</string>
+    
+    <!-- Report list -->
+    <string name="report_list_title">Report History</string>
+    <string name="report_list_empty_message">Your report is empty.</string>
 </resources>

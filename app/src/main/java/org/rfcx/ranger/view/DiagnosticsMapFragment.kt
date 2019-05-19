@@ -15,8 +15,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.LocationDb
+import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.view.report.ReportActivity
 
 class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 	
@@ -49,10 +52,33 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 	
 	override fun onMapReady(p0: GoogleMap?) {
 		p0?.let {
-			drawPolyLineToMap(it)
+			drawPolyLineToMap(it) // create line check-in
+			createMarkReports(it) // create mark of Reports
 		}
 	}
-	
+
+	private fun createMarkReports(googleMap: GoogleMap) {
+		if (context == null || !isAdded) return
+		val reports = ReportDb().getAllAsync()
+		if (reports.isEmpty()) return
+
+		for (report in reports) {
+			val latLng = LatLng(report.latitude, report.longitude)
+			val marker = googleMap.addMarker(MarkerOptions()
+					.position(latLng)
+					.title(report.site)
+					.snippet(DateHelper.parse(report.reportedAt)))
+			marker.tag = report
+		}
+
+		googleMap.setOnInfoWindowClickListener { marker ->
+			if (marker.tag != null && marker.tag is Report) {
+				val report = marker.tag as Report
+				context?.let { ReportActivity.startIntent(it, report.id) }
+			}
+		}
+	}
+
 	private fun drawPolyLineToMap(googleMap: GoogleMap) {
 		if (context == null || !isAdded) return
 		val polylineOptions = PolylineOptions()
