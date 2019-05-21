@@ -156,7 +156,13 @@ class SettingsActivity : AppCompatActivity() {
 	}
 	
 	private fun populateGuardianGroups(groups: List<GuardianGroup>) {
-		guardianGroupsAdapter.setData(groups)
+		
+		if (groups.isEmpty()) {
+			// set group "None"
+			guardianGroupsAdapter.setData(listOf(GuardianGroup.noneGuardianGroup))
+		} else {
+			guardianGroupsAdapter.setData(groups)
+		}
 		
 		val selectedValue = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		if (selectedValue != null) {
