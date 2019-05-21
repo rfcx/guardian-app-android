@@ -2,6 +2,7 @@ package org.rfcx.ranger.localdb
 
 import android.util.Log
 import io.realm.Realm
+import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.util.DateHelper
@@ -79,8 +80,16 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 	}
 	
-	fun getAllAsync(): List<Report> {
-		return realm.copyFromRealm(realm.where(Report::class.java).findAllAsync())
+	
+	fun getSync(reportId: Int): List<ReportImage> {
+		return realm.copyFromRealm(realm.where(ReportImage::class.java)
+				.equalTo("reportId", reportId)
+				.findAll())
+	}
+	
+	fun getAllResultsAsync(): RealmResults<ReportImage> {
+		return realm.where(ReportImage::class.java)
+				.findAllAsync()
 	}
 	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {

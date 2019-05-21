@@ -35,16 +35,14 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 		reportEmptyItem = ReportEmptyItem(messageRes, icon)
 	}
 	
-	fun setReports(reports: List<Report>) {
+	fun setReports(reports: List<ReportItem>) {
 		Log.d("setReports", "${reports.count()}")
 		if (reportEmptyItem == null)
 			throw java.lang.IllegalStateException("Please initial empty view, by using setEmptyView(@StringRes messageRes: Int, @DrawableRes icon: Int?)")
 		if (reports.isEmpty()) items.add(reportEmptyItem!!)
-		
-		items.addAll(reports.map {
-			ReportItem(it)
-		})
-		submitList(items)
+		items.clear()
+		items.addAll(reports)
+		submitList(ArrayList(items))
 	}
 	
 	fun getItemAt(position: Int): ReportItemBase? {
@@ -65,13 +63,12 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		when (holder) {
 			is ReportEmptyView -> holder.bind(reportEmptyItem!!.messageRes, reportEmptyItem!!.iconRes)
-			is ReportViewHolder -> holder.bind((getItem(position) as ReportItem).report)
+			is ReportViewHolder -> holder.bind((getItem(position) as ReportItem))
 		}
 	}
 	
 	override fun getItemViewType(position: Int): Int {
-		val item = getItem(position)
-		return when (item) {
+		return when (val item = getItem(position)) {
 			is ReportItem -> reportViewType
 			is ReportEmptyItem -> emptyViewType
 			else -> throw IllegalStateException("Item type (${item::class.java.simpleName} not found on ReportListAdapter.")
@@ -80,23 +77,27 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 	
 }
 
-
 class ReportListDiffUtil : DiffUtil.ItemCallback<ReportItemBase>() {
 	override fun areItemsTheSame(oldItem: ReportItemBase, newItem: ReportItemBase): Boolean {
 		return oldItem.getId() == newItem.getId()
 	}
 	
 	override fun areContentsTheSame(oldItem: ReportItemBase, newItem: ReportItemBase): Boolean {
-		return false
+		return if (oldItem is ReportItem && newItem is ReportItem) {
+			oldItem.getId() == newItem.getId() && oldItem.report.syncState == newItem.report.syncState
+					&& oldItem.attachImagesCount == newItem.attachImagesCount
+					&& oldItem.attachImagesUnSyncCount == newItem.attachImagesUnSyncCount
+		} else {
+			false
+		}
 	}
-	
 }
 
 interface ReportItemBase {
 	fun getId(): Int
 }
 
-data class ReportItem(val report: Report) : ReportItemBase {
+data class ReportItem(val report: Report, val attachImagesCount: Int, val attachImagesUnSyncCount: Int) : ReportItemBase {
 	override fun getId(): Int = report.id
 }
 
@@ -114,7 +115,9 @@ class ReportViewHolder(itemView: View, private val onItemClick: ((Int) -> Unit?)
 	}
 	
 	@SuppressLint("SetTextI18n")
-	fun bind(report: Report) {
+	fun bind(reportItem: ReportItem) {
+		Log.d("ReportListAdapter", "${reportItem.report.id} -- ${reportItem.report.syncState}")
+		val report = reportItem.report
 		itemView.reportTypeNameTextView.text = report.value
 		val latLon = StringBuilder(report.latitude.toString())
 				.append(",")
@@ -134,6 +137,19 @@ class ReportViewHolder(itemView: View, private val onItemClick: ((Int) -> Unit?)
 					else -> R.drawable.ic_other
 				}
 		)
+		if (reportItem.attachImagesCount == 0) {
+			itemView.imageSyncState.visibility = View.GONE
+		} else {
+			if (reportItem.attachImagesUnSyncCount == 0) {
+				itemView.imageSyncState.text = itemView.context.getString(
+						R.string.images_sync_format, reportItem.attachImagesCount)
+			} else {
+				itemView.imageSyncState.text = itemView.context.getString(
+						R.string.images_unsync_format, reportItem.attachImagesCount, reportItem.attachImagesUnSyncCount)
+			}
+			
+			itemView.imageSyncState.visibility = View.VISIBLE
+		}
 	}
 }
 
@@ -146,3 +162,4 @@ class ReportEmptyView(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		itemView.tv_empty_list.setText(messageRes)
 	}
 }
+

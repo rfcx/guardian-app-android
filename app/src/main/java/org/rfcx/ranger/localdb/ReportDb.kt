@@ -2,6 +2,7 @@ package org.rfcx.ranger.localdb
 
 import android.util.Log
 import io.realm.Realm
+import io.realm.RealmResults
 import io.realm.Sort
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -121,6 +122,11 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		return realm.copyFromRealm(realm.where(Report::class.java)
 				.sort("id", Sort.DESCENDING)
 				.findAllAsync())
+	}
+	
+	fun getAllResultsAsync(): RealmResults<Report> {
+		return realm.where(Report::class.java)
+				.findAllAsync()
 	}
 	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
