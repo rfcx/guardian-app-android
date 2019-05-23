@@ -39,9 +39,9 @@ class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(R
 		Log.d("setReports", "${reports.count()}")
 		if (reportEmptyItem == null)
 			throw java.lang.IllegalStateException("Please initial empty view, by using setEmptyView(@StringRes messageRes: Int, @DrawableRes icon: Int?)")
-		if (reports.isEmpty()) items.add(reportEmptyItem!!)
 		items.clear()
 		items.addAll(reports)
+		if (reports.isEmpty()) items.add(reportEmptyItem!!)
 		submitList(ArrayList(items))
 	}
 	
