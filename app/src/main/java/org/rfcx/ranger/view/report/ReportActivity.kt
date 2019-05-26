@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_report.*
 import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
@@ -556,27 +559,26 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun startOpenGallery() {
-		val galleyIntent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-		galleyIntent.type = "image/*"
-		galleyIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-		startActivityForResult(galleyIntent, REQUEST_GALLERY)
+		val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - attachImages.count()
+		Matisse.from(this)
+				.choose(MimeType.ofImage())
+				.countable(true)
+				.maxSelectable(remainingImage)
+				.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+				.thumbnailScale(0.85f)
+				.imageEngine(GlideV4ImageEngine())
+				.theme(R.style.Matisse_Dracula)
+				.forResult(REQUEST_GALLERY)
 	}
 	
 	private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
 		if (requestCode != REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
 		
 		val pathList = mutableListOf<String>()
-		if (intentData.data != null) {
-			val imageUri = intentData.data!!
-			val path = ImageFileUtils.findRealPath(this@ReportActivity, imageUri)
-			path?.let { pathList.add(it) }
-		} else {
-			val clipData = intentData.clipData ?: return
-			for (index in 0 until clipData.itemCount) {
-				val item = clipData.getItemAt(index)
-				val path = ImageFileUtils.findRealPath(this@ReportActivity, item.uri)
-				path?.let { pathList.add(it) }
-			}
+		val results = Matisse.obtainResult(intentData)
+		results.forEach {
+			Log.d("handleGalleryResult", it.toString())
+			pathList.add(it.toString())
 		}
 		attachImages.addAll(pathList)
 		showImages()
