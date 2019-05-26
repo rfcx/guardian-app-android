@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_report.*
 import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
+import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
 import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
@@ -105,10 +106,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		bindActionbar()
 		initReport()
 		
-		addAudioButton.setOnClickListener {
-			onAddAudio()
-		}
-		
 		reportButton.setOnClickListener {
 			if (report == null) {
 				submitReport()
@@ -147,7 +144,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		if (intent.hasExtra(EXTRA_REPORT_ID)) {
 			val reportId = intent.getIntExtra(EXTRA_REPORT_ID, 0)
 			report = ReportDb().getReport(reportId)
-			addAudioButton.visibility = View.INVISIBLE
 			reportButton.visibility = View.GONE
 			soundRecordProgressView.visibility = View.VISIBLE
 		}
@@ -462,6 +458,17 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			setHasFixedSize(true)
 		}
 		
+		reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
+			override fun onAddImageClick() {
+				attachImageDialog.show()
+			}
+			
+			override fun onDeleteImageClick(position: Int) {
+			
+			}
+			
+		}
+		
 		report?.let { it ->
 			val reportImages = ReportDb().getReportImages(it.id)
 			reportImageAttachmentsCount = reportImages?.count() ?: 0
@@ -470,16 +477,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 					attachImages.add(imagePath)
 				}
 			}
-			showImages()
 		}
-	}
-	
-	private fun onAddAudio() {
-		addAudioButton.visibility = View.INVISIBLE
-		soundRecordProgressView.visibility = View.VISIBLE
-		scrollView.post {
-			scrollView.fullScroll(View.FOCUS_DOWN)
-		}
+		showImages()
 	}
 	
 	private fun setupAttachImageDialog() {
@@ -496,19 +495,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		attachImageDialog = BottomSheetDialog(this@ReportActivity)
 		attachImageDialog.setContentView(bottomSheetView)
 		
-		attachImageButton.setOnClickListener {
-			attachImageDialog.show()
-		}
 	}
 	
 	private fun showImages() {
-		if (attachImages.isEmpty()) {
-			attachImageRecycler.visibility = View.GONE
-			return
-		}
-		
-		reportImageAdapter.images = attachImages
-		attachImageRecycler.visibility = View.VISIBLE
+		reportImageAdapter.setImages(attachImages)
 		attachImageDialog.dismiss()
 		
 		if (report != null && reportImageAttachmentsCount != attachImages.count()) {
@@ -568,7 +558,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun startOpenGallery() {
 		val galleyIntent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 		galleyIntent.type = "image/*"
-		galleyIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+		galleyIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
 		startActivityForResult(galleyIntent, REQUEST_GALLERY)
 	}
 	

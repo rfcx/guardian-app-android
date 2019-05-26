@@ -112,18 +112,6 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/whenView" />
 			
-			<ImageButton
-				android:id="@+id/attachImageButton"
-				style="@style/Widget.AppCompat.Button.Borderless.Colored"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:contentDescription="@string/report_record_label"
-				android:src="@drawable/ic_add"
-				app:layout_constraintBottom_toBottomOf="@+id/attachImageTextView"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="@+id/attachImageTextView" />
-			
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/attachImageRecycler"
 				android:layout_width="0dp"
@@ -152,18 +140,6 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
 			
-			<ImageButton
-				android:id="@+id/addAudioButton"
-				style="@style/Widget.AppCompat.Button.Borderless.Colored"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:contentDescription="@string/report_record_label"
-				android:src="@drawable/ic_add"
-				app:layout_constraintBottom_toBottomOf="@+id/reportRecordTextView"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="@+id/reportRecordTextView" />
-			
 			<org.rfcx.ranger.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
 				android:layout_width="match_parent"
@@ -171,7 +147,6 @@
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_small"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:visibility="gone"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
