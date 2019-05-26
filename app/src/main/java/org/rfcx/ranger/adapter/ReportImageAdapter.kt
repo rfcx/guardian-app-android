@@ -21,11 +21,11 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	
 	var onReportImageAdapterClickListener: OnReportImageAdapterClickListener? = null
 	
-	fun setImages(images: List<String>) {
+	fun setImages(oldReportImageAttachmentsCount: Int, images: List<String>) {
 		val newItems = arrayListOf<BaseListItem>()
 		var position = 0
 		images.forEach {
-			newItems.add(ImageItem(position, it))
+			newItems.add(ImageItem(position, it, position >= oldReportImageAttachmentsCount))
 			position++
 		}
 		if (newItems.count() < MAX_IMAGE_SIZE) {
@@ -52,7 +52,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		if (holder is ReportImageAdapterViewHolder && getItem(position) is ImageItem) {
-			holder.bind((getItem(position) as ImageItem).imagePath)
+			val itemImage = getItem(position) as ImageItem
+			holder.bind(itemImage.imagePath, itemImage.canDelete)
 		}
 	}
 	
@@ -64,13 +65,14 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		}
 	}
 	
-	inner class ReportImageAdapterViewHolder(itemView: View, val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(itemView) {
+	inner class ReportImageAdapterViewHolder(itemView: View, private val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(itemView) {
 		
-		fun bind(imagePath: String) {
+		fun bind(imagePath: String, canDelete: Boolean) {
 			GlideApp.with(itemView.imageReport)
 					.load(imagePath)
 					.into(itemView.imageReport)
 			
+			itemView.deleteImageButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
 			itemView.deleteImageButton.setOnClickListener {
 				onReportImageAdapterClickListener?.onDeleteImageClick(adapterPosition)
 			}
@@ -93,14 +95,14 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		
 		override fun areContentsTheSame(oldItem: BaseListItem, newItem: BaseListItem): Boolean {
 			return if (newItem is ImageItem && oldItem is ImageItem) {
-				(newItem.imageId == oldItem.imageId && newItem.imagePath == newItem.imagePath)
+				(newItem.imageId == oldItem.imageId && newItem.imagePath == oldItem.imagePath)
 			} else newItem is AddImageItem && oldItem is AddImageItem
 		}
 	}
 	
 }
 
-data class ImageItem(val imageId: Int, val imagePath: String) : BaseListItem {
+data class ImageItem(val imageId: Int, val imagePath: String, val canDelete: Boolean) : BaseListItem {
 	override fun getItemId(): Int = imageId
 }
 

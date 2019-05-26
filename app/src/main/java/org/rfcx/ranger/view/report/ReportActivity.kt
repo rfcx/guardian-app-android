@@ -68,7 +68,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	// data
 	private var report: Report? = null
-	private var reportImageAttachmentsCount: Int = 0
+	private var oldReportImageAttachmentsCount: Int = 0
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -130,7 +130,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		// take the new image
 		if (report == null) return
 		val newAttachImages = arrayListOf<String>()
-		val startNewImageIndex = if (reportImageAttachmentsCount == 0) 0 else reportImageAttachmentsCount
+		val startNewImageIndex = if (oldReportImageAttachmentsCount == 0) 0 else oldReportImageAttachmentsCount
 		val reportImageDb = ReportImageDb()
 		for (i in startNewImageIndex until attachImages.count()) {
 			newAttachImages.add(attachImages[i])
@@ -244,7 +244,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
 			lastLocation?.let { markRangerLocation(it) }
-		} catch (ex: java.lang.SecurityException) {
+		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
 			ex.printStackTrace()
@@ -464,14 +464,14 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			
 			override fun onDeleteImageClick(position: Int) {
-			
+				attachImages.removeAt(position)
+				showImages()
 			}
-			
 		}
 		
 		report?.let { it ->
 			val reportImages = ReportDb().getReportImages(it.id)
-			reportImageAttachmentsCount = reportImages?.count() ?: 0
+			oldReportImageAttachmentsCount = reportImages?.count() ?: 0
 			reportImages?.forEach { reportImage ->
 				reportImage.imageUrl?.let { imagePath ->
 					attachImages.add(imagePath)
@@ -498,10 +498,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun showImages() {
-		reportImageAdapter.setImages(attachImages)
+		reportImageAdapter.setImages(oldReportImageAttachmentsCount, attachImages)
 		attachImageDialog.dismiss()
 		
-		if (report != null && reportImageAttachmentsCount != attachImages.count()) {
+		if (report != null && oldReportImageAttachmentsCount != attachImages.count()) {
 			// if have new image added
 			reportButton.visibility = View.VISIBLE
 		}
