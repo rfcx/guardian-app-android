@@ -3,6 +3,7 @@ package org.rfcx.ranger.adapter.location
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_location.view.*
 import org.rfcx.ranger.R
@@ -25,16 +26,16 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
 		locations[position]?.let { holder.bind(it) }
 	}
 	
-	
 	inner class LocationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		fun bind(checkin: CheckIn) {
 			itemView.timeTextView.text = DateHelper.parse(checkin.time)
 			itemView.latitudeTextView.text = checkin.latitude.toString()
 			itemView.longitudeTextView.text = checkin.longitude.toString()
-			itemView.syncedTextView.setTextColor(if (checkin.synced) itemView.resources.getColor(android.R.color.holo_green_light) else itemView.resources.getColor(android.R.color.holo_orange_light))
+			itemView.syncedTextView.setTextColor(ContextCompat.getColor(
+					itemView.context, (if (checkin.synced) android.R.color.holo_green_light
+			else android.R.color.holo_orange_light)))
 		}
 	}
-	
 }
 
 
