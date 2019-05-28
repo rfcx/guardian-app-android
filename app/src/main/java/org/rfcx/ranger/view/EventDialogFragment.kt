@@ -46,7 +46,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	private val delayTime = 100L
 	private val maxProgress = 100_000
 	
-	override fun onAttach(context: Context?) {
+	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		if (context is OnAlertConfirmCallback) {
 			onAlertConfirmCallback = context

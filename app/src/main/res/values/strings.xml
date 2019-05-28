@@ -96,6 +96,12 @@
 	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
 	<string name="common_ok">OK</string>
 	
+	<string name="menu_status">STATUS</string>
+	<string name="menu_map">MAP</string>
+	<string name="menu_alert">ALERT</string>
+	<string name="menu_profile">PROFILE</string>
+	
+	
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>

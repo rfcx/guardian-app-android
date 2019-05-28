@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/coordinator_view"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#ffffff"
+	android:fitsSystemWindows="false">
+	
+	<com.google.android.material.bottomappbar.BottomAppBar
+		android:id="@+id/bottom_bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:clickable="false"
+		app:contentInsetStart="0dp"
+		app:contentInsetStartWithNavigation="0dp"
+		app:fabAlignmentMode="center"
+		app:hideOnScroll="true"
+		app:titleMarginStart="0dp">
+		
+		<include layout="@layout/layout_bottom_navigation_menu" />
+	
+	</com.google.android.material.bottomappbar.BottomAppBar>
+	
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/newReportFabButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_add_white_18dp"
+		app:backgroundTint="@color/colorPrimary"
+		app:layout_anchor="@id/bottom_bar"
+		app:tint="#ffffff" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
