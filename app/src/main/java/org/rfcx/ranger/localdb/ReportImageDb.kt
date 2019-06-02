@@ -17,13 +17,13 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		return realm.where(ReportImage::class.java).notEqualTo("syncState", SENT).count()
 	}
 	
-	fun save(report: Report, attachImages: List<String>? = null) {
+	fun save(report: Report, attachImages: List<String>) {
 		val imageCreateAt = DateHelper.parse(report.reportedAt, DateHelper.dateTimeFormatSecond)
 		realm.executeTransaction {
 			// save attached image to be Report Image
-			attachImages?.forEach { attachImage ->
+			attachImages.forEach { attachImage ->
 				val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-				val reportImage = ReportImage(imageId, guid = report.guid, reportId = report.id, imageUrl = attachImage, createAt = imageCreateAt)
+				val reportImage = ReportImage(imageId, guid = report.guid, reportId = report.id, localPath = attachImage, createAt = imageCreateAt)
 				it.insertOrUpdate(reportImage)
 			}
 		}
@@ -95,7 +95,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
 		val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
 		images?.forEach {
-			Log.i("saveGuIDtoImages", "${it.imageUrl}")
+			Log.i("saveGuIDtoImages", it.localPath)
 		}
 		realm.executeTransaction { transition ->
 			images?.forEach {

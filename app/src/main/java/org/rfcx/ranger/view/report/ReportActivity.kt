@@ -67,11 +67,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	private var attachImages = arrayListOf<String>()
 	
 	// data
 	private var report: Report? = null
-	private var oldReportImageAttachmentsCount: Int = 0
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -132,12 +130,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		// Update image attachments
 		// take the new image
 		if (report == null) return
-		val newAttachImages = arrayListOf<String>()
-		val startNewImageIndex = if (oldReportImageAttachmentsCount == 0) 0 else oldReportImageAttachmentsCount
+		val newAttachImages = reportImageAdapter.getNewAttachImage()
 		val reportImageDb = ReportImageDb()
-		for (i in startNewImageIndex until attachImages.count()) {
-			newAttachImages.add(attachImages[i])
-		}
+		
 		reportImageDb.save(report!!, newAttachImages)
 		ImageUploadWorker.enqueue()
 		finish()
@@ -376,9 +371,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
 				audioLocation = recordFile?.canonicalPath)
 		
-		ReportDb().save(report, attachImages)
+		ReportDb().save(report, reportImageAdapter.getNewAttachImage())
 		ReportSyncWorker.enqueue()
-		
 		finish()
 	}
 	
@@ -467,21 +461,21 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			
 			override fun onDeleteImageClick(position: Int) {
-				attachImages.removeAt(position)
-				showImages()
+				reportImageAdapter.removeAt(position)
+				dismissImagePickerOptionsDialog()
 			}
 		}
 		
 		report?.let { it ->
 			val reportImages = ReportDb().getReportImages(it.id)
-			oldReportImageAttachmentsCount = reportImages?.count() ?: 0
-			reportImages?.forEach { reportImage ->
-				reportImage.imageUrl?.let { imagePath ->
-					attachImages.add(imagePath)
-				}
+			if (reportImages != null) {
+				reportImageAdapter.setImages(reportImages)
 			}
+		} ?: run {
+			reportImageAdapter.setImages(arrayListOf())
 		}
-		showImages()
+		
+		dismissImagePickerOptionsDialog()
 	}
 	
 	private fun setupAttachImageDialog() {
@@ -500,14 +494,13 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 	}
 	
-	private fun showImages() {
-		reportImageAdapter.setImages(oldReportImageAttachmentsCount, attachImages)
-		attachImageDialog.dismiss()
-		
-		if (report != null && oldReportImageAttachmentsCount != attachImages.count()) {
-			// if have new image added
+	private fun dismissImagePickerOptionsDialog() {
+		if (reportImageAdapter.getNewAttachImage().count() != 0) {
 			reportButton.visibility = View.VISIBLE
+		} else if (isOnDetailView()) {
+			reportButton.visibility = View.GONE
 		}
+		attachImageDialog.dismiss()
 	}
 	
 	private fun takePhoto() {
@@ -536,10 +529,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		if (resultCode == Activity.RESULT_OK) {
 			imageFile?.let {
-				attachImages.add(it.absolutePath)
+				reportImageAdapter.addImages(listOf(it.absolutePath))
 			}
-			showImages()
-			Log.d("photoSet", "photo size: ${attachImages.size}")
+			dismissImagePickerOptionsDialog()
+			
 		} else {
 			// remove file image
 			imageFile?.let {
@@ -559,7 +552,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun startOpenGallery() {
-		val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - attachImages.count()
+		val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - reportImageAdapter.getImageCount()
 		Matisse.from(this)
 				.choose(MimeType.ofImage())
 				.countable(true)
@@ -577,11 +570,13 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val pathList = mutableListOf<String>()
 		val results = Matisse.obtainResult(intentData)
 		results.forEach {
-			Log.d("handleGalleryResult", it.toString())
-			pathList.add(it.toString())
+			val imagePath = ImageFileUtils.findRealPath(this, it)
+			imagePath?.let { path ->
+				pathList.add(path)
+			}
 		}
-		attachImages.addAll(pathList)
-		showImages()
+		reportImageAdapter.addImages(pathList)
+		dismissImagePickerOptionsDialog()
 	}
 	
 	companion object {

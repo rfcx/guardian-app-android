@@ -29,7 +29,7 @@ class UploadImageApi {
 		val attachments = arrayListOf<MultipartBody.Part>()
 		
 		val compressedList = arrayListOf<File>()
-		compressedList.add(compressFile(context, File(reportImage.imageUrl)))
+		compressedList.add(compressFile(context, File(reportImage.localPath)))
 		
 		for (file in compressedList) {
 			attachments.add(createLocalFilePart(file, "image/*"))
