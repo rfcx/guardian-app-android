@@ -156,6 +156,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		override fun areContentsTheSame(oldItem: BaseListItem, newItem: BaseListItem): Boolean {
 			return if (newItem is LocalImageItem && oldItem is LocalImageItem) {
 				(newItem.imageId == oldItem.imageId && newItem.localPath == oldItem.localPath)
+			} else if (newItem is RemoteImageItem && oldItem is RemoteImageItem) {
+				(newItem.imageId == oldItem.imageId && newItem.remotePath == oldItem.remotePath)
 			} else newItem is AddImageItem && oldItem is AddImageItem
 		}
 	}
