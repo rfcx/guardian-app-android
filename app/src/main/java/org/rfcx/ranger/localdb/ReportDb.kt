@@ -1,6 +1,5 @@
 package org.rfcx.ranger.localdb
 
-import android.net.Uri
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
@@ -110,7 +109,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 				.findAll()
 		val imageDb = ReportImageDb()
 		reports.forEach {
-			imageDb.delete(it.id)
+			imageDb.deleteAll(it.id)
 		}
 		val filenames = reports.mapNotNull { it.audioLocation }
 		realm.executeTransaction {

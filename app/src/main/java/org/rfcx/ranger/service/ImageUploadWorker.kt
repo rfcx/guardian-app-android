@@ -8,6 +8,7 @@ import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.repo.api.UploadImageApi
+import java.io.FileNotFoundException
 
 
 /**
@@ -26,16 +27,20 @@ class ImageUploadWorker(context: Context, params: WorkerParameters)
 		
 		var someFailed = false
 		for (image in images) {
-			val result = api.sendSync(applicationContext, image)
-			when (result) {
+			when (val result = api.sendSync(applicationContext, image)) {
 				is Ok -> {
 					Log.d(TAG, "doWork: success ${image.id}")
 					db.markSent(image.id)
 				}
 				is Err -> {
 					Log.d(TAG, "doWork: failed ${image.id}")
-					db.markUnsent(image.id)
-					someFailed = true
+					if (result.error is FileNotFoundException) {
+						// remove this attachment if file has deleted
+						db.delete(image.id)
+					} else {
+						db.markUnsent(image.id)
+						someFailed = true
+					}
 				}
 			}
 		}

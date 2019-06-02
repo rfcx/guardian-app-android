@@ -70,7 +70,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 	}
 	
-	fun delete(reportId: Int) {
+	fun deleteAll(reportId: Int) {
 		val shouldDelete = realm.where(ReportImage::class.java)
 				.equalTo("reportId", reportId)
 				.findAll()
@@ -90,6 +90,15 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 	fun getAllResultsAsync(): RealmResults<ReportImage> {
 		return realm.where(ReportImage::class.java)
 				.findAllAsync()
+	}
+	
+	fun delete(reportImageId: Int) {
+		val shouldDelete = realm.where(ReportImage::class.java)
+				.equalTo("id", reportImageId)
+				.findAll()
+		realm.executeTransaction {
+			shouldDelete.deleteAllFromRealm()
+		}
 	}
 	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
