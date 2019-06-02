@@ -30,7 +30,11 @@ class ImageUploadWorker(context: Context, params: WorkerParameters)
 			when (val result = api.sendSync(applicationContext, image)) {
 				is Ok -> {
 					Log.d(TAG, "doWork: success ${image.id}")
-					db.markSent(image.id)
+					var remotePath: String? = null
+					if (result.value.isNotEmpty()) {
+						remotePath = result.value[0].url
+					}
+					db.markSent(image.id, remotePath)
 				}
 				is Err -> {
 					Log.d(TAG, "doWork: failed ${image.id}")

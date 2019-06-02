@@ -57,8 +57,14 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		mark(id = id, syncState = UNSENT)
 	}
 	
-	fun markSent(id: Int) {
-		mark(id, SENT)
+	fun markSent(id: Int, remotePath: String?) {
+		realm.executeTransaction {
+			val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
+			if (report != null) {
+				report.syncState = SENT
+				report.remotePath = remotePath
+			}
+		}
 	}
 	
 	private fun mark(id: Int, syncState: Int) {

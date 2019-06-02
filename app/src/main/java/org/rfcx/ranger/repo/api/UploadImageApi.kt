@@ -1,7 +1,6 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import id.zelory.compressor.Compressor
 import okhttp3.MediaType
@@ -36,7 +35,7 @@ class UploadImageApi {
 			return Err(FileNotFoundException("Image attachments not found."))
 		}
 		
-		val compressedFile = compressFile(context, File(reportImage.localPath))
+		val compressedFile = compressFile(context, imageFile)
 		
 		attachments.add(createLocalFilePart(compressedFile, "image/*"))
 		
@@ -74,7 +73,7 @@ class UploadImageApi {
 		}
 		val compressed = Compressor(context)
 				.setQuality(75)
-				.setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(file)
+				.compressToFile(file)
 		if (compressed.length() > 1_000_000) {
 			return compressFile(context, compressed)
 		}

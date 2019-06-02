@@ -1,5 +1,6 @@
 package org.rfcx.ranger.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		imagesSource = arrayListOf()
 		var index = 0
 		reportImages.forEach {
+			Log.d("setImages", "${it.remotePath}")
 			if (it.remotePath != null) {
 				imagesSource.add(RemoteImageItem(index, it.remotePath!!, false))
 			} else {
@@ -106,6 +108,9 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		if (holder is ReportImageAdapterViewHolder && getItem(position) is LocalImageItem) {
 			val itemImage = getItem(position) as LocalImageItem
 			holder.bind(itemImage.localPath, itemImage.canDelete)
+		} else if (holder is ReportImageAdapterViewHolder && getItem(position) is RemoteImageItem) {
+			val itemImage = getItem(position) as RemoteImageItem
+			holder.bind(itemImage.remotePath, false)
 		}
 	}
 	
@@ -123,6 +128,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		fun bind(imagePath: String, canDelete: Boolean) {
 			GlideApp.with(itemView.imageReport)
 					.load(imagePath)
+					.placeholder(R.drawable.ic_mountains)
+					.error(R.drawable.ic_mountains)
 					.into(itemView.imageReport)
 			
 			itemView.deleteImageButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
