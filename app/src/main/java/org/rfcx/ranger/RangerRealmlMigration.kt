@@ -7,8 +7,14 @@ import io.realm.RealmMigration
 class RangerRealmlMigration : RealmMigration {
 	
 	override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
-		if (oldVersion == 2L) {
+		var version = oldVersion
+		if (version == 2L) {
 			migrateToV3(c)
+			version++
+		}
+		
+		if (version == 3L) {
+			migrateToV4(c)
 		}
 	}
 	
@@ -30,6 +36,15 @@ class RangerRealmlMigration : RealmMigration {
 			addField("createAt", String::class.java)
 			setRequired("createAt", true)
 			addField("syncState", Int::class.java)
+		}
+	}
+	
+	private fun migrateToV4(realm: DynamicRealm) {
+		val reportImage = realm.schema.get("ReportImage")
+		reportImage?.apply {
+			addField("remotePath", String::class.java)
+			renameField("imageUrl", "localPath")
+			setRequired("localPath", true)
 		}
 	}
 }
