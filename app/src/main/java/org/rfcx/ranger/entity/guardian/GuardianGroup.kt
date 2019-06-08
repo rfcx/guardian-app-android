@@ -10,11 +10,23 @@ import io.realm.annotations.PrimaryKey
  */
 
 open class GuardianGroup : RealmObject() {
-    @PrimaryKey
-    var shortname: String = ""
-    var name: String = ""
-    var description: String = ""
-    var guardians: RealmList<Guardian>? = null
-    @SerializedName("site")
-    var siteId: String = ""
+	@PrimaryKey
+	var shortname: String = ""
+	var name: String = ""
+	var description: String = ""
+	var guardians: RealmList<Guardian>? = null
+	@SerializedName("site")
+	var siteId: String = ""
+	
+	companion object {
+		val noneGuardianGroup =
+				GuardianGroup().apply {
+					name = noneGuardianGroupName
+					shortname = noneGuardianGroupName
+					siteId = noneGuardianGroupSiteId
+				}
+		
+		private const val noneGuardianGroupSiteId = "None"
+		const val noneGuardianGroupName = "None"
+	}
 }

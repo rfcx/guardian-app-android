@@ -12,8 +12,8 @@ android {
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 26
-        versionName "0.1.8"
+        versionCode 27
+        versionName "0.1.9"
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
@@ -93,6 +93,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.2'
     implementation 'id.zelory:compressor:2.1.0'
+    implementation 'com.zhihu.android:matisse:0.5.2-beta4'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {

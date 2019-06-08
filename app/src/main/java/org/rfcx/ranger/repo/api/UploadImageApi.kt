@@ -1,7 +1,6 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import id.zelory.compressor.Compressor
 import okhttp3.MediaType
@@ -17,6 +16,7 @@ import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getTokenID
 import retrofit2.Response
 import java.io.File
+import java.io.FileNotFoundException
 
 class UploadImageApi {
 	
@@ -28,12 +28,16 @@ class UploadImageApi {
 		val time = RequestBody.create(MultipartBody.FORM, DateHelper.getIsoTime())
 		val attachments = arrayListOf<MultipartBody.Part>()
 		
-		val compressedList = arrayListOf<File>()
-		compressedList.add(compressFile(context, File(reportImage.imageUrl)))
 		
-		for (file in compressedList) {
-			attachments.add(createLocalFilePart(file, "image/*"))
+		val imageFile = File(reportImage.localPath)
+		
+		if (!imageFile.exists()) {
+			return Err(FileNotFoundException("Image attachments not found."))
 		}
+		
+		val compressedFile = compressFile(context, imageFile)
+		
+		attachments.add(createLocalFilePart(compressedFile, "image/*"))
 		
 		val response: Response<List<UploadImageResponse>>?
 		try {
@@ -46,14 +50,11 @@ class UploadImageApi {
 		}
 		
 		// remove file
-		for (cache in compressedList) {
-			try {
-				cache.deleteOnExit()
-			} catch (ignore: Exception) {
-				ignore.printStackTrace()
-			}
+		try {
+			compressedFile.deleteOnExit()
+		} catch (ignore: Exception) {
+			ignore.printStackTrace()
 		}
-		
 		return responseParser(response)
 	}
 	
@@ -72,7 +73,7 @@ class UploadImageApi {
 		}
 		val compressed = Compressor(context)
 				.setQuality(75)
-				.setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(file)
+				.compressToFile(file)
 		if (compressed.length() > 1_000_000) {
 			return compressFile(context, compressed)
 		}

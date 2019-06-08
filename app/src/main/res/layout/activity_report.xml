@@ -47,6 +47,20 @@
 				tools:layout_editor_absoluteY="0dp" />
 			
 			<TextView
+				android:id="@+id/locationStatusTextView"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:padding="@dimen/margin_padding_small"
+				android:textColor="@color/text_white"
+				android:textSize="@dimen/text_medium"
+				android:visibility="invisible"
+				app:layout_constraintEnd_toEndOf="@id/mapView"
+				app:layout_constraintStart_toStartOf="@+id/mapView"
+				app:layout_constraintTop_toTopOf="@id/mapView"
+				tools:text="Location status text view. \n Here" />
+			
+			<TextView
 				android:id="@+id/reportTypeTextView"
 				style="@style/Base.TextAppearance.AppCompat.Body2"
 				android:layout_width="wrap_content"
@@ -98,18 +112,6 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/whenView" />
 			
-			<ImageButton
-				android:id="@+id/attachImageButton"
-				style="@style/Widget.AppCompat.Button.Borderless.Colored"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:contentDescription="@string/report_record_label"
-				android:src="@drawable/ic_add"
-				app:layout_constraintBottom_toBottomOf="@+id/attachImageTextView"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="@+id/attachImageTextView" />
-			
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/attachImageRecycler"
 				android:layout_width="0dp"
@@ -138,18 +140,6 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
 			
-			<ImageButton
-				android:id="@+id/addAudioButton"
-				style="@style/Widget.AppCompat.Button.Borderless.Colored"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:contentDescription="@string/report_record_label"
-				android:src="@drawable/ic_add"
-				app:layout_constraintBottom_toBottomOf="@+id/reportRecordTextView"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="@+id/reportRecordTextView" />
-			
 			<org.rfcx.ranger.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
 				android:layout_width="match_parent"
@@ -157,7 +147,6 @@
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_small"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:visibility="gone"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -178,6 +167,20 @@
 		android:text="@string/report_submit_button_label"
 		android:textColor="@android:color/white"
 		android:textStyle="bold"
-		app:layout_constraintBottom_toBottomOf="parent" />
+		app:layout_constraintBottom_toTopOf="@+id/reportButtonDisableReasonTextView" />
+	
+	<TextView
+		android:id="@+id/reportButtonDisableReasonTextView"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:gravity="center"
+		android:textColor="@color/text_error"
+		android:textSize="@dimen/text_small"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="@id/reportButton"
+		app:layout_constraintStart_toStartOf="@id/reportButton"
+		tools:text="Error Here" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

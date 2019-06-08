@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -26,15 +28,19 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_report.*
 import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
+import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
 import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
@@ -61,11 +67,9 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	private var attachImages = arrayListOf<String>()
 	
 	// data
 	private var report: Report? = null
-	private var reportImageAttachmentsCount: Int = 0
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -78,9 +82,23 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-		override fun onProviderEnabled(p0: String?) {}
-		override fun onProviderDisabled(p0: String?) {}
+		override fun onProviderEnabled(p0: String?) {
+			showLocationFinding()
+		}
+		
+		override fun onProviderDisabled(p0: String?) {
+			showLocationMessageError(getString(R.string.notification_location_not_availability))
+		}
 	}
+	
+	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
+		if (isOnAirplaneMode && !isDestroyed) {
+			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
+		} else {
+			checkThenAccquireLocation()
+		}
+	}
+	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -88,10 +106,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		bindActionbar()
 		initReport()
-		
-		addAudioButton.setOnClickListener {
-			onAddAudio()
-		}
 		
 		reportButton.setOnClickListener {
 			if (report == null) {
@@ -102,16 +116,23 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		}
 	}
 	
+	override fun onResume() {
+		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+		super.onResume()
+	}
+	
+	override fun onPause() {
+		unregisterReceiver(airplaneModeReceiver)
+		super.onPause()
+	}
+	
 	private fun updateReport() {
 		// Update image attachments
 		// take the new image
 		if (report == null) return
-		val newAttachImages = arrayListOf<String>()
-		val startNewImageIndex = if (reportImageAttachmentsCount == 0) 0 else reportImageAttachmentsCount
+		val newAttachImages = reportImageAdapter.getNewAttachImage()
 		val reportImageDb = ReportImageDb()
-		for (i in startNewImageIndex until attachImages.count()) {
-			newAttachImages.add(attachImages[i])
-		}
+		
 		reportImageDb.save(report!!, newAttachImages)
 		ImageUploadWorker.enqueue()
 		finish()
@@ -121,7 +142,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		if (intent.hasExtra(EXTRA_REPORT_ID)) {
 			val reportId = intent.getIntExtra(EXTRA_REPORT_ID, 0)
 			report = ReportDb().getReport(reportId)
-			addAudioButton.visibility = View.INVISIBLE
 			reportButton.visibility = View.GONE
 			soundRecordProgressView.visibility = View.VISIBLE
 		}
@@ -178,11 +198,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 			return
 		}
-		locationPermissions.check { isAllowed: Boolean ->
-			if (isAllowed) {
-				getLocation()
-			}
-		}
+		checkThenAccquireLocation()
 	}
 	
 	private fun bindActionbar() {
@@ -200,16 +216,33 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		map?.getMapAsync(this@ReportActivity)
 	}
 	
+	private fun checkThenAccquireLocation() {
+		if (isDestroyed) return
+		if (isOnAirplaneMode()) {
+			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
+		} else {
+			locationPermissions.check { isAllowed: Boolean ->
+				if (isAllowed) {
+					getLocation()
+				} else {
+					showLocationMessageError(getString(R.string.notification_location_not_availability))
+				}
+			}
+		}
+	}
+	
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
 		if (isDestroyed) return
+		locationManager?.removeUpdates(locationListener)
 		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 //			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+			showLocationFinding()
 			lastLocation?.let { markRangerLocation(it) }
-		} catch (ex: java.lang.SecurityException) {
+		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
 			ex.printStackTrace()
@@ -228,6 +261,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))
 		googleMap?.uiSettings?.isScrollGesturesEnabled = false
+		locationStatusTextView.visibility = View.GONE
+		reportButtonDisableReasonTextView.visibility = View.GONE
 		validateForm()
 	}
 	
@@ -305,6 +340,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun validateForm() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
+		if (lastLocation != null) reportButtonDisableReasonTextView.visibility = View.GONE
+		
 		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastLocation != null
 	}
 	
@@ -334,9 +371,8 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
 				audioLocation = recordFile?.canonicalPath)
 		
-		ReportDb().save(report, attachImages)
+		ReportDb().save(report, reportImageAdapter.getNewAttachImage())
 		ReportSyncWorker.enqueue()
-		
 		finish()
 	}
 	
@@ -419,24 +455,27 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			setHasFixedSize(true)
 		}
 		
+		reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
+			override fun onAddImageClick() {
+				attachImageDialog.show()
+			}
+			
+			override fun onDeleteImageClick(position: Int) {
+				reportImageAdapter.removeAt(position)
+				dismissImagePickerOptionsDialog()
+			}
+		}
+		
 		report?.let { it ->
 			val reportImages = ReportDb().getReportImages(it.id)
-			reportImageAttachmentsCount = reportImages?.count() ?: 0
-			reportImages?.forEach { reportImage ->
-				reportImage.imageUrl?.let { imagePath ->
-					attachImages.add(imagePath)
-				}
+			if (reportImages != null) {
+				reportImageAdapter.setImages(reportImages)
 			}
-			showImages()
+		} ?: run {
+			reportImageAdapter.setImages(arrayListOf())
 		}
-	}
-	
-	private fun onAddAudio() {
-		addAudioButton.visibility = View.INVISIBLE
-		soundRecordProgressView.visibility = View.VISIBLE
-		scrollView.post {
-			scrollView.fullScroll(View.FOCUS_DOWN)
-		}
+		
+		dismissImagePickerOptionsDialog()
 	}
 	
 	private fun setupAttachImageDialog() {
@@ -453,25 +492,15 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		attachImageDialog = BottomSheetDialog(this@ReportActivity)
 		attachImageDialog.setContentView(bottomSheetView)
 		
-		attachImageButton.setOnClickListener {
-			attachImageDialog.show()
-		}
 	}
 	
-	private fun showImages() {
-		if (attachImages.isEmpty()) {
-			attachImageRecycler.visibility = View.GONE
-			return
-		}
-		
-		reportImageAdapter.images = attachImages
-		attachImageRecycler.visibility = View.VISIBLE
-		attachImageDialog.dismiss()
-		
-		if (report != null && reportImageAttachmentsCount != attachImages.count()) {
-			// if have new image added
+	private fun dismissImagePickerOptionsDialog() {
+		if (reportImageAdapter.getNewAttachImage().count() != 0) {
 			reportButton.visibility = View.VISIBLE
+		} else if (isOnDetailView()) {
+			reportButton.visibility = View.GONE
 		}
+		attachImageDialog.dismiss()
 	}
 	
 	private fun takePhoto() {
@@ -500,10 +529,10 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		if (resultCode == Activity.RESULT_OK) {
 			imageFile?.let {
-				attachImages.add(it.absolutePath)
+				reportImageAdapter.addImages(listOf(it.absolutePath))
 			}
-			showImages()
-			Log.d("photoSet", "photo size: ${attachImages.size}")
+			dismissImagePickerOptionsDialog()
+			
 		} else {
 			// remove file image
 			imageFile?.let {
@@ -523,30 +552,31 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun startOpenGallery() {
-		val galleyIntent = Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-		galleyIntent.type = "image/*"
-		galleyIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-		startActivityForResult(galleyIntent, REQUEST_GALLERY)
+		val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - reportImageAdapter.getImageCount()
+		Matisse.from(this)
+				.choose(MimeType.ofImage())
+				.countable(true)
+				.maxSelectable(remainingImage)
+				.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+				.thumbnailScale(0.85f)
+				.imageEngine(GlideV4ImageEngine())
+				.theme(R.style.Matisse_Dracula)
+				.forResult(REQUEST_GALLERY)
 	}
 	
 	private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
 		if (requestCode != REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
 		
 		val pathList = mutableListOf<String>()
-		if (intentData.data != null) {
-			val imageUri = intentData.data!!
-			val path = ImageFileUtils.findRealPath(this@ReportActivity, imageUri)
-			path?.let { pathList.add(it) }
-		} else {
-			val clipData = intentData.clipData ?: return
-			for (index in 0 until clipData.itemCount) {
-				val item = clipData.getItemAt(index)
-				val path = ImageFileUtils.findRealPath(this@ReportActivity, item.uri)
-				path?.let { pathList.add(it) }
+		val results = Matisse.obtainResult(intentData)
+		results.forEach {
+			val imagePath = ImageFileUtils.findRealPath(this, it)
+			imagePath?.let { path ->
+				pathList.add(path)
 			}
 		}
-		attachImages.addAll(pathList)
-		showImages()
+		reportImageAdapter.addImages(pathList)
+		dismissImagePickerOptionsDialog()
 	}
 	
 	companion object {
@@ -557,6 +587,24 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			intent.putExtra(EXTRA_REPORT_ID, reportId)
 			context.startActivity(intent)
 		}
+	}
+	
+	private fun showLocationMessageError(message: String) {
+		if (isOnDetailView()) return
+		locationStatusTextView.text = message
+		locationStatusTextView.setBackgroundResource(R.color.location_status_failed_bg)
+		locationStatusTextView.visibility = View.VISIBLE
+		reportButtonDisableReasonTextView.text = message
+		reportButtonDisableReasonTextView.visibility = View.VISIBLE
+	}
+	
+	private fun showLocationFinding() {
+		if (isOnDetailView()) return
+		locationStatusTextView.text = getString(R.string.notification_location_loading)
+		locationStatusTextView.setBackgroundResource(R.color.location_status_loading_bg)
+		locationStatusTextView.visibility = View.VISIBLE
+		reportButtonDisableReasonTextView.text = getString(R.string.notification_location_loading)
+		reportButtonDisableReasonTextView.visibility = View.VISIBLE
 	}
 	
 	/**
