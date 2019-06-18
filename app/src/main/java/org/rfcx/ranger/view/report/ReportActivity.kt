@@ -262,7 +262,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				latLng, 15f))
 		googleMap?.uiSettings?.isScrollGesturesEnabled = false
 		locationStatusTextView.visibility = View.GONE
-		reportButtonDisableReasonTextView.visibility = View.GONE
 		validateForm()
 	}
 	
@@ -340,8 +339,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun validateForm() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
-		if (lastLocation != null) reportButtonDisableReasonTextView.visibility = View.GONE
-		
 		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastLocation != null
 	}
 	
@@ -594,8 +591,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		locationStatusTextView.text = message
 		locationStatusTextView.setBackgroundResource(R.color.location_status_failed_bg)
 		locationStatusTextView.visibility = View.VISIBLE
-		reportButtonDisableReasonTextView.text = message
-		reportButtonDisableReasonTextView.visibility = View.VISIBLE
 	}
 	
 	private fun showLocationFinding() {
@@ -603,8 +598,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		locationStatusTextView.text = getString(R.string.notification_location_loading)
 		locationStatusTextView.setBackgroundResource(R.color.location_status_loading_bg)
 		locationStatusTextView.visibility = View.VISIBLE
-		reportButtonDisableReasonTextView.text = getString(R.string.notification_location_loading)
-		reportButtonDisableReasonTextView.visibility = View.VISIBLE
 	}
 	
 	/**

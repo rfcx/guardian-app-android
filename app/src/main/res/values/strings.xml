@@ -91,8 +91,8 @@
 	<string name="images_sync_format">%d images (synced)</string>
 	<string name="images_unsync_format">%1d images (%2d unsynced)</string>
 	
-	<string name="in_air_plane_mode">You are in airplane mode</string>
-	<string name="pls_off_air_plane_mode">Please turn off airplane mode.</string>
+	<string name="in_air_plane_mode">Unable to determine your location</string>
+	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
 	<string name="common_ok">OK</string>
 	
 	
