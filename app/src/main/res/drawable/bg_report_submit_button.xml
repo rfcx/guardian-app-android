@@ -2,11 +2,18 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<item android:state_enabled="true">
-		<color android:color="@color/colorPrimary" />
+		<shape android:shape="rectangle">
+			<solid android:color="@color/colorPrimary" />
+			<corners android:radius="24dp" />
+		</shape>
+	
 	</item>
 	
 	<item>
-		<color android:color="#A2D1A3" />
+		<shape android:shape="rectangle">
+			<solid android:color="@color/divider" />
+			<corners android:radius="24dp" />
+		</shape>
 	</item>
 
 </selector>
