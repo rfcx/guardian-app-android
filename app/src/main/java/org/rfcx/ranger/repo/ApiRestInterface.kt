@@ -2,6 +2,8 @@ package org.rfcx.ranger.repo
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.rfcx.ranger.entity.event.ClassificationBody
+import org.rfcx.ranger.entity.event.ClassificationResponse
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import org.rfcx.ranger.entity.guardian.GuardianGroup
@@ -72,4 +74,9 @@ interface ApiRestInterface {
 	                 @Part("type") type: RequestBody,
 	                 @Part("time") time: RequestBody,
 	                 @Part() audioFile: ArrayList<MultipartBody.Part>): Call<List<UploadImageResponse>>
+	
+	@POST("tags/classified/byannotator")
+	fun getClassificationSpectrogram(@Header("Authorization") authUser: String,
+	                                 @Body body: ClassificationBody): Call<ClassificationResponse>
+	
 }

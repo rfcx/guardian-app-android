@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -29,7 +30,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
+import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter.Companion.MAX_SPAN_COUNT
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.Confidence
+import org.rfcx.ranger.repo.api.ClassificationApi
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 
@@ -70,6 +75,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 		super.onViewCreated(view, savedInstanceState)
 		initView()
 		initPlayer()
+		getClassificationSpectrogram()
 		setupMap()
 		
 		replayButton.setOnClickListener {
@@ -160,8 +166,8 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 		var audioUrl = event?.audio?.opus
 		if (!audioUrl.isNullOrEmpty()) {
 			val descriptorFactory =
-				DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
-
+					DefaultDataSourceFactory(context, Util.getUserAgent(context, getString(R.string.app_name)))
+			
 			if (Build.VERSION.SDK_INT < 21) {
 				audioUrl = audioUrl.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
 			}
@@ -252,6 +258,34 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 			replayButton.visibility = View.VISIBLE
 			Crashlytics.logException(error)
 		}
+	}
+	
+	private fun getClassificationSpectrogram() {
+		
+		ClassificationApi().getClassification(context, event?.audioGUID, event?.value, object : ClassificationApi.ClassificationCallback {
+			override fun onSuccess(confidences: List<Confidence>) {
+				Log.d("Confidence", "${confidences.count()}")
+				
+				val classificationAdapter = ClassificationAdapter()
+				classificationAdapter.setClassification(confidences)
+				val gridLayoutManager = GridLayoutManager(context, MAX_SPAN_COUNT)
+				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+					override fun getSpanSize(position: Int): Int {
+						return classificationAdapter.lists[position].durationSecond()
+					}
+				}
+				
+				classificationRecyclerView.apply {
+					setHasFixedSize(false)
+					layoutManager = gridLayoutManager
+					adapter = classificationAdapter
+				}
+			}
+			
+			override fun onFailed(t: Throwable?, message: String?) {
+				Log.e("Confidence", "$message")
+			}
+		})
 	}
 	
 	companion object {
