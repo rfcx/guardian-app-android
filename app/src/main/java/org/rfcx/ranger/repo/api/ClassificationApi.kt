@@ -16,9 +16,9 @@ import retrofit2.Response
 
 class ClassificationApi {
 	
-	fun getClassification(context: Context?, audioGuids: String?, value: String?, classificationCallback: ClassificationCallback) {
+	fun getClassification(context: Context?, audioGuids: String?, value: String?, annotatorGuid: String?, classificationCallback: ClassificationCallback) {
 		
-		if (context == null || audioGuids == null || value == null) return
+		if (context == null || audioGuids == null || value == null || annotatorGuid == null) return
 		val token = context.getTokenID()
 		if (token == null) {
 			classificationCallback.onFailed(TokenExpireException(context), null)
@@ -26,7 +26,7 @@ class ClassificationApi {
 		}
 		
 		ApiManager.getInstance().apiRest.getClassificationSpectrogram("Bearer $token",
-				ClassificationBody(audioGuids = audioGuids, value = value)).enqueue(object : Callback<ClassificationResponse> {
+				ClassificationBody(audioGuids = audioGuids, value = value, annotatorGuid = annotatorGuid)).enqueue(object : Callback<ClassificationResponse> {
 			override fun onFailure(call: Call<ClassificationResponse>, t: Throwable) {
 			
 			}

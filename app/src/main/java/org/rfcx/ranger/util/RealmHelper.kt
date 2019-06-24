@@ -16,7 +16,7 @@ class RealmHelper {
 		@Volatile
 		private var INSTANCE: RealmHelper? = null
 		
-		private const val schemaVersion = 4L
+		private const val schemaVersion = 5L
 		
 		fun getInstance(): RealmHelper =
 				INSTANCE ?: synchronized(this) {

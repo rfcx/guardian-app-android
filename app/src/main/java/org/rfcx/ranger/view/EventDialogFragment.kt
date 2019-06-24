@@ -32,8 +32,8 @@ import kotlinx.android.synthetic.main.fragment_dialog_alert_event.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter.Companion.MAX_SPAN_COUNT
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.Confidence
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.repo.api.ClassificationApi
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
@@ -262,7 +262,7 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 	
 	private fun getClassificationSpectrogram() {
 		
-		ClassificationApi().getClassification(context, event?.audioGUID, event?.value, object : ClassificationApi.ClassificationCallback {
+		ClassificationApi().getClassification(context, event?.audioGUID, event?.value, event?.aiGuid, object : ClassificationApi.ClassificationCallback {
 			override fun onSuccess(confidences: List<Confidence>) {
 				Log.d("Confidence", "${confidences.count()}")
 				
