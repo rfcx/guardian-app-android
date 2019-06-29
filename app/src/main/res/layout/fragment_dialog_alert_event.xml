@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
+	android:layout_width="@dimen/dialog_min_width"
 	android:layout_height="wrap_content"
 	android:gravity="center_horizontal"
 	android:orientation="vertical">
@@ -12,10 +12,12 @@
 		android:layout_height="0dp" />
 	
 	<FrameLayout
-		android:layout_width="match_parent"
+		android:layout_width="@dimen/dialog_min_width"
 		android:layout_height="@dimen/spectrogram_height"
 		android:layout_gravity="center"
-		android:layout_margin="@dimen/margin_padding_small">
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:paddingStart="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_small">
 		
 		<androidx.appcompat.widget.AppCompatImageView
 			android:id="@+id/spectrogramImageView"

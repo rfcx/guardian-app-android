@@ -27,11 +27,14 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 				
 			} else {
 				val pref = list[i - 1]
+				val lastedBox = lists[lists.lastIndex]
 				if (current.beginsAtOffset > pref.endsAtOffset) {
 					lists.add(ClassificationEmptyBox(pref.endsAtOffset, current.beginsAtOffset))
 					lists.add(ClassificationBox(current.beginsAtOffset, current.endsAtOffset))
-				} else {
-					lists.add(ClassificationBox(current.beginsAtOffset, current.endsAtOffset))
+				} else if (current.beginsAtOffset == pref.endsAtOffset) {
+					// combine the box
+					lastedBox.endAt = current.endsAtOffset
+					
 				}
 			}
 			
@@ -77,14 +80,9 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 }
 
-interface Classification {
-	fun durationSecond(): Int
+open class Classification(open var beginAt: Long, open var endAt: Long) {
+	fun durationSecond(): Int = ((endAt - beginAt) / 1000).toInt()
 }
 
-data class ClassificationBox(val beginAt: Long, val endAt: Long, val duration: Long = endAt - beginAt) : Classification {
-	override fun durationSecond(): Int = (duration / 1000).toInt()
-}
-
-data class ClassificationEmptyBox(val beginAt: Long, val endAt: Long, val duration: Long = endAt - beginAt) : Classification {
-	override fun durationSecond(): Int = (duration / 1000).toInt()
-}
+data class ClassificationBox(override var beginAt: Long, override var endAt: Long) : Classification(beginAt, endAt)
+data class ClassificationEmptyBox(override var beginAt: Long, override var endAt: Long) : Classification(beginAt, endAt)
