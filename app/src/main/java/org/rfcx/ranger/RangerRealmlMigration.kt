@@ -15,6 +15,11 @@ class RangerRealmlMigration : RealmMigration {
 		
 		if (version == 3L) {
 			migrateToV4(c)
+			version++
+		}
+		
+		if (version==4L){
+			migrateToV5(c)
 		}
 	}
 	
@@ -45,6 +50,13 @@ class RangerRealmlMigration : RealmMigration {
 			addField("remotePath", String::class.java)
 			renameField("imageUrl", "localPath")
 			setRequired("localPath", true)
+		}
+	}
+	
+	private fun migrateToV5(realm: DynamicRealm) {
+		val event = realm.schema.get("Event")
+		event?.apply {
+			addField("aiGuid", String::class.java)
 		}
 	}
 }

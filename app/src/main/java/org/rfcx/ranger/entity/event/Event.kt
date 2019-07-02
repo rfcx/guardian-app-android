@@ -8,12 +8,16 @@ import io.realm.annotations.PrimaryKey
 
 open class Event() : RealmObject(), Parcelable {
 	@PrimaryKey
+	@SerializedName("event_guid")
 	var event_guid: String = ""
 	
 	@SerializedName("audio_guid")
 	var audioGUID: String? = ""
 	
+	@SerializedName("latitude")
 	var latitude: Double? = null
+	
+	@SerializedName("longitude")
 	var longitude: Double? = null
 	
 	@SerializedName("begins_at")
@@ -21,9 +25,11 @@ open class Event() : RealmObject(), Parcelable {
 	
 	@SerializedName("ends_at")
 	var endAt: String? = ""
-	
+	@SerializedName("type")
 	var type: String? = ""
+	@SerializedName("value")
 	var value: String? = ""
+	@SerializedName("confidence")
 	var confidence: Float? = null
 	
 	@SerializedName("guardian_guid")
@@ -32,13 +38,18 @@ open class Event() : RealmObject(), Parcelable {
 	@SerializedName("guardian_shortname")
 	var guardianShortname: String? = ""
 	
+	@SerializedName("site")
 	var site: String? = ""
+	@SerializedName("timezone")
 	var timezone: String? = ""
 	
 	var isOpened: Boolean = false
+	@SerializedName("audio")
 	var audio: Audio? = null
 	@SerializedName("reviewer_confirmed")
 	var reviewerConfirmed: Boolean? = null
+	@SerializedName("ai_guid")
+	var aiGuid: String? = ""
 	
 	constructor(parcel: Parcel) : this() {
 		event_guid = parcel.readString() ?: ""
@@ -57,6 +68,7 @@ open class Event() : RealmObject(), Parcelable {
 		isOpened = parcel.readByte() != 0.toByte()
 		audio = parcel.readParcelable(Audio::class.java.classLoader)
 		reviewerConfirmed = parcel.readValue(Boolean::class.java.classLoader) as Boolean
+		aiGuid = parcel.readString()
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -76,6 +88,7 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeByte(if (isOpened) 1 else 0)
 		parcel.writeParcelable(audio, flags)
 		parcel.writeValue(reviewerConfirmed)
+		parcel.writeString(aiGuid)
 	}
 	
 	override fun describeContents(): Int {
