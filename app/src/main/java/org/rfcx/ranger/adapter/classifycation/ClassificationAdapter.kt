@@ -10,7 +10,7 @@ import org.rfcx.ranger.entity.event.Confidence
 class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	var lists: ArrayList<Classification> = arrayListOf()
-	
+	var onDetectionBoxClick: ((ClassificationBox) -> Unit)? = null
 	fun setClassification(list: List<Confidence>) {
 		list.sortedBy { it.beginsAtOffset }
 		
@@ -49,7 +49,9 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		val inflater = LayoutInflater.from(parent.context)
 		return when (viewType) {
-			VIEW_CLASSIFICATION -> ClassificationHolder(inflater.inflate(R.layout.item_classification, parent, false))
+			VIEW_CLASSIFICATION ->
+				ClassificationHolder(inflater.inflate(R.layout.item_classification, parent, false)
+						, onDetectionBoxClick)
 			else -> ClassificationEmptyHolder(inflater.inflate(R.layout.item_classification_empty, parent, false))
 		}
 	}
@@ -59,6 +61,10 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	}
 	
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+		val box = lists[position]
+		if (holder is ClassificationHolder && box is ClassificationBox) {
+			holder.bind(box)
+		}
 	}
 	
 	override fun getItemViewType(position: Int): Int {
@@ -68,7 +74,15 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 		}
 	}
 	
-	class ClassificationHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+	class ClassificationHolder(itemView: View, private val onDetectionBoxClick: ((ClassificationBox) -> Unit)?) : RecyclerView.ViewHolder(itemView) {
+		
+		fun bind(classificationBox: ClassificationBox) {
+			itemView.setOnClickListener {
+				onDetectionBoxClick?.invoke(classificationBox)
+			}
+		}
+	}
+	
 	class ClassificationEmptyHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 	
 	companion object {

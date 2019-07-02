@@ -152,6 +152,13 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 		}
 	}
 	
+	private fun seekPlayerTo(timeMs: Long) {
+		if (exoPlayer.playbackState != Player.STATE_IDLE) {
+			exoPlayer.seekTo(timeMs)
+			exoPlayer.playWhenReady = true
+		}
+	}
+	
 	private fun report(isCurrentAlert: Boolean) {
 		if (isCurrentAlert) {
 			onAlertConfirmCallback?.onCurrentAlert(event!!)
@@ -267,6 +274,9 @@ class EventDialogFragment : DialogFragment(), OnMapReadyCallback {
 				Log.d("Confidence", "${confidences.count()}")
 				
 				val classificationAdapter = ClassificationAdapter()
+				classificationAdapter.onDetectionBoxClick = {
+					seekPlayerTo(it.beginAt)
+				}
 				classificationAdapter.setClassification(confidences)
 				val gridLayoutManager = GridLayoutManager(context, MAX_SPAN_COUNT)
 				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
