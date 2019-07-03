@@ -60,10 +60,7 @@ class SendReportApi {
 	}
 
 	private fun request(context: Context, report: Report): Call<SendReportResponse> {
-		val token = context.getTokenID()
-		if (token == null) {
-			throw Exception("Null token")
-		}
+		val token = context.getTokenID() ?: throw Exception("Null token")
 
 		val authUser = "Bearer $token"
 		val audioFileOrNull = if (!report.audioLocation.isNullOrEmpty()) createLocalFilePart("audio", Uri.parse(report.audioLocation!!), "audio/mpeg") else null
