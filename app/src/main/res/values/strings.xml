@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
 	<!-- LoginActivity -->
 	<string name="email">Email</string>
 	<string name="password">Password</string>
@@ -81,13 +82,13 @@
 	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
 	
 	<!-- Symbols -->
-	<string name="syncedSymbol" tools:ignore="MissingTranslation">●</string>
+	<string name="syncedSymbol">●</string>
 	<string name="menu_camera">Camera</string>
 	<string name="menu_gallery">Gallery</string>
 	
 	<!-- Report list -->
 	<string name="report_list_title">Report History</string>
-	<string name="report_list_empty_message">Your report is empty.</string>
+	<string name="report_list_empty_message">You do not have any reports</string>
 	<string name="images_sync_format">%d images (synced)</string>
 	<string name="images_unsync_format">%1d images (%2d unsynced)</string>
 	
