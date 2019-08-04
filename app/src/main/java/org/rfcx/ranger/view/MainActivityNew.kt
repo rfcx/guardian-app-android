@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
@@ -57,6 +58,10 @@ class MainActivityNew : BaseActivity() {
 				menuMap.menuSelected = true
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
+				
+				supportFragmentManager.beginTransaction()
+						.replace(contentContainer.id, MapFragment.newInstance(),
+								MapFragment.tag).commit()
 			}
 			menuAlert.id -> {
 				menuStatus.menuSelected = false
