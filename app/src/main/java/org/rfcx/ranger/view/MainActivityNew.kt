@@ -74,6 +74,8 @@ class MainActivityNew : BaseActivity() {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = true
+				
+				MainActivity.startActivity(this)
 			}
 		}
 	}
