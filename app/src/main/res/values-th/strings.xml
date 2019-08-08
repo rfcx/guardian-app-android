@@ -15,11 +15,12 @@
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     <string name="location_permission_msg">แอป Ranger ต้องการใช้ตำแหน่งของคุณ</string>
     <string name="record_audio_permission_msg">แอป Ranger ต้องการบันทึกเสียง</string>
-    <string name="camera_permission_msg">Ranger App would like to use your camera</string>
-    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
+    <string name="camera_permission_msg">แอป Ranger ต้องการที่จะใช้กล้องของคุณ</string>
+    <string name="read_storage_permission_msg">แอป Ranger ต้องการที่จะอ่านการจัดเก็บข้อมูลของคุณ</string>
     <string name="go_to_setting">ตั้งค่า</string>
     <string name="menu_logout">ออกจากระบบ</string>
     <string name="menu_check_in_history">ประวัติการเช็คอิน</string>
+    <string name="menu_report_history">ประวัติการรายงาน</string>
 
     <!-- message list -->
     <string name="profile_welcome">สวัสดี %s!</string>
@@ -36,7 +37,7 @@
     <string name="report_when_label">เมื่อ</string>
     <string name="report_submit_button_label">บันทึก</string>
     <string name="report_record_label">บันทึกเสียง</string>
-    <string name="report_attach_image_label">PHOTOS (Optional)</string>
+    <string name="report_attach_image_label">ภาพถ่าย</string>
     <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
 
     <!-- Notification -->
@@ -81,6 +82,41 @@
     <string name="can_not_play_audio">ไม่สามารถเล่นเสียงได้โปรดลองอีกครั้งในภายหลัง</string>
     
     <!-- Symbols -->
-    <string name="menu_camera">Camera</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="syncedSymbol">●</string>
+    <string name="menu_camera">กล้อง</string>
+    <string name="menu_gallery">แกลลอรี่</string>
+    
+    <!-- Report list -->
+    <string name="report_list_title">ประวัติการรายงาน</string>
+    <string name="report_list_empty_message">คุณยังไม่มีรายงานใดๆ</string>
+    <string name="images_sync_format">%d ภาพ (อัปโหลดแล้ว)</string>
+    <string name="images_unsync_format">%1d ภาพ (%2d ยังไม่ได้อัปโหลด)</string>
+    
+    <string name="in_air_plane_mode">การติดตามตำแหน่งถูกปิดใช้งานเมื่ออยู่ในโหมดเครื่องบิน</string>
+    <string name="pls_off_air_plane_mode">กรุณาปิดโหมดเครื่องบิน</string>
+    <string name="common_ok">ตกลง</string>
+    
+    
+    <!-- Override string res from matisse Image picker library -->
+    <string name="album_name_all">ไฟล์ทั้งหมด</string>
+    <string name="button_preview">ดูตัวอย่าง</string>
+    <string name="button_apply_default">ใช้</string>
+    <string name="button_apply">ใช้(%1$d)</string>
+    <string name="button_back">กลับ</string>
+    <string name="photo_grid_capture">กล้อง</string>
+    <string name="empty_text">ไม่มีไฟล์</string>
+    <string name="button_ok">ตกลง</string>
+    <string name="error_over_count_default">คุณมีไฟล์ที่สามารถเลือกได้ถึงจำนวนสูงสุดแล้ว</string>
+    <string name="error_over_count">คุณสามารถเลือกไฟล์ได้ถึง %1$d ไฟล์</string>
+    <string name="error_under_quality">คุณภาพต่ำกว่า</string>
+    <string name="error_over_quality">คุณภาพสูงกว่า</string>
+    <string name="error_file_type">ประเภทไฟล์ที่ไม่สนับสนุน</string>
+    <string name="error_type_conflict">ไม่สามารถเลือกภาพและวีดีโอได้ในเวลาเดียวกัน</string>
+    <string name="error_no_video_activity">ไม่พบแอปสำหรับการดูตัวอย่างวีดีโอ</string>
+    <string name="error_over_original_size">ไม่สามารถเลือกภาพที่มีขนาดใหญ่กว่า %1$d MB ได้</string>
+    <string name="error_over_original_count">%1$d ภาพ มีขนาดเกิน %2$d MB</string>
+    <string name="button_original">ไฟล์ต้นฉบับ</string>
+    <string name="button_sure_default">ตกลง</string>
+    <string name="button_sure">ตกลง(%1$d)</string>
+    <!-- Override string res from matisse Image picker library -->
 </resources>

@@ -15,9 +15,12 @@
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
     <string name="record_audio_permission_msg">O aplicativo Ranger gostaria de gravar áudio</string>
+    <string name="camera_permission_msg">O aplicativo Ranger gostaria de usar sua câmera</string>
+    <string name="read_storage_permission_msg">O aplicativo Ranger gostaria de ler o seu armazenamento</string>
     <string name="go_to_setting">Definições</string>
     <string name="menu_logout">Sair</string>
     <string name="menu_check_in_history">Histórico de check-in</string>
+    <string name="menu_report_history">Histórico de relatório</string>
 
     <!-- message list -->
     <string name="profile_welcome">Olá, %s!</string>
@@ -34,8 +37,9 @@
     <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Enviar</string>
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
+    <string name="report_attach_image_label">FOTOS (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
-
+    
     <!-- Notification -->
     <string name="notification_location_title">Localização do Ranger</string>
     <string name="notification_location_loading">Carregando localização…</string>
@@ -76,5 +80,43 @@
     <string name="sync_complete">Upload completo!</string>
     <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
     <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
-
+   
+    <!-- Symbols -->
+    <string name="syncedSymbol">●</string>
+    <string name="menu_camera">Câmera</string>
+    <string name="menu_gallery">Galeria</string>
+    
+    <!-- Report list -->
+    <string name="report_list_title">Histórico de relatório</string>
+    <string name="report_list_empty_message">Você não tem nenhum relatório</string>
+    <string name="images_sync_format">%d imagens (sincronizado)</string>
+    <string name="images_unsync_format">%1d imagens (%2d ainda não sincronizado)</string>
+    
+    <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
+    <string name="pls_off_air_plane_mode">Por favor, desligue o modo avião</string>
+    <string name="common_ok">Está bem</string>
+    
+    
+    <!-- Override string res from matisse Image picker library -->
+    <string name="album_name_all">Todos os meios</string>
+    <string name="button_preview">visualização</string>
+    <string name="button_apply_default">Aplique</string>
+    <string name="button_apply">Aplicar (%1$d)</string>
+    <string name="button_back">De volta</string>
+    <string name="photo_grid_capture">Câmera</string>
+    <string name="empty_text">Ainda não há meios</string>
+    <string name="button_ok">Está bem</string>
+    <string name="error_over_count_default">Você atingiu o máximo de arquivos selecionáveis</string>
+    <string name="error_over_count">Você só pode selecionar até %1$d arquivos de mídia</string>
+    <string name="error_under_quality">Sob qualidade</string>
+    <string name="error_over_quality">Sobre a qualidade</string>
+    <string name="error_file_type">Tipo de arquivo não suportado</string>
+    <string name="error_type_conflict">Não é possível selecionar imagens e vídeos ao mesmo tempo</string>
+    <string name="error_no_video_activity">Nenhum aplicativo encontrado para suportar visualização de vídeo</string>
+    <string name="error_over_original_size">Não é possível selecionar as imagens maiores que %1$d MB</string>
+    <string name="error_over_original_count">%1$d imagens acima de %2$d MB. O original será desmarcado</string>
+    <string name="button_original">Original</string>
+    <string name="button_sure_default">Está bem</string>
+    <string name="button_sure">Está bem(%1$d)</string>
+    <!-- Override string res from matisse Image picker library -->
 </resources>
