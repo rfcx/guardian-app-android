@@ -6,9 +6,12 @@ import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportDetailViewModel
 
 object UiModule {
-	
-	val mapModule = module {
-		viewModel { MapViewModel(get(), get()) }
-		viewModel { ReportDetailViewModel(get(), get()) }
-	}
+
+    val mapModule = module {
+        viewModel { MapViewModel(get(), get()) }
+        viewModel { ReportDetailViewModel(get(), get()) }
+    }
+    val statusModel = module {
+        viewModel { StatusViewModel(get()) }
+    }
 }

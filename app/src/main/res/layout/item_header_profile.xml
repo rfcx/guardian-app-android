@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="profile"
+            type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ProfileItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_padding_small">
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:text="@{String.format(@string/profile_welcome, profile.profileName)}"
+            android:textColor="@color/text_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Hi, Ant!" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/locationTrackingSwitch"
+            style="@style/SwitchCompatStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:clickable="@{profile.locationTracking}"
+            android:textOff="@string/location_tracking_off_label"
+            android:textOn="@string/location_tracking_on_label"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutLocation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:showText="false"
+            tools:checked="false" />
+
+        <LinearLayout
+            android:id="@+id/layoutLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_xsmall"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_xsmall"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toStartOf="@+id/locationTrackingSwitch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userNameTextView">
+
+            <ImageView
+                android:id="@+id/statusImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@{profile.locationTracking ? @drawable/ic_radar : @drawable/ic_radar_grey}" />
+
+            <TextView
+                android:id="@+id/statusTextView"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_xsmall"
+                android:text="@{profile.locationTracking ? @string/profile_onduty : @string/profile_nottracking }"
+                android:textColor="@color/text_secondary"
+                tools:text="@string/profile_onduty" />
+
+            <ImageView
+                android:id="@+id/locationImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_xsmall"
+                android:src="@drawable/ic_location_24dp_grey" />
+
+            <TextView
+                android:id="@+id/locationTextView"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{profile.location}"
+                android:textColor="@color/text_secondary"
+                tools:text="Tembe" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

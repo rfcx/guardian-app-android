@@ -9,6 +9,9 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     flavorDimensions "mode"
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]

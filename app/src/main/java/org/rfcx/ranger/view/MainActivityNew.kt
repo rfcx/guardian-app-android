@@ -10,6 +10,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.report.ReportActivity
+import org.rfcx.ranger.view.status.StatusFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 // TODO change class name
@@ -77,16 +78,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
+
+				startFragment(StatusFragment.newInstance(), StatusFragment.tag)
 			}
 			menuMap.id -> {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = true
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
-				
-				supportFragmentManager.beginTransaction()
-						.replace(contentContainer.id, MapFragment.newInstance(),
-								MapFragment.tag).commit()
+
+				startFragment(MapFragment.newInstance(), MapFragment.tag)
 			}
 			menuAlert.id -> {
 				menuStatus.menuSelected = false
@@ -104,7 +105,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			}
 		}
 	}
-	
+
 	override fun showBottomSheet(fragment: Fragment) {
 		hidBottomAppBar()
 		supportFragmentManager.beginTransaction()
@@ -125,6 +126,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	override fun showBottomAppBar() {
 		bottomBar.visibility = View.VISIBLE
 		newReportFabButton.visibility = View.VISIBLE
+	}
+
+	private fun startFragment(fragment: Fragment, tag: String = "fragment") {
+		supportFragmentManager.beginTransaction()
+				.replace(contentContainer.id, fragment,
+						tag).commit()
 	}
 }
 

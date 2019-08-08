@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="reportItem"
+            type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ReportItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_padding_normal"
+        android:paddingTop="@dimen/margin_padding_small"
+        android:paddingEnd="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_small">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReportType"
+            android:layout_width="@dimen/report_icon_size"
+            android:layout_height="@dimen/report_icon_size"
+            android:src="@{reportItem.icon}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvReportType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:text="@{reportItem.report.value}"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintEnd_toStartOf="@+id/tvReportedAt"
+            app:layout_constraintStart_toEndOf="@+id/ivReportType"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Vehicle" />
+
+        <TextView
+            android:id="@+id/tvReportedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_xsmall"
+            app:layout_constraintBottom_toBottomOf="@+id/tvReportType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvReportType"
+            tools:text="2h" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_xsmall"
+            android:drawableStart="@drawable/ic_place"
+            android:drawablePadding="@dimen/margin_padding_small"
+            android:gravity="center_vertical"
+            android:text="@{reportItem.latLng}"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="@+id/tvReportType"
+            app:layout_constraintTop_toBottomOf="@+id/tvReportType"
+            tools:text="@string/format_location" />
+
+        <TextView
+            android:id="@+id/tvImageAttach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_xsmall"
+            android:textSize="@dimen/text_small"
+            android:drawableStart="@drawable/ic_image"
+            android:drawablePadding="@dimen/margin_padding_small"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_secondary"
+            android:visibility="@{reportItem.attachImagesCount != 0 ? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="@+id/tvReportType"
+            app:layout_constraintTop_toBottomOf="@+id/tvLocation"
+            tools:text="@string/format_image_synced" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconSync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sync"
+            android:visibility="@{reportItem.report.syncState != 2 ? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvReportedAt"
+            app:layout_constraintTop_toBottomOf="@+id/tvReportedAt" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
