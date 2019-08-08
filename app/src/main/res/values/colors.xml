@@ -10,6 +10,8 @@
 	<color name="text_error">#e41a1a</color>
 	<color name="text_white">#ffffff</color>
 	<color name="text_almost_white">#f0f0f0</color>
+	<color name="text_black">#000000</color>
+	<color name="text_green">#2FB04A</color>
 	
 	<color name="divider">#D6D6D6</color>
 	<color name="yellow">#ffdd00</color>

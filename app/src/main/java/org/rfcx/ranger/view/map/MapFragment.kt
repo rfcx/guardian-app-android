@@ -16,8 +16,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
-import org.rfcx.ranger.view.report.ReportActivity
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
@@ -52,10 +52,27 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		map?.let {
 			displayReport(it)
 			displayCheckIn(it)
+			map.setOnMapClickListener {
+				(activity as MainActivityEventListener).hideBottomSheet()
+			}
 		}
 	}
 	
 	private fun displayReport(map: GoogleMap) {
+		
+		map.setOnMarkerClickListener { marker ->
+			
+			Log.d(tag, "Map click $marker")
+			if (marker.tag is Report) {
+				val report = marker.tag as Report
+				(activity as MainActivityEventListener)
+						.showBottomSheet(ReportDetailBottomSheetFragment.newInstance(report.id))
+			} else {
+				(activity as MainActivityEventListener).hideBottomSheet()
+			}
+			false
+		}
+		
 		mapViewModel.getReports().observe(this, Observer { reports ->
 			
 			if (!isAdded || isDetached) return@Observer
@@ -75,13 +92,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				marker.tag = report
 				marker.zIndex = 1f
 				retortMarkers.add(marker)
-			}
-			
-			map.setOnInfoWindowClickListener { marker ->
-				if (marker.tag != null && marker.tag is Report) {
-					val report = marker.tag as Report
-					context?.let { ReportActivity.startIntent(it, report.id) }
-				}
 			}
 		})
 	}
@@ -114,7 +124,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 						.anchor(0.5f, 0.5f)
 						.title(DateHelper.parse(checkIn.time))
 						.snippet("${checkIn.latitude},${checkIn.latitude}")
-						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_on_map))))
+						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
 				checkInPolyline = map.addPolyline(polylineOptions)
 			}
 			

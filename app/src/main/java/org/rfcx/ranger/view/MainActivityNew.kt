@@ -2,6 +2,8 @@ package org.rfcx.ranger.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.rfcx.ranger.R
@@ -11,8 +13,9 @@ import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 // TODO change class name
-class MainActivityNew : BaseActivity() {
+class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
+	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main_new)
@@ -23,6 +26,28 @@ class MainActivityNew : BaseActivity() {
 			ReportActivity.startIntent(this, null)
 		}
 		
+		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+		bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+			override fun onSlide(bottomSheet: View, slideOffset: Float) {
+			
+			}
+			
+			override fun onStateChanged(bottomSheet: View, newState: Int) {
+				if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+					showBottomAppBar()
+				}
+			}
+			
+		})
+	}
+	
+	override fun onBackPressed() {
+		
+		if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+			bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+		} else {
+			return super.onBackPressed()
+		}
 	}
 	
 	private fun setupBottomMenu() {
@@ -79,4 +104,33 @@ class MainActivityNew : BaseActivity() {
 			}
 		}
 	}
+	
+	override fun showBottomSheet(fragment: Fragment) {
+		hidBottomAppBar()
+		supportFragmentManager.beginTransaction()
+				.replace(bottomSheetContainer.id, fragment, "BottomSheet")
+				.commit()
+		bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+	}
+	
+	override fun hideBottomSheet() {
+		bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+	}
+	
+	override fun hidBottomAppBar() {
+		newReportFabButton.visibility = View.INVISIBLE
+		bottomBar.visibility = View.INVISIBLE
+	}
+	
+	override fun showBottomAppBar() {
+		bottomBar.visibility = View.VISIBLE
+		newReportFabButton.visibility = View.VISIBLE
+	}
+}
+
+interface MainActivityEventListener {
+	fun showBottomSheet(fragment: Fragment)
+	fun hideBottomSheet()
+	fun hidBottomAppBar()
+	fun showBottomAppBar()
 }

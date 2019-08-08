@@ -4,9 +4,9 @@
 	android:id="@+id/coordinator_view"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:animateLayoutChanges="true"
 	android:background="#ffffff"
 	android:fitsSystemWindows="false">
-	
 	
 	<FrameLayout
 		android:id="@+id/contentContainer"
@@ -14,7 +14,7 @@
 		android:layout_height="match_parent" />
 	
 	<com.google.android.material.bottomappbar.BottomAppBar
-		android:id="@+id/bottom_bar"
+		android:id="@+id/bottomBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
@@ -22,7 +22,6 @@
 		app:contentInsetStart="0dp"
 		app:contentInsetStartWithNavigation="0dp"
 		app:fabAlignmentMode="center"
-		app:hideOnScroll="true"
 		app:titleMarginStart="0dp">
 		
 		<include layout="@layout/layout_bottom_navigation_menu" />
@@ -35,7 +34,16 @@
 		android:layout_height="wrap_content"
 		android:src="@drawable/ic_add_white_18dp"
 		app:backgroundTint="@color/colorPrimary"
-		app:layout_anchor="@id/bottom_bar"
+		app:layout_anchor="@id/bottomBar"
 		app:tint="#ffffff" />
+	
+	<FrameLayout
+		android:id="@+id/bottomSheetContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:behavior_hideable="false"
+		app:behavior_peekHeight="0dp"
+		app:layout_anchorGravity="bottom"
+		app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

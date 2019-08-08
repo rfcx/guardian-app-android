@@ -86,6 +86,10 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirst()
 	}
 	
+	fun getReportAsync(id: Int): Report? {
+		return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirstAsync()
+	}
+	
 	fun getReportImages(reportId: Int): List<ReportImage>? {
 		return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAll()
 	}
@@ -117,7 +121,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 		return filenames
 	}
-
+	
 	fun deleteReport(id: Int) {
 		// Delete report also delete reportImage
 		realm.executeTransaction {

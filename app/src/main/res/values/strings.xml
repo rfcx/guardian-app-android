@@ -101,7 +101,7 @@
 	<string name="menu_alert">ALERT</string>
 	<string name="menu_profile">PROFILE</string>
 	
-	
+	<string name="see_report_detail">See Detail</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>

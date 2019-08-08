@@ -98,6 +98,12 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 				.findAllAsync()
 	}
 	
+	fun getByReportIdAsync(reportId: Int): RealmResults<ReportImage> {
+		return realm.where(ReportImage::class.java)
+				.equalTo("reportId", reportId)
+				.findAllAsync()
+	}
+	
 	fun delete(reportImageId: Int) {
 		val shouldDelete = realm.where(ReportImage::class.java)
 				.equalTo("id", reportImageId)
