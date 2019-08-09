@@ -1,8 +1,8 @@
 package org.rfcx.ranger.view.status.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -37,7 +37,7 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
                 UserStatusView(itemView)
             }
             ITEM_REPORT_HISTORY -> {
-                val itemView = DataBindingUtil.inflate<ItemStatusReportBinding>(inflater,R.layout.item_status_report, parent, false)
+                val itemView = DataBindingUtil.inflate<ItemStatusReportBinding>(inflater, R.layout.item_status_report, parent, false)
                 ReportView(itemView)
             }
             ITEM_TITLE -> {
@@ -78,7 +78,34 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
         }
 
         override fun areContentsTheSame(oldItem: StatusItemBase, newItem: StatusItemBase): Boolean {
-            return false
+            if (oldItem.getViewType() != newItem.getViewType()) {
+                return false
+            }
+
+            when (oldItem) {
+                is ProfileItem -> {
+                    val item = newItem as ProfileItem
+                    return oldItem.nickname == item.nickname && oldItem.location == item.location
+                            && oldItem.isLocationTracking && item.isLocationTracking
+
+                }
+                is UserStatusItem -> {
+                    val item = newItem as UserStatusItem
+                    return oldItem.dutyCount == item.dutyCount && oldItem.reportedCount == item.reportedCount &&
+                            oldItem.reviewedCount == item.reviewedCount
+                }
+                is ReportItem -> {
+                    val item = newItem as ReportItem
+                    return oldItem.report.id == item.report.id
+                            && oldItem.attachImagesUnSyncCount == item.attachImagesUnSyncCount
+                            && oldItem.attachImagesCount == item.attachImagesCount
+                }
+                is TitleItem -> {
+                    val item = newItem as TitleItem
+                    return oldItem.title == item.title
+                }
+                else -> return false
+            }
         }
     }
 
@@ -106,8 +133,25 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
     data class ReportItem(val report: Report, val attachImagesCount: Int, val attachImagesUnSyncCount: Int) : StatusItemBase {
         override fun getViewType(): Int = ITEM_REPORT_HISTORY
 
-        fun getIcon():Int = report.value.toEventIcon()
+        fun getReportType(): String = report.value.trim().capitalize()
+
+        fun getIcon(): Int = report.value.toEventIcon()
 
         fun getLatLng(): String = "${report.latitude}, ${report.longitude}"
+
+        fun getImageState(context: Context): String {
+            if (attachImagesCount < 1)
+                return ""
+
+            return if (attachImagesUnSyncCount < 1) {
+                context.getString(if (attachImagesCount < 2) R.string.format_image_synced
+                else R.string.format_images_synced, attachImagesCount.toString())
+            } else {
+                context.getString(if (attachImagesCount < 2) R.string.format_image_unsync
+                else R.string.format_images_unsync, attachImagesCount.toString(),
+                        attachImagesUnSyncCount.toString())
+
+            }
+        }
     }
 }

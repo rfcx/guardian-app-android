@@ -32,10 +32,6 @@ class StatusFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.statusViewModel = statusViewModel // set view model
 
-        context?.let {
-            statusViewModel.updateProfile(it.getUserNickname(), it.getSiteName(), LocationTracking.isOn(it))
-        }
-
         // setup adapter layoutmanager
         rvStatus?.apply {
             layoutManager = LinearLayoutManager(context)
@@ -44,7 +40,13 @@ class StatusFragment : BaseFragment() {
 
         statusViewModel.getItems().observe(this, Observer {
             it?.let(statusAdapter::submitList)
+            statusAdapter.submitList(it)
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        statusViewModel.compositeDisposable.clear()
     }
 
     companion object {

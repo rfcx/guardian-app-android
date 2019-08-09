@@ -7,6 +7,7 @@ import org.rfcx.ranger.view.status.adapter.StatusAdapter
 class ReportView(private val binding: ItemStatusReportBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: StatusAdapter.ReportItem) {
         binding.reportItem = item
+        binding.context = binding.root.context
         binding.executePendingBindings()
     }
 }

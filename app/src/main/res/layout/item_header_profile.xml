@@ -9,6 +9,10 @@
         <variable
             name="profile"
             type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ProfileItem" />
+
+        <variable
+            name="view"
+            type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_padding_normal"
-            android:clickable="@{profile.locationTracking}"
+            android:checked="@{profile.locationTracking}"
             android:textOff="@string/location_tracking_off_label"
             android:textOn="@string/location_tracking_on_label"
             app:layout_constraintBottom_toBottomOf="@+id/layoutLocation"
@@ -77,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_xsmall"
+                android:visibility="@{profile.locationTracking? view.VISIBLE: view.INVISIBLE}"
                 android:src="@drawable/ic_location_24dp_grey" />
 
             <TextView
@@ -85,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{profile.location}"
+                android:visibility="@{profile.locationTracking? view.VISIBLE: view.INVISIBLE}"
                 android:textColor="@color/text_secondary"
                 tools:text="Tembe" />
 

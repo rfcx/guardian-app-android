@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="context"
+            type="android.content.Context" />
+
+        <variable
             name="reportItem"
             type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ReportItem" />
     </data>
@@ -34,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_small"
             android:layout_marginEnd="@dimen/margin_padding_small"
-            android:text="@{reportItem.report.value}"
+            android:text="@{reportItem.reportType}"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_large"
             app:layout_constraintEnd_toStartOf="@+id/tvReportedAt"
@@ -77,6 +81,7 @@
             android:drawablePadding="@dimen/margin_padding_small"
             android:gravity="center_vertical"
             android:textColor="@color/text_secondary"
+            android:text="@{reportItem.getImageState(context)}"
             android:visibility="@{reportItem.attachImagesCount != 0 ? View.VISIBLE: View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@+id/tvReportType"
             app:layout_constraintTop_toBottomOf="@+id/tvLocation"

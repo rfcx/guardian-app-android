@@ -106,11 +106,11 @@
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>
-	<string name="format_location" translatable="false">%s, %s</string>
-	<string name="format_image_synced" translatable="false">%s image</string>
-	<string name="format_image_unsync" translatable="false">%s image (%s not yet synced)</string>
-	<string name="format_images_synced" translatable="false">%s imaged</string>
-	<string name="format_images_unsync" translatable="false">%s images (%s not yet synced)</string>
+	<string name="format_location" >%s, %s</string>
+	<string name="format_image_synced" >%s image</string>
+	<string name="format_image_unsync" >%s image (%s not yet synced)</string>
+	<string name="format_images_synced" >%s images</string>
+	<string name="format_images_unsync">%s images (%s not yet synced)</string>
 
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>
