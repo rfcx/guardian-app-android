@@ -100,7 +100,10 @@
 	<string name="menu_map">MAP</string>
 	<string name="menu_alert">ALERT</string>
 	<string name="menu_profile">PROFILE</string>
+	
 	<string name="see_report_detail">See Detail</string>
+	<string name="report_hr_format">%dh</string>
+	<string name="report_day_format">%dday</string>
 
 	<!-- Status -->
 	<string name="status_duty_count_desc">minutes on duty</string>

@@ -579,11 +579,13 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	companion object {
 		private const val EXTRA_REPORT_ID = "extra_report_id"
 		
-		fun startIntent(context: Context, reportId: Int?) {
-			val intent = Intent(context, ReportActivity::class.java)
-			if (reportId != null)
-				intent.putExtra(EXTRA_REPORT_ID, reportId)
-			context.startActivity(intent)
+		fun startIntent(context: Context?, reportId: Int?) {
+			context?.let {
+				val intent = Intent(it, ReportActivity::class.java)
+				if (reportId != null)
+					intent.putExtra(EXTRA_REPORT_ID, reportId)
+				it.startActivity(intent)
+			}
 		}
 	}
 	

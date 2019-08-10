@@ -4,6 +4,11 @@ import org.rfcx.ranger.entity.event.Event
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+/**
+ *
+ * TODO refactor this class
+ */
 object DateHelper {
 	
 	private const val inputFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -48,6 +53,7 @@ object DateHelper {
 		return try {
 			inputSdf.parse(input)
 		} catch (e: java.lang.Exception) {
+			e.printStackTrace()
 			null
 		}
 		
@@ -130,4 +136,23 @@ object DateHelper {
 			""
 		}
 	}
+	
+	/**
+	 * @param utcTime
+	 * return diff between current time and param 'utcTime'
+	 * return diff time in millisecond
+	 */
+	fun getTimePasted(utcTime: String): Long {
+		
+		return try {
+			val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.getDefault())
+			val inputDateTime = sdf.parse(utcTime)
+			val currentDateTime = Date()
+			return currentDateTime.time - inputDateTime.time
+		} catch (e: Exception) {
+			e.printStackTrace()
+			0
+		}
+	}
+	
 }

@@ -11,14 +11,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.getPastedTimeFormat
+import org.rfcx.ranger.view.report.ReportActivity
 
 class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
 	private val reportViewModel: ReportDetailViewModel by viewModel()
 	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_dialog_report_detail, container, false)
@@ -43,7 +43,7 @@ class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 		if (report == null) {
 		
 		} else {
-			reportTypeNameTextView.text = report.value
+			reportTypeNameTextView.text = report.value.capitalize()
 			val latLon = StringBuilder(report.latitude.toString())
 					.append(",")
 					.append(report.longitude)
@@ -57,6 +57,12 @@ class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 						else -> R.drawable.ic_other
 					}
 			)
+			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
+			reportTimePastedTextView.text = context.getPastedTimeFormat(reportPasted)
+			
+			seeDetailTextView.setOnClickListener {
+				ReportActivity.startIntent(context, reportId = report.id)
+			}
 		}
 	}
 	
