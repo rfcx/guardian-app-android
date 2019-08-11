@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+	
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/spectrogram_height"
+		android:layout_gravity="center">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/spectrogramImageView"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/spectrogram_height"
+			android:scaleType="fitXY"
+			android:src="@drawable/spectrogram_place_holder" />
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/classificationRecyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/spectrogram_height"
+			android:background="@color/transparent" />
+		
+		<androidx.appcompat.widget.AppCompatSeekBar
+			android:id="@+id/soundProgressSeekBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingStart="0dp"
+			android:paddingEnd="0dp"
+			android:progress="0"
+			android:progressDrawable="@null"
+			android:thumb="@drawable/seek_bar_thumb" />
+		
+		<ProgressBar
+			android:id="@+id/loadingSoundProgressBar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center" />
+		
+		<ImageView
+			android:id="@+id/replayButton"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="fitXY"
+			android:src="@drawable/ic_replay_black_40dp"
+			android:tint="@color/colorPrimaryDark"
+			android:visibility="invisible" />
+	
+	</FrameLayout>
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:padding="@dimen/margin_padding_normal">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/eventIconImageView"
+			android:layout_width="@dimen/report_icon_size"
+			android:layout_height="@dimen/report_icon_size"
+			tools:src="@drawable/ic_truck" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/eventNameTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:textColor="@color/text_primary"
+			android:textSize="@dimen/text_large"
+			android:textStyle="bold"
+			tools:text="Vehicle?" />
+	
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/buttonView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="0dp"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_normal"
+		android:weightSum="2">
+		
+		<androidx.appcompat.widget.AppCompatButton
+			android:id="@+id/negativeButton"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:layout_weight="1"
+			android:background="@drawable/button_negative"
+			android:textColor="@color/text_white"
+			android:textSize="@dimen/text_medium"
+			android:textStyle="bold"
+			tools:text="Negative" />
+		
+		<androidx.appcompat.widget.AppCompatButton
+			android:id="@+id/positiveButton"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_weight="1"
+			android:background="@drawable/button_positive"
+			android:textColor="@color/text_white"
+			android:textSize="@dimen/text_medium"
+			android:textStyle="bold"
+			tools:text="Positive" />
+	
+	</LinearLayout>
+
+</LinearLayout>

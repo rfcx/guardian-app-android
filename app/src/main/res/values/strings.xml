@@ -104,6 +104,9 @@
 	<string name="see_report_detail">See Detail</string>
 	<string name="report_hr_format">%dh</string>
 	<string name="report_day_format">%dday</string>
+	
+	<string name="common_no">No</string>
+	<string name="common_yes">Yes</string>
 
 	<!-- Status -->
 	<string name="status_duty_count_desc">minutes on duty</string>

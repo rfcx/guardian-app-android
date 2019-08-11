@@ -44,6 +44,7 @@ import org.rfcx.ranger.service.NetworkReceiver
 import org.rfcx.ranger.service.NetworkState
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.report.ReportListActivity
 import kotlin.math.ceil
@@ -423,7 +424,9 @@ class MainActivity : AppCompatActivity(), OnMessageItemClickListener, HeaderProt
 	
 	private fun showAlertPopup(event: Event) {
 		RealmHelper.getInstance().updateOpenedEvent(event)
-		EventDialogFragment.newInstance(event).show(supportFragmentManager, null)
+		/*EventDialogFragment.newInstance(event).show(supportFragmentManager, null)*/
+		AlertBottomDialogFragment.newInstance(event).show(supportFragmentManager,
+				AlertBottomDialogFragment.tag)
 	}
 	
 	private fun reportEvent(event: Event, isConfirmEvent: Boolean) {
