@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.status
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import org.rfcx.ranger.adapter.entity.TitleItem
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.getSiteName
-import org.rfcx.ranger.util.getUserNickname
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
 class StatusViewModel(private val reportDb: ReportDb, private val prefManager: Preferences) : ViewModel() {
@@ -28,14 +27,7 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
 
     init {
         //TBD - demo ui
-        val observer = Observable
-                .zip(getProfile().subscribeOn(Schedulers.newThread()),
-                        getUserStatus().subscribeOn(Schedulers.newThread()),
-                        getReports().subscribeOn(Schedulers.newThread()),
-                        onDataChange())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(StatusItemsObserver())
-        compositeDisposable.add(observer)
+        updateFeed()
     }
 
     private fun onDataChange(): Function3<StatusAdapter.ProfileItem, StatusAdapter.UserStatusItem,
@@ -59,7 +51,7 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
     private fun getProfile(): Observable<StatusAdapter.ProfileItem> {
         // TODO: observe Location tracking
         return Observable.just(StatusAdapter.ProfileItem(prefManager.getUserNickname(),
-                prefManager.getSiteName(), true))
+                prefManager.getSiteName(), prefManager.isTracking()))
     }
 
     private fun getUserStatus(): Observable<StatusAdapter.UserStatusItem> {
@@ -69,6 +61,22 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
     private fun getReports(): Observable<List<StatusAdapter.ReportItem>> {
         // TODO: observe report from db
         return Observable.just(Data.getSampleReports())
+    }
+
+    private fun updateFeed() {
+        val observer = Observable
+                .zip(getProfile().subscribeOn(Schedulers.newThread()),
+                        getUserStatus().subscribeOn(Schedulers.newThread()),
+                        getReports().subscribeOn(Schedulers.newThread()),
+                        onDataChange())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(StatusItemsObserver())
+        compositeDisposable.add(observer)
+    }
+
+    fun onTracking(enable: Boolean) {
+        prefManager.putString(Preferences.ENABLE_LOCATION_TRACKING, if (enable) LocationTracking.TRACKING_ON else LocationTracking.TRACKING_OFF)
+        updateFeed()
     }
 
     private inner class StatusItemsObserver : DisposableObserver<List<StatusAdapter.StatusItemBase>>() {
@@ -82,7 +90,7 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
             items.value = t
         }
     }
-    
+
     // TBD - demo ui
     object Data {
         fun getSampleReports(): List<StatusAdapter.ReportItem> {

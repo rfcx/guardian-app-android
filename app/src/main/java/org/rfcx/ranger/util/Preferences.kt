@@ -6,7 +6,7 @@ import java.util.*
 
 class Preferences(context: Context) {
 	
-	private var sharedPreferences: SharedPreferences
+	var sharedPreferences: SharedPreferences
 	
 	companion object {
 		@Volatile

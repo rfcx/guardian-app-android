@@ -12,8 +12,8 @@ class LocationTracking {
 
     companion object {
 
-        private val TRACKING_ON = "on"
-        private val TRACKING_OFF = "off"
+        val TRACKING_ON = "on"
+        val TRACKING_OFF = "off"
 
         fun isOn(context: Context): Boolean {
             val preferences = Preferences.getInstance(context)

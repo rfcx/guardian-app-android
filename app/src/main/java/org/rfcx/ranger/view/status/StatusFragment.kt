@@ -1,6 +1,8 @@
 package org.rfcx.ranger.view.status
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +14,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
 import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.getSiteName
-import org.rfcx.ranger.util.getUserNickname
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
-class StatusFragment : BaseFragment() {
+class StatusFragment : BaseFragment(), StatusFragmentListener {
+
     private lateinit var viewDataBinding: FragmentStatusBinding
     private val statusViewModel: StatusViewModel by viewModel()
     private val statusAdapter by lazy { StatusAdapter() }
@@ -33,6 +35,7 @@ class StatusFragment : BaseFragment() {
         viewDataBinding.statusViewModel = statusViewModel // set view model
 
         // setup adapter layoutmanager
+        statusAdapter.setListener(this)
         rvStatus?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = statusAdapter
@@ -49,6 +52,10 @@ class StatusFragment : BaseFragment() {
         statusViewModel.compositeDisposable.clear()
     }
 
+    override fun enableTracking(enable: Boolean) {
+        statusViewModel.onTracking(enable)
+    }
+
     companion object {
         fun newInstance(): StatusFragment {
             return StatusFragment()
@@ -56,4 +63,8 @@ class StatusFragment : BaseFragment() {
 
         const val tag = "StatusFragment"
     }
+}
+
+interface StatusFragmentListener {
+    fun enableTracking(enable: Boolean)
 }

@@ -15,6 +15,9 @@ import org.rfcx.ranger.databinding.ItemStatusReportBinding
 import org.rfcx.ranger.databinding.ItemUserStatusBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.status.StatusFragment
+import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_TITLE
@@ -24,13 +27,18 @@ import org.rfcx.ranger.view.status.adapter.viewholder.ReportView
 import org.rfcx.ranger.view.status.adapter.viewholder.UserStatusView
 
 class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()) {
+    private var listener: StatusFragmentListener? = null
+
+    fun setListener(listener: StatusFragmentListener) {
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ITEM_PROFILE -> {
                 val itemView = DataBindingUtil.inflate<ItemHeaderProfileBinding>(inflater, R.layout.item_header_profile, parent, false)
-                ProfileView(itemView)
+                ProfileView(itemView, listener)
             }
             ITEM_USER_STATUS -> {
                 val itemView = DataBindingUtil.inflate<ItemUserStatusBinding>(inflater, R.layout.item_user_status, parent, false)

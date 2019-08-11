@@ -11,6 +11,10 @@
             type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ProfileItem" />
 
         <variable
+            name="onTrackingChange"
+            type="android.widget.CompoundButton.OnCheckedChangeListener"/>
+
+        <variable
             name="view"
             type="android.view.View" />
     </data>
@@ -40,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_padding_normal"
             android:checked="@{profile.locationTracking}"
+            android:onCheckedChanged="@{onTrackingChange}"
             android:textOff="@string/location_tracking_off_label"
             android:textOn="@string/location_tracking_on_label"
             app:layout_constraintBottom_toBottomOf="@+id/layoutLocation"
