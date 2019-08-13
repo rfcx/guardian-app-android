@@ -7,6 +7,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.report.ReportActivity
@@ -52,7 +53,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	}
 	
 	private fun setupBottomMenu() {
-		
 		menuStatus.setOnClickListener {
 			onBottomMenuClick(it)
 		}
@@ -68,6 +68,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
+
+		// start default page
+		startFragment(StatusFragment.newInstance(), StatusFragment.tag)
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
@@ -94,6 +97,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
+				startFragment(AlertsFragment.newInstance(), AlertsFragment.tag)
 			}
 			menuProfile.id -> {
 				menuStatus.menuSelected = false

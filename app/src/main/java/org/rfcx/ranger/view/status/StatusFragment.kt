@@ -1,8 +1,6 @@
 package org.rfcx.ranger.view.status
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +11,6 @@ import kotlinx.android.synthetic.main.fragment_status.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
-import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 

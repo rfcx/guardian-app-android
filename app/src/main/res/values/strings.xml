@@ -140,4 +140,8 @@
 	<string name="button_sure_default">OK</string>
 	<string name="button_sure">OK(%1$d)</string>
 	<!-- Override string res from matisse Image picker library -->
+
+	<!-- Alerts -->
+	<string name="tab_group_by_guardians">Group By Guardians</string>
+	<string name="tab_all_alerts">All Alerts</string>
 </resources>
