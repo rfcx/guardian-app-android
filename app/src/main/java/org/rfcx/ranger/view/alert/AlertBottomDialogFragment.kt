@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
+import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
@@ -42,6 +45,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		setupView()
 		observeEventView()
 		observePlayer()
+		observeClassifiedCation()
 	}
 	
 	private fun setupView() {
@@ -51,6 +55,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		replayButton.setOnClickListener {
 			alertViewModel.replaySound()
 		}
+		
+		
 	}
 	
 	@SuppressLint("SetTextI18n")
@@ -114,6 +120,33 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			} else {
 				soundProgressSeekBar?.progress = it
 			}
+		})
+	}
+	
+	private fun observeClassifiedCation() {
+		alertViewModel.classifiedCation.observe(this, Observer { it ->
+			it.success({ confidence ->
+				val classificationAdapter = ClassificationAdapter()
+				classificationAdapter.onDetectionBoxClick = {
+					alertViewModel.seekPlayerTo(it.beginAt)
+				}
+				classificationAdapter.setClassification(confidence)
+				val gridLayoutManager = GridLayoutManager(context, ClassificationAdapter.MAX_SPAN_COUNT)
+				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+					override fun getSpanSize(position: Int): Int {
+						return classificationAdapter.lists[position].durationSecond()
+					}
+				}
+				
+				classificationRecyclerView.apply {
+					setHasFixedSize(false)
+					layoutManager = gridLayoutManager
+					adapter = classificationAdapter
+				}
+			}, {
+				// Handle error if need
+			})
+			
 		})
 	}
 	

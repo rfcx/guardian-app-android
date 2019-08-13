@@ -15,13 +15,13 @@ object UiModule {
 		viewModel { MapViewModel(get(), get()) }
 		viewModel { ReportDetailViewModel(get(), get()) }
 	}
-
+	
 	val statusModule = module {
 		viewModel { StatusViewModel(get(), get()) }
 	}
-
+	
 	val alertModule = module {
 		viewModel { AlertsViewModel() }
-		viewModel { AlertBottomDialogViewModel(androidContext()) }
+		viewModel { AlertBottomDialogViewModel(androidContext(), get()) }
 	}
 }

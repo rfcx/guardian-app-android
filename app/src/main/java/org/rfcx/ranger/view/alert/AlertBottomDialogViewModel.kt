@@ -14,11 +14,15 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
+import org.rfcx.ranger.entity.event.ClassificationBody
+import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.data.remote.Result
 
-class AlertBottomDialogViewModel(private val context: Context) : ViewModel() {
-	
+class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase) : ViewModel() {
 	
 	private var _event: MutableLiveData<Event> = MutableLiveData()
 	val event: LiveData<Event>
@@ -45,6 +49,10 @@ class AlertBottomDialogViewModel(private val context: Context) : ViewModel() {
 	val playerProgress: LiveData<Int>
 		get() = _playerProgress
 	
+	private var _classifiedCation: MutableLiveData<Result<List<Confidence>>> = MutableLiveData()
+	val classifiedCation: LiveData<Result<List<Confidence>>>
+		get() = _classifiedCation
+	
 	
 	init {
 		_playerState.value = Player.STATE_IDLE
@@ -57,6 +65,7 @@ class AlertBottomDialogViewModel(private val context: Context) : ViewModel() {
 		event.audio?.opus?.let {
 			initPlayer(it)
 		}
+		getClassifiedCation()
 	}
 	
 	private fun setSpectrogramImage() {
@@ -137,6 +146,21 @@ class AlertBottomDialogViewModel(private val context: Context) : ViewModel() {
 			val currentDuration = it.currentPosition
 			val progress = maxProgress * currentDuration / duration
 			_playerProgress.value = progress.toInt()
+		}
+	}
+	
+	private fun getClassifiedCation() {
+		event.value?.let {
+			classifiedUseCase.execute(object : DisposableSingleObserver<List<Confidence>>() {
+				override fun onSuccess(t: List<Confidence>) {
+					_classifiedCation.value = Result.Success(t)
+				}
+				
+				override fun onError(e: Throwable) {
+					_classifiedCation.value = Result.Error(e)
+					e.printStackTrace()
+				}
+			}, ClassificationBody(audioGuids = it.audioGUID, value = it.value, annotatorGuid = it.aiGuid))
 		}
 	}
 	
