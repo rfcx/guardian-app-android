@@ -22,6 +22,6 @@ object UiModule {
 	
 	val alertModule = module {
 		viewModel { AlertsViewModel() }
-		viewModel { AlertBottomDialogViewModel(androidContext(), get()) }
+		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 	}
 }

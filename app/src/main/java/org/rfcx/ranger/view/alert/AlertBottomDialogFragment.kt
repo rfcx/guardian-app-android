@@ -46,6 +46,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		observeEventView()
 		observePlayer()
 		observeClassifiedCation()
+		observeReveiewEvent()
 	}
 	
 	private fun setupView() {
@@ -56,7 +57,21 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			alertViewModel.replaySound()
 		}
 		
+		negativeButton.setOnClickListener {
+			if (alertViewModel.eventState.value == EventState.NONE) {
+				alertViewModel.reviewEvent(false)
+			} else {
+				// Navigate to google map
+			}
+		}
 		
+		positiveButton.setOnClickListener {
+			if (alertViewModel.eventState.value == EventState.NONE) {
+				alertViewModel.reviewEvent(true)
+			} else {
+				dismissDialog()
+			}
+		}
 	}
 	
 	@SuppressLint("SetTextI18n")
@@ -147,6 +162,22 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				// Handle error if need
 			})
 			
+		})
+	}
+	
+	private fun observeReveiewEvent() {
+		alertViewModel.reviewEvent.observe(this, Observer {
+			it.success(
+					{
+						hideLoading()
+					},
+					{
+						hideLoading()
+						// TODO error handle
+					},
+					{
+						showLoading()
+					})
 		})
 	}
 	

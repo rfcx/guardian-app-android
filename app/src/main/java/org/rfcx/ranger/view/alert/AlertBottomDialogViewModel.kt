@@ -16,13 +16,13 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
-import org.rfcx.ranger.entity.event.ClassificationBody
-import org.rfcx.ranger.entity.event.Confidence
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
+import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
+import org.rfcx.ranger.entity.event.*
 
-class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase) : ViewModel() {
+class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase,
+                                 private val reviewEventUseCase: ReviewEventUseCase) : ViewModel() {
 	
 	private var _event: MutableLiveData<Event> = MutableLiveData()
 	val event: LiveData<Event>
@@ -53,6 +53,9 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	val classifiedCation: LiveData<Result<List<Confidence>>>
 		get() = _classifiedCation
 	
+	private var _reviewEvent: MutableLiveData<Result<ReviewEventResponse>> = MutableLiveData()
+	val reviewEvent: LiveData<Result<ReviewEventResponse>>
+		get() = _reviewEvent
 	
 	init {
 		_playerState.value = Player.STATE_IDLE
@@ -164,6 +167,27 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		}
 	}
 	
+	fun reviewEvent(confirm: Boolean) {
+		_reviewEvent.value = Result.Loading
+		event.value?.let {
+			val requests = ReviewEventFactory(it.event_guid, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
+			reviewEventUseCase.execute(object : DisposableSingleObserver<ReviewEventResponse>() {
+				override fun onSuccess(t: ReviewEventResponse) {
+					_reviewEvent.value = Result.Success(t)
+					// invoke state to review
+					_eventState.value = EventState.REVIEWED
+				}
+				
+				override fun onError(e: Throwable) {
+					_reviewEvent.value = Result.Error(e)
+				}
+				
+			}, requests)
+		} ?: run {
+			_reviewEvent.value = Result.Error(IllegalStateException("Event is null."))
+		}
+	}
+	
 	
 	override fun onCleared() {
 		super.onCleared()
@@ -180,7 +204,6 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		const val maxProgress = 100_000
 		private const val delayTime = 100L
 	}
-	
 }
 
 enum class EventState {

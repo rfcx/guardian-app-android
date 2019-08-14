@@ -1,5 +1,7 @@
 package org.rfcx.ranger.view.base
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +9,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import org.rfcx.ranger.R
 
-class LoadingFragment : DialogFragment() {
+class LoadingDialogFragment : DialogFragment() {
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_loading, container, false)
+	}
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 	}
 	
 	fun dismissDialog() {
@@ -23,6 +30,6 @@ class LoadingFragment : DialogFragment() {
 	}
 	
 	companion object {
-		fun newInstance() = LoadingFragment()
+		fun newInstance() = LoadingDialogFragment()
 	}
 }

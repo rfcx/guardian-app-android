@@ -6,7 +6,11 @@ import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
+import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
+import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
+import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
+import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.ClassifiedRepositoryImp
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
@@ -26,10 +30,15 @@ object DataModule {
 		
 		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
 		single { GetClassifiedUseCase(get(), get(), get()) }
+		
+		single { EventRepositoryImp(get()) } bind EventRepository::class
+		single { GetEventsUseCase(get(), get(), get()) }
+		single { ReviewEventUseCase(get(), get(), get()) }
 	}
 	
 	val remoteModule = module {
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

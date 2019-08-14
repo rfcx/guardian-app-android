@@ -7,16 +7,16 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 	private val loadingDialogTag = "LoadingDialog"
 	
 	protected fun showLoading() {
-		val loading: LoadingFragment = childFragmentManager.findFragmentByTag(loadingDialogTag) as LoadingFragment?
+		val loadingDialog: LoadingDialogFragment = childFragmentManager.findFragmentByTag(loadingDialogTag) as LoadingDialogFragment?
 				?: run {
-					LoadingFragment()
+					LoadingDialogFragment()
 				}
-		loading.show(childFragmentManager, loadingDialogTag)
+		loadingDialog.show(childFragmentManager, loadingDialogTag)
 	}
 	
 	protected fun hideLoading() {
-		val loading: LoadingFragment? = childFragmentManager.findFragmentByTag(loadingDialogTag) as LoadingFragment?
-		loading?.dismissDialog()
+		val loadingDialog: LoadingDialogFragment? = childFragmentManager.findFragmentByTag(loadingDialogTag) as LoadingDialogFragment?
+		loadingDialog?.dismissDialog()
 	}
 	
 	protected fun dismissDialog() {
