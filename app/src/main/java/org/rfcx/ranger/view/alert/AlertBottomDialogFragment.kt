@@ -1,6 +1,8 @@
 package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
+
 
 class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
@@ -46,7 +49,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		observeEventView()
 		observePlayer()
 		observeClassifiedCation()
-		observeReveiewEvent()
+		observeReviewEvent()
 	}
 	
 	private fun setupView() {
@@ -61,7 +64,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(false)
 			} else {
-				// Navigate to google map
+				dismissDialog()
 			}
 		}
 		
@@ -69,7 +72,17 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(true)
 			} else {
-				dismissDialog()
+				alertViewModel.event.value?.let { event ->
+					val gmmIntentUri = Uri.parse("geo:<${event.latitude}>,<${event.longitude}>" +
+							"?q=<${event.latitude}>,<${event.longitude}>")
+					val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+					mapIntent.setPackage("com.google.android.apps.maps")
+					context?.let {
+						if (mapIntent.resolveActivity(it.packageManager) != null) {
+							startActivity(mapIntent)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -89,14 +102,19 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					.into(spectrogramImageView)
 		})
 		
-		alertViewModel.eventState.observe(this, Observer {
+		alertViewModel.eventState.observe(this, Observer { it ->
 			when (it!!) {
 				EventState.NONE -> {
 					negativeButton.text = getString(R.string.common_no)
 					positiveButton.text = getString(R.string.common_yes)
 				}
 				EventState.REVIEWED -> {
-				
+					negativeButton.text = getString(R.string.follow_up_later_button)
+					positiveButton.apply {
+						text = getString(R.string.open_map_button)
+						setCompoundDrawablesWithIntrinsicBounds(
+								R.drawable.ic_directions_white_24dp, 0, 0, 0)
+					}
 				}
 			}
 		})
@@ -165,7 +183,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		})
 	}
 	
-	private fun observeReveiewEvent() {
+	private fun observeReviewEvent() {
 		alertViewModel.reviewEvent.observe(this, Observer {
 			it.success(
 					{
@@ -173,7 +191,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					},
 					{
 						hideLoading()
-						// TODO error handle
+						Toast.makeText(context, R.string.error_common, Toast.LENGTH_SHORT).show()
+						
 					},
 					{
 						showLoading()
