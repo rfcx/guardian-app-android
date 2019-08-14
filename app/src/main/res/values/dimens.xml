@@ -5,6 +5,8 @@
 	<dimen name="margin_padding_normal">16dp</dimen>
 	<dimen name="margin_padding_large">24dp</dimen>
 	<dimen name="margin_padding_xlarge">32dp</dimen>
+
+	<dimen name="button_height">44dp</dimen>
 	
 	<!-- Text size -->
 	<dimen name="text_xlarge">22sp</dimen>
