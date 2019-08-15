@@ -93,6 +93,7 @@
             app:layout_constraintTop_toBottomOf="@+id/loginPasswordEditText"/>
 
     <View
+            android:id="@+id/leftLineView"
             android:layout_width="0dp"
             android:layout_height="0.5dp"
             android:layout_margin="@dimen/margin_padding_large"
@@ -119,6 +120,7 @@
             tools:text="OR"/>
 
     <View
+            android:id="@+id/rightLineView"
             android:layout_width="0dp"
             android:layout_height="0.5dp"
             android:layout_margin="@dimen/margin_padding_large"
@@ -142,5 +144,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orTextView"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/loginErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_small"
+            android:background="@color/grey_default"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/text_white"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/facebookLoginButton"
+            tools:text="Error Login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,9 +38,7 @@ class LoginFragment : BaseFragment() {
             val email = loginEmailEditText.text.toString()
             val password = loginPasswordEditText.text.toString()
             if (validateInput(email, password)) {
-
-                // TODO doLogin
-
+                listener.doLogin(email, password)
             }
         }
     }

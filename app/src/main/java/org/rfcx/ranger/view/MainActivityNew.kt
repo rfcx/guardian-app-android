@@ -1,11 +1,14 @@
 package org.rfcx.ranger.view
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
+import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
@@ -136,6 +139,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		supportFragmentManager.beginTransaction()
 				.replace(contentContainer.id, fragment,
 						tag).commit()
+	}
+	companion object {
+		fun startActivity(context: Context) {
+			val intent = Intent(context, MainActivityNew::class.java)
+			context.startActivity(intent)
+		}
 	}
 }
 
