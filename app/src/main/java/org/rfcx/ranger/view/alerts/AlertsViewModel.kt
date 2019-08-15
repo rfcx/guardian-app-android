@@ -7,10 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.entity.EventItem
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
+import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.util.getGuardianGroup
 import kotlin.math.ceil
 
@@ -63,6 +65,15 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
             override fun onSuccess(t: EventResponse) {
                 _loading.value = false
                 totalItemCount = t.total
+
+                t.events?.forEach { event ->
+                    // is Read?
+                    val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
+                    localEvent?.let {
+                        event.isOpened = it.isOpened
+                    }
+
+                }
                 _alerts.value = t.events
             }
 

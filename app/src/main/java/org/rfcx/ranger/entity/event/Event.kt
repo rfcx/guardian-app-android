@@ -46,7 +46,7 @@ open class Event() : RealmObject(), Parcelable {
 	var isOpened: Boolean = false
 	@SerializedName("audio")
 	var audio: Audio? = null
-	@SerializedName("reviewerConfirmed")
+	@SerializedName("reviewer_confirmed")
 	var reviewerConfirmed: Boolean? = null
 	@SerializedName("ai_guid")
 	var aiGuid: String? = ""

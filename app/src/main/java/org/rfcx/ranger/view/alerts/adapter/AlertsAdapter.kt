@@ -36,6 +36,8 @@ class AlertsAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<Ale
         private val iconAlert = itemView.ivAlertIcon
         private val tvFrom = itemView.tvAlertFromSite
         private val tvTimeAgo = itemView.tvAlertTimeAgo
+        private val ivStatusRead = itemView.ivStatusRead
+        private val ivReviewed = itemView.ivReviewed
 
         @SuppressLint("SetTextI18n")
         fun bind(event: Event) {
@@ -43,7 +45,19 @@ class AlertsAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<Ale
             event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
             tvFrom.text = event.site
             tvTimeAgo.text = "• ${event.timeAgoDisplay(itemView.context)}"
+            ivStatusRead.visibility = if (event.reviewerConfirmed != null && event.reviewerConfirmed!!) View.INVISIBLE else View.VISIBLE
+            if (event.reviewerConfirmed != null) {
+                if (event.reviewerConfirmed!!) {
+                    ivReviewed.setImageResource(R.drawable.ic_check)
+                    ivReviewed.setBackgroundResource(R.drawable.circle_green_stroke)
+                } else {
+                    ivReviewed.setImageResource(R.drawable.ic_wrong)
+                    ivReviewed.setBackgroundResource(R.drawable.circle_green_stroke)
+                }
+                ivReviewed.visibility = View.VISIBLE
+            } else {
+                ivReviewed.visibility = View.INVISIBLE
+            }
         }
-
     }
 }

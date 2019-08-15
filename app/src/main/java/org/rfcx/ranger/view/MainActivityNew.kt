@@ -10,6 +10,9 @@ import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.RealmHelper
+import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
@@ -135,6 +138,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		newReportFabButton.visibility = View.VISIBLE
 	}
 
+	override fun showAlertPopup(event: Event) {
+		AlertBottomDialogFragment.newInstance(event).show(supportFragmentManager,
+				AlertBottomDialogFragment.tag)
+	}
+
 	private fun startFragment(fragment: Fragment, tag: String = "fragment") {
 		supportFragmentManager.beginTransaction()
 				.replace(contentContainer.id, fragment,
@@ -153,4 +161,5 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
+	fun showAlertPopup(event: Event)
 }

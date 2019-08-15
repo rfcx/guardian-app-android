@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +12,22 @@ import kotlinx.android.synthetic.main.fragment_all_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.AlertsAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
 class AllAlertsFragment : BaseFragment(), AlertClickListener {
+    private lateinit var listener: MainActivityEventListener
     private val alertsViewModel: AlertsViewModel by viewModel()
     private val alertsAdapter by lazy {
         AlertsAdapter(this)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as MainActivityEventListener
+        //TODO: handle on context on have @MainActivityEventListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,7 +51,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
     }
 
     override fun onClickedAlert(event: Event) {
-        // TODO: handle on click alert's item
+        listener.showAlertPopup(event)
     }
 
     private fun setupAlertList() {
