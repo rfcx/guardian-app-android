@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
-import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
@@ -33,6 +31,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		
 		newReportFabButton.setOnClickListener {
 			ReportActivity.startIntent(this, null)
+		}
+		
+		if (savedInstanceState == null) {
+			menuStatus.performClick()
 		}
 		
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
@@ -75,9 +77,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
-
-		// start default page
-		startFragment(StatusFragment.newInstance(), StatusFragment.tag)
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
@@ -88,34 +87,35 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
-
-				startFragment(StatusFragment.newInstance(), StatusFragment.tag)
+				
+				startFragment(StatusFragment.newInstance(), StatusFragment.tag, true)
 			}
 			menuMap.id -> {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = true
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
-
-				startFragment(MapFragment.newInstance(), MapFragment.tag)
+				
+				startFragment(MapFragment.newInstance(), MapFragment.tag, false)
 			}
 			menuAlert.id -> {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(), AlertsFragment.tag)
+				startFragment(AlertsFragment.newInstance(), AlertsFragment.tag, true)
 			}
+			
 			menuProfile.id -> {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = true
-				startFragment(ProfileFragment.newInstance(), ProfileFragment.tag)
+				startFragment(ProfileFragment.newInstance(), ProfileFragment.tag, true)
 			}
 		}
 	}
-
+	
 	override fun showBottomSheet(fragment: Fragment) {
 		hidBottomAppBar()
 		supportFragmentManager.beginTransaction()
@@ -137,17 +137,23 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		bottomBar.visibility = View.VISIBLE
 		newReportFabButton.visibility = View.VISIBLE
 	}
-
+	
 	override fun showAlertPopup(event: Event) {
 		AlertBottomDialogFragment.newInstance(event).show(supportFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
-
-	private fun startFragment(fragment: Fragment, tag: String = "fragment") {
+	
+	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
+		
+		val contentContainerPaddingBottom =
+				if (showAboveAppbar) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
+		
+		contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
 		supportFragmentManager.beginTransaction()
 				.replace(contentContainer.id, fragment,
 						tag).commit()
 	}
+	
 	companion object {
 		fun startActivity(context: Context) {
 			val intent = Intent(context, MainActivityNew::class.java)

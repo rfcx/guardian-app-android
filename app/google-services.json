@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "443412271144",
+    "firebase_url": "https://rfcx-ranger.firebaseio.com",
+    "project_id": "rfcx-ranger",
+    "storage_bucket": "rfcx-ranger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443412271144:android:126f10dfac5e2fbb",
+        "android_client_info": {
+          "package_name": "org.rfcx.ranger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443412271144-98mgockv4vu7gt8pn8jn53q4njdlfqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443412271144:android:698cb1dbc3ab5e2c",
+        "android_client_info": {
+          "package_name": "org.rfcx.ranger.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443412271144-98mgockv4vu7gt8pn8jn53q4njdlfqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
