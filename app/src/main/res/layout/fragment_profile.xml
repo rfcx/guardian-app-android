@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/userInfoLayout"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_padding_xlarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_xlarge"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:text="Example"/>
+        <LinearLayout
+            android:id="@+id/userLocationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_xsmall"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_xsmall"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/userLocationImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_24dp_grey" />
+            <TextView
+                android:id="@+id/userLocationTextView"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary"
+                android:text="Tembe"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/locationTextView"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_xlarge"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_small"
+            android:text="Location"
+            android:textAllCaps="true"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_small" />
+
+        <LinearLayout
+            android:id="@+id/locationTrackingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_small">
+            <TextView
+                android:id="@+id/locationTrackingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:text="Location tracking"
+                style="@style/Base.TextAppearance.AppCompat.Title"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/locationTrackingSwitch"
+                style="@style/SwitchCompatStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:textOff="@string/location_tracking_off_label"
+                android:textOn="@string/location_tracking_on_label"
+                tools:checked="false" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notificationTextView"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_small"
+            android:text="Notifications"
+            android:textAllCaps="true"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_small" />
+
+        <LinearLayout
+            android:id="@+id/notificationReceiveLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_small">
+            <TextView
+                android:id="@+id/notificationReceiveTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:text="Receive notifications"
+                style="@style/Base.TextAppearance.AppCompat.Title"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/notificationReceiveSwitch"
+                style="@style/SwitchCompatStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:textOff="@string/location_tracking_off_label"
+                android:textOn="@string/location_tracking_on_label"
+                tools:checked="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/guardianGroupLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/guardianGroupTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginEnd="@dimen/margin_padding_small"
+                android:text="Guardian group"
+                android:textSize="@dimen/text_small"
+                style="@style/Base.TextAppearance.AppCompat.Title" />
+            <TextView
+                android:id="@+id/siteNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_normal"
+                android:layout_marginEnd="@dimen/margin_padding_small"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                android:textColor="@color/text_secondary"
+                android:text="Osa Conservation"
+                style="@style/TextAppearance.AppCompat.Body1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/logoutTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_padding_normal"
+            android:paddingEnd="@dimen/margin_padding_small"
+            android:paddingBottom="@dimen/margin_padding_small"
+
+            android:text="Logout"
+            android:textSize="@dimen/text_small"
+            style="@style/Base.TextAppearance.AppCompat.Title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_secondary"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_small"/>
+
+        <TextView
+            android:id="@+id/additionalTextView"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:text="Additional"
+            android:textAllCaps="true"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:id="@+id/appVersionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:textColor="@color/text_secondary"
+            android:text="App version"
+            style="@style/TextAppearance.AppCompat.Body1" />
+        <TextView
+            android:id="@+id/versionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_small"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:textColor="@color/text_secondary"
+            android:text="2.0.0(135)"
+            style="@style/TextAppearance.AppCompat.Body1" />
+        <TextView
+            android:id="@+id/feedbackTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_padding_small"
+            android:paddingStart="@dimen/margin_padding_normal"
+            android:paddingEnd="@dimen/margin_padding_small"
+            android:paddingBottom="@dimen/margin_padding_normal"
+            android:text="Feedback"
+            android:textSize="@dimen/text_small"
+            style="@style/Base.TextAppearance.AppCompat.Title" />
+
+        <TextView
+            android:id="@+id/rateAppTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_padding_small"
+            android:paddingStart="@dimen/margin_padding_normal"
+            android:paddingEnd="@dimen/margin_padding_small"
+            android:paddingBottom="@dimen/margin_padding_small"
+            android:text="Rate the app"
+            android:textSize="@dimen/text_small"
+            style="@style/Base.TextAppearance.AppCompat.Title" />
+    </LinearLayout>
+</ScrollView>

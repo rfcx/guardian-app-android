@@ -13,6 +13,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
+import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.status.StatusFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
@@ -107,8 +108,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = true
-				
-				MainActivity.startActivity(this)
+				startFragment(ProfileFragment.newInstance(), ProfileFragment.tag)
 			}
 		}
 	}
