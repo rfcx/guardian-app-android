@@ -3,8 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_padding_small">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_padding_small"
+    android:layout_marginBottom="@dimen/margin_padding_small"
+    android:layout_marginEnd="@dimen/margin_padding_normal"
+    android:layout_marginStart="@dimen/margin_padding_normal">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivAlertIcon"
@@ -49,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_small"
         android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_xsmall"
         app:layout_constraintBottom_toBottomOf="@+id/tvAlertFromSite"
         app:layout_constraintStart_toEndOf="@+id/tvAlertFromSite"
         app:layout_constraintTop_toTopOf="@+id/tvAlertFromSite"

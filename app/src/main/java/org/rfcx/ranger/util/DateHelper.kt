@@ -15,10 +15,17 @@ object DateHelper {
 	private const val dateTimeFormat = "yyyy-MM-dd HH:mm"
 	const val dateTimeFormatSecond = "yyyy-MM-dd HH:mm:ss"
 	private const val dateFormat = "yyyy-MM-dd"
-	private const val timeFormat = "HH:mm"
+	const val timeFormat = "HH:mm"
 	
 	private const val oneDayMs = 24L * 3600000L
-	
+
+	const val SECOND: Long = 1000
+	const val MINUTE = 60 * SECOND
+	const val HOUR = 60 * MINUTE
+	const val DAY = 24 * HOUR
+	const val WEEK = 7 * DAY
+	const val MONTH = 4 * WEEK
+
 	private val inputSdf by lazy {
 		val sdf = SimpleDateFormat(inputFormat, Locale.US)
 		sdf.timeZone = TimeZone.getTimeZone("UTC")

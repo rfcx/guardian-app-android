@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_all_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -21,17 +22,23 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         return inflater.inflate(R.layout.fragment_all_alerts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupAlertList()
 
-        alertsViewModel.getLoading().observe(this, Observer {
+        alertsViewModel.loading.observe(this, Observer {
             loadingProgress.visibility = if (it) View.VISIBLE else View.INVISIBLE
         })
 
-        setupAlertList()
+        alertsViewModel.alerts.observe(this, Observer {
+            alertsAdapter.items = it
+        })
+
+        alertsViewModel.loadEvents()
     }
 
     override fun onClickedAlert(event: Event) {
@@ -39,9 +46,25 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
     }
 
     private fun setupAlertList() {
+        val alertsLayoutManager = LinearLayoutManager(context)
         alertsRecyclerView?.apply {
             adapter = alertsAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = alertsLayoutManager
+//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    val visibleItemCount = alertsLayoutManager.childCount
+//                    val total = alertsLayoutManager.itemCount
+//                    val firstVisibleItemPosition = alertsLayoutManager.findFirstVisibleItemPosition()
+//                    if ((visibleItemCount + firstVisibleItemPosition) >= total
+//                            && firstVisibleItemPosition >= 0
+//                            && total >= AlertsViewModel.PAGE_LIMITS) {
+//
+//                        // load events
+//                        alertsViewModel.loadEvents()
+//                    }
+//                }
+//            })
         }
     }
 

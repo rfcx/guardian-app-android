@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.timeAgoDisplay
 import org.rfcx.ranger.util.toEventIcon
 
 class AlertsAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<AlertsAdapter.AlertViewHolder>() {
-    var items = arrayListOf<Event>()
+    var items: List<Event> = arrayListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_alert, parent, false)
         return AlertViewHolder(view)
@@ -30,11 +37,12 @@ class AlertsAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<Ale
         private val tvFrom = itemView.tvAlertFromSite
         private val tvTimeAgo = itemView.tvAlertTimeAgo
 
+        @SuppressLint("SetTextI18n")
         fun bind(event: Event) {
             tvTitle.text = event.value?.trim()?.capitalize()
             event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
             tvFrom.text = event.site
-            //TODO: set time ago
+            tvTimeAgo.text = "• ${event.timeAgoDisplay(itemView.context)}"
         }
 
     }
