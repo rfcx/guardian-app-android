@@ -101,11 +101,8 @@
 			android:layout_weight="1"
 			android:background="@drawable/button_negative"
 			android:gravity="center"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
 			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_medium"
-			android:textStyle="bold"
+			android:textSize="@dimen/text_small"
 			tools:text="Negative" />
 		
 		<androidx.appcompat.widget.AppCompatButton
@@ -120,8 +117,7 @@
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_medium"
-			android:textStyle="bold"
+			android:textSize="@dimen/text_small"
 			tools:text="Positive" />
 	
 	</LinearLayout>
