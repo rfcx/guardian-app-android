@@ -15,8 +15,8 @@ import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login_new.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.loginErrorTextView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.Err
@@ -67,6 +67,8 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 	}
 	
 	override fun onLoginWithFacebook() {
+		loginGroupView.visibility = View.GONE
+		loginProgressBar.visibility = View.VISIBLE
 		loginErrorTextView.visibility = View.INVISIBLE
 		
 		webAuthentication
@@ -80,6 +82,10 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
+						runOnUiThread{
+							loginProgressBar.visibility = View.INVISIBLE
+							loginGroupView.visibility = View.VISIBLE
+						}
 						Crashlytics.logException(exception)
 						loginFailed(exception.localizedMessage)
 					}
@@ -99,6 +105,8 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 	}
 	
 	override fun doLogin(email: String, password: String) {
+		loginGroupView.visibility = View.GONE
+		loginProgressBar.visibility = View.VISIBLE
 		loginErrorTextView.visibility = View.INVISIBLE
 		
 		authentication
@@ -132,6 +140,8 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 	
 	private fun loginFailed(errorMessage: String?) {
 		runOnUiThread {
+			loginGroupView.visibility = View.VISIBLE
+			loginProgressBar.visibility = View.INVISIBLE
 			loginErrorTextView.text = errorMessage
 			loginErrorTextView.visibility = View.VISIBLE
 		}
@@ -156,7 +166,7 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 			
 			override fun onFailed(t: Throwable?, message: String?) {
 				runOnUiThread {
-					loginProgress.visibility = View.INVISIBLE
+					loginProgressBar.visibility = View.INVISIBLE
 					loginGroupView.visibility = View.VISIBLE
 				}
 				Crashlytics.logException(t)
