@@ -16,6 +16,7 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_login_new.*
+import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.loginErrorTextView
 import org.rfcx.ranger.R
@@ -142,8 +143,7 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 		runOnUiThread {
 			loginGroupView.visibility = View.VISIBLE
 			loginProgressBar.visibility = View.INVISIBLE
-			loginErrorTextView.text = errorMessage
-			loginErrorTextView.visibility = View.VISIBLE
+			Toast.makeText(this@LoginActivityNew, errorMessage, Toast.LENGTH_LONG).show()
 		}
 	}
 	
@@ -181,6 +181,9 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 				MainActivityNew.startActivity(this@LoginActivityNew)
 				finish()
 			} else {
+				invitationProgressBar.visibility = View.GONE
+				inputCodeEditText.isEnabled = true
+				submitButton.isEnabled = true
 				Toast.makeText(this@LoginActivityNew, "Problem", Toast.LENGTH_LONG).show() // TODO: handle error
 			}
 		}

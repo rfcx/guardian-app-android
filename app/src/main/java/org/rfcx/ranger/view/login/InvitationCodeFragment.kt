@@ -28,6 +28,8 @@ class InvitationCodeFragment : BaseFragment() {
 	
 	private fun initView() {
 		submitButton.setOnClickListener {
+			invitationProgressBar.visibility = View.VISIBLE
+			
 			val code = inputCodeEditText.text.toString()
 			listener.doSubmit(code)
 		}
