@@ -37,6 +37,7 @@ import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
 import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
@@ -369,6 +370,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				audioLocation = recordFile?.canonicalPath)
 		
 		ReportDb().save(report, reportImageAdapter.getNewAttachImage())
+		WeeklySummaryData(Preferences(this)).adJustReportSubmitCount()
 		ReportSyncWorker.enqueue()
 		finish()
 	}

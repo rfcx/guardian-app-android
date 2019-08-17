@@ -1,14 +1,15 @@
 package org.rfcx.ranger.di
 
+import io.reactivex.Single
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
-import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
@@ -17,6 +18,7 @@ import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
+import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.localdb.LocationDb
@@ -34,7 +36,7 @@ object DataModule {
 		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
-		single { EventRepositoryImp(get()) } bind EventRepository::class
+		single { EventRepositoryImp(get(), get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		
@@ -52,6 +54,7 @@ object DataModule {
 		factory { LocationDb() }
 		factory { ReportDb() }
 		factory { ReportImageDb() }
-		factory { Preferences.getInstance(androidContext()) }
+		factory { EventDb() }
+		single { Preferences.getInstance(androidContext()) }
 	}
 }

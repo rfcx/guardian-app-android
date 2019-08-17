@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.view.base.BaseFragment
 
 class ProfileFragment : BaseFragment() {
@@ -26,11 +27,13 @@ class ProfileFragment : BaseFragment() {
 		val rateAppButton = view.findViewById<TextView>(R.id.rateAppTextView)
 		val feedbackButton = view.findViewById<TextView>(R.id.feedbackTextView)
 		
-		trackingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-			profileViewModel.onTracking(isChecked)
+		trackingSwitch.setOnCheckedChangeListener { _, isChecked ->
+			context?.let {
+				LocationTracking.set(it, isChecked)
+			}
 		}
 		
-		notificationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+		notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
 			profileViewModel.onReceiving(isChecked)
 		}
 		
