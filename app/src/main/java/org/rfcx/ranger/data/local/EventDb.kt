@@ -12,4 +12,13 @@ class EventDb(private val realm: Realm = Realm.getDefaultInstance()) {
 			}
 		}
 	}
+	
+	/**
+	 * @param eventGuid :String of Event
+	 * return event state of review -> null,confirm,reject
+	 */
+	fun getEventState(eventGuid: String): String? {
+		return realm.where(EventRealmObject::class.java).equalTo("eventGuId", eventGuid).findFirst()
+				?.review
+	}
 }
