@@ -7,6 +7,7 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportDetailViewModel
+import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.status.StatusViewModel
 
@@ -28,5 +29,6 @@ object UiModule {
 
 	val profileModule = module{
 		viewModel { ProfileViewModel(get()) }
+		viewModel { GuardianGroupViewModel(get()) }
 	}
 }

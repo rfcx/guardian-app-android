@@ -9,8 +9,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 
-class GetEventsUseCase(private val eventRepository: EventRepository, threadExecutor: ThreadExecutor,
-                       postExecutionThread: PostExecutionThread) :
+class GetEventsUseCase(private val eventRepository: EventRepository, threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread) :
 		SingleUseCase<EventsRequestFactory, EventResponse>(threadExecutor, postExecutionThread) {
 	override fun buildUseCaseObservable(params: EventsRequestFactory): Single<EventResponse> {
 		return eventRepository.getEventList(params)

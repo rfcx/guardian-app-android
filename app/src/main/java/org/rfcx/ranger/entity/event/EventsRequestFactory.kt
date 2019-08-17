@@ -20,3 +20,5 @@ data class ReviewEventFactory(val eventGuID: String, val reviewConfirm: String) 
 		const val rejectEvent = "reject"
 	}
 }
+
+class GuardianGroupFactory

@@ -8,6 +8,7 @@ import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
+import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
@@ -15,6 +16,8 @@ import org.rfcx.ranger.data.remote.domain.classified.ClassifiedRepositoryImp
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
+import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
+import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
@@ -34,11 +37,15 @@ object DataModule {
 		single { EventRepositoryImp(get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
+		
+		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
+		single { GetGuardianGroups(get(), get(), get()) }
 	}
 	
 	val remoteModule = module {
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {
