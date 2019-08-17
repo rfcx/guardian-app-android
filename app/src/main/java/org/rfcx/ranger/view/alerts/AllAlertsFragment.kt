@@ -16,7 +16,7 @@ import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.AlertsAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
-class AllAlertsFragment : BaseFragment(), AlertClickListener , ReviewAlertCallback{
+class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallback {
 	
 	private val alertsViewModel: AlertsViewModel by viewModel()
 	private val alertsAdapter by lazy {
@@ -51,6 +51,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener , ReviewAlertCallba
 	override fun onReviewed(eventGuID: String, reviewValue: String) {
 		// TODO update ui with eventGuID and reviewValue
 		// reviewValue contains of confirm and reject
+		
+		alertsViewModel.onEventReviewed(eventGuID, reviewValue)
 		
 	}
 	
