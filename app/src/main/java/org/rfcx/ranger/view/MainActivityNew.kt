@@ -3,12 +3,16 @@ package org.rfcx.ranger.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alerts.AlertsFragment
@@ -21,7 +25,7 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener {
-	
+	private val weeklySummaryData: WeeklySummaryData by inject { parametersOf() }
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -50,6 +54,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			}
 			
 		})
+		
+		
+		Log.d("WeeklySummaryData", "${weeklySummaryData.getReportSubmitCount()}")
+		Log.d("WeeklySummaryData", "${weeklySummaryData.getReviewCount()}")
+		Log.d("WeeklySummaryData", "${weeklySummaryData.getOnDutyTimeMinute()}")
 	}
 	
 	override fun onBackPressed() {

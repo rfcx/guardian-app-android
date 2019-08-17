@@ -1,6 +1,5 @@
 package org.rfcx.ranger.di
 
-import io.reactivex.Single
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -8,6 +7,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
@@ -36,7 +36,7 @@ object DataModule {
 		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
-		single { EventRepositoryImp(get(), get()) } bind EventRepository::class
+		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		
@@ -55,6 +55,7 @@ object DataModule {
 		factory { ReportDb() }
 		factory { ReportImageDb() }
 		factory { EventDb() }
+		factory { WeeklySummaryData(get()) }
 		single { Preferences.getInstance(androidContext()) }
 	}
 }

@@ -18,7 +18,9 @@ class WeeklySummaryData(private val preferences: Preferences) {
 	fun getReviewCount(): Int = preferences.getInt(REVIEW_COUNT, 0)
 	
 	fun adJustReportSubmitCount() {
-	
+		var lastedCount: Int = preferences.getInt(REPORT_COUNT, 0)
+		lastedCount += 1
+		preferences.putInt(REPORT_COUNT, lastedCount)
 	}
 	
 	fun getReportSubmitCount(): Int = preferences.getInt(REPORT_COUNT, 0)
@@ -26,10 +28,11 @@ class WeeklySummaryData(private val preferences: Preferences) {
 	/**
 	 * return onDuty time in Minute
 	 */
-	fun getOnduty(): Long {
+	fun getOnDutyTimeMinute(): Long {
 		
-		val lastOnDutyTime = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
-		return if (lastOnDutyTime != 0L) {
+		val lastOnDutyTime = preferences.getLong(ON_DUTY, 0L)
+		val lastDutyOpenTime = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
+		return if (lastDutyOpenTime != 0L) {
 			val currentTime = System.currentTimeMillis()
 			val onDutyNow = (currentTime - lastOnDutyTime) / MILLI_SECS_PER_MINUTE
 			lastOnDutyTime + onDutyNow
@@ -52,11 +55,12 @@ class WeeklySummaryData(private val preferences: Preferences) {
 	fun stopDutyTracking() {
 		val lastOpen: Long = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
 		val stopTime = System.currentTimeMillis()
+		preferences.putLong(ON_DUTY_LAST_OPEN, 0L)
 		if (lastOpen != 0L && stopTime > lastOpen) {
 			val onDutyMinute = ((stopTime - lastOpen) / MILLI_SECS_PER_MINUTE).toInt()
 			adjustOnDuty(onDutyMinute)
 		}
-		preferences.putLong(ON_DUTY_LAST_OPEN, 0)
+		
 	}
 	
 	/**
@@ -111,11 +115,11 @@ class WeeklySummaryData(private val preferences: Preferences) {
 	companion object {
 		private const val REVIEW_COUNT = Preferences.PREFIX + "REVIEW_COUNT"
 		private const val REPORT_COUNT = Preferences.PREFIX + "REPORT_COUNT"
-		private const val ON_DUTY = Preferences.PREFIX + "ON_DUTY"
+		private const val ON_DUTY = Preferences.PREFIX + "ON_DUTY_TIME"
 		private const val ON_DUTY_LAST_OPEN = Preferences.PREFIX + "ON_DUTY_LAST_OPEN"
 		
 		private const val LAST_CLEAN_DATA_MONDAY = Preferences.PREFIX + "LAST_CLEAN_DATA_MONDAY"
 		private const val MILLI_SECS_PER_DAY = (24 * 60 * 60 * 1000).toLong()
-		private const val MILLI_SECS_PER_MINUTE = (60 * 60).toLong()
+		private const val MILLI_SECS_PER_MINUTE = (60 * 1000).toLong()
 	}
 }
