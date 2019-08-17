@@ -1,21 +1,19 @@
 package org.rfcx.ranger.view.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.getSiteName
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.profile.GuardianGroupList.GuardianGroupListActivity
 
 class ProfileFragment : BaseFragment(){
 
@@ -40,6 +38,8 @@ class ProfileFragment : BaseFragment(){
 
         guardianGroupLayout.setOnClickListener {
             //TODO: move to select guardian site page
+            val intent = Intent(activity, GuardianGroupListActivity::class.java)
+            startActivity(intent)
         }
 
         logoutButton.setOnClickListener {
