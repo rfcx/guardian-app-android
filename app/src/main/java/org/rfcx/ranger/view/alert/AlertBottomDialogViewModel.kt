@@ -53,8 +53,8 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	val classifiedCation: LiveData<Result<List<Confidence>>>
 		get() = _classifiedCation
 	
-	private var _reviewEvent: MutableLiveData<Result<ReviewEventResponse>> = MutableLiveData()
-	val reviewEvent: LiveData<Result<ReviewEventResponse>>
+	private var _reviewEvent: MutableLiveData<Result<ReviewEventFactory>> = MutableLiveData()
+	val reviewEvent: LiveData<Result<ReviewEventFactory>>
 		get() = _reviewEvent
 	
 	init {
@@ -173,12 +173,13 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			val requests = ReviewEventFactory(it.event_guid, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
 			reviewEventUseCase.execute(object : DisposableSingleObserver<ReviewEventResponse>() {
 				override fun onSuccess(t: ReviewEventResponse) {
-					_reviewEvent.value = Result.Success(t)
+					_reviewEvent.value = Result.Success(requests)
 					// invoke state to review
 					_eventState.value = EventState.REVIEWED
 				}
 				
 				override fun onError(e: Throwable) {
+					e.printStackTrace()
 					_reviewEvent.value = Result.Error(e)
 				}
 				

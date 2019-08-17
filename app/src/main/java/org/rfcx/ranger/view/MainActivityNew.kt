@@ -14,6 +14,7 @@ import org.koin.core.parameter.parametersOf
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
@@ -40,6 +41,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		if (savedInstanceState == null) {
 			menuStatus.performClick()
 		}
+		
+		//TODO remove this
+		Preferences.getInstance(this).putString(Preferences.SELECTED_GUARDIAN_GROUP,"derc")
 		
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 		bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -147,11 +151,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		newReportFabButton.visibility = View.VISIBLE
 	}
 	
-	override fun showAlertPopup(event: Event) {
-		AlertBottomDialogFragment.newInstance(event).show(supportFragmentManager,
-				AlertBottomDialogFragment.tag)
-	}
-	
 	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
 		
 		val contentContainerPaddingBottom =
@@ -176,5 +175,4 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
-	fun showAlertPopup(event: Event)
 }

@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
@@ -26,6 +28,23 @@ import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
 	private val alertViewModel: AlertBottomDialogViewModel by viewModel()
+	
+	private var reviewAlertCallback: ReviewAlertCallback? = null
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (parentFragment is ReviewAlertCallback) {
+			reviewAlertCallback = parentFragment as ReviewAlertCallback
+		} else {
+			throw IllegalStateException("Parent Fragment ${(parentFragment as Fragment).javaClass.simpleName} " +
+					"not implemented @ReviewAlertCallback")
+		}
+	}
+	
+	override fun onDetach() {
+		super.onDetach()
+		reviewAlertCallback = null
+	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -102,7 +121,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					.into(spectrogramImageView)
 		})
 		
-		alertViewModel.eventState.observe(this, Observer { it ->
+		alertViewModel.eventState.observe(this, Observer {
 			when (it!!) {
 				EventState.NONE -> {
 					negativeButton.text = getString(R.string.common_no)
@@ -184,10 +203,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	}
 	
 	private fun observeReviewEvent() {
-		alertViewModel.reviewEvent.observe(this, Observer {
+		alertViewModel.reviewEvent.observe(this, Observer { it ->
 			it.success(
 					{
 						hideLoading()
+						reviewAlertCallback?.onReviewed(it.eventGuID, it.reviewConfirm)
 					},
 					{
 						hideLoading()
