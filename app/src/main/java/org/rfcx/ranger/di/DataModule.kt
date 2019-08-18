@@ -7,6 +7,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
@@ -56,6 +57,7 @@ object DataModule {
 		factory { ReportImageDb() }
 		factory { EventDb() }
 		factory { WeeklySummaryData(get()) }
+		factory { ProfileData(get()) }
 		single { Preferences.getInstance(androidContext()) }
 	}
 }

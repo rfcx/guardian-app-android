@@ -10,18 +10,22 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import io.realm.RealmResults
 import org.rfcx.ranger.adapter.entity.TitleItem
+import org.rfcx.ranger.data.local.ProfileData
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
-class StatusViewModel(private val reportDb: ReportDb, private val prefManager: Preferences) : ViewModel() {
-	private val items = MutableLiveData<List<StatusAdapter.StatusItemBase>>()
+class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb, private val profileData: ProfileData,
+                      private val weeklySummaryData: WeeklySummaryData) : ViewModel() {
+	private val _items = MutableLiveData<List<StatusAdapter.StatusItemBase>>()
+	val items: LiveData<List<StatusAdapter.StatusItemBase>> = _items
 	
-	val profile = MutableLiveData<StatusAdapter.ProfileItem>()
-	val userStatus = MutableLiveData<StatusAdapter.UserStatusItem>()
-	val reports = MutableLiveData<List<StatusAdapter.ReportItem>>()
+	private var _reports: List<Report>? = null // TODO: onChange
 	
 	val compositeDisposable = CompositeDisposable()
 	
@@ -46,20 +50,17 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
 		}
 	}
 	
-	fun getItems(): LiveData<List<StatusAdapter.StatusItemBase>> = items
-	
 	private fun getProfile(): Observable<StatusAdapter.ProfileItem> {
-		// TODO: observe Location tracking
-		return Observable.just(StatusAdapter.ProfileItem(prefManager.getUserNickname(),
-				prefManager.getSiteName(), prefManager.isTracking()))
+		return Observable.just(StatusAdapter.ProfileItem(profileData.getUserNickname(),
+				profileData.getSiteName(), profileData.getTracking()))
 	}
 	
 	private fun getUserStatus(): Observable<StatusAdapter.UserStatusItem> {
-		return Observable.just(StatusAdapter.UserStatusItem(120, 10, 0))
+		return Observable.just(StatusAdapter.UserStatusItem(weeklySummaryData.getOnDutyTimeMinute(),
+				weeklySummaryData.getReportSubmitCount(), weeklySummaryData.getReviewCount()))
 	}
 	
 	private fun getReports(): Observable<List<StatusAdapter.ReportItem>> {
-		// TODO: observe report from db
 		return Observable.just(Data.getSampleReports())
 	}
 	
@@ -75,7 +76,7 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
 	}
 	
 	fun onTracking(enable: Boolean) {
-		prefManager.putString(Preferences.ENABLE_LOCATION_TRACKING, if (enable) LocationTracking.TRACKING_ON else LocationTracking.TRACKING_OFF)
+		profileData.updateTracking(enable)
 		updateFeed()
 	}
 	
@@ -87,21 +88,22 @@ class StatusViewModel(private val reportDb: ReportDb, private val prefManager: P
 		}
 		
 		override fun onNext(t: List<StatusAdapter.StatusItemBase>) {
-			items.value = t
+			_items.value = t
 		}
 	}
-	
-	// TBD - demo ui
-	object Data {
-		fun getSampleReports(): List<StatusAdapter.ReportItem> {
-			val report1 = Report(id = 0, guid = "xxxx", value = "vehicle", syncState = 0, latitude = 34.595, longitude = 213.508, reportedAt = "2019-08-08 06:50:00")
-			val report2 = Report(id = 1, guid = "yyyyy", value = "vehicle", syncState = 0, latitude = 33.595, longitude = 213.508, reportedAt = "2019-08-08 10:00:30")
-			val report3 = Report(id = 2, guid = "zzzzzz", value = "trespasser", syncState = 2, latitude = 36.595, longitude = 213.508, reportedAt = "2019-08-08 14:00:30")
-			val reportItems = arrayListOf<StatusAdapter.ReportItem>()
-			reportItems.add(StatusAdapter.ReportItem(report1, 2, 0))
-			reportItems.add(StatusAdapter.ReportItem(report2, 0, 0))
-			reportItems.add(StatusAdapter.ReportItem(report3, 3, 1))
-			return reportItems
-		}
+}
+
+// TBD - demo ui
+object Data {
+	fun getSampleReports(): List<StatusAdapter.ReportItem> {
+		val report1 = Report(id = 0, guid = "xxxx", value = "vehicle", syncState = 0, latitude = 34.595, longitude = 213.508, reportedAt = "2019-08-08 06:50:00")
+		val report2 = Report(id = 1, guid = "yyyyy", value = "vehicle", syncState = 0, latitude = 33.595, longitude = 213.508, reportedAt = "2019-08-08 10:00:30")
+		val report3 = Report(id = 2, guid = "zzzzzz", value = "trespasser", syncState = 2, latitude = 36.595, longitude = 213.508, reportedAt = "2019-08-08 14:00:30")
+		val reportItems = arrayListOf<StatusAdapter.ReportItem>()
+		reportItems.add(StatusAdapter.ReportItem(report1, ImageState(2, 0)))
+		reportItems.add(StatusAdapter.ReportItem(report2, ImageState(0, 0)))
+		reportItems.add(StatusAdapter.ReportItem(report3, ImageState(3, 1)))
+		return reportItems
+		
 	}
 }

@@ -19,7 +19,7 @@ object UiModule {
 	}
 	
 	val statusModule = module {
-		viewModel { StatusViewModel(get(), get()) }
+		viewModel { StatusViewModel(get(), get(), get(), get()) }
 	}
 	
 	val alertModule = module {

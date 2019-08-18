@@ -81,8 +81,8 @@
             android:drawablePadding="@dimen/margin_padding_small"
             android:gravity="center_vertical"
             android:textColor="@color/text_secondary"
-            android:text="@{reportItem.getImageState(context)}"
-            android:visibility="@{reportItem.attachImagesCount != 0 ? View.VISIBLE: View.INVISIBLE}"
+            android:text="@{reportItem.getTextImageState(context)}"
+            android:visibility="@{reportItem.imageState.count != 0 ? View.VISIBLE: View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@+id/tvReportType"
             app:layout_constraintTop_toBottomOf="@+id/tvLocation"
             tools:text="@string/format_image_synced" />
