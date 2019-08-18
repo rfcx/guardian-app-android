@@ -32,9 +32,11 @@ class WeeklySummaryData(private val preferences: Preferences) {
 		
 		val lastOnDutyTime = preferences.getLong(ON_DUTY, 0L)
 		val lastDutyOpenTime = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
+		
 		return if (lastDutyOpenTime != 0L) {
 			val currentTime = System.currentTimeMillis()
-			val onDutyNow = (currentTime - lastOnDutyTime) / MILLI_SECS_PER_MINUTE
+			val difTime = currentTime - lastDutyOpenTime
+			val onDutyNow = difTime / MILLI_SECS_PER_MINUTE
 			lastOnDutyTime + onDutyNow
 		} else {
 			preferences.getLong(ON_DUTY, 0L)
@@ -49,13 +51,16 @@ class WeeklySummaryData(private val preferences: Preferences) {
 	
 	
 	fun startDutyTracking() {
-		preferences.putLong(ON_DUTY_LAST_OPEN, System.currentTimeMillis())
+		if (preferences.getLong(ON_DUTY_LAST_OPEN, 0L) == 0L) {
+			preferences.putLong(ON_DUTY_LAST_OPEN, System.currentTimeMillis())
+		}
 	}
 	
 	fun stopDutyTracking() {
 		val lastOpen: Long = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
 		val stopTime = System.currentTimeMillis()
 		preferences.putLong(ON_DUTY_LAST_OPEN, 0L)
+		
 		if (lastOpen != 0L && stopTime > lastOpen) {
 			val onDutyMinute = ((stopTime - lastOpen) / MILLI_SECS_PER_MINUTE).toInt()
 			adjustOnDuty(onDutyMinute)

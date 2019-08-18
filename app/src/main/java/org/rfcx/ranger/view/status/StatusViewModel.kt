@@ -1,8 +1,13 @@
 package org.rfcx.ranger.view.status
 
 
+import android.util.Log
 import android.util.SparseArray
 import androidx.lifecycle.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.data.local.ProfileData
@@ -14,10 +19,10 @@ import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
+import java.util.concurrent.TimeUnit
 
 class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb, private val profileData: ProfileData,
                       private val weeklySummaryData: WeeklySummaryData) : ViewModel() {
-	
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
@@ -53,14 +58,21 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 	private lateinit var reportLiveData: LiveData<List<Report>>
 	private lateinit var reportImageLiveData: LiveData<List<ReportImage>>
 	
+	private var onDutyRealmTimeDisposable: Disposable? = null
+	
 	init {
 		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 				profileData.getSiteName(), profileData.getTracking())
 		updateWeeklyStat()
 		fetchReports()
+		
+		if (profileData.getTracking()) {
+			observeRealTimeOnDuty()
+		}
 	}
 	
 	private fun updateWeeklyStat() {
+		Log.d("updateWeeklyStat", "updateWeeklyStat")
 		_stat.value = StatusAdapter.UserStatusItem(weeklySummaryData.getOnDutyTimeMinute(),
 				weeklySummaryData.getReportSubmitCount(), weeklySummaryData.getReviewCount())
 	}
@@ -92,9 +104,21 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		_reportItems.value = newItemsList
 	}
 	
+	private fun observeRealTimeOnDuty() {
+		onDutyRealmTimeDisposable = Observable.interval(1, 1, TimeUnit.MINUTES)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe {
+					updateWeeklyStat()
+				}
+		
+	}
+	
 	override fun onCleared() {
 		reportImageLiveData.removeObserver(reportImageObserve)
 		reportLiveData.removeObserver(reportObserve)
+		onDutyRealmTimeDisposable?.dispose()
 		super.onCleared()
 	}
 }
+
