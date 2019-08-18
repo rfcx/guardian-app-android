@@ -18,9 +18,11 @@ import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_TITLE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
+import org.rfcx.ranger.view.status.adapter.viewholder.EmptyReportView
 import org.rfcx.ranger.view.status.adapter.viewholder.ProfileView
 import org.rfcx.ranger.view.status.adapter.viewholder.ReportView
 import org.rfcx.ranger.view.status.adapter.viewholder.UserStatusView
@@ -68,7 +70,12 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		reportTitle?.let {
 			newList.add(TitleItem(it))
 		}
-		newList.addAll(reports)
+		
+		if (reports.isNotEmpty()) {
+			newList.addAll(reports)
+		} else {
+			newList.add(ReportEmpty())
+		}
 		submitList(newList)
 		
 	}
@@ -91,6 +98,10 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			ITEM_TITLE -> {
 				val itemView = inflater.inflate(R.layout.item_title_holder, parent, false)
 				TitleViewHolder(itemView)
+			}
+			ITEM_REPORT_EMPTY -> {
+				val itemView = inflater.inflate(R.layout.item_report_empty, parent, false)
+				EmptyReportView(itemView)
 			}
 			else -> {
 				throw Exception("Invalid viewType")
@@ -167,6 +178,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			const val ITEM_PROFILE = 1
 			const val ITEM_USER_STATUS = 2
 			const val ITEM_REPORT_HISTORY = 3
+			const val ITEM_REPORT_EMPTY = 4
 		}
 	}
 	
@@ -211,5 +223,11 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				
 			}
 		}
+	}
+	
+	class ReportEmpty : StatusItemBase {
+		override fun getViewType(): Int = ITEM_REPORT_EMPTY
+		
+		override fun getId(): Int = -6
 	}
 }
