@@ -24,7 +24,6 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		
 		return inflater.inflate(R.layout.fragment_all_alerts, container, false)
 	}
 	
@@ -37,7 +36,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 		})
 		
 		alertsViewModel.alerts.observe(this, Observer {
-			alertsAdapter.items = it
+			alertsAdapter.submitList(null)
+			alertsAdapter.submitList(ArrayList(it))
 		})
 		
 		alertsViewModel.loadEvents()
@@ -49,18 +49,14 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 	}
 	
 	override fun onReviewed(eventGuID: String, reviewValue: String) {
-		// TODO update ui with eventGuID and reviewValue
-		// reviewValue contains of confirm and reject
-		
 		alertsViewModel.onEventReviewed(eventGuID, reviewValue)
-		
 	}
 	
 	private fun setupAlertList() {
 		val alertsLayoutManager = LinearLayoutManager(context)
 		alertsRecyclerView?.apply {
-			adapter = alertsAdapter
 			layoutManager = alertsLayoutManager
+			adapter = alertsAdapter
 //            addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 //                    super.onScrolled(recyclerView, dx, dy)

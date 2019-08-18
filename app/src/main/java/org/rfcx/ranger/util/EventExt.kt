@@ -38,6 +38,6 @@ fun Event.timeAgoDisplay(context: Context): String {
         "${context.getString(R.string.yesterday)} ${timeFormat.format(eventDate.time)}"
     } else {
         val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
-        dateFormat.format(diffCalendar.time)
+        dateFormat.format(eventDate.time)
     }
 }

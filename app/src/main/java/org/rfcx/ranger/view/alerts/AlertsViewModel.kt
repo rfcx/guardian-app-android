@@ -7,21 +7,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.util.RealmHelper
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.getGuardianGroup
+import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
-class AlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
+class AlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
+                      private val eventDb: EventDb) : ViewModel() {
 	private val _loading = MutableLiveData<Boolean>()
 	val loading: LiveData<Boolean>
 		get() = _loading
 	
-	private var _alerts = MutableLiveData<List<Event>>()
-	val alerts: LiveData<List<Event>>
+	private var _alerts = MutableLiveData<List<EventItem>>()
+	val alerts: LiveData<List<EventItem>>
 		get() = _alerts
 	
 	// data loading events
@@ -65,15 +67,21 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 				_loading.value = false
 				totalItemCount = t.total
 				
+				val items = arrayListOf<EventItem>()
 				t.events?.forEach { event ->
-					// is Read?
-					val localEvent = RealmHelper.getInstance().findLocalEvent(event.event_guid)
-					localEvent?.let {
-						event.isOpened = it.isOpened
+					val state = eventDb.getEventState(event.event_guid)
+					state?.let {
+						val result = when (it) {
+							ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+							ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+							else -> EventItem.State.NONE
+						}
+						items.add(EventItem(event, result))
+					} ?: run {
+						items.add(EventItem(event, EventItem.State.NONE))
 					}
-					
 				}
-				_alerts.value = t.events
+				_alerts.value = items
 			}
 			
 			override fun onError(e: Throwable) {
@@ -83,18 +91,19 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		// TODO refactor to same your item data
-		run loop@{
-			_alerts.value?.forEach {
-				if (it.event_guid == eventGuid) {
-					// Update this item
-					it.reviewerConfirmed = reviewValue == "confirm"
-					return@loop
+		val newItems = arrayListOf<EventItem>()
+		_alerts.value?.forEach {
+			if (it.event.event_guid == eventGuid) {
+				// Update this item
+				it.state = when (reviewValue) {
+					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+					else -> EventItem.State.NONE
 				}
 			}
+			newItems.add(EventItem(it.event, it.state))
 		}
-		// trig to observer
-		_alerts.value = _alerts.value
+		_alerts.value = newItems
 	}
 	
 	companion object {

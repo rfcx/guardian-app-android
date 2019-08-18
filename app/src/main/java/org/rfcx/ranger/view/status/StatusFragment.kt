@@ -38,7 +38,6 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
         }
 
         statusViewModel.items.observe(this, Observer {
-            it?.let(statusAdapter::submitList)
             statusAdapter.submitList(it)
         })
     }
