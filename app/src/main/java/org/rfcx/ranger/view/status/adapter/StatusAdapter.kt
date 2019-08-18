@@ -205,7 +205,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		
 		fun getIcon(): Int = report.value.toEventIcon()
 		
-		fun getLatLng(): String = "${report.latitude}, ${report.longitude}"
+		fun getLatLng(): String = "${report.latitude},${report.longitude}"
 		
 		fun getTextImageState(context: Context): String {
 			val attachImagesCount = imageState.count

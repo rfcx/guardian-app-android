@@ -55,34 +55,40 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvReportType"
             tools:text="2h" />
-
+    
         <TextView
             android:id="@+id/tvLocation"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_xsmall"
+            android:layout_marginEnd="@dimen/margin_padding_small"
             android:drawableStart="@drawable/ic_place"
             android:drawablePadding="@dimen/margin_padding_small"
             android:gravity="center_vertical"
             android:text="@{reportItem.latLng}"
-            android:textSize="@dimen/text_small"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintEnd_toStartOf="@+id/iconSync"
             app:layout_constraintStart_toStartOf="@+id/tvReportType"
             app:layout_constraintTop_toBottomOf="@+id/tvReportType"
             tools:text="@string/format_location" />
-
+    
         <TextView
             android:id="@+id/tvImageAttach"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_xsmall"
-            android:textSize="@dimen/text_small"
+            android:layout_marginEnd="@dimen/margin_padding_small"
             android:drawableStart="@drawable/ic_image"
             android:drawablePadding="@dimen/margin_padding_small"
             android:gravity="center_vertical"
-            android:textColor="@color/text_secondary"
             android:text="@{reportItem.getTextImageState(context)}"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_small"
             android:visibility="@{reportItem.imageState.count != 0 ? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintEnd_toStartOf="@+id/iconSync"
             app:layout_constraintStart_toStartOf="@+id/tvReportType"
             app:layout_constraintTop_toBottomOf="@+id/tvLocation"
             tools:text="@string/format_image_synced" />
