@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_guardian_group.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.view.base.BaseActivity
 
 
@@ -26,12 +27,20 @@ class GuardianGroupActivity : BaseActivity() {
 			adapter = guardianGroupAdapter
 		}
 		
-		viewModel.items.observe(this, Observer {
-			guardianGroupAdapter.items = it
-		})
-		
-		viewModel.loading.observe(this, Observer {
-			loadingProgress.visibility = if (it) View.VISIBLE else View.INVISIBLE
+		viewModel.items.observe(this, Observer { it ->
+			it.success({
+				// Success block
+				loadingProgress.visibility = View.INVISIBLE
+				guardianGroupAdapter.items = it
+				
+			}, {
+				loadingProgress.visibility = View.INVISIBLE
+				// Error block
+				// TODO Handle error
+			}, {
+				// Loading block
+				loadingProgress.visibility = View.VISIBLE
+			})
 		})
 	}
 	
