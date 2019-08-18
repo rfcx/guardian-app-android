@@ -116,6 +116,8 @@
 	<string name="common_yes">Yes</string>
 
 	<!-- Status -->
+	<string name="status_stat_title">Your status</string>
+	<string name="status_report_title">Report history</string>
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>

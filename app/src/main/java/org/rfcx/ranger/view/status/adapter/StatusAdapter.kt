@@ -25,11 +25,52 @@ import org.rfcx.ranger.view.status.adapter.viewholder.ProfileView
 import org.rfcx.ranger.view.status.adapter.viewholder.ReportView
 import org.rfcx.ranger.view.status.adapter.viewholder.UserStatusView
 
-class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()) {
+class StatusAdapter(private val statusTitle: String?, private val reportTitle: String?) : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()) {
 	private var listener: StatusFragmentListener? = null
 	
 	fun setListener(listener: StatusFragmentListener) {
 		this.listener = listener
+	}
+	
+	private var profile: ProfileItem? = null
+	private var stat: UserStatusItem? = null
+	private var reports = arrayListOf<ReportItem>()
+	
+	fun updateHeader(header: ProfileItem) {
+		profile = header
+		update()
+	}
+	
+	fun updateStat(stat: UserStatusItem) {
+		this.stat = stat
+		update()
+	}
+	
+	fun updateReportList(newLists: List<ReportItem>) {
+		reports.clear()
+		reports.addAll(newLists)
+		update()
+	}
+	
+	private fun update() {
+		val newList = arrayListOf<StatusItemBase>()
+		profile?.let {
+			newList.add(it)
+		}
+		
+		stat?.let {
+			statusTitle?.let {
+				newList.add(TitleItem(it))
+			}
+			newList.add(it)
+		}
+		
+		reportTitle?.let {
+			newList.add(TitleItem(it))
+		}
+		newList.addAll(reports)
+		submitList(newList)
+		
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -81,7 +122,7 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
 	
 	class StatusListDiffUtil : DiffUtil.ItemCallback<StatusItemBase>() {
 		override fun areItemsTheSame(oldItem: StatusItemBase, newItem: StatusItemBase): Boolean {
-			return oldItem.getViewType() == newItem.getViewType()
+			return oldItem.getId() == newItem.getId()
 		}
 		
 		override fun areContentsTheSame(oldItem: StatusItemBase, newItem: StatusItemBase): Boolean {
@@ -119,6 +160,8 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
 	interface StatusItemBase {
 		fun getViewType(): Int
 		
+		fun getId(): Int
+		
 		companion object {
 			const val ITEM_TITLE = 0
 			const val ITEM_PROFILE = 1
@@ -128,16 +171,22 @@ class StatusAdapter : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.Vie
 	}
 	
 	data class ProfileItem(val nickname: String, val location: String, val isLocationTracking: Boolean) : StatusItemBase {
+		override fun getId() = -1
+		
 		override fun getViewType(): Int = ITEM_PROFILE
 		
 		fun getProfileName(): String = nickname.trim().capitalize()
 	}
 	
 	data class UserStatusItem(val dutyCount: Long, val reportedCount: Int, val reviewedCount: Int) : StatusItemBase {
+		override fun getId(): Int = -2
+		
 		override fun getViewType(): Int = ITEM_USER_STATUS
 	}
 	
 	data class ReportItem(val report: Report, val imageState: ImageState) : StatusItemBase {
+		override fun getId(): Int = report.id
+		
 		override fun getViewType(): Int = ITEM_REPORT_HISTORY
 		
 		fun getReportType(): String = report.value.trim().capitalize()

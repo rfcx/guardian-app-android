@@ -15,51 +15,59 @@ import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
 class StatusFragment : BaseFragment(), StatusFragmentListener {
-
-    private lateinit var viewDataBinding: FragmentStatusBinding
-    private val statusViewModel: StatusViewModel by viewModel()
-    private val statusAdapter by lazy { StatusAdapter() }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_status, container, false)
-        viewDataBinding.lifecycleOwner = this
-        return viewDataBinding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewDataBinding.statusViewModel = statusViewModel // set view model
-
-        // setup adapter layoutmanager
-        statusAdapter.setListener(this)
-        rvStatus?.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = statusAdapter
-        }
-
-        statusViewModel.items.observe(this, Observer {
-            statusAdapter.submitList(it)
-        })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        statusViewModel.compositeDisposable.clear()
-    }
-
-    override fun enableTracking(enable: Boolean) {
-        statusViewModel.onTracking(enable)
-    }
-
-    companion object {
-        fun newInstance(): StatusFragment {
-            return StatusFragment()
-        }
-
-        const val tag = "StatusFragment"
-    }
+	
+	
+	override fun enableTracking(enable: Boolean) {
+	
+	}
+	
+	private lateinit var viewDataBinding: FragmentStatusBinding
+	private val statusViewModel: StatusViewModel by viewModel()
+	private val statusAdapter by lazy {
+		StatusAdapter(context?.getString(R.string.status_stat_title),
+				context?.getString(R.string.status_report_title))
+	}
+	
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_status, container, false)
+		viewDataBinding.lifecycleOwner = this
+		return viewDataBinding.root
+	}
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		viewDataBinding.statusViewModel = statusViewModel // set view model
+		
+		// setup adapter layoutmanager
+		statusAdapter.setListener(this)
+		rvStatus?.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = statusAdapter
+		}
+		
+		statusViewModel.profile.observe(this, Observer {
+			statusAdapter.updateHeader(it)
+		})
+		
+		statusViewModel.summaryStat.observe(this, Observer {
+			statusAdapter.updateStat(it)
+		})
+		
+		statusViewModel.reportItems.observe(this, Observer {
+			statusAdapter.updateReportList(it)
+		})
+		
+	}
+	
+	companion object {
+		fun newInstance(): StatusFragment {
+			return StatusFragment()
+		}
+		
+		const val tag = "StatusFragment"
+	}
 }
 
 interface StatusFragmentListener {
-    fun enableTracking(enable: Boolean)
+	fun enableTracking(enable: Boolean)
 }
