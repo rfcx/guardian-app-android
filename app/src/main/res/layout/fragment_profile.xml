@@ -75,21 +75,33 @@
 			<TextView
 				android:id="@+id/locationTrackingTextView"
 				style="@style/Base.TextAppearance.AppCompat.Title"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:layout_weight="1"
 				android:text="Location tracking"
 				android:textSize="@dimen/text_small" />
 			
-			<androidx.appcompat.widget.SwitchCompat
-				android:id="@+id/locationTrackingSwitch"
-				style="@style/SwitchCompatStyle"
-				android:layout_width="0dp"
+			<FrameLayout
+				android:id="@+id/locationTrackingSwitchLayout"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:layout_weight="1"
-				android:textOff="@string/location_tracking_off_label"
-				android:textOn="@string/location_tracking_on_label"
-				tools:checked="false" />
+				android:clickable="true"
+				android:focusable="true">
+				
+				<androidx.appcompat.widget.SwitchCompat
+					android:id="@+id/locationTrackingSwitch"
+					style="@style/SwitchCompatStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:clickable="false"
+					android:focusable="false"
+					android:textOff="@string/location_tracking_off_label"
+					android:textOn="@string/location_tracking_on_label"
+					tools:checked="false" />
+			
+			</FrameLayout>
+		
 		</LinearLayout>
 		
 		<TextView
@@ -169,7 +181,6 @@
 			android:layout_height="wrap_content"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_small"
-			
 			android:paddingBottom="@dimen/margin_padding_small"
 			android:text="Logout"
 			android:textSize="@dimen/text_small" />
@@ -241,4 +252,5 @@
 			android:text="Rate the app"
 			android:textSize="@dimen/text_small" />
 	</LinearLayout>
+
 </ScrollView>

@@ -24,10 +24,6 @@ class ProfileData(private val preferences: Preferences) {
 		return tracking == LocationTracking.TRACKING_ON
 	}
 	
-	fun updateTracking(enable: Boolean) {
-		preferences.putString(Preferences.ENABLE_LOCATION_TRACKING, if (enable) LocationTracking.TRACKING_ON else LocationTracking.TRACKING_OFF)
-	}
-	
 	fun getReceiveNotification(): Boolean {
 		return preferences.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS)
 	}

@@ -1,17 +1,15 @@
 package org.rfcx.ranger.view.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.LocationTracking
+import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class ProfileFragment : BaseFragment() {
@@ -19,48 +17,16 @@ class ProfileFragment : BaseFragment() {
 	private val profileViewModel: ProfileViewModel by viewModel()
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		val view = inflater.inflate(R.layout.fragment_profile, container, false)
-		val trackingSwitch = view.findViewById<SwitchCompat>(R.id.locationTrackingSwitch)
-		val notificationSwitch = view.findViewById<SwitchCompat>(R.id.notificationReceiveSwitch)
-		val guardianGroupLayout = view.findViewById<LinearLayout>(R.id.guardianGroupLayout)
-		val logoutButton = view.findViewById<TextView>(R.id.logoutTextView)
-		val rateAppButton = view.findViewById<TextView>(R.id.rateAppTextView)
-		val feedbackButton = view.findViewById<TextView>(R.id.feedbackTextView)
-		
-		trackingSwitch.setOnCheckedChangeListener { _, isChecked ->
-			context?.let {
-				LocationTracking.set(it, isChecked)
-			}
-		}
-		
-		notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-			profileViewModel.onReceiving(isChecked)
-		}
-		
-		guardianGroupLayout.setOnClickListener {
-			//TODO: move to select guardian site page
-			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
-		}
-		
-		logoutButton.setOnClickListener {
-			//TODO: delete token
-		}
-		
-		rateAppButton.setOnClickListener {
-			//TODO: move to rate app page
-		}
-		
-		feedbackButton.setOnClickListener {
-			//TODO: move to feedback page
-		}
-		
-		return view
+		return inflater.inflate(R.layout.fragment_profile, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
+		setEventClick()
+		
 		profileViewModel.locationTracking.observe(this, Observer {
+			Log.e("BaseActivity", "$it")
 			locationTrackingSwitch.isChecked = it
 		})
 		
@@ -79,6 +45,44 @@ class ProfileFragment : BaseFragment() {
 		profileViewModel.userName.observe(this, Observer {
 			userNameTextView.text = it
 		})
+	}
+	
+	private fun setEventClick() {
+		locationTrackingSwitchLayout.setOnClickListener {
+			if (locationTrackingSwitch.isChecked) {
+				// off location tracking
+				(activity as MainActivityNew).disableLocationTracking()
+				profileViewModel.onTracingStatusChange()
+				
+			} else {
+				// on location tracking
+				(activity as MainActivityNew).enableLocationTracking {
+					profileViewModel.onTracingStatusChange()
+				}
+			}
+		}
+		
+		notificationReceiveSwitch.setOnCheckedChangeListener { _, isChecked ->
+			profileViewModel.onReceiving(isChecked)
+		}
+		
+		guardianGroupLayout.setOnClickListener {
+			//TODO: move to select guardian site page
+			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
+		}
+		
+		logoutTextView.setOnClickListener {
+			//TODO: delete token
+		}
+		
+		rateAppTextView.setOnClickListener {
+			//TODO: move to rate app page
+		}
+		
+		feedbackTextView.setOnClickListener {
+			//TODO: move to feedback page
+		}
+		
 	}
 	
 	companion object {
