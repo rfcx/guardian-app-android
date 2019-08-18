@@ -21,7 +21,13 @@ import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
+import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepository
+import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepositoryImp
+import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
 import org.rfcx.ranger.data.remote.service.ServiceFactory
+import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
+import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
+import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
@@ -43,12 +49,21 @@ object DataModule {
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
 		single { GetGuardianGroups(get(), get(), get()) }
+		
+		single { InviteCodeRepositoryImp(get()) } bind InviteCodeRepository::class
+		single { SendInviteCodeUseCase(get(), get(), get()) }
+		
+		single { UserTouchRepositoryImp(get()) } bind UserTouchRepository::class
+		single { CheckUserTouchUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeInviteCodeService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {
