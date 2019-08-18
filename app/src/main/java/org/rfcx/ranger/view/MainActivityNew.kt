@@ -59,7 +59,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			
 		})
 		
-		
 		Log.d("WeeklySummaryData", "${weeklySummaryData.getReportSubmitCount()}")
 		Log.d("WeeklySummaryData", "${weeklySummaryData.getReviewCount()}")
 		Log.d("WeeklySummaryData", "${weeklySummaryData.getOnDutyTimeMinute()}")

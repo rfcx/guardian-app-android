@@ -43,6 +43,9 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		combinedReports()
 	}
 	
+	private val _locationTracking = MutableLiveData<Boolean>()
+	val locationTracking: LiveData<Boolean> = _locationTracking
+	
 	private val _profile = MutableLiveData<StatusAdapter.ProfileItem>()
 	val profile: LiveData<StatusAdapter.ProfileItem> = _profile
 	
@@ -61,8 +64,8 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 	private var onDutyRealmTimeDisposable: Disposable? = null
 	
 	init {
-		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
-				profileData.getSiteName(), profileData.getTracking())
+		_locationTracking.value = profileData.getTracking()
+		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
 		
@@ -70,6 +73,12 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 			observeRealTimeOnDuty()
 		}
 	}
+	
+	fun updateProfile() {
+		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
+				profileData.getSiteName(), profileData.getTracking())
+	}
+	
 	
 	private fun updateWeeklyStat() {
 		Log.d("updateWeeklyStat", "updateWeeklyStat")
@@ -113,6 +122,20 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 				}
 		
 	}
+	
+	fun updateTracking() {
+		_locationTracking.value = profileData.getTracking()
+		
+		updateProfile()
+		
+		// verify on duty
+		if (profileData.getTracking()) {
+			observeRealTimeOnDuty()
+		}else{
+			onDutyRealmTimeDisposable?.dispose()
+		}
+	}
+	
 	
 	override fun onCleared() {
 		reportImageLiveData.removeObserver(reportImageObserve)

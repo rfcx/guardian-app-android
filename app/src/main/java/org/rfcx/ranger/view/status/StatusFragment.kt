@@ -11,15 +11,11 @@ import kotlinx.android.synthetic.main.fragment_status.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
+import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
 class StatusFragment : BaseFragment(), StatusFragmentListener {
-	
-	
-	override fun enableTracking(enable: Boolean) {
-	
-	}
 	
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
@@ -57,6 +53,23 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 			statusAdapter.updateReportList(it)
 		})
 		
+		statusViewModel.locationTracking.observe(this, Observer {
+		
+		})
+	}
+	
+	
+	override fun enableTracking(enable: Boolean) {
+		if (enable) {
+			// on location tracking
+			(activity as MainActivityNew).enableLocationTracking {
+				statusViewModel.updateTracking()
+			}
+		} else {
+			// off location tracking
+			(activity as MainActivityNew).disableLocationTracking()
+			statusViewModel.updateTracking()
+		}
 	}
 	
 	companion object {
