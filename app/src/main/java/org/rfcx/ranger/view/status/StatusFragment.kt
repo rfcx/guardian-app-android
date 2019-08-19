@@ -11,8 +11,10 @@ import kotlinx.android.synthetic.main.fragment_status.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
+import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
 class StatusFragment : BaseFragment(), StatusFragmentListener {
@@ -58,7 +60,6 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		})
 	}
 	
-	
 	override fun enableTracking(enable: Boolean) {
 		if (enable) {
 			// on location tracking
@@ -72,6 +73,11 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		}
 	}
 	
+	override fun onClickedReportItem(report: Report) {
+		// TODO: Start report detail page
+		ReportActivity.startIntent(context, reportId = report.id)
+	}
+	
 	companion object {
 		fun newInstance(): StatusFragment {
 			return StatusFragment()
@@ -83,4 +89,5 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 
 interface StatusFragmentListener {
 	fun enableTracking(enable: Boolean)
+	fun onClickedReportItem(report: Report)
 }

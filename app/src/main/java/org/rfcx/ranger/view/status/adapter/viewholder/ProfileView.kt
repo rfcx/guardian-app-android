@@ -1,6 +1,5 @@
 package org.rfcx.ranger.view.status.adapter.viewholder
 
-import android.util.Log
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.databinding.ItemHeaderProfileBinding

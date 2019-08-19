@@ -14,6 +14,8 @@ import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
 import org.rfcx.ranger.databinding.ItemStatusReportBinding
 import org.rfcx.ranger.databinding.ItemUserStatusBinding
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
@@ -93,7 +95,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			}
 			ITEM_REPORT_HISTORY -> {
 				val itemView = DataBindingUtil.inflate<ItemStatusReportBinding>(inflater, R.layout.item_status_report, parent, false)
-				ReportView(itemView)
+				ReportView(itemView, listener)
 			}
 			ITEM_TITLE -> {
 				val itemView = inflater.inflate(R.layout.item_title_holder, parent, false)
@@ -146,7 +148,6 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 					val item = newItem as ProfileItem
 					return oldItem.nickname == item.nickname && oldItem.location == item.location
 							&& oldItem.isLocationTracking && item.isLocationTracking
-					
 				}
 				is UserStatusItem -> {
 					val item = newItem as UserStatusItem
@@ -220,8 +221,12 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				context.getString(if (attachImagesCount < 2) R.string.format_image_unsync
 				else R.string.format_images_unsync, attachImagesCount.toString(),
 						attachImagesUnSyncCount.toString())
-				
 			}
+		}
+		
+		fun getTimeAgo(context: Context): String {
+			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
+			return context.getPastedTimeFormat(reportPasted)
 		}
 	}
 	
