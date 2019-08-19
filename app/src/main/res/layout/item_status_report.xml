@@ -74,7 +74,7 @@
 			android:ellipsize="end"
 			android:gravity="center_vertical"
 			android:maxLines="2"
-			android:text="@{reportItem.latLng}"
+			android:text="@{reportItem.report.latLng}"
 			android:textColor="@color/text_secondary"
 			android:textSize="@dimen/text_small"
 			app:layout_constraintEnd_toStartOf="@+id/iconSync"

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.text.DecimalFormat
 
 open class Report(
 		@PrimaryKey
@@ -30,6 +31,15 @@ open class Report(
 		@Expose(serialize = false)
 		var syncState: Int = 0 // local state: 0 unsent, 1 uploading, 2 uploaded (sync complete)
 ) : RealmObject() {
+	
+	fun getLatLng(): String {
+		val decimalFormat = DecimalFormat("##.######")
+		
+		val lat = decimalFormat.format(latitude)
+		val lng = decimalFormat.format(longitude)
+		
+		return "$lat, $lng"
+	}
 
 	companion object {
 		const val FIELD_GUID = "guid"
