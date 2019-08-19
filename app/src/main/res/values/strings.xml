@@ -107,8 +107,11 @@
 	<string name="menu_profile">PROFILE</string>
 	
 	<string name="see_report_detail">See Detail</string>
+	<string name="report_time_second">second</string>
+	<string name="report_minutes_format">%dm</string>
 	<string name="report_hr_format">%dh</string>
-	<string name="report_day_format">%dday</string>
+	<string name="report_day_format">%dd</string>
+	<string name="report_week_format">%dw</string>
 	<string name="follow_up_later_button">Follow up later</string>
 	<string name="open_map_button">Open Map</string>
 	
