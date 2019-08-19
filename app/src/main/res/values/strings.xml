@@ -107,7 +107,7 @@
 	<string name="menu_profile">PROFILE</string>
 	
 	<string name="see_report_detail">See Detail</string>
-	<string name="report_time_second">second</string>
+	<string name="report_time_second">Just now</string>
 	<string name="report_minutes_format">%dm</string>
 	<string name="report_hr_format">%dh</string>
 	<string name="report_day_format">%dd</string>
@@ -119,7 +119,7 @@
 	<string name="common_yes">Yes</string>
 
 	<!-- Status -->
-	<string name="status_stat_title">Your status</string>
+	<string name="status_stat_title">Your weekly status</string>
 	<string name="status_report_title">Report history</string>
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
