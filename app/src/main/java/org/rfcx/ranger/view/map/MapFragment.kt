@@ -50,6 +50,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onMapReady(map: GoogleMap?) {
 		map?.let {
+			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
 			displayReport(it)
 			displayCheckIn(it)
 			map.setOnMapClickListener {

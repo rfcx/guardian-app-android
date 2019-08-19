@@ -68,6 +68,12 @@ class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
 	private fun bindImageState(state: ImageState) {
 		// TODO move to use Data binding
+		if (state.count == 0) {
+			reportImageStateTextView.visibility = View.INVISIBLE
+			return
+		}
+		
+		reportImageStateTextView.visibility = View.VISIBLE
 		if (state.unsentCount == 0) {
 			reportImageStateTextView.text = getString(
 					R.string.images_sync_format, state.count)
