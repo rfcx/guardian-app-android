@@ -182,7 +182,7 @@
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_small"
 			android:paddingBottom="@dimen/margin_padding_small"
-			android:text="Logout"
+			android:text="Sign out"
 			android:textSize="@dimen/text_small" />
 		
 		<View

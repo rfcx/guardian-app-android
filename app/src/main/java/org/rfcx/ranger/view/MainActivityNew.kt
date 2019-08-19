@@ -13,11 +13,11 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
-import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.login.LoginActivityNew
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.report.ReportActivity
@@ -43,7 +43,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		}
 		
 		//TODO remove this
-		Preferences.getInstance(this).putString(Preferences.SELECTED_GUARDIAN_GROUP,"derc")
+		Preferences.getInstance(this).putString(Preferences.SELECTED_GUARDIAN_GROUP, "derc")
 		
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 		bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -161,6 +161,13 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 						tag).commit()
 	}
 	
+	override fun logout() {
+		CloudMessaging.unsubscribe(this)
+		Preferences.getInstance(this@MainActivityNew).clear()
+		LoginActivityNew.startActivity(this@MainActivityNew)
+		finish()
+	}
+	
 	companion object {
 		fun startActivity(context: Context) {
 			val intent = Intent(context, MainActivityNew::class.java)
@@ -174,4 +181,5 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
+	fun logout()
 }

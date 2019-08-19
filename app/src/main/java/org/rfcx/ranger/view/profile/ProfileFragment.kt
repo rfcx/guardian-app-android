@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,12 +10,19 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class ProfileFragment : BaseFragment() {
 	
 	private val profileViewModel: ProfileViewModel by viewModel()
+	lateinit var listener: MainActivityEventListener
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as MainActivityEventListener)
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_profile, container, false)
@@ -72,7 +80,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		logoutTextView.setOnClickListener {
-			//TODO: delete token
+			listener.logout()
 		}
 		
 		rateAppTextView.setOnClickListener {
