@@ -18,7 +18,6 @@ import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_login_new.*
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_login.loginErrorTextView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
@@ -60,11 +59,14 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
 		
-		// TODO hasValidCredentials()
-		
-		supportFragmentManager.beginTransaction()
-				.add(loginContainer.id, LoginFragment(),
-						"LoginFragment").commit()
+		if (CredentialKeeper(this).hasValidCredentials()) {
+			MainActivityNew.startActivity(this@LoginActivityNew)
+			finish()
+		} else {
+			supportFragmentManager.beginTransaction()
+					.add(loginContainer.id, LoginFragment(),
+							"LoginFragment").commit()
+		}
 	}
 	
 	override fun onLoginWithFacebook() {
@@ -83,7 +85,7 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
-						runOnUiThread{
+						runOnUiThread {
 							loginProgressBar.visibility = View.INVISIBLE
 							loginGroupView.visibility = View.VISIBLE
 						}
