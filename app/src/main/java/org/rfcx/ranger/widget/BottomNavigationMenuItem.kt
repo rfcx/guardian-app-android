@@ -66,7 +66,7 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 				iconImageView.setColorFilter(titleColorSelected,
 						PorterDuff.Mode.SRC_IN)
 		} else {
-			titleTextView.visibility = View.GONE
+			titleTextView.visibility = View.VISIBLE
 			titleTextView.setTextColor(titleColor)
 			iconImageView.colorFilter = null
 		}
@@ -78,9 +78,9 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 		
 		title = typedArray.getString(R.styleable.BottomNavigationMenuItem_title)
 		titleColor = ContextCompat.getColor(context,
-				typedArray.getResourceId(R.styleable.BottomNavigationMenuItem_titleColor, android.R.color.black))
+				typedArray.getResourceId(R.styleable.BottomNavigationMenuItem_titleColor, R.color.grey_active))
 		titleColorSelected = ContextCompat.getColor(context,
-				typedArray.getResourceId(R.styleable.BottomNavigationMenuItem_titleColorSelected, android.R.color.black))
+				typedArray.getResourceId(R.styleable.BottomNavigationMenuItem_titleColorSelected, R.color.grey_active))
 		
 		icon = typedArray.getDrawable(R.styleable.BottomNavigationMenuItem_icon)
 		iconTintColor = ContextCompat.getColor(context,
