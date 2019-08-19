@@ -20,6 +20,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
@@ -208,6 +209,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					{
 						hideLoading()
 						reviewAlertCallback?.onReviewed(it.eventGuID, it.reviewConfirm)
+						
+						// is rejectEvent?
+						if (it.reviewConfirm == ReviewEventFactory.rejectEvent) {
+							dismiss()
+						}
 					},
 					{
 						hideLoading()
