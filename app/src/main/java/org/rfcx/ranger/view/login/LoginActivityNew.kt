@@ -72,7 +72,6 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 	override fun onLoginWithFacebook() {
 		loginGroupView.visibility = View.GONE
 		loginProgressBar.visibility = View.VISIBLE
-		loginErrorTextView.visibility = View.INVISIBLE
 		
 		webAuthentication
 				.withConnection("facebook")
@@ -107,39 +106,6 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 				})
 	}
 	
-	override fun doLogin(email: String, password: String) {
-		loginGroupView.visibility = View.GONE
-		loginProgressBar.visibility = View.VISIBLE
-		loginErrorTextView.visibility = View.INVISIBLE
-		
-		authentication
-				.login(email, password, "Username-Password-Authentication")
-				.setScope(getString(R.string.auth0_scopes))
-				.setAudience(getString(R.string.auth0_audience))
-				.start(object : BaseCallback<Credentials, AuthenticationException> {
-					override fun onSuccess(credentials: Credentials) {
-						val result = CredentialVerifier(this@LoginActivityNew).verify(credentials)
-						when (result) {
-							is Err -> {
-								loginFailed(result.error)
-							}
-							is Ok -> {
-								loginSuccess(result.value)
-							}
-						}
-					}
-					
-					override fun onFailure(exception: AuthenticationException) {
-						exception.printStackTrace()
-						Crashlytics.logException(exception)
-						if (exception.code == "invalid_grant") {
-							loginFailed(getString(R.string.incorrect_username_password))
-						} else {
-							loginFailed(exception.description)
-						}
-					}
-				})
-	}
 	
 	private fun loginFailed(errorMessage: String?) {
 		runOnUiThread {
@@ -234,10 +200,22 @@ class LoginActivityNew : AppCompatActivity(), LoginListener {
 			}
 		})
 	}
+	
+	override fun openMain() {
+		MainActivityNew.startActivity(this@LoginActivityNew)
+		finish()
+	}
+	
+	override fun openInvitationCodeFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, InvitationCodeFragment(),
+						"InvitationCodeFragment").commit()
+	}
 }
 
 interface LoginListener {
 	fun onLoginWithFacebook()
-	fun doLogin(email: String, password: String)
 	fun doSubmit(code: String)
+	fun openMain()
+	fun openInvitationCodeFragment()
 }

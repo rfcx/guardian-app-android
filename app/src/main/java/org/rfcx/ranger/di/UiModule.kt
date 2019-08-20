@@ -5,6 +5,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
+import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportDetailViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
@@ -30,5 +31,9 @@ object UiModule {
 	val profileModule = module{
 		viewModel { ProfileViewModel(get()) }
 		viewModel { GuardianGroupViewModel(get()) }
+	}
+	
+	var loginModule = module{
+		viewModel { LoginViewModel(androidContext()) }
 	}
 }
