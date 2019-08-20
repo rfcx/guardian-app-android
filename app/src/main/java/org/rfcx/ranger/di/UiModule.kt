@@ -5,6 +5,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
+import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportDetailViewModel
@@ -33,7 +34,8 @@ object UiModule {
 		viewModel { GuardianGroupViewModel(get()) }
 	}
 	
-	var loginModule = module{
+	var loginModule = module {
 		viewModel { LoginViewModel(androidContext()) }
+		viewModel { InvitationCodeViewModel(androidContext()) }
 	}
 }

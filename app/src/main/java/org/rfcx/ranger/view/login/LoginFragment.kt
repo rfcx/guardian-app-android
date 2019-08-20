@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.login
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,30 +41,38 @@ class LoginFragment : BaseFragment() {
 				loginProgressBar.visibility = View.VISIBLE
 				loginViewModel.setLoginState()
 				loginViewModel.doLogin(email, password)
-				loginViewModel.loginState.observe(this, Observer {
-					when (it) {
-						LoginState.SUCCESS -> {
-							loginViewModel.loginResult.observe(this, Observer {
-								loginViewModel.loginSuccess(it)
-								handleUserTouch()
-							})
-						}
-						LoginState.FAILED -> {
-							loginViewModel.loginError.observe(this, Observer {
-								loginGroupView.visibility = View.VISIBLE
-								loginProgressBar.visibility = View.INVISIBLE
-								loginViewModel.loginState.value
-								Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-							})
-						}
-					}
-				})
+				handleLogin()
 			}
 		}
 		
 		facebookLoginButton.setOnClickListener {
-			listener.onLoginWithFacebook()
+			loginGroupView.visibility = View.GONE
+			loginProgressBar.visibility = View.VISIBLE
+			loginViewModel.setLoginState()
+			activity?.let { it1 -> loginViewModel.onLoginWithFacebook(it1) }
+			handleLogin()
 		}
+	}
+	
+	private fun handleLogin() {
+		loginViewModel.loginState.observe(this, Observer {
+			when (it) {
+				LoginState.SUCCESS -> {
+					loginViewModel.loginResult.observe(this, Observer {
+						loginViewModel.loginSuccess(it)
+						handleUserTouch()
+					})
+				}
+				LoginState.FAILED -> {
+					loginViewModel.loginError.observe(this, Observer {
+						loginGroupView.visibility = View.VISIBLE
+						loginProgressBar.visibility = View.INVISIBLE
+						loginViewModel.loginState.value
+						Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+					})
+				}
+			}
+		})
 	}
 	
 	private fun getError() {
@@ -83,6 +92,7 @@ class LoginFragment : BaseFragment() {
 							listener.openMain()
 						} else if (it == "InvitationCodeFragment") {
 							listener.openInvitationCodeFragment()
+							Log.d("handleUserTouch", "InvitationCodeFragment")
 						}
 					})
 				}

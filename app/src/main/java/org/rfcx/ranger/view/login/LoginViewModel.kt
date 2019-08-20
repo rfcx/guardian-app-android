@@ -1,8 +1,9 @@
 package org.rfcx.ranger.view.login
 
 
+import android.app.Activity
+import android.app.Dialog
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,8 @@ import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
+import com.auth0.android.provider.AuthCallback
+import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.R
@@ -31,6 +34,10 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 	
 	private val authentication by lazy {
 		AuthenticationAPIClient(auth0)
+	}
+	
+	private val webAuthentication by lazy {
+		WebAuthProvider.init(auth0)
 	}
 	
 	private var _loginState: MutableLiveData<LoginState> = MutableLiveData()
@@ -67,7 +74,6 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 								_loginError.postValue(result.error)
 							}
 							is Ok -> {
-								Log.d("login1", "Ok work")
 								_loginState.postValue(LoginState.SUCCESS)
 								_loginResult.postValue(result.value)
 							}
@@ -88,8 +94,44 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 				})
 	}
 	
+	fun onLoginWithFacebook(activity: Activity) {
+		webAuthentication
+				.withConnection("facebook")
+				.withScope(context.getString(R.string.auth0_scopes))
+				.withScheme(context.getString(R.string.auth0_scheme))
+				.withAudience(context.getString(R.string.auth0_audience))
+				.start(activity, object : AuthCallback {
+					override fun onFailure(dialog: Dialog) {
+						_loginState.postValue(LoginState.FAILED)
+						_loginError.postValue(null)
+					}
+					
+					override fun onFailure(exception: AuthenticationException) {
+						Crashlytics.logException(exception)
+						_loginState.postValue(LoginState.FAILED)
+						_loginError.postValue(exception.localizedMessage)
+						
+					}
+					
+					override fun onSuccess(credentials: Credentials) {
+						val result = CredentialVerifier(context).verify(credentials)
+						when (result) {
+							is Err -> {
+								_loginState.postValue(LoginState.FAILED)
+								_loginError.postValue(result.error)
+							}
+							is Ok -> {
+								_loginState.postValue(LoginState.SUCCESS)
+								_loginResult.postValue(result.value)
+							}
+						}
+					}
+				})
+	}
+	
 	fun setLoginState() {
 		_loginState.value = LoginState.NONE
+		_userTouchState.value = UserTouchState.NONE
 	}
 	
 	fun loginSuccess(userAuthResponse: UserAuthResponse) {
@@ -104,7 +146,6 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 					_userTouchState.postValue(UserTouchState.SUCCESS)
 					_gotoPage.postValue("InvitationCodeFragment")
 				}
-				
 			}
 			
 			override fun onFailed(t: Throwable?, message: String?) {
@@ -121,6 +162,6 @@ enum class LoginState {
 }
 
 enum class UserTouchState {
-	FAILED, SUCCESS
+	NONE, FAILED, SUCCESS
 }
 
