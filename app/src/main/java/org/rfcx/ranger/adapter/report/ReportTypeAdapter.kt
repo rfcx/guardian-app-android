@@ -70,7 +70,7 @@ class ReportTypeViewHolder(itemView: View, private val onMessageItemClickListene
 		itemView.reportTypeImageView.setImageResource(item.iconRes)
 		if (isSelected) {
 			ImageViewCompat.setImageTintList(itemView.reportTypeImageView,
-					ColorStateList.valueOf(ContextCompat.getColor(itemView.context, R.color.grey_active)))
+					ColorStateList.valueOf(ContextCompat.getColor(itemView.context, R.color.colorPrimary)))
 		} else {
 			ImageViewCompat.setImageTintList(itemView.reportTypeImageView, null)
 		}

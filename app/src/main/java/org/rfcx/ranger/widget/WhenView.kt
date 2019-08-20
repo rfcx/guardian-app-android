@@ -89,22 +89,22 @@ class WhenView @JvmOverloads constructor(
 			}
 			State.LAST_MONTH -> {
 				text0?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text0?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text0?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image0?.selected()
 			}
 			State.LAST_WEEK -> {
 				text1?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text1?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text1?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image1?.selected()
 			}
 			State.LAST_24_HR -> {
 				text2?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text2?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text2?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image2?.selected()
 			}
 			State.NOW -> {
 				text3?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text3?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text3?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image3?.selected()
 			}
 		}
