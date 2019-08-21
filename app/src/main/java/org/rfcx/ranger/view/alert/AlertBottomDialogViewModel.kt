@@ -118,6 +118,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			_playerState.value = playbackState
 			when (playbackState) {
 				Player.STATE_READY -> {
+					playerTimeHandler.removeCallbacks(playerTimeRunnable)
 					playerTimeHandler.postDelayed(playerTimeRunnable, delayTime)
 				}
 				
