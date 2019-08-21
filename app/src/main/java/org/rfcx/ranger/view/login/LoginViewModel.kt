@@ -15,15 +15,16 @@ import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.crashlytics.android.Crashlytics
+import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.user.UserAuthResponse
-import org.rfcx.ranger.repo.api.UserTouchApi
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 
-class LoginViewModel(private val context: Context) : ViewModel() {
+class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) : ViewModel() {
 	
 	private val auth0 by lazy {
 		val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
@@ -137,8 +138,8 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 	fun loginSuccess(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		
-		UserTouchApi().send(context, object : UserTouchApi.UserTouchCallback {
-			override fun onSuccess() {
+		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
+			override fun onSuccess(t: Boolean) {
 				if (userAuthResponse.isRanger) {
 					_userTouchState.postValue(UserTouchState.SUCCESS)
 					_gotoPage.postValue("MainActivityNew")
@@ -148,12 +149,12 @@ class LoginViewModel(private val context: Context) : ViewModel() {
 				}
 			}
 			
-			override fun onFailed(t: Throwable?, message: String?) {
+			override fun onError(e: Throwable) {
 				_userTouchState.postValue(UserTouchState.FAILED)
-				Crashlytics.logException(t)
-				_loginError.postValue(message ?: t?.localizedMessage)
+				Crashlytics.logException(e)
+				_loginError.postValue(e.localizedMessage)
 			}
-		})
+		}, null)
 	}
 }
 
