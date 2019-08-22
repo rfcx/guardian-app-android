@@ -12,7 +12,6 @@
 	<string name="or">OR</string>
 
     <!--new Login Activite-->
-    <string name="RFCx_Ranger" translatable="false">RFCx Ranger</string>
     <string name="login_sign_in_button_label" translatable="false">Sign in</string>
     <string name="invitation_submit_button_label" translatable="false">Submit</string>
 	
