@@ -1,27 +1,35 @@
 package org.rfcx.ranger.view.status
 
 
+import android.content.Context
 import android.util.Log
 import android.util.SparseArray
 import androidx.lifecycle.*
+import androidx.work.WorkInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
+import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.service.LocationSyncWorker
+import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.asLiveData
+import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
 
-class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb, private val profileData: ProfileData,
+class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
+                      private val locationDb: LocationDb, private val profileData: ProfileData,
                       private val weeklySummaryData: WeeklySummaryData) : ViewModel() {
 	
 	private val reportObserve = Observer<List<Report>> {
@@ -43,6 +51,24 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		combinedReports()
 	}
 	
+	// TODO - Improve this {use follow MainActivity}
+	private val workInfoObserve = Observer<List<WorkInfo>> {
+		val currentWorkStatus = it?.getOrNull(0)
+		if (currentWorkStatus != null) {
+			when (currentWorkStatus.state) {
+				WorkInfo.State.RUNNING -> {
+					updateSyncInfo(SyncInfo.Status.UPLOADING)
+				}
+				WorkInfo.State.SUCCEEDED -> {
+					updateSyncInfo(SyncInfo.Status.UPLOADED)
+				}
+				else -> {
+					updateSyncInfo()
+				}
+			}
+		}
+	}
+	
 	private val _locationTracking = MutableLiveData<Boolean>()
 	val locationTracking: LiveData<Boolean> = _locationTracking
 	
@@ -55,12 +81,17 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 	private val _reportItems = MutableLiveData<List<StatusAdapter.ReportItem>>()
 	val reportItems: LiveData<List<StatusAdapter.ReportItem>> = _reportItems
 	
+	private val _syncInfo = MutableLiveData<SyncInfo>()
+	val syncInfo: LiveData<SyncInfo> = _syncInfo
+	
 	private var reportsImage: SparseArray<ImageState> = SparseArray()
 	private var reportList = listOf<Report>()
 	
 	private lateinit var reportLiveData: LiveData<List<Report>>
 	private lateinit var reportImageLiveData: LiveData<List<ReportImage>>
 	
+	private lateinit var checkinWorkInfoLiveData: LiveData<List<WorkInfo>>
+	private lateinit var reportWorkInfoLiveData: LiveData<List<WorkInfo>>
 	private var onDutyRealmTimeDisposable: Disposable? = null
 	
 	init {
@@ -68,17 +99,17 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
+		fetchJobSyncing()
 		
 		if (profileData.getTracking()) {
 			observeRealTimeOnDuty()
 		}
 	}
 	
-	fun updateProfile() {
+	private fun updateProfile() {
 		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 				profileData.getSiteName(), profileData.getTracking())
 	}
-	
 	
 	private fun updateWeeklyStat() {
 		Log.d("updateWeeklyStat", "updateWeeklyStat")
@@ -101,6 +132,22 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		}
 		
 		reportImageLiveData.observeForever(reportImageObserve)
+	}
+	
+	private fun fetchJobSyncing() {
+		if (locationDb.unsentCount() > 0) {
+			LocationSyncWorker.enqueue()
+		}
+		
+		if (reportDb.unsentCount() > 0) {
+			ReportSyncWorker.enqueue()
+		}
+		
+		reportWorkInfoLiveData = ReportSyncWorker.workInfos()
+		reportWorkInfoLiveData.observeForever(workInfoObserve)
+		
+		checkinWorkInfoLiveData = LocationSyncWorker.workInfos()
+		checkinWorkInfoLiveData.observeForever(workInfoObserve)
 	}
 	
 	private fun combinedReports() {
@@ -131,15 +178,26 @@ class StatusViewModel(private val reportDb: ReportDb, private val reportImageDb:
 		// verify on duty
 		if (profileData.getTracking()) {
 			observeRealTimeOnDuty()
-		}else{
+		} else {
 			onDutyRealmTimeDisposable?.dispose()
 		}
 	}
 	
+	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {
+		val status = syncStatus
+				?: if (context.isNetworkAvailable()) SyncInfo.Status.STARTING else SyncInfo.Status.WAITING_NETWORK
+		
+		val locationCount = locationDb.unsentCount()
+		val reportCount = reportDb.unsentCount()
+		
+		_syncInfo.value = SyncInfo(status, reportCount, locationCount)
+	}
 	
 	override fun onCleared() {
 		reportImageLiveData.removeObserver(reportImageObserve)
 		reportLiveData.removeObserver(reportObserve)
+		reportWorkInfoLiveData.removeObserver(workInfoObserve)
+		checkinWorkInfoLiveData.removeObserver(workInfoObserve)
 		onDutyRealmTimeDisposable?.dispose()
 		super.onCleared()
 	}

@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.status.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,10 +9,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.TitleItem
 import org.rfcx.ranger.adapter.view.TitleViewHolder
 import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
 import org.rfcx.ranger.databinding.ItemStatusReportBinding
+import org.rfcx.ranger.databinding.ItemStatusSyncingBinding
 import org.rfcx.ranger.databinding.ItemUserStatusBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
@@ -22,14 +25,14 @@ import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_SYNC_INFO
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_TITLE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
-import org.rfcx.ranger.view.status.adapter.viewholder.EmptyReportView
-import org.rfcx.ranger.view.status.adapter.viewholder.ProfileView
-import org.rfcx.ranger.view.status.adapter.viewholder.ReportView
-import org.rfcx.ranger.view.status.adapter.viewholder.UserStatusView
+import org.rfcx.ranger.view.status.adapter.viewholder.*
 
-class StatusAdapter(private val statusTitle: String?, private val reportTitle: String?) : ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()) {
+class StatusAdapter(private val statusTitle: String?, private val reportTitle: String?)
+	: ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()), SyncingViewCallback {
+	
 	private var listener: StatusFragmentListener? = null
 	
 	fun setListener(listener: StatusFragmentListener) {
@@ -39,6 +42,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 	private var profile: ProfileItem? = null
 	private var stat: UserStatusItem? = null
 	private var reports = arrayListOf<ReportItem>()
+	private var syncInfo: SyncInfoItem? = null
 	
 	fun updateHeader(header: ProfileItem) {
 		profile = header
@@ -56,9 +60,18 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		update()
 	}
 	
+	fun updateSyncInfo(syncInfo: SyncInfo?) {
+		this.syncInfo = if (syncInfo != null) SyncInfoItem(syncInfo) else null
+		update()
+	}
+	
 	private fun update() {
 		val newList = arrayListOf<StatusItemBase>()
 		profile?.let {
+			newList.add(it)
+		}
+		
+		syncInfo?.let {
 			newList.add(it)
 		}
 		
@@ -81,6 +94,14 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		submitList(newList)
 		
 	}
+	
+	// region @link{ SyncingViewCallback }
+	override fun onUploadCompleted() {
+		Log.d("StatusAdapter", "hide syncing view")
+		
+		updateSyncInfo(null) // for hide view syncing
+	}
+	// endregion
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		val inflater = LayoutInflater.from(parent.context)
@@ -105,6 +126,10 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				val itemView = inflater.inflate(R.layout.item_report_empty, parent, false)
 				EmptyReportView(itemView)
 			}
+			ITEM_SYNC_INFO -> {
+				val itemView = DataBindingUtil.inflate<ItemStatusSyncingBinding>(inflater, R.layout.item_status_syncing, parent, false)
+				SyncingView(itemView, this)
+			}
 			else -> {
 				throw Exception("Invalid viewType")
 			}
@@ -125,6 +150,9 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			}
 			is TitleViewHolder -> {
 				holder.bind((item as TitleItem).title)
+			}
+			is SyncingView -> {
+				holder.bind(item as SyncInfoItem)
 			}
 		}
 	}
@@ -180,6 +208,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			const val ITEM_USER_STATUS = 2
 			const val ITEM_REPORT_HISTORY = 3
 			const val ITEM_REPORT_EMPTY = 4
+			const val ITEM_SYNC_INFO = 5
 		}
 	}
 	
@@ -189,6 +218,43 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		override fun getViewType(): Int = ITEM_PROFILE
 		
 		fun getProfileName(): String = nickname.trim().capitalize()
+	}
+	
+	data class SyncInfoItem(val syncInfo: SyncInfo) : StatusItemBase {
+		override fun getViewType(): Int = ITEM_SYNC_INFO
+		
+		override fun getId(): Int = -7
+		
+		fun getIcon(): Int = when (syncInfo.status) {
+			SyncInfo.Status.WAITING_NETWORK -> R.drawable.ic_queue
+			SyncInfo.Status.STARTING -> R.drawable.ic_upload
+			SyncInfo.Status.UPLOADING -> R.drawable.ic_upload
+			else -> R.drawable.ic_upload_done // upload completed
+		}
+		
+		fun getSyncingTitle(context: Context): String = when (syncInfo.status) {
+			SyncInfo.Status.WAITING_NETWORK, SyncInfo.Status.STARTING, SyncInfo.Status.UPLOADING -> {
+				val checkinText = if (syncInfo.countCheckIn > 0) context.getString(R.string.sync_checkins_label, syncInfo.countCheckIn) else null
+				val reportText = if (syncInfo.countReport > 0) {
+					context.getString(
+							if (syncInfo.countReport > 1) R.string.sync_reports_label else R.string.sync_report_label, syncInfo.countReport)
+				} else null
+				val result = if (checkinText != null && reportText != null) "$reportText, $checkinText" else reportText
+						?: checkinText
+				
+				result ?: " - " // TODO: handle when title null
+			}
+			else -> context.getString(R.string.sync_complete)  // upload completed
+		}
+		
+		fun getSyncingDescription(context: Context): String = when (syncInfo.status) {
+			SyncInfo.Status.WAITING_NETWORK -> context.getString(R.string.sync_waiting_network)
+			SyncInfo.Status.STARTING -> context.getString(R.string.sync_starting)
+			SyncInfo.Status.UPLOADING -> context.getString(R.string.sync_uploading)
+			else -> ""  // upload completed
+		}
+		
+		fun isLoading(): Boolean = syncInfo.status == SyncInfo.Status.UPLOADING
 	}
 	
 	data class UserStatusItem(val dutyCount: Long, val reportedCount: Int, val reviewedCount: Int) : StatusItemBase {

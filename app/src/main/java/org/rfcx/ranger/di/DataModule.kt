@@ -73,6 +73,6 @@ object DataModule {
 		factory { EventDb() }
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get()) }
-		single { Preferences.getInstance(androidContext()) }
+		factory { Preferences.getInstance(androidContext()) }
 	}
 }

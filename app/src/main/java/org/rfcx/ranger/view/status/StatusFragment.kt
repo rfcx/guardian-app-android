@@ -36,7 +36,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		super.onViewCreated(view, savedInstanceState)
 		viewDataBinding.statusViewModel = statusViewModel // set view model
 		
-		// setup adapter layoutmanager
+		// setup recycler view
 		statusAdapter.setListener(this)
 		rvStatus?.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -53,6 +53,10 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		
 		statusViewModel.reportItems.observe(this, Observer {
 			statusAdapter.updateReportList(it)
+		})
+		
+		statusViewModel.syncInfo.observe(this, Observer {
+			statusAdapter.updateSyncInfo(it)
 		})
 		
 		statusViewModel.locationTracking.observe(this, Observer {
