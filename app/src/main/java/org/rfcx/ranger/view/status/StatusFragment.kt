@@ -78,7 +78,8 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	}
 	
 	override fun onClickedReportItem(report: Report) {
-		ReportDetailActivity.startIntent(context, reportId = report.id)
+		// TODO: Start report detail page
+		ReportActivity.startIntent(context, reportId = report.id)
 	}
 	
 	companion object {
