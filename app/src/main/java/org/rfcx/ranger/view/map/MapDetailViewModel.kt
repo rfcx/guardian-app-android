@@ -12,7 +12,7 @@ import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.localdb.ReportImageDb.Companion.SENT
 import org.rfcx.ranger.util.asLiveData
 
-class ReportDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
+class MapDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
 	
 	private var _report: Report? = null
 	

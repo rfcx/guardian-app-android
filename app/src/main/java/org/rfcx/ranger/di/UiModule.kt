@@ -7,21 +7,23 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
+import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
-import org.rfcx.ranger.view.map.ReportDetailViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
+import org.rfcx.ranger.view.report.ReportDetailViewModel
 import org.rfcx.ranger.view.status.StatusViewModel
 
 object UiModule {
 	
 	val mapModule = module {
 		viewModel { MapViewModel(get(), get()) }
-		viewModel { ReportDetailViewModel(get(), get()) }
+		viewModel { MapDetailViewModel(get(), get()) }
 	}
 	
 	val statusModule = module {
 		viewModel { StatusViewModel(get(), get(), get(), get()) }
+		viewModel { ReportDetailViewModel(get(), get()) }
 	}
 	
 	val alertModule = module {
@@ -29,7 +31,7 @@ object UiModule {
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 	}
 
-	val profileModule = module{
+	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get()) }
 		viewModel { GuardianGroupViewModel(get()) }
 	}

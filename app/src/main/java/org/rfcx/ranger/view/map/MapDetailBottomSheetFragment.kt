@@ -15,9 +15,9 @@ import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.view.report.ReportActivity
 
-class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
+class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
-	private val reportViewModel: ReportDetailViewModel by viewModel()
+	private val viewModel: MapDetailViewModel by viewModel()
 	
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -28,11 +28,11 @@ class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		
 		val reportId: Int = arguments?.getInt("BUNDLE_REPORT_ID") ?: -1
-		reportViewModel.getReportDetail(reportId).observe(this@ReportDetailBottomSheetFragment, Observer {
+		viewModel.getReportDetail(reportId).observe(this@MapDetailBottomSheetFragment, Observer {
 			bindReportView(it)
 		})
 		
-		reportViewModel.getReportImages(reportId).observe(this@ReportDetailBottomSheetFragment, Observer {
+		viewModel.getReportImages(reportId).observe(this@MapDetailBottomSheetFragment, Observer {
 			bindImageState(it)
 		})
 	}
@@ -84,8 +84,8 @@ class ReportDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	}
 	
 	companion object {
-		fun newInstance(reportId: Int): ReportDetailBottomSheetFragment {
-			return ReportDetailBottomSheetFragment().apply {
+		fun newInstance(reportId: Int): MapDetailBottomSheetFragment {
+			return MapDetailBottomSheetFragment().apply {
 				arguments = Bundle().apply {
 					putInt(BUNDLE_REPORT_ID, reportId)
 				}

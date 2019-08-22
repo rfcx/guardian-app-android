@@ -67,7 +67,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			if (marker.tag is Report) {
 				val report = marker.tag as Report
 				(activity as MainActivityEventListener)
-						.showBottomSheet(ReportDetailBottomSheetFragment.newInstance(report.id))
+						.showBottomSheet(MapDetailBottomSheetFragment.newInstance(report.id))
 			} else {
 				(activity as MainActivityEventListener).hideBottomSheet()
 			}

@@ -96,6 +96,7 @@
 	<string name="report_list_empty_message">You do not have any reports</string>
 	<string name="images_sync_format">%d images (synced)</string>
 	<string name="images_unsync_format">%1d images (%2d unsynced)</string>
+	<string name="report_detail_title">Report detail</string>
 	
 	<string name="in_air_plane_mode">Unable to determine your location</string>
 	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>

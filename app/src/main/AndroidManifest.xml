@@ -21,7 +21,8 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
 		tools:ignore="GoogleAppIndexingWarning">
-		<activity android:name=".view.profile.GuardianGroupActivity"></activity>
+		<activity android:name=".view.report.ReportDetailActivity"></activity>
+		<activity android:name=".view.profile.GuardianGroupActivity" />
 		
 		<provider
 			android:name="androidx.core.content.FileProvider"
