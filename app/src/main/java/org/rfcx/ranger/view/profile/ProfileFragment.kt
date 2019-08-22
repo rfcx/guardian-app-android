@@ -53,6 +53,10 @@ class ProfileFragment : BaseFragment() {
 		profileViewModel.userName.observe(this, Observer {
 			userNameTextView.text = it
 		})
+		
+		profileViewModel.guardianGroup.observe(this, Observer {
+			siteNameTextView.text = it
+		})
 	}
 	
 	private fun setEventClick() {
@@ -91,6 +95,11 @@ class ProfileFragment : BaseFragment() {
 			//TODO: move to feedback page
 		}
 		
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		profileViewModel.updateSiteName()
 	}
 	
 	companion object {

@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.activity_guardian_group.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.base.BaseActivity
 
 
@@ -42,6 +44,15 @@ class GuardianGroupActivity : BaseActivity() {
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
+		
+		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
+			override fun onItemClick(guardianGroup: GuardianGroup?) {
+				val preferenceHelper = Preferences.getInstance(this@GuardianGroupActivity)
+				preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, guardianGroup?.name.toString())
+				
+				finish()
+			}
+		}
 	}
 	
 	companion object {
@@ -50,4 +61,8 @@ class GuardianGroupActivity : BaseActivity() {
 			context.startActivity(intent)
 		}
 	}
+}
+
+interface OnItemClickListener {
+	fun onItemClick(guardianGroup: GuardianGroup?)
 }

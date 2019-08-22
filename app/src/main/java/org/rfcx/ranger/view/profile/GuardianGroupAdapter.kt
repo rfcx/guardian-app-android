@@ -15,6 +15,8 @@ class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianG
 			notifyDataSetChanged()
 		}
 	
+	var mOnItemClickListener: OnItemClickListener? = null
+	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianGroupViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian_group, parent, false)
 		return GuardianGroupViewHolder(view)
@@ -28,8 +30,19 @@ class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianG
 	
 	inner class GuardianGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
-		fun bind(group: GuardianGroup) {
-			textView.text = group.name
+		
+		var currentGroup: GuardianGroup? = null
+		
+		init {
+			itemView.setOnClickListener {
+				mOnItemClickListener?.onItemClick(currentGroup)
+			}
+		}
+		
+		fun bind(group: GuardianGroup?) {
+			textView.text = group?.name
+			
+			this.currentGroup = group
 		}
 	}
 }
