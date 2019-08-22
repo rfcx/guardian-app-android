@@ -17,7 +17,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="visible"
-		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton" />
+		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton, poweredByTextView, rfcxLogoImageView" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellLogoImageView"
@@ -38,21 +38,21 @@
 		android:fontFamily="sans-serif"
 		android:gravity="center_horizontal"
 		android:lineSpacingExtra="8sp"
-		android:text="@string/protecting_rainforests_realtime_data"
+		android:text="@string/RFCx_Ranger"
 		android:textColor="@color/text_black"
 		android:textSize="24sp"
-		android:textStyle="normal"
+		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="@+id/guideline25"
-		tools:text="Protecting rainforests  with real-time data" />
+		tools:text="RFCx Ranger" />
 	
 	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/guideline40"
+		android:id="@+id/guideline35"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.40" />
+		app:layout_constraintGuide_percent="0.35" />
 	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginEmailEditText"
@@ -66,7 +66,7 @@
 		android:inputType="textEmailAddress"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/guideline40" />
+		app:layout_constraintTop_toBottomOf="@+id/guideline35" />
 	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginPasswordEditText"
@@ -120,7 +120,6 @@
 		android:text="@string/or"
 		android:textColor="@color/text_secondary"
 		android:textSize="13sp"
-		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/signInButton"
@@ -151,6 +150,36 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/orTextView" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline90"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.90" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/poweredByTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_padding_small"
+		android:fontFamily="sans-serif"
+		android:text="Powered by"
+		android:textColor="@color/text_secondary"
+		android:textSize="14sp"
+		app:layout_constraintBottom_toTopOf="@+id/guideline90"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/rfcxLogoImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="27dp"
+		android:layout_marginBottom="@dimen/margin_padding_large"
+		android:src="@drawable/rfcx_logo"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/guideline90" />
 	
 	
 	<ProgressBar
