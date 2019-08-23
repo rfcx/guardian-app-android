@@ -97,8 +97,6 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 	
 	// region @link{ SyncingViewCallback }
 	override fun onUploadCompleted() {
-		Log.d("StatusAdapter", "hide syncing view")
-		
 		updateSyncInfo(null) // for hide view syncing
 	}
 	// endregion
@@ -185,6 +183,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				is ReportItem -> {
 					val item = newItem as ReportItem
 					return oldItem.report.id == item.report.id
+							&& oldItem.report.syncState == item.report.syncState
 							&& oldItem.imageState.unsentCount == item.imageState.unsentCount
 							&& oldItem.imageState.count == item.imageState.count
 				}
