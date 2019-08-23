@@ -42,9 +42,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			menuStatus.performClick()
 		}
 		
-		//TODO remove this
-		Preferences.getInstance(this).putString(Preferences.SELECTED_GUARDIAN_GROUP, "derc")
-		
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 		bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 			override fun onSlide(bottomSheet: View, slideOffset: Float) {

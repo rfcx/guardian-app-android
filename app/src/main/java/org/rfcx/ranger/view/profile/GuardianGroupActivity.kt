@@ -46,10 +46,9 @@ class GuardianGroupActivity : BaseActivity() {
 		})
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(guardianGroup: GuardianGroup?) {
+			override fun onItemClick(guardianGroup: GuardianGroup) {
 				val preferenceHelper = Preferences.getInstance(this@GuardianGroupActivity)
-				preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, guardianGroup?.name.toString())
-				
+				preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, guardianGroup.shortname)
 				finish()
 			}
 		}
@@ -64,5 +63,5 @@ class GuardianGroupActivity : BaseActivity() {
 }
 
 interface OnItemClickListener {
-	fun onItemClick(guardianGroup: GuardianGroup?)
+	fun onItemClick(guardianGroup: GuardianGroup)
 }

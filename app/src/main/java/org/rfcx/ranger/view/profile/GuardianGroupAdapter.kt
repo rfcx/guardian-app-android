@@ -35,7 +35,7 @@ class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianG
 		
 		init {
 			itemView.setOnClickListener {
-				mOnItemClickListener?.onItemClick(currentGroup)
+				currentGroup?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 			}
 		}
 		
