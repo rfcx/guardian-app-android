@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_all_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.ReviewAlertCallback
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -31,13 +33,18 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 		super.onViewCreated(view, savedInstanceState)
 		setupAlertList()
 		
-		alertsViewModel.loading.observe(this, Observer {
-			loadingProgress.visibility = if (it) View.VISIBLE else View.INVISIBLE
-		})
-		
-		alertsViewModel.alerts.observe(this, Observer {
-			alertsAdapter.submitList(null)
-			alertsAdapter.submitList(ArrayList(it))
+		alertsViewModel.alerts.observe(this, Observer { it ->
+			
+			it.success({
+				alertsAdapter.submitList(null)
+				alertsAdapter.submitList(ArrayList(it))
+				loadingProgress.visibility = View.INVISIBLE
+			}, {
+				loadingProgress.visibility = View.INVISIBLE
+				context?.handleError(it)
+			}, {
+				loadingProgress.visibility = View.VISIBLE
+			})
 		})
 		
 		alertsViewModel.loadEvents()

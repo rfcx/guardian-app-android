@@ -8,23 +8,24 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.getGuardianGroup
+import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
 class AlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
                       private val eventDb: EventDb) : ViewModel() {
-	private val _loading = MutableLiveData<Boolean>()
-	val loading: LiveData<Boolean>
-		get() = _loading
 	
-	private var _alerts = MutableLiveData<List<EventItem>>()
-	val alerts: LiveData<List<EventItem>>
+	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
+	val alerts: LiveData<Result<List<EventItem>>>
 		get() = _alerts
+	
+	private var _alertsList: List<EventItem> = listOf()
 	
 	// data loading events
 	private var currentOffset: Int = 0
@@ -42,15 +43,15 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 	init {
 		currentOffset = 0
 		
-		// set default loading
-		_loading.value = false
 	}
 	
 	
 	fun loadEvents() {
-		if (_loading.value == true && isLastPage) {
+		/*if (isLastPage) {
 			return
-		}
+		}*/
+		
+		_alerts.value = Result.Loading
 		
 		// start load
 		val group = context.getGuardianGroup()
@@ -59,14 +60,11 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 			return
 		}
 		
-		_loading.value = true
-		
 		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				_loading.value = false
-				totalItemCount = t.total
 				
+				totalItemCount = t.total
 				val items = arrayListOf<EventItem>()
 				t.events?.forEach { event ->
 					val state = eventDb.getEventState(event.event_guid)
@@ -81,18 +79,20 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 						items.add(EventItem(event, EventItem.State.NONE))
 					}
 				}
-				_alerts.value = items
+				_alertsList = items
+				_alerts.value = Result.Success(items)
 			}
 			
 			override fun onError(e: Throwable) {
-				_loading.value = false
+				_alerts.value = e.getResultError()
+				
 			}
 		}, requestFactory)
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
 		val newItems = arrayListOf<EventItem>()
-		_alerts.value?.forEach {
+		_alertsList.forEach {
 			if (it.event.event_guid == eventGuid) {
 				// Update this item
 				it.state = when (reviewValue) {
@@ -103,7 +103,7 @@ class AlertsViewModel(private val context: Context, private val eventsUserCase: 
 			}
 			newItems.add(EventItem(it.event, it.state))
 		}
-		_alerts.value = newItems
+		_alerts.value = Result.Success(newItems)
 	}
 	
 	companion object {

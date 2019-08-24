@@ -16,6 +16,8 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	companion object {
 		fun startActivity(context: Context) {
 			val intent = Intent(context, LoginActivityNew::class.java)
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			context.startActivity(intent)
 		}
 	}
@@ -23,14 +25,14 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
-
+		
 		if (CredentialKeeper(this).hasValidCredentials()) {
 			MainActivityNew.startActivity(this@LoginActivityNew)
 			finish()
 		} else {
-		supportFragmentManager.beginTransaction()
-				.add(loginContainer.id, LoginFragment(),
-						"LoginFragment").commit()
+			supportFragmentManager.beginTransaction()
+					.add(loginContainer.id, LoginFragment(),
+							"LoginFragment").commit()
 		}
 	}
 	

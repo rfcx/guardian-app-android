@@ -157,4 +157,6 @@
 	<string name="tab_group_by_guardians">Group By Guardians</string>
 	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
+	
+	<string name="no_internet_connection">No internet, Please try again.</string>
 </resources>
