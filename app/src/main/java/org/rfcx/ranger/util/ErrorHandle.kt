@@ -1,7 +1,6 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.R

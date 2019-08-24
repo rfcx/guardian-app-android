@@ -12,6 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
 
 
@@ -37,8 +38,7 @@ class GuardianGroupActivity : BaseActivity() {
 				
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
-				// Error block
-				// TODO Handle error
+				this@GuardianGroupActivity.handleError(it)
 			}, {
 				// Loading block
 				loadingProgress.visibility = View.VISIBLE

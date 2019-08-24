@@ -17,9 +17,11 @@ import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.util.getResultError
 
 class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase,
                                  private val reviewEventUseCase: ReviewEventUseCase) : ViewModel() {
@@ -161,7 +163,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 				}
 				
 				override fun onError(e: Throwable) {
-					_classifiedCation.value = Result.Error(e)
+					_classifiedCation.value = e.getResultError()
 					e.printStackTrace()
 				}
 			}, ClassificationBody(audioGuids = it.audioGUID, value = it.value, annotatorGuid = it.aiGuid))
@@ -181,7 +183,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 				
 				override fun onError(e: Throwable) {
 					e.printStackTrace()
-					_reviewEvent.value = Result.Error(e)
+					_reviewEvent.value = e.getResultError()
 				}
 				
 			}, requests)
