@@ -3,18 +3,16 @@ package org.rfcx.ranger.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.local.WeeklySummaryData
-import org.rfcx.ranger.util.CloudMessaging
-import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.login.LoginActivityNew
@@ -26,8 +24,11 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener {
-	private val weeklySummaryData: WeeklySummaryData by inject { parametersOf() }
+	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
+	
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+	private val locationPermissions by lazy { LocationPermissions(this) }
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main_new)
@@ -56,9 +57,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			
 		})
 		
-		Log.d("WeeklySummaryData", "${weeklySummaryData.getReportSubmitCount()}")
-		Log.d("WeeklySummaryData", "${weeklySummaryData.getReviewCount()}")
-		Log.d("WeeklySummaryData", "${weeklySummaryData.getOnDutyTimeMinute()}")
+		observeLocationTracking()
 	}
 	
 	override fun onBackPressed() {
@@ -68,6 +67,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		} else {
 			return super.onBackPressed()
 		}
+	}
+	
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+		locationPermissions.handleRequestResult(requestCode, grantResults)
+	}
+	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		locationPermissions.handleActivityResult(requestCode, resultCode)
 	}
 	
 	private fun setupBottomMenu() {
@@ -163,6 +171,38 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		Preferences.getInstance(this@MainActivityNew).clear()
 		LoginActivityNew.startActivity(this@MainActivityNew)
 		finish()
+	}
+	
+	private fun observeLocationTracking() {
+		locationTrackingViewModel.requireLocationTrackingState.observe(this, Observer {
+			if (it) {
+				enableLocationTracking()
+			} else {
+				disableLocationTracking()
+			}
+		})
+	}
+	
+	private fun enableLocationTracking() {
+		if (isOnAirplaneMode()) {
+			AlertDialog.Builder(this)
+					.setTitle(R.string.in_air_plane_mode)
+					.setMessage(R.string.pls_off_air_plane_mode)
+					.setPositiveButton(R.string.common_ok, null)
+					.show()
+			LocationTracking.set(this, false)
+			locationTrackingViewModel.trackingStateChange()
+		} else {
+			locationPermissions.check { hasPermission: Boolean ->
+				LocationTracking.set(this, hasPermission)
+				locationTrackingViewModel.trackingStateChange()
+			}
+		}
+	}
+	
+	private fun disableLocationTracking() {
+		LocationTracking.set(this, false)
+		locationTrackingViewModel.trackingStateChange()
 	}
 	
 	companion object {

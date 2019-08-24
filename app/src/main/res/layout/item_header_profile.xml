@@ -4,54 +4,42 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 	
-	<data>
-		
-		<variable
-			name="profile"
-			type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ProfileItem" />
-		
-		<variable
-			name="onTrackingChange"
-			type="android.widget.CompoundButton.OnCheckedChangeListener" />
-		
-		<variable
-			name="view"
-			type="android.view.View" />
-	</data>
-	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingBottom="@dimen/margin_padding_small">
 		
-		<TextView
-			android:id="@+id/userNameTextView"
-			style="@style/Base.TextAppearance.AppCompat.Title"
-			android:layout_width="wrap_content"
+		<LinearLayout
+			android:id="@+id/layoutLocation"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:layout_marginTop="@dimen/margin_padding_normal"
-			android:text="@{String.format(@string/profile_welcome, profile.profileName)}"
-			android:textColor="@color/text_primary"
+			android:layout_marginTop="@dimen/margin_padding_xsmall"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:layout_marginBottom="@dimen/margin_padding_xsmall"
+			android:gravity="center_vertical"
+			app:layout_constraintEnd_toStartOf="@+id/statusTextView"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			tools:text="Hi, Ant!" />
+			app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+			tools:ignore="UseCompoundDrawables">
+			
+			<ImageView
+				android:id="@+id/locationImageView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:contentDescription="@string/app_name"
+				android:src="@drawable/ic_location_24dp_grey" />
+			
+			<TextView
+				android:id="@+id/locationTextView"
+				style="@style/TextAppearance.AppCompat.Body1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@{profile.location}"
+				android:textColor="@color/text_secondary"
+				tools:text="Tembe" />
 		
-		<androidx.appcompat.widget.SwitchCompat
-			android:id="@+id/locationTrackingSwitch"
-			style="@style/SwitchCompatStyle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:layout_marginBottom="8dp"
-			android:checked="@{profile.locationTracking}"
-			android:onCheckedChanged="@{onTrackingChange}"
-			android:textOff="@string/location_tracking_off_label"
-			android:textOn="@string/location_tracking_on_label"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:showText="false"
-			tools:checked="false" />
+		</LinearLayout>
 		
 		<TextView
 			android:id="@+id/statusTextView"
@@ -67,35 +55,61 @@
 			app:layout_constraintTop_toTopOf="@+id/layoutLocation"
 			tools:text="@string/profile_onduty" />
 		
-		<!-- TODO: update this below layout-->
-		<LinearLayout
-			android:id="@+id/layoutLocation"
-			android:layout_width="0dp"
+		<TextView
+			android:id="@+id/userNameTextView"
+			style="@style/Base.TextAppearance.AppCompat.Title"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:layout_marginTop="@dimen/margin_padding_xsmall"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_xsmall"
-			android:gravity="center_vertical"
-			app:layout_constraintEnd_toStartOf="@+id/statusTextView"
+			android:layout_marginTop="@dimen/margin_padding_normal"
+			android:text="@{String.format(@string/profile_welcome, profile.profileName)}"
+			android:textColor="@color/text_primary"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/userNameTextView">
-			
-			<ImageView
-				android:id="@+id/locationImageView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_location_24dp_grey" />
-			
-			<TextView
-				android:id="@+id/locationTextView"
-				style="@style/TextAppearance.AppCompat.Body1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@{profile.location}"
-				android:textColor="@color/text_secondary"
-				tools:text="Tembe" />
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Hi, Ant!" />
 		
-		</LinearLayout>
+		<!-- TODO: update this below layout-->
+		<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/locationTrackingSwitch"
+			style="@style/SwitchCompatStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:layout_marginBottom="8dp"
+			android:checked="@{profile.locationTracking}"
+			android:clickable="false"
+			android:focusable="false"
+			android:textOff="@string/location_tracking_off_label"
+			android:textOn="@string/location_tracking_on_label"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:showText="false"
+			tools:checked="false" />
+		
+		<View
+			android:id="@+id/viewLocationTrackingSwitchClick"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:onClick="@{onTrackLocationSwitchClick}"
+			app:layout_constraintBottom_toBottomOf="@+id/locationTrackingSwitch"
+			app:layout_constraintEnd_toEndOf="@+id/locationTrackingSwitch"
+			app:layout_constraintStart_toStartOf="@+id/locationTrackingSwitch"
+			app:layout_constraintTop_toTopOf="@+id/locationTrackingSwitch" />
+	
 	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+	<data>
+		
+		<variable
+			name="profile"
+			type="org.rfcx.ranger.view.status.adapter.StatusAdapter.ProfileItem" />
+		
+		<variable
+			name="onTrackLocationSwitchClick"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="view"
+			type="android.view.View" />
+	</data>
 </layout>

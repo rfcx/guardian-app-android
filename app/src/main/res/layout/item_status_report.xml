@@ -23,11 +23,11 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:foreground="?attr/selectableItemBackground"
 		android:onClick="@{onClickedItem}"
 		android:paddingStart="@dimen/margin_padding_normal"
 		android:paddingTop="@dimen/margin_padding_small"
 		android:paddingEnd="@dimen/margin_padding_normal"
-		android:foreground="?attr/selectableItemBackground"
 		android:paddingBottom="@dimen/margin_padding_small">
 		
 		<androidx.appcompat.widget.AppCompatImageView
@@ -56,10 +56,10 @@
 			android:id="@+id/tvReportedAt"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:text="@{reportItem.getTimeAgo(context)}"
 			android:textSize="@dimen/text_xsmall"
 			app:layout_constraintBottom_toBottomOf="@+id/tvReportType"
 			app:layout_constraintEnd_toEndOf="parent"
-			android:text="@{reportItem.getTimeAgo(context)}"
 			app:layout_constraintTop_toTopOf="@+id/tvReportType"
 			tools:text="2h" />
 		

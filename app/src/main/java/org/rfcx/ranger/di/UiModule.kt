@@ -3,6 +3,7 @@ package org.rfcx.ranger.di
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
@@ -15,6 +16,10 @@ import org.rfcx.ranger.view.report.ReportDetailViewModel
 import org.rfcx.ranger.view.status.StatusViewModel
 
 object UiModule {
+	
+	val mainModule = module {
+		viewModel { LocationTrackingViewModel(get()) }
+	}
 	
 	val mapModule = module {
 		viewModel { MapViewModel(get(), get()) }
@@ -30,7 +35,7 @@ object UiModule {
 		viewModel { AlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 	}
-
+	
 	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get()) }
 		viewModel { GuardianGroupViewModel(get()) }

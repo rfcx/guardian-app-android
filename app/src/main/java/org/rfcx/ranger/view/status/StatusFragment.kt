@@ -8,11 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_status.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.view.MainActivityNew
+import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
@@ -21,6 +22,8 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
+	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
+	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
 				context?.getString(R.string.status_report_title))
@@ -62,18 +65,19 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		statusViewModel.locationTracking.observe(this, Observer {
 		
 		})
+		
+		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
+			statusViewModel.updateTracking()
+		})
 	}
 	
 	override fun enableTracking(enable: Boolean) {
 		if (enable) {
 			// on location tracking
-			(activity as MainActivityNew).enableLocationTracking {
-				statusViewModel.updateTracking()
-			}
+			locationTrackingViewModel.requireEnableLocationTracking()
 		} else {
 			// off location tracking
-			(activity as MainActivityNew).disableLocationTracking()
-			statusViewModel.updateTracking()
+			locationTrackingViewModel.requireDisableLocationTracking()
 		}
 	}
 	

@@ -8,15 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_profile.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
-import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class ProfileFragment : BaseFragment() {
 	
 	private val profileViewModel: ProfileViewModel by viewModel()
+	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	
 	override fun onAttach(context: Context) {
@@ -57,20 +59,19 @@ class ProfileFragment : BaseFragment() {
 		profileViewModel.guardianGroup.observe(this, Observer {
 			siteNameTextView.text = it
 		})
+		
+		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
+			profileViewModel.onTracingStatusChange()
+		})
 	}
 	
 	private fun setEventClick() {
 		locationTrackingSwitchLayout.setOnClickListener {
 			if (locationTrackingSwitch.isChecked) {
 				// off location tracking
-				(activity as MainActivityNew).disableLocationTracking()
-				profileViewModel.onTracingStatusChange()
-				
+				locationTrackingViewModel.requireDisableLocationTracking()
 			} else {
-				// on location tracking
-				(activity as MainActivityNew).enableLocationTracking {
-					profileViewModel.onTracingStatusChange()
-				}
+				locationTrackingViewModel.requireEnableLocationTracking()
 			}
 		}
 		
