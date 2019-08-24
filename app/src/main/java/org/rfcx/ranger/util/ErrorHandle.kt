@@ -1,7 +1,9 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.ErrorResponse
@@ -24,7 +26,12 @@ fun HttpException?.getErrorFormApi(): Exception {
 			return ApiException(this?.code(), "error and missing error body")
 		}
 		
+		val url = this.response().raw().request().url().toString()
 		val errString = this.response().errorBody()?.string()
+		
+		Crashlytics.logException(Exception("API failed from $url,code ${this.code()} " +
+				"===> response $errString"))
+		
 		return try {
 			val error: ErrorResponse = GsonProvider.getInstance().gson.fromJson(
 					errString, ErrorResponse::class.java)
