@@ -1,20 +1,31 @@
 package org.rfcx.ranger.view.map
 
+import android.Manifest
+import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.tasks.Task
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.service.LocationTrackerService
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -25,6 +36,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInPolyline: Polyline? = null
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
+	
+	private var onCompletionCallback: ((Boolean) -> Unit)? = null
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_map, container, false)
@@ -55,6 +68,64 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			displayCheckIn(it)
 			map.setOnMapClickListener {
 				(activity as MainActivityEventListener).hideBottomSheet()
+			}
+		}
+		
+		val permissionState = context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) }
+		if (permissionState == PackageManager.PERMISSION_GRANTED) {
+			Log.d("permissionState", "true")
+			check { isAllowed: Boolean ->
+				if (isAllowed) {
+					Log.d("check", "true")
+					map?.isMyLocationEnabled = true
+				} else {
+					Log.d("check", "false")
+					map?.isMyLocationEnabled = false
+				}
+			}
+		} else {
+			Log.d("permissionState", "false")
+		}
+	}
+	
+	private fun allowed(): Boolean {
+		val permissionState = context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) }
+		return permissionState == PackageManager.PERMISSION_GRANTED
+	}
+	
+	private fun check(onCompletionCallback: (Boolean) -> Unit) {
+		this.onCompletionCallback = onCompletionCallback
+		if (!allowed()) {
+			Log.d("allowed", "false")
+		} else {
+			verifySettings()
+		}
+	}
+	
+	private fun verifySettings() {
+		val builder = LocationSettingsRequest.Builder().addLocationRequest(LocationTrackerService.locationRequest)
+		context?.let {
+			val client: SettingsClient = LocationServices.getSettingsClient(it)
+			val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+			
+			task.addOnSuccessListener {
+				onCompletionCallback?.invoke(true)
+			}
+			
+			task.addOnFailureListener { exception ->
+				if (exception is ResolvableApiException) {
+					// Location settings are not satisfied, but this can be fixed by showing the user a dialog
+					try {
+						// Show the dialog and check the result in onActivityResult()
+//					exception.startResolutionForResult(activity, MapFragment.REQUEST_CHECK_LOCATION_SETTINGS)
+					} catch (sendEx: IntentSender.SendIntentException) {
+						// Ignore the error.
+						sendEx.printStackTrace()
+						onCompletionCallback?.invoke(false)
+					}
+				} else {
+					onCompletionCallback?.invoke(false)
+				}
 			}
 		}
 	}
