@@ -20,9 +20,9 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_normal"
-			android:text="Example"
 			android:textColor="@color/text_primary"
-			android:textSize="@dimen/text_xlarge" />
+			android:textSize="@dimen/text_xlarge"
+			tools:text="Example" />
 		
 		<LinearLayout
 			android:id="@+id/userLocationLayout"
@@ -32,12 +32,14 @@
 			android:layout_marginTop="@dimen/margin_padding_xsmall"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_xsmall"
-			android:gravity="center_vertical">
+			android:gravity="center_vertical"
+			tools:ignore="UseCompoundDrawables">
 			
 			<ImageView
 				android:id="@+id/userLocationImageView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:contentDescription="@string/app_name"
 				android:src="@drawable/ic_location_24dp_grey" />
 			
 			<TextView
@@ -45,8 +47,9 @@
 				style="@style/TextAppearance.AppCompat.Body1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Tembe"
-				android:textColor="@color/text_secondary" />
+				android:textColor="@color/text_secondary"
+				tools:text="Tembe" />
+		
 		</LinearLayout>
 		
 		<TextView
@@ -58,7 +61,7 @@
 			android:layout_marginTop="@dimen/margin_padding_xlarge"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_small"
-			android:text="Location"
+			android:text="@string/profile_location_label"
 			android:textAllCaps="true"
 			android:textColor="@color/text_primary"
 			android:textSize="@dimen/text_small" />
@@ -78,7 +81,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:text="Location tracking"
+				android:text="@string/location_tracking_label"
 				android:textSize="@dimen/text_small" />
 			
 			<FrameLayout
@@ -112,7 +115,7 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_small"
-			android:text="Notifications"
+			android:text="@string/notifications"
 			android:textAllCaps="true"
 			android:textColor="@color/text_primary"
 			android:textSize="@dimen/text_small" />
@@ -131,7 +134,7 @@
 				style="@style/Base.TextAppearance.AppCompat.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Receive notifications"
+				android:text="@string/profile_receive_noti_label"
 				android:textSize="@dimen/text_small" />
 			
 			<androidx.appcompat.widget.SwitchCompat
@@ -159,7 +162,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:text="Guardian group"
+				android:text="@string/guardian_group_label"
 				android:textSize="@dimen/text_small" />
 			
 			<TextView
@@ -170,8 +173,9 @@
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
 				android:layout_marginBottom="@dimen/margin_padding_normal"
-				android:text="Osa Conservation"
-				android:textColor="@color/text_secondary" />
+				android:textColor="@color/text_secondary"
+				tools:text="Osa Conservation" />
+		
 		</LinearLayout>
 		
 		<TextView
@@ -182,7 +186,7 @@
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_small"
 			android:paddingBottom="@dimen/margin_padding_small"
-			android:text="Sign out"
+			android:text="@string/profile_sign_out_label"
 			android:textSize="@dimen/text_small" />
 		
 		<View
@@ -201,7 +205,7 @@
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_normal"
-			android:text="Additional"
+			android:text="@string/profile_aditional_label"
 			android:textAllCaps="true"
 			android:textColor="@color/text_primary"
 			android:textSize="@dimen/text_small" />
@@ -214,7 +218,7 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:text="App version"
+			android:text="@string/profile_app_version_label"
 			android:textColor="@color/text_secondary" />
 		
 		<TextView
@@ -225,8 +229,8 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_normal"
-			android:text="2.0.0(135)"
-			android:textColor="@color/text_secondary" />
+			android:textColor="@color/text_secondary"
+			tools:text="2.0.0(135)" />
 		
 		<TextView
 			android:id="@+id/feedbackTextView"
@@ -237,7 +241,7 @@
 			android:paddingTop="@dimen/margin_padding_small"
 			android:paddingEnd="@dimen/margin_padding_small"
 			android:paddingBottom="@dimen/margin_padding_normal"
-			android:text="Feedback"
+			android:text="@string/profile_feedback_label"
 			android:textSize="@dimen/text_small" />
 		
 		<TextView
@@ -249,7 +253,7 @@
 			android:paddingTop="@dimen/margin_padding_small"
 			android:paddingEnd="@dimen/margin_padding_small"
 			android:paddingBottom="@dimen/margin_padding_small"
-			android:text="Rate the app"
+			android:text="@string/profile_rate_app_label"
 			android:textSize="@dimen/text_small" />
 	</LinearLayout>
 

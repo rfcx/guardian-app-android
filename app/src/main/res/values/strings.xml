@@ -10,10 +10,10 @@
 	<string name="incorrect_username_password">Incorrect username or password</string>
 	<string name="an_error_occurred">Service unavailable</string>
 	<string name="or">OR</string>
-
-    <!--new Login Activite-->
-    <string name="login_sign_in_button_label" translatable="false">Sign in</string>
-    <string name="invitation_submit_button_label" translatable="false">Submit</string>
+	
+	<!--new Login Activite-->
+	<string name="login_sign_in_button_label" translatable="false">Sign in</string>
+	<string name="invitation_submit_button_label" translatable="false">Submit</string>
 	
 	<!-- common error -->
 	<string name="error_common">An error occurred. Please try again.</string>
@@ -120,19 +120,19 @@
 	
 	<string name="common_no">No</string>
 	<string name="common_yes">Yes</string>
-
+	
 	<!-- Status -->
 	<string name="status_stat_title">Your weekly status</string>
 	<string name="status_report_title">Report history</string>
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>
-	<string name="format_location" >%s, %s</string>
-	<string name="format_image_synced" >%s image</string>
-	<string name="format_image_unsync" >%s image (%s not yet synced)</string>
-	<string name="format_images_synced" >%s images</string>
+	<string name="format_location">%s, %s</string>
+	<string name="format_image_synced">%s image</string>
+	<string name="format_image_unsync">%s image (%s not yet synced)</string>
+	<string name="format_images_synced">%s images</string>
 	<string name="format_images_unsync">%s images (%s not yet synced)</string>
-
+	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>
 	<string name="button_preview">Preview</string>
@@ -155,7 +155,7 @@
 	<string name="button_sure_default">OK</string>
 	<string name="button_sure">OK(%1$d)</string>
 	<!-- Override string res from matisse Image picker library -->
-
+	
 	<!-- Alerts -->
 	<string name="tab_group_by_guardians">Group By Guardians</string>
 	<string name="tab_all_alerts">All Alerts</string>
@@ -170,4 +170,13 @@
 	<string name="trespasser">trespasser</string>
 	<string name="other">other</string>
 	
+	<!--Profile -->
+	<string name="profile_location_label">Location</string>
+	<string name="profile_receive_noti_label">Receive notifications</string>
+	<string name="profile_sign_out_label">Sign out</string>
+	<string name="profile_aditional_label">Additional</string>
+	<string name="profile_app_version_label">App version</string>
+	<string name="profile_feedback_label">Feedback</string>
+	<string name="profile_rate_app_label">Rate the app</string>
+
 </resources>
