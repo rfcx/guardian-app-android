@@ -1,8 +1,14 @@
 package org.rfcx.ranger.view.map
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,8 +42,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInPolyline: Polyline? = null
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
+	private var googleMap: GoogleMap? = null
 	
 	private var onCompletionCallback: ((Boolean) -> Unit)? = null
+	
+	private var locationManager: LocationManager? = null
+	private var lastLocation: Location? = null
+	
+	private val locationListener = object : android.location.LocationListener {
+		override fun onLocationChanged(p0: Location?) {
+			p0?.let {
+				moveCameraToCurrentLocation(it)
+			}
+		}
+		
+		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
+		override fun onProviderEnabled(p0: String?) {}
+		override fun onProviderDisabled(p0: String?) {}
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_map, container, false)
@@ -56,16 +78,25 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		super.onDestroyView()
 	}
 	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
+			onCompletionCallback?.invoke(resultCode == Activity.RESULT_OK)
+		}
+	}
+	
 	private fun setupMap() {
 		val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
 		map?.getMapAsync(this)
 	}
 	
 	override fun onMapReady(map: GoogleMap?) {
+		googleMap = map
 		map?.let {
 			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
 			displayReport(it)
 			displayCheckIn(it)
+			getLocation()
 			map.setOnMapClickListener {
 				(activity as MainActivityEventListener).hideBottomSheet()
 			}
@@ -75,17 +106,35 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		if (permissionState == PackageManager.PERMISSION_GRANTED) {
 			Log.d("permissionState", "true")
 			check { isAllowed: Boolean ->
-				if (isAllowed) {
-					Log.d("check", "true")
-					map?.isMyLocationEnabled = true
-				} else {
-					Log.d("check", "false")
-					map?.isMyLocationEnabled = false
-				}
+				map?.isMyLocationEnabled = isAllowed
 			}
 		} else {
 			Log.d("permissionState", "false")
 		}
+	}
+	
+	@SuppressLint("MissingPermission")
+	private fun getLocation() {
+		locationManager?.removeUpdates(locationListener)
+		locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		try {
+//			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
+//			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
+			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+			lastLocation?.let { moveCameraToCurrentLocation(it) }
+		} catch (ex: SecurityException) {
+			ex.printStackTrace()
+		} catch (ex: IllegalArgumentException) {
+			ex.printStackTrace()
+		}
+	}
+	
+	private fun moveCameraToCurrentLocation(location: Location) {
+		lastLocation = location
+		googleMap?.clear()
+		val latLng = LatLng(location.latitude, location.longitude)
+		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+				latLng, 15f))
 	}
 	
 	private fun allowed(): Boolean {
@@ -95,9 +144,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private fun check(onCompletionCallback: (Boolean) -> Unit) {
 		this.onCompletionCallback = onCompletionCallback
-		if (!allowed()) {
-			Log.d("allowed", "false")
-		} else {
+		if (allowed()) {
 			verifySettings()
 		}
 	}
@@ -117,7 +164,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 					// Location settings are not satisfied, but this can be fixed by showing the user a dialog
 					try {
 						// Show the dialog and check the result in onActivityResult()
-//					exception.startResolutionForResult(activity, MapFragment.REQUEST_CHECK_LOCATION_SETTINGS)
+						this.startIntentSenderForResult(exception.resolution.intentSender, REQUEST_CHECK_LOCATION_SETTINGS, null, 0, 0, 0, null)
 					} catch (sendEx: IntentSender.SendIntentException) {
 						// Ignore the error.
 						sendEx.printStackTrace()
@@ -164,6 +211,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				marker.tag = report
 				marker.zIndex = 1f
 				retortMarkers.add(marker)
+			}
+			
+			if (reports.isNotEmpty()) {
+				val lastCheckIn = reports.last()
+				moveMapTo(map, LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
 	}
@@ -219,6 +271,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			return MapFragment()
 		}
 		
+		const val REQUEST_CHECK_LOCATION_SETTINGS = 36
 		const val tag = "MapFragment"
 	}
 }
