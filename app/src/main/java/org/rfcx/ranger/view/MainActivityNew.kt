@@ -25,6 +25,7 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
+	private val mainViewModel: MainActivityViewModel by viewModel()
 	
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
@@ -57,6 +58,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			
 		})
 		
+		observeMian()
 		observeLocationTracking()
 	}
 	
@@ -180,6 +182,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			} else {
 				disableLocationTracking()
 			}
+		})
+	}
+	
+	private fun observeMian() {
+		mainViewModel.isRequireToLogin.observe(this, Observer {
+			if (it) logout()
+		})
+		
+		mainViewModel.isLocationTrackingOn.observe(this, Observer {
+			if (it) enableLocationTracking()
 		})
 	}
 	

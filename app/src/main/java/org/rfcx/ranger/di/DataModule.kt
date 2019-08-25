@@ -31,6 +31,7 @@ import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
 
 object DataModule {
@@ -74,5 +75,6 @@ object DataModule {
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get()) }
 		factory { Preferences.getInstance(androidContext()) }
+		single { CredentialKeeper(androidContext()) }
 	}
 }

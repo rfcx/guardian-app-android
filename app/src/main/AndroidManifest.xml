@@ -36,9 +36,10 @@
 		
 		<activity
 			android:name=".view.MainActivityNew"
+			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme">
-
+		
 		</activity>
 		
 		<activity android:name=".view.login.LoginActivityNew">

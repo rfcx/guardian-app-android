@@ -4,6 +4,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.ranger.view.LocationTrackingViewModel
+import org.rfcx.ranger.view.MainActivityViewModel
 import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
@@ -19,6 +20,7 @@ object UiModule {
 	
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
+		viewModel {MainActivityViewModel(get(),get())}
 	}
 	
 	val mapModule = module {
