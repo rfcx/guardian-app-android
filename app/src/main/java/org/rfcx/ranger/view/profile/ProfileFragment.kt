@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -40,8 +41,17 @@ class ProfileFragment : BaseFragment() {
 			locationTrackingSwitch.isChecked = it
 		})
 		
-		profileViewModel.notificationReceiving.observe(this, Observer {
+		profileViewModel.notificationReceiving.observe(this, Observer { it ->
 			notificationReceiveSwitch.isChecked = it
+			if (it) {
+				context?.let {
+					CloudMessaging.subscribeIfRequired(it)
+				}
+			} else {
+				context?.let {
+					CloudMessaging.unsubscribe(it)
+				}
+			}
 		})
 		
 		profileViewModel.userSite.observe(this, Observer {

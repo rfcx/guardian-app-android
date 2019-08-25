@@ -11,7 +11,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.Preferences.Companion.SELECTED_GUARDIAN_GROUP
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
 
@@ -48,7 +50,11 @@ class GuardianGroupActivity : BaseActivity() {
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
 				val preferenceHelper = Preferences.getInstance(this@GuardianGroupActivity)
-				preferenceHelper.putString(Preferences.SELECTED_GUARDIAN_GROUP, guardianGroup.shortname)
+				if (preferenceHelper.getString(SELECTED_GUARDIAN_GROUP) != guardianGroup.shortname) {
+					CloudMessaging.unsubscribe(this@GuardianGroupActivity)
+					preferenceHelper.putString(SELECTED_GUARDIAN_GROUP, guardianGroup.shortname)
+					CloudMessaging.subscribeIfRequired(this@GuardianGroupActivity)
+				}
 				finish()
 			}
 		}
