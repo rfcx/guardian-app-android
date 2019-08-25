@@ -118,4 +118,12 @@
     <string name="button_sure_default">ตกลง</string>
     <string name="button_sure">ตกลง(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
+    
+    <!--Event value-->
+    <string name="chainsaw">เลื่อย</string>
+    <string name="gunshot">กระสุนปืน</string>
+    <string name="vehicle">ยานพาหนะ</string>
+    <string name="trespasser">ผู้บุกรุก</string>
+    <string name="other">อื่นๆ</string>
+    
 </resources>

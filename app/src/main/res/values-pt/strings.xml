@@ -118,4 +118,12 @@
     <string name="button_sure_default">Está bem</string>
     <string name="button_sure">Está bem(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
+    
+    <!--Event value-->
+    <string name="chainsaw">motosserra</string>
+    <string name="gunshot">bala</string>
+    <string name="vehicle">veículo</string>
+    <string name="trespasser">invasor</string>
+    <string name="other">outro</string>
+    
 </resources>

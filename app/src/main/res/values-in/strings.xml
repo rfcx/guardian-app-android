@@ -118,4 +118,12 @@
     <string name="button_sure_default">Oke</string>
     <string name="button_sure">Oke(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
+    
+    <!--Event value-->
+    <string name="chainsaw">gergaji</string>
+    <string name="gunshot">tembakan</string>
+    <string name="vehicle">kendaraan</string>
+    <string name="trespasser">penyusup</string>
+    <string name="other">lainnya</string>
+    
 </resources>

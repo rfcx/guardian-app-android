@@ -162,4 +162,12 @@
 	<string name="yesterday">Yesterday</string>
 	
 	<string name="no_internet_connection">No internet, Please try again.</string>
+	
+	<!--Event value-->
+	<string name="chainsaw">chainsaw</string>
+	<string name="gunshot">gunshot</string>
+	<string name="vehicle">vehicle</string>
+	<string name="trespasser">trespasser</string>
+	<string name="other">other</string>
+	
 </resources>
