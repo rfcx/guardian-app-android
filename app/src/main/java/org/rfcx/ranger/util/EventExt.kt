@@ -39,7 +39,7 @@ fun String.toEventIcon(): Int {
 	}
 }
 
-fun Event.timeAgoDisplay(context: Context): String {
+fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
 	beginsAt ?: return ""
 	
 	val eventDate = DateHelper.getDateTime(beginsAt)

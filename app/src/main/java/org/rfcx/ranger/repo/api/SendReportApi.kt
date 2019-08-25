@@ -68,7 +68,7 @@ class SendReportApi {
 		return ApiManager.getInstance().apiRest.sendReport(authUser =  authUser, value = createPartFromString(report.value),
 				site = createPartFromString(report.site), reportedAt = createPartFromString(report.reportedAt),
 				latitude = createPartFromString(report.latitude.toString()), longitude = createPartFromString(report.longitude.toString()),
-				ageEstimate = createPartFromString(report.ageEstimate.toString()), audioFile = audioFileOrNull)
+				ageEstimate = createPartFromString(report.ageEstimateRaw.toString()), audioFile = audioFileOrNull)
 	}
 
 	private fun createPartFromString(descriptionString: String): RequestBody {

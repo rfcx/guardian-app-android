@@ -23,7 +23,7 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 		report = reportDb.getReportAsync(id)
 		report?.addChangeListener<Report> { t ->
 			reportLive.value = Report(t.id, t.guid, t.value, t.site, t.reportedAt, t.latitude, t.longitude,
-					t.ageEstimate, t.distanceEstimate, t.audioLocation, t.syncState)
+					t.ageEstimateRaw, t.audioLocation, t.syncState)
 		} ?: run {
 			reportLive.value = null
 		}

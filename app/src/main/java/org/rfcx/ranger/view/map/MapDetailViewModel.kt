@@ -24,8 +24,9 @@ class MapDetailViewModel(private val reportDb: ReportDb, private val reportImage
 	fun getReportDetail(reportId: Int): LiveData<Report?> {
 		_report = reportDb.getReportAsync(reportId)
 		_report?.addChangeListener<Report> { t ->
+			// TODO consider using t.realm.copyFromRealm(t) to detach the object
 			_reportLive.value = Report(t.id, t.guid, t.value, t.site, t.reportedAt, t.latitude, t.longitude,
-					t.ageEstimate, t.distanceEstimate, t.audioLocation, t.syncState)
+					t.ageEstimateRaw, t.audioLocation, t.syncState)
 		} ?: run {
 			_reportLive.value = null
 		}

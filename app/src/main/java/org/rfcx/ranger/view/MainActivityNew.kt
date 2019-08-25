@@ -36,7 +36,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		setupBottomMenu()
 		
 		newReportFabButton.setOnClickListener {
-			ReportActivity.startIntent(this, null)
+			ReportActivity.startIntent(this)
 		}
 		
 		if (savedInstanceState == null) {

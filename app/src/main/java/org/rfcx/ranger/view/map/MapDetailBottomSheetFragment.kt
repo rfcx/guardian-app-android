@@ -13,7 +13,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
-import org.rfcx.ranger.view.report.ReportActivity
+import org.rfcx.ranger.view.report.ReportDetailActivity
 
 class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
@@ -61,7 +61,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 			reportTimePastedTextView.text = context.getPastedTimeFormat(reportPasted)
 			
 			seeDetailTextView.setOnClickListener {
-				ReportActivity.startIntent(context, reportId = report.id)
+				ReportDetailActivity.startIntent(context, reportId = report.id)
 			}
 		}
 	}
