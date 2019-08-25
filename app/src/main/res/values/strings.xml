@@ -85,8 +85,6 @@
 	<string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
 	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
 	
-	<!-- Symbols -->
-	<string name="syncedSymbol">●</string>
 	<string name="menu_camera">Camera</string>
 	<string name="menu_gallery">Gallery</string>
 	

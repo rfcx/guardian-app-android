@@ -82,7 +82,6 @@
     <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
    
     <!-- Symbols -->
-    <string name="syncedSymbol">●</string>
     <string name="menu_camera">Câmera</string>
     <string name="menu_gallery">Galeria</string>
     

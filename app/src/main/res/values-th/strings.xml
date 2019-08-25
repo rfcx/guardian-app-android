@@ -82,7 +82,6 @@
     <string name="can_not_play_audio">ไม่สามารถเล่นเสียงได้โปรดลองอีกครั้งในภายหลัง</string>
     
     <!-- Symbols -->
-    <string name="syncedSymbol">●</string>
     <string name="menu_camera">กล้อง</string>
     <string name="menu_gallery">แกลลอรี่</string>
     

@@ -82,7 +82,6 @@
     <string name="can_not_play_audio">Tidak dapat memutar audio, silakan coba lagi nanti.</string>
     
     <!-- Symbols -->
-    <string name="syncedSymbol">●</string>
     <string name="menu_camera">Kamera</string>
     <string name="menu_gallery">Galeri</string>
     
