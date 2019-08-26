@@ -39,6 +39,9 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		super.onViewCreated(view, savedInstanceState)
 		viewDataBinding.statusViewModel = statusViewModel // set view model
 		
+		// setup onClick
+		setupOnClick()
+		
 		// setup recycler view
 		statusAdapter.setListener(this)
 		rvStatus?.apply {
@@ -69,6 +72,15 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			statusViewModel.updateTracking()
 		})
+	}
+	
+	private fun setupOnClick() {
+		viewDataBinding.onLater = View.OnClickListener {
+			viewDataBinding.layoutSetting.visibility = View.GONE
+		}
+		viewDataBinding.onSetGuardianGroup = View.OnClickListener {
+			//TODO: Start Guardian Group List Activity
+		}
 	}
 	
 	override fun enableTracking(enable: Boolean) {

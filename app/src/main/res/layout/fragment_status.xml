@@ -1,27 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 	
 	<data>
+		<variable
+			name="onSetGuardianGroup"
+			type="android.view.View.OnClickListener"/>
+		
+		<variable
+			name="onLater"
+			type="android.view.View.OnClickListener"/>
+		
+		<variable
+			name="view"
+			type="android.view.View"/>
 		
 		<variable
 			name="statusViewModel"
-			type="org.rfcx.ranger.view.status.StatusViewModel" />
+			type="org.rfcx.ranger.view.status.StatusViewModel"/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/layoutSetting"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/margin_padding_normal"
+			android:visibility="@{statusViewModel.hasGuardianGroup ? view.GONE : view.VISIBLE}"
+			app:layout_constraintTop_toTopOf="parent">
+			
+			<TextView
+				android:id="@+id/tvSettingTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:textColor="@color/text_primary"
+				android:textSize="@dimen/text_small"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				android:text="@string/setting_guardian_group"/>
+			
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/negativeButton"
+				style="@style/TextButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_padding_xsmall"
+				android:padding="@dimen/margin_padding_xsmall"
+				android:text="@string/button_later"
+				android:onClick="@{onLater}"
+				app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
+				app:layout_constraintEnd_toStartOf="@+id/positiveButton"
+				app:layout_constraintTop_toTopOf="@+id/positiveButton"/>
+			
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/positiveButton"
+				style="@style/TextButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:padding="@dimen/margin_padding_xsmall"
+				android:text="@string/button_set_guarduan_group"
+				android:onClick="@{onSetGuardianGroup}"
+				app:layout_constraintBottom_toTopOf="@+id/line"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingTitle"/>
+			
+			<View
+				android:id="@+id/line"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:background="@color/gray_30"
+				app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
+				app:layout_constraintTop_toBottomOf="@+id/positiveButton"/>
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
+		
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvStatus"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-			android:paddingTop="@dimen/margin_padding_xlarge"
+			android:paddingTop="@dimen/margin_padding_large"
 			android:paddingBottom="@dimen/fab_height_half"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toBottomOf="@+id/layoutSetting"/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

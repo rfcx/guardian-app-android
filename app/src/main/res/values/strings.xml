@@ -132,6 +132,10 @@
 	<string name="format_image_unsync">%s image (%s not yet synced)</string>
 	<string name="format_images_synced">%s images</string>
 	<string name="format_images_unsync">%s images (%s not yet synced)</string>
+	<string name="empty_report_text">No reports in the last 7 days.</string>
+	<string name="setting_guardian_group">You haven\'t set guardian group yet.</string>
+	<string name="button_later">Later</string>
+	<string name="button_set_guarduan_group">Set Guardian Group</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>

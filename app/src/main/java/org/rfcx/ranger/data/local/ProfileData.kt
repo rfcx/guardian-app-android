@@ -31,4 +31,9 @@ class ProfileData(private val preferences: Preferences) {
 	fun updateReceivingNotification(received: Boolean) {
 		preferences.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, received)
 	}
+	
+	fun hasGuardianGroup(): Boolean{
+		val guardianGroup = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
+		return guardianGroup.isNotEmpty()
+	}
 }

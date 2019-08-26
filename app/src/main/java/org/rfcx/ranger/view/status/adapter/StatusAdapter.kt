@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.status.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,10 +11,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.TitleItem
 import org.rfcx.ranger.adapter.view.TitleViewHolder
-import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
-import org.rfcx.ranger.databinding.ItemStatusReportBinding
-import org.rfcx.ranger.databinding.ItemStatusSyncingBinding
-import org.rfcx.ranger.databinding.ItemUserStatusBinding
+import org.rfcx.ranger.databinding.*
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
@@ -190,6 +186,10 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				is TitleItem -> {
 					val item = newItem as TitleItem
 					return oldItem.title == item.title
+				}
+				is SyncInfoItem -> {
+					val item = newItem as SyncInfoItem
+					return oldItem.syncInfo.status.name == item.syncInfo.status.name
 				}
 				else -> return false
 			}

@@ -84,6 +84,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private val _syncInfo = MutableLiveData<SyncInfo>()
 	val syncInfo: LiveData<SyncInfo> = _syncInfo
 	
+	private val _hasGuardianGroup = MutableLiveData<Boolean>()
+	val hasGuardianGroup: LiveData<Boolean> = _hasGuardianGroup
+	
 	private var reportsImage: SparseArray<ImageState> = SparseArray()
 	private var reportList = listOf<Report>()
 	
@@ -95,7 +98,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private var onDutyRealmTimeDisposable: Disposable? = null
 	
 	init {
-		_locationTracking.value = profileData.getTracking()
+		_hasGuardianGroup.value = profileData.hasGuardianGroup()
 		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
