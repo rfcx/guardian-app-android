@@ -12,6 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.timeAgoDisplay
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.util.toEventName
 
 
 class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, AlertsAdapter.AlertViewHolder>(AlertsDiffUtil()) {
@@ -48,7 +49,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, A
 		
 		@SuppressLint("SetTextI18n")
 		fun bind(item: EventItem) {
-			tvTitle.text = item.event.value?.trim()?.capitalize()
+			tvTitle.text = item.event.value?.toEventName(itemView.context)
 			item.event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
 			tvFrom.text = item.event.site
 			tvTimeAgo.text = "• ${item.event.timeAgoDisplay(itemView.context)}"

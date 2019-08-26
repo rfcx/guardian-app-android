@@ -88,7 +88,6 @@
 	<string name="sync_complete">Upload complete!</string>
 	<string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
 	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
-	<string name="report_type_other">Other</string>
 	
 	<string name="menu_camera">Camera</string>
 	<string name="menu_gallery">Gallery</string>

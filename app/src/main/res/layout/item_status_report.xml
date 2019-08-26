@@ -44,7 +44,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:text="@{reportItem.reportType}"
+			android:text="@{reportItem.getReportType(context)}"
 			android:textColor="@color/text_primary"
 			android:textSize="@dimen/text_large"
 			app:layout_constraintEnd_toStartOf="@+id/tvReportedAt"

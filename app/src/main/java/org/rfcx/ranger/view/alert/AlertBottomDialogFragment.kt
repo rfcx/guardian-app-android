@@ -23,6 +23,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
+import org.rfcx.ranger.util.toEventName
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
@@ -111,7 +112,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
-			eventNameTextView.text = "${it.value?.capitalize()} ?"
+			eventNameTextView.text = "${context?.let { it1 -> it.value?.toEventName(it1).toString().capitalize()}} ?"
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {

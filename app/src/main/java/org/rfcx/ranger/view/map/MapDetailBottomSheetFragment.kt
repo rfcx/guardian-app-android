@@ -14,6 +14,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.view.report.ReportDetailActivity
+import org.rfcx.ranger.view.report.getLocalisedValue
 
 class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
@@ -43,7 +44,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 		if (report == null) {
 		
 		} else {
-			reportTypeNameTextView.text = report.value.capitalize()
+			reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
 			val latLon = StringBuilder(report.latitude.toString())
 					.append(",")
 					.append(report.longitude)

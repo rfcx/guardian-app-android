@@ -29,6 +29,15 @@ fun String.toEventPosition(): Int {
 	}
 }
 
+fun String.toEventName(context: Context): String = when (this) {
+	Event.chainsaw -> context.getString(R.string.chainsaw)
+	Event.gunshot -> context.getString(R.string.gunshot)
+	Event.vehicle -> context.getString(R.string.vehicle)
+	Event.trespasser -> context.getString(R.string.trespasser)
+	Event.other -> context.getString(R.string.other)
+	else -> this
+}.capitalize()
+
 fun String.toEventIcon(): Int {
 	return when (this) {
 		Event.chainsaw -> R.drawable.ic_chainsaw

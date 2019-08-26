@@ -16,6 +16,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.util.toEventName
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
@@ -267,7 +268,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		
 		override fun getViewType(): Int = ITEM_REPORT_HISTORY
 		
-		fun getReportType(): String = report.value.trim().capitalize()
+		fun getReportType(context: Context): String = report.value.toEventName(context)
 		
 		fun getIcon(): Int = report.value.toEventIcon()
 		

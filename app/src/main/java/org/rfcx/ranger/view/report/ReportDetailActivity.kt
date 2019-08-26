@@ -37,8 +37,8 @@ class ReportDetailActivity : BaseActivity() {
 		
 		viewModel.getReport().observe(this, Observer { report ->
 			if (report == null) {
-				reportTypeTextView.text = getString(R.string.report_type_other)
-				reportTypeImageView.setImageResource(R.drawable.ic_other)
+				reportTypeTextView.text = getString(R.string.other)
+				reportTypeImageView.setImageResource(R.drawable.ic_place_report)
 			} else {
 				reportTypeTextView.text = report.getLocalisedValue(this)
 				reportTypeImageView.setImageResource(report.getImageResource())
