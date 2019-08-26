@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian_group.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.Preferences
 
 class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianGroupViewHolder>() {
 	var items: List<GuardianGroup> = arrayListOf()
@@ -30,6 +31,7 @@ class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianG
 	
 	inner class GuardianGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
+		private val checkImageView = itemView.checkImageView
 		
 		var currentGroup: GuardianGroup? = null
 		
@@ -40,6 +42,12 @@ class GuardianGroupAdapter : RecyclerView.Adapter<GuardianGroupAdapter.GuardianG
 		}
 		
 		fun bind(group: GuardianGroup?) {
+			val preferenceHelper = Preferences.getInstance(itemView.context)
+			if (preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP) == group?.shortname) {
+				checkImageView.visibility = View.VISIBLE
+			}else{
+				checkImageView.visibility = View.INVISIBLE
+			}
 			textView.text = group?.name
 			
 			this.currentGroup = group
