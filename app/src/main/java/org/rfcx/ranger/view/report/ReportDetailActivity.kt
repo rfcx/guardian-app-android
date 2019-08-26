@@ -77,6 +77,11 @@ class ReportDetailActivity : BaseActivity() {
 		}
 	}
 	
+	override fun onSupportNavigateUp(): Boolean {
+		onBackPressed()
+		return true
+	}
+	
 	private fun setupMapPin() {
 		val mapView = mapView
 		val location = location
