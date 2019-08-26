@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.status
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import org.rfcx.ranger.databinding.FragmentStatusBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -33,6 +35,12 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_status, container, false)
 		viewDataBinding.lifecycleOwner = this
 		return viewDataBinding.root
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		// force check setting guardian group
+		statusViewModel.updateGuardianGroup()
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +87,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 			viewDataBinding.layoutSetting.visibility = View.GONE
 		}
 		viewDataBinding.onSetGuardianGroup = View.OnClickListener {
-			//TODO: Start Guardian Group List Activity
+			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
 		}
 	}
 	

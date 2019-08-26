@@ -36,4 +36,12 @@ class ProfileData(private val preferences: Preferences) {
 		val guardianGroup = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
 		return guardianGroup.isNotEmpty()
 	}
+	
+	fun setLastStatusSyncing(status: String) {
+		preferences.putString(Preferences.LAST_STATUS_SYNCING, status)
+	}
+	
+	fun getLastStatusSyncing(): String {
+		return preferences.getString(Preferences.LAST_STATUS_SYNCING, "")
+	}
 }

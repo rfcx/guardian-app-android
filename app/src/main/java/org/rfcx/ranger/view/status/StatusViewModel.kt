@@ -98,7 +98,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private var onDutyRealmTimeDisposable: Disposable? = null
 	
 	init {
-		_hasGuardianGroup.value = profileData.hasGuardianGroup()
+		updateGuardianGroup()
 		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
@@ -186,9 +186,20 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		}
 	}
 	
+	fun updateGuardianGroup() {
+		_hasGuardianGroup.value = profileData.hasGuardianGroup()
+	}
+	
 	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {
 		val status = syncStatus
 				?: if (context.isNetworkAvailable()) SyncInfo.Status.STARTING else SyncInfo.Status.WAITING_NETWORK
+		
+		if (profileData.getLastStatusSyncing() == SyncInfo.Status.UPLOADED.name && status == SyncInfo.Status.UPLOADED) {
+			return
+		}
+		
+		// update last status syncing
+		profileData.setLastStatusSyncing(status.name)
 		
 		val locationCount = locationDb.unsentCount()
 		val reportCount = reportDb.unsentCount()
