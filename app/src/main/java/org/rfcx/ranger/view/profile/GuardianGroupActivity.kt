@@ -26,6 +26,8 @@ class GuardianGroupActivity : BaseActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_guardian_group)
 		
+		setupToolbar()
+		
 		// setup list
 		guardianGroupRecycler.apply {
 			layoutManager = LinearLayoutManager(this@GuardianGroupActivity)
@@ -58,6 +60,21 @@ class GuardianGroupActivity : BaseActivity() {
 				finish()
 			}
 		}
+	}
+	
+	private fun setupToolbar() {
+		setSupportActionBar(toolbar)
+		supportActionBar?.apply {
+			setDisplayHomeAsUpEnabled(true)
+			setDisplayShowHomeEnabled(true)
+			elevation = 0f
+			title = getString(R.string.guardian_group_list)
+		}
+	}
+	
+	override fun onSupportNavigateUp(): Boolean {
+		onBackPressed()
+		return true
 	}
 	
 	companion object {

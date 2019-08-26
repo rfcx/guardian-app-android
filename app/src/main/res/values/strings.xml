@@ -181,5 +181,8 @@
 	<string name="profile_app_version_label">App version</string>
 	<string name="profile_feedback_label">Feedback</string>
 	<string name="profile_rate_app_label">Rate the app</string>
-
+	
+	<!--Guardian Group List-->
+	<string name="guardian_group_list">Guardian Group List</string>
+	
 </resources>
