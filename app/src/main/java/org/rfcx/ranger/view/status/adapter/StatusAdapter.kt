@@ -11,7 +11,10 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.TitleItem
 import org.rfcx.ranger.adapter.view.TitleViewHolder
-import org.rfcx.ranger.databinding.*
+import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
+import org.rfcx.ranger.databinding.ItemStatusReportBinding
+import org.rfcx.ranger.databinding.ItemStatusSyncingBinding
+import org.rfcx.ranger.databinding.ItemUserStatusBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
@@ -38,7 +41,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 	
 	private var profile: ProfileItem? = null
 	private var stat: UserStatusItem? = null
-	private var reports = arrayListOf<ReportItem>()
+	private var reports: ArrayList<ReportItem>? = arrayListOf()
 	private var syncInfo: SyncInfoItem? = null
 	
 	fun updateHeader(header: ProfileItem) {
@@ -52,8 +55,12 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 	}
 	
 	fun updateReportList(newLists: List<ReportItem>) {
-		reports.clear()
-		reports.addAll(newLists)
+		if (newLists.isNotEmpty()) {
+			reports = arrayListOf()
+			reports?.addAll(newLists)
+		} else {
+			reports = null // display no reports
+		}
 		update()
 	}
 	
@@ -83,11 +90,14 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			newList.add(TitleItem(it))
 		}
 		
-		if (reports.isNotEmpty()) {
-			newList.addAll(reports)
-		} else {
+		if (reports == null) {
 			newList.add(ReportEmpty())
 		}
+		
+		if (reports != null && reports!!.isNotEmpty()) {
+			newList.addAll(reports!!)
+		}
+		
 		submitList(newList)
 		
 	}
