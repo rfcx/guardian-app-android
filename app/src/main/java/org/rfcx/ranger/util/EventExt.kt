@@ -57,8 +57,6 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 	val daysAgo = 2 * DAY
 	
 	val diff = Date().time - eventDate!!.time
-	val diffCalendar = Calendar.getInstance()
-	diffCalendar.timeInMillis = diff
 	
 	val timeFormat = SimpleDateFormat(DateHelper.timeFormat, Locale.US)
 	

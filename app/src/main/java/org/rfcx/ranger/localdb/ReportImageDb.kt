@@ -18,7 +18,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun save(report: Report, attachImages: List<String>) {
-		val imageCreateAt = DateHelper.parse(report.reportedAt, DateHelper.dateTimeFormatSecond)
+		val imageCreateAt = DateHelper.parse(report.reportedAt)
 		realm.executeTransaction {
 			// save attached image to be Report Image
 			attachImages.forEach { attachImage ->
