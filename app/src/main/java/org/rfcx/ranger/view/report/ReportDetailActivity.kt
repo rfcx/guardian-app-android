@@ -7,6 +7,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -17,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
@@ -31,12 +33,14 @@ class ReportDetailActivity : BaseActivity() {
 	private var location: LatLng? = null
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
+	private val reportImageAdapter by lazy { ReportImageAdapter() }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_report_detail)
 		setupToolbar()
 		setupAudioPlaying()
+		setupImageRecycler()
 		
 		val reportId = intent.getIntExtra(EXTRA_REPORT_ID, -1)
 		viewModel.setReport(reportId)
@@ -58,11 +62,9 @@ class ReportDetailActivity : BaseActivity() {
 			}
 		})
 		
-//		viewModel.getReportImages().observe(this, Observer {
-//			if (reportImages != null) {
-//				reportImageAdapter.setImages(reportImages)
-//			}
-//		})
+		viewModel.getReportImages().observe(this, Observer { images ->
+			reportImageAdapter.setImages(images)
+		})
 		
 		val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
 		mapFragment?.getMapAsync {
@@ -168,6 +170,24 @@ class ReportDetailActivity : BaseActivity() {
 //		finish()
 	}
 	
+	private fun setupImageRecycler() {
+		imageRecycler.apply {
+			adapter = reportImageAdapter
+			layoutManager = LinearLayoutManager(this@ReportDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+			setHasFixedSize(true)
+		}
+		
+//		reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
+//			override fun onAddImageClick() {
+//				attachImageDialog.show()
+//			}
+//
+//			override fun onDeleteImageClick(position: Int) {
+//				reportImageAdapter.removeAt(position)
+//				dismissImagePickerOptionsDialog()
+//			}
+//		}
+	}
 	
 	companion object {
 		private const val EXTRA_REPORT_ID = "extra_report_id"
