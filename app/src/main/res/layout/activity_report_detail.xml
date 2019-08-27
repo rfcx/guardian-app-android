@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/rootView"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context="org.rfcx.ranger.view.report.ReportDetailActivity">
@@ -112,7 +113,8 @@
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
 		app:layout_constraintTop_toBottomOf="@id/headerBottom"
 		app:layout_constraintBottom_toTopOf="@id/mapView"
-		tools:text="LOCATION"/>
+		android:text="@string/location"
+		android:textAllCaps="true"/>
 	
 	<fragment
 		android:id="@+id/mapView"
@@ -134,7 +136,8 @@
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
 		app:layout_constraintTop_toBottomOf="@id/mapView"
 		app:layout_constraintBottom_toTopOf="@id/imageRecycler"
-		tools:text="PHOTOS"/>
+		android:text="@string/photos"
+		android:textAllCaps="true"/>
 	
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/imageRecycler"
@@ -158,7 +161,8 @@
 		app:layout_constraintStart_toStartOf="@id/leftGutter"
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
 		app:layout_constraintTop_toBottomOf="@id/imageRecycler"
-		tools:text="AUDIO NOTES"/>
+		android:text="@string/audio_notes"
+		android:textAllCaps="true"/>
 	
 	<org.rfcx.ranger.widget.SoundRecordProgressView
 		android:id="@+id/audioProgressView"

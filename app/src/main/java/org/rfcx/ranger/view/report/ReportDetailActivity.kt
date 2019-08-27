@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.report
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -11,12 +12,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
+import java.io.IOException
 
 class ReportDetailActivity : BaseActivity() {
 	
@@ -24,13 +28,14 @@ class ReportDetailActivity : BaseActivity() {
 	
 	private var mapView: GoogleMap? = null
 	private var location: LatLng? = null
+	private var audioFile: File? = null
+	private var player: MediaPlayer? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_report_detail)
 		setupToolbar()
-		
-		audioProgressView.disableEdit()
+		setupAudioPlaying()
 		
 		val reportId = intent.getIntExtra(EXTRA_REPORT_ID, -1)
 		viewModel.setReport(reportId)
@@ -46,9 +51,9 @@ class ReportDetailActivity : BaseActivity() {
 				whenTextView.text = report.getLocalisedAgeEstimate(this)
 
 				this.location = LatLng(report.latitude, report.longitude)
-				setupMapPin()
-
-				setupAudioPlayer(report.audioLocation)
+				setMapPin()
+				
+				setAudio(report.audioLocation)
 			}
 		})
 		
@@ -63,7 +68,7 @@ class ReportDetailActivity : BaseActivity() {
 			mapView = it
 			mapView?.mapType = GoogleMap.MAP_TYPE_SATELLITE
 			mapView?.uiSettings?.isScrollGesturesEnabled = false
-			runOnUiThread { setupMapPin() }
+			runOnUiThread { setMapPin() }
 		}
 	}
 	
@@ -82,7 +87,7 @@ class ReportDetailActivity : BaseActivity() {
 		return true
 	}
 	
-	private fun setupMapPin() {
+	private fun setMapPin() {
 		val mapView = mapView
 		val location = location
 		if (mapView == null || location == null) {
@@ -95,9 +100,9 @@ class ReportDetailActivity : BaseActivity() {
 				location, 15f))
 	}
 	
-	private fun setupAudioPlayer(audioLocation: String?) {
-		var file: File? = audioLocation?.let { File(it) }
-		if (file != null && file.exists()) {
+	private fun setAudio(path: String?) {
+		audioFile = path?.let { File(it) }
+		if (audioFile?.exists() == true) {
 			audioProgressView.state = SoundRecordState.STOP_PLAYING
 			audioProgressView.visibility = View.VISIBLE
 			audioNoneLabel.visibility = View.GONE
@@ -105,6 +110,50 @@ class ReportDetailActivity : BaseActivity() {
 			audioProgressView.visibility = View.GONE
 			audioNoneLabel.visibility = View.VISIBLE
 		}
+	}
+	
+	private fun setupAudioPlaying() {
+		audioProgressView.disableEdit()
+		audioProgressView.onStateChangeListener = object : OnStateChangeListener {
+			override fun onStateChanged(state: SoundRecordState) {
+				when (state) {
+					SoundRecordState.PLAYING -> {
+						startPlaying()
+					}
+					SoundRecordState.STOP_PLAYING -> {
+						stopPlaying()
+					}
+					
+				}
+			}
+		}
+	}
+	
+	private fun startPlaying() {
+		val file = audioFile
+		if (file == null) {
+			audioProgressView.state = SoundRecordState.NONE
+			return
+		}
+		player = MediaPlayer().apply {
+			try {
+				setDataSource(file.absolutePath)
+				prepare()
+				start()
+				setOnCompletionListener {
+					audioProgressView.state = SoundRecordState.STOP_PLAYING
+				}
+			} catch (e: IOException) {
+				audioProgressView.state = SoundRecordState.STOP_PLAYING
+				Snackbar.make(rootView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+				e.printStackTrace()
+			}
+		}
+	}
+	
+	private fun stopPlaying() {
+		player?.release()
+		player = null
 	}
 	
 	private fun updateReportImages() {
