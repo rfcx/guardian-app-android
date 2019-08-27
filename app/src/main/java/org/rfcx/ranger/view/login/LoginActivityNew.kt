@@ -6,6 +6,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.CredentialKeeper
+import org.rfcx.ranger.util.getSiteName
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseActivity
 
@@ -26,7 +27,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
 		
-		if (CredentialKeeper(this).hasValidCredentials()) {
+		if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty()) {
 			MainActivityNew.startActivity(this@LoginActivityNew)
 			finish()
 		} else {
