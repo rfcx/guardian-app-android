@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.report
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -68,6 +69,8 @@ class ReportDetailActivity : BaseActivity() {
 			mapView = it
 			mapView?.mapType = GoogleMap.MAP_TYPE_SATELLITE
 			mapView?.uiSettings?.isScrollGesturesEnabled = false
+			val horizontalPadding = 16.px
+			mapView?.setPadding(horizontalPadding,0,horizontalPadding,0)
 			runOnUiThread { setMapPin() }
 		}
 	}
@@ -178,3 +181,6 @@ class ReportDetailActivity : BaseActivity() {
 		}
 	}
 }
+
+val Int.px: Int
+	get() = (this * Resources.getSystem().displayMetrics.density).toInt()
