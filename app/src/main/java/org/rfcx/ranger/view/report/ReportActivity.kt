@@ -45,7 +45,7 @@ import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.util.ReportUtils.REQUEST_GALLERY
 import org.rfcx.ranger.util.ReportUtils.REQUEST_TAKE_PHOTO
-import org.rfcx.ranger.widget.OnStatChangeListener
+import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
@@ -249,7 +249,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun setupRecordSoundProgressView() {
-		soundRecordProgressView.onStatChangeListener = object : OnStatChangeListener {
+		soundRecordProgressView.onStateChangeListener = object : OnStateChangeListener {
 			override fun onStateChanged(state: SoundRecordState) {
 				when (state) {
 					SoundRecordState.NONE -> {
