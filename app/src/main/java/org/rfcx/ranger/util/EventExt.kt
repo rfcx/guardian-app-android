@@ -14,7 +14,7 @@ fun Event.getIconRes(): Int {
 		Event.gunshot -> R.drawable.ic_gun
 		Event.vehicle -> R.drawable.ic_truck
 		Event.trespasser -> R.drawable.ic_people
-		else -> R.drawable.ic_place_report
+		else -> R.drawable.ic_pin_huge
 	}
 }
 
@@ -44,7 +44,7 @@ fun String.toEventIcon(): Int {
 		Event.gunshot -> R.drawable.ic_gun
 		Event.vehicle -> R.drawable.ic_truck
 		Event.trespasser -> R.drawable.ic_people
-		else -> R.drawable.ic_place_report
+		else -> R.drawable.ic_pin_huge
 	}
 }
 

@@ -14,7 +14,7 @@ fun Report.getImageResource(): Int = when (value) {
 	Event.vehicle -> R.drawable.ic_vehicle
 	Event.trespasser -> R.drawable.ic_people
 	Event.gunshot -> R.drawable.ic_gun
-	else -> R.drawable.ic_place_report
+	else -> R.drawable.ic_pin_huge
 }
 
 fun Report.getLocalisedValue(context: Context): String = when (value) {

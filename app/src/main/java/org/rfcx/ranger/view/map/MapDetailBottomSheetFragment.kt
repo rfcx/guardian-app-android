@@ -55,7 +55,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 						Event.trespasser -> R.drawable.ic_people
 						Event.chainsaw -> R.drawable.ic_chainsaw
 						Event.gunshot -> R.drawable.ic_gun
-						else -> R.drawable.ic_place_report
+						else -> R.drawable.ic_pin_huge
 					}
 			)
 			val reportPasted = DateHelper.getTimePasted(report.reportedAt)

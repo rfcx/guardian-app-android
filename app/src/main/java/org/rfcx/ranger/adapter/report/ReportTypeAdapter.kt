@@ -29,7 +29,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 		source.add(ReportTypeItem(Event.trespasser, R.drawable.ic_people))
 		source.add(ReportTypeItem(Event.chainsaw, R.drawable.ic_chainsaw))
 		source.add(ReportTypeItem(Event.gunshot, R.drawable.ic_gun))
-		source.add(ReportTypeItem(Event.other, R.drawable.ic_place_report))
+		source.add(ReportTypeItem(Event.other, R.drawable.ic_pin_huge))
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportTypeViewHolder {
