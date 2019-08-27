@@ -61,7 +61,7 @@
 			android:layout_marginTop="@dimen/margin_padding_xlarge"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:layout_marginBottom="@dimen/margin_padding_small"
-			android:text="@string/profile_location_label"
+			android:text="@string/location"
 			android:textAllCaps="true"
 			android:textColor="@color/text_primary"
 			android:textSize="@dimen/text_small" />

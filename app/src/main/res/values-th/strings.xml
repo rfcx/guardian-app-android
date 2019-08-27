@@ -105,6 +105,8 @@
     <string name="pls_off_air_plane_mode">กรุณาปิดโหมดเครื่องบิน</string>
     <string name="common_ok">ตกลง</string>
     
+    <string name="location">ตำแหน่ง</string>
+    
     <string name="menu_status">สถานะ</string>
     <string name="menu_map">แผนที่</string>
     <string name="menu_alert">การแจ้งเตือน</string>
@@ -176,7 +178,6 @@
     <string name="other">อื่นๆ</string>
     
     <!--Profile -->
-    <string name="profile_location_label">ตำแหน่ง</string>
     <string name="profile_receive_noti_label">รับการแจ้งเตือน</string>
     <string name="profile_sign_out_label">ออกจากระบบ</string>
     <string name="profile_aditional_label">เพิ่มเติม</string>
@@ -186,5 +187,5 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
-    
+
 </resources>

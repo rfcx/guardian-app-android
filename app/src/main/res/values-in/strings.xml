@@ -106,6 +106,8 @@
     <string name="pls_off_air_plane_mode">Harap matikan mode pesawat</string>
     <string name="common_ok">Oke</string>
     
+    <string name="location">Tempat</string>
+    
     <string name="menu_status">STATUS</string>
     <string name="menu_map">PETA</string>
     <string name="menu_alert">WASPADA</string>
@@ -177,7 +179,6 @@
     <string name="other">lainnya</string>
     
     <!--Profile -->
-    <string name="profile_location_label">tempat</string>
     <string name="profile_receive_noti_label">menerima pemberitahuan</string>
     <string name="profile_sign_out_label">Keluar</string>
     <string name="profile_aditional_label">Tambahan</string>
@@ -187,5 +188,5 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
-    
+
 </resources>

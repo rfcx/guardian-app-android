@@ -104,6 +104,10 @@
 	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
 	<string name="common_ok">OK</string>
 	
+	<string name="location">Location</string>
+	<string name="photos">photos</string>
+	<string name="audio_notes">Audio notes</string>
+	
 	<string name="menu_status">STATUS</string>
 	<string name="menu_map">MAP</string>
 	<string name="menu_alert">ALERT</string>
@@ -175,7 +179,6 @@
 	<string name="other">other</string>
 	
 	<!--Profile -->
-	<string name="profile_location_label">Location</string>
 	<string name="profile_receive_noti_label">Receive notifications</string>
 	<string name="profile_sign_out_label">Sign out</string>
 	<string name="profile_aditional_label">Additional</string>
@@ -185,5 +188,5 @@
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>
-	
+
 </resources>

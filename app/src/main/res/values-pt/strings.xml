@@ -102,10 +102,11 @@
     <string name="images_unsync_format">%1d imagens (%2d ainda não sincronizado)</string>
     <string name="report_detail_title">relatório detalhado</string>
     
-    
     <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
     <string name="pls_off_air_plane_mode">Por favor, desligue o modo avião</string>
     <string name="common_ok">Está bem</string>
+    
+    <string name="location">Localização</string>
     
     <string name="menu_status">STATUS</string>
     <string name="menu_map">MAPA</string>
@@ -178,7 +179,6 @@
     <string name="other">outro</string>
     
     <!--Profile -->
-    <string name="profile_location_label">Localização</string>
     <string name="profile_receive_noti_label">Receber notificações</string>
     <string name="profile_sign_out_label">Sair</string>
     <string name="profile_aditional_label">Adicional</string>
@@ -188,5 +188,5 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Lista Grupo Guardião</string>
-    
+
 </resources>
