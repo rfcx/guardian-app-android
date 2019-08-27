@@ -77,6 +77,7 @@
 	<string name="invitation_title">Connect to a site</string>
 	<string name="invitation_desc">Please enter your invitation code</string>
 	<string name="hint_code">Code</string>
+	<string name="invalid_invite_code">Invalid invite code</string>
 	
 	<!-- Report -->
 	<string name="sync_reports_label">%d reports</string>

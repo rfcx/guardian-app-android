@@ -38,7 +38,7 @@ object ServiceFactory {
 	}
 	
 	fun makeInviteCodeService(isDebug: Boolean, context: Context): InviteCodeEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createDefaultOkHttpClient(isDebug),
+		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(InviteCodeEndpoint::class.java)
 	}

@@ -35,6 +35,7 @@ class InvitationCodeFragment : BaseFragment() {
 			invitationProgressBar.visibility = View.VISIBLE
 			
 			val code = inputCodeEditText.text.toString()
+			invitationCodeViewModel.setSubmitState()
 			invitationCodeViewModel.doSubmit(code)
 			invitationCodeViewModel.submitCodeState.observe(this, Observer {
 				when (it) {
@@ -43,7 +44,7 @@ class InvitationCodeFragment : BaseFragment() {
 					}
 					SubmitState.FAILED -> {
 						invitationProgressBar.visibility = View.GONE
-						Toast.makeText(context, "Problem Submit State", Toast.LENGTH_LONG).show() // TODO: handle error
+						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show() // TODO: handle error
 					}
 				}
 			})

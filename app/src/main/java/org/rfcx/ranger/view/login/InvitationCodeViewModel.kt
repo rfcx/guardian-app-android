@@ -9,15 +9,18 @@ import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
+import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.repo.api.InvitationCodeApi
+import org.rfcx.ranger.entity.user.InvitationCodeRequest
+import org.rfcx.ranger.entity.user.InvitationCodeResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 import org.rfcx.ranger.util.Preferences
 
-class InvitationCodeViewModel(private val context: Context) : ViewModel() {
+class InvitationCodeViewModel(private val context: Context, private val sendInviteCodeUseCase: SendInviteCodeUseCase) : ViewModel() {
 	
 	private val auth0 by lazy {
 		val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
@@ -44,18 +47,22 @@ class InvitationCodeViewModel(private val context: Context) : ViewModel() {
 		}
 	}
 	
+	fun setSubmitState() {
+		_submitCodeState.value = SubmitState.NONE
+	}
+	
 	private fun submit(code: String, callback: (Boolean) -> Unit) {
-		InvitationCodeApi().send(context, code, object : InvitationCodeApi.InvitationCodeCallback {
-			override fun onSuccess() {
+		sendInviteCodeUseCase.execute(object : DisposableSingleObserver<InvitationCodeResponse>() {
+			override fun onSuccess(t: InvitationCodeResponse) {
 				refreshToken { success ->
 					callback(success)
 				}
 			}
 			
-			override fun onFailed(t: Throwable?, message: String?) {
+			override fun onError(e: Throwable) {
 				callback(false)
 			}
-		})
+		}, InvitationCodeRequest(code))
 	}
 	
 	private fun refreshToken(callback: (Boolean) -> Unit) {

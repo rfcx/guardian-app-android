@@ -45,6 +45,6 @@ object UiModule {
 	
 	var loginModule = module {
 		viewModel { LoginViewModel(androidContext(), get()) }
-		viewModel { InvitationCodeViewModel(androidContext()) }
+		viewModel { InvitationCodeViewModel(androidContext(), get()) }
 	}
 }
