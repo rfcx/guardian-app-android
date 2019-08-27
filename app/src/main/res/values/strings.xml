@@ -12,8 +12,8 @@
 	<string name="or">OR</string>
 	
 	<!--new Login Activite-->
-	<string name="login_sign_in_button_label" translatable="false">Sign in</string>
-	<string name="invitation_submit_button_label" translatable="false">Submit</string>
+	<string name="login_sign_in_button_label">Sign in</string>
+	<string name="invitation_submit_button_label">Submit</string>
 	
 	<!-- common error -->
 	<string name="error_common">An error occurred. Please try again.</string>

@@ -10,6 +10,10 @@
     <string name="incorrect_username_password">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="an_error_occurred">ไม่สามารถให้บริการได้</string>
     <string name="or">หรือ</string>
+    
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
+    <string name="invitation_submit_button_label">บันทึก</string>
 
     <!-- common error -->
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
@@ -60,6 +64,10 @@
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>
     <string name="now">ขณะนี้</string>
+    <string name="within_month">ภายในหนึ่งเดือน</string>
+    <string name="within_week">ภายในหนึ่งสัปดาห์</string>
+    <string name="within_24_hours">ภายใน 24 ชั่วโมง</string>
+    <string name="at_that_time">ขณะนั้น</string>
 
     <string name="tab_to_record_label">แตะปุ่มค้างไว้เพื่อบันทึกเสียง</string>
     <string name="recent_title">เร็วๆนี้</string>
@@ -69,7 +77,8 @@
     <string name="invitation_title">เชื่่อมต่อกับพื้นที่ของคุณ</string>
     <string name="invitation_desc">กรุณากรอกรหัสเชิญ (invitation code)</string>
     <string name="hint_code">รหัส</string>
-
+    <string name="invalid_invite_code">รหัสเชิญไม่ถูกต้อง</string>
+    
     <!-- Report -->
     <string name="sync_reports_label">%d รายงาน</string>
     <string name="sync_report_label">%d รายงาน</string>
@@ -90,11 +99,44 @@
     <string name="report_list_empty_message">คุณยังไม่มีรายงานใดๆ</string>
     <string name="images_sync_format">%d ภาพ (อัปโหลดแล้ว)</string>
     <string name="images_unsync_format">%1d ภาพ (%2d ยังไม่ได้อัปโหลด)</string>
+    <string name="report_detail_title">รายละเอียดรายงาน</string>
     
     <string name="in_air_plane_mode">การติดตามตำแหน่งถูกปิดใช้งานเมื่ออยู่ในโหมดเครื่องบิน</string>
     <string name="pls_off_air_plane_mode">กรุณาปิดโหมดเครื่องบิน</string>
     <string name="common_ok">ตกลง</string>
     
+    <string name="menu_status">สถานะ</string>
+    <string name="menu_map">แผนที่</string>
+    <string name="menu_alert">การแจ้งเตือน</string>
+    <string name="menu_profile">ข้อมูลส่วนตัว</string>
+    
+    <string name="see_report_detail">ดูรายละเอียด</string>
+    <string name="report_time_second">เมื่อสักครู่</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+    <string name="follow_up_later_button">ติดตามในภายหลัง</string>
+    <string name="open_map_button">เปิดแผนที่</string>
+    
+    <string name="common_no">ไม่</string>
+    <string name="common_yes">ใช่</string>
+    
+    <!-- Status -->
+    <string name="status_stat_title">สถานะรายสัปดาห์ของคุณ</string>
+    <string name="status_report_title">ประวัติการรายงาน</string>
+    <string name="status_duty_count_desc">นาทีในการปฏิบัติหน้าที่</string>
+    <string name="status_reported_desc">รายงานที่บันทึก</string>
+    <string name="status_reviewed_desc">การแจ้งเตือนที่ตรวจสอบ</string>
+    <string name="format_location">%s, %s</string>
+    <string name="format_image_synced">%s ภาพ</string>
+    <string name="format_image_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="format_images_synced">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
+    <string name="setting_guardian_group">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
+    <string name="button_later">ไว้ทีหลัง</string>
+    <string name="button_set_guarduan_group">ตั้งค่ากลุ่ม Guardian</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">ไฟล์ทั้งหมด</string>
@@ -119,11 +161,30 @@
     <string name="button_sure">ตกลง(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
     
+    <!-- Alerts -->
+    <string name="tab_group_by_guardians">ตามกลุ่ม Guardian</string>
+    <string name="tab_all_alerts">การแจ้งเตือนทั้งหมด</string>
+    <string name="yesterday">เมื่อวาน</string>
+    
+    <string name="no_internet_connection">ไม่มีอินเทอร์เน็ตโปรดลองอีกครั้ง</string>
+    
     <!--Event value-->
     <string name="chainsaw">เลื่อย</string>
     <string name="gunshot">กระสุนปืน</string>
     <string name="vehicle">ยานพาหนะ</string>
     <string name="trespasser">ผู้บุกรุก</string>
     <string name="other">อื่นๆ</string>
+    
+    <!--Profile -->
+    <string name="profile_location_label">ตำแหน่ง</string>
+    <string name="profile_receive_noti_label">รับการแจ้งเตือน</string>
+    <string name="profile_sign_out_label">ออกจากระบบ</string>
+    <string name="profile_aditional_label">เพิ่มเติม</string>
+    <string name="profile_app_version_label">เวอร์ชั่น</string>
+    <string name="profile_feedback_label">ฟีดแบค</string>
+    <string name="profile_rate_app_label">ให้คะแนนแอป</string>
+    
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">กลุ่ม Guardian</string>
     
 </resources>

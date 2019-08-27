@@ -10,6 +10,10 @@
     <string name="incorrect_username_password">Username dan kata sandi salah</string>
     <string name="an_error_occurred">layanan tidak tersedia</string>
     <string name="or">atau</string>
+    
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">Masuk</string>
+    <string name="invitation_submit_button_label">menyerahkan</string>
 
     <!-- common error -->
     <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
@@ -60,6 +64,10 @@
     <string name="last_week">Terakhir\nMinggu</string>
     <string name="last_24_hours">Terakhir\n24 jam</string>
     <string name="now">Sekarang</string>
+    <string name="within_month">Dalam satu bulan</string>
+    <string name="within_week">Dalam waktu seminggu</string>
+    <string name="within_24_hours">Dalam 24 jam</string>
+    <string name="at_that_time">Pada saat itu</string>
 
     <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
     <string name="recent_title">Aktual</string>
@@ -69,7 +77,9 @@
     <string name="invitation_title">Hubungkan ke suatu tempat</string>
     <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
     <string name="hint_code">Kode</string>
-
+    <string name="invalid_invite_code">Kode mengundang valid</string>
+    
+    
     <!-- Report -->
     <string name="sync_reports_label">%d laporan</string>
     <string name="sync_report_label">%d laporan</string>
@@ -90,11 +100,44 @@
     <string name="report_list_empty_message">Anda tidak memiliki laporan</string>
     <string name="images_sync_format">%d gambar (disinkronkan)</string>
     <string name="images_unsync_format">%1d gambar (%2d belum disinkronkan)</string>
+    <string name="report_detail_title">laporan rinci</string>
     
     <string name="in_air_plane_mode">Tidak dapat menentukan lokasi Anda</string>
     <string name="pls_off_air_plane_mode">Harap matikan mode pesawat</string>
     <string name="common_ok">Oke</string>
     
+    <string name="menu_status">STATUS</string>
+    <string name="menu_map">PETA</string>
+    <string name="menu_alert">WASPADA</string>
+    <string name="menu_profile">PROFIL</string>
+    
+    <string name="see_report_detail">Lihat Detil</string>
+    <string name="report_time_second">Baru saja</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+    <string name="follow_up_later_button">Ikuti nanti</string>
+    <string name="open_map_button">terbuka Peta</string>
+    
+    <string name="common_no">Tidak</string>
+    <string name="common_yes">Iya nih</string>
+    
+    <!-- Status -->
+    <string name="status_stat_title">Status mingguan Anda</string>
+    <string name="status_report_title">laporan sejarah</string>
+    <string name="status_duty_count_desc">menit bertugas</string>
+    <string name="status_reported_desc">laporan yang disampaikan</string>
+    <string name="status_reviewed_desc">mengingatkan Ulasan</string>
+    <string name="format_location">%s, %s</string>
+    <string name="format_image_synced">%s gambar</string>
+    <string name="format_image_unsync">%s gambar (%s belum disinkronkan)</string>
+    <string name="format_images_synced">%s gambar</string>
+    <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
+    <string name="empty_report_text">Tidak ada laporan dalam 7 hari terakhir.</string>
+    <string name="setting_guardian_group">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>
+    <string name="button_later">Kemudian</string>
+    <string name="button_set_guarduan_group">Set Wali Grup</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Semua Media</string>
@@ -119,11 +162,30 @@
     <string name="button_sure">Oke(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
     
+    <!-- Alerts -->
+    <string name="tab_group_by_guardians">Group By Wali</string>
+    <string name="tab_all_alerts">semua Alerts</string>
+    <string name="yesterday">Kemarin</string>
+    
+    <string name="no_internet_connection">Tidak ada internet, Silakan coba lagi.</string>
+    
     <!--Event value-->
     <string name="chainsaw">gergaji</string>
     <string name="gunshot">tembakan</string>
     <string name="vehicle">kendaraan</string>
     <string name="trespasser">penyusup</string>
     <string name="other">lainnya</string>
+    
+    <!--Profile -->
+    <string name="profile_location_label">tempat</string>
+    <string name="profile_receive_noti_label">menerima pemberitahuan</string>
+    <string name="profile_sign_out_label">Keluar</string>
+    <string name="profile_aditional_label">Tambahan</string>
+    <string name="profile_app_version_label">versi aplikasi</string>
+    <string name="profile_feedback_label">Masukan</string>
+    <string name="profile_rate_app_label">Menilai aplikasi</string>
+    
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">Daftar wali Grup</string>
     
 </resources>

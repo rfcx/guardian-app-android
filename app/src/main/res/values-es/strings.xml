@@ -11,6 +11,10 @@
 	<string name="an_error_occurred">Servicio no disponible</string>
 	<string name="or">O</string>
 	
+	<!--new Login Activite-->
+	<string name="login_sign_in_button_label">Entrar</string>
+	<string name="invitation_submit_button_label">Enviar</string>
+	
 	<!-- common error -->
 	<string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
 	<string name="location_permission_msg">A Ranger App le gustaría usar tu ubicación</string>
@@ -60,6 +64,10 @@
 	<string name="last_week">Ultima\nSemana</string>
 	<string name="last_24_hours">Ultimas\n24 horas</string>
 	<string name="now">Ahora</string>
+	<string name="within_month">Dentro de un mes</string>
+	<string name="within_week">Dentro de una semana</string>
+	<string name="within_24_hours">En 24 horas</string>
+	<string name="at_that_time">En ese momento</string>
 	
 	<string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
 	<string name="recent_title">Reciente</string>
@@ -69,6 +77,8 @@
 	<string name="invitation_title">Conectarse a un sitio.</string>
 	<string name="invitation_desc">Por favor inserte su código de invitacion</string>
 	<string name="hint_code">Código</string>
+	<string name="invalid_invite_code">código de invitación no válido</string>
+	
 	
 	<!-- Report -->
 	<string name="sync_reports_label">%d reportes</string>
@@ -90,11 +100,44 @@
 	<string name="report_list_empty_message">No tienes ningún informe</string>
 	<string name="images_sync_format">%d Imagenes (cargada)</string>
 	<string name="images_unsync_format">%1d Imagenes (%2d no cargada)</string>
+	<string name="report_detail_title">informe detallado</string>
 	
 	<string name="in_air_plane_mode">No se puede determinar tu ubicación</string>
 	<string name="pls_off_air_plane_mode">Por favor apague el modo avión</string>
 	<string name="common_ok">OK</string>
 	
+	<string name="menu_status">ESTADO</string>
+	<string name="menu_map">MAPA</string>
+	<string name="menu_alert">ALERTA</string>
+	<string name="menu_profile">PERFIL</string>
+	
+	<string name="see_report_detail">Ver detalle</string>
+	<string name="report_time_second">Justo ahora</string>
+	<string name="report_minutes_format">%dm</string>
+	<string name="report_hr_format">%dh</string>
+	<string name="report_day_format">%dd</string>
+	<string name="report_week_format">%dw</string>
+	<string name="follow_up_later_button">Un seguimiento posterior</string>
+	<string name="open_map_button">Un seguimiento posterior</string>
+	
+	<string name="common_no">No</string>
+	<string name="common_yes">Sí</string>
+	
+	<!-- Status -->
+	<string name="status_stat_title">Su estado semanal</string>
+	<string name="status_report_title">Historial de Informes </string>
+	<string name="status_duty_count_desc">minutos de guardia</string>
+	<string name="status_reported_desc">los informes presentados</string>
+	<string name="status_reviewed_desc">alertar revisado</string>
+	<string name="format_location">%s, %s</string>
+	<string name="format_image_synced">%s imagen</string>
+	<string name="format_image_unsync">%s imagen (%s aún no sincronizado)</string>
+	<string name="format_images_synced">%s imágenes</string>
+	<string name="format_images_unsync">%s imágenes (%s aún no sincronizadas)</string>
+	<string name="empty_report_text">No hay informes en los últimos 7 días.</string>
+	<string name="setting_guardian_group">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
+	<string name="button_later">Luego</string>
+	<string name="button_set_guarduan_group">Establecer Grupo Guardián</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">Todos los archivos</string>
@@ -119,11 +162,30 @@
 	<string name="button_sure">OK(%1$d)</string>
 	<!-- Override string res from matisse Image picker library -->
 	
+	<!-- Alerts -->
+	<string name="tab_group_by_guardians">Por grupo de guardianes</string>
+	<string name="tab_all_alerts">todas las alertas</string>
+	<string name="yesterday">Ayer</string>
+	
+	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
+	
 	<!--Event value-->
 	<string name="chainsaw">motosierra</string>
 	<string name="gunshot">bala</string>
 	<string name="vehicle">vehículo</string>
 	<string name="trespasser">intruso</string>
 	<string name="other">otro</string>
+	
+	<!--Profile -->
+	<string name="profile_location_label">Ubicación</string>
+	<string name="profile_receive_noti_label">Recibir notificaciones</string>
+	<string name="profile_sign_out_label">desconectar</string>
+	<string name="profile_aditional_label">Adicional</string>
+	<string name="profile_app_version_label">Version de aplicacion</string>
+	<string name="profile_feedback_label">Realimentación</string>
+	<string name="profile_rate_app_label">Califica la aplicación</string>
+	
+	<!--Guardian Group List-->
+	<string name="guardian_group_list">Lista de grupos de la guarda</string>
 	
 </resources>
