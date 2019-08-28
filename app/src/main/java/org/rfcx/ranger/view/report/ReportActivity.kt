@@ -219,7 +219,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.addMarker(MarkerOptions()
 				.position(latLng)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_report_pin_on_map)))
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
 		
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))

@@ -207,7 +207,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				val latLng = LatLng(report.latitude, report.longitude)
 				val marker = map.addMarker(MarkerOptions()
 						.position(latLng)
-						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_report_pin_on_map)))
+						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
 				marker.tag = report
 				marker.zIndex = 1f
 				retortMarkers.add(marker)

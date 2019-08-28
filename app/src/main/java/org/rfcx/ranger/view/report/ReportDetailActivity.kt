@@ -100,7 +100,7 @@ class ReportDetailActivity : BaseActivity() {
 		}
 		mapView.clear()
 		mapView.addMarker(MarkerOptions().position(location)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_report_pin_on_map)))
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
 		mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				location, 15f))
 	}
