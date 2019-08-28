@@ -4,6 +4,8 @@ package org.rfcx.ranger.view.login
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -126,6 +128,30 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 								_loginResult.postValue(result.value)
 							}
 						}
+					}
+				})
+	}
+	
+	fun loginMagicLink(activity: Activity) {
+		webAuthentication
+				.withScope(context.getString(R.string.auth0_scopes))
+				.withScheme(context.getString(R.string.auth0_scheme))
+				.withAudience(context.getString(R.string.auth0_audience))
+				.start(activity, object : AuthCallback {
+					override fun onFailure(dialog: Dialog) {
+						_loginError.postValue(dialog.toString())
+						Log.d("MagicLink onFailure", dialog.toString())
+					}
+					
+					override fun onFailure(exception: AuthenticationException) {
+						Log.d("MagicLink onFailure", exception.toString())
+						
+						_loginError.postValue(exception.localizedMessage)
+					}
+					
+					override fun onSuccess(credentials: Credentials) {
+						Log.d("MagicLink onSuccess", credentials.toString())
+						_gotoPage.postValue("InvitationCodeFragment")
 					}
 				})
 	}

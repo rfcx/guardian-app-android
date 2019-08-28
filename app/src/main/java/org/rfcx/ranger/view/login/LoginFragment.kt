@@ -54,6 +54,14 @@ class LoginFragment : BaseFragment() {
 		}
 		
 		smsLoginButton.setOnClickListener{
+			loginGroupView.visibility = View.GONE
+			loginProgressBar.visibility = View.VISIBLE
+			activity?.let { it1 -> loginViewModel.loginMagicLink(it1) }
+			loginViewModel.gotoPage.observe(this, Observer {
+				if (it == "InvitationCodeFragment") {
+					listener.openInvitationCodeFragment()
+				}
+			})
 		}
 	}
 	
