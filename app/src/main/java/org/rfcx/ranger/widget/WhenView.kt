@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.report.Report
 
 class WhenView @JvmOverloads constructor(
 		context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -24,12 +25,12 @@ class WhenView @JvmOverloads constructor(
 	private var text2: TextView? = null
 	private var text3: TextView? = null
 	
-	private var state: State = State.NONE
+	private var state: Report.AgeEstimate = Report.AgeEstimate.NONE
 	
 	private var scale = resources.displayMetrics.density
 	private val imageInactivePadding: Int = (4 * scale).toInt()
 	
-	var onWhenViewStatChangedListener: OnWhenViewStatChangedListener? = null
+	var onWhenViewStateChangedListener: OnWhenViewStateChangedListener? = null
 	
 	init {
 		View.inflate(context, R.layout.widget_when_view, this)
@@ -46,65 +47,65 @@ class WhenView @JvmOverloads constructor(
 		reset()
 		
 		image0?.setOnClickListener {
-			setState(State.LAST_MONTH)
+			setState(Report.AgeEstimate.LAST_MONTH)
 		}
 		
 		image1?.setOnClickListener {
-			setState(State.LAST_WEEK)
+			setState(Report.AgeEstimate.LAST_WEEK)
 		}
 		
 		image2?.setOnClickListener {
-			setState(State.LAST_24_HR)
+			setState(Report.AgeEstimate.LAST_24_HR)
 		}
 		
 		image3?.setOnClickListener {
-			setState(State.NOW)
+			setState(Report.AgeEstimate.NOW)
 		}
 		
 		text0?.setOnClickListener {
-			setState(State.LAST_MONTH)
+			setState(Report.AgeEstimate.LAST_MONTH)
 		}
 		
 		text1?.setOnClickListener {
-			setState(State.LAST_WEEK)
+			setState(Report.AgeEstimate.LAST_WEEK)
 		}
 		
 		text2?.setOnClickListener {
-			setState(State.LAST_24_HR)
+			setState(Report.AgeEstimate.LAST_24_HR)
 		}
 		
 		text3?.setOnClickListener {
-			setState(State.NOW)
+			setState(Report.AgeEstimate.NOW)
 		}
 		
 	}
 	
-	fun setState(state: State) {
+	fun setState(state: Report.AgeEstimate) {
 		reset()
 		this.state = state
-		onWhenViewStatChangedListener?.onStateChange(state)
+		onWhenViewStateChangedListener?.onStateChange(state)
 		when (state) {
-			State.NONE -> {
+			Report.AgeEstimate.NONE -> {
 			
 			}
-			State.LAST_MONTH -> {
+			Report.AgeEstimate.LAST_MONTH -> {
 				text0?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text0?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text0?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image0?.selected()
 			}
-			State.LAST_WEEK -> {
+			Report.AgeEstimate.LAST_WEEK -> {
 				text1?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text1?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text1?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image1?.selected()
 			}
-			State.LAST_24_HR -> {
+			Report.AgeEstimate.LAST_24_HR -> {
 				text2?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text2?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text2?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image2?.selected()
 			}
-			State.NOW -> {
+			Report.AgeEstimate.NOW -> {
 				text3?.setTypeface(text0?.typeface, Typeface.BOLD)
-				text3?.setTextColor(ContextCompat.getColor(context, R.color.grey_active))
+				text3?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
 				image3?.selected()
 			}
 		}
@@ -137,7 +138,7 @@ class WhenView @JvmOverloads constructor(
 		this.setPadding(0, 0, 0, 0)
 	}
 	
-	fun getState(): State = state
+	fun getState(): Report.AgeEstimate = state
 	
 	fun disable() {
 		image0?.setOnClickListener(null)
@@ -150,18 +151,8 @@ class WhenView @JvmOverloads constructor(
 		text3?.setOnClickListener(null)
 	}
 	
-	enum class State(val ageEstimate: Int) {
-		NONE(-1), LAST_MONTH(30), LAST_WEEK(20),
-		LAST_24_HR(10), NOW(0);
-		
-		companion object {
-			private val map = State.values().associateBy(State::ageEstimate)
-			fun fromInt(ageEstimate: Int) = map[ageEstimate]
-		}
-	}
-	
-	interface OnWhenViewStatChangedListener {
-		fun onStateChange(state: State)
+	interface OnWhenViewStateChangedListener {
+		fun onStateChange(state: Report.AgeEstimate)
 	}
 	
 }

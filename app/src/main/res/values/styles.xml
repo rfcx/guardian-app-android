@@ -1,156 +1,176 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+	
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="titleTextColor">@android:color/white</item>
+	</style>
+	
+	<style name="AppTheme.Translucent" parent="AppTheme">
+		<item name="android:windowTranslucentStatus">true</item>
+		<item name="android:windowTranslucentNavigation">true</item>
+	</style>
+	
+	<style name="AppTheme.Login" parent="Theme.Design.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+	</style>
+	
+	<style name="AppTheme.LoadingProgress" parent="AppTheme">
+		<item name="colorAccent">@android:color/white</item>
+	</style>
+	
+	<style name="AppTheme.SyncLoadingProgress" parent="AppTheme">
+		<item name="colorAccent">@color/grey_default</item>
+	</style>
+	
+	<style name="CustomProgressBarHorizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
+		<item name="theme">@style/AppTheme.SyncLoadingProgress</item>
+		<item name="android:minHeight">8dp</item>
+	</style>
+	
+	<style name="RangerEdit" parent="Widget.AppCompat.EditText">
+		<item name="android:background">@android:color/white</item>
+		<item name="android:minHeight">40dp</item>
+		<item name="android:paddingBottom">4dp</item>
+		<item name="android:paddingTop">4dp</item>
+		<item name="android:paddingEnd">@dimen/margin_padding_normal</item>
+		<item name="android:paddingStart">@dimen/margin_padding_normal</item>
+	</style>
+	
+	<style name="TextAppearance.Design.Snackbar.Message" parent="android:TextAppearance" tools:override="true">
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textSize">50sp</item>
+	</style>
+	
+	
+	<style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
+		<item name="android:button">@drawable/ic_chainsaw</item>
+	</style>
+	
+	<style name="ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+		<item name="android:paddingStart">@dimen/margin_padding_large</item>
+		<item name="android:paddingEnd">@dimen/margin_padding_large</item>
+		<item name="android:minHeight">50dp</item>
+		<item name="android:minWidth">120dp</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:textColor">@color/text_white</item>
+		<item name="android:foreground">?android:attr/selectableItemBackground</item>
+	</style>
+	
+	<style name="PositiveButton" parent="ButtonStyle">
+		<item name="android:background">@color/colorPrimaryDark</item>
+	</style>
+	
+	<style name="NegativeButton" parent="ButtonStyle">
+		<item name="android:background">@color/divider</item>
+	</style>
+	
+	<style name="TextButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+		<item name="android:minHeight">36dp</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
+	
+	<style name="ProgressDialogStyle">
+		<item name="android:bottomBright">@color/transparent</item>
+		<item name="android:bottomDark">@color/transparent</item>
+		<item name="android:bottomMedium">@color/transparent</item>
+		<item name="android:centerBright">@color/transparent</item>
+		<item name="android:centerDark">@color/transparent</item>
+		<item name="android:centerMedium">@color/transparent</item>
+		<item name="android:fullBright">@color/transparent</item>
+		<item name="android:fullDark">@color/transparent</item>
+		<item name="android:topBright">@color/transparent</item>
+		<item name="android:topDark">@color/transparent</item>
+	</style>
+	
+	<style name="DialogDefaultStyle" parent="Base.Theme.AppCompat.Dialog">
+		<item name="android:windowMinWidthMajor">50%</item>
+		<item name="android:windowMinWidthMinor">50%</item>
+	</style>
+	
+	<style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+		<item name="android:background">@drawable/bg_report_radio_button</item>
+		<item name="android:button">@null</item>
+		<item name="android:drawablePadding">@dimen/margin_padding_normal</item>
+		<item name="android:paddingEnd">@dimen/margin_padding_large</item>
+		<item name="android:paddingStart">@dimen/margin_padding_large</item>
+		<item name="android:paddingTop">@dimen/margin_padding_small</item>
+		<item name="android:paddingBottom">@dimen/margin_padding_small</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:minHeight">56dp</item>
+	</style>
+	
+	<style name="ProgressDialogTheme" parent="android:Theme.Holo.Dialog">
+		<item name="android:alertDialogStyle">@style/ProgressDialogStyle</item>
+		<item name="android:windowBackground">@color/transparent</item>
+		<item name="android:textColorPrimary">#FFFFFF</item>
+		<item name="android:backgroundDimEnabled">true</item>
+		<item name="android:textColor">#FFFFFF</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">12sp</item>
+	</style>
+	
+	<style name="SwitchCompatStyle">
+		<item name="thumbTint">@color/switch_color</item>
+		<item name="showText">false</item>
+	</style>
+	
+	<style name="LoginButton" parent="Widget.AppCompat.Button">
+		<item name="android:background">@drawable/btn_stoke_white</item>
+		<item name="android:paddingLeft">@dimen/margin_padding_normal</item>
+		<item name="android:paddingRight">@dimen/margin_padding_normal</item>
+		<item name="android:paddingTop">0dp</item>
+		<item name="android:paddingBottom">0dp</item>
+		<item name="android:layout_marginLeft">@dimen/margin_padding_normal</item>
+		<item name="android:layout_marginRight">@dimen/margin_padding_normal</item>
+		<item name="android:layout_marginBottom">@dimen/margin_padding_large</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textColor">@color/text_white</item>
+	</style>
+	
+	<style name="LoginButton.FacebookButton" parent="LoginButton">
+		<item name="android:drawableLeft">@drawable/ic_facebook</item>
+	</style>
+	
+	<style name="DialogAnim">
+		<item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
+	</style>
+	
+	<!-- Invitation -->
+	<style name="InvitationInput" parent="Base.Widget.AppCompat.EditText">
+		<item name="android:paddingTop">12dp</item>
+		<item name="android:paddingBottom">12dp</item>
+		<item name="android:paddingEnd">@dimen/margin_padding_small</item>
+		<item name="android:paddingStart">@dimen/margin_padding_small</item>
+		<item name="android:background">@android:color/white</item>
+		<item name="android:hint">@string/hint_code</item>
+		<item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body1</item>
+		<item name="android:textColor">@android:color/black</item>
+	</style>
+	
+	<style name="RangerBottomAppbar" parent="Widget.MaterialComponents.BottomAppBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+	</style>
+	
+	<style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+		<item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+	</style>
+	
+	<style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+		<item name="android:background">@android:color/transparent</item>
+	</style>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textSize">@dimen/text_medium</item>
-        <item name="titleTextColor">@android:color/white</item>
-    </style>
-
-    <style name="AppTheme.Translucent" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
-
-    <style name="AppTheme.Login" parent="Theme.Design.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.LoadingProgress" parent="AppTheme">
-        <item name="colorAccent">@android:color/white</item>
-    </style>
-
-    <style name="AppTheme.SyncLoadingProgress" parent="AppTheme">
-        <item name="colorAccent">@color/grey_default</item>
-    </style>
-
-    <style name="CustomProgressBarHorizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="theme">@style/AppTheme.SyncLoadingProgress</item>
-        <item name="android:minHeight">8dp</item>
-    </style>
-
-    <style name="RangerEdit" parent="Widget.AppCompat.EditText">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingEnd">@dimen/margin_padding_normal</item>
-        <item name="android:paddingStart">@dimen/margin_padding_normal</item>
-    </style>
-
-    <style name="TextAppearance.Design.Snackbar.Message" parent="android:TextAppearance" tools:override="true">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">50sp</item>
-    </style>
-
-
-    <style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
-        <item name="android:button">@drawable/ic_chainsaw</item>
-    </style>
-
-    <style name="ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:paddingStart">@dimen/margin_padding_large</item>
-        <item name="android:paddingEnd">@dimen/margin_padding_large</item>
-        <item name="android:minHeight">50dp</item>
-        <item name="android:minWidth">120dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/text_small</item>
-        <item name="android:textColor">@color/text_white</item>
-        <item name="android:foreground">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="PositiveButton" parent="ButtonStyle">
-        <item name="android:background">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="NegativeButton" parent="ButtonStyle">
-        <item name="android:background">@color/divider</item>
-    </style>
-
-    <style name="ProgressDialogStyle">
-        <item name="android:bottomBright">@color/transparent</item>
-        <item name="android:bottomDark">@color/transparent</item>
-        <item name="android:bottomMedium">@color/transparent</item>
-        <item name="android:centerBright">@color/transparent</item>
-        <item name="android:centerDark">@color/transparent</item>
-        <item name="android:centerMedium">@color/transparent</item>
-        <item name="android:fullBright">@color/transparent</item>
-        <item name="android:fullDark">@color/transparent</item>
-        <item name="android:topBright">@color/transparent</item>
-        <item name="android:topDark">@color/transparent</item>
-    </style>
-
-    <style name="DialogDefaultStyle" parent="Base.Theme.AppCompat.Dialog">
-        <item name="android:windowMinWidthMajor">50%</item>
-        <item name="android:windowMinWidthMinor">50%</item>
-    </style>
-
-    <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:background">@drawable/bg_report_radio_button</item>
-        <item name="android:button">@null</item>
-        <item name="android:drawablePadding">@dimen/margin_padding_normal</item>
-        <item name="android:paddingEnd">@dimen/margin_padding_large</item>
-        <item name="android:paddingStart">@dimen/margin_padding_large</item>
-        <item name="android:paddingTop">@dimen/margin_padding_small</item>
-        <item name="android:paddingBottom">@dimen/margin_padding_small</item>
-        <item name="android:textSize">@dimen/text_medium</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">56dp</item>
-    </style>
-
-    <style name="ProgressDialogTheme" parent="android:Theme.Holo.Dialog">
-        <item name="android:alertDialogStyle">@style/ProgressDialogStyle</item>
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="SwitchCompatStyle">
-        <item name="thumbTint">@color/switch_color</item>
-        <item name="trackTint">@color/switch_track_color</item>
-        <item name="showText">false</item>
-    </style>
-
-    <style name="LoginButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/btn_stoke_white</item>
-        <item name="android:paddingLeft">@dimen/margin_padding_normal</item>
-        <item name="android:paddingRight">@dimen/margin_padding_normal</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:layout_marginLeft">@dimen/margin_padding_normal</item>
-        <item name="android:layout_marginRight">@dimen/margin_padding_normal</item>
-        <item name="android:layout_marginBottom">@dimen/margin_padding_large</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/text_white</item>
-    </style>
-
-    <style name="LoginButton.FacebookButton" parent="LoginButton">
-        <item name="android:drawableLeft">@drawable/ic_facebook</item>
-    </style>
-
-    <style name="DialogAnim">
-        <item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
-    </style>
-
-    <!-- Invitation -->
-    <style name="InvitationInput" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingEnd">@dimen/margin_padding_small</item>
-        <item name="android:paddingStart">@dimen/margin_padding_small</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:hint">@string/hint_code</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body1</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
 </resources>

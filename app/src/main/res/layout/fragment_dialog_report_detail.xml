@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/transparent"
+	android:clickable="true"
+	android:focusable="true">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_small"
+		android:background="@drawable/background_report_detail_bottom_sheet"
+		android:elevation="16dp"
+		android:padding="@dimen/margin_padding_normal">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/reportTypeImageView"
+			android:layout_width="48dp"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:src="@drawable/ic_truck" />
+		
+		<TextView
+			android:id="@+id/reportTypeNameTextView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:textColor="@color/text_black"
+			android:textSize="@dimen/text_medium"
+			app:layout_constraintEnd_toStartOf="@+id/reportTimePastedTextView"
+			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
+			app:layout_constraintTop_toTopOf="@+id/reportTypeImageView"
+			tools:text="Vehicle" />
+		
+		<TextView
+			android:id="@+id/reportTimePastedTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/text_primary"
+			android:textSize="@dimen/text_medium"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="6h" />
+		
+		<TextView
+			android:id="@+id/reportLocationTextView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:drawableStart="@drawable/ic_pin_bottom_sheet"
+			android:textColor="@color/text_primary"
+			android:textSize="@dimen/text_medium"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
+			app:layout_constraintTop_toBottomOf="@+id/reportTypeNameTextView"
+			tools:text="1111111,11111" />
+		
+		<TextView
+			android:id="@+id/reportImageStateTextView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:drawableStart="@drawable/ic_photo_state_18dp"
+			android:textColor="@color/text_primary"
+			android:textSize="@dimen/text_medium"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
+			app:layout_constraintTop_toBottomOf="@+id/reportLocationTextView"
+			tools:text="5 images (2 not yet synced)" />
+		
+		<TextView
+			android:id="@+id/seeDetailTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_normal"
+			android:text="@string/see_report_detail"
+			android:textAllCaps="true"
+			android:textColor="@color/text_green"
+			android:textSize="@dimen/text_medium"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/reportImageStateTextView" />
+	
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

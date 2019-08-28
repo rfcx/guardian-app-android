@@ -31,7 +31,6 @@ class ProfileViewHolder(itemView: View, private val headerProtocol: HeaderProtoc
     private val tvStatus = itemView.statusTextView
 
     fun bind(context: Context, nickname: String, location: String) {
-
         // setup data
         val enableTracking = headerProtocol.isEnableTracking()
         val networkState = headerProtocol.getNetworkState()

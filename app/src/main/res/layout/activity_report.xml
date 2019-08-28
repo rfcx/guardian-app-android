@@ -10,10 +10,12 @@
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="?android:actionBarSize"
-		android:background="@color/colorPrimary"
-		app:layout_constraintTop_toTopOf="parent"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:title="← Report"/>
 	
 	<ScrollView
 		android:id="@+id/scrollView"
@@ -128,7 +130,7 @@
 			
 			<org.rfcx.ranger.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="48dp"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_small"
@@ -137,8 +139,9 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
 			
-			<Button
+			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/reportButton"
+				style="@style/Widget.AppCompat.Button.Borderless"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_padding_normal"

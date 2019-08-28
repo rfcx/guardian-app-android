@@ -19,7 +19,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.view.report.ReportActivity
+import org.rfcx.ranger.view.report.ReportDetailActivity
 
 class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 	
@@ -74,7 +74,7 @@ class DiagnosticsMapFragment : Fragment(), OnMapReadyCallback {
 		googleMap.setOnInfoWindowClickListener { marker ->
 			if (marker.tag != null && marker.tag is Report) {
 				val report = marker.tag as Report
-				context?.let { ReportActivity.startIntent(it, report.id) }
+				context?.let { ReportDetailActivity.startIntent(it, report.id) }
 			}
 		}
 	}

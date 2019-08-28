@@ -24,7 +24,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.view.SettingsActivity
+import org.rfcx.ranger.view.MainActivityNew
 
 /**
  *
@@ -114,7 +114,7 @@ class LocationTrackerService : Service() {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 //			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
-		} catch (ex: java.lang.SecurityException) {
+		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 			Log.w(TAG, "fail to request location update, ignore", ex)
 		} catch (ex: IllegalArgumentException) {
@@ -142,7 +142,7 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun createLocationTrackerNotification(location: Location?, isLocationAvailability: Boolean): Notification {
-		val intent = Intent(this, SettingsActivity::class.java)
+		val intent = Intent(this, MainActivityNew::class.java)
 		val pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {
@@ -150,7 +150,7 @@ class LocationTrackerService : Service() {
 			if (isLocationAvailability) {
 				location?.let {
 					setContentText("${it.latitude}, ${it.longitude}")
-				} ?: kotlin.run {
+				} ?: run {
 					setContentText(getString(R.string.notification_location_loading))
 				}
 			} else {

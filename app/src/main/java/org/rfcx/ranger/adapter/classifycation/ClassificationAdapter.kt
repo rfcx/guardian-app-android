@@ -1,6 +1,7 @@
 package org.rfcx.ranger.adapter.classifycation
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +53,8 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 			VIEW_CLASSIFICATION ->
 				ClassificationHolder(inflater.inflate(R.layout.item_classification, parent, false)
 						, onDetectionBoxClick)
-			else -> ClassificationEmptyHolder(inflater.inflate(R.layout.item_classification_empty, parent, false))
+			else -> ClassificationEmptyHolder(inflater.inflate(R.layout.item_classification_empty, parent, false),
+					onDetectionBoxClick)
 		}
 	}
 	
@@ -63,6 +65,8 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 		val box = lists[position]
 		if (holder is ClassificationHolder && box is ClassificationBox) {
+			holder.bind(box)
+		} else if (holder is ClassificationEmptyHolder && box is ClassificationEmptyBox) {
 			holder.bind(box)
 		}
 	}
@@ -83,7 +87,26 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 		}
 	}
 	
-	class ClassificationEmptyHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+	class ClassificationEmptyHolder(itemView: View, private val onDetectionBoxClick: ((ClassificationBox) -> Unit)?) : RecyclerView.ViewHolder(itemView) {
+		
+		fun bind(classificationBox: ClassificationEmptyBox) {
+			
+			var lastTouchDownX = 0f
+			itemView.setOnTouchListener { _, event ->
+				
+				if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+					lastTouchDownX = event.x
+				}
+				false
+			}
+			itemView.setOnClickListener {
+				
+				val boxWidth = it.width
+				val durationOnClickPosition = classificationBox.durationSecond() * lastTouchDownX / boxWidth
+				onDetectionBoxClick?.invoke(ClassificationBox((classificationBox.beginAt + (durationOnClickPosition * 1000)).toLong(), classificationBox.endAt))
+			}
+		}
+	}
 	
 	companion object {
 		const val VIEW_CLASSIFICATION = 1

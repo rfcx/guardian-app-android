@@ -37,16 +37,15 @@ import org.rfcx.ranger.adapter.OnMessageItemClickListener
 import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
 import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
-import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.util.ReportUtils.REQUEST_GALLERY
 import org.rfcx.ranger.util.ReportUtils.REQUEST_TAKE_PHOTO
-import org.rfcx.ranger.widget.OnStatChangeListener
+import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
@@ -67,9 +66,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	
-	// data
-	private var report: Report? = null
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -108,11 +104,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		initReport()
 		
 		reportButton.setOnClickListener {
-			if (report == null) {
-				submitReport()
-			} else {
-				updateReport()
-			}
+			submitReport()
 		}
 	}
 	
@@ -126,26 +118,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		super.onPause()
 	}
 	
-	private fun updateReport() {
-		// Update image attachments
-		// take the new image
-		if (report == null) return
-		val newAttachImages = reportImageAdapter.getNewAttachImage()
-		val reportImageDb = ReportImageDb()
-		
-		reportImageDb.save(report!!, newAttachImages)
-		ImageUploadWorker.enqueue()
-		finish()
-	}
-	
 	private fun initReport() {
-		if (intent.hasExtra(EXTRA_REPORT_ID)) {
-			val reportId = intent.getIntExtra(EXTRA_REPORT_ID, 0)
-			report = ReportDb().getReport(reportId)
-			reportButton.visibility = View.GONE
-			soundRecordProgressView.visibility = View.VISIBLE
-		}
-		
 		setupMap()
 		setupReportWhatAdapter()
 		setupWhenView()
@@ -157,7 +130,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onDestroy() {
 		super.onDestroy()
 		locationManager?.removeUpdates(locationListener)
-		val map = supportFragmentManager?.findFragmentById(R.id.mapView) as SupportMapFragment?
+		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
 		map?.let {
 			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
 		}
@@ -188,16 +161,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onMapReady(map: GoogleMap?) {
 		googleMap = map
 		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-		
-		if (isOnDetailView()) {
-			report?.let {
-				val location = Location(LocationManager.GPS_PROVIDER)
-				location.latitude = it.latitude
-				location.longitude = it.longitude
-				markRangerLocation(location)
-			}
-			return
-		}
 		checkThenAccquireLocation()
 	}
 	
@@ -212,7 +175,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun setupMap() {
-		val map = supportFragmentManager?.findFragmentById(R.id.mapView) as SupportMapFragment?
+		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
 		map?.getMapAsync(this@ReportActivity)
 	}
 	
@@ -256,7 +219,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.addMarker(MarkerOptions()
 				.position(latLng)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin)))
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_report_pin_on_map)))
 		
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))
@@ -271,33 +234,22 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		reportTypeRecycler.adapter = reportAdapter
 		reportAdapter.onMessageItemClickListener = object : OnMessageItemClickListener {
 			override fun onMessageItemClick(position: Int) {
+				Log.i("ReportActivity", "onMessageItemClick: $position")
 				validateForm()
-			}
-		}
-		
-		if (isOnDetailView()) {
-			report?.let {
-				reportAdapter.selectedItem = it.value.toEventPosition()
-				// Disable touch event
-				reportAdapter.disable()
 			}
 		}
 	}
 	
 	private fun setupWhenView() {
-		whenView.onWhenViewStatChangedListener = object : WhenView.OnWhenViewStatChangedListener {
-			override fun onStateChange(state: WhenView.State) {
+		whenView.onWhenViewStateChangedListener = object : WhenView.OnWhenViewStateChangedListener {
+			override fun onStateChange(state: Report.AgeEstimate) {
 				validateForm()
 			}
-		}
-		if (isOnDetailView()) {
-			whenView.setState(WhenView.State.fromInt(report?.ageEstimate ?: 0) ?: WhenView.State.NOW)
-			whenView.disable()
 		}
 	}
 	
 	private fun setupRecordSoundProgressView() {
-		soundRecordProgressView.onStatChangeListener = object : OnStatChangeListener {
+		soundRecordProgressView.onStateChangeListener = object : OnStateChangeListener {
 			override fun onStateChanged(state: SoundRecordState) {
 				when (state) {
 					SoundRecordState.NONE -> {
@@ -320,32 +272,18 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 				}
 			}
 		}
-		if (isOnDetailView()) {
-			soundRecordProgressView.disableEdit()
-			report?.audioLocation?.let {
-				recordFile = File(it)
-			}
-			if (recordFile != null && recordFile!!.exists()) {
-				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-				soundRecordProgressView.visibility = View.VISIBLE
-				reportRecordTextView.visibility = View.VISIBLE
-			} else {
-				soundRecordProgressView.visibility = View.GONE
-				reportRecordTextView.visibility = View.GONE
-			}
-		}
 	}
 	
 	private fun validateForm() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
-		reportButton.isEnabled = reportTypeItem != null && whenState != WhenView.State.NONE && lastLocation != null
+		reportButton.isEnabled = reportTypeItem != null && whenState != Report.AgeEstimate.NONE && lastLocation != null
 	}
 	
 	private fun submitReport() {
 		val reportTypeItem = reportAdapter.getSelectedItem()
 		val whenState = whenView.getState()
-		if (reportTypeItem == null || whenState == WhenView.State.NONE) {
+		if (reportTypeItem == null || whenState == Report.AgeEstimate.NONE) {
 			validateForm()
 			return
 		}
@@ -365,10 +303,11 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		val lon = lastLocation?.longitude ?: 0.0
 		Log.d("getSiteName", getSiteName())
 		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time,
-				latitude = lat, longitude = lon, ageEstimate = whenState.ageEstimate,
+				latitude = lat, longitude = lon, ageEstimateRaw = whenState.value,
 				audioLocation = recordFile?.canonicalPath)
 		
 		ReportDb().save(report, reportImageAdapter.getNewAttachImage())
+		WeeklySummaryData(Preferences(this)).adJustReportSubmitCount()
 		ReportSyncWorker.enqueue()
 		finish()
 	}
@@ -419,9 +358,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun startPlaying() {
 		if (recordFile == null) {
 			soundRecordProgressView.state = SoundRecordState.NONE
-			if (isOnDetailView()) {
-				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-			}
 			return
 		}
 		player = MediaPlayer().apply {
@@ -463,15 +399,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			}
 		}
 		
-		report?.let { it ->
-			val reportImages = ReportDb().getReportImages(it.id)
-			if (reportImages != null) {
-				reportImageAdapter.setImages(reportImages)
-			}
-		} ?: run {
-			reportImageAdapter.setImages(arrayListOf())
-		}
-		
+		reportImageAdapter.setImages(arrayListOf())
 		dismissImagePickerOptionsDialog()
 	}
 	
@@ -494,8 +422,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun dismissImagePickerOptionsDialog() {
 		if (reportImageAdapter.getNewAttachImage().count() != 0) {
 			reportButton.visibility = View.VISIBLE
-		} else if (isOnDetailView()) {
-			reportButton.visibility = View.GONE
 		}
 		attachImageDialog.dismiss()
 	}
@@ -577,31 +503,24 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	companion object {
-		private const val EXTRA_REPORT_ID = "extra_report_id"
-		
-		fun startIntent(context: Context, reportId: Int) {
-			val intent = Intent(context, ReportActivity::class.java)
-			intent.putExtra(EXTRA_REPORT_ID, reportId)
-			context.startActivity(intent)
+		fun startIntent(context: Context?) {
+			context?.let {
+				val intent = Intent(it, ReportActivity::class.java)
+				it.startActivity(intent)
+			}
 		}
 	}
 	
 	private fun showLocationMessageError(message: String) {
-		if (isOnDetailView()) return
 		locationStatusTextView.text = message
 		locationStatusTextView.setBackgroundResource(R.color.location_status_failed_bg)
 		locationStatusTextView.visibility = View.VISIBLE
 	}
 	
 	private fun showLocationFinding() {
-		if (isOnDetailView()) return
 		locationStatusTextView.text = getString(R.string.notification_location_loading)
 		locationStatusTextView.setBackgroundResource(R.color.location_status_loading_bg)
 		locationStatusTextView.visibility = View.VISIBLE
 	}
-	
-	/**
-	 * return Boolean of showing exist report
-	 */
-	private fun isOnDetailView(): Boolean = report != null
+
 }

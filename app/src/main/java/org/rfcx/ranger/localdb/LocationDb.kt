@@ -38,7 +38,8 @@ class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
     }
 
     fun allForDisplay(): RealmResults<CheckIn> {
-        return realm.where(CheckIn::class.java).greaterThan("timestamp", System.currentTimeMillis() - (MAX_DISPLAY_AGE_HOURS * 3600000)).findAll()
+        return realm.where(CheckIn::class.java).greaterThan("timestamp",
+                System.currentTimeMillis() - (MAX_DISPLAY_AGE_HOURS * 3600000)).findAllAsync()
     }
 
     fun deleteSynced(): Long {

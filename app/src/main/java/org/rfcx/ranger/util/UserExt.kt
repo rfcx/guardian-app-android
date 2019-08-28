@@ -33,3 +33,10 @@ fun Context.getUserNickname(): String {
 	val nickname = Preferences.getInstance(this).getString(Preferences.NICKNAME)
 	return if (nickname != null && nickname.length > 0) nickname else "${getSiteName()} Ranger"
 }
+
+fun Preferences.getTokenID(): String? {
+	val idToken = this.getString(Preferences.ID_TOKEN, "")
+	Log.d("getToken", idToken)
+	return if (idToken.isEmpty()) null else idToken
+}
+
