@@ -4,28 +4,35 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline05"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.05" />
 	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/guideline25"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.25" />
+		app:layout_constraintGuide_percent="0.20" />
 	
 	<androidx.constraintlayout.widget.Group
 		android:id="@+id/loginGroupView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="visible"
-		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton, poweredByTextView, rfcxLogoImageView" />
+		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton, poweredByTextView, rfcxLogoImageView, smsLoginButton" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellLogoImageView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_padding_large"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginBottom="@dimen/margin_padding_small"
 		android:src="@drawable/ic_notification_green"
 		app:layout_constraintBottom_toBottomOf="@+id/guideline25"
+		app:layout_constraintTop_toBottomOf="@+id/guideline05"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 	
@@ -52,7 +59,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.35" />
+		app:layout_constraintGuide_percent="0.30"/>
 	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginEmailEditText"
@@ -151,6 +158,21 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/orTextView" />
 	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/smsLoginButton"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/button_height"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_sms_login_button"
+		android:text="@string/connect_with_sms"
+		android:textColor="@android:color/white"
+		android:textStyle="bold"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/facebookLoginButton" />
+	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/guideline90"
 		android:layout_width="wrap_content"
@@ -180,7 +202,6 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/guideline90" />
-	
 	
 	<ProgressBar
 		android:id="@+id/loginProgressBar"

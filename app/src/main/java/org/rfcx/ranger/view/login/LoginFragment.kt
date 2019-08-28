@@ -52,6 +52,9 @@ class LoginFragment : BaseFragment() {
 			activity?.let { it1 -> loginViewModel.onLoginWithFacebook(it1) }
 			handleLogin()
 		}
+		
+		smsLoginButton.setOnClickListener{
+		}
 	}
 	
 	private fun handleLogin() {
