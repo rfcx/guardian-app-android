@@ -103,7 +103,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		feedbackTextView.setOnClickListener {
-			//TODO: move to feedback page
+			context?.let { it1 -> FeedbackActivity.startActivity(it1) }
 		}
 		
 	}
