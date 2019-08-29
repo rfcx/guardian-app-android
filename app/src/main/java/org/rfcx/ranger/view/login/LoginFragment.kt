@@ -57,11 +57,7 @@ class LoginFragment : BaseFragment() {
 			loginGroupView.visibility = View.GONE
 			loginProgressBar.visibility = View.VISIBLE
 			activity?.let { it1 -> loginViewModel.loginMagicLink(it1) }
-			loginViewModel.gotoPage.observe(this, Observer {
-				if (it == "InvitationCodeFragment") {
-					listener.openInvitationCodeFragment()
-				}
-			})
+			handleLogin()
 		}
 	}
 	
@@ -78,7 +74,6 @@ class LoginFragment : BaseFragment() {
 					loginViewModel.loginError.observe(this, Observer {
 						loginGroupView.visibility = View.VISIBLE
 						loginProgressBar.visibility = View.INVISIBLE
-						loginViewModel.loginState.value
 						Toast.makeText(context, it, Toast.LENGTH_LONG).show()
 					})
 				}

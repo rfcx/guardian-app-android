@@ -151,7 +151,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 					
 					override fun onSuccess(credentials: Credentials) {
 						Log.d("MagicLink onSuccess", credentials.toString())
-						_gotoPage.postValue("InvitationCodeFragment")
+						_loginState.postValue(LoginState.SUCCESS)
 					}
 				})
 	}
@@ -167,9 +167,11 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
 			override fun onSuccess(t: Boolean) {
 				if (userAuthResponse.isRanger) {
+					Log.d("MainActivityNew", "MainActivityNew")
 					_userTouchState.postValue(UserTouchState.SUCCESS)
 					_gotoPage.postValue("MainActivityNew")
 				} else {
+					Log.d("InvitationCodeFragment", "InvitationCodeFragment")
 					_userTouchState.postValue(UserTouchState.SUCCESS)
 					_gotoPage.postValue("InvitationCodeFragment")
 				}
