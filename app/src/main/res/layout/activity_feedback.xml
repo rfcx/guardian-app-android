@@ -44,7 +44,7 @@
 		app:layout_constraintTop_toBottomOf="@+id/fromEmailTextView"/>
 	
 	<androidx.appcompat.widget.AppCompatEditText
-		android:id="@+id/loginEmailEditText"
+		android:id="@+id/feedbackEditText"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
