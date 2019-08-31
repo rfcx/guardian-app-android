@@ -187,5 +187,6 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
+	<string name="photos">ภาพถ่าย</string>
 
 </resources>

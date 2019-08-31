@@ -188,5 +188,7 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
+	<string name="audio_notes">Catatan audio</string>
+    <string name="photos">Foto</string>
 
 </resources>
