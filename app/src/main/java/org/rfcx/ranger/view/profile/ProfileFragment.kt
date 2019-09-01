@@ -1,6 +1,8 @@
 package org.rfcx.ranger.view.profile
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -98,7 +100,16 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		rateAppTextView.setOnClickListener {
-			//TODO: move to rate app page
+			val appPackageName = activity?.packageName
+			try {
+				val playStoreUri: Uri = Uri.parse("market://details?id=$appPackageName")
+				val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
+				startActivity(playStoreIntent)
+			}catch (exp:Exception){
+				val exceptionUri: Uri = Uri.parse("http://play.google.com/store/apps/details?id=$appPackageName")
+				val exceptionIntent = Intent(Intent.ACTION_VIEW, exceptionUri)
+				startActivity(exceptionIntent)
+			}
 		}
 		
 		feedbackTextView.setOnClickListener {
