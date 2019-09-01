@@ -196,7 +196,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {
 		val status = syncStatus
 				?: if (context.isNetworkAvailable()) SyncInfo.Status.STARTING else SyncInfo.Status.WAITING_NETWORK
-		
 		if (profileData.getLastStatusSyncing() == SyncInfo.Status.UPLOADED.name && status == SyncInfo.Status.UPLOADED) {
 			return
 		}

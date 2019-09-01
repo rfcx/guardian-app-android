@@ -1,5 +1,6 @@
 package org.rfcx.ranger.data.local
 
+import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.util.*
 
@@ -42,6 +43,6 @@ class ProfileData(private val preferences: Preferences) {
 	}
 	
 	fun getLastStatusSyncing(): String {
-		return preferences.getString(Preferences.LAST_STATUS_SYNCING, "")
+		return preferences.getString(Preferences.LAST_STATUS_SYNCING, SyncInfo.Status.UPLOADED.name)
 	}
 }

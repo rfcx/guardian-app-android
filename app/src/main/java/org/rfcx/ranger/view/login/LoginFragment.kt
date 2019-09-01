@@ -29,6 +29,12 @@ class LoginFragment : BaseFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		initView()
+		setupObserver()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		loading(false)
 	}
 	
 	private fun initView() {
@@ -37,72 +43,44 @@ class LoginFragment : BaseFragment() {
 			val password = loginPasswordEditText.text.toString()
 			
 			if (validateInput(email, password)) {
-				loginGroupView.visibility = View.GONE
-				loginProgressBar.visibility = View.VISIBLE
-				loginViewModel.setLoginState()
-				loginViewModel.doLogin(email, password)
-				handleLogin()
+				loading()
+				loginViewModel.login(email, password)
 			}
 		}
 		
 		facebookLoginButton.setOnClickListener {
-			loginGroupView.visibility = View.GONE
-			loginProgressBar.visibility = View.VISIBLE
-			loginViewModel.setLoginState()
-			activity?.let { it1 -> loginViewModel.onLoginWithFacebook(it1) }
-			handleLogin()
+			loading()
+			activity?.let { it1 -> loginViewModel.loginWithFacebook(it1) }
 		}
 	}
 	
-	private fun handleLogin() {
-		loginViewModel.loginState.observe(this, Observer {
-			when (it) {
-				LoginState.SUCCESS -> {
-					loginViewModel.loginResult.observe(this, Observer {
-						loginViewModel.loginSuccess(it)
-						handleUserTouch()
-					})
-				}
-				LoginState.FAILED -> {
-					loginViewModel.loginError.observe(this, Observer {
-						loginGroupView.visibility = View.VISIBLE
-						loginProgressBar.visibility = View.INVISIBLE
-						loginViewModel.loginState.value
-						Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-					})
-				}
+	private fun loading(start: Boolean = true) {
+		loginGroupView.visibility = if (start) View.GONE else View.VISIBLE
+		loginProgressBar.visibility = if (start) View.VISIBLE else View.GONE
+	}
+	
+	private fun setupObserver() {
+		loginViewModel.userAuth.observe(this, Observer {
+			it ?: return@Observer
+			loginViewModel.checkUserDetail(it)
+		})
+		
+		loginViewModel.loginFailure.observe(this, Observer { errorMessage ->
+			loading(false)
+			if (errorMessage != null && errorMessage.isNotEmpty()) {
+				Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+			}
+		})
+		
+		loginViewModel.redirectPage.observe(this, Observer { loginRedirect ->
+			loading(false)
+			when (loginRedirect) {
+				LoginRedirect.MAIN_PAGE -> listener.openMain()
+				LoginRedirect.INVITE_CODE_PAGE -> listener.openInvitationCodeFragment()
 			}
 		})
 	}
-	
-	private fun getError() {
-		loginViewModel.loginError.observe(this, Observer {
-			loginGroupView.visibility = View.VISIBLE
-			loginProgressBar.visibility = View.INVISIBLE
-			Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-		})
-	}
-	
-	private fun handleUserTouch() {
-		loginViewModel.userTouchState.observe(this, Observer {
-			when (it!!) {
-				UserTouchState.SUCCESS -> {
-					loginViewModel.gotoPage.observe(this, Observer {
-						if (it == "MainActivityNew") {
-							listener.openMain()
-						} else if (it == "InvitationCodeFragment") {
-							listener.openInvitationCodeFragment()
-							Log.d("handleUserTouch", "InvitationCodeFragment")
-						}
-					})
-				}
-				UserTouchState.FAILED -> {
-					getError()
-				}
-			}
-		})
-	}
-	
+
 	private fun validateInput(email: String?, password: String?): Boolean {
 		if (email.isNullOrEmpty()) {
 			loginEmailEditText.error = getString(R.string.pls_fill_email)
