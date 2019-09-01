@@ -102,7 +102,6 @@
 	
 	<string name="in_air_plane_mode">Unable to determine your location</string>
 	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
-	<string name="common_ok">OK</string>
 	
 	<string name="location">Location</string>
 	<string name="photos">Photos</string>
@@ -122,8 +121,10 @@
 	<string name="follow_up_later_button">Follow up later</string>
 	<string name="open_map_button">Open Map</string>
 	
+	<string name="common_ok">OK</string>
 	<string name="common_no">No</string>
 	<string name="common_yes">Yes</string>
+	<string name="common_none">None</string>
 	
 	<!-- Status -->
 	<string name="status_stat_title">Your weekly status</string>
