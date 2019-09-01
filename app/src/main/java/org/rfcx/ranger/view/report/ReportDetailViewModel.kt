@@ -8,6 +8,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.service.ImageUploadWorker
 
 class ReportDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
 	
@@ -46,5 +47,13 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 	
 	fun getReportImages(): LiveData<List<ReportImage>> {
 		return reportImagesLive
+	}
+	
+	fun addReportImages(images: List<String>) {
+		report?.let {
+			val reportImageDb = ReportImageDb()
+			reportImageDb.save(it, images)
+			ImageUploadWorker.enqueue()
+		}
 	}
 }

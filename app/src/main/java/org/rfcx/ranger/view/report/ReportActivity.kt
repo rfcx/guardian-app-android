@@ -1,22 +1,17 @@
 package org.rfcx.ranger.view.report
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ActivityInfo
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,16 +21,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_report.*
-import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.OnMessageItemClickListener
-import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
-import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
@@ -43,32 +32,23 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.util.ReportUtils.REQUEST_GALLERY
-import org.rfcx.ranger.util.ReportUtils.REQUEST_TAKE_PHOTO
-import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
 
-class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
+class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	private var googleMap: GoogleMap? = null
 	private val reportAdapter = ReportTypeAdapter()
 	
-	private var imageFile: File? = null
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
 	private var player: MediaPlayer? = null
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val recordPermissions by lazy { RecordingPermissions(this) }
-	private val cameraPermissions by lazy { CameraPermissions(this) }
-	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
-	
-	private lateinit var attachImageDialog: BottomSheetDialog
-	private val reportImageAdapter by lazy { ReportImageAdapter() }
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -94,6 +74,7 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			checkThenAccquireLocation()
 		}
 	}
+	
 	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +82,11 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		setContentView(R.layout.activity_report)
 		
 		bindActionbar()
-		initReport()
+		setupMap()
+		setupReportWhatAdapter()
+		setupWhenView()
+		setupRecordSoundProgressView()
+		setupImageRecycler()
 		
 		reportButton.setOnClickListener {
 			submitReport()
@@ -118,15 +103,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		super.onPause()
 	}
 	
-	private fun initReport() {
-		setupMap()
-		setupReportWhatAdapter()
-		setupWhenView()
-		setupRecordSoundProgressView()
-		setupAttachImageDialog()
-		setupReportImages()
-	}
-	
 	override fun onDestroy() {
 		super.onDestroy()
 		locationManager?.removeUpdates(locationListener)
@@ -139,16 +115,15 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
+		
 		locationPermissions.handleActivityResult(requestCode, resultCode)
-		handleTakePhotoResult(requestCode, resultCode)
-		handleGalleryResult(requestCode, resultCode, data)
 	}
 	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+		
 		locationPermissions.handleRequestResult(requestCode, grantResults)
 		recordPermissions.handleRequestResult(requestCode, grantResults)
-		cameraPermissions.handleRequestResult(requestCode, grantResults)
-		galleryPermissions.handleRequestResult(requestCode, grantResults)
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -156,12 +131,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 			android.R.id.home -> finish()
 		}
 		return super.onOptionsItemSelected(item)
-	}
-	
-	override fun onMapReady(map: GoogleMap?) {
-		googleMap = map
-		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-		checkThenAccquireLocation()
 	}
 	
 	private fun bindActionbar() {
@@ -177,6 +146,12 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	private fun setupMap() {
 		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
 		map?.getMapAsync(this@ReportActivity)
+	}
+	
+	override fun onMapReady(map: GoogleMap?) {
+		googleMap = map
+		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+		checkThenAccquireLocation()
 	}
 	
 	private fun checkThenAccquireLocation() {
@@ -201,7 +176,6 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
-//			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
 			lastLocation?.let { markRangerLocation(it) }
@@ -249,26 +223,23 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun setupRecordSoundProgressView() {
-		soundRecordProgressView.onStateChangeListener = object : OnStateChangeListener {
-			override fun onStateChanged(state: SoundRecordState) {
-				when (state) {
-					SoundRecordState.NONE -> {
-						recordFile?.deleteOnExit()
-						recordFile = null
-					}
-					SoundRecordState.RECORDING -> {
-						record()
-					}
-					SoundRecordState.STOPPED_RECORD -> {
-						stopRecording()
-					}
-					SoundRecordState.PLAYING -> {
-						startPlaying()
-					}
-					SoundRecordState.STOP_PLAYING -> {
-						stopPlaying()
-					}
-					
+		soundRecordProgressView.onStateChangeListener = { state ->
+			when (state) {
+				SoundRecordState.NONE -> {
+					recordFile?.deleteOnExit()
+					recordFile = null
+				}
+				SoundRecordState.RECORDING -> {
+					record()
+				}
+				SoundRecordState.STOPPED_RECORD -> {
+					stopRecording()
+				}
+				SoundRecordState.PLAYING -> {
+					startPlaying()
+				}
+				SoundRecordState.STOP_PLAYING -> {
+					stopPlaying()
 				}
 			}
 		}
@@ -381,125 +352,20 @@ class ReportActivity : AppCompatActivity(), OnMapReadyCallback {
 		player = null
 	}
 	
-	private fun setupReportImages() {
+	private fun setupImageRecycler() {
 		attachImageRecycler.apply {
 			adapter = reportImageAdapter
 			layoutManager = LinearLayoutManager(this@ReportActivity, LinearLayoutManager.HORIZONTAL, false)
 			setHasFixedSize(true)
 		}
-		
-		reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
-			override fun onAddImageClick() {
-				attachImageDialog.show()
-			}
-			
-			override fun onDeleteImageClick(position: Int) {
-				reportImageAdapter.removeAt(position)
-				dismissImagePickerOptionsDialog()
-			}
-		}
-		
 		reportImageAdapter.setImages(arrayListOf())
-		dismissImagePickerOptionsDialog()
 	}
 	
-	private fun setupAttachImageDialog() {
-		val bottomSheetView = layoutInflater.inflate(R.layout.buttom_sheet_attach_image_layout, null)
-		
-		bottomSheetView.menuGallery.setOnClickListener {
-			openGallery()
-		}
-		
-		bottomSheetView.menuTakePhoto.setOnClickListener {
-			takePhoto()
-		}
-		
-		attachImageDialog = BottomSheetDialog(this@ReportActivity)
-		attachImageDialog.setContentView(bottomSheetView)
-		
-	}
 	
-	private fun dismissImagePickerOptionsDialog() {
+	override fun didDismissImagePicker() {
 		if (reportImageAdapter.getNewAttachImage().count() != 0) {
 			reportButton.visibility = View.VISIBLE
 		}
-		attachImageDialog.dismiss()
-	}
-	
-	private fun takePhoto() {
-		if (!cameraPermissions.allowed()) {
-			imageFile = null
-			cameraPermissions.check { }
-		} else {
-			startTakePhoto()
-		}
-	}
-	
-	private fun startTakePhoto() {
-		val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-		imageFile = ReportUtils.createReportImageFile()
-		if (imageFile != null) {
-			val photoURI = FileProvider.getUriForFile(this, ReportUtils.FILE_CONTENT_PROVIDER, imageFile!!)
-			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-			startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-		} else {
-			// TODO: handle on can't create image file
-		}
-	}
-	
-	private fun handleTakePhotoResult(requestCode: Int, resultCode: Int) {
-		if (requestCode != REQUEST_TAKE_PHOTO) return
-		
-		if (resultCode == Activity.RESULT_OK) {
-			imageFile?.let {
-				reportImageAdapter.addImages(listOf(it.absolutePath))
-			}
-			dismissImagePickerOptionsDialog()
-			
-		} else {
-			// remove file image
-			imageFile?.let {
-				ImageFileUtils.removeFile(it)
-				this@ReportActivity.imageFile = null
-			}
-		}
-	}
-	
-	private fun openGallery() {
-		if (!galleryPermissions.allowed()) {
-			imageFile = null
-			galleryPermissions.check { }
-		} else {
-			startOpenGallery()
-		}
-	}
-	
-	private fun startOpenGallery() {
-		val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - reportImageAdapter.getImageCount()
-		Matisse.from(this)
-				.choose(MimeType.ofImage())
-				.countable(true)
-				.maxSelectable(remainingImage)
-				.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-				.thumbnailScale(0.85f)
-				.imageEngine(GlideV4ImageEngine())
-				.theme(R.style.Matisse_Dracula)
-				.forResult(REQUEST_GALLERY)
-	}
-	
-	private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-		if (requestCode != REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
-		
-		val pathList = mutableListOf<String>()
-		val results = Matisse.obtainResult(intentData)
-		results.forEach {
-			val imagePath = ImageFileUtils.findRealPath(this, it)
-			imagePath?.let { path ->
-				pathList.add(path)
-			}
-		}
-		reportImageAdapter.addImages(pathList)
-		dismissImagePickerOptionsDialog()
 	}
 	
 	companion object {
