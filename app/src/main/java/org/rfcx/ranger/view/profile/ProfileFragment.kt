@@ -34,21 +34,21 @@ class ProfileFragment : BaseFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		setEventClick()
+		setupButtonListeners()
 		
 		profileViewModel.locationTracking.observe(this, Observer {
 			Log.e("BaseActivity", "$it")
 			locationTrackingSwitch.isChecked = it
 		})
 		
-		profileViewModel.notificationReceiving.observe(this, Observer { it ->
-			notificationReceiveSwitch.isChecked = it
-			if (it) {
-				context?.let {
+		profileViewModel.notificationReceiving.observe(this, Observer { on ->
+			notificationReceiveSwitch.isChecked = on
+			// TODO this should be in the VM
+			// TODO need to protect again continuous presses
+			context?.let {
+				if (on) {
 					CloudMessaging.subscribeIfRequired(it)
-				}
-			} else {
-				context?.let {
+				} else {
 					CloudMessaging.unsubscribe(it)
 				}
 			}
@@ -75,7 +75,7 @@ class ProfileFragment : BaseFragment() {
 		})
 	}
 	
-	private fun setEventClick() {
+	private fun setupButtonListeners() {
 		locationTrackingSwitchLayout.setOnClickListener {
 			if (locationTrackingSwitch.isChecked) {
 				// off location tracking
@@ -90,8 +90,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		guardianGroupLayout.setOnClickListener {
-			//TODO: move to select guardian site page
-			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
+			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
 		logoutTextView.setOnClickListener {
@@ -103,9 +102,8 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		feedbackTextView.setOnClickListener {
-			context?.let { it1 -> FeedbackActivity.startActivity(it1) }
+			context?.let { FeedbackActivity.startActivity(it) }
 		}
-		
 	}
 	
 	override fun onStart() {
