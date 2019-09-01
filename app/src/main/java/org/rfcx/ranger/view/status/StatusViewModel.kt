@@ -20,6 +20,7 @@ import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.asLiveData
@@ -98,7 +99,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private var onDutyRealmTimeDisposable: Disposable? = null
 	
 	init {
-		updateGuardianGroup()
+		resumed()
 		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
@@ -186,8 +187,10 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		}
 	}
 	
-	fun updateGuardianGroup() {
+	fun resumed() {
 		_hasGuardianGroup.value = profileData.hasGuardianGroup()
+		
+		ImageUploadWorker.enqueue()
 	}
 	
 	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {

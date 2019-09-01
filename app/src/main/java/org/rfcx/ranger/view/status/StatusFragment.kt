@@ -1,6 +1,5 @@
 package org.rfcx.ranger.view.status
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,8 +38,8 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	
 	override fun onResume() {
 		super.onResume()
-		// force check setting guardian group
-		statusViewModel.updateGuardianGroup()
+		
+		statusViewModel.resumed()
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
