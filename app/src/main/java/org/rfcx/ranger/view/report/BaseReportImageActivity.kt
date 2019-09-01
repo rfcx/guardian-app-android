@@ -23,7 +23,8 @@ import java.io.File
 
 abstract class BaseReportImageActivity: BaseActivity() {
 	
-	protected abstract fun didDismissImagePicker()
+	protected abstract fun didAddImages(imagePaths: List<String>)
+	protected abstract fun didRemoveImage(imagePath: String)
 	
 	protected val reportImageAdapter by lazy { ReportImageAdapter() }
 	private var imageFile: File? = null
@@ -52,9 +53,10 @@ abstract class BaseReportImageActivity: BaseActivity() {
 				attachImageDialog.show()
 			}
 			
-			override fun onDeleteImageClick(position: Int) {
+			override fun onDeleteImageClick(position: Int, imagePath: String) {
 				reportImageAdapter.removeAt(position)
 				dismissImagePickerOptionsDialog()
+				didRemoveImage(imagePath)
 			}
 		}
 		
@@ -79,7 +81,6 @@ abstract class BaseReportImageActivity: BaseActivity() {
 	
 	private fun dismissImagePickerOptionsDialog() {
 		attachImageDialog.dismiss()
-		didDismissImagePicker()
 	}
 	
 	private fun takePhoto() {
@@ -108,7 +109,9 @@ abstract class BaseReportImageActivity: BaseActivity() {
 		
 		if (resultCode == Activity.RESULT_OK) {
 			imageFile?.let {
-				reportImageAdapter.addImages(listOf(it.absolutePath))
+				val pathList = listOf(it.absolutePath)
+				reportImageAdapter.addImages(pathList)
+				didAddImages(pathList)
 			}
 			dismissImagePickerOptionsDialog()
 			
@@ -155,6 +158,7 @@ abstract class BaseReportImageActivity: BaseActivity() {
 			}
 		}
 		reportImageAdapter.addImages(pathList)
+		didAddImages(pathList)
 		dismissImagePickerOptionsDialog()
 	}
 }

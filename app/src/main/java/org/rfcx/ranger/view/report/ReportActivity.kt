@@ -361,12 +361,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		reportImageAdapter.setImages(arrayListOf())
 	}
 	
-	
-	override fun didDismissImagePicker() {
-		if (reportImageAdapter.getNewAttachImage().count() != 0) {
-			reportButton.visibility = View.VISIBLE
-		}
-	}
+	override fun didAddImages(imagePaths: List<String>) { }
+	override fun didRemoveImage(imagePath: String) { }
 	
 	companion object {
 		fun startIntent(context: Context?) {

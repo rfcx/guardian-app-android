@@ -151,18 +151,12 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		player = null
 	}
 	
-	override fun didDismissImagePicker() {
-	
+	override fun didAddImages(imagePaths: List<String>) {
+	    viewModel.addReportImages(imagePaths)
 	}
 	
-	private fun updateReportImages() {
-		val newAttachImages = reportImageAdapter.getNewAttachImage()
-		
-		if (newAttachImages.isNotEmpty()) {
-			viewModel.addReportImages(newAttachImages)
-		}
-		
-		finish()
+	override fun didRemoveImage(imagePath: String) {
+		viewModel.removeReportImage(imagePath)
 	}
 	
 	private fun setupImageRecycler() {

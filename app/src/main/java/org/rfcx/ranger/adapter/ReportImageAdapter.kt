@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.adapter_report_image.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
 import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.GlideApp
 
 class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(ReportImageAdapterDiffUtil()) {
@@ -34,7 +35,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 			if (it.remotePath != null) {
 				imagesSource.add(RemoteImageItem(index, it.remotePath!!, false))
 			} else {
-				imagesSource.add(LocalImageItem(index, it.localPath, false))
+				imagesSource.add(LocalImageItem(index, it.localPath, it.syncState == ReportImageDb.UNSENT))
 			}
 			index++
 		}
@@ -87,9 +88,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	fun getImageCount(): Int = if (imagesSource[imagesSource.count() - 1] is AddImageItem) imagesSource.count() - 1
 	else imagesSource.count()
 	
-	override
-	
-	fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		
 		return when (viewType) {
 			VIEW_TYPE_IMAGE -> {
@@ -134,7 +133,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 			
 			itemView.deleteImageButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
 			itemView.deleteImageButton.setOnClickListener {
-				onReportImageAdapterClickListener?.onDeleteImageClick(adapterPosition)
+				onReportImageAdapterClickListener?.onDeleteImageClick(adapterPosition, imagePath)
 			}
 		}
 	}
@@ -178,6 +177,6 @@ data class AddImageItem(val any: Any? = null) : BaseListItem {
 
 interface OnReportImageAdapterClickListener {
 	fun onAddImageClick()
-	fun onDeleteImageClick(position: Int)
+	fun onDeleteImageClick(position: Int, imagePath: String)
 }
 
