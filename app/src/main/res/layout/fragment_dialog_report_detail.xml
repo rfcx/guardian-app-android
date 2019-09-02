@@ -23,7 +23,7 @@
 			android:adjustViewBounds="true"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:src="@drawable/ic_truck" />
+			tools:src="@drawable/ic_vehicle" />
 		
 		<TextView
 			android:id="@+id/reportTypeNameTextView"

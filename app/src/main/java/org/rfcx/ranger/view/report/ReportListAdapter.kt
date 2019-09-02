@@ -128,15 +128,7 @@ class ReportViewHolder(itemView: View, private val onItemClick: ((Int) -> Unit?)
 				ContextCompat.getColor(itemView.context,
 						if (report.syncState == ReportDb.SENT) android.R.color.holo_green_light else android.R.color.holo_orange_light))
 		
-		itemView.reportTypeImageView.setImageResource(
-				when (report.value) {
-					Event.vehicle -> R.drawable.ic_truck
-					Event.trespasser -> R.drawable.ic_people
-					Event.chainsaw -> R.drawable.ic_chainsaw
-					Event.gunshot -> R.drawable.ic_gun
-					else -> R.drawable.ic_pin_huge
-				}
-		)
+		itemView.reportTypeImageView.setImageResource(report.getImageResource())
 		if (reportItem.attachImagesCount == 0) {
 			itemView.imageSyncState.visibility = View.GONE
 		} else {

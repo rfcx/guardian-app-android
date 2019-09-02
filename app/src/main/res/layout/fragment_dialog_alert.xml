@@ -66,7 +66,7 @@
 			android:id="@+id/eventIconImageView"
 			android:layout_width="@dimen/report_icon_size"
 			android:layout_height="@dimen/report_icon_size"
-			tools:src="@drawable/ic_truck" />
+			tools:src="@drawable/ic_vehicle" />
 		
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/eventNameTextView"
