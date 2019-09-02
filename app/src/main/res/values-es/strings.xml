@@ -188,5 +188,8 @@
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de grupos de la guarda</string>
+	<string name="audio_notes">Notas de audio</string>
+	<string name="photos">Foto</string>
+	<string name="common_none">Nada</string>
 
 </resources>

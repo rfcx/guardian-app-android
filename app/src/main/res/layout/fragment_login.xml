@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
+	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/guideline05"
 		android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="visible"
-		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton, poweredByTextView, rfcxLogoImageView, smsLoginButton" />
+		app:constraint_referenced_ids="loginEmailEditText,loginPasswordEditText,signInButton,leftLineView,orTextView,rightLineView,facebookLoginButton,poweredByTextView,rfcxLogoImageView,smsLoginButton" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellLogoImageView"
@@ -32,9 +33,9 @@
 		android:layout_marginBottom="@dimen/margin_padding_small"
 		android:src="@drawable/ic_notification_green"
 		app:layout_constraintBottom_toBottomOf="@+id/guideline25"
-		app:layout_constraintTop_toBottomOf="@+id/guideline05"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent" />
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/guideline05" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/protectingRainforestsTextView"
@@ -59,7 +60,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.30"/>
+		app:layout_constraintGuide_percent="0.30" />
 	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginEmailEditText"

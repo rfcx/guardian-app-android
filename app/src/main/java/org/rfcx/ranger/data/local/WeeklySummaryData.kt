@@ -105,6 +105,7 @@ class WeeklySummaryData(private val preferences: Preferences) {
 		
 		preferences.remove(REVIEW_COUNT)
 		preferences.remove(REPORT_COUNT)
+		preferences.remove(ON_DUTY)
 		
 		val mondayCalendar = Calendar.getInstance()
 		mondayCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
@@ -113,6 +114,13 @@ class WeeklySummaryData(private val preferences: Preferences) {
 		mondayCalendar.set(Calendar.SECOND, 0)
 		mondayCalendar.set(Calendar.MILLISECOND, 0)
 		val mondayOfThisWeek = mondayCalendar.time
+		
+		// save on duty open time to monday if it's on
+		val lastDutyOpenTime = preferences.getLong(ON_DUTY_LAST_OPEN, 0L)
+		if (lastDutyOpenTime != 0L) {
+			preferences.putLong(ON_DUTY_LAST_OPEN, mondayOfThisWeek.time)
+		}
+		
 		preferences.putDate(LAST_CLEAN_DATA_MONDAY, mondayOfThisWeek)
 	}
 	

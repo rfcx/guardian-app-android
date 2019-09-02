@@ -133,7 +133,7 @@
     <string name="format_location">%s, %s</string>
     <string name="format_image_synced">%s ภาพ</string>
     <string name="format_image_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
-    <string name="format_images_synced">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="format_images_synced">%s ภาพ</string>
     <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
     <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
     <string name="setting_guardian_group">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
@@ -187,5 +187,7 @@
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
+	<string name="photos">ภาพถ่าย</string>
+	<string name="common_none">ไม่มี</string>
 
 </resources>

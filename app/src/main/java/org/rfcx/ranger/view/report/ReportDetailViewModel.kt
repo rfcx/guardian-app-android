@@ -47,4 +47,16 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 	fun getReportImages(): LiveData<List<ReportImage>> {
 		return reportImagesLive
 	}
+	
+	fun addReportImages(imagePaths: List<String>) {
+		report?.let {
+			val reportImageDb = ReportImageDb()
+			reportImageDb.save(it, imagePaths)
+		}
+	}
+	
+	fun removeReportImage(imagePath: String) {
+		reportImageDb.deleteUnsent(imagePath)
+	}
+
 }

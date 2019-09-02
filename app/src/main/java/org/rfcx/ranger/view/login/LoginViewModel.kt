@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,42 +42,37 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 		WebAuthProvider.init(auth0)
 	}
 	
-	private var _loginState: MutableLiveData<LoginState> = MutableLiveData()
-	val loginState: LiveData<LoginState>
-		get() = _loginState
+	private var _userAuth: MutableLiveData<UserAuthResponse?> = MutableLiveData()
+	val userAuth: LiveData<UserAuthResponse?>
+		get() = _userAuth
 	
-	private var _loginResult: MutableLiveData<UserAuthResponse> = MutableLiveData()
-	val loginResult: LiveData<UserAuthResponse>
-		get() = _loginResult
+	private var _loginFailure: MutableLiveData<String?> = MutableLiveData()
+	val loginFailure: LiveData<String?>
+		get() = _loginFailure
 	
-	private var _loginError: MutableLiveData<String?> = MutableLiveData()
-	val loginError: LiveData<String?>
-		get() = _loginError
+	private var _redirectPage: MutableLiveData<LoginRedirect?> = MutableLiveData()
+	val redirectPage: LiveData<LoginRedirect?>
+		get() = _redirectPage
 	
-	private var _userTouchState: MutableLiveData<UserTouchState> = MutableLiveData()
-	val userTouchState: LiveData<UserTouchState>
-		get() = _userTouchState
+	init {
+		_userAuth.postValue(null)
+		_loginFailure.postValue(null)
+		_redirectPage.postValue(null)
+	}
 	
-	private var _gotoPage: MutableLiveData<String> = MutableLiveData()
-	val gotoPage: LiveData<String>
-		get() = _gotoPage
-	
-	fun doLogin(email: String, password: String) {
+	fun login(email: String, password: String) {
 		authentication
 				.login(email, password, "Username-Password-Authentication")
 				.setScope(context.getString(R.string.auth0_scopes))
 				.setAudience(context.getString(R.string.auth0_audience))
 				.start(object : BaseCallback<Credentials, AuthenticationException> {
 					override fun onSuccess(credentials: Credentials) {
-						val result = CredentialVerifier(context).verify(credentials)
-						when (result) {
+						when (val result = CredentialVerifier(context).verify(credentials)) {
 							is Err -> {
-								_loginState.postValue(LoginState.FAILED)
-								_loginError.postValue(result.error)
+								_loginFailure.postValue(result.error)
 							}
 							is Ok -> {
-								_loginState.postValue(LoginState.SUCCESS)
-								_loginResult.postValue(result.value)
+								_userAuth.postValue(result.value)
 							}
 						}
 					}
@@ -87,17 +81,15 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 						exception.printStackTrace()
 						Crashlytics.logException(exception)
 						if (exception.code == "invalid_grant") {
-							_loginState.postValue(LoginState.FAILED)
-							_loginError.postValue(context.getString(R.string.incorrect_username_password))
+							_loginFailure.postValue(context.getString(R.string.incorrect_username_password))
 						} else {
-							_loginState.postValue(LoginState.FAILED)
-							_loginError.postValue(exception.description)
+							_loginFailure.postValue(exception.description)
 						}
 					}
 				})
 	}
 	
-	fun onLoginWithFacebook(activity: Activity) {
+	fun loginWithFacebook(activity: Activity) {
 		webAuthentication
 				.withConnection("facebook")
 				.withScope(context.getString(R.string.auth0_scopes))
@@ -105,27 +97,21 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				.withAudience(context.getString(R.string.auth0_audience))
 				.start(activity, object : AuthCallback {
 					override fun onFailure(dialog: Dialog) {
-						_loginState.postValue(LoginState.FAILED)
-						_loginError.postValue(null)
+						_loginFailure.postValue("")
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
 						Crashlytics.logException(exception)
-						_loginState.postValue(LoginState.FAILED)
-						_loginError.postValue(exception.localizedMessage)
-						
+						_loginFailure.postValue(exception.localizedMessage)
 					}
 					
 					override fun onSuccess(credentials: Credentials) {
-						val result = CredentialVerifier(context).verify(credentials)
-						when (result) {
+						when (val result = CredentialVerifier(context).verify(credentials)) {
 							is Err -> {
-								_loginState.postValue(LoginState.FAILED)
-								_loginError.postValue(result.error)
+								_loginFailure.postValue(result.error)
 							}
 							is Ok -> {
-								_loginState.postValue(LoginState.SUCCESS)
-								_loginResult.postValue(result.value)
+								_userAuth.postValue(result.value)
 							}
 						}
 					}
@@ -139,58 +125,54 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				.withAudience(context.getString(R.string.auth0_audience))
 				.start(activity, object : AuthCallback {
 					override fun onFailure(dialog: Dialog) {
-						_loginError.postValue(dialog.toString())
+						_loginFailure.postValue("")
 						Log.d("MagicLink onFailure", dialog.toString())
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
 						Log.d("MagicLink onFailure", exception.toString())
-						
-						_loginError.postValue(exception.localizedMessage)
+						_loginFailure.postValue(exception.localizedMessage)
 					}
 					
 					override fun onSuccess(credentials: Credentials) {
 						Log.d("MagicLink onSuccess", credentials.toString())
-						_loginState.postValue(LoginState.SUCCESS)
+						when (val result = CredentialVerifier(context).verify(credentials)) {
+							is Err -> {
+								_loginFailure.postValue(result.error)
+							}
+							is Ok -> {
+								_userAuth.postValue(result.value)
+							}
+						}
 					}
 				})
 	}
-	
-	fun setLoginState() {
-		_loginState.value = LoginState.NONE
-		_userTouchState.value = UserTouchState.NONE
-	}
-	
-	fun loginSuccess(userAuthResponse: UserAuthResponse) {
+
+//	fun setLoginState() {
+//		_loginState.value = LoginState.NONE
+//		_userTouchState.value = UserTouchState.NONE
+//	}
+//
+	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
 			override fun onSuccess(t: Boolean) {
 				if (userAuthResponse.isRanger) {
-					Log.d("MainActivityNew", "MainActivityNew")
-					_userTouchState.postValue(UserTouchState.SUCCESS)
-					_gotoPage.postValue("MainActivityNew")
+					_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
 				} else {
-					Log.d("InvitationCodeFragment", "InvitationCodeFragment")
-					_userTouchState.postValue(UserTouchState.SUCCESS)
-					_gotoPage.postValue("InvitationCodeFragment")
+					_redirectPage.postValue(LoginRedirect.INVITE_CODE_PAGE)
 				}
 			}
 			
 			override fun onError(e: Throwable) {
-				_userTouchState.postValue(UserTouchState.FAILED)
 				Crashlytics.logException(e)
-				_loginError.postValue(e.localizedMessage)
+				_loginFailure.postValue(e.localizedMessage)
 			}
 		}, null)
 	}
 }
 
-enum class LoginState {
-	NONE, FAILED, SUCCESS
+enum class LoginRedirect {
+	MAIN_PAGE, INVITE_CODE_PAGE
 }
-
-enum class UserTouchState {
-	NONE, FAILED, SUCCESS
-}
-

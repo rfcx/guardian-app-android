@@ -1,6 +1,8 @@
 package org.rfcx.ranger.view.profile
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,21 +36,21 @@ class ProfileFragment : BaseFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		setEventClick()
+		setupButtonListeners()
 		
 		profileViewModel.locationTracking.observe(this, Observer {
 			Log.e("BaseActivity", "$it")
 			locationTrackingSwitch.isChecked = it
 		})
 		
-		profileViewModel.notificationReceiving.observe(this, Observer { it ->
-			notificationReceiveSwitch.isChecked = it
-			if (it) {
-				context?.let {
+		profileViewModel.notificationReceiving.observe(this, Observer { on ->
+			notificationReceiveSwitch.isChecked = on
+			// TODO this should be in the VM
+			// TODO need to protect again continuous presses
+			context?.let {
+				if (on) {
 					CloudMessaging.subscribeIfRequired(it)
-				}
-			} else {
-				context?.let {
+				} else {
 					CloudMessaging.unsubscribe(it)
 				}
 			}
@@ -75,7 +77,7 @@ class ProfileFragment : BaseFragment() {
 		})
 	}
 	
-	private fun setEventClick() {
+	private fun setupButtonListeners() {
 		locationTrackingSwitchLayout.setOnClickListener {
 			if (locationTrackingSwitch.isChecked) {
 				// off location tracking
@@ -90,8 +92,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		guardianGroupLayout.setOnClickListener {
-			//TODO: move to select guardian site page
-			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
+			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
 		logoutTextView.setOnClickListener {
@@ -99,13 +100,21 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		rateAppTextView.setOnClickListener {
-			//TODO: move to rate app page
+			val appPackageName = activity?.packageName
+			try {
+				val playStoreUri: Uri = Uri.parse("market://details?id=$appPackageName")
+				val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
+				startActivity(playStoreIntent)
+			} catch (exp: Exception) {
+				val exceptionUri: Uri = Uri.parse("http://play.google.com/store/apps/details?id=$appPackageName")
+				val exceptionIntent = Intent(Intent.ACTION_VIEW, exceptionUri)
+				startActivity(exceptionIntent)
+			}
 		}
 		
 		feedbackTextView.setOnClickListener {
-			//TODO: move to feedback page
+			context?.let { FeedbackActivity.startActivity(it) }
 		}
-		
 	}
 	
 	override fun onStart() {

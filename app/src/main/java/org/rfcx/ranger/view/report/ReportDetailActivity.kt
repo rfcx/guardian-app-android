@@ -18,14 +18,11 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.ReportImageAdapter
-import org.rfcx.ranger.view.base.BaseActivity
-import org.rfcx.ranger.widget.OnStateChangeListener
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
 
-class ReportDetailActivity : BaseActivity() {
+class ReportDetailActivity : BaseReportImageActivity() {
 	
 	private val viewModel: ReportDetailViewModel by viewModel()
 	
@@ -33,7 +30,6 @@ class ReportDetailActivity : BaseActivity() {
 	private var location: LatLng? = null
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
-	private val reportImageAdapter by lazy { ReportImageAdapter() }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -100,7 +96,7 @@ class ReportDetailActivity : BaseActivity() {
 		}
 		mapView.clear()
 		mapView.addMarker(MarkerOptions().position(location)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_report_pin_on_map)))
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
 		mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				location, 15f))
 	}
@@ -119,17 +115,11 @@ class ReportDetailActivity : BaseActivity() {
 	
 	private fun setupAudioPlaying() {
 		audioProgressView.disableEdit()
-		audioProgressView.onStateChangeListener = object : OnStateChangeListener {
-			override fun onStateChanged(state: SoundRecordState) {
-				when (state) {
-					SoundRecordState.PLAYING -> {
-						startPlaying()
-					}
-					SoundRecordState.STOP_PLAYING -> {
-						stopPlaying()
-					}
-					
-				}
+		audioProgressView.onStateChangeListener = { state ->
+			when (state) {
+				SoundRecordState.PLAYING -> startPlaying()
+				SoundRecordState.STOP_PLAYING -> stopPlaying()
+				else -> {}
 			}
 		}
 	}
@@ -161,13 +151,12 @@ class ReportDetailActivity : BaseActivity() {
 		player = null
 	}
 	
-	private fun updateReportImages() {
-//		val newAttachImages = reportImageAdapter.getNewAttachImage()
-//		val reportImageDb = ReportImageDb()
-//
-//		reportImageDb.save(report!!, newAttachImages)
-//		ImageUploadWorker.enqueue()
-//		finish()
+	override fun didAddImages(imagePaths: List<String>) {
+	    viewModel.addReportImages(imagePaths)
+	}
+	
+	override fun didRemoveImage(imagePath: String) {
+		viewModel.removeReportImage(imagePath)
 	}
 	
 	private fun setupImageRecycler() {
@@ -176,18 +165,8 @@ class ReportDetailActivity : BaseActivity() {
 			layoutManager = LinearLayoutManager(this@ReportDetailActivity, LinearLayoutManager.HORIZONTAL, false)
 			setHasFixedSize(true)
 		}
-		
-//		reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
-//			override fun onAddImageClick() {
-//				attachImageDialog.show()
-//			}
-//
-//			override fun onDeleteImageClick(position: Int) {
-//				reportImageAdapter.removeAt(position)
-//				dismissImagePickerOptionsDialog()
-//			}
-//		}
 	}
+	
 	
 	companion object {
 		private const val EXTRA_REPORT_ID = "extra_report_id"

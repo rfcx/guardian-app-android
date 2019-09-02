@@ -113,6 +113,16 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 	}
 	
+	fun deleteUnsent(imagePath: String) {
+		val shouldDelete = realm.where(ReportImage::class.java)
+				.equalTo("syncState", UNSENT)
+				.equalTo("localPath", imagePath)
+				.findAll()
+		realm.executeTransaction {
+			shouldDelete.deleteAllFromRealm()
+		}
+	}
+	
 	private fun saveGuIDtoImages(guid: String, reportId: Int) {
 		val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
 		images?.forEach {
