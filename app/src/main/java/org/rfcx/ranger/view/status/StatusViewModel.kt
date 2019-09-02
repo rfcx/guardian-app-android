@@ -139,13 +139,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun fetchJobSyncing() {
-		if (locationDb.unsentCount() > 0) {
-			LocationSyncWorker.enqueue()
-		}
-		
-		if (reportDb.unsentCount() > 0) {
-			ReportSyncWorker.enqueue()
-		}
 		
 		reportWorkInfoLiveData = ReportSyncWorker.workInfos()
 		reportWorkInfoLiveData.observeForever(workInfoObserve)
@@ -191,6 +184,14 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		_hasGuardianGroup.value = profileData.hasGuardianGroup()
 		
 		ImageUploadWorker.enqueue()
+		
+		if (locationDb.unsentCount() > 0) {
+			LocationSyncWorker.enqueue()
+		}
+		
+		if (reportDb.unsentCount() > 0) {
+			ReportSyncWorker.enqueue()
+		}
 	}
 	
 	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {
