@@ -70,13 +70,11 @@
 		
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/eventNameTextView"
+			style="@style/RangerText.Body2.Bold"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:textColor="@color/text_primary"
-			android:textSize="@dimen/text_large"
-			android:textStyle="bold"
 			tools:text="Vehicle?" />
 	
 	</LinearLayout>
@@ -94,30 +92,20 @@
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/negativeButton"
-			style="@style/Widget.AppCompat.Button.Borderless"
+			style="@style/RangerButton.Negative"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_weight="1"
-			android:background="@drawable/button_negative"
-			android:gravity="center"
-			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_small"
 			tools:text="Negative" />
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/positiveButton"
-			style="@style/Widget.AppCompat.Button.Borderless"
+			style="@style/RangerButton.Positive"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_weight="1"
-			android:background="@drawable/button_positive"
-			android:gravity="center"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:textColor="@color/text_white"
-			android:textSize="@dimen/text_small"
 			tools:text="Positive" />
 	
 	</LinearLayout>

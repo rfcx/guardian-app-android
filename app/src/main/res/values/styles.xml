@@ -79,6 +79,10 @@
 		<item name="android:padding">@dimen/margin_padding_xsmall</item>
 	</style>
 	
+	<style name="TextButton.Bold" parent="TextButton">
+		<item name="android:textStyle">bold</item>
+	</style>
+	
 	<style name="ProgressDialogStyle">
 		<item name="android:bottomBright">@color/transparent</item>
 		<item name="android:bottomDark">@color/transparent</item>
@@ -209,15 +213,41 @@
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
+	<style name="RangerText.Body.Secondary" parent="RangerText">
+		<item name="android:textColor">@color/text_secondary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
 	<style name="RangerText.Body2" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_large</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
+	<style name="RangerText.Body2.Bold" parent="RangerText.Body2">
+		<item name="android:textStyle">bold</item>
+	</style>
+	
 	<style name="RangerText.Body3" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Body3.Black" parent="RangerText">
+		<item name="android:textColor">@color/text_black</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Body3.Bold" parent="RangerText.Body3.Black">
+		<item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="RangerText.Body4.Secondary" parent="RangerText">
+		<item name="android:textColor">@color/text_secondary</item>
+		<item name="android:textSize">@dimen/text_xsmall</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
@@ -227,25 +257,37 @@
 		<item name="android:textAllCaps">true</item>
 	</style>
 		
-	<style name="RangerText.Body.Secondary" parent="RangerText">
-		<item name="android:textColor">@color/text_secondary</item>
-		<item name="android:textSize">@dimen/text_small</item>
-		<item name="android:fontFamily">sans-serif</item>
-	</style>
+	
 	
 	<!-- Button -->
 	<style name="RangerButton" parent="Widget.AppCompat.Button"/>
 	
-	<style name="RangerButton.GreenButton" parent="Widget.AppCompat.Button">
+	<style name="RangerButton.GreenButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_color_primary_button</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textColor">@android:color/white</item>
 	</style>
 	
-	<style name="RangerButton.FacebookButton" parent="Widget.AppCompat.Button">
+	<style name="RangerButton.FacebookButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_facebook_login_button</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textColor">@android:color/white</item>
+	</style>
+	
+	<style name="RangerButton1" parent="RangerButton">
+		<item name="android:textStyle">bold</item>
+		<item name="android:gravity">center</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+	
+	<style name="RangerButton.Negative" parent="RangerButton1">
+		<item name="android:background">@drawable/button_negative</item>
+	</style>
+	
+	<style name="RangerButton.Positive" parent="RangerButton1">
+		<item name="android:background">@drawable/button_positive</item>
 	</style>
 	
 
