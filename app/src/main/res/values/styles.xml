@@ -208,6 +208,24 @@
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
+	
+	<style name="RangerText.Body2" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_large</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Body3" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="TextAppearance.Title.AllCaps" parent="TextAppearance.AppCompat.Body2">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
 		
 	<style name="RangerText.Body.Secondary" parent="RangerText">
 		<item name="android:textColor">@color/text_secondary</item>

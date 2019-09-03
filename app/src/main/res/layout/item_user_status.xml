@@ -1,108 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="userStatus"
-            type="org.rfcx.ranger.view.status.adapter.StatusAdapter.UserStatusItem" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_padding_small">
-
-        <TextView
-            android:id="@+id/tvDutyCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_small"
-            android:gravity="center"
-            android:text="@{String.valueOf(userStatus.dutyCount)}"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_xlarge"
-            app:layout_constraintEnd_toStartOf="@+id/tvReportCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="245" />
-
-        <TextView
-            android:id="@+id/tvDutyDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_xsmall"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="@string/status_duty_count_desc"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintEnd_toEndOf="@+id/tvDutyCount"
-            app:layout_constraintStart_toStartOf="@+id/tvDutyCount"
-            app:layout_constraintTop_toBottomOf="@+id/tvDutyCount" />
-
-        <TextView
-            android:id="@+id/tvReportCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_small"
-            android:gravity="center"
-            android:text="@{String.valueOf(userStatus.reportedCount)}"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_xlarge"
-            app:layout_constraintEnd_toStartOf="@+id/tvAlertReviewCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/tvDutyCount"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="15" />
-
-        <TextView
-            android:id="@+id/tvReportDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_xsmall"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="@string/status_reported_desc"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintEnd_toEndOf="@+id/tvReportCount"
-            app:layout_constraintStart_toStartOf="@+id/tvReportCount"
-            app:layout_constraintTop_toBottomOf="@+id/tvReportCount" />
-
-        <TextView
-            android:id="@+id/tvAlertReviewCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_small"
-            android:gravity="center"
-            android:text="@{String.valueOf(userStatus.reviewedCount)}"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_xlarge"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/tvReportCount"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="15" />
-
-        <TextView
-            android:id="@+id/tvAlertReviewDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_xsmall"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="@string/status_reviewed_desc"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintEnd_toEndOf="@+id/tvAlertReviewCount"
-            app:layout_constraintStart_toStartOf="@+id/tvAlertReviewCount"
-            app:layout_constraintTop_toBottomOf="@+id/tvAlertReviewCount" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<data>
+		
+		<variable
+			name="userStatus"
+			type="org.rfcx.ranger.view.status.adapter.StatusAdapter.UserStatusItem" />
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_small">
+		
+		<TextView
+			android:id="@+id/tvDutyCount"
+			style="@style/RangerText.Headline"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_small"
+			android:gravity="center"
+			android:text="@{String.valueOf(userStatus.dutyCount)}"
+			app:layout_constraintEnd_toStartOf="@+id/tvReportCount"
+			app:layout_constraintHorizontal_weight="1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="245" />
+		
+		<TextView
+			android:id="@+id/tvDutyDescription"
+			style="@style/RangerText.Body.Secondary"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_xsmall"
+			android:ellipsize="end"
+			android:gravity="center"
+			android:maxLines="2"
+			android:text="@string/status_duty_count_desc"
+			app:layout_constraintEnd_toEndOf="@+id/tvDutyCount"
+			app:layout_constraintStart_toStartOf="@+id/tvDutyCount"
+			app:layout_constraintTop_toBottomOf="@+id/tvDutyCount" />
+		
+		<TextView
+			android:id="@+id/tvReportCount"
+			style="@style/RangerText.Headline"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_small"
+			android:gravity="center"
+			android:text="@{String.valueOf(userStatus.reportedCount)}"
+			app:layout_constraintEnd_toStartOf="@+id/tvAlertReviewCount"
+			app:layout_constraintHorizontal_weight="1"
+			app:layout_constraintStart_toEndOf="@+id/tvDutyCount"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="15" />
+		
+		<TextView
+			android:id="@+id/tvReportDescription"
+			style="@style/RangerText.Body.Secondary"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_xsmall"
+			android:ellipsize="end"
+			android:gravity="center"
+			android:maxLines="2"
+			android:text="@string/status_reported_desc"
+			app:layout_constraintEnd_toEndOf="@+id/tvReportCount"
+			app:layout_constraintStart_toStartOf="@+id/tvReportCount"
+			app:layout_constraintTop_toBottomOf="@+id/tvReportCount" />
+		
+		<TextView
+			android:id="@+id/tvAlertReviewCount"
+			style="@style/RangerText.Headline"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_small"
+			android:gravity="center"
+			android:text="@{String.valueOf(userStatus.reviewedCount)}"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_weight="1"
+			app:layout_constraintStart_toEndOf="@+id/tvReportCount"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="15" />
+		
+		<TextView
+			android:id="@+id/tvAlertReviewDescription"
+			style="@style/RangerText.Body.Secondary"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_xsmall"
+			android:ellipsize="end"
+			android:gravity="center"
+			android:maxLines="2"
+			android:text="@string/status_reviewed_desc"
+			app:layout_constraintEnd_toEndOf="@+id/tvAlertReviewCount"
+			app:layout_constraintStart_toStartOf="@+id/tvAlertReviewCount"
+			app:layout_constraintTop_toBottomOf="@+id/tvAlertReviewCount" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

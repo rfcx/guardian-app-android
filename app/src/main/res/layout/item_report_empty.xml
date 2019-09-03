@@ -17,11 +17,10 @@
 	
 	<TextView
 		android:id="@+id/emptyReportTextView"
+		style="@style/RangerText.Body"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:textColor="@color/text_primary"
-		android:textSize="@dimen/text_small"
 		android:text="@string/empty_report_text" />
 	
 	<androidx.appcompat.widget.AppCompatImageView

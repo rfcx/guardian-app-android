@@ -7,16 +7,13 @@
 
     <TextView
         android:id="@+id/titleTextView"
-        style="@style/TextAppearance.AppCompat.Body2"
+        style="@style/TextAppearance.Title.AllCaps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_normal"
         android:layout_marginTop="@dimen/margin_padding_xlarge"
         android:layout_marginEnd="@dimen/margin_padding_small"
         android:layout_marginBottom="@dimen/margin_padding_small"
-        android:textAllCaps="true"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_small"
         tools:text="Recent" />
 
 </LinearLayout>

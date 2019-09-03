@@ -32,11 +32,10 @@
 			
 			<TextView
 				android:id="@+id/locationTextView"
-				style="@style/RangerText.Body"
+				style="@style/RangerText.Body.Secondary"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@{profile.location}"
-				android:textColor="@color/text_secondary"
 				tools:text="Tembe" />
 		
 		</LinearLayout>
