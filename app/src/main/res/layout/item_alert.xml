@@ -32,12 +32,13 @@
 
     <TextView
         android:id="@+id/tvAlertTitle"
-        style="@style/RangerText.Body3.Bold"
+        style="@style/RangerText.Body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_small"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
         android:layout_marginEnd="@dimen/margin_padding_small"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
         app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +46,7 @@
 
     <TextView
         android:id="@+id/tvAlertFromSite"
-        style="@style/RangerText.Body.Secondary"
+        style="@style/RangerText.Label.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
@@ -58,7 +59,7 @@
 
     <TextView
         android:id="@+id/tvAlertTimeAgo"
-        style="@style/RangerText.Body4.Secondary"
+        style="@style/RangerText.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

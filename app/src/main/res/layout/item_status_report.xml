@@ -40,7 +40,7 @@
 		
 		<TextView
 			android:id="@+id/tvReportType"
-			style="@style/RangerText.Body2"
+			style="@style/RangerText.Subhead"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
@@ -64,7 +64,7 @@
 		
 		<TextView
 			android:id="@+id/tvLocation"
-			style="@style/RangerText.Body.Secondary"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_xsmall"
@@ -82,7 +82,7 @@
 		
 		<TextView
 			android:id="@+id/tvImageAttach"
-			style="@style/RangerText.Body.Secondary"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_xsmall"

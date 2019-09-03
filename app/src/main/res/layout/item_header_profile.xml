@@ -32,7 +32,7 @@
 			
 			<TextView
 				android:id="@+id/locationTextView"
-				style="@style/RangerText.Body.Secondary"
+				style="@style/RangerText.Label.Secondary"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@{profile.location}"

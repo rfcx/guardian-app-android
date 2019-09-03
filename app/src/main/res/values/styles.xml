@@ -48,7 +48,6 @@
 		<item name="android:textSize">50sp</item>
 	</style>
 	
-	
 	<style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
 		<item name="android:button">@drawable/ic_chainsaw</item>
 	</style>
@@ -194,70 +193,61 @@
 	<!-- TextView -->
 	<style name="RangerText" parent="Widget.AppCompat.TextView"/>
 	
-	<style name="RangerText.Title" parent="RangerText">
-		<item name="android:textColor">@color/text_primary</item>
-		<item name="android:textSize">24sp</item>
-		<item name="android:fontFamily">sans-serif</item>
-		<item name="android:textStyle">bold</item>
-	</style>
-	
 	<style name="RangerText.Headline" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">24sp</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="RangerText.Body" parent="RangerText">
+	<style name="RangerText.Label" parent="TextAppearance.AppCompat.Body2">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="RangerText.Body.Secondary" parent="RangerText">
+	<style name="RangerText.Label.Secondary" parent="RangerText">
 		<item name="android:textColor">@color/text_secondary</item>
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="RangerText.Body2" parent="RangerText">
+	<style name="RangerText.Subhead" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_large</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="RangerText.Body2.Bold" parent="RangerText.Body2">
+	<style name="RangerText.Subhead.Bold" parent="RangerText.Subhead">
 		<item name="android:textStyle">bold</item>
 	</style>
 	
-	<style name="RangerText.Body3" parent="RangerText">
+	<style name="RangerText.Body" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_medium</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="RangerText.Body3.Black" parent="RangerText">
-		<item name="android:textColor">@color/text_black</item>
-		<item name="android:textSize">@dimen/text_medium</item>
-		<item name="android:fontFamily">sans-serif</item>
-	</style>
-	
-	<style name="RangerText.Body3.Bold" parent="RangerText.Body3.Black">
-		<item name="android:textStyle">bold</item>
-	</style>
-	
-	<style name="RangerText.Body4.Secondary" parent="RangerText">
+	<style name="RangerText.Caption" parent="RangerText">
 		<item name="android:textColor">@color/text_secondary</item>
 		<item name="android:textSize">@dimen/text_xsmall</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
-	<style name="TextAppearance.Title.AllCaps" parent="TextAppearance.AppCompat.Body2">
+	<style name="RangerText.Title" parent="TextAppearance.AppCompat.Body2">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:textAllCaps">true</item>
 	</style>
-		
 	
+	<style name="RangerText.SubTitle" parent="Base.TextAppearance.AppCompat.Title">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+	</style>
+	
+	<style name="RangerText.SubTitle.Secondary" parent="TextAppearance.AppCompat.Body1">
+		<item name="android:textColor">@color/text_secondary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+	</style>
 	
 	<!-- Button -->
 	<style name="RangerButton" parent="Widget.AppCompat.Button"/>

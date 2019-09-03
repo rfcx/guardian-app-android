@@ -27,7 +27,7 @@
 		
 		<TextView
 			android:id="@+id/reportTypeNameTextView"
-			style="@style/RangerText.Body3"
+			style="@style/RangerText.Body"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -39,7 +39,7 @@
 		
 		<TextView
 			android:id="@+id/reportTimePastedTextView"
-			style="@style/RangerText.Body.Secondary"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
 		
 		<TextView
 			android:id="@+id/reportLocationTextView"
-			style="@style/RangerText.Body.Secondary"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -62,7 +62,7 @@
 		
 		<TextView
 			android:id="@+id/reportImageStateTextView"
-			style="@style/RangerText.Body.Secondary"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"

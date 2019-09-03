@@ -29,7 +29,7 @@
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/invitationDescription"
-		style="@style/RangerText.Body.Secondary"
+		style="@style/RangerText.Label.Secondary"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"

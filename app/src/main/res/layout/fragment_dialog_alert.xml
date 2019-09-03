@@ -70,7 +70,7 @@
 		
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/eventNameTextView"
-			style="@style/RangerText.Body2.Bold"
+			style="@style/RangerText.Subhead.Bold"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
