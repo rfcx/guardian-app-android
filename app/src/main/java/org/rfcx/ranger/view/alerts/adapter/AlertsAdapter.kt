@@ -47,11 +47,13 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, A
 		private val ivStatusRead = itemView.ivStatusRead
 		private val ivReviewed = itemView.ivReviewed
 		
-		@SuppressLint("SetTextI18n")
+		@SuppressLint("SetTextI18n", "DefaultLocale")
 		fun bind(item: EventItem) {
-			tvTitle.text = item.event.value?.toEventName(itemView.context)
+			tvTitle.text = item.event.guardianShortname
 			item.event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
-			tvFrom.text = item.event.site
+			if (item.event.site != null) {
+				tvFrom.text = item.event.site!!.capitalize()
+			}
 			tvTimeAgo.text = "• ${item.event.timeAgoDisplay(itemView.context)}"
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
