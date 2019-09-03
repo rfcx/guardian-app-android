@@ -76,6 +76,7 @@
 		<item name="android:minHeight">36dp</item>
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:textAllCaps">true</item>
+		<item name="android:padding">@dimen/margin_padding_xsmall</item>
 	</style>
 	
 	<style name="ProgressDialogStyle">
@@ -173,7 +174,7 @@
 		<item name="android:background">@android:color/transparent</item>
 	</style>
 	
-	<!--	edit text -->
+	<!-- EditText -->
 	<style name="RangerEditText" parent="Widget.AppCompat.EditText" />
 	
 	<style name="RangerEditText.NoBackground" parent="RangerEditText">
@@ -181,11 +182,53 @@
 		<item name="android:background">@color/transparent</item>
 	</style>
 	
-	<!--	Text-->
-	<style name="RangerText" parent="Widget.AppCompat.TextView">
-		<item name="android:textColor">@color/text_primary</item>
-		<item name="android:textSize">@dimen/text_large</item>
+	<style name="RangerEditText.Background" parent="RangerEditText">
+		<item name="android:padding">@dimen/margin_padding_normal</item>
+		<item name="android:backgroundTint" tools:targetApi="lollipop">@color/gray_30</item>
 	</style>
-
+	
+	<!-- TextView -->
+	<style name="RangerText" parent="Widget.AppCompat.TextView"/>
+	
+	<style name="RangerText.Title" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">24sp</item>
+		<item name="android:fontFamily">sans-serif</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="RangerText.Headline" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">24sp</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Body" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+		
+	<style name="RangerText.Body.Secondary" parent="RangerText">
+		<item name="android:textColor">@color/text_secondary</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<!-- Button -->
+	<style name="RangerButton" parent="Widget.AppCompat.Button"/>
+	
+	<style name="RangerButton.GreenButton" parent="Widget.AppCompat.Button">
+		<item name="android:background">@drawable/bg_color_primary_button</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+	
+	<style name="RangerButton.FacebookButton" parent="Widget.AppCompat.Button">
+		<item name="android:background">@drawable/bg_facebook_login_button</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+	
 
 </resources>

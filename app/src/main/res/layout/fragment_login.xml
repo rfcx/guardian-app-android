@@ -17,7 +17,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="visible"
-		app:constraint_referenced_ids="loginEmailEditText, loginPasswordEditText, signInButton, leftLineView, orTextView, rightLineView,facebookLoginButton, poweredByTextView, rfcxLogoImageView" />
+		app:constraint_referenced_ids="loginEmailEditText,loginPasswordEditText,signInButton,leftLineView,orTextView,rightLineView,facebookLoginButton,poweredByTextView,rfcxLogoImageView" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellLogoImageView"
@@ -31,51 +31,39 @@
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/protectingRainforestsTextView"
-		android:layout_width="250dp"
+		style="@style/RangerText.Title"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:fontFamily="sans-serif"
-		android:gravity="center_horizontal"
-		android:lineSpacingExtra="8sp"
 		android:text="@string/app_name"
-		android:textColor="@color/text_black"
-		android:textSize="24sp"
-		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="@+id/guideline25"
 		tools:text="RFCx Ranger" />
 	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/guideline35"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.35" />
-	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginEmailEditText"
+		style="@style/RangerEditText.Background"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:backgroundTint="@color/gray_30"
 		android:hint="@string/email"
 		android:imeOptions="actionNext"
 		android:inputType="textEmailAddress"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/guideline35" />
+		app:layout_constraintTop_toBottomOf="@+id/protectingRainforestsTextView" />
 	
 	<androidx.appcompat.widget.AppCompatEditText
 		android:id="@+id/loginPasswordEditText"
+		style="@style/RangerEditText.Background"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_large"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:backgroundTint="@color/gray_30"
 		android:hint="@string/password"
 		android:imeOptions="actionDone"
 		android:inputType="textPassword"
@@ -85,16 +73,13 @@
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/signInButton"
+		style="@style/RangerButton.GreenButton"
 		android:layout_width="0dp"
 		android:layout_height="@dimen/button_height"
 		android:layout_margin="@dimen/margin_padding_normal"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_sign_in_button"
-		android:enabled="true"
 		android:text="@string/login_sign_in_button_label"
-		android:textColor="@android:color/white"
-		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/loginPasswordEditText" />
@@ -112,14 +97,11 @@
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/orTextView"
+		style="@style/RangerText.Body.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="@dimen/margin_padding_normal"
-		android:fontFamily="sans-serif"
-		android:gravity="center_horizontal"
 		android:text="@string/or"
-		android:textColor="@color/text_secondary"
-		android:textSize="13sp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/signInButton"
@@ -138,15 +120,13 @@
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/facebookLoginButton"
+		style="@style/RangerButton.FacebookButton"
 		android:layout_width="0dp"
 		android:layout_height="@dimen/button_height"
 		android:layout_margin="@dimen/margin_padding_normal"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_facebook_login_button"
 		android:text="@string/connect_with_facebook"
-		android:textColor="@android:color/white"
-		android:textStyle="bold"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/orTextView" />
@@ -160,13 +140,11 @@
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/poweredByTextView"
+		style="@style/RangerText.Body.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/margin_padding_small"
-		android:fontFamily="sans-serif"
-		android:text="Powered by"
-		android:textColor="@color/text_secondary"
-		android:textSize="14sp"
+		android:text="@string/powered_by"
 		app:layout_constraintBottom_toTopOf="@+id/guideline90"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
@@ -181,7 +159,6 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/guideline90" />
 	
-	
 	<ProgressBar
 		android:id="@+id/loginProgressBar"
 		android:layout_width="wrap_content"
@@ -192,6 +169,5 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/protectingRainforestsTextView" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
