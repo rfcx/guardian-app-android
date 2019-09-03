@@ -222,17 +222,6 @@
 			tools:text="2.0.0(135)" />
 		
 		<TextView
-			android:id="@+id/feedbackTextView"
-			style="@style/RangerText.SubTitle"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingTop="@dimen/margin_padding_small"
-			android:paddingEnd="@dimen/margin_padding_small"
-			android:paddingBottom="@dimen/margin_padding_normal"
-			android:text="@string/profile_feedback_label" />
-		
-		<TextView
 			android:id="@+id/rateAppTextView"
 			style="@style/RangerText.SubTitle"
 			android:layout_width="match_parent"
