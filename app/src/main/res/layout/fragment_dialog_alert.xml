@@ -70,11 +70,12 @@
 		
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/eventNameTextView"
-			style="@style/RangerText.Subhead.Bold"
+			style="@style/RangerText.Subhead"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:textStyle="bold"
 			tools:text="Vehicle?" />
 	
 	</LinearLayout>

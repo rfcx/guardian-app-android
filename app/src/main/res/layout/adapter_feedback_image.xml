@@ -33,12 +33,13 @@
 			android:layout_height="wrap_content"
 			android:ellipsize="middle"
 			android:textColor="@color/text_black"
+			android:textSize="@dimen/text_xsmall"
 			app:layout_constraintBottom_toBottomOf="@id/lineView"
 			app:layout_constraintEnd_toStartOf="@id/deleteImageFeedbackButton"
-			app:layout_constraintHorizontal_bias="0.238"
+			app:layout_constraintHorizontal_bias="0.15"
 			app:layout_constraintStart_toStartOf="@+id/lineView"
 			app:layout_constraintTop_toTopOf="@id/lineView"
-			app:layout_constraintVertical_bias="0.448"
+			app:layout_constraintVertical_bias="0.5"
 			tools:text="Screenshot_20190830_090710.png" />
 		
 		<androidx.appcompat.widget.AppCompatImageButton

@@ -20,7 +20,7 @@
 	
 	<TextView
 		android:id="@+id/reportTypeNameTextView"
-		style="@style/TextAppearance.AppCompat.Menu"
+		style="@style/RangerText.Body"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_xsmall"
@@ -35,21 +35,20 @@
 	
 	<TextView
 		android:id="@+id/reportLocationTextView"
-		style="@style/TextAppearance.AppCompat.Body1"
+		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xsmall"
 		android:drawableStart="@drawable/ic_location_24dp"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:textColor="@color/text_secondary"
 		app:layout_constraintStart_toStartOf="@id/reportTypeNameTextView"
 		app:layout_constraintTop_toBottomOf="@id/reportTypeNameTextView"
 		tools:text="12.1,100.2" />
 	
 	<TextView
 		android:id="@+id/messageTimeTextView"
-		style="@style/TextAppearance.AppCompat.Caption"
+		style="@style/RangerText.Caption"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
@@ -70,11 +69,10 @@
 	
 	<TextView
 		android:id="@+id/imageSyncState"
-		style="@style/TextAppearance.AppCompat.Body1"
+		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:maxLines="1"
-		android:textColor="@color/text_secondary"
 		app:layout_constraintStart_toStartOf="@id/reportTypeNameTextView"
 		app:layout_constraintTop_toBottomOf="@id/reportLocationTextView"
 		tools:text="10 images (2 unsynced)" />

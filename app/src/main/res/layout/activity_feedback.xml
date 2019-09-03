@@ -32,15 +32,11 @@
 	
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/fromEmailTextView"
+				style="@style/RangerText.Body"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_xlarge"
 				android:layout_marginTop="@dimen/margin_padding_small"
-				android:fontFamily="sans-serif"
-				android:lineSpacingExtra="8sp"
-				android:textColor="@color/text_primary"
-				android:textSize="16sp"
-				android:textStyle="normal"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				tools:text="From: antony@rfcx.org"/>

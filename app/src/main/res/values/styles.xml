@@ -199,6 +199,18 @@
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
+	<style name="RangerText.Subhead" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_large</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Body" parent="RangerText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
 	<style name="RangerText.Label" parent="TextAppearance.AppCompat.Body2">
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_small</item>
@@ -208,28 +220,6 @@
 	<style name="RangerText.Label.Secondary" parent="RangerText">
 		<item name="android:textColor">@color/text_secondary</item>
 		<item name="android:textSize">@dimen/text_small</item>
-		<item name="android:fontFamily">sans-serif</item>
-	</style>
-	
-	<style name="RangerText.Subhead" parent="RangerText">
-		<item name="android:textColor">@color/text_primary</item>
-		<item name="android:textSize">@dimen/text_large</item>
-		<item name="android:fontFamily">sans-serif</item>
-	</style>
-	
-	<style name="RangerText.Subhead.Bold" parent="RangerText.Subhead">
-		<item name="android:textStyle">bold</item>
-	</style>
-	
-	<style name="RangerText.Body" parent="RangerText">
-		<item name="android:textColor">@color/text_primary</item>
-		<item name="android:textSize">@dimen/text_medium</item>
-		<item name="android:fontFamily">sans-serif</item>
-	</style>
-	
-	<style name="RangerText.Caption" parent="RangerText">
-		<item name="android:textColor">@color/text_secondary</item>
-		<item name="android:textSize">@dimen/text_xsmall</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
@@ -247,6 +237,12 @@
 	<style name="RangerText.SubTitle.Secondary" parent="TextAppearance.AppCompat.Body1">
 		<item name="android:textColor">@color/text_secondary</item>
 		<item name="android:textSize">@dimen/text_small</item>
+	</style>
+	
+	<style name="RangerText.Caption" parent="RangerText">
+		<item name="android:textColor">@color/text_secondary</item>
+		<item name="android:textSize">@dimen/text_xsmall</item>
+		<item name="android:fontFamily">sans-serif</item>
 	</style>
 	
 	<!-- Button -->
