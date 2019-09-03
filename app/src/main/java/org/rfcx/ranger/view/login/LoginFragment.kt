@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.login
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,26 +60,27 @@ class LoginFragment : BaseFragment() {
 	
 	private fun setupObserver() {
 		loginViewModel.userAuth.observe(this, Observer {
+			loading()
 			it ?: return@Observer
 			loginViewModel.checkUserDetail(it)
 		})
 		
 		loginViewModel.loginFailure.observe(this, Observer { errorMessage ->
-			loading(false)
 			if (errorMessage != null && errorMessage.isNotEmpty()) {
 				Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
 			}
+			loading(false)
 		})
 		
 		loginViewModel.redirectPage.observe(this, Observer { loginRedirect ->
-			loading(false)
 			when (loginRedirect) {
 				LoginRedirect.MAIN_PAGE -> listener.openMain()
 				LoginRedirect.INVITE_CODE_PAGE -> listener.openInvitationCodeFragment()
+				else -> loading(false)
 			}
 		})
 	}
-
+	
 	private fun validateInput(email: String?, password: String?): Boolean {
 		if (email.isNullOrEmpty()) {
 			loginEmailEditText.error = getString(R.string.pls_fill_email)

@@ -97,7 +97,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				.withAudience(context.getString(R.string.auth0_audience))
 				.start(activity, object : AuthCallback {
 					override fun onFailure(dialog: Dialog) {
-						Log.d("loginWithFacebook", "cancel")
 						_loginFailure.postValue("")
 					}
 					
@@ -119,11 +118,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				})
 	}
 	
-//	fun setLoginState() {
-//		_loginState.value = LoginState.NONE
-//		_userTouchState.value = UserTouchState.NONE
-//	}
-//
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		
