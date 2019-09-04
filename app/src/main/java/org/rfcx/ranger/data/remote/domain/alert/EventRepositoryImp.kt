@@ -18,7 +18,7 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 	
 	override fun reviewEvent(requestFactory: ReviewEventFactory): Single<ReviewEventResponse> {
 		return eventService.reviewEvent(requestFactory.eventGuID, requestFactory.reviewConfirm).flatMap {
-			eventDb.save(EventRealmObject(requestFactory.eventGuID, requestFactory.reviewConfirm))
+			eventDb.save(EventReview(requestFactory.eventGuID, requestFactory.reviewConfirm))
 			weeklySummaryData.adJustReviewCount()
 			Single.just(it)
 		}

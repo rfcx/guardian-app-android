@@ -35,6 +35,15 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
+		
+		
+		// If from old version no have report count.
+		// So, we have to add the currently report count in db to pref
+		val reportCount = weeklySummaryData.getReportSubmitCount()
+		if (reportCount < 1)  {
+			weeklySummaryData.adJustRportSubmitCount(reportList.size)
+		}
+		
 		updateWeeklyStat()
 		combinedReports()
 	}

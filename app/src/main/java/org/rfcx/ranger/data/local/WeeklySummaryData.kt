@@ -23,6 +23,10 @@ class WeeklySummaryData(private val preferences: Preferences) {
 		preferences.putInt(REPORT_COUNT, lastedCount)
 	}
 	
+	fun adJustRportSubmitCount(total: Int) {
+		preferences.putInt(REPORT_COUNT, total)
+	}
+	
 	fun getReportSubmitCount(): Int = preferences.getInt(REPORT_COUNT, 0)
 	
 	/**
