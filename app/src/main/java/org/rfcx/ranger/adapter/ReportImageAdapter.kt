@@ -127,8 +127,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		fun bind(imagePath: String, canDelete: Boolean) {
 			GlideApp.with(itemView.imageReport)
 					.load(imagePath)
-					.placeholder(R.drawable.ic_mountains)
-					.error(R.drawable.ic_mountains)
+					.placeholder(R.drawable.bg_grey_light)
+					.error(R.drawable.bg_grey_light)
 					.into(itemView.imageReport)
 			
 			itemView.deleteImageButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
