@@ -152,7 +152,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 //		_loginState.value = LoginState.NONE
 //		_userTouchState.value = UserTouchState.NONE
 //	}
-//
+
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		

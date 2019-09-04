@@ -64,21 +64,6 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 		alertsRecyclerView?.apply {
 			layoutManager = alertsLayoutManager
 			adapter = alertsAdapter
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    val visibleItemCount = alertsLayoutManager.childCount
-//                    val total = alertsLayoutManager.itemCount
-//                    val firstVisibleItemPosition = alertsLayoutManager.findFirstVisibleItemPosition()
-//                    if ((visibleItemCount + firstVisibleItemPosition) >= total
-//                            && firstVisibleItemPosition >= 0
-//                            && total >= AlertsViewModel.PAGE_LIMITS) {
-//
-//                        // load events
-//                        alertsViewModel.loadEvents()
-//                    }
-//                }
-//            })
 		}
 	}
 	

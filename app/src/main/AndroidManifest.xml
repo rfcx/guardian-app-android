@@ -11,6 +11,8 @@
 	<uses-permission android:name="android.permission.CAMERA"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!-- Required for foreground services on P+. -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	
 	<application
 		android:name=".RangerApplication"
@@ -20,6 +22,7 @@
 		android:roundIcon="${roundIcon}"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
+		android:resizeableActivity="false"
 		tools:ignore="GoogleAppIndexingWarning">
 		<activity android:name=".view.profile.FeedbackActivity"/>
 		<activity android:name=".view.report.ReportDetailActivity"/>

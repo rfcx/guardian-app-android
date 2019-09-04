@@ -51,7 +51,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 			reportLocationTextView.text = latLon
 			reportTypeImageView.setImageResource(
 					when (report.value) {
-						Event.vehicle -> R.drawable.ic_truck
+						Event.vehicle -> R.drawable.ic_vehicle
 						Event.trespasser -> R.drawable.ic_people
 						Event.chainsaw -> R.drawable.ic_chainsaw
 						Event.gunshot -> R.drawable.ic_gun

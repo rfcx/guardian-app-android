@@ -201,6 +201,8 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				is SyncInfoItem -> {
 					val item = newItem as SyncInfoItem
 					return oldItem.syncInfo.status.name == item.syncInfo.status.name
+							&& oldItem.syncInfo.countCheckIn == item.syncInfo.countCheckIn
+							&& oldItem.syncInfo.countReport == item.syncInfo.countCheckIn
 				}
 				else -> return false
 			}

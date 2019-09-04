@@ -7,7 +7,7 @@
     android:layout_marginStart="@dimen/margin_padding_normal"
     android:layout_marginTop="@dimen/margin_padding_small"
     android:layout_marginEnd="@dimen/margin_padding_normal"
-    android:layout_marginBottom="@dimen/margin_padding_small">
+    android:layout_marginBottom="@dimen/margin_padding_normal">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivAlertIcon"
@@ -15,7 +15,7 @@
         android:layout_height="@dimen/report_icon_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_truck" />
+        tools:src="@drawable/ic_vehicle" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivReviewed"
@@ -32,13 +32,12 @@
 
     <TextView
         android:id="@+id/tvAlertTitle"
+        style="@style/RangerText.Body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_small"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
         android:layout_marginEnd="@dimen/margin_padding_small"
-        android:textColor="@color/text_black"
-        android:textSize="@dimen/text_large"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
         app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"
@@ -47,20 +46,20 @@
 
     <TextView
         android:id="@+id/tvAlertFromSite"
+        style="@style/RangerText.Label.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
         android:drawableStart="@drawable/ic_place"
         android:drawablePadding="@dimen/margin_padding_xsmall"
         android:gravity="center_vertical"
-        android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_medium"
         app:layout_constraintStart_toStartOf="@+id/tvAlertTitle"
         app:layout_constraintTop_toBottomOf="@+id/tvAlertTitle"
         tools:text="@string/default_site_label" />
 
     <TextView
         android:id="@+id/tvAlertTimeAgo"
+        style="@style/RangerText.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

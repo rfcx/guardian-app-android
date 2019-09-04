@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -59,6 +61,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
 		override fun onProviderEnabled(p0: String?) {}
 		override fun onProviderDisabled(p0: String?) {}
+	}
+	
+	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+		return ContextCompat.getDrawable(context, vectorResId)?.run {
+			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+			draw(Canvas(bitmap))
+			BitmapDescriptorFactory.fromBitmap(bitmap)
+		}
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -207,7 +218,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				val latLng = LatLng(report.latitude, report.longitude)
 				val marker = map.addMarker(MarkerOptions()
 						.position(latLng)
-						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
+						.icon(context?.let { bitmapDescriptorFromVector(it, R.drawable.ic_pin_map) }))
 				marker.tag = report
 				marker.zIndex = 1f
 				retortMarkers.add(marker)

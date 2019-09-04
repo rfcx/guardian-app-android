@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 	
 	<data>
+		
 		<variable
 			name="onSetGuardianGroup"
-			type="android.view.View.OnClickListener"/>
+			type="android.view.View.OnClickListener" />
 		
 		<variable
 			name="onLater"
-			type="android.view.View.OnClickListener"/>
+			type="android.view.View.OnClickListener" />
 		
 		<variable
 			name="view"
-			type="android.view.View"/>
+			type="android.view.View" />
 		
 		<variable
 			name="statusViewModel"
-			type="org.rfcx.ranger.view.status.StatusViewModel"/>
+			type="org.rfcx.ranger.view.status.StatusViewModel" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -34,15 +35,14 @@
 			
 			<TextView
 				android:id="@+id/tvSettingTitle"
+				style="@style/RangerText.Label"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:textColor="@color/text_primary"
-				android:textSize="@dimen/text_small"
+				android:text="@string/setting_guardian_group"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				android:text="@string/setting_guardian_group"/>
+				app:layout_constraintTop_toTopOf="parent" />
 			
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/negativeButton"
@@ -50,12 +50,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/margin_padding_xsmall"
-				android:padding="@dimen/margin_padding_xsmall"
-				android:text="@string/button_later"
 				android:onClick="@{onLater}"
+				android:text="@string/button_later"
 				app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
 				app:layout_constraintEnd_toStartOf="@+id/positiveButton"
-				app:layout_constraintTop_toTopOf="@+id/positiveButton"/>
+				app:layout_constraintTop_toTopOf="@+id/positiveButton" />
 			
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/positiveButton"
@@ -64,12 +63,11 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:padding="@dimen/margin_padding_xsmall"
-				android:text="@string/button_set_guarduan_group"
 				android:onClick="@{onSetGuardianGroup}"
+				android:text="@string/button_set_guarduan_group"
 				app:layout_constraintBottom_toTopOf="@+id/line"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingTitle"/>
+				app:layout_constraintTop_toBottomOf="@id/tvSettingTitle" />
 			
 			<View
 				android:id="@+id/line"
@@ -78,7 +76,7 @@
 				android:layout_marginTop="@dimen/margin_padding_small"
 				android:background="@color/gray_30"
 				app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
-				app:layout_constraintTop_toBottomOf="@+id/positiveButton"/>
+				app:layout_constraintTop_toBottomOf="@+id/positiveButton" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 		
@@ -90,7 +88,7 @@
 			android:paddingTop="@dimen/margin_padding_large"
 			android:paddingBottom="@dimen/fab_height_half"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/layoutSetting"/>
+			app:layout_constraintTop_toBottomOf="@+id/layoutSetting" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

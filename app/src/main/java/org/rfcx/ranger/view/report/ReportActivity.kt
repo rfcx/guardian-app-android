@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -12,12 +14,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -49,6 +53,15 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val recordPermissions by lazy { RecordingPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
+	
+	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+		return ContextCompat.getDrawable(context, vectorResId)?.run {
+			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+			draw(Canvas(bitmap))
+			BitmapDescriptorFactory.fromBitmap(bitmap)
+		}
+	}
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -193,7 +206,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.addMarker(MarkerOptions()
 				.position(latLng)
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_on_map_repost)))
+				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
 		
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))

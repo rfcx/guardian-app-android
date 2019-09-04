@@ -20,13 +20,12 @@
 
     <TextView
         android:id="@+id/tv_empty_list"
-        style="@style/TextAppearance.AppCompat.Caption"
+        style="@style/RangerText.SubTitle.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_small"
         android:gravity="center"
         android:text="@string/empty_list_description"
-        android:textColor="@color/text_secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

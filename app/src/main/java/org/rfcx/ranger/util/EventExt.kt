@@ -12,7 +12,7 @@ fun Event.getIconRes(): Int {
 	return when (this.value) {
 		Event.chainsaw -> R.drawable.ic_chainsaw
 		Event.gunshot -> R.drawable.ic_gun
-		Event.vehicle -> R.drawable.ic_truck
+		Event.vehicle -> R.drawable.ic_vehicle
 		Event.trespasser -> R.drawable.ic_people
 		else -> R.drawable.ic_pin_huge
 	}
@@ -42,7 +42,7 @@ fun String.toEventIcon(): Int {
 	return when (this) {
 		Event.chainsaw -> R.drawable.ic_chainsaw
 		Event.gunshot -> R.drawable.ic_gun
-		Event.vehicle -> R.drawable.ic_truck
+		Event.vehicle -> R.drawable.ic_vehicle
 		Event.trespasser -> R.drawable.ic_people
 		else -> R.drawable.ic_pin_huge
 	}

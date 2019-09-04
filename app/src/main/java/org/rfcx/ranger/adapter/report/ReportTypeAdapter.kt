@@ -25,7 +25,7 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	var onMessageItemClickListener: OnMessageItemClickListener? = null
 	
 	init {
-		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_truck))
+		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_vehicle))
 		source.add(ReportTypeItem(Event.trespasser, R.drawable.ic_people))
 		source.add(ReportTypeItem(Event.chainsaw, R.drawable.ic_chainsaw))
 		source.add(ReportTypeItem(Event.gunshot, R.drawable.ic_gun))

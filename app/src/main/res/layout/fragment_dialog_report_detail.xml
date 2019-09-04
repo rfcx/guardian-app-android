@@ -23,16 +23,15 @@
 			android:adjustViewBounds="true"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:src="@drawable/ic_truck" />
+			tools:src="@drawable/ic_vehicle" />
 		
 		<TextView
 			android:id="@+id/reportTypeNameTextView"
+			style="@style/RangerText.Body"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:textColor="@color/text_black"
-			android:textSize="@dimen/text_medium"
 			app:layout_constraintEnd_toStartOf="@+id/reportTimePastedTextView"
 			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
 			app:layout_constraintTop_toTopOf="@+id/reportTypeImageView"
@@ -40,24 +39,22 @@
 		
 		<TextView
 			android:id="@+id/reportTimePastedTextView"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/text_primary"
-			android:textSize="@dimen/text_medium"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			tools:text="6h" />
 		
 		<TextView
 			android:id="@+id/reportLocationTextView"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:drawableStart="@drawable/ic_pin_bottom_sheet"
-			android:textColor="@color/text_primary"
-			android:textSize="@dimen/text_medium"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
 			app:layout_constraintTop_toBottomOf="@+id/reportTypeNameTextView"
@@ -65,14 +62,13 @@
 		
 		<TextView
 			android:id="@+id/reportImageStateTextView"
+			style="@style/RangerText.Label.Secondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:drawableStart="@drawable/ic_photo_state_18dp"
-			android:textColor="@color/text_primary"
-			android:textSize="@dimen/text_medium"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/reportTypeImageView"
 			app:layout_constraintTop_toBottomOf="@+id/reportLocationTextView"
@@ -80,14 +76,11 @@
 		
 		<TextView
 			android:id="@+id/seeDetailTextView"
+			style="@style/TextButton.Bold"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_normal"
 			android:text="@string/see_report_detail"
-			android:textAllCaps="true"
-			android:textColor="@color/text_green"
-			android:textSize="@dimen/text_medium"
-			android:textStyle="bold"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/reportImageStateTextView" />

@@ -11,6 +11,7 @@
 	<string name="incorrect_username_password">Incorrect username or password</string>
 	<string name="an_error_occurred">Service unavailable</string>
 	<string name="or">OR</string>
+	<string name="powered_by">Powered by</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>
@@ -191,6 +192,7 @@
 	<string name="profile_send_feedback">Send feedback</string>
 	<string name="from">From:</string>
 	<string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
+	<string name="maximum_number_of_attachments">The maximum number of attachments is 5. Try remove some items before adding more attachments.</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>

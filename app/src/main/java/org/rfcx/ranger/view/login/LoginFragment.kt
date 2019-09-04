@@ -64,22 +64,23 @@ class LoginFragment : BaseFragment() {
 	
 	private fun setupObserver() {
 		loginViewModel.userAuth.observe(this, Observer {
+			loading()
 			it ?: return@Observer
 			loginViewModel.checkUserDetail(it)
 		})
 		
 		loginViewModel.loginFailure.observe(this, Observer { errorMessage ->
-			loading(false)
 			if (errorMessage != null && errorMessage.isNotEmpty()) {
 				Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
 			}
+			loading(false)
 		})
 		
 		loginViewModel.redirectPage.observe(this, Observer { loginRedirect ->
-			loading(false)
 			when (loginRedirect) {
 				LoginRedirect.MAIN_PAGE -> listener.openMain()
 				LoginRedirect.INVITE_CODE_PAGE -> listener.openInvitationCodeFragment()
+				else -> loading(false)
 			}
 		})
 	}

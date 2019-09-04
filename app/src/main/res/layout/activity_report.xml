@@ -50,13 +50,12 @@
 			
 			<TextView
 				android:id="@+id/reportTypeTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_what_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/mapView" />
 			
@@ -68,13 +67,12 @@
 			
 			<TextView
 				android:id="@+id/reportWhenTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_when_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
 			
@@ -90,13 +88,12 @@
 			
 			<TextView
 				android:id="@+id/attachImageTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:text="@string/report_attach_image_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/whenView" />
 			
@@ -118,13 +115,12 @@
 			
 			<TextView
 				android:id="@+id/reportRecordTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:text="@string/report_record_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
 			

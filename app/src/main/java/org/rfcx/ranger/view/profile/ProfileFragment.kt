@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.profile
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -33,6 +34,7 @@ class ProfileFragment : BaseFragment() {
 		return inflater.inflate(R.layout.fragment_profile, container, false)
 	}
 	
+	@SuppressLint("DefaultLocale")
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
@@ -65,7 +67,7 @@ class ProfileFragment : BaseFragment() {
 		})
 		
 		profileViewModel.userName.observe(this, Observer {
-			userNameTextView.text = it
+			userNameTextView.text = it.capitalize()
 		})
 		
 		profileViewModel.guardianGroup.observe(this, Observer {
@@ -112,9 +114,9 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		feedbackTextView.setOnClickListener {
-			context?.let { FeedbackActivity.startActivity(it) }
-		}
+//		feedbackTextView.setOnClickListener {
+//			context?.let { FeedbackActivity.startActivity(it) }
+//		}
 	}
 	
 	override fun onStart() {
