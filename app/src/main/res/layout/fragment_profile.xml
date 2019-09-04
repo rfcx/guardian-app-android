@@ -10,7 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:paddingTop="@dimen/margin_padding_xlarge"
+		android:paddingTop="@dimen/margin_padding_large"
 		android:paddingBottom="@dimen/fab_height_half">
 		
 		<TextView
@@ -58,7 +58,6 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_xlarge"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_small"
 			android:text="@string/location" />
 		
 		<LinearLayout
@@ -66,8 +65,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:orientation="horizontal">
 			
 			<TextView
@@ -75,6 +74,7 @@
 				style="@style/RangerText.SubTitle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
 				android:layout_weight="1"
 				android:text="@string/location_tracking_label"
 				android:textSize="@dimen/text_small" />
@@ -91,7 +91,6 @@
 					style="@style/SwitchCompatStyle"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:clickable="false"
 					android:focusable="false"
 					android:textOff="@string/location_tracking_off_label"
@@ -108,8 +107,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_normal"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_small"
 			android:text="@string/notifications"
 			android:textSize="@dimen/text_small" />
 		
@@ -118,8 +117,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:orientation="horizontal">
 			
 			<TextView
@@ -134,7 +133,6 @@
 				style="@style/SwitchCompatStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:layout_weight="1"
 				android:textOff="@string/location_tracking_off_label"
 				android:textOn="@string/location_tracking_on_label"
@@ -145,7 +143,11 @@
 			android:id="@+id/guardianGroupLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical">
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="?attr/selectableItemBackground"
+			android:orientation="vertical"
+			android:paddingTop="@dimen/margin_padding_small"
+			android:paddingBottom="@dimen/margin_padding_small">
 			
 			<TextView
 				android:id="@+id/guardianGroupTextView"
@@ -163,7 +165,6 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_normal"
 				tools:text="Osa Conservation" />
 		
 		</LinearLayout>
@@ -173,7 +174,10 @@
 			style="@style/RangerText.SubTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="?attr/selectableItemBackground"
 			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingTop="@dimen/margin_padding_small"
 			android:paddingEnd="@dimen/margin_padding_small"
 			android:paddingBottom="@dimen/margin_padding_small"
 			android:text="@string/profile_sign_out_label" />
@@ -193,7 +197,7 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:layout_marginBottom="@dimen/margin_padding_normal"
+			android:layout_marginBottom="@dimen/margin_padding_small"
 			android:text="@string/profile_aditional_label"
 			android:textAllCaps="true"
 			android:textColor="@color/text_primary"
@@ -226,6 +230,7 @@
 			style="@style/RangerText.SubTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackground"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingTop="@dimen/margin_padding_small"
 			android:paddingEnd="@dimen/margin_padding_small"
