@@ -17,6 +17,10 @@
 	<string name="login_sign_in_button_label">Sign in</string>
 	<string name="invitation_submit_button_label">Submit</string>
 	
+	<string name="what_we_call_you">What should we call you?</string>
+	<string name="please_tell_name">Please tell us your name</string>
+	<string name="hint_name">Name</string>
+	
 	<!-- common error -->
 	<string name="error_common">An error occurred. Please try again.</string>
 	<string name="location_permission_msg">Ranger App would like to use your location</string>
