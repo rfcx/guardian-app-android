@@ -2,7 +2,9 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.util.Log
+import io.realm.Realm
 import org.rfcx.ranger.localdb.SiteGuardianDb
+import org.rfcx.ranger.view.login.LoginActivityNew
 
 fun Context.getTokenID(): String? {
 	val idToken = Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "")
@@ -13,7 +15,8 @@ fun Context.getTokenID(): String? {
 fun Context.getSiteName(): String {
 	val defaultSiteName = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
 	val database = SiteGuardianDb()
-	val guardianGroupId = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
+	val guardianGroupId = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP)
+			?: ""
 	val siteId = database.guardianGroup(guardianGroupId)?.siteId ?: ""
 	val site = database.site(siteId)
 	return if (site != null) site.name else defaultSiteName.capitalize()
@@ -38,5 +41,19 @@ fun Preferences.getTokenID(): String? {
 	val idToken = this.getString(Preferences.ID_TOKEN, "")
 	Log.d("getToken", idToken)
 	return if (idToken.isEmpty()) null else idToken
+}
+
+fun Context?.logout() {
+	this?.let {
+		CloudMessaging.unsubscribe(this)
+		Preferences.getInstance(this).clear()
+		LocationTracking.set(this, false)
+		Realm.getDefaultInstance().use { realm ->
+			realm.executeTransaction {
+				it.deleteAll()
+			}
+		}
+		LoginActivityNew.startActivity(this)
+	}
 }
 

@@ -58,7 +58,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			
 		})
 		
-		observeMian()
+		observeMain()
 		observeLocationTracking()
 	}
 	
@@ -168,13 +168,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 						tag).commit()
 	}
 	
-	override fun logout() {
-		CloudMessaging.unsubscribe(this)
-		Preferences.getInstance(this@MainActivityNew).clear()
-		LoginActivityNew.startActivity(this@MainActivityNew)
-		finish()
-	}
-	
 	private fun observeLocationTracking() {
 		locationTrackingViewModel.requireLocationTrackingState.observe(this, Observer {
 			if (it) {
@@ -185,7 +178,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		})
 	}
 	
-	private fun observeMian() {
+	private fun observeMain() {
 		mainViewModel.isRequireToLogin.observe(this, Observer {
 			if (it) logout()
 		})
@@ -230,5 +223,4 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
-	fun logout()
 }
