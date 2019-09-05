@@ -15,6 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.CloudMessaging
+import org.rfcx.ranger.util.logout
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -98,7 +99,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		logoutTextView.setOnClickListener {
-			listener.logout()
+			context.logout()
 		}
 		
 		rateAppTextView.setOnClickListener {

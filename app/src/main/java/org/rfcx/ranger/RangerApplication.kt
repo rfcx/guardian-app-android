@@ -1,5 +1,6 @@
 package org.rfcx.ranger
 
+import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.crashlytics.android.Crashlytics
@@ -51,6 +52,8 @@ class RangerApplication : MultiDexApplication() {
 			realm.close()
 			Realm.setDefaultConfiguration(RealmHelper.migrationConfig())
 		} catch (e: RealmMigrationNeededException) {
+			Log.e("RealmMigration", e.message)
+			CrashlyticsCore.getInstance().logException(e)
 			Realm.setDefaultConfiguration(RealmHelper.defaultConfig())
 		}
 	}

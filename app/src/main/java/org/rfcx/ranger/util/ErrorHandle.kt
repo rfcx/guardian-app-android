@@ -75,8 +75,7 @@ fun Context?.handleError(error: Throwable) {
 		is UnauthenticatedException -> {
 			
 			this?.let {
-				Preferences.getInstance(it).clear()
-				LoginActivityNew.startActivity(it)
+				logout()
 			}
 			Toast.makeText(this, this?.getString(R.string.login), Toast.LENGTH_SHORT).show()
 		}

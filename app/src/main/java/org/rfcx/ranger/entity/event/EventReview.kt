@@ -5,7 +5,7 @@ import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
 @RealmClass
-open class EventRealmObject(
+open class EventReview(
 		@PrimaryKey
 		var eventGuId: String = "",
 		

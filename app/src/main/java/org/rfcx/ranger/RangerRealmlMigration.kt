@@ -64,5 +64,13 @@ class RangerRealmlMigration : RealmMigration {
 			renameField("ageEstimate", "ageEstimateRaw")
 			removeField("distanceEstimate")
 		}
+
+		// Add EventReview class
+		val eventReview = realm.schema.create("EventReview")
+		eventReview.apply {
+			addField("eventGuId", String::class.java, FieldAttribute.PRIMARY_KEY)
+					.setRequired("eventGuId", true)
+			addField("review", String::class.java)
+		}
 	}
 }
