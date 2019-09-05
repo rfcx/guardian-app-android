@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.base.BaseFragment
 
 class InvitationCodeFragment : BaseFragment() {
@@ -33,6 +35,7 @@ class InvitationCodeFragment : BaseFragment() {
 	private fun initView() {
 		submitButton.setOnClickListener {
 			invitationProgressBar.visibility = View.VISIBLE
+			it.hideKeyboard()
 			
 			val code = inputCodeEditText.text.toString()
 			invitationCodeViewModel.setSubmitState()
@@ -40,7 +43,11 @@ class InvitationCodeFragment : BaseFragment() {
 			invitationCodeViewModel.submitCodeState.observe(this, Observer {
 				when (it) {
 					SubmitState.SUCCESS -> {
-						listener.openMain()
+						if (context?.getUserNickname()?.substring(0, 1) == "+") {
+							listener.openSetUserNameFragmentFragment()
+						} else {
+							listener.openMain()
+						}
 					}
 					SubmitState.FAILED -> {
 						invitationProgressBar.visibility = View.GONE
@@ -49,5 +56,10 @@ class InvitationCodeFragment : BaseFragment() {
 				}
 			})
 		}
+	}
+	
+	private fun View.hideKeyboard() {
+		val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		inputManager.hideSoftInputFromWindow(windowToken, 0)
 	}
 }

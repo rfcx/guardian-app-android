@@ -9,6 +9,7 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertsViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
+import org.rfcx.ranger.view.login.SetUserNameViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
@@ -46,5 +47,6 @@ object UiModule {
 	var loginModule = module {
 		viewModel { LoginViewModel(androidContext(), get()) }
 		viewModel { InvitationCodeViewModel(androidContext(), get()) }
+		viewModel { SetUserNameViewModel(androidContext(), get()) }
 	}
 }

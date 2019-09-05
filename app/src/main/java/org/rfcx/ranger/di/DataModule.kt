@@ -25,6 +25,9 @@ import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepository
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepositoryImp
 import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
 import org.rfcx.ranger.data.remote.service.ServiceFactory
+import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
+import org.rfcx.ranger.data.remote.setusername.SetNameRepository
+import org.rfcx.ranger.data.remote.setusername.SetNameRepositoryImp
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
@@ -57,6 +60,9 @@ object DataModule {
 		single { UserTouchRepositoryImp(get()) } bind UserTouchRepository::class
 		single { CheckUserTouchUseCase(get(), get(), get()) }
 		
+		single { SetNameRepositoryImp(get()) } bind SetNameRepository::class
+		single { SendNameUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -65,6 +71,7 @@ object DataModule {
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeInviteCodeService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {
