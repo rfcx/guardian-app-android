@@ -9,8 +9,6 @@ import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
-import com.crashlytics.android.Crashlytics
-import io.jsonwebtoken.Jwts
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
@@ -21,7 +19,7 @@ import org.rfcx.ranger.entity.user.SetNameResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.getTokenID
+import org.rfcx.ranger.util.getUserId
 
 class SetUserNameViewModel(private val context: Context, private val sendNameUseCase: SendNameUseCase) : ViewModel() {
 	
@@ -43,7 +41,7 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
 		get() = _userName
 	
 	fun sendName(name: String) {
-		getUserId()
+		idUser = context.getUserId()
 		sendNameUseCase.execute(object : DisposableSingleObserver<SetNameResponse>() {
 			override fun onSuccess(t: SetNameResponse) {
 				refreshToken { success ->
@@ -87,21 +85,5 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
 				callback(false)
 			}
 		})
-	}
-	
-	private fun getUserId() {
-		val token = context.getTokenID() ?: return
-		val metaDataKey = context.getString(R.string.auth0_metadata_key)
-		val withoutSignature = token.substring(0, token.lastIndexOf('.') + 1)
-		try {
-			val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
-			if (untrusted.body[metaDataKey] == null) {
-				return
-			}
-			idUser = untrusted.body["sub"] as String
-		} catch (e: Exception) {
-			e.printStackTrace()
-			Crashlytics.logException(e)
-		}
 	}
 }
