@@ -5,32 +5,28 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_feedback.*
-import kotlinx.android.synthetic.main.activity_feedback.toolbar
-import kotlinx.android.synthetic.main.activity_report.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
-import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.DiagnosticsLocationActivity
 import java.io.File
 
 class FeedbackActivity : AppCompatActivity() {
 	
+	private val feedbackViewModel: FeedbackViewModel by viewModel()
 	private var imageFile: File? = null
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
+	var pathListArray: List<String>? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -76,12 +72,58 @@ class FeedbackActivity : AppCompatActivity() {
 		return super.onOptionsItemSelected(item)
 	}
 	
+	private fun openGallery() {
+		if (!galleryPermissions.allowed()) {
+			imageFile = null
+			galleryPermissions.check { }
+		} else {
+			startOpenGallery()
+		}
+	}
+	
+	private fun startOpenGallery() {
+		if (feedbackImageAdapter.getImageCount() < FeedbackImageAdapter.MAX_IMAGE_SIZE) {
+			val remainingImage = FeedbackImageAdapter.MAX_IMAGE_SIZE - feedbackImageAdapter.getImageCount()
+			Matisse.from(this)
+					.choose(MimeType.ofImage())
+					.countable(true)
+					.maxSelectable(remainingImage)
+					.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+					.thumbnailScale(0.85f)
+					.imageEngine(GlideV4ImageEngine())
+					.theme(R.style.Matisse_Dracula)
+					.forResult(ReportUtils.REQUEST_GALLERY)
+		} else {
+			Toast.makeText(this, R.string.maximum_number_of_attachments, Toast.LENGTH_LONG).show()
+		}
+	}
+	
+	private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+		if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
+		
+		val pathList = mutableListOf<String>()
+		val results = Matisse.obtainResult(intentData)
+		results.forEach {
+			val imagePath = ImageFileUtils.findRealPath(this, it)
+			imagePath?.let { path ->
+				pathList.add(path)
+			}
+		}
+		feedbackImageAdapter.addImages(pathList)
+		pathListArray = pathList
+	}
+	
 	private fun sendEmail() {
-		Log.d("sendEmail","sendEmail")
+		val feedbackInput = feedbackEditText.text.toString()
+		if(feedbackInput.isNotEmpty()) {
+			feedbackViewModel.uploadFile(pathListArray, feedbackInput)
+		}else{
+			Toast.makeText(this, "Data Stored", Toast.LENGTH_SHORT).show()
+		}
 	}
 	
 	@SuppressLint("SetTextI18n")
-	fun setEmail(){
+	fun setEmail() {
 		val preferences = Preferences.getInstance(this)
 		val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
 		fromEmailTextView.text = "${getString(R.string.from)} ${email}"
@@ -100,46 +142,6 @@ class FeedbackActivity : AppCompatActivity() {
 	override fun onSupportNavigateUp(): Boolean {
 		onBackPressed()
 		return true
-	}
-	
-	private fun openGallery() {
-		if (!galleryPermissions.allowed()) {
-			imageFile = null
-			galleryPermissions.check { }
-		} else {
-			startOpenGallery()
-		}
-	}
-	
-	private fun startOpenGallery() {
-		if(feedbackImageAdapter.getImageCount() < FeedbackImageAdapter.MAX_IMAGE_SIZE) {
-			val remainingImage = FeedbackImageAdapter.MAX_IMAGE_SIZE - feedbackImageAdapter.getImageCount()
-			Matisse.from(this)
-					.choose(MimeType.ofImage())
-					.countable(true)
-					.maxSelectable(remainingImage)
-					.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-					.thumbnailScale(0.85f)
-					.imageEngine(GlideV4ImageEngine())
-					.theme(R.style.Matisse_Dracula)
-					.forResult(ReportUtils.REQUEST_GALLERY)
-		}else{
-			Toast.makeText(this, R.string.maximum_number_of_attachments, Toast.LENGTH_LONG).show()
-		}
-	}
-	
-	private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-		if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
-		
-		val pathList = mutableListOf<String>()
-		val results = Matisse.obtainResult(intentData)
-		results.forEach {
-			val imagePath = ImageFileUtils.findRealPath(this, it)
-			imagePath?.let { path ->
-				pathList.add(path)
-			}
-		}
-		feedbackImageAdapter.addImages(pathList)
 	}
 	
 	companion object {

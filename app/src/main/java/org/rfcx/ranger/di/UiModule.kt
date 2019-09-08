@@ -11,6 +11,7 @@ import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
+import org.rfcx.ranger.view.profile.FeedbackViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.report.ReportDetailViewModel
@@ -41,6 +42,7 @@ object UiModule {
 	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get()) }
 		viewModel { GuardianGroupViewModel(get()) }
+		viewModel { FeedbackViewModel(androidContext()) }
 	}
 	
 	var loginModule = module {

@@ -59,7 +59,7 @@
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:cursorVisible="false"
+				android:textCursorDrawable="@drawable/cursor_green"
 				android:hint="@string/app_feedback_share_ideas"
 				android:inputType="textMultiLine"
 				app:layout_constraintEnd_toEndOf="parent"

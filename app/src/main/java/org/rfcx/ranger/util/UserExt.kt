@@ -2,6 +2,8 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.util.Log
+import com.crashlytics.android.Crashlytics
+import io.jsonwebtoken.Jwts
 import io.realm.Realm
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
@@ -57,3 +59,16 @@ fun Context?.logout() {
 	}
 }
 
+fun Context?.getUserId(): String {
+	var userID = ""
+	val token = this?.getTokenID()
+	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	try {
+		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+		userID = untrusted.body["sub"] as String
+	} catch (e: Exception) {
+		e.printStackTrace()
+		Crashlytics.logException(e)
+	}
+	return userID
+}

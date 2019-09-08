@@ -115,9 +115,9 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-//		feedbackTextView.setOnClickListener {
-//			context?.let { FeedbackActivity.startActivity(it) }
-//		}
+		feedbackTextView.setOnClickListener {
+			context?.let { FeedbackActivity.startActivity(it) }
+		}
 	}
 	
 	override fun onStart() {
