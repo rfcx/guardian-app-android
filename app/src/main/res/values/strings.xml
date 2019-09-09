@@ -188,6 +188,7 @@
 	<string name="profile_feedback_label">Feedback</string>
 	<string name="profile_rate_app_label">Rate the app</string>
 	
+	<string name="please_enter_feedback">Please enter feedback</string>
 	<string name="profile_send_feedback">Send feedback</string>
 	<string name="from">From:</string>
 	<string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
