@@ -6,5 +6,9 @@ data class SetNameRequest(
 		@SerializedName("user_id")
 		val userId: String,
 		@SerializedName("given_name")
-		val givenName: String
+		val givenName: String,
+		@SerializedName("name")
+		val name: String,
+		@SerializedName("nickname")
+		val nickname: String
 )
