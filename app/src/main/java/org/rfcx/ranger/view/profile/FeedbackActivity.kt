@@ -116,7 +116,7 @@ class FeedbackActivity : AppCompatActivity() {
 	private fun sendEmail() {
 		val feedbackInput = feedbackEditText.text.toString()
 		if(feedbackInput.isNotEmpty()) {
-			feedbackViewModel.uploadFile(pathListArray, feedbackInput)
+			feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput)
 		}else{
 			Toast.makeText(this, "Data Stored", Toast.LENGTH_SHORT).show()
 		}
