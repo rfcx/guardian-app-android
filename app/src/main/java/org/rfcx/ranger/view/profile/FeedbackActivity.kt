@@ -19,11 +19,14 @@ import kotlinx.android.synthetic.main.activity_feedback.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.adapter.entity.BaseListItem
+import org.rfcx.ranger.util.GalleryPermissions
+import org.rfcx.ranger.util.GlideV4ImageEngine
+import org.rfcx.ranger.util.ImageFileUtils
+import org.rfcx.ranger.util.ReportUtils
 import java.io.File
 
 class FeedbackActivity : AppCompatActivity() {
-	
 	private val feedbackViewModel: FeedbackViewModel by viewModel()
 	private var imageFile: File? = null
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
@@ -35,7 +38,7 @@ class FeedbackActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_feedback)
 		
 		setupToolbar()
-		setEmail()
+		setTextFrom()
 		setupFeedbackImages()
 	}
 	
@@ -46,6 +49,15 @@ class FeedbackActivity : AppCompatActivity() {
 		}
 		
 		feedbackImageAdapter.onFeedbackImageAdapterClickListener = object : OnFeedbackImageAdapterClickListener {
+			override fun pathListArray(path: ArrayList<BaseListItem>) {
+				val pathList = mutableListOf<String>()
+				path.forEach {
+					val itemImage = it as LocalImageItem
+					pathList.add(itemImage.localPath)
+				}
+				pathListArray = pathList
+			}
+			
 			override fun onDeleteImageClick(position: Int) {
 				feedbackImageAdapter.removeAt(position)
 			}
@@ -112,13 +124,11 @@ class FeedbackActivity : AppCompatActivity() {
 			}
 		}
 		feedbackImageAdapter.addImages(pathList)
-		pathListArray = pathList
 	}
 	
 	private fun sendFeedback() {
 		val itemView = findViewById<View>(R.id.sendFeedbackView)
 		itemView.hideKeyboard()
-		
 		val feedbackInput = feedbackEditText.text.toString()
 		if (feedbackInput.isNotEmpty()) {
 			feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput)
@@ -133,10 +143,9 @@ class FeedbackActivity : AppCompatActivity() {
 	}
 	
 	@SuppressLint("SetTextI18n")
-	fun setEmail() {
-		val preferences = Preferences.getInstance(this)
-		val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
-		fromEmailTextView.text = "${getString(R.string.from)} $email"
+	fun setTextFrom() {
+		val fromWho = feedbackViewModel.from()
+		fromEmailTextView.text = "${getString(R.string.from)} $fromWho"
 	}
 	
 	private fun setupToolbar() {
@@ -161,3 +170,4 @@ class FeedbackActivity : AppCompatActivity() {
 		}
 	}
 }
+
