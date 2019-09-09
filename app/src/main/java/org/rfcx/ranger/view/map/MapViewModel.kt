@@ -24,11 +24,11 @@ class MapViewModel(private val reportDb: ReportDb, private val locationDb: Locat
 				locationDb.allForDisplay().asLiveData()
 		) {
 			
-			if (it.count() <= MAXIMUM_CHECK_IN_FOR_DISPLAY) {
+			if (it.count() <= MAX_AVERAGE_CHECK_IN_FOR_DISPLAY) {
 				it
 			} else {
 				val displayPoints = arrayListOf<CheckIn>()
-				val interestModPosition = it.count() / (MAXIMUM_CHECK_IN_FOR_DISPLAY)
+				val interestModPosition = it.count() / (MAX_AVERAGE_CHECK_IN_FOR_DISPLAY)
 				it.forEachIndexed { index, checkIn ->
 					if (index % interestModPosition == 0) {
 						displayPoints.add(checkIn)
@@ -42,6 +42,6 @@ class MapViewModel(private val reportDb: ReportDb, private val locationDb: Locat
 	}
 	
 	companion object {
-		private const val MAXIMUM_CHECK_IN_FOR_DISPLAY = 10
+		private const val MAX_AVERAGE_CHECK_IN_FOR_DISPLAY = 120
 	}
 }
