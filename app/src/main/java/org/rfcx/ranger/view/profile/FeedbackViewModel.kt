@@ -11,8 +11,10 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import org.rfcx.ranger.adapter.entity.BaseListItem
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserId
+import org.rfcx.ranger.util.getUserNickname
 import java.io.File
 import java.sql.Timestamp
 
@@ -25,11 +27,9 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 	private val pathImages = mutableListOf<String>()
 	
 	fun saveDataInFirestore(uris: List<String>?, input: String) {
-		val preferences = Preferences.getInstance(context)
-		val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
 		val docData = hashMapOf(
 				"userId" to context.getUserId(),
-				"email" to email,
+				"from" to from(),
 				"inputFeedback" to input,
 				"pathImages" to pathImages,
 				"timeStamp" to Timestamp(System.currentTimeMillis()).toString()
@@ -70,10 +70,9 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 					val downloadUri = task.result
 					pathImages.add(downloadUri.toString())
 					
+					Log.d("downloadUri", downloadUri.toString())
 					if (counter == uris.size) {
-						val docData = hashMapOf(
-								"pathImages" to pathImages
-						)
+						val docData = hashMapOf("pathImages" to pathImages)
 						documentReference.update(docData as Map<String, Any>)
 					}
 				} else {
@@ -81,7 +80,12 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 				}
 			}
 		}
-		
+	}
+	
+	fun from(): String {
+		val preferences = Preferences.getInstance(context)
+		val email = preferences.getString(Preferences.EMAIL)
+		return email ?: context.getUserNickname()
 	}
 	
 	companion object {

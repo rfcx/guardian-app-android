@@ -32,6 +32,7 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 			index++
 		}
 		submitList(ArrayList(imagesSource))
+		onFeedbackImageAdapterClickListener?.pathListArray(imagesSource)
 	}
 	
 	fun removeAt(index: Int) {
@@ -40,6 +41,7 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 		}
 		imagesSource.removeAt(index)
 		submitList(ArrayList(imagesSource))
+		onFeedbackImageAdapterClickListener?.pathListArray(imagesSource)
 	}
 	
 	fun getImageCount(): Int {
@@ -114,4 +116,5 @@ data class AddImageItem(val any: Any? = null) : BaseListItem {
 
 interface OnFeedbackImageAdapterClickListener {
 	fun onDeleteImageClick(position: Int)
+	fun pathListArray(path: ArrayList<BaseListItem>)
 }
