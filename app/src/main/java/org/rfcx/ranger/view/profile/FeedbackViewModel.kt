@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
@@ -23,56 +24,64 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 	private val storageRef = storage.reference
 	private val pathImages = mutableListOf<String>()
 	
-	fun uploadFile(uris: List<String>?, input: String) {
-		if (uris != null) {
-			val preferences = Preferences.getInstance(context)
-			val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
-			var counter = 0
+	fun saveDataInFirestore(uris: List<String>?, input: String) {
+		val preferences = Preferences.getInstance(context)
+		val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
+		val docData = hashMapOf(
+				"userId" to context.getUserId(),
+				"email" to email,
+				"inputFeedback" to input,
+				"pathImages" to pathImages,
+				"timeStamp" to Timestamp(System.currentTimeMillis()).toString()
+		)
+		
+		db.collection("feedback")
+				.add(docData)
+				.addOnSuccessListener { documentReference ->
+					Log.d("documentReference", documentReference.toString())
+					Toast.makeText(context, "Data Stored", Toast.LENGTH_SHORT).show()
+					
+					if (uris != null) uploadFile(uris, documentReference)
+				}
+				.addOnFailureListener { e ->
+					Log.d("error", e.message)
+					Toast.makeText(context, "Data Not Stored", Toast.LENGTH_SHORT).show()
+				}
+	}
+	
+	private fun uploadFile(uris: List<String>, documentReference: DocumentReference) {
+		var counter = 0
+		
+		uris.forEach {
+			val file = Uri.fromFile(File(it))
+			val ref = storageRef.child(file.lastPathSegment)
+			val uploadTask = ref.putFile(file)
 			
-			uris.forEach {
-				val file = Uri.fromFile(File(it))
-				val ref = storageRef.child(file.lastPathSegment)
-				val uploadTask = ref.putFile(file)
-				
-				uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
-					if (!task.isSuccessful) {
-						task.exception?.let {
-							throw it
-						}
+			uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+				if (!task.isSuccessful) {
+					task.exception?.let {
+						throw it
 					}
-					return@Continuation ref.downloadUrl
-				}).addOnCompleteListener { task ->
-					if (task.isSuccessful) {
-						counter += 1
-						val downloadUri = task.result
-						pathImages.add(downloadUri.toString())
-
-						if(counter == uris.size){
-							val docData = hashMapOf(
-									"userId" to context.getUserId(),
-									"email" to email,
-									"inputFeedback" to input,
-									"pathImages" to pathImages,
-									"timeStamp" to Timestamp(System.currentTimeMillis()).toString()
-							)
-							
-							db.collection("feedback")
-									.add(docData)
-									.addOnSuccessListener { documentReference ->
-										Log.d("documentReference", documentReference.toString())
-										Toast.makeText(context, "Data Stored", Toast.LENGTH_SHORT).show()
-									}
-									.addOnFailureListener { e ->
-										Log.d("error", e.message)
-										Toast.makeText(context, "Data Not Stored", Toast.LENGTH_SHORT).show()
-									}
-						}
-					} else {
-						Toast.makeText(context, "Upload Image Fail", Toast.LENGTH_SHORT).show()
+				}
+				return@Continuation ref.downloadUrl
+			}).addOnCompleteListener { task ->
+				if (task.isSuccessful) {
+					counter += 1
+					val downloadUri = task.result
+					pathImages.add(downloadUri.toString())
+					
+					if (counter == uris.size) {
+						val docData = hashMapOf(
+								"pathImages" to pathImages
+						)
+						documentReference.update(docData as Map<String, Any>)
 					}
+				} else {
+					Toast.makeText(context, "Upload Image Fail", Toast.LENGTH_SHORT).show()
 				}
 			}
 		}
+		
 	}
 	
 	companion object {

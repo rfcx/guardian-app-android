@@ -8,6 +8,8 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +28,7 @@ class FeedbackActivity : AppCompatActivity() {
 	private var imageFile: File? = null
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
-	var pathListArray: List<String>? = null
+	private var pathListArray: List<String>? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -67,7 +69,7 @@ class FeedbackActivity : AppCompatActivity() {
 		when (item?.itemId) {
 			android.R.id.home -> finish()
 			R.id.attachView -> openGallery()
-			R.id.sendEmailView -> sendEmail()
+			R.id.sendFeedbackView -> sendFeedback()
 		}
 		return super.onOptionsItemSelected(item)
 	}
@@ -113,20 +115,28 @@ class FeedbackActivity : AppCompatActivity() {
 		pathListArray = pathList
 	}
 	
-	private fun sendEmail() {
+	private fun sendFeedback() {
+		val itemView = findViewById<View>(R.id.sendFeedbackView)
+		itemView.hideKeyboard()
+		
 		val feedbackInput = feedbackEditText.text.toString()
-		if(feedbackInput.isNotEmpty()) {
-			feedbackViewModel.uploadFile(pathListArray, feedbackInput)
-		}else{
-			Toast.makeText(this, "Data Stored", Toast.LENGTH_SHORT).show()
+		if (feedbackInput.isNotEmpty()) {
+			feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput)
+		} else {
+			Toast.makeText(this, getString(R.string.please_enter_feedback), Toast.LENGTH_SHORT).show()
 		}
+	}
+	
+	private fun View.hideKeyboard() = this.let {
+		val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		imm.hideSoftInputFromWindow(windowToken, 0)
 	}
 	
 	@SuppressLint("SetTextI18n")
 	fun setEmail() {
 		val preferences = Preferences.getInstance(this)
 		val email = preferences.getString(Preferences.EMAIL, preferences.getString(Preferences.USER_GUID, ""))
-		fromEmailTextView.text = "${getString(R.string.from)} ${email}"
+		fromEmailTextView.text = "${getString(R.string.from)} $email"
 	}
 	
 	private fun setupToolbar() {

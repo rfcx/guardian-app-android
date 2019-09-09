@@ -10,7 +10,7 @@
 		tools:ignore="MenuTitle" />
 	
 	<item
-		android:id="@+id/sendEmailView"
+		android:id="@+id/sendFeedbackView"
 		android:icon="@drawable/ic_send_email"
 		app:showAsAction="ifRoom"
 		tools:ignore="MenuTitle" />
