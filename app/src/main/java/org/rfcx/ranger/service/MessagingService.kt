@@ -1,9 +1,7 @@
 package org.rfcx.ranger.service
 
-import android.content.Intent
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import org.rfcx.ranger.view.MainActivity
 import android.media.RingtoneManager
 
 
@@ -24,7 +22,7 @@ class MessagingService : FirebaseMessagingService() {
 		}
 
 		// Broadcast message to refresh
-		val intent = Intent(MainActivity.INTENT_FILTER_MESSAGE_BROADCAST)
-		applicationContext.sendBroadcast(intent)
+//		val intent = Intent(MainActivity.INTENT_FILTER_MESSAGE_BROADCAST)
+//		applicationContext.sendBroadcast(intent)
 	}
 }
