@@ -24,9 +24,6 @@
 		android:theme="@style/AppTheme"
 		android:resizeableActivity="false"
 		tools:ignore="GoogleAppIndexingWarning">
-		<activity android:name=".view.profile.FeedbackActivity"/>
-		<activity android:name=".view.report.ReportDetailActivity"/>
-		<activity android:name=".view.profile.GuardianGroupActivity"/>
 		
 		<provider
 			android:name="androidx.core.content.FileProvider"
@@ -37,6 +34,10 @@
 				android:name="android.support.FILE_PROVIDER_PATHS"
 				android:resource="@xml/file_paths"/>
 		</provider>
+		
+		<activity android:name=".view.profile.FeedbackActivity"/>
+		<activity android:name=".view.report.ReportDetailActivity"/>
+		<activity android:name=".view.profile.GuardianGroupActivity"/>
 		
 		<activity
 			android:name=".view.MainActivityNew"
@@ -53,24 +54,7 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".view.MainActivity"
-			android:launchMode="singleTask"
-			android:screenOrientation="portrait"/>
-		<activity
-			android:name=".view.SettingsActivity"
-			android:launchMode="singleTop"
-			android:screenOrientation="portrait"/>
-		<activity
 			android:name=".view.report.ReportActivity"
-			android:screenOrientation="portrait"/>
-		<activity
-			android:name=".view.InvitationActivity"
-			android:screenOrientation="portrait"/>
-		<activity
-			android:name=".view.DiagnosticsLocationActivity"
-			android:screenOrientation="portrait"/>
-		<activity
-			android:name=".view.report.ReportListActivity"
 			android:screenOrientation="portrait"/>
 		<service
 			android:name=".service.LocationTrackerService"
