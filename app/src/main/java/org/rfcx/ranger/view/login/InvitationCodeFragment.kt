@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
@@ -33,6 +34,7 @@ class InvitationCodeFragment : BaseFragment() {
 	private fun initView() {
 		submitButton.setOnClickListener {
 			invitationProgressBar.visibility = View.VISIBLE
+			it.hideKeyboard()
 			
 			val code = inputCodeEditText.text.toString()
 			invitationCodeViewModel.setSubmitState()
@@ -49,5 +51,10 @@ class InvitationCodeFragment : BaseFragment() {
 				}
 			})
 		}
+	}
+	
+	private fun View.hideKeyboard() = this.let {
+		val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		inputManager.hideSoftInputFromWindow(windowToken, 0)
 	}
 }
