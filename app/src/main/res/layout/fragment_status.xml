@@ -40,7 +40,9 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:text="@string/setting_guardian_group"
+				android:layout_marginTop="16dp"
+				android:text="@string/guardian_group_not_found"
+				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 			

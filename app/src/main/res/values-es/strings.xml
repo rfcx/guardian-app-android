@@ -137,7 +137,6 @@
 	<string name="format_images_synced">%s imágenes</string>
 	<string name="format_images_unsync">%s imágenes (%s aún no sincronizadas)</string>
 	<string name="empty_report_text">No hay informes en los últimos 7 días.</string>
-	<string name="setting_guardian_group">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
 	<string name="button_later">Luego</string>
 	<string name="button_set_guarduan_group">Establecer Grupo Guardián</string>
 	
