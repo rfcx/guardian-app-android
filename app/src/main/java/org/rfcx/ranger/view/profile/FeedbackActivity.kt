@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -40,7 +39,7 @@ class FeedbackActivity : AppCompatActivity() {
 	private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
 	private var pathListArray: List<String>? = null
 	private var menuAll: Menu? = null
-
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_feedback)
@@ -182,12 +181,11 @@ class FeedbackActivity : AppCompatActivity() {
 		feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput, contextView)
 		
 		feedbackViewModel.statusToSaveData.observe(this, Observer {
-			val fragment = ProfileFragment()
-			
 			if (it == "Success") {
+				val intent = Intent()
+				setResult(ProfileFragment.RESULT_CODE, intent)
 				finish()
-				fragment.showSnackbar()
-			} else if(it == "Fail"){
+			} else if (it == "Fail") {
 				setEnableSendFeedbackView()
 				feedbackGroupView.visibility = View.VISIBLE
 				feedbackProgressBar.visibility = View.INVISIBLE

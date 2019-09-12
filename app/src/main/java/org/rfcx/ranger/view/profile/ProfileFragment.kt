@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,8 +36,9 @@ class ProfileFragment : BaseFragment() {
 		return inflater.inflate(R.layout.fragment_profile, container, false)
 	}
 	
-	fun showSnackbar() {
-		Log.d(tag, "showSnackbar")
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		handleShowSnackbarResult(requestCode, resultCode, data)
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -120,7 +122,8 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		feedbackTextView.setOnClickListener {
-			context?.let { FeedbackActivity.startActivity(it) }
+			val intent = Intent(activity, FeedbackActivity::class.java)
+			startActivityForResult(intent, REQUEST_CODE)
 		}
 	}
 	
@@ -129,11 +132,23 @@ class ProfileFragment : BaseFragment() {
 		profileViewModel.updateSiteName()
 	}
 	
+	private fun handleShowSnackbarResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+		if (requestCode != REQUEST_CODE || resultCode != RESULT_CODE || intentData == null) return
+		
+		view?.let {
+			Snackbar.make(it, R.string.feedback_submitted, Snackbar.LENGTH_SHORT)
+					.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+					.setAnchorView(R.id.newReportFabButton).show()
+		}
+	}
+	
 	companion object {
 		fun newInstance(): ProfileFragment {
 			return ProfileFragment()
 		}
 		
 		const val tag = "ProfileFragment"
+		const val RESULT_CODE = 12
+		const val REQUEST_CODE = 11
 	}
 }
