@@ -189,6 +189,9 @@
 	<string name="profile_feedback_label">Feedback</string>
 	<string name="profile_rate_app_label">Rate the app</string>
 	
+	<string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
+	<string name="feedback_submission_failed">Feedback submission failed! Please try again.</string>
+	<string name="snackbar_retry">RETRY</string>
 	<string name="please_enter_feedback">Please enter feedback</string>
 	<string name="profile_send_feedback">Send feedback</string>
 	<string name="from">From:</string>

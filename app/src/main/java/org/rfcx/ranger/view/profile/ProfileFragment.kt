@@ -35,6 +35,10 @@ class ProfileFragment : BaseFragment() {
 		return inflater.inflate(R.layout.fragment_profile, container, false)
 	}
 	
+	fun showSnackbar() {
+		Log.d(tag, "showSnackbar")
+	}
+	
 	@SuppressLint("DefaultLocale")
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -108,7 +112,7 @@ class ProfileFragment : BaseFragment() {
 				val playStoreUri: Uri = Uri.parse("market://details?id=$appPackageName")
 				val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
 				startActivity(playStoreIntent)
-			}catch (exp:Exception){
+			} catch (exp: Exception) {
 				val exceptionUri: Uri = Uri.parse("http://play.google.com/store/apps/details?id=$appPackageName")
 				val exceptionIntent = Intent(Intent.ACTION_VIEW, exceptionUri)
 				startActivity(exceptionIntent)
