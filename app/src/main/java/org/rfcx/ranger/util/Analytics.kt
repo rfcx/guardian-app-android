@@ -42,8 +42,6 @@ class Analytics(context: Context) {
 		bundle.putString(FirebaseAnalytics.Param.METHOD, method)
 		trackEvent(FirebaseAnalytics.Event.LOGIN, bundle)
 	}
-	adb shell setprop debug.firebase.analytics.app org.rfcx.ranger
-	
 	
 	fun trackEnterInviteCodeEvent(inviteCode: String) {
 		val bundle = Bundle()
