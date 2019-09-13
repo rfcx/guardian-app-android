@@ -22,22 +22,16 @@
     <string name="camera_permission_msg">แอป Ranger ต้องการที่จะใช้กล้องของคุณ</string>
     <string name="read_storage_permission_msg">แอป Ranger ต้องการที่จะอ่านการจัดเก็บข้อมูลของคุณ</string>
     <string name="go_to_setting">ตั้งค่า</string>
-    <string name="menu_logout">ออกจากระบบ</string>
-    <string name="menu_check_in_history">ประวัติการเช็คอิน</string>
-    <string name="menu_report_history">ประวัติการรายงาน</string>
-
-    <!-- message list -->
+	
+	<!-- message list -->
     <string name="profile_welcome">สวัสดี %s!</string>
     <string name="profile_onduty">กำลังปฏิบัติหน้าที่</string>
     <string name="profile_nottracking">ปิดการติดตามตำแหน่ง</string>
-    <string name="network_online">online</string>
-    <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">ตั้้งค่ากลุ่มในเมนูตั้งค่า</string>
+	<string name="error_no_guardian_group_set">ตั้้งค่ากลุ่มในเมนูตั้งค่า</string>
 
     <!-- report -->
     <string name="report_title">รายงาน</string>
-    <string name="report_send_success">รายงานผลสำเร็จ!</string>
-    <string name="report_what_label">เสียง</string>
+	<string name="report_what_label">เสียง</string>
     <string name="report_when_label">เมื่อ</string>
     <string name="report_submit_button_label">บันทึก</string>
     <string name="report_record_label">บันทึกเสียง</string>
@@ -45,22 +39,18 @@
     <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
 
     <!-- Notification -->
-    <string name="notification_location_title">ตำแหน่งของเจ้าหน้าที่</string>
-    <string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
+	<string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
-    <string name="setting_label">ตั้งค่า</string>
-    <string name="app_version_label">เวอร์ชั่น %s</string>
-    <string name="location_tracking_label">การติดตามตำแหน่ง</string>
+	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
     <string name="default_site_label">พื้นที่</string>
     <string name="guardian_group_label">กลุ่ม</string>
     <string name="notifications">การแจ้งเตือน</string>
-    <string name="receive_event_notifications">รับการแจ้งเตือนเหตุการณ์</string>
-
-    <string name="last_month">เดือนที่แล้ว</string>
+	
+	<string name="last_month">เดือนที่แล้ว</string>
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>
     <string name="now">ขณะนี้</string>
@@ -70,10 +60,8 @@
     <string name="at_that_time">ขณะนั้น</string>
 
     <string name="tab_to_record_label">แตะปุ่มค้างไว้เพื่อบันทึกเสียง</string>
-    <string name="recent_title">เร็วๆนี้</string>
-    <string name="history_title">ประวัติ</string>
-
-    <!-- Invitation -->
+	
+	<!-- Invitation -->
     <string name="invitation_title">เชื่่อมต่อกับพื้นที่ของคุณ</string>
     <string name="invitation_desc">กรุณากรอกรหัสเชิญ (invitation code)</string>
     <string name="hint_code">รหัส</string>

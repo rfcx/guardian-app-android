@@ -22,22 +22,16 @@
     <string name="camera_permission_msg">Aplikasi Ranger ingin menggunakan kamera Anda</string>
     <string name="read_storage_permission_msg">Aplikasi Ranger ingin membaca penyimpanan Anda</string>
     <string name="go_to_setting">Pengaturan</string>
-    <string name="menu_logout">Keluar</string>
-    <string name="menu_check_in_history">Riwayat check-in</string>
-    <string name="menu_report_history">Riwayat laporan</string>
-
-    <!-- message list -->
+	
+	<!-- message list -->
     <string name="profile_welcome">Hai, %s!</string>
     <string name="profile_onduty">Sedang mengerjakan</string>
     <string name="profile_nottracking">Tidak melacak</string>
-    <string name="network_online">online</string>
-    <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">Atur grup Guardian di Pengaturan</string>
+	<string name="error_no_guardian_group_set">Atur grup Guardian di Pengaturan</string>
 
     <!-- report -->
     <string name="report_title">laporan</string>
-    <string name="report_send_success">laporan berhasil!</string>
-    <string name="report_what_label">APA?</string>
+	<string name="report_what_label">APA?</string>
     <string name="report_when_label">KAPAN?</string>
     <string name="report_submit_button_label">menyerahkan</string>
     <string name="report_record_label">CATATAN PEREKAM (Opsional)</string>
@@ -45,22 +39,18 @@
     <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
 
     <!-- Notification -->
-    <string name="notification_location_title">Lokasi Ranger</string>
-    <string name="notification_location_loading">Memuat lokasi…</string>
+	<string name="notification_location_loading">Memuat lokasi…</string>
     <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
 
     <!-- Settings -->
-    <string name="setting_label">Pengaturan</string>
-    <string name="app_version_label">v%s</string>
-    <string name="location_tracking_label">Pelacakan lokasi</string>
+	<string name="location_tracking_label">Pelacakan lokasi</string>
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>
     <string name="default_site_label">Tempat</string>
     <string name="guardian_group_label">Kelompok Guardian</string>
     <string name="notifications">Pemberitahuan</string>
-    <string name="receive_event_notifications">Terima Pemberitahuan acara</string>
-
-    <string name="last_month">Terakhir\nBulan</string>
+	
+	<string name="last_month">Terakhir\nBulan</string>
     <string name="last_week">Terakhir\nMinggu</string>
     <string name="last_24_hours">Terakhir\n24 jam</string>
     <string name="now">Sekarang</string>
@@ -70,10 +60,8 @@
     <string name="at_that_time">Pada saat itu</string>
 
     <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
-    <string name="recent_title">Aktual</string>
-    <string name="history_title">Riwayat</string>
-
-    <!-- Invitation -->
+	
+	<!-- Invitation -->
     <string name="invitation_title">Hubungkan ke suatu tempat</string>
     <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
     <string name="hint_code">Kode</string>

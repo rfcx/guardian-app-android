@@ -22,21 +22,15 @@
 	<string name="camera_permission_msg">A Ranger app le gustaria usar su cámara</string>
 	<string name="read_storage_permission_msg">A Ranger app quiere leer tu almacenamiento</string>
 	<string name="go_to_setting">Configuración</string>
-	<string name="menu_logout">Salir</string>
-	<string name="menu_check_in_history">Ver el historial</string>
-	<string name="menu_report_history">Historial de Informes </string>
 	
 	<!-- message list -->
 	<string name="profile_welcome">¡Hola, %s!</string>
 	<string name="profile_onduty">En servicio</string>
 	<string name="profile_nottracking">No trastreando</string>
-	<string name="network_online">online</string>
-	<string name="network_offline">offline</string>
 	<string name="error_no_guardian_group_set">Establecer grupo guardián en configuraciones</string>
 	
 	<!-- report -->
 	<string name="report_title">Reportar</string>
-	<string name="report_send_success">¡Reporte exitoso!</string>
 	<string name="report_what_label">¿QUÉ?</string>
 	<string name="report_when_label">¿CUÁNDO?</string>
 	<string name="report_submit_button_label">Enviar</string>
@@ -45,20 +39,16 @@
 	<string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
 	
 	<!-- Notification -->
-	<string name="notification_location_title">Ubicación del Ranger</string>
 	<string name="notification_location_loading">Cargando ubicación…</string>
 	
 	<!-- Settings -->
 	<string name="notification_location_not_availability">!Por favor active la ubicación de su dispositivo!</string>
-	<string name="setting_label">Configuración</string>
-	<string name="app_version_label">v%s</string>
 	<string name="location_tracking_label">Seguimiento de la ubicación</string>
 	<string name="location_tracking_on_label">Encendido</string>
 	<string name="location_tracking_off_label">Apagando</string>
 	<string name="default_site_label">Sitio</string>
 	<string name="guardian_group_label">Grupo de Guardias</string>
 	<string name="notifications">Notificaciones</string>
-	<string name="receive_event_notifications">Recibir notificaciones de evento</string>
 	
 	<string name="last_month">Ultimo\nMes</string>
 	<string name="last_week">Ultima\nSemana</string>
@@ -70,8 +60,6 @@
 	<string name="at_that_time">En ese momento</string>
 	
 	<string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
-	<string name="recent_title">Reciente</string>
-	<string name="history_title">Historia</string>
 	
 	<!-- Invitation -->
 	<string name="invitation_title">Conectarse a un sitio.</string>
