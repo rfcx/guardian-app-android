@@ -23,7 +23,6 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_feedback.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
 import org.rfcx.ranger.util.GalleryPermissions
@@ -98,11 +97,8 @@ class FeedbackActivity : AppCompatActivity() {
 	@SuppressLint("ResourceAsColor")
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 		menuAll = menu
-		
-		if (BuildConfig.DEBUG) {
-			val inflater = menuInflater
-			inflater.inflate(R.menu.feedback_menu, menu)
-		}
+		val inflater = menuInflater
+		inflater.inflate(R.menu.feedback_menu, menu)
 		setEnableSendFeedbackView(false)
 		return super.onCreateOptionsMenu(menu)
 	}
