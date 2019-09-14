@@ -18,7 +18,7 @@ import org.rfcx.ranger.view.MainActivityNew
 
 object AlertNotification {
 	
-	fun createAlert(context: Context, notificationManager: NotificationManager, notification: RemoteMessage.Notification?,
+	fun createAlert(context: Context, notificationManager: NotificationManager, notification: RemoteMessage.Notification,
 	                data: Map<String, String>): Notification {
 		
 		val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -31,7 +31,7 @@ object AlertNotification {
 		val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
 				.setAutoCancel(true)
 				.setContentTitle(context.getString(R.string.app_name))
-				.setContentText("Test content")
+				.setContentText(notification.body)
 				.setContentIntent(pendingIntent)
 				.setSmallIcon(R.drawable.ic_notification)
 				.setSound(defaultSoundUri)
@@ -74,6 +74,8 @@ object AlertNotification {
 			audio = Audio().apply {
 				opus = "https://assets.rfcx.org/audio/$audioGUID.opus"
 			}
+			
+			reviewerConfirmed = false
 		}
 		return event
 	}

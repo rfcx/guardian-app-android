@@ -18,8 +18,8 @@ import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
-class AlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
-                      private val eventDb: EventDb) : ViewModel() {
+class AllAlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
+                         private val eventDb: EventDb) : ViewModel() {
 	
 	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
 	val alerts: LiveData<Result<List<EventItem>>>

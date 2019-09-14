@@ -12,15 +12,15 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
-import org.rfcx.ranger.view.alert.ReviewAlertCallback
+import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.AlertsAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
-class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallback {
+class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	
-	private val alertsViewModel: AlertsViewModel by viewModel()
+	private val allAlertsViewModel: AllAlertsViewModel by viewModel()
+	
 	private val alertsAdapter by lazy {
 		AlertsAdapter(this)
 	}
@@ -33,7 +33,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 		super.onViewCreated(view, savedInstanceState)
 		setupAlertList()
 		
-		alertsViewModel.alerts.observe(this, Observer { it ->
+		allAlertsViewModel.alerts.observe(this, Observer { it ->
 			
 			it.success({
 				alertsAdapter.submitList(null)
@@ -47,16 +47,15 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener, ReviewAlertCallbac
 			})
 		})
 		
-		alertsViewModel.loadEvents()
+		allAlertsViewModel.loadEvents()
 	}
 	
 	override fun onClickedAlert(event: Event) {
-		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
-				AlertBottomDialogFragment.tag)
+		(parentFragment as AlertListener?)?.showDetail(event)
 	}
 	
-	override fun onReviewed(eventGuID: String, reviewValue: String) {
-		alertsViewModel.onEventReviewed(eventGuID, reviewValue)
+	fun onReviewed(eventGuID: String, reviewValue: String) {
+		allAlertsViewModel.onEventReviewed(eventGuID, reviewValue)
 	}
 	
 	private fun setupAlertList() {

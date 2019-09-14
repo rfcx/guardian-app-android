@@ -12,10 +12,14 @@ import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.service.AlertNotification
+import org.rfcx.ranger.util.LocationPermissions
+import org.rfcx.ranger.util.LocationTracking
+import org.rfcx.ranger.util.isOnAirplaneMode
+import org.rfcx.ranger.util.logout
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
-import org.rfcx.ranger.view.login.LoginActivityNew
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.report.ReportActivity
@@ -60,6 +64,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		
 		observeMain()
 		observeLocationTracking()
+		observeEventFromNotification()
+		
+		getEventFromIntentIfHave(intent)
+	}
+	
+	override fun onNewIntent(intent: Intent?) {
+		super.onNewIntent(intent)
+		getEventFromIntentIfHave(intent)
 	}
 	
 	override fun onBackPressed() {
@@ -122,7 +134,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(), AlertsFragment.tag, true)
+				startFragment(AlertsFragment.newInstance(null), AlertsFragment.tag, true)
 			}
 			
 			menuProfile.id -> {
@@ -186,6 +198,31 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		mainViewModel.isLocationTrackingOn.observe(this, Observer {
 			if (it) enableLocationTracking()
 		})
+	}
+	
+	private fun observeEventFromNotification() {
+		mainViewModel.eventFromNotification.observe(this, Observer {
+			
+			val alertsFragment =
+					supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
+			if (alertsFragment != null && alertsFragment is AlertsFragment) {
+				alertsFragment.showDetail(it)
+			} else {
+				menuStatus.menuSelected = false
+				menuMap.menuSelected = false
+				menuAlert.menuSelected = true
+				menuProfile.menuSelected = false
+				startFragment(AlertsFragment.newInstance(it), AlertsFragment.tag, true)
+			}
+			
+		})
+	}
+	
+	private fun getEventFromIntentIfHave(intent: Intent?) {
+		if (intent?.hasExtra(AlertNotification.ALERT_NOTI_INTENT) == true) {
+			val event = intent.getParcelableExtra<Event>(AlertNotification.ALERT_NOTI_INTENT)
+			mainViewModel.eventFromNotification.value = event
+		}
 	}
 	
 	private fun enableLocationTracking() {

@@ -14,17 +14,17 @@ class MessagingService : FirebaseMessagingService() {
 	
 	override fun onMessageReceived(remoteMessage: RemoteMessage?) {
 		
-		//if (remoteMessage?.notification == null) return
-		Log.i("MessagingService", "-- " + remoteMessage?.data.toString())
-		if (remoteMessage?.data?.containsKey("event_guid") == true) {
+		if (remoteMessage?.notification == null) return
+		Log.i("MessagingService", "-- " + remoteMessage.data.toString())
+		if (remoteMessage.data?.containsKey("event_guid") == true) {
 			val alertNotification = createAlert(this, getNotificationManager()
-					, remoteMessage.notification, remoteMessage.data)
+					, remoteMessage.notification!!, remoteMessage.data)
 			notify(createNotificationID(), alertNotification)
 			Log.d("MessagingService", remoteMessage.data.toString())
 		} else {
 			// Play a sound
 			super.onMessageReceived(remoteMessage)
-			if (remoteMessage?.notification != null && remoteMessage.notification!!.sound == "default") {
+			if (remoteMessage.notification != null && remoteMessage.notification!!.sound == "default") {
 				try {
 					val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 					val r = RingtoneManager.getRingtone(this, notification)
@@ -43,7 +43,7 @@ class MessagingService : FirebaseMessagingService() {
 	
 	private fun notify(id: Int, notification: Notification) {
 		Log.w("MessagingService", "notify")
-		getNotificationManager().notify(1, notification)
+		getNotificationManager().notify(id, notification)
 	}
 	
 	private fun getNotificationManager(): NotificationManager {
