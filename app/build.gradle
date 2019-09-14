@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
     implementation 'com.google.firebase:firebase-firestore:21.0.0'
     implementation 'com.google.firebase:firebase-storage:19.0.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.0'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'
