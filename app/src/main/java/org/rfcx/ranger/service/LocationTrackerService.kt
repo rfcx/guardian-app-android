@@ -10,10 +10,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.location.LocationProvider
 import android.media.RingtoneManager
-import android.os.Binder
-import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
+import android.os.*
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -21,10 +18,13 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.view.SettingsActivity
+import org.rfcx.ranger.view.MainActivityNew
+import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 /**
  *
@@ -44,12 +44,15 @@ class LocationTrackerService : Service() {
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
 		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
-		private const val TAG = "LocationTrackerService"
+		private const val TAG = " LocationTrackerService"
 	}
 	
 	private val binder = LocationTrackerServiceBinder()
 	
 	private var mLocationManager: LocationManager? = null
+	private var isLocationAvailability: Boolean = true
+	private var trackingStatTimer: Timer? = null
+	private lateinit var weeklySummaryData: WeeklySummaryData
 	
 	private val locationListener = object : android.location.LocationListener {
 		
@@ -57,8 +60,6 @@ class LocationTrackerService : Service() {
 			p0?.let {
 				Log.i(TAG, "${it.longitude} , ${it.longitude}")
 				saveLocation(it)
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(it, true))
-				
 				if (BuildConfig.DEBUG) playSound()
 			}
 		}
@@ -68,25 +69,27 @@ class LocationTrackerService : Service() {
 			
 			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
 				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LASTEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
-					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 				}
 				
 			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
-				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 			}
 		}
 		
 		override fun onProviderEnabled(p0: String?) {
 			Log.d(TAG, "onProviderEnabled $p0")
-			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 		}
 		
 		override fun onProviderDisabled(p0: String?) {
 			Log.d(TAG, "onProviderDisabled $p0")
-			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, false))
+			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 		}
 		
 	}
+	
+	private val handler = Handler()
 	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
@@ -95,11 +98,11 @@ class LocationTrackerService : Service() {
 	override fun onCreate() {
 		super.onCreate()
 		// check login first
+		weeklySummaryData = WeeklySummaryData(Preferences(this))
 		if (Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "").isNotEmpty()) {
 			startTracker()
 		}
 	}
-	
 	
 	private fun startTracker() {
 		val check = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -113,8 +116,12 @@ class LocationTrackerService : Service() {
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
 //			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
-			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(null, true))
-		} catch (ex: java.lang.SecurityException) {
+			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
+			trackingStatTimer?.cancel()
+			trackingStatTimer = fixedRateTimer("timer", false, 60 * 1000, 60 * 1000) {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(isLocationAvailability))
+			}
+		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 			Log.w(TAG, "fail to request location update, ignore", ex)
 		} catch (ex: IllegalArgumentException) {
@@ -128,6 +135,7 @@ class LocationTrackerService : Service() {
 		super.onDestroy()
 		Log.e(TAG, "onDestroy")
 		mLocationManager?.removeUpdates(locationListener)
+		trackingStatTimer?.cancel()
 	}
 	
 	
@@ -141,18 +149,16 @@ class LocationTrackerService : Service() {
 			get() = this@LocationTrackerService
 	}
 	
-	private fun createLocationTrackerNotification(location: Location?, isLocationAvailability: Boolean): Notification {
-		val intent = Intent(this, SettingsActivity::class.java)
+	private fun createLocationTrackerNotification(isLocationAvailability: Boolean): Notification {
+		val intent = Intent(this, MainActivityNew::class.java)
 		val pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {
-			setContentTitle(getString(R.string.notification_location_title))
-			if (isLocationAvailability) {
-				location?.let {
-					setContentText("${it.latitude}, ${it.longitude}")
-				} ?: kotlin.run {
-					setContentText(getString(R.string.notification_location_loading))
-				}
+			setContentTitle(getString(R.string.notification_tracking_title))
+			this@LocationTrackerService.isLocationAvailability = isLocationAvailability
+			
+			if (this@LocationTrackerService.isLocationAvailability) {
+				setContentText(getString(R.string.notification_traking_message_format, weeklySummaryData.getOnDutyTimeMinute()))
 			} else {
 				setContentText(getString(R.string.notification_location_not_availability))
 			}

@@ -25,11 +25,11 @@ class ReportTypeAdapter : RecyclerView.Adapter<ReportTypeViewHolder>(), OnMessag
 	var onMessageItemClickListener: OnMessageItemClickListener? = null
 	
 	init {
-		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_truck))
+		source.add(ReportTypeItem(Event.vehicle, R.drawable.ic_vehicle))
 		source.add(ReportTypeItem(Event.trespasser, R.drawable.ic_people))
 		source.add(ReportTypeItem(Event.chainsaw, R.drawable.ic_chainsaw))
 		source.add(ReportTypeItem(Event.gunshot, R.drawable.ic_gun))
-		source.add(ReportTypeItem(Event.other, R.drawable.ic_other))
+		source.add(ReportTypeItem(Event.other, R.drawable.ic_pin_huge))
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportTypeViewHolder {
@@ -70,7 +70,7 @@ class ReportTypeViewHolder(itemView: View, private val onMessageItemClickListene
 		itemView.reportTypeImageView.setImageResource(item.iconRes)
 		if (isSelected) {
 			ImageViewCompat.setImageTintList(itemView.reportTypeImageView,
-					ColorStateList.valueOf(ContextCompat.getColor(itemView.context, R.color.grey_active)))
+					ColorStateList.valueOf(ContextCompat.getColor(itemView.context, R.color.colorPrimary)))
 		} else {
 			ImageViewCompat.setImageTintList(itemView.reportTypeImageView, null)
 		}

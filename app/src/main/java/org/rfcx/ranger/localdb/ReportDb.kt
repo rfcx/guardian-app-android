@@ -9,7 +9,7 @@ import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.util.DateHelper
 
 /**
- * Manage the saving and sending of reports from the local database
+ * Manage the saving and sending of reportsLive from the local database
  */
 
 class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
@@ -22,7 +22,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun save(report: Report, attachImages: List<String>) {
-		val imageCreateAt = DateHelper.parse(report.reportedAt, DateHelper.dateTimeFormatSecond)
+		val imageCreateAt = DateHelper.parse(report.reportedAt)
 		realm.executeTransaction {
 			if (report.id == 0) {
 				report.id = (it.where(Report::class.java).max("id")?.toInt() ?: 0) + 1
@@ -86,11 +86,15 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirst()
 	}
 	
+	fun getReportAsync(id: Int): Report? {
+		return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirstAsync()
+	}
+	
 	fun getReportImages(reportId: Int): List<ReportImage>? {
 		return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAll()
 	}
 	
-	// Deletes sent reports, returns a list of files that can also be deleted
+	// Deletes sent reportsLive, returns a list of files that can also be deleted
 	fun deleteSent(): List<String> {
 		val unsentCount = unsentCount()
 		var keepSentReportLeft = KEEP_REPORT_COUNT - unsentCount
@@ -117,7 +121,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 		}
 		return filenames
 	}
-
+	
 	fun deleteReport(id: Int) {
 		// Delete report also delete reportImage
 		realm.executeTransaction {
@@ -132,8 +136,9 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 				.findAllAsync())
 	}
 	
-	fun getAllResultsAsync(): RealmResults<Report> {
+	fun getAllResultsAsync(sort: Sort = Sort.DESCENDING): RealmResults<Report> {
 		return realm.where(Report::class.java)
+				.sort("id", sort)
 				.findAllAsync()
 	}
 	

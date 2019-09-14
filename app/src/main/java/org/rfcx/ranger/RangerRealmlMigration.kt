@@ -7,19 +7,17 @@ import io.realm.RealmMigration
 class RangerRealmlMigration : RealmMigration {
 	
 	override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
-		var version = oldVersion
-		if (version == 2L) {
+		if (oldVersion < 3L && newVersion >= 3L) {
 			migrateToV3(c)
-			version++
 		}
-		
-		if (version == 3L) {
+		if (oldVersion < 4L && newVersion >= 4L) {
 			migrateToV4(c)
-			version++
 		}
-		
-		if (version==4L){
+		if (oldVersion < 5L && newVersion >= 5L) {
 			migrateToV5(c)
+		}
+		if (oldVersion < 6L && newVersion >= 6L) {
+			migrateToV6(c)
 		}
 	}
 	
@@ -57,6 +55,22 @@ class RangerRealmlMigration : RealmMigration {
 		val event = realm.schema.get("Event")
 		event?.apply {
 			addField("aiGuid", String::class.java)
+		}
+	}
+	
+	private fun migrateToV6(realm: DynamicRealm) {
+		val report = realm.schema.get("Report")
+		report?.apply {
+			renameField("ageEstimate", "ageEstimateRaw")
+			removeField("distanceEstimate")
+		}
+
+		// Add EventReview class
+		val eventReview = realm.schema.create("EventReview")
+		eventReview.apply {
+			addField("eventGuId", String::class.java, FieldAttribute.PRIMARY_KEY)
+					.setRequired("eventGuId", true)
+			addField("review", String::class.java)
 		}
 	}
 }

@@ -1,3 +1,8 @@
 package org.rfcx.ranger.entity.user
 
-data class UserTouchResponse(val success: Boolean)
+import com.google.gson.annotations.SerializedName
+
+data class UserTouchResponse(
+		@SerializedName("success")
+		val success: Boolean
+)

@@ -8,6 +8,7 @@
     tools:layout_height="56dp">
 
     <View
+        android:id="@+id/bgView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_padding_xsmall"
@@ -42,10 +43,10 @@
         android:layout_height="wrap_content"
         android:text="@string/tab_to_record_label"
         style="@style/TextAppearance.AppCompat.Caption"
-        app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
+        app:layout_constraintBottom_toBottomOf="@+id/bgView"
         app:layout_constraintEnd_toStartOf="@+id/actionButton"
         app:layout_constraintStart_toEndOf="@id/cancelButton"
-        app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+        app:layout_constraintTop_toTopOf="@+id/bgView" />
 
     <org.rfcx.ranger.widget.NoneTouchableRecycler
         android:id="@+id/recyclerView"
@@ -55,10 +56,10 @@
         android:layout_marginTop="@dimen/margin_padding_xsmall"
         android:layout_marginBottom="@dimen/margin_padding_xsmall"
         android:layout_marginEnd="@dimen/margin_padding_normal"
-        app:layout_constraintBottom_toBottomOf="@+id/cancelButton"
-        app:layout_constraintEnd_toStartOf="@+id/actionButton"
+        app:layout_constraintBottom_toBottomOf="@+id/bgView"
+        app:layout_constraintEnd_toEndOf="@+id/bgView"
         app:layout_constraintStart_toEndOf="@id/cancelButton"
-        app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+        app:layout_constraintTop_toTopOf="@+id/bgView" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/actionButton"

@@ -1,5 +1,6 @@
 package org.rfcx.ranger
 
+import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.crashlytics.android.Crashlytics
@@ -8,6 +9,11 @@ import com.facebook.stetho.Stetho
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import io.realm.exceptions.RealmMigrationNeededException
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.core.module.Module
+import org.rfcx.ranger.di.DataModule
+import org.rfcx.ranger.di.UiModule
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
 import org.rfcx.ranger.util.RealmHelper
@@ -17,6 +23,7 @@ class RangerApplication : MultiDexApplication() {
 	
 	override fun onCreate() {
 		super.onCreate()
+		
 		MultiDex.install(this)
 		Realm.init(this)
 		
@@ -24,6 +31,7 @@ class RangerApplication : MultiDexApplication() {
 		val kit = Crashlytics.Builder().core(core).build()
 		Fabric.with(this, kit)
 		setUpRealm()
+		setupKoin()
 		ReportCleanupWorker.enqueuePeriodically()
 		LocationCleanupWorker.enqueuePeriodically()
 		
@@ -33,6 +41,8 @@ class RangerApplication : MultiDexApplication() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
+		
+		
 	}
 	
 	private fun setUpRealm() {
@@ -42,7 +52,31 @@ class RangerApplication : MultiDexApplication() {
 			realm.close()
 			Realm.setDefaultConfiguration(RealmHelper.migrationConfig())
 		} catch (e: RealmMigrationNeededException) {
+			Log.e("RealmMigration", e.message)
+			CrashlyticsCore.getInstance().logException(e)
 			Realm.setDefaultConfiguration(RealmHelper.defaultConfig())
+		}
+	}
+	
+	
+	private val listModules: ArrayList<Module> by lazy {
+		arrayListOf(
+				UiModule.mainModule,
+				UiModule.mapModule,
+				UiModule.statusModule,
+				UiModule.alertModule,
+				UiModule.profileModule,
+				UiModule.loginModule,
+				DataModule.localModule,
+				DataModule.remoteModule,
+				DataModule.dataModule
+		)
+	}
+	
+	private fun setupKoin() {
+		startKoin {
+			androidContext(this@RangerApplication)
+			modules(listModules)
 		}
 	}
 	

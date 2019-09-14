@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
 
 data class ClassificationBody(
 		@SerializedName("annotatorGuid")
-		val annotatorGuid: String,
+		val annotatorGuid: String?,
 		@SerializedName("annotatorType")
 		val annotatorType: String = "model",
 		@SerializedName("audioGuids")
-		val audioGuids: String,
+		val audioGuids: String?,
 		@SerializedName("type")
 		val type: String = "classification",
 		@SerializedName("value")

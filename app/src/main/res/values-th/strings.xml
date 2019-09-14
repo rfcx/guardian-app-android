@@ -10,6 +10,10 @@
     <string name="incorrect_username_password">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="an_error_occurred">ไม่สามารถให้บริการได้</string>
     <string name="or">หรือ</string>
+    
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
+    <string name="invitation_submit_button_label">บันทึก</string>
 
     <!-- common error -->
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
@@ -18,22 +22,16 @@
     <string name="camera_permission_msg">แอป Ranger ต้องการที่จะใช้กล้องของคุณ</string>
     <string name="read_storage_permission_msg">แอป Ranger ต้องการที่จะอ่านการจัดเก็บข้อมูลของคุณ</string>
     <string name="go_to_setting">ตั้งค่า</string>
-    <string name="menu_logout">ออกจากระบบ</string>
-    <string name="menu_check_in_history">ประวัติการเช็คอิน</string>
-    <string name="menu_report_history">ประวัติการรายงาน</string>
-
-    <!-- message list -->
+	
+	<!-- message list -->
     <string name="profile_welcome">สวัสดี %s!</string>
     <string name="profile_onduty">กำลังปฏิบัติหน้าที่</string>
     <string name="profile_nottracking">ปิดการติดตามตำแหน่ง</string>
-    <string name="network_online">online</string>
-    <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">ตั้้งค่ากลุ่มในเมนูตั้งค่า</string>
+	<string name="error_no_guardian_group_set">ตั้้งค่ากลุ่มในเมนูตั้งค่า</string>
 
     <!-- report -->
     <string name="report_title">รายงาน</string>
-    <string name="report_send_success">รายงานผลสำเร็จ!</string>
-    <string name="report_what_label">เสียง</string>
+	<string name="report_what_label">เสียง</string>
     <string name="report_when_label">เมื่อ</string>
     <string name="report_submit_button_label">บันทึก</string>
     <string name="report_record_label">บันทึกเสียง</string>
@@ -41,35 +39,34 @@
     <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
 
     <!-- Notification -->
-    <string name="notification_location_title">ตำแหน่งของเจ้าหน้าที่</string>
-    <string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
+	<string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
-    <string name="setting_label">ตั้งค่า</string>
-    <string name="app_version_label">เวอร์ชั่น %s</string>
-    <string name="location_tracking_label">การติดตามตำแหน่ง</string>
+	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
     <string name="default_site_label">พื้นที่</string>
     <string name="guardian_group_label">กลุ่ม</string>
     <string name="notifications">การแจ้งเตือน</string>
-    <string name="receive_event_notifications">รับการแจ้งเตือนเหตุการณ์</string>
-
-    <string name="last_month">เดือนที่แล้ว</string>
+	
+	<string name="last_month">เดือนที่แล้ว</string>
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>
     <string name="now">ขณะนี้</string>
+    <string name="within_month">ภายในหนึ่งเดือน</string>
+    <string name="within_week">ภายในหนึ่งสัปดาห์</string>
+    <string name="within_24_hours">ภายใน 24 ชั่วโมง</string>
+    <string name="at_that_time">ขณะนั้น</string>
 
     <string name="tab_to_record_label">แตะปุ่มค้างไว้เพื่อบันทึกเสียง</string>
-    <string name="recent_title">เร็วๆนี้</string>
-    <string name="history_title">ประวัติ</string>
-
-    <!-- Invitation -->
+	
+	<!-- Invitation -->
     <string name="invitation_title">เชื่่อมต่อกับพื้นที่ของคุณ</string>
     <string name="invitation_desc">กรุณากรอกรหัสเชิญ (invitation code)</string>
     <string name="hint_code">รหัส</string>
-
+    <string name="invalid_invite_code">รหัสเชิญไม่ถูกต้อง</string>
+    
     <!-- Report -->
     <string name="sync_reports_label">%d รายงาน</string>
     <string name="sync_report_label">%d รายงาน</string>
@@ -82,7 +79,6 @@
     <string name="can_not_play_audio">ไม่สามารถเล่นเสียงได้โปรดลองอีกครั้งในภายหลัง</string>
     
     <!-- Symbols -->
-    <string name="syncedSymbol">●</string>
     <string name="menu_camera">กล้อง</string>
     <string name="menu_gallery">แกลลอรี่</string>
     
@@ -91,11 +87,45 @@
     <string name="report_list_empty_message">คุณยังไม่มีรายงานใดๆ</string>
     <string name="images_sync_format">%d ภาพ (อัปโหลดแล้ว)</string>
     <string name="images_unsync_format">%1d ภาพ (%2d ยังไม่ได้อัปโหลด)</string>
+    <string name="report_detail_title">รายละเอียดรายงาน</string>
     
     <string name="in_air_plane_mode">การติดตามตำแหน่งถูกปิดใช้งานเมื่ออยู่ในโหมดเครื่องบิน</string>
     <string name="pls_off_air_plane_mode">กรุณาปิดโหมดเครื่องบิน</string>
     <string name="common_ok">ตกลง</string>
     
+    <string name="location">ตำแหน่ง</string>
+    
+    <string name="menu_status">สถานะ</string>
+    <string name="menu_map">แผนที่</string>
+    <string name="menu_alert">การแจ้งเตือน</string>
+    <string name="menu_profile">ข้อมูลส่วนตัว</string>
+    
+    <string name="see_report_detail">ดูรายละเอียด</string>
+    <string name="report_time_second">เมื่อสักครู่</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+    <string name="follow_up_later_button">ติดตามในภายหลัง</string>
+    <string name="open_map_button">เปิดแผนที่</string>
+    
+    <string name="common_no">ไม่</string>
+    <string name="common_yes">ใช่</string>
+    
+    <!-- Status -->
+    <string name="status_stat_title">สถานะรายสัปดาห์ของคุณ</string>
+    <string name="status_report_title">ประวัติการรายงาน</string>
+    <string name="status_duty_count_desc">นาทีในการปฏิบัติหน้าที่</string>
+    <string name="status_reported_desc">รายงานที่บันทึก</string>
+    <string name="status_reviewed_desc">การแจ้งเตือนที่ตรวจสอบ</string>
+    <string name="format_location">%s, %s</string>
+    <string name="format_image_synced">%s ภาพ</string>
+    <string name="format_image_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="format_images_synced">%s ภาพ</string>
+    <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
+    <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
+    <string name="button_later">ไว้ทีหลัง</string>
+    <string name="button_set_guarduan_group">ตั้งค่ากลุ่ม Guardian</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">ไฟล์ทั้งหมด</string>
@@ -119,4 +149,32 @@
     <string name="button_sure_default">ตกลง</string>
     <string name="button_sure">ตกลง(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
+    
+    <!-- Alerts -->
+    <string name="tab_group_by_guardians">ตามกลุ่ม Guardian</string>
+    <string name="tab_all_alerts">การแจ้งเตือนทั้งหมด</string>
+    <string name="yesterday">เมื่อวาน</string>
+    
+    <string name="no_internet_connection">ไม่มีอินเทอร์เน็ตโปรดลองอีกครั้ง</string>
+    
+    <!--Event value-->
+    <string name="chainsaw">เลื่อย</string>
+    <string name="gunshot">กระสุนปืน</string>
+    <string name="vehicle">ยานพาหนะ</string>
+    <string name="trespasser">ผู้บุกรุก</string>
+    <string name="other">อื่นๆ</string>
+    
+    <!--Profile -->
+    <string name="profile_receive_noti_label">รับการแจ้งเตือน</string>
+    <string name="profile_sign_out_label">ออกจากระบบ</string>
+    <string name="profile_aditional_label">เพิ่มเติม</string>
+    <string name="profile_app_version_label">เวอร์ชั่น</string>
+    <string name="profile_feedback_label">ฟีดแบค</string>
+    <string name="profile_rate_app_label">ให้คะแนนแอป</string>
+    
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">กลุ่ม Guardian</string>
+	<string name="photos">ภาพถ่าย</string>
+	<string name="common_none">ไม่มี</string>
+
 </resources>
