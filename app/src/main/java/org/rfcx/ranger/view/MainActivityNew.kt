@@ -248,8 +248,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	}
 	
 	companion object {
-		fun startActivity(context: Context) {
+		fun startActivity(context: Context, event: Event?) {
 			val intent = Intent(context, MainActivityNew::class.java)
+			if (event != null)
+				intent.putExtra(AlertNotification.ALERT_NOTI_INTENT, event)
 			context.startActivity(intent)
 		}
 	}

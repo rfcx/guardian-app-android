@@ -30,7 +30,7 @@ object AlertNotification {
 		val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 		val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
 				.setAutoCancel(true)
-				.setContentTitle(context.getString(R.string.app_name))
+				.setContentTitle(notification.title)
 				.setContentText(notification.body)
 				.setContentIntent(pendingIntent)
 				.setSmallIcon(R.drawable.ic_notification)
