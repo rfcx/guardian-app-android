@@ -28,7 +28,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			onStateChange()
 		}
 	var isDisableEdit = false
-	var onStatChangeListener: OnStatChangeListener? = null
+	var onStateChangeListener: OnStateChangeListener? = null
 	
 	private var soundWaveViewAdapter = SoundWaveViewAdapter()
 	private val animateHandler = Handler()
@@ -88,8 +88,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
 				}
 				SoundRecordState.PLAYING -> state = SoundRecordState.STOP_PLAYING
 				SoundRecordState.STOP_PLAYING -> state = SoundRecordState.PLAYING
-				else -> {
-				}
+				else -> {}
 			}
 		}
 		
@@ -162,14 +161,12 @@ class SoundRecordProgressView @JvmOverloads constructor(
 			}
 		}
 		
-		onStatChangeListener?.onStateChanged(state)
+		onStateChangeListener?.invoke(state)
 	}
-	
 	
 	fun disableEdit() {
 		isDisableEdit = true
 	}
-	
 	
 }
 
@@ -232,6 +229,5 @@ class SoundWaveViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	}
 }
 
-interface OnStatChangeListener {
-	fun onStateChanged(state: SoundRecordState)
-}
+
+typealias OnStateChangeListener = (SoundRecordState) -> Unit

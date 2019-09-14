@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/rootView"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="org.rfcx.ranger.view.report.ReportDetailActivity">
+	
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:title="← Report detail"/>
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/leftGutter"
+		app:layout_constraintGuide_begin="@dimen/margin_padding_normal"
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/rightGutter"
+		app:layout_constraintGuide_end="@dimen/margin_padding_normal"
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+		
+	
+	<!-- Header section -->
+	
+	<ImageView
+		android:id="@+id/reportTypeImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/toolbar"
+		app:layout_constraintBottom_toBottomOf="@id/whenTextView"
+		tools:src="@drawable/ic_chainsaw"/>
+	
+	<TextView
+		android:id="@+id/dateTimeTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/toolbar"
+		app:layout_constraintBottom_toTopOf="@id/reportTypeTextView"
+		tools:text="June 6, 2019 - 18:07"/>
+	
+	<TextView
+		android:id="@+id/reportTypeTextView"
+		style="@style/RangerText.Subhead"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintStart_toStartOf="@id/dateTimeTextView"
+		app:layout_constraintEnd_toStartOf="@id/syncStatusImageView"
+		app:layout_constraintTop_toBottomOf="@id/dateTimeTextView"
+		app:layout_constraintBottom_toTopOf="@id/whenTextView"
+		tools:text="Chainsaw"/>
+	
+	<TextView
+		android:id="@+id/whenTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:drawableStart="@drawable/ic_place"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:drawablePadding="@dimen/margin_padding_xsmall"
+		android:ellipsize="end"
+		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/reportTypeTextView"
+		tools:text="At that moment"/>
+	
+	<ImageView
+		android:id="@+id/syncStatusImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintStart_toEndOf="@id/reportTypeTextView"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintBottom_toBottomOf="@id/reportTypeTextView"
+		android:src="@drawable/ic_sync"
+		android:visibility="gone"/>
+	
+	<androidx.constraintlayout.widget.Barrier
+		android:id="@+id/headerBottom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:barrierDirection="bottom"
+		app:constraint_referenced_ids="reportTypeImageView,whenTextView"/>
+	
+	<!-- Location section -->
+	
+	<TextView
+		android:id="@+id/locationTitle"
+		style="@style/RangerText.Title"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/headerBottom"
+		app:layout_constraintBottom_toTopOf="@id/mapView"
+		android:text="@string/location" />
+	
+	<fragment
+		android:id="@+id/mapView"
+		android:name="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		app:layout_constraintTop_toBottomOf="@id/locationTitle"
+		app:layout_constraintBottom_toTopOf="@+id/photosTitle"
+		app:layout_constraintDimensionRatio="11:4" />
+	
+	<TextView
+		android:id="@+id/photosTitle"
+		style="@style/RangerText.Title"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/mapView"
+		app:layout_constraintBottom_toTopOf="@id/imageRecycler"
+		android:text="@string/photos" />
+	
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/imageRecycler"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:clipToPadding="false"
+		android:paddingStart="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_small"
+		app:layout_constraintTop_toBottomOf="@+id/photosTitle"
+		tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+		tools:listitem="@layout/adapter_report_image"
+		tools:orientation="horizontal" />
+	
+	<TextView
+		android:id="@+id/audioTitle"
+		style="@style/RangerText.Title"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/imageRecycler"
+		android:text="@string/audio_notes" />
+	
+	<org.rfcx.ranger.widget.SoundRecordProgressView
+		android:id="@+id/audioProgressView"
+		android:layout_width="0dp"
+		android:layout_height="48dp"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/audioTitle"/>
+	
+	<TextView
+		android:id="@+id/audioNoneLabel"
+		android:layout_width="0dp"
+		style="@style/RangerText.Label"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintTop_toBottomOf="@id/audioTitle"
+		android:text="@string/common_none"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

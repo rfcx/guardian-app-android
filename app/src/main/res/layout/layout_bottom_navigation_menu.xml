@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/bottom_bar_height"
+	android:weightSum="5">
+	
+	<org.rfcx.ranger.widget.BottomNavigationMenuItem
+		android:id="@+id/menuStatus"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="?selectableItemBackgroundBorderless"
+		app:icon="@drawable/ic_menu_discover"
+		app:iconTintColor="@color/colorPrimary"
+		app:menuSelected="false"
+		app:title="@string/menu_status"
+		app:titleColorSelected="@color/colorPrimary" />
+	
+	<org.rfcx.ranger.widget.BottomNavigationMenuItem
+		android:id="@+id/menuMap"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="?selectableItemBackgroundBorderless"
+		app:icon="@drawable/ic_menu_map"
+		app:iconTintColor="@color/colorPrimary"
+		app:title="@string/menu_map"
+		app:titleColorSelected="@color/colorPrimary" />
+	
+	<View
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1" />
+	
+	<org.rfcx.ranger.widget.BottomNavigationMenuItem
+		android:id="@+id/menuAlert"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="?selectableItemBackgroundBorderless"
+		app:icon="@drawable/ic_menu_alert"
+		app:iconTintColor="@color/colorPrimary"
+		app:title="@string/menu_alert"
+		app:titleColorSelected="@color/colorPrimary" />
+	
+	<org.rfcx.ranger.widget.BottomNavigationMenuItem
+		android:id="@+id/menuProfile"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="?selectableItemBackgroundBorderless"
+		app:icon="@drawable/ic_menu_profile"
+		app:iconTintColor="@color/colorPrimary"
+		app:title="@string/menu_profile"
+		app:titleColorSelected="@color/colorPrimary" />
+
+</LinearLayout>

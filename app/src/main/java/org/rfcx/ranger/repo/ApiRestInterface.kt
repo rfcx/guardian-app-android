@@ -52,18 +52,6 @@ interface ApiRestInterface {
 	                @Path("review_confirmed") reviewConfirm: String)
 			: Call<ReviewEventResponse>
 	
-	@GET("users/touchapi")
-	fun userTouch(@Header("Authorization") authorization: String): Call<UserTouchResponse>
-	
-	@POST("users/code")
-	fun sendInvitationCode(@Header("Authorization") authorization: String, @Body code: InvitationCodeRequest): Call<InvitationCodeResponse>
-	
-	@GET("guardians/groups")
-	fun guardianGroups(@Header("Authorization") authorization: String): Call<List<GuardianGroup>>
-	
-	@GET("sites")
-	fun sites(@Header("Authorization") authorization: String): Call<List<Site>>
-	
 	@GET("sites/{id}")
 	fun site(@Header("Authorization") authorization: String, @Path("id") id: String): Call<Site>
 	
@@ -74,9 +62,5 @@ interface ApiRestInterface {
 	                 @Part("type") type: RequestBody,
 	                 @Part("time") time: RequestBody,
 	                 @Part() audioFile: ArrayList<MultipartBody.Part>): Call<List<UploadImageResponse>>
-	
-	@POST("tags/classified/byannotator")
-	fun getClassificationSpectrogram(@Header("Authorization") authUser: String,
-	                                 @Body body: ClassificationBody): Call<ClassificationResponse>
 	
 }

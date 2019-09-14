@@ -1,3 +1,8 @@
 package org.rfcx.ranger.entity.user
 
-data class InvitationCodeRequest(val code: String)
+import com.google.gson.annotations.SerializedName
+
+data class InvitationCodeRequest(
+		@SerializedName("code")
+		val code: String
+)

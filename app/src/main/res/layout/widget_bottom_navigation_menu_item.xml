@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:animateLayoutChanges="true"
+	android:gravity="center"
+	android:orientation="vertical">
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/iconImageView"
+		android:layout_width="@dimen/bottom_navigation_widget_icon_size"
+		android:layout_height="@dimen/bottom_navigation_widget_icon_size"
+		android:layout_gravity="center"
+		android:adjustViewBounds="true"
+		tools:src="@drawable/ic_add" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/menuTitleTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="2dp"
+		android:gravity="center"
+		android:textSize="@dimen/bottom_navigation_widget_title_size"
+		tools:text="@string/app_name" />
+
+</LinearLayout>

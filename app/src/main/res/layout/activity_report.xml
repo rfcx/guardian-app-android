@@ -10,10 +10,12 @@
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="?android:actionBarSize"
-		android:background="@color/colorPrimary"
-		app:layout_constraintTop_toTopOf="parent"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:title="← Report"/>
 	
 	<ScrollView
 		android:id="@+id/scrollView"
@@ -48,13 +50,12 @@
 			
 			<TextView
 				android:id="@+id/reportTypeTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_what_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/mapView" />
 			
@@ -66,13 +67,12 @@
 			
 			<TextView
 				android:id="@+id/reportWhenTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_when_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
 			
@@ -88,13 +88,12 @@
 			
 			<TextView
 				android:id="@+id/attachImageTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:text="@string/report_attach_image_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/whenView" />
 			
@@ -116,19 +115,18 @@
 			
 			<TextView
 				android:id="@+id/reportRecordTextView"
-				style="@style/Base.TextAppearance.AppCompat.Body2"
+				style="@style/RangerText.Title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:text="@string/report_record_label"
-				android:textColor="@color/text_primary"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
 			
 			<org.rfcx.ranger.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="48dp"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_small"
@@ -137,8 +135,9 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
 			
-			<Button
+			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/reportButton"
+				style="@style/Widget.AppCompat.Button.Borderless"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_padding_normal"

@@ -10,6 +10,10 @@
     <string name="incorrect_username_password">Usuário ou senha incorretos</string>
     <string name="an_error_occurred">Serviço indisponível</string>
     <string name="or">OU</string>
+    
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">Assinar em </string>
+    <string name="invitation_submit_button_label">Enviar</string>
 
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
@@ -18,22 +22,16 @@
     <string name="camera_permission_msg">O aplicativo Ranger gostaria de usar sua câmera</string>
     <string name="read_storage_permission_msg">O aplicativo Ranger gostaria de ler o seu armazenamento</string>
     <string name="go_to_setting">Definições</string>
-    <string name="menu_logout">Sair</string>
-    <string name="menu_check_in_history">Histórico de check-in</string>
-    <string name="menu_report_history">Histórico de relatório</string>
-
-    <!-- message list -->
+	
+	<!-- message list -->
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
-    <string name="network_online">online</string>
-    <string name="network_offline">offline</string>
-    <string name="error_no_guardian_group_set">Definir grupo de guardiões nas configurações</string>
+	<string name="error_no_guardian_group_set">Definir grupo de guardiões nas configurações</string>
 
     <!-- report -->
     <string name="report_title">Relatório</string>
-    <string name="report_send_success">Relatório enviado com sucesso!</string>
-    <string name="report_what_label">O QUE?</string>
+	<string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Enviar</string>
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
@@ -41,35 +39,35 @@
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
     
     <!-- Notification -->
-    <string name="notification_location_title">Localização do Ranger</string>
-    <string name="notification_location_loading">Carregando localização…</string>
+	<string name="notification_location_loading">Carregando localização…</string>
 
     <!-- Settings -->
     <string name="notification_location_not_availability">Ative a localização do dispositivo!</string>
-    <string name="setting_label">Definições</string>
-    <string name="app_version_label">Versão%s</string>
-    <string name="location_tracking_label">Rastreamento de localização</string>
+	<string name="location_tracking_label">Rastreamento de localização</string>
     <string name="location_tracking_on_label">Ligado</string>
     <string name="location_tracking_off_label">Desligado</string>
     <string name="default_site_label">Local</string>
     <string name="guardian_group_label">Grupo de guardiões</string>
     <string name="notifications">Notificações</string>
-    <string name="receive_event_notifications">Receba notificações de eventos</string>
-
-    <string name="last_month">Último\nMês</string>
+	
+	<string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
+    <string name="within_month">Dentro de um mês</string>
+    <string name="within_week">Dentro de uma semana</string>
+    <string name="within_24_hours">Dentro de 24 horas</string>
+    <string name="at_that_time">Naquele momento</string>
 
     <string name="tab_to_record_label">Toque e segure o botão para gravar áudio.</string>
-    <string name="recent_title">Recente</string>
-    <string name="history_title">Histórico</string>
-
-    <!-- Invitation -->
+	
+	<!-- Invitation -->
     <string name="invitation_title">Conectar a uma localidade.</string>
     <string name="invitation_desc">Por favor insira o seu código de convite</string>
     <string name="hint_code">Código</string>
-
+    <string name="invalid_invite_code">convite código inválido</string>
+    
+    
     <!-- Report -->
     <string name="sync_reports_label">%d relatórios e lista</string>
     <string name="sync_report_label">%d relatório</string>
@@ -82,7 +80,6 @@
     <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
    
     <!-- Symbols -->
-    <string name="syncedSymbol">●</string>
     <string name="menu_camera">Câmera</string>
     <string name="menu_gallery">Galeria</string>
     
@@ -91,11 +88,45 @@
     <string name="report_list_empty_message">Você não tem nenhum relatório</string>
     <string name="images_sync_format">%d imagens (sincronizado)</string>
     <string name="images_unsync_format">%1d imagens (%2d ainda não sincronizado)</string>
+    <string name="report_detail_title">relatório detalhado</string>
     
     <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
     <string name="pls_off_air_plane_mode">Por favor, desligue o modo avião</string>
     <string name="common_ok">Está bem</string>
     
+    <string name="location">Localização</string>
+    
+    <string name="menu_status">STATUS</string>
+    <string name="menu_map">MAPA</string>
+    <string name="menu_alert">ALERTA</string>
+    <string name="menu_profile">PERFIL</string>
+    
+    <string name="see_report_detail">veja Detalhe</string>
+    <string name="report_time_second">Agora mesmo</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+    <string name="follow_up_later_button">Seguir-se mais tarde</string>
+    <string name="open_map_button">Abrir mapa</string>
+    
+    <string name="common_no">Não</string>
+    <string name="common_yes">Sim</string>
+    
+    <!-- Status -->
+    <string name="status_stat_title">Seu status semanal</string>
+    <string name="status_report_title">Histórico de relatório</string>
+    <string name="status_duty_count_desc">minutos de plantão</string>
+    <string name="status_reported_desc">relatórios enviados</string>
+    <string name="status_reviewed_desc">alerta revisado</string>
+    <string name="format_location">%s, %s</string>
+    <string name="format_image_synced">%s imagem</string>
+    <string name="format_image_unsync">%s imagem (%s ainda não sincronizada)</string>
+    <string name="format_images_synced">%s imagens</string>
+    <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
+    <string name="empty_report_text">Não há relatos nos últimos 7 dias.</string>
+    <string name="button_later">Mais tarde</string>
+    <string name="button_set_guarduan_group">Definir Grupo Guardião</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Todos os meios</string>
@@ -119,4 +150,33 @@
     <string name="button_sure_default">Está bem</string>
     <string name="button_sure">Está bem(%1$d)</string>
     <!-- Override string res from matisse Image picker library -->
+    
+    <!-- Alerts -->
+    <string name="tab_group_by_guardians">Grupo por Guardians</string>
+    <string name="tab_all_alerts">Todos os alertas</string>
+    <string name="yesterday">Ontem</string>
+    
+    <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
+    
+    <!--Event value-->
+    <string name="chainsaw">motosserra</string>
+    <string name="gunshot">bala</string>
+    <string name="vehicle">veículo</string>
+    <string name="trespasser">invasor</string>
+    <string name="other">outro</string>
+    
+    <!--Profile -->
+    <string name="profile_receive_noti_label">Receber notificações</string>
+    <string name="profile_sign_out_label">Sair</string>
+    <string name="profile_aditional_label">Adicional</string>
+    <string name="profile_app_version_label">Versão do aplicativo</string>
+    <string name="profile_feedback_label">Comentários</string>
+    <string name="profile_rate_app_label">Avalie o aplicativo</string>
+    
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">Lista Grupo Guardião</string>
+	<string name="audio_notes">Notas de áudio</string>
+    <string name="photos">Foto</string>
+	<string name="common_none">Nada</string>
+
 </resources>

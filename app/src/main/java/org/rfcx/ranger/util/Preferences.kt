@@ -6,7 +6,7 @@ import java.util.*
 
 class Preferences(context: Context) {
 	
-	private var sharedPreferences: SharedPreferences
+	var sharedPreferences: SharedPreferences
 	
 	companion object {
 		@Volatile
@@ -16,10 +16,10 @@ class Preferences(context: Context) {
 				INSTANCE ?: synchronized(this) {
 					INSTANCE ?: Preferences(context).also { INSTANCE = it }
 				}
-
+		
 		private const val PREFERENCES_NAME = "Rfcx.Ranger"
-		private const val PREFIX = "org.rfcx.ranger:"
-
+		const val PREFIX = "org.rfcx.ranger:"
+		
 		const val ID_TOKEN = "${PREFIX}ID_TOKEN"
 		const val ACCESS_TOKEN = "${PREFIX}ACCESS_TOKEN"
 		const val REFRESH_TOKEN = "${PREFIX}REFRESH_TOKEN"
@@ -34,12 +34,13 @@ class Preferences(context: Context) {
 		const val SELECTED_GUARDIAN_GROUP = "${PREFIX}SELECTED_GUARDIAN_GROUP"
 		const val GUARDIAN_GROUPS_LAST_UPDATED = "${PREFIX}GUARDIAN_GROUPS_LAST_UPDATED"
 		const val ENABLE_LOCATION_TRACKING = "${PREFIX}ENABLE_LOCATION_TRACKING"
+		const val LAST_STATUS_SYNCING = "${PREFIX}LAST_STATUS_SYNCING"
 	}
 	
 	init {
 		sharedPreferences = context.applicationContext.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 	}
-
+	
 	fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
 		return sharedPreferences.getBoolean(key, defaultValue)
 	}
@@ -47,11 +48,11 @@ class Preferences(context: Context) {
 	fun putBoolean(key: String, value: Boolean) {
 		sharedPreferences.edit().putBoolean(key, value).apply()
 	}
-
+	
 	fun getString(key: String, defValue: String): String {
 		return sharedPreferences.getString(key, defValue) ?: defValue
 	}
-
+	
 	fun getString(key: String): String? {
 		return sharedPreferences.getString(key, null)
 	}
@@ -59,12 +60,12 @@ class Preferences(context: Context) {
 	fun putString(key: String, value: String) {
 		sharedPreferences.edit().putString(key, value).apply()
 	}
-
+	
 	fun <E> getObject(key: String, objClass: Class<E>): E? {
 		val objectJson = sharedPreferences.getString(key, null) ?: return null
 		return GsonProvider.getInstance().gson.fromJson(objectJson, objClass)
 	}
-
+	
 	fun putObject(key: String, value: Any) {
 		sharedPreferences.edit().putString(key, GsonProvider.getInstance().gson.toJson(value)).apply()
 	}
@@ -80,19 +81,27 @@ class Preferences(context: Context) {
 	fun putDate(key: String, date: Date) {
 		sharedPreferences.edit().putLong(key, date.time).apply()
 	}
-
+	
 	fun getLong(key: String, defValue: Long): Long {
 		return sharedPreferences.getLong(key, defValue)
 	}
-
+	
 	fun putLong(key: String, long: Long) {
 		sharedPreferences.edit().putLong(key, long).apply()
+	}
+	
+	fun putInt(key: String, value: Int) {
+		sharedPreferences.edit().putInt(key, value).apply()
+	}
+	
+	fun getInt(key: String, defValue: Int): Int {
+		return sharedPreferences.getInt(key, defValue)
 	}
 	
 	fun getStringSet(key: String): Set<String> {
 		return sharedPreferences.getStringSet(key, setOf()) ?: setOf()
 	}
-
+	
 	fun putStringSet(key: String, value: Set<String>) {
 		sharedPreferences.edit().putStringSet(key, value).apply()
 	}
