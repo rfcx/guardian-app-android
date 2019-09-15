@@ -3,20 +3,24 @@ package org.rfcx.ranger.view.profile
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
+import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
-import org.rfcx.ranger.adapter.entity.BaseListItem
+import org.rfcx.ranger.R
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserId
 import org.rfcx.ranger.util.getUserNickname
 import java.io.File
 import java.sql.Timestamp
+
 
 class FeedbackViewModel(private val context: Context) : ViewModel() {
 	
@@ -25,8 +29,12 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 	private val storage = FirebaseStorage.getInstance()
 	private val storageRef = storage.reference
 	private val pathImages = mutableListOf<String>()
+
+	private var _statusToSaveData: MutableLiveData<String> = MutableLiveData()
+	val statusToSaveData: LiveData<String>
+		get() = _statusToSaveData
 	
-	fun saveDataInFirestore(uris: List<String>?, input: String) {
+	fun saveDataInFirestore(uris: List<String>?, input: String, contextView: View) {
 		val docData = hashMapOf(
 				"userId" to context.getUserId(),
 				"from" to from(),
@@ -39,13 +47,20 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 				.add(docData)
 				.addOnSuccessListener { documentReference ->
 					Log.d("documentReference", documentReference.toString())
-					Toast.makeText(context, "Data Stored", Toast.LENGTH_SHORT).show()
 					
 					if (uris != null) uploadFile(uris, documentReference)
+					_statusToSaveData.postValue("Success")
+				
 				}
 				.addOnFailureListener { e ->
 					Log.d("error", e.message)
-					Toast.makeText(context, "Data Not Stored", Toast.LENGTH_SHORT).show()
+					
+					Snackbar.make(contextView, R.string.feedback_submission_failed, Snackbar.LENGTH_LONG)
+							.setAction(R.string.snackbar_retry) {
+								saveDataInFirestore(uris, input, contextView)
+							}.show()
+					
+					_statusToSaveData.postValue("Fail")
 				}
 	}
 	
@@ -69,14 +84,13 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 					counter += 1
 					val downloadUri = task.result
 					pathImages.add(downloadUri.toString())
-					
 					Log.d("downloadUri", downloadUri.toString())
 					if (counter == uris.size) {
 						val docData = hashMapOf("pathImages" to pathImages)
 						documentReference.update(docData as Map<String, Any>)
 					}
 				} else {
-					Toast.makeText(context, "Upload Image Fail", Toast.LENGTH_SHORT).show()
+//					Toast.makeText(context, "Upload Image Fail", Toast.LENGTH_SHORT).show()
 				}
 			}
 		}

@@ -52,7 +52,7 @@ class SetUserNameFragment : BaseFragment() {
 		}
 	}
 	
-	private fun View.hideKeyboard() {
+	private fun View.hideKeyboard() = this.let {
 		val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 		inputManager.hideSoftInputFromWindow(windowToken, 0)
 	}

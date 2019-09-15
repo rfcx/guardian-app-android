@@ -15,8 +15,8 @@ android {
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 35
-        versionName "1.0.0"
+        versionCode 38
+        versionName "1.0.1"
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
     implementation 'com.google.firebase:firebase-firestore:21.0.0'
     implementation 'com.google.firebase:firebase-storage:19.0.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.0'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'

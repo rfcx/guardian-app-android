@@ -6,18 +6,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_feedback.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
 import org.rfcx.ranger.util.GalleryPermissions
@@ -32,6 +37,7 @@ class FeedbackActivity : AppCompatActivity() {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
 	private var pathListArray: List<String>? = null
+	private var menuAll: Menu? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -40,7 +46,26 @@ class FeedbackActivity : AppCompatActivity() {
 		setupToolbar()
 		setTextFrom()
 		setupFeedbackImages()
+		
+		feedbackEditText.addTextChangedListener(object : TextWatcher {
+			override fun afterTextChanged(p0: Editable?) {
+				if (p0 != null) {
+					if (p0.isEmpty()) {
+						setEnableSendFeedbackView(false)
+					}
+				}
+			}
+			
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				Log.d("", "beforeTextChanged")
+			}
+			
+			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				setEnableSendFeedbackView()
+			}
+		})
 	}
+	
 	
 	private fun setupFeedbackImages() {
 		feedbackRecycler.apply {
@@ -69,21 +94,33 @@ class FeedbackActivity : AppCompatActivity() {
 		handleGalleryResult(requestCode, resultCode, data)
 	}
 	
+	@SuppressLint("ResourceAsColor")
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		if (BuildConfig.DEBUG) {
-			val inflater = menuInflater
-			inflater.inflate(R.menu.feedback_menu, menu)
-		}
+		menuAll = menu
+		val inflater = menuInflater
+		inflater.inflate(R.menu.feedback_menu, menu)
+		setEnableSendFeedbackView(false)
 		return super.onCreateOptionsMenu(menu)
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		R.id.attachView
 		when (item?.itemId) {
 			android.R.id.home -> finish()
 			R.id.attachView -> openGallery()
 			R.id.sendFeedbackView -> sendFeedback()
 		}
 		return super.onOptionsItemSelected(item)
+	}
+	
+	private fun setEnableSendFeedbackView(start: Boolean = true) {
+		menuAll?.findItem(R.id.sendFeedbackView)?.isEnabled = start
+		val itemSend = menuAll?.findItem(R.id.sendFeedbackView)?.icon
+		val wrapDrawable = itemSend?.let { DrawableCompat.wrap(it) }
+		
+		if (wrapDrawable != null) {
+			if (start) DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(this, R.color.colorPrimary)) else DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(this, android.R.color.darker_gray))
+		}
 	}
 	
 	private fun openGallery() {
@@ -127,14 +164,29 @@ class FeedbackActivity : AppCompatActivity() {
 	}
 	
 	private fun sendFeedback() {
-		val itemView = findViewById<View>(R.id.sendFeedbackView)
-		itemView.hideKeyboard()
+		val sendFeedbackView = findViewById<View>(R.id.sendFeedbackView)
+		val contextView = findViewById<View>(R.id.content)
+		
+		feedbackGroupView.visibility = View.GONE
+		feedbackProgressBar.visibility = View.VISIBLE
+		
+		setEnableSendFeedbackView(false)
+		sendFeedbackView.hideKeyboard()
+		
 		val feedbackInput = feedbackEditText.text.toString()
-		if (feedbackInput.isNotEmpty()) {
-			feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput)
-		} else {
-			Toast.makeText(this, getString(R.string.please_enter_feedback), Toast.LENGTH_SHORT).show()
-		}
+		feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput, contextView)
+		
+		feedbackViewModel.statusToSaveData.observe(this, Observer {
+			if (it == "Success") {
+				val intent = Intent()
+				setResult(ProfileFragment.RESULT_CODE, intent)
+				finish()
+			} else if (it == "Fail") {
+				setEnableSendFeedbackView()
+				feedbackGroupView.visibility = View.VISIBLE
+				feedbackProgressBar.visibility = View.INVISIBLE
+			}
+		})
 	}
 	
 	private fun View.hideKeyboard() = this.let {

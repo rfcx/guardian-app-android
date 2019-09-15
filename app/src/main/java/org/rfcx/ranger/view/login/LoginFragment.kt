@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -40,6 +41,7 @@ class LoginFragment : BaseFragment() {
 		signInButton.setOnClickListener {
 			val email = loginEmailEditText.text.toString()
 			val password = loginPasswordEditText.text.toString()
+			it.hideKeyboard()
 			
 			if (validateInput(email, password)) {
 				loading()
@@ -94,5 +96,10 @@ class LoginFragment : BaseFragment() {
 			return false
 		}
 		return true
+	}
+	
+	private fun View.hideKeyboard() = this.let {
+		val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		inputManager.hideSoftInputFromWindow(windowToken, 0)
 	}
 }
