@@ -130,7 +130,7 @@
 	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
 	
 	<string name="button_later">Later</string>
-	<string name="button_set_guarduan_group">Set Guardian Group</string>
+	<string name="button_set_guardian_group">Set Guardian Group</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>
@@ -159,7 +159,7 @@
 	<string name="tab_group_by_guardians">Group By Guardians</string>
 	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
-	
+	<string name="warning_set_guardian_group">Guardian group not found. You must set a group to receive alerts!</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
 	
 	<!--Event value-->

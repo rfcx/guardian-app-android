@@ -126,7 +126,7 @@
     <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
     <string name="empty_report_text">Tidak ada laporan dalam 7 hari terakhir.</string>
     <string name="button_later">Kemudian</string>
-    <string name="button_set_guarduan_group">Set Wali Grup</string>
+    <string name="button_set_guardian_group">Set Wali Grup</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Semua Media</string>

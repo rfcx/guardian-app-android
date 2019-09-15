@@ -125,7 +125,7 @@
     <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
     <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
     <string name="button_later">ไว้ทีหลัง</string>
-    <string name="button_set_guarduan_group">ตั้งค่ากลุ่ม Guardian</string>
+    <string name="button_set_guardian_group">ตั้งค่ากลุ่ม Guardian</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">ไฟล์ทั้งหมด</string>
