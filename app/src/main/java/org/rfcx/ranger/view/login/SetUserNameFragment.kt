@@ -1,15 +1,12 @@
 package org.rfcx.ranger.view.login
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_set_user_name.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,20 +32,23 @@ class SetUserNameFragment : BaseFragment() {
 		initView()
 	}
 	
+	
 	private fun initView() {
 		submitButton.setOnClickListener {
 			it.hideKeyboard()
 			setNameProgressBar.visibility = View.VISIBLE
-			
 			val name = inputNameEditText.text.toString()
 			setUserNameViewModel.sendName(name)
-			setUserNameViewModel.userName.observe(this, Observer {
-				if (it == "FAILED") {
-					Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
-				} else if (it.substring(0, 1) !== "+") {
-					listener.openMain()
-				}
-			})
+			if (name.isEmpty()) {
+				setNameProgressBar.visibility = View.INVISIBLE
+				Toast.makeText(context, R.string.please_enter_your_name, Toast.LENGTH_SHORT).show()
+			} else {
+				setUserNameViewModel.userName.observe(this, Observer { value ->
+					if (value.substring(0, 1) !== "+") {
+						listener.openMain()
+					}
+				})
+			}
 		}
 	}
 	

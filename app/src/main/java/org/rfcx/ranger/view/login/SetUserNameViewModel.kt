@@ -52,7 +52,7 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
 			}
 			
 			override fun onError(e: Throwable) {
-				_userName.postValue("FAILED")
+				// TODO onError
 			}
 		}, SetNameRequest(idUser, name, name, name))
 	}
