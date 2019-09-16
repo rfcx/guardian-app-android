@@ -25,10 +25,7 @@ import kotlinx.android.synthetic.main.activity_feedback.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
-import org.rfcx.ranger.util.GalleryPermissions
-import org.rfcx.ranger.util.GlideV4ImageEngine
-import org.rfcx.ranger.util.ImageFileUtils
-import org.rfcx.ranger.util.ReportUtils
+import org.rfcx.ranger.util.*
 import java.io.File
 
 class FeedbackActivity : AppCompatActivity() {
@@ -38,6 +35,7 @@ class FeedbackActivity : AppCompatActivity() {
 	private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
 	private var pathListArray: List<String>? = null
 	private var menuAll: Menu? = null
+	private val analytics by lazy { Analytics(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -66,6 +64,10 @@ class FeedbackActivity : AppCompatActivity() {
 		})
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		analytics.trackScreen(Screen.FEEDBACK)
+	}
 	
 	private fun setupFeedbackImages() {
 		feedbackRecycler.apply {
@@ -178,6 +180,7 @@ class FeedbackActivity : AppCompatActivity() {
 		
 		feedbackViewModel.statusToSaveData.observe(this, Observer {
 			if (it == "Success") {
+				analytics.trackFeedbackSentEvent()
 				val intent = Intent()
 				setResult(ProfileFragment.RESULT_CODE, intent)
 				finish()

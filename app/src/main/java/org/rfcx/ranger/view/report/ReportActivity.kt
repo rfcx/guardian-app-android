@@ -53,6 +53,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val recordPermissions by lazy { RecordingPermissions(this) }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
+	private val analytics by lazy { Analytics(this) }
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -102,6 +103,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		setupImageRecycler()
 		
 		reportButton.setOnClickListener {
+			analytics.trackSubmitTheReportEvent()
 			submitReport()
 		}
 	}
@@ -114,6 +116,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
 		super.onPause()
+		analytics.trackScreen(Screen.ADDREPORT)
 	}
 	
 	override fun onDestroy() {

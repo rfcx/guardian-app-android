@@ -12,6 +12,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -19,6 +21,7 @@ import org.rfcx.ranger.view.base.BaseFragment
 class AlertsFragment : BaseFragment(), AlertListener {
 	
 	private val alertViewModel: AlertViewModel by viewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_alerts, container, false)
@@ -29,6 +32,11 @@ class AlertsFragment : BaseFragment(), AlertListener {
 		initView()
 		observeAlert()
 		getEventExtra()
+	}
+	
+	override fun onResume() {
+		analytics?.trackScreen(Screen.ALERT)
+		super.onResume()
 	}
 	
 	private fun getEventExtra() {

@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -20,6 +21,7 @@ import org.rfcx.ranger.view.base.BaseFragment
 class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	
 	private val allAlertsViewModel: AllAlertsViewModel by viewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private val alertsAdapter by lazy {
 		AlertsAdapter(this)
@@ -52,6 +54,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	
 	override fun onClickedAlert(event: Event) {
 		(parentFragment as AlertListener?)?.showDetail(event)
+		event.value?.let { analytics?.trackSeeAlertDetailEvent(event.event_guid, it) }
 	}
 	
 	fun onReviewed(eventGuID: String, reviewValue: String) {

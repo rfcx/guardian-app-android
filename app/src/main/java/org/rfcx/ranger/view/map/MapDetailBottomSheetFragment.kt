@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.view.report.ReportDetailActivity
@@ -19,7 +20,7 @@ import org.rfcx.ranger.view.report.getLocalisedValue
 class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 	
 	private val viewModel: MapDetailViewModel by viewModel()
-	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_dialog_report_detail, container, false)
@@ -62,6 +63,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 			reportTimePastedTextView.text = context.getPastedTimeFormat(reportPasted)
 			
 			seeDetailTextView.setOnClickListener {
+				analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)
 				ReportDetailActivity.startIntent(context, reportId = report.id)
 			}
 		}

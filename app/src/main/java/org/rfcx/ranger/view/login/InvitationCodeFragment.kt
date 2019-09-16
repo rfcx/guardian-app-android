@@ -11,11 +11,14 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.base.BaseFragment
 
 class InvitationCodeFragment : BaseFragment() {
 	lateinit var listener: LoginListener
 	private val invitationCodeViewModel: InvitationCodeViewModel by viewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -31,12 +34,19 @@ class InvitationCodeFragment : BaseFragment() {
 		initView()
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.INVITECODE)
+	}
+	
 	private fun initView() {
 		submitButton.setOnClickListener {
 			invitationProgressBar.visibility = View.VISIBLE
 			it.hideKeyboard()
 			
 			val code = inputCodeEditText.text.toString()
+			analytics?.trackEnterInviteCodeEvent(code)
+			
 			invitationCodeViewModel.setSubmitState()
 			invitationCodeViewModel.doSubmit(code)
 			invitationCodeViewModel.submitCodeState.observe(this, Observer {

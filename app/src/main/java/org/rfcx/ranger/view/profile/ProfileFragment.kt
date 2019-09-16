@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.CloudMessaging
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.logout
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
@@ -23,6 +25,7 @@ import org.rfcx.ranger.view.base.BaseFragment
 
 class ProfileFragment : BaseFragment() {
 	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val profileViewModel: ProfileViewModel by viewModel()
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
@@ -39,6 +42,11 @@ class ProfileFragment : BaseFragment() {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		handleShowSnackbarResult(requestCode, resultCode, data)
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.PROFILE)
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -101,6 +109,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		guardianGroupLayout.setOnClickListener {
+			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
 			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
@@ -109,6 +118,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		rateAppTextView.setOnClickListener {
+			analytics?.trackRateAppEvent()
 			val appPackageName = activity?.packageName
 			try {
 				val playStoreUri: Uri = Uri.parse("market://details?id=$appPackageName")
@@ -122,6 +132,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		feedbackTextView.setOnClickListener {
+			analytics?.trackFeedbackStartEvent()
 			val intent = Intent(activity, FeedbackActivity::class.java)
 			startActivityForResult(intent, REQUEST_CODE)
 		}

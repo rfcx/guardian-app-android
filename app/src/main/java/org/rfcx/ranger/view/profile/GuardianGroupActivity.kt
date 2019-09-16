@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
@@ -19,6 +20,7 @@ import org.rfcx.ranger.view.base.BaseActivity
 class GuardianGroupActivity : BaseActivity() {
 	private val viewModel: GuardianGroupViewModel by viewModel()
 	private val guardianGroupAdapter by lazy { GuardianGroupAdapter() }
+	private val analytics by lazy { Analytics(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
+				analytics.trackSetGuardianGroupEvent()
 				// TODO what happens on failure?
 				loadingProgress.visibility = View.VISIBLE
 				// TODO should be in the VM

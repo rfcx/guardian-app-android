@@ -13,6 +13,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
@@ -24,6 +26,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
@@ -38,7 +41,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	
 	override fun onResume() {
 		super.onResume()
-		
+		analytics?.trackScreen(Screen.STATUS)
 		statusViewModel.resumed()
 	}
 	
@@ -86,6 +89,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 			viewDataBinding.layoutSetting.visibility = View.GONE
 		}
 		viewDataBinding.onSetGuardianGroup = View.OnClickListener {
+			analytics?.trackSetGuardianGroupStartEvent(Screen.STATUS)
 			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
 		}
 	}
@@ -101,6 +105,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	}
 	
 	override fun onClickedReportItem(report: Report) {
+		analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)
 		ReportDetailActivity.startIntent(context, reportId = report.id)
 	}
 	
