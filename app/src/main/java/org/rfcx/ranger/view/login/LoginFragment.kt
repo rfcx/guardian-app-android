@@ -11,11 +11,15 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.base.BaseFragment
 
 class LoginFragment : BaseFragment() {
 	lateinit var listener: LoginListener
 	private val loginViewModel: LoginViewModel by viewModel()
+	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -34,11 +38,13 @@ class LoginFragment : BaseFragment() {
 	
 	override fun onResume() {
 		super.onResume()
+		analytics?.trackScreen(Screen.LOGIN)
 		loading(false)
 	}
 	
 	private fun initView() {
 		signInButton.setOnClickListener {
+			analytics?.trackLoginEvent("email")
 			val email = loginEmailEditText.text.toString()
 			val password = loginPasswordEditText.text.toString()
 			it.hideKeyboard()
@@ -50,11 +56,12 @@ class LoginFragment : BaseFragment() {
 		}
 		
 		facebookLoginButton.setOnClickListener {
+			analytics?.trackLoginEvent("facebook")
 			activity?.let { loginViewModel.loginWithFacebook(it) }
 		}
 		
 		smsLoginButton.setOnClickListener {
-			loading()
+			analytics?.trackLoginEvent("sms")
 			activity?.let { loginViewModel.loginMagicLink(it) }
 		}
 	}

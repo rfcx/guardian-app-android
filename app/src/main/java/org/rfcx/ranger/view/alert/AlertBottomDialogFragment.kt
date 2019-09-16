@@ -20,6 +20,7 @@ import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.GlideApp
 import org.rfcx.ranger.util.getIconRes
 import org.rfcx.ranger.util.toEventName
@@ -29,6 +30,7 @@ import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
 	private val alertViewModel: AlertBottomDialogViewModel by viewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private var alertListener: AlertListener? = null
 	
@@ -83,7 +85,9 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		negativeButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(false)
+				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.event_guid, it1.value.toString(), "0") }
 			} else {
+				alertViewModel.event.value?.let { it1 -> analytics?.trackFollowAlertEvent(it1.event_guid, it1.value.toString()) }
 				dismissDialog()
 			}
 		}
@@ -91,6 +95,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		positiveButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(true)
+				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.event_guid, it1.value.toString(), "1") }
 			} else {
 				alertViewModel.event.value?.let { event ->
 					val gmmIntentUri = Uri.parse("geo:<${event.latitude}>,<${event.longitude}>" +
@@ -111,7 +116,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
-			eventNameTextView.text = "${context?.let { it1 -> it.value?.toEventName(it1).toString().capitalize()}} ?"
+			eventNameTextView.text = "${context?.let { it1 -> it.value?.toEventName(it1).toString().capitalize() }} ?"
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {

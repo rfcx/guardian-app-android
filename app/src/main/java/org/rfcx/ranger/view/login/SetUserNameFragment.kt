@@ -11,12 +11,15 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_set_user_name.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.base.BaseFragment
 
 class SetUserNameFragment : BaseFragment() {
 	
 	lateinit var listener: LoginListener
 	private val setUserNameViewModel: SetUserNameViewModel by viewModel()
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -32,6 +35,10 @@ class SetUserNameFragment : BaseFragment() {
 		initView()
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.USERNAME)
+	}
 	
 	private fun initView() {
 		submitButton.setOnClickListener {
@@ -45,6 +52,7 @@ class SetUserNameFragment : BaseFragment() {
 			} else {
 				setUserNameViewModel.userName.observe(this, Observer { value ->
 					if (value.substring(0, 1) !== "+") {
+						analytics?.trackSetUsernameEvent()
 						listener.openMain()
 					}
 				})

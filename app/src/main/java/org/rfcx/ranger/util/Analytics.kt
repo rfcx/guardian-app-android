@@ -18,7 +18,7 @@ enum class Screen(val id: String) {
 	ALERTGUARDIANDETAIL("AlertGuardianDetail"),
 	AlertDetail("AlertDetail"),
 	PROFILE("Profile"),
-	Feedback("Feedback")
+	FEEDBACK("Feedback")
 }
 
 class Analytics(context: Context) {
