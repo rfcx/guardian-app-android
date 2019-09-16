@@ -23,7 +23,7 @@ object UiModule {
 	
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
-		viewModel {MainActivityViewModel(get(),get())}
+		viewModel { MainActivityViewModel(get(), get()) }
 	}
 	
 	val mapModule = module {
@@ -39,7 +39,7 @@ object UiModule {
 	val alertModule = module {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
-		viewModel { AlertViewModel() }
+		viewModel { AlertViewModel(get()) }
 	}
 	
 	val profileModule = module {

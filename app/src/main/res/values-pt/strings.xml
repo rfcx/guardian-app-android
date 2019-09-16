@@ -126,7 +126,7 @@
     <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
     <string name="empty_report_text">Não há relatos nos últimos 7 dias.</string>
     <string name="button_later">Mais tarde</string>
-    <string name="button_set_guarduan_group">Definir Grupo Guardião</string>
+    <string name="button_set_guardian_group">Definir Grupo Guardião</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Todos os meios</string>

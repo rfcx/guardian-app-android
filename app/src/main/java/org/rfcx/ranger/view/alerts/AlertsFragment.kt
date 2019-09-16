@@ -19,6 +19,12 @@ import org.rfcx.ranger.view.base.BaseFragment
 class AlertsFragment : BaseFragment(), AlertListener {
 	
 	private val alertViewModel: AlertViewModel by viewModel()
+	private val observeGuardianGroup = Observer<Boolean> {
+		if (it) {
+			val tabSelected = alertsTabLayout.selectedTabPosition
+			startTabSelected(tabSelected)
+		}
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_alerts, container, false)
@@ -29,6 +35,11 @@ class AlertsFragment : BaseFragment(), AlertListener {
 		initView()
 		observeAlert()
 		getEventExtra()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		alertViewModel.resumed()
 	}
 	
 	private fun getEventExtra() {
@@ -75,24 +86,40 @@ class AlertsFragment : BaseFragment(), AlertListener {
 			
 			override fun onTabSelected(tab: TabLayout.Tab?) {
 				if (tab != null) {
-					when (tab.position) {
-						0 -> {
-							startFragment(GroupAlertsFragment(), GroupAlertsFragment.tag)
-						}
-						1 -> {
-							startFragment(AllAlertsFragment.newInstance(), AllAlertsFragment.tag)
-						}
-					}
+					startTabSelected(tab.position)
 				}
 			}
 		})
 		alertsTabLayout.getTabAt(1)?.select()
 	}
 	
+	private fun startTabSelected(position: Int) {
+		when (position) {
+			0 -> {
+				startFragment(GroupAlertsFragment(), GroupAlertsFragment.tag)
+			}
+			1 -> {
+				startFragment(AllAlertsFragment.newInstance(), AllAlertsFragment.tag)
+			}
+		}
+	}
+	
 	private fun startFragment(fragment: Fragment, tag: String) {
+		val startFragment = if (!alertViewModel.hasGuardianGroup) {
+			observeSettingGuardianGroup() // start observe setting guardian group
+			SetGuardianGroupFragment()
+		} else {
+			fragment
+		}
+		
 		childFragmentManager.beginTransaction()
-				.replace(contentContainer.id, fragment,
+				.replace(contentContainer.id, startFragment,
 						tag).commit()
+	}
+	
+	private fun observeSettingGuardianGroup() {
+		alertViewModel.observeGuardianGroup.removeObserver(observeGuardianGroup)
+		alertViewModel.observeGuardianGroup.observe(this, observeGuardianGroup)
 	}
 	
 	companion object {

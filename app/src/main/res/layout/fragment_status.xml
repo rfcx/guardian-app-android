@@ -66,7 +66,7 @@
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:onClick="@{onSetGuardianGroup}"
-				android:text="@string/button_set_guarduan_group"
+				android:text="@string/button_set_guardian_group"
 				app:layout_constraintBottom_toTopOf="@+id/line"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvSettingTitle" />
