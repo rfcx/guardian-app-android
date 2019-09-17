@@ -16,7 +16,7 @@ android {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
         versionCode 41
-        versionName "1.0.2"
+        versionName "1.0.2-beta"
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
