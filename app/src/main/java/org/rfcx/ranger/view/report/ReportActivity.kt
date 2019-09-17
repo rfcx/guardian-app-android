@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -28,8 +27,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.OnMessageItemClickListener
-import org.rfcx.ranger.adapter.report.ReportTypeAdapter
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
@@ -37,6 +34,7 @@ import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.SoundRecordState
+import org.rfcx.ranger.widget.WhatView
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
@@ -44,7 +42,6 @@ import java.io.IOException
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	private var googleMap: GoogleMap? = null
-	private val reportAdapter = ReportTypeAdapter()
 	
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
@@ -97,7 +94,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		
 		bindActionbar()
 		setupMap()
-		setupReportWhatAdapter()
+		setupWhatView()
 		setupWhenView()
 		setupRecordSoundProgressView()
 		setupImageRecycler()
@@ -218,13 +215,9 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		validateForm()
 	}
 	
-	private fun setupReportWhatAdapter() {
-		val layoutManager = GridLayoutManager(this@ReportActivity, 5)
-		reportTypeRecycler.layoutManager = layoutManager
-		reportTypeRecycler.adapter = reportAdapter
-		reportAdapter.onMessageItemClickListener = object : OnMessageItemClickListener {
-			override fun onMessageItemClick(position: Int) {
-				Log.i("ReportActivity", "onMessageItemClick: $position")
+	private fun setupWhatView() {
+		whatView.onWhatViewChangedListener = object : WhatView.OnWhatViewChangedListener {
+			override fun onViewChange(event: String?) {
 				validateForm()
 			}
 		}
@@ -262,15 +255,15 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	}
 	
 	private fun validateForm() {
-		val reportTypeItem = reportAdapter.getSelectedItem()
+		val eventSelected = whatView.getEventSelected()
 		val whenState = whenView.getState()
-		reportButton.isEnabled = reportTypeItem != null && whenState != Report.AgeEstimate.NONE && lastLocation != null
+		reportButton.isEnabled = eventSelected != null && whenState != Report.AgeEstimate.NONE && lastLocation != null
 	}
 	
 	private fun submitReport() {
-		val reportTypeItem = reportAdapter.getSelectedItem()
+		val eventSelected = whatView.getEventSelected()
 		val whenState = whenView.getState()
-		if (reportTypeItem == null || whenState == Report.AgeEstimate.NONE) {
+		if (eventSelected == null || whenState == Report.AgeEstimate.NONE) {
 			validateForm()
 			return
 		}
@@ -289,7 +282,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		val lat = lastLocation?.latitude ?: 0.0
 		val lon = lastLocation?.longitude ?: 0.0
 		Log.d("getSiteName", getSiteName())
-		val report = Report(value = reportTypeItem.type, site = site, reportedAt = time,
+		val report = Report(value = eventSelected, site = site, reportedAt = time,
 				latitude = lat, longitude = lon, ageEstimateRaw = whenState.value,
 				audioLocation = recordFile?.canonicalPath)
 		

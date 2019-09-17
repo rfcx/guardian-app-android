@@ -10,12 +10,12 @@
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="?android:actionBarSize"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:title="← Report"/>
+		tools:title="← Report" />
 	
 	<ScrollView
 		android:id="@+id/scrollView"
@@ -59,8 +59,8 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/mapView" />
 			
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/reportTypeRecycler"
+			<org.rfcx.ranger.widget.WhatView
+				android:id="@+id/whatView"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
@@ -74,7 +74,7 @@
 				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:text="@string/report_when_label"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/reportTypeRecycler" />
+				app:layout_constraintTop_toBottomOf="@id/whatView" />
 			
 			<org.rfcx.ranger.widget.WhenView
 				android:id="@+id/whenView"
