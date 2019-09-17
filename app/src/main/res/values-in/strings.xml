@@ -4,7 +4,6 @@
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
     <string name="login">Masuk</string>
-    <string name="connect_with_facebook">Terhubung dengan Facebook</string>
     <string name="pls_fill_email">Masukkan Email</string>
     <string name="pls_fill_password">Masukkan kata sandi</string>
     <string name="incorrect_username_password">Username dan kata sandi salah</string>

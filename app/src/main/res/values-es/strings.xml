@@ -4,7 +4,6 @@
 	<string name="email">Correo electrónico</string>
 	<string name="password">Clave</string>
 	<string name="login">Entrar</string>
-	<string name="connect_with_facebook">Conectar con Facebook</string>
 	<string name="pls_fill_email">Escriba su correo electrónico</string>
 	<string name="pls_fill_password">Escriba su clave</string>
 	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
