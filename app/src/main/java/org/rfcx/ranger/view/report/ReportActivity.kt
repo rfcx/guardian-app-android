@@ -108,12 +108,12 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	override fun onResume() {
 		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
+		analytics.trackScreen(Screen.ADDREPORT)
 	}
 	
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
 		super.onPause()
-		analytics.trackScreen(Screen.ADDREPORT)
 	}
 	
 	override fun onDestroy() {

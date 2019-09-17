@@ -45,7 +45,6 @@ class AlertsFragment : BaseFragment(), AlertListener {
 		super.onResume()
 		alertViewModel.resumed()
 		analytics?.trackScreen(Screen.ALERT)
-		super.onResume()
 	}
 	
 	private fun getEventExtra() {
