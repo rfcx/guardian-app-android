@@ -18,6 +18,9 @@ import org.rfcx.ranger.data.remote.domain.classified.ClassifiedRepositoryImp
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
+import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepository
+import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepositoryImp
+import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
@@ -63,6 +66,9 @@ object DataModule {
 		single { SetNameRepositoryImp(get()) } bind SetNameRepository::class
 		single { SendNameUseCase(get(), get(), get()) }
 		
+		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
+		single { GroupByGuardiansUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -72,6 +78,7 @@ object DataModule {
 		factory { ServiceFactory.makeInviteCodeService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
+import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.service.rest.ClassifiedService
@@ -54,6 +55,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SetNameEndpoint::class.java)
+	}
+	
+	fun makeGroupByGuardiansService(isDebug: Boolean, context: Context): GroupByGuardiansEndpoint {
+		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(GroupByGuardiansEndpoint::class.java)
 	}
 	
 	private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {
