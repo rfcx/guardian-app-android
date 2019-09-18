@@ -34,7 +34,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.LocationTrackerService
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -50,6 +52,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -87,6 +90,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			childFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
 		}
 		super.onDestroyView()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.MAP)
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

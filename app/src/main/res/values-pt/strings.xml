@@ -4,7 +4,6 @@
     <string name="email">Email</string>
     <string name="password">Senha</string>
     <string name="login">Usuário</string>
-    <string name="connect_with_facebook">Conectar com o Facebook</string>
     <string name="pls_fill_email">Por favor insira um email</string>
     <string name="pls_fill_password">Por favor insira a senha</string>
     <string name="incorrect_username_password">Usuário ou senha incorretos</string>
@@ -126,7 +125,7 @@
     <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
     <string name="empty_report_text">Não há relatos nos últimos 7 dias.</string>
     <string name="button_later">Mais tarde</string>
-    <string name="button_set_guarduan_group">Definir Grupo Guardião</string>
+    <string name="button_set_guardian_group">Definir Grupo Guardião</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Todos os meios</string>

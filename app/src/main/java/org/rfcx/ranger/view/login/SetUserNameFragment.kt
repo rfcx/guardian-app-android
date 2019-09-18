@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_invitation_code.*
+import kotlinx.android.synthetic.main.fragment_set_user_name.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.base.BaseFragment
 
-class InvitationCodeFragment : BaseFragment() {
+class SetUserNameFragment : BaseFragment() {
+	
 	lateinit var listener: LoginListener
-	private val invitationCodeViewModel: InvitationCodeViewModel by viewModel()
+	private val setUserNameViewModel: SetUserNameViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	override fun onAttach(context: Context) {
@@ -27,7 +27,7 @@ class InvitationCodeFragment : BaseFragment() {
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_invitation_code, container, false)
+		return inflater.inflate(R.layout.fragment_set_user_name, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,34 +37,26 @@ class InvitationCodeFragment : BaseFragment() {
 	
 	override fun onResume() {
 		super.onResume()
-		analytics?.trackScreen(Screen.INVITECODE)
+		analytics?.trackScreen(Screen.USERNAME)
 	}
 	
 	private fun initView() {
 		submitButton.setOnClickListener {
-			invitationProgressBar.visibility = View.VISIBLE
 			it.hideKeyboard()
-			
-			val code = inputCodeEditText.text.toString()
-			analytics?.trackEnterInviteCodeEvent(code)
-			
-			invitationCodeViewModel.setSubmitState()
-			invitationCodeViewModel.doSubmit(code)
-			invitationCodeViewModel.submitCodeState.observe(this, Observer {
-				when (it) {
-					SubmitState.SUCCESS -> {
-						if (context?.getUserNickname()?.substring(0, 1) == "+") {
-							listener.openSetUserNameFragmentFragment()
-						} else {
-							listener.openMain()
-						}
+			setNameProgressBar.visibility = View.VISIBLE
+			val name = inputNameEditText.text.toString()
+			setUserNameViewModel.sendName(name)
+			if (name.isEmpty()) {
+				setNameProgressBar.visibility = View.INVISIBLE
+				Toast.makeText(context, R.string.please_enter_your_name, Toast.LENGTH_SHORT).show()
+			} else {
+				setUserNameViewModel.userName.observe(this, Observer { value ->
+					if (value.substring(0, 1) !== "+") {
+						analytics?.trackSetUsernameEvent()
+						listener.openMain()
 					}
-					SubmitState.FAILED -> {
-						invitationProgressBar.visibility = View.GONE
-						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show() // TODO: handle error
-					}
-				}
-			})
+				})
+			}
 		}
 	}
 	

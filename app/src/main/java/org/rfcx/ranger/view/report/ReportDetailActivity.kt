@@ -22,6 +22,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
@@ -34,6 +36,8 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	private var location: LatLng? = null
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
+	private val analytics by lazy { Analytics(this) }
+	
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -84,6 +88,11 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			mapView?.setPadding(horizontalPadding,0,horizontalPadding,0)
 			runOnUiThread { setMapPin() }
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics.trackScreen(Screen.REPORTDETAIL)
 	}
 	
 	private fun setupToolbar() {

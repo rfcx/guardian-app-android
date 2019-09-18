@@ -14,10 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
-import org.rfcx.ranger.util.LocationPermissions
-import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.isOnAirplaneMode
-import org.rfcx.ranger.util.logout
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
@@ -33,6 +30,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
+	private val analytics by lazy { Analytics(this) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -41,6 +39,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		setupBottomMenu()
 		
 		newReportFabButton.setOnClickListener {
+			analytics.trackStartToAddReportEvent()
 			ReportActivity.startIntent(this)
 		}
 		

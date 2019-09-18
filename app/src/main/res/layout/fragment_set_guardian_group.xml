@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center"
+	android:orientation="vertical">
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/RangerText.Label.Secondary"
+		android:paddingBottom="@dimen/margin_padding_small"
+		android:paddingTop="@dimen/margin_padding_normal"
+		android:paddingStart="@dimen/margin_padding_large"
+		android:paddingEnd="@dimen/margin_padding_large"
+		android:text="@string/warning_set_guardian_group"
+		android:gravity="center" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/setGuardianGroupButton"
+		style="@style/RangerButton.GreenButton"
+		android:textSize="@dimen/text_small"
+		android:textStyle="normal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingBottom="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:text="@string/button_set_guardian_group"/>
+
+</LinearLayout>

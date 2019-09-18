@@ -118,6 +118,41 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				})
 	}
 	
+	fun loginMagicLink(activity: Activity) {
+		webAuthentication
+				.withScope(context.getString(R.string.auth0_scopes))
+				.withScheme(context.getString(R.string.auth0_scheme))
+				.withAudience(context.getString(R.string.auth0_audience))
+				.start(activity, object : AuthCallback {
+					override fun onFailure(dialog: Dialog) {
+						_loginFailure.postValue("")
+						Log.d("MagicLink onFailure", dialog.toString())
+					}
+					
+					override fun onFailure(exception: AuthenticationException) {
+						Log.d("MagicLink onFailure", exception.toString())
+						_loginFailure.postValue(exception.localizedMessage)
+					}
+					
+					override fun onSuccess(credentials: Credentials) {
+						Log.d("MagicLink onSuccess", credentials.toString())
+						when (val result = CredentialVerifier(context).verify(credentials)) {
+							is Err -> {
+								_loginFailure.postValue(result.error)
+							}
+							is Ok -> {
+								_userAuth.postValue(result.value)
+							}
+						}
+					}
+				})
+	}
+
+//	fun setLoginState() {
+//		_loginState.value = LoginState.NONE
+//		_userTouchState.value = UserTouchState.NONE
+//	}
+
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		
@@ -138,6 +173,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	}
 }
 
-enum class LoginRedirect{
+enum class LoginRedirect {
 	MAIN_PAGE, INVITE_CODE_PAGE
 }

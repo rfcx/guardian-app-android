@@ -58,6 +58,14 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 						"InvitationCodeFragment").commit()
 	}
 	
+
+	override fun openSetUserNameFragmentFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, SetUserNameFragment(),
+						"SetUserNameFragment").commit()
+		
+	}
+	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
 		if (intent?.hasExtra("event_guid") == true) {
 			eventFromNotification = Event().apply {
@@ -89,4 +97,5 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 interface LoginListener {
 	fun openMain()
 	fun openInvitationCodeFragment()
+	fun openSetUserNameFragmentFragment()
 }

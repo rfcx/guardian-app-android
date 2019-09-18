@@ -10,6 +10,7 @@ import org.rfcx.ranger.view.alerts.AlertViewModel
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
+import org.rfcx.ranger.view.login.SetUserNameViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.profile.FeedbackViewModel
@@ -22,7 +23,7 @@ object UiModule {
 	
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
-		viewModel {MainActivityViewModel(get(),get())}
+		viewModel { MainActivityViewModel(get(), get()) }
 	}
 	
 	val mapModule = module {
@@ -38,7 +39,7 @@ object UiModule {
 	val alertModule = module {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
-		viewModel { AlertViewModel() }
+		viewModel { AlertViewModel(get()) }
 	}
 	
 	val profileModule = module {
@@ -50,5 +51,6 @@ object UiModule {
 	var loginModule = module {
 		viewModel { LoginViewModel(androidContext(), get()) }
 		viewModel { InvitationCodeViewModel(androidContext(), get()) }
+		viewModel { SetUserNameViewModel(androidContext(), get()) }
 	}
 }

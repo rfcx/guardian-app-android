@@ -4,7 +4,6 @@
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
     <string name="login">Masuk</string>
-    <string name="connect_with_facebook">Terhubung dengan Facebook</string>
     <string name="pls_fill_email">Masukkan Email</string>
     <string name="pls_fill_password">Masukkan kata sandi</string>
     <string name="incorrect_username_password">Username dan kata sandi salah</string>
@@ -126,7 +125,7 @@
     <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
     <string name="empty_report_text">Tidak ada laporan dalam 7 hari terakhir.</string>
     <string name="button_later">Kemudian</string>
-    <string name="button_set_guarduan_group">Set Wali Grup</string>
+    <string name="button_set_guardian_group">Set Wali Grup</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Semua Media</string>

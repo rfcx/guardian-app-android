@@ -4,17 +4,23 @@
 	<string name="email">Email</string>
 	<string name="password">Password</string>
 	<string name="login">Login</string>
-	<string name="connect_with_facebook">Connect with Facebook</string>
+	<string name="connect_with_facebook">Continue with facebook</string>
+	<string name="connect_with_sms">Continue with phone number</string>
 	<string name="pls_fill_email">Please fill email</string>
 	<string name="pls_fill_password">Please fill password</string>
 	<string name="incorrect_username_password">Incorrect username or password</string>
 	<string name="an_error_occurred">Service unavailable</string>
 	<string name="or">OR</string>
 	<string name="powered_by">Powered by</string>
+	<string name="please_enter_your_name">"Please enter your name."</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>
 	<string name="invitation_submit_button_label">Submit</string>
+	
+	<string name="what_we_call_you">What should we call you?</string>
+	<string name="please_tell_name">Please tell us your name</string>
+	<string name="hint_name">Name</string>
 	
 	<!-- common error -->
 	<string name="error_common">An error occurred. Please try again.</string>
@@ -130,7 +136,7 @@
 	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
 	
 	<string name="button_later">Later</string>
-	<string name="button_set_guarduan_group">Set Guardian Group</string>
+	<string name="button_set_guardian_group">Set Guardian Group</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>
@@ -159,7 +165,7 @@
 	<string name="tab_group_by_guardians">Group By Guardians</string>
 	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
-	
+	<string name="warning_set_guardian_group">Guardian group not found. You must set a group to receive alerts!</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
 	
 	<!--Event value-->

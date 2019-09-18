@@ -5,6 +5,7 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
+import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
 
