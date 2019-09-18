@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+	
+	<TextView
+		android:id="@+id/groupByGuardianTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Itahu (2018)" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/circleImageView"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
+		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:src="@drawable/bg_circle_green"
+		app:layout_constraintBottom_toBottomOf="@id/groupByGuardianTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@id/groupByGuardianTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="1"
+		android:textColor="@color/text_white"
+		app:layout_constraintBottom_toBottomOf="@id/circleImageView"
+		app:layout_constraintEnd_toEndOf="@id/circleImageView"
+		app:layout_constraintStart_toStartOf="@id/circleImageView"
+		app:layout_constraintTop_toTopOf="@id/circleImageView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
