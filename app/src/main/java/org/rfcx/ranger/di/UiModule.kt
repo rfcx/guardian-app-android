@@ -9,6 +9,7 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertViewModel
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 import org.rfcx.ranger.view.alerts.GroupAlertsViewModel
+import org.rfcx.ranger.view.alerts.GuardianListDetailViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.login.SetUserNameViewModel
@@ -41,6 +42,7 @@ object UiModule {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 		viewModel { GroupAlertsViewModel(androidContext(), get()) }
+		viewModel { GuardianListDetailViewModel(get()) }
 		viewModel { AlertViewModel(get()) }
 	}
 	
