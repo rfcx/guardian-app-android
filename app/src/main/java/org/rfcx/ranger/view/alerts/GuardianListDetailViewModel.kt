@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,8 +10,9 @@ import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventInGuardianResponse
+import org.rfcx.ranger.util.timeAgoDisplay
 
-class GuardianListDetailViewModel(private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
+class GuardianListDetailViewModel(private val context: Context, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
 	private val _items = MutableLiveData<Result<EventInGuardianResponse>>()
 	val items: LiveData<Result<EventInGuardianResponse>> get() = _items
 	
@@ -21,7 +23,7 @@ class GuardianListDetailViewModel(private val getEventInGuardian: GetEventInGuar
 	private var eventOfGunshot: MutableList<Event> = mutableListOf()
 	private var eventOfTrespasser: MutableList<Event> = mutableListOf()
 	private var eventOfOther: MutableList<Event> = mutableListOf()
-	private var eventOfElse: MutableList<Event> = mutableListOf()
+	private var eventOfMismatch: MutableList<Event> = mutableListOf()
 	
 	init {
 		loadEvantsGuardian()
@@ -56,7 +58,7 @@ class GuardianListDetailViewModel(private val getEventInGuardian: GetEventInGuar
 				event.value == "other" -> {
 					eventOfOther.add(event)
 				}
-				else -> eventOfElse.add(event)
+				else -> eventOfMismatch.add(event)
 			}
 		}
 	}
