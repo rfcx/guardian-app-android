@@ -1,6 +1,5 @@
 package org.rfcx.ranger.view.alerts.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,8 @@ import org.rfcx.ranger.view.alerts.OnItemClickEventValuesListener
 
 class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
 	
-	var items: List<Event> = arrayListOf()
+	
+	var allItem: ArrayList<MutableList<Event>> = arrayListOf()
 		set(value) {
 			field = value
 			notifyDataSetChanged()
@@ -25,30 +25,31 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		return GuardianListDetailViewHolder(view)
 	}
 	
-	override fun getItemCount(): Int = items.size
+	override fun getItemCount(): Int = allItem.size
 	
 	override fun onBindViewHolder(holder: GuardianListDetailViewHolder, position: Int) {
-		holder.bind(items[position])
+		holder.bind(allItem[position])
 	}
 	
 	inner class GuardianListDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		private val groupByGuardianTextView = itemView.eventsInGuardianTextView
+		private val groupByGuardianTextView = itemView.guardianListDetailTextView
 		private val circleImageView = itemView.circleImageView
 		
-		var currentGroup: Event? = null
+		var currentEventList: MutableList<Event>? = null
 		
 		init {
 			itemView.setOnClickListener {
-				currentGroup?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
+				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 			}
 		}
 		
-		fun bind(event: Event) {
+		fun bind(eventList: MutableList<Event>) {
 			circleImageView.visibility = View.VISIBLE
-			Log.d("Event", event.value)
-			groupByGuardianTextView.text = event.value
+			groupByGuardianTextView.text = eventList[0].value
 			
-			this.currentGroup = event
+			// list of event
+			
+			this.currentEventList = eventList
 		}
 	}
 }

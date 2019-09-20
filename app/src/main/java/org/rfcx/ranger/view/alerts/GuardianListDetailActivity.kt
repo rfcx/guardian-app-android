@@ -24,8 +24,10 @@ class GuardianListDetailActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_guardian_list_detail)
-		
 		setupToolbar()
+		
+		guardianListDetailViewModel.setEventGuid(intent.extras.getString("guid"))
+		guardianListDetailViewModel.loadEvantsGuardian()
 		
 		eventsInGuardianRecycler.apply {
 			layoutManager = LinearLayoutManager(this@GuardianListDetailActivity)
@@ -38,7 +40,7 @@ class GuardianListDetailActivity : BaseActivity() {
 				
 				if (it.events !== null) {
 					guardianListDetailViewModel.makeGroupOfValue(it.events!!)
-					guardianListDetailAdapter.items = it.events!!
+					guardianListDetailAdapter.allItem = guardianListDetailViewModel.eventAll
 				}
 				//TODO if event null
 			}, {
@@ -50,8 +52,8 @@ class GuardianListDetailActivity : BaseActivity() {
 		})
 		
 		guardianListDetailAdapter.mOnItemClickListener = object : OnItemClickEventValuesListener {
-			override fun onItemClick(event: Event) {
-				Log.d("", event.value)
+			override fun onItemClick(event: MutableList<Event>) {
+				Log.d(event[0].value, event.size.toString())
 			}
 		}
 	}
@@ -62,9 +64,10 @@ class GuardianListDetailActivity : BaseActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			title = "Bear Hut #2"
+			title = intent.extras.getString("value")
 		}
 	}
+	
 	
 	override fun onSupportNavigateUp(): Boolean {
 		onBackPressed()
@@ -72,13 +75,15 @@ class GuardianListDetailActivity : BaseActivity() {
 	}
 	
 	companion object {
-		fun startActivity(context: Context) {
+		fun startActivity(context: Context, guid: String, value: String) {
 			val intent = Intent(context, GuardianListDetailActivity::class.java)
+			intent.putExtra("guid", guid)
+			intent.putExtra("value", value)
 			context.startActivity(intent)
 		}
 	}
 }
 
 interface OnItemClickEventValuesListener {
-	fun onItemClick(event: Event)
+	fun onItemClick(event: MutableList<Event>)
 }
