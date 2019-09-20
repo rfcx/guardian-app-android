@@ -7,7 +7,7 @@
 	
 	<TextView
 		android:id="@+id/eventsInEventsTextView"
-		style="@style/RangerText.Body"
+		style="@style/RangerText.SubTitle"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"

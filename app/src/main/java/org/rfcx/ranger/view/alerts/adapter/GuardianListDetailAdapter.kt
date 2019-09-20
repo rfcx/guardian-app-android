@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.alerts.OnItemClickEventValuesListener
 
 class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
@@ -40,10 +42,15 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		private val circleImageView = itemView.circleImageView
 		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
 		private val guardianListDetailRecycler = itemView.guardianListDetailRecycler
+		private val iconAlert = itemView.ivAlertIcon
 		
+		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<Event>, position: Int) {
+			eventList[0].value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
 			circleImageView.visibility = View.VISIBLE
-			groupByGuardianTextView.text = eventList[0].value
+			if(eventList[0].value !== null){
+				groupByGuardianTextView.text = eventList[0].value!!.capitalize()
+			}
 			numOfEventsNotOpen.text = eventList.size.toString()
 			stutasVisibility.add(position, false)
 			
