@@ -34,6 +34,7 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 	inner class GuardianListDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val groupByGuardianTextView = itemView.guardianListDetailTextView
 		private val circleImageView = itemView.circleImageView
+		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
 		
 		var currentEventList: MutableList<Event>? = null
 		
@@ -46,6 +47,7 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		fun bind(eventList: MutableList<Event>) {
 			circleImageView.visibility = View.VISIBLE
 			groupByGuardianTextView.text = eventList[0].value
+			numOfEventsNotOpen.text = eventList.size.toString()
 			
 			// list of event
 			
