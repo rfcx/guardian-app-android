@@ -20,7 +20,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		locationTracking.value = profileData.getTracking()
 		notificationReceiving.value = profileData.getReceiveNotification()
 		userSite.value = profileData.getSiteName()
-		appVersion.value = BuildConfig.VERSION_NAME
+		appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
 		userName.value = profileData.getUserNickname()
 	}
 	
