@@ -2,18 +2,20 @@ package org.rfcx.ranger.view.login
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.base.BaseFragment
 
 class InvitationCodeFragment : BaseFragment() {
@@ -41,7 +43,26 @@ class InvitationCodeFragment : BaseFragment() {
 	}
 	
 	private fun initView() {
+		inputCodeEditText.addTextChangedListener(object : TextWatcher {
+			override fun afterTextChanged(p0: Editable?) {
+				if (p0 != null) {
+					if (p0.isEmpty()) {
+						submitButton.isEnabled = false
+					}
+				}
+			}
+			
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				Log.d("", "beforeTextChanged")
+			}
+			
+			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				submitButton.isEnabled = true
+			}
+		})
+		
 		submitButton.setOnClickListener {
+			submitButton.isEnabled = false
 			invitationProgressBar.visibility = View.VISIBLE
 			it.hideKeyboard()
 			
@@ -61,7 +82,9 @@ class InvitationCodeFragment : BaseFragment() {
 					}
 					SubmitState.FAILED -> {
 						invitationProgressBar.visibility = View.GONE
-						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show() // TODO: handle error
+						submitButton.isEnabled = true
+						// TODO Submit failed @tree
+//						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show() // TODO: handle error
 					}
 				}
 			})

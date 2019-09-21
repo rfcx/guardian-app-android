@@ -65,6 +65,7 @@
 		android:layout_marginStart="@dimen/margin_padding_large"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:text="@string/invitation_submit_button_label"
+		android:enabled="false"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/inputCodeEditText" />

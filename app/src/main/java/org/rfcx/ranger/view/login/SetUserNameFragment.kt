@@ -2,11 +2,13 @@ package org.rfcx.ranger.view.login
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_set_user_name.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,22 +43,38 @@ class SetUserNameFragment : BaseFragment() {
 	}
 	
 	private fun initView() {
+		
+		inputNameEditText.addTextChangedListener(object : TextWatcher {
+			override fun afterTextChanged(p0: Editable?) {
+				if (p0 != null) {
+					if (p0.isEmpty()) {
+						submitButton.isEnabled = false
+					}
+				}
+			}
+			
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				Log.d("", "beforeTextChanged")
+			}
+			
+			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+				submitButton.isEnabled = true
+			}
+		})
+		
 		submitButton.setOnClickListener {
 			it.hideKeyboard()
+			submitButton.isEnabled = false
 			setNameProgressBar.visibility = View.VISIBLE
 			val name = inputNameEditText.text.toString()
 			setUserNameViewModel.sendName(name)
-			if (name.isEmpty()) {
-				setNameProgressBar.visibility = View.INVISIBLE
-				Toast.makeText(context, R.string.please_enter_your_name, Toast.LENGTH_SHORT).show()
-			} else {
-				setUserNameViewModel.userName.observe(this, Observer { value ->
-					if (value.substring(0, 1) !== "+") {
-						analytics?.trackSetUsernameEvent()
-						listener.openMain()
-					}
-				})
-			}
+			
+			setUserNameViewModel.userName.observe(this, Observer { value ->
+				if (value.substring(0, 1) !== "+") {
+					analytics?.trackSetUsernameEvent()
+					listener.openMain()
+				}
+			})
 		}
 	}
 	
