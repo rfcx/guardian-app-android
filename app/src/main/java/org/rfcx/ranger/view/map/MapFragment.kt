@@ -34,9 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.LocationTrackerService
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -47,9 +45,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
 	private var googleMap: GoogleMap? = null
-	
-	private var onCompletionCallback: ((Boolean) -> Unit)? = null
-	
+	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
 	private val analytics by lazy { context?.let { Analytics(it) } }
@@ -99,9 +95,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
-			onCompletionCallback?.invoke(resultCode == Activity.RESULT_OK)
-		}
+		locationPermissions?.handleActivityResult(requestCode, resultCode)
+	}
+	
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+		locationPermissions?.handleRequestResult(requestCode, grantResults)
 	}
 	
 	private fun setupMap() {
@@ -113,22 +112,21 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		googleMap = map
 		map?.let {
 			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-			displayReport(it)
-			displayCheckIn(it)
-			getLocation()
-			map.setOnMapClickListener {
-				(activity as MainActivityEventListener).hideBottomSheet()
-			}
+			setDisplay()
+			checkThenAccquireLocation()
 		}
-		
-		val permissionState = context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) }
-		if (permissionState == PackageManager.PERMISSION_GRANTED) {
-			Log.d("permissionState", "true")
-			check { isAllowed: Boolean ->
-				map?.isMyLocationEnabled = isAllowed
+	}
+	
+	private fun checkThenAccquireLocation() {
+		if (!context?.isOnAirplaneMode()!!) {
+			locationPermissions?.check { isAllowed: Boolean ->
+				if (isAllowed) {
+					googleMap?.isMyLocationEnabled = isAllowed
+					getLocation()
+				} else {
+					setDisplay()
+				}
 			}
-		} else {
-			Log.d("permissionState", "false")
 		}
 	}
 	
@@ -137,14 +135,21 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		locationManager?.removeUpdates(locationListener)
 		locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
-//			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
-//			locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			lastLocation?.let { moveCameraToCurrentLocation(it) }
+			setDisplay()
 		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
 			ex.printStackTrace()
+		}
+	}
+	
+	fun setDisplay(){
+		googleMap?.let { displayReport(it) }
+		googleMap?.let { displayCheckIn(it) }
+		googleMap?.setOnMapClickListener {
+			(activity as MainActivityEventListener).hideBottomSheet()
 		}
 	}
 	
@@ -154,46 +159,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		val latLng = LatLng(location.latitude, location.longitude)
 		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				latLng, 15f))
-	}
-	
-	private fun allowed(): Boolean {
-		val permissionState = context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) }
-		return permissionState == PackageManager.PERMISSION_GRANTED
-	}
-	
-	private fun check(onCompletionCallback: (Boolean) -> Unit) {
-		this.onCompletionCallback = onCompletionCallback
-		if (allowed()) {
-			verifySettings()
-		}
-	}
-	
-	private fun verifySettings() {
-		val builder = LocationSettingsRequest.Builder().addLocationRequest(LocationTrackerService.locationRequest)
-		context?.let {
-			val client: SettingsClient = LocationServices.getSettingsClient(it)
-			val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-			
-			task.addOnSuccessListener {
-				onCompletionCallback?.invoke(true)
-			}
-			
-			task.addOnFailureListener { exception ->
-				if (exception is ResolvableApiException) {
-					// Location settings are not satisfied, but this can be fixed by showing the user a dialog
-					try {
-						// Show the dialog and check the result in onActivityResult()
-						this.startIntentSenderForResult(exception.resolution.intentSender, REQUEST_CHECK_LOCATION_SETTINGS, null, 0, 0, 0, null)
-					} catch (sendEx: IntentSender.SendIntentException) {
-						// Ignore the error.
-						sendEx.printStackTrace()
-						onCompletionCallback?.invoke(false)
-					}
-				} else {
-					onCompletionCallback?.invoke(false)
-				}
-			}
-		}
 	}
 	
 	private fun displayReport(map: GoogleMap) {
@@ -289,8 +254,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		fun newInstance(): MapFragment {
 			return MapFragment()
 		}
-		
-		const val REQUEST_CHECK_LOCATION_SETTINGS = 36
 		const val tag = "MapFragment"
 	}
 }
