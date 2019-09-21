@@ -9,6 +9,7 @@
     <string name="incorrect_username_password">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="an_error_occurred">ไม่สามารถให้บริการได้</string>
     <string name="or">หรือ</string>
+    <string name="powered_by">โดย</string>
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
@@ -93,6 +94,7 @@
     <string name="common_ok">ตกลง</string>
     
     <string name="location">ตำแหน่ง</string>
+    <string name="audio_notes">เสียงที่บันทึก</string>
     
     <string name="menu_status">สถานะ</string>
     <string name="menu_map">แผนที่</string>
@@ -125,6 +127,7 @@
     <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
     <string name="button_later">ไว้ทีหลัง</string>
     <string name="button_set_guardian_group">ตั้งค่ากลุ่ม Guardian</string>
+    <string name="guardian_group_not_found">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">ไฟล์ทั้งหมด</string>
@@ -171,9 +174,20 @@
     <string name="profile_feedback_label">ฟีดแบค</string>
     <string name="profile_rate_app_label">ให้คะแนนแอป</string>
     
+    <string name="feedback_submitted">ขอขอบคุณสำหรับความคิดเห็นของคุณ :)</string>
+    <string name="feedback_submission_failed">การส่งความคิดเห็นล้มเหลว กรุณาลองใหม่อีกครั้ง</string>
+    <string name="snackbar_retry">ลองใหม่</string>
+    <string name="profile_send_feedback">ส่่งความคิดเห็น</string>
+    <string name="from">จาก</string>
+    <string name="app_feedback_share_ideas">แสดงความคิดเห็นหรือข้อเสนอแนะเกี่ยวกับแอป</string>
+    <string name="maximum_number_of_attachments">คุณมีไฟล์ที่สามารถเลือกได้ถึงจำนวนสูงสุดแล้ว ลองลบบางรายการเพื่อเพิ่มไฟล์อื่น</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
 	<string name="photos">ภาพถ่าย</string>
 	<string name="common_none">ไม่มี</string>
-
+    
+    <string name="notification_tracking_title">กำลังปฏิบัติหน้าที่และการติดตามตำแหน่ง</string>
+    <string name="notification_traking_message_format">%d นาทีในการปฏิบัติหน้าที่</string>
+    
 </resources>

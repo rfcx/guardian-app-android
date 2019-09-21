@@ -9,6 +9,7 @@
     <string name="incorrect_username_password">Usuário ou senha incorretos</string>
     <string name="an_error_occurred">Serviço indisponível</string>
     <string name="or">OU</string>
+    <string name="powered_by">Distribuído por</string>
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Assinar em </string>
@@ -126,6 +127,7 @@
     <string name="empty_report_text">Não há relatos nos últimos 7 dias.</string>
     <string name="button_later">Mais tarde</string>
     <string name="button_set_guardian_group">Definir Grupo Guardião</string>
+    <string name="guardian_group_not_found">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Todos os meios</string>
@@ -172,10 +174,21 @@
     <string name="profile_feedback_label">Comentários</string>
     <string name="profile_rate_app_label">Avalie o aplicativo</string>
     
+    <string name="feedback_submitted">Comentários enviados. Obrigado pelo seu tempo :)</string>
+    <string name="feedback_submission_failed">Feedback submissão falhou! Por favor, tente novamente.</string>
+    <string name="snackbar_retry">Tentar novamente</string>
+    <string name="profile_send_feedback">Enviar comentários</string>
+    <string name="from">De:</string>
+    <string name="app_feedback_share_ideas">Deixar classificação aplicativo ou compartilhar suas ideias</string>
+    <string name="maximum_number_of_attachments">Você chegou selecionável máx. Tente remover alguns itens antes de adicionar mais anexos.</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">Lista Grupo Guardião</string>
 	<string name="audio_notes">Notas de áudio</string>
     <string name="photos">Foto</string>
 	<string name="common_none">Nada</string>
+    
+    <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
+    <string name="notification_traking_message_format">%d minutos gravado</string>
 
 </resources>

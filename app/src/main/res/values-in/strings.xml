@@ -9,6 +9,7 @@
     <string name="incorrect_username_password">Username dan kata sandi salah</string>
     <string name="an_error_occurred">layanan tidak tersedia</string>
     <string name="or">atau</string>
+    <string name="powered_by">Dipersembahkan oleh</string>
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
@@ -126,6 +127,7 @@
     <string name="empty_report_text">Tidak ada laporan dalam 7 hari terakhir.</string>
     <string name="button_later">Kemudian</string>
     <string name="button_set_guardian_group">Set Wali Grup</string>
+    <string name="guardian_group_not_found">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Semua Media</string>
@@ -172,10 +174,21 @@
     <string name="profile_feedback_label">Masukan</string>
     <string name="profile_rate_app_label">Menilai aplikasi</string>
     
+    <string name="feedback_submitted">Umpan balik yang disampaikan. Terima kasih atas waktu Anda :)</string>
+    <string name="feedback_submission_failed">Pengiriman umpan balik gagal! Silakan coba lagi.</string>
+    <string name="snackbar_retry">Mencoba kembali</string>
+    <string name="profile_send_feedback">Kirim umpan balik</string>
+    <string name="from">Dari:</string>
+    <string name="app_feedback_share_ideas">Meninggalkan umpan balik aplikasi atau berbagi ide</string>
+    <string name="maximum_number_of_attachments">Anda telah mencapai max dipilih. Cobalah menghapus beberapa item sebelum menambahkan lebih lampiran.</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
 	<string name="audio_notes">Catatan audio</string>
     <string name="photos">Foto</string>
 	<string name="common_none">Tidak ada</string>
-
+    
+    <string name="notification_tracking_title">On-tugas dan pelacakan diaktifkan</string>
+    <string name="notification_traking_message_format">%d menit direkam</string>
+    
 </resources>

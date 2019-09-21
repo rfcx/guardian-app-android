@@ -9,6 +9,7 @@
 	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
 	<string name="an_error_occurred">Servicio no disponible</string>
 	<string name="or">O</string>
+	<string name="powered_by">Energizado por</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Entrar</string>
@@ -126,6 +127,7 @@
 	<string name="empty_report_text">No hay informes en los últimos 7 días.</string>
 	<string name="button_later">Luego</string>
 	<string name="button_set_guardian_group">Establecer Grupo Guardián</string>
+	<string name="guardian_group_not_found">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">Todos los archivos</string>
@@ -172,10 +174,21 @@
 	<string name="profile_feedback_label">Realimentación</string>
 	<string name="profile_rate_app_label">Califica la aplicación</string>
 	
+	<string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
+	<string name="feedback_submission_failed">envío de comentarios no! Inténtalo de nuevo.</string>
+	<string name="snackbar_retry">Procesar de nuevo</string>
+	<string name="profile_send_feedback">Enviar comentarios</string>
+	<string name="from">De:</string>
+	<string name="app_feedback_share_ideas">Votar aplicación o compartir sus ideas</string>
+	<string name="maximum_number_of_attachments">Usted ha llegado seleccionable máx. Trate de eliminar algunos artículos antes de añadir más elementos adjuntos.</string>
+	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de grupos de la guarda</string>
 	<string name="audio_notes">Notas de audio</string>
 	<string name="photos">Foto</string>
 	<string name="common_none">Nada</string>
+	
+	<string name="notification_tracking_title">De guardia y el seguimiento habilitado</string>
+	<string name="notification_traking_message_format">%d minutos registraron</string>
 
 </resources>
