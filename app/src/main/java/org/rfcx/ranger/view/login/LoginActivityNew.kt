@@ -10,6 +10,7 @@ import org.rfcx.ranger.entity.event.Audio
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.getSiteName
+import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseActivity
 
@@ -32,7 +33,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
 		getEventFromIntentIfHave(intent)
-		if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty()) {
+		if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty() && getUserNickname().substring(0, 1) != "+") {
 			MainActivityNew.startActivity(this@LoginActivityNew, eventFromNotification)
 			finish()
 		} else {

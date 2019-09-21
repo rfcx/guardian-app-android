@@ -24,6 +24,7 @@ import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.user.UserAuthResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
+import org.rfcx.ranger.util.getUserNickname
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) : ViewModel() {
 	
@@ -152,14 +153,19 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 //		_loginState.value = LoginState.NONE
 //		_userTouchState.value = UserTouchState.NONE
 //	}
-
+	
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		CredentialKeeper(context).save(userAuthResponse)
 		
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
 			override fun onSuccess(t: Boolean) {
 				if (userAuthResponse.isRanger) {
-					_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
+					if (context.getUserNickname().substring(0, 1) == "+") {
+						_redirectPage.postValue(LoginRedirect.SET_USER_NAME)
+					} else {
+						_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
+						
+					}
 				} else {
 					_redirectPage.postValue(LoginRedirect.INVITE_CODE_PAGE)
 				}
@@ -174,5 +180,5 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 }
 
 enum class LoginRedirect {
-	MAIN_PAGE, INVITE_CODE_PAGE
+	MAIN_PAGE, INVITE_CODE_PAGE, SET_USER_NAME
 }

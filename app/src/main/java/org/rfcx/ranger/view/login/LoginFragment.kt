@@ -89,6 +89,7 @@ class LoginFragment : BaseFragment() {
 			when (loginRedirect) {
 				LoginRedirect.MAIN_PAGE -> listener.openMain()
 				LoginRedirect.INVITE_CODE_PAGE -> listener.openInvitationCodeFragment()
+				LoginRedirect.SET_USER_NAME -> listener.openSetUserNameFragmentFragment()
 				else -> loading(false)
 			}
 		})
