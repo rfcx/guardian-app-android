@@ -1,5 +1,6 @@
 package org.rfcx.ranger.util
 
+import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.rfcx.ranger.RangerRealmMigration
 
