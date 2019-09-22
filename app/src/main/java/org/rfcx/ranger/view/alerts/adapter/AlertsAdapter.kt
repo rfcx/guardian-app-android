@@ -12,7 +12,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.timeAgoDisplay
 import org.rfcx.ranger.util.toEventIcon
-import org.rfcx.ranger.util.toEventName
 
 
 class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, AlertsAdapter.AlertViewHolder>(AlertsDiffUtil()) {
@@ -30,12 +29,14 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, A
 	
 	class AlertsDiffUtil : DiffUtil.ItemCallback<EventItem>() {
 		override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
-			return oldItem.event.event_guid == newItem.event.event_guid
+			return oldItem.state == newItem.state
 			
 		}
 		
 		override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
-			return oldItem.event.event_guid == newItem.event.event_guid && oldItem.state == newItem.state
+			return oldItem.event.event_guid == newItem.event.event_guid
+					&& oldItem.event.value == newItem.event.value
+					&& oldItem.state == newItem.state
 		}
 	}
 	

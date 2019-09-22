@@ -15,6 +15,7 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
+import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
@@ -28,6 +29,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	private var _alertsList: List<EventItem> = listOf()
 	
 	// data loading events
+	private val items = arrayListOf<EventItem>()
 	private var currentOffset: Int = 0
 	private var totalItemCount: Int = 0
 	private val totalPage: Int
@@ -37,7 +39,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			currentOffset += PAGE_LIMITS
 			return currentOffset
 		}
-	private val isLastPage: Boolean
+	val isLastPage: Boolean
 		get() = currentOffset >= totalPage
 	
 	init {
@@ -45,12 +47,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		
 	}
 	
-	
 	fun loadEvents() {
-		/*if (isLastPage) {
-			return
-		}*/
-		
 		_alerts.value = Result.Loading
 		
 		// start load
@@ -59,28 +56,12 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
-		
-		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
+		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				
 				totalItemCount = t.total
-				val items = arrayListOf<EventItem>()
-				t.events?.forEach { event ->
-					val state = eventDb.getEventState(event.event_guid)
-					state?.let {
-						val result = when (it) {
-							ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-							ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-							else -> EventItem.State.NONE
-						}
-						items.add(EventItem(event, result))
-					} ?: run {
-						items.add(EventItem(event, EventItem.State.NONE))
-					}
-				}
-				_alertsList = items
-				_alerts.value = Result.Success(items)
+				handleOnSuccess(t)
 			}
 			
 			override fun onError(e: Throwable) {
@@ -90,23 +71,65 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}, requestFactory)
 	}
 	
-	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val newItems = arrayListOf<EventItem>()
-		_alertsList.forEach {
-			if (it.event.event_guid == eventGuid) {
-				// Update this item
-				it.state = when (reviewValue) {
+	private fun handleOnSuccess(t: EventResponse) {
+		t.events?.forEach { event ->
+			val state = eventDb.getEventState(event.event_guid)
+			state?.let {
+				val result = when (it) {
 					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 					else -> EventItem.State.NONE
 				}
+				items.add(EventItem(event, result))
+			} ?: run {
+				items.add(EventItem(event, EventItem.State.NONE))
 			}
-			newItems.add(EventItem(it.event, it.state))
 		}
-		_alerts.value = Result.Success(newItems)
+		_alertsList = items
+		_alerts.value = Result.Success(items)
+	}
+	
+	fun loadMoreEvents() {
+		if (isLastPage) {
+			return
+		}
+		
+		_alerts.value = Result.Loading
+		
+		val group = context.getGuardianGroup()
+		if (group == null) {
+			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
+			return
+		}
+		
+		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
+		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
+			override fun onSuccess(t: EventResponse) {
+				totalItemCount = t.total
+				handleOnSuccess(t)
+			}
+			
+			override fun onError(e: Throwable) {
+				currentOffset -= PAGE_LIMITS
+				_alerts.value = e.getResultError()
+			}
+		}, requestFactory)
+	}
+	
+	fun onEventReviewed(eventGuid: String, reviewValue: String) {
+		val eventItem = _alertsList.firstOrNull { it.event.event_guid == eventGuid }
+		if (eventItem != null) {
+			eventItem.state = when (reviewValue) {
+				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+				else -> EventItem.State.NONE
+			}
+			_alertsList.replace(eventItem) {it.event.event_guid == eventGuid}
+		}
+		_alerts.value = Result.Success(_alertsList)
 	}
 	
 	companion object {
-		const val PAGE_LIMITS = 50
+		const val PAGE_LIMITS = 10
 	}
 }
