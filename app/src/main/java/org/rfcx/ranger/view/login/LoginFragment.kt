@@ -38,8 +38,8 @@ class LoginFragment : BaseFragment() {
 	
 	override fun onResume() {
 		super.onResume()
-		analytics?.trackScreen(Screen.LOGIN)
 		loading(false)
+		analytics?.trackScreen(Screen.LOGIN)
 	}
 	
 	private fun initView() {
@@ -56,11 +56,13 @@ class LoginFragment : BaseFragment() {
 		}
 		
 		facebookLoginButton.setOnClickListener {
+			loading()
 			analytics?.trackLoginEvent("facebook")
 			activity?.let { loginViewModel.loginWithFacebook(it) }
 		}
 		
 		smsLoginButton.setOnClickListener {
+			loading()
 			analytics?.trackLoginEvent("sms")
 			activity?.let { loginViewModel.loginMagicLink(it) }
 		}
