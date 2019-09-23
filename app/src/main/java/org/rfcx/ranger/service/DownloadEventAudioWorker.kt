@@ -32,6 +32,9 @@ class DownloadEventAudioWorker(val context: Context) {
 		val file0 = events[0]
 		
 		val aa = service.getRawAudio(file0.audio!!.opus)
+		
+		
+		
 		aa.subscribeOn(Schedulers.io())
 				.observeOn(Schedulers.io())
 				.doOnNext {
@@ -52,6 +55,12 @@ class DownloadEventAudioWorker(val context: Context) {
 			
 			val temp = File(context.cacheDir, "$fileName _temp")
 			val file = File(context.cacheDir, fileName)
+			
+			if (file.exists()) {
+				subscriber.onNext(file)
+				subscriber.onComplete()
+			}
+			
 			if (response.body()?.source() == null) {
 				subscriber.onError(NullPointerException())
 			}
