@@ -76,7 +76,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	override fun onBackPressed() {
 		
 		if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-			bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+			hideBottomSheet()
 		} else {
 			return super.onBackPressed()
 		}
@@ -155,6 +155,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	}
 	
 	override fun hideBottomSheet() {
+		val bottomSheet = supportFragmentManager.findFragmentByTag("BottomSheet")
+		if (bottomSheet != null) {
+			supportFragmentManager.beginTransaction()
+					.remove(bottomSheet)
+					.commit()
+		}
 		bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 	}
 	
