@@ -56,6 +56,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 			override fun onStateChanged(bottomSheet: View, newState: Int) {
 				if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 					showBottomAppBar()
+					val bottomSheetFragment = supportFragmentManager.findFragmentByTag("BottomSheet")
+					if (bottomSheetFragment != null) {
+						supportFragmentManager.beginTransaction()
+								.remove(bottomSheetFragment)
+								.commit()
+					}
 				}
 			}
 			
@@ -155,12 +161,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	}
 	
 	override fun hideBottomSheet() {
-		val bottomSheet = supportFragmentManager.findFragmentByTag("BottomSheet")
-		if (bottomSheet != null) {
-			supportFragmentManager.beginTransaction()
-					.remove(bottomSheet)
-					.commit()
-		}
 		bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 	}
 	
