@@ -1,8 +1,8 @@
 package org.rfcx.ranger.entity.event
 
 data class EventsRequestFactory(
-		val guardianGroup: String,
-		val orderBy: String,
+		val guardianInGroup: List<String>,
+		val order: String,
 		val dir: String,
 		val limit: Int,
 		val offset: Int)

@@ -87,8 +87,8 @@ object ServiceFactory {
 	): OkHttpClient {
 		val okHttpClient = OkHttpClient.Builder()
 				.addInterceptor(tokenInterceptor)
-				.connectTimeout(30, TimeUnit.SECONDS)
-				.readTimeout(30, TimeUnit.SECONDS)
+				.connectTimeout(120, TimeUnit.SECONDS)
+				.readTimeout(120, TimeUnit.SECONDS)
 		
 		if (isDebug) {
 			okHttpClient

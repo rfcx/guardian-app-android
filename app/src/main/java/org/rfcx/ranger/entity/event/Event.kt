@@ -8,10 +8,10 @@ import io.realm.annotations.PrimaryKey
 
 open class Event() : RealmObject(), Parcelable {
 	@PrimaryKey
-	@SerializedName("event_guid")
+	@SerializedName("guid")
 	var event_guid: String = ""
 	
-	@SerializedName("audio_guid")
+	@SerializedName("audioGuid")
 	var audioGUID: String? = ""
 	
 	@SerializedName("latitude")
@@ -29,26 +29,30 @@ open class Event() : RealmObject(), Parcelable {
 	var type: String? = ""
 	@SerializedName("value")
 	var value: String? = ""
+	
+	@SerializedName("createdAt")
+	var createdAt: Long? = null
+	
 	@SerializedName("confidence")
 	var confidence: Float? = null
 	
-	@SerializedName("guardian_guid")
+	@SerializedName("guardianGuid")
 	var guardianGUID: String? = ""
 	
-	@SerializedName("guardian_shortname")
+	@SerializedName("guardianShortname")
 	var guardianShortname: String? = ""
 	
-	@SerializedName("site")
+	@SerializedName("siteGuid")
 	var site: String? = ""
-	@SerializedName("timezone")
+	@SerializedName("siteTimezone")
 	var timezone: String? = ""
 	
 	var isOpened: Boolean = false
-	@SerializedName("audio")
+	@SerializedName("urls")
 	var audio: Audio? = null
 	@SerializedName("reviewer_confirmed")
 	var reviewerConfirmed: Boolean? = null
-	@SerializedName("ai_guid")
+	@SerializedName("aiGuid")
 	var aiGuid: String? = ""
 	
 	constructor(parcel: Parcel) : this() {

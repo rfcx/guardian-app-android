@@ -4,6 +4,7 @@ import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.DateHelper.DAY
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,10 +50,13 @@ fun String.toEventIcon(): Int {
 }
 
 fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
-	beginsAt ?: return ""
+//	beginsAt ?: return ""
 	
-	val eventDate = DateHelper.getDateTime(beginsAt)
-	// timestamp
+	val stamp = createdAt?.times(1000)?.let { Timestamp(it) }
+	val date = stamp?.time?.let { Date(it) }
+	
+	val eventDate = date
+	
 	val dayAgo = DAY
 	val daysAgo = 2 * DAY
 	

@@ -5,6 +5,6 @@ import org.rfcx.ranger.entity.guardian.GuardianGroup
 import retrofit2.http.GET
 
 interface GuardianGroupEndpoint {
-	@GET("guardians/groups")
+	@GET("v1/guardians/groups")
 	fun guardianGroups(): Single<List<GuardianGroup>>
 }

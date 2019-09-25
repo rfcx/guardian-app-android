@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface UserTouchEndPoint {
 	
-	@GET("users/touchapi")
+	@GET("v1/users/touchapi")
 	fun userTouch(): Single<UserTouchResponse>
 }

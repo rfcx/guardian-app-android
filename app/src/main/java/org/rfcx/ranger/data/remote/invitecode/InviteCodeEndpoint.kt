@@ -8,6 +8,6 @@ import retrofit2.http.POST
 
 interface InviteCodeEndpoint {
 	
-	@POST("users/code")
+	@POST("v1/users/code")
 	fun sendInvitationCode(@Body code: InvitationCodeRequest): Single<InvitationCodeResponse>
 }

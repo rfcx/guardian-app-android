@@ -51,8 +51,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
-		
-		allAlertsViewModel.loadEvents()
+		allAlertsViewModel.getGuardianGroup()
+//		allAlertsViewModel.loadEvents()
 	}
 	
 	override fun onClickedAlert(event: Event) {

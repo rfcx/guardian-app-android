@@ -9,14 +9,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface EventService {
-	@GET("events/event/datatable")
-	fun getEvents(@Query("guardian_groups[]") guardianGroup: String,
+	@GET("v2/events")
+	fun getEvents(@Query("limit") limit: Int,
+	              @Query("offset") offset: Int,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
-	              @Query("limit") limit: Int,
-	              @Query("offset") offset: Int): Single<EventResponse>
+	              @Query("guardian[]") guardianGroup: List<String>): Single<EventResponse>
 	
-	@POST("events/{event_guid}/{review_confirmed}")
+	@POST("v1/events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,
 	                @Path("review_confirmed") reviewConfirm: String)
 			: Single<ReviewEventResponse>

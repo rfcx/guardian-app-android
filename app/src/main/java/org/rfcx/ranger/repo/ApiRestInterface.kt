@@ -21,16 +21,16 @@ import retrofit2.http.*
 
 interface ApiRestInterface {
 	
-	@GET("messages")
+	@GET("v1/messages")
 	fun getMessage(@Header("Authorization") authUser: String,
 	               @Query("to") email: String,
 	               @Query("type") type: String): Call<List<Message>>
 	
-	@POST("users/checkin")
+	@POST("v1/users/checkin")
 	fun updateLocation(@Header("Authorization") authUser: String,
 	                   @Body checkInRequestBody: CheckInRequest): Call<List<CheckInResult>>
 	
-	@GET("events/event/datatable")
+	@GET("v2/events/event/datatable")
 	fun getEvents(@Header("Authorization") authUser: String,
 	              @Query("guardian_groups[]") guardianGroup: String,
 	              @Query("order") orderBy: String,
@@ -38,7 +38,7 @@ interface ApiRestInterface {
 	              @Query("limit") limit: Int,
 	              @Query("offset") offset: Int): Call<EventResponse>
 	
-	@POST("reports")
+	@POST("v1/reports")
 	@Multipart
 	fun sendReport(@Header("Authorization") authUser: String, @Part("value") value: RequestBody,
 	               @Part("site") site: RequestBody, @Part("reported_at") reportedAt: RequestBody,
@@ -46,16 +46,16 @@ interface ApiRestInterface {
 	               @Part("age_estimate") ageEstimate: RequestBody, @Part("distance") distanceEstimate: RequestBody? = null,
 	               @Part() audioFile: MultipartBody.Part? = null): Call<SendReportResponse>
 	
-	@POST("events/{event_guid}/{review_confirmed}")
+	@POST("v1/events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Header("Authorization") authUser: String,
 	                @Path("event_guid") eventGuID: String,
 	                @Path("review_confirmed") reviewConfirm: String)
 			: Call<ReviewEventResponse>
 	
-	@GET("sites/{id}")
+	@GET("v1/sites/{id}")
 	fun site(@Header("Authorization") authorization: String, @Path("id") id: String): Call<Site>
 	
-	@POST("reports/{report_guid}/attachments")
+	@POST("v1/reports/{report_guid}/attachments")
 	@Multipart
 	fun uploadImages(@Header("Authorization") authUser: String,
 	                 @Path("report_guid") reportGuID: String,

@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface SetNameEndpoint {
-	@POST("users/auth0/update-user/public")
+	@POST("v1/users/auth0/update-user/public")
 	fun sendGivenName(@Body body: SetNameRequest): Single<SetNameResponse>
 }
 

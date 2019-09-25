@@ -10,8 +10,8 @@ import org.rfcx.ranger.entity.event.*
 class EventRepositoryImp(private val eventService: EventService, private val eventDb: EventDb,
                          private val weeklySummaryData: WeeklySummaryData) : EventRepository {
 	override fun getEventList(requestFactory: EventsRequestFactory): Single<EventResponse> {
-		return eventService.getEvents(requestFactory.guardianGroup, requestFactory.orderBy,
-				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
+		return eventService.getEvents(requestFactory.limit, requestFactory.offset,
+				requestFactory.order, requestFactory.dir, requestFactory.guardianInGroup).map {
 			it
 		}
 	}

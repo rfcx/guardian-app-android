@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ClassifiedService {
-	@POST("tags/classified/byannotator")
+	@POST("v1/tags/classified/byannotator")
 	fun getClassificationSpectrogram(
 			@Body body: ClassificationBody): Single<ClassificationResponse>
 }

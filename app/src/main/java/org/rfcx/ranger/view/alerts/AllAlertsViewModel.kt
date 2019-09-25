@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,10 +10,14 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
+import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
+import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
@@ -20,7 +25,10 @@ import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
 class AllAlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
-                         private val eventDb: EventDb) : ViewModel() {
+                         private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase) : ViewModel() {
+	
+	private val _groupByGuardians = MutableLiveData<Result<GroupByGuardiansResponse>>()
+	val groupByGuardians: LiveData<Result<GroupByGuardiansResponse>> get() = _groupByGuardians
 	
 	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
 	val alerts: LiveData<Result<List<EventItem>>>
@@ -47,16 +55,51 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		
 	}
 	
-	fun loadEvents() {
+	fun getGuardianGroup(){
 		_alerts.value = Result.Loading
 		
-		// start load
 		val group = context.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
-		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, 0)
+		_groupByGuardians.value = Result.Loading
+		
+		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>(){
+			override fun onSuccess(t: GroupByGuardiansResponse) {
+				listOfGuardiansInGroup(t.guardians)
+			}
+			
+			override fun onError(e: Throwable) {
+				// TODO onError @tree
+			}
+			
+		}, group)
+	}
+	
+	fun listOfGuardiansInGroup(list: List<Guardian>){
+		val listGuardians = ArrayList<String>()
+		
+//		list.forEach { guardians ->
+//			listGuardians.add(guardians.guid)
+//		}
+		
+		listGuardians.add(list[0].guid)
+		
+		Log.d("listGuardians", listGuardians.toString())
+		loadEvents(listGuardians)
+	}
+	
+	private fun loadEvents(group: List<String>) {
+//		_alerts.value = Result.Loading
+		
+//		// start load
+//		val group = context.getGuardianGroup()
+//		if (group == null) {
+//			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
+//			return
+//		}
+		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", 1, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				
@@ -102,18 +145,18 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
-				totalItemCount = t.total
-				handleOnSuccess(t)
-			}
-			
-			override fun onError(e: Throwable) {
-				currentOffset -= PAGE_LIMITS
-				_alerts.value = e.getResultError()
-			}
-		}, requestFactory)
+//		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
+//		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
+//			override fun onSuccess(t: EventResponse) {
+//				totalItemCount = t.total
+//				handleOnSuccess(t)
+//			}
+//
+//			override fun onError(e: Throwable) {
+//				currentOffset -= PAGE_LIMITS
+//				_alerts.value = e.getResultError()
+//			}
+//		}, requestFactory)
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
@@ -131,5 +174,18 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	companion object {
 		const val PAGE_LIMITS = 20
+	}
+}
+
+class GetGuardianGroupDisposable(
+		private val liveData: MutableLiveData<Result<GroupByGuardiansResponse>>)
+	: BaseDisposableSingle<GroupByGuardiansResponse>() {
+	override fun onSuccess(success: Result<GroupByGuardiansResponse>) {
+		liveData.value = success
+	
+	}
+	
+	override fun onError(e: Throwable, error: Result<GroupByGuardiansResponse>) {
+		liveData.value = error
 	}
 }

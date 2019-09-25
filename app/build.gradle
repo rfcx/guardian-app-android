@@ -37,12 +37,12 @@ android {
     productFlavors {
         production {
             manifestPlaceholders = [icon: "@mipmap/ic_launcher", roundIcon: "@mipmap/ic_launcher_round"]
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/v1/"'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
         }
         develop {
             applicationIdSuffix ".dev"
             manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org/v1/"'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org/"'
         }
     }
     lintOptions {

@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface GroupByGuardiansEndpoint {
-	@GET("guardians/group/{shortname}")
+	@GET("v1/guardians/group/{shortname}")
 	fun sendShortName(@Path("shortname") shortname: String ): Single<GroupByGuardiansResponse>
 }

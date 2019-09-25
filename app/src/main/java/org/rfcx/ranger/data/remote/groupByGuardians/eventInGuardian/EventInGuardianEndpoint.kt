@@ -6,7 +6,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface EventInGuardianEndpoint {
-	@GET("events/event/datatable")
+	// TODO DELETE This API @tree
+	@GET("v2/events/event/datatable")
 	fun sendGuardianName(@Query("guardians[]") guardianGroup: String,
 	                     @Query("limit") limit: Int = 50,
 	                     @Query("offset") offset: Int = 0): Single<EventInGuardianResponse>

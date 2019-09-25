@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -174,6 +175,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		_reviewEvent.value = Result.Loading
 		event.value?.let {
 			val requests = ReviewEventFactory(it.event_guid, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
+			Log.d("requests2", requests.toString())
 			reviewEventUseCase.execute(object : DisposableSingleObserver<ReviewEventResponse>() {
 				override fun onSuccess(t: ReviewEventResponse) {
 					_reviewEvent.value = Result.Success(requests)
