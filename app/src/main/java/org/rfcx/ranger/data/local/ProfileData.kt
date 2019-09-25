@@ -2,7 +2,8 @@ package org.rfcx.ranger.data.local
 
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.localdb.SiteGuardianDb
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.LocationTracking
+import org.rfcx.ranger.util.Preferences
 
 class ProfileData(private val preferences: Preferences) {
 	
@@ -14,7 +15,7 @@ class ProfileData(private val preferences: Preferences) {
 		val site = database.site(siteId)
 		return if (site != null) site.name else defaultSiteName.capitalize()
 	}
-
+	
 	fun getUserNickname(): String {
 		val nickname = preferences.getString(Preferences.NICKNAME)
 		return if (nickname != null && nickname.length > 0) nickname else "${getSiteName()} Ranger"
@@ -26,14 +27,14 @@ class ProfileData(private val preferences: Preferences) {
 	}
 	
 	fun getReceiveNotification(): Boolean {
-		return preferences.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS)
+		return preferences.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
 	}
 	
 	fun updateReceivingNotification(received: Boolean) {
 		preferences.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, received)
 	}
 	
-	fun hasGuardianGroup(): Boolean{
+	fun hasGuardianGroup(): Boolean {
 		val guardianGroup = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
 		return guardianGroup.isNotEmpty()
 	}

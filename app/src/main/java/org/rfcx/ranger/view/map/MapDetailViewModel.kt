@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -24,9 +25,9 @@ class MapDetailViewModel(private val reportDb: ReportDb, private val reportImage
 	fun getReportDetail(reportId: Int): LiveData<Report?> {
 		_report = reportDb.getReportAsync(reportId)
 		_report?.addChangeListener<Report> { t ->
-			// TODO consider using t.realm.copyFromRealm(t) to detach the object
-			_reportLive.value = Report(t.id, t.guid, t.value, t.site, t.reportedAt, t.latitude, t.longitude,
-					t.ageEstimateRaw, t.audioLocation, t.syncState)
+			if (t.isValid)
+				_reportLive.value = Realm.getDefaultInstance().copyFromRealm(t)
+			else _reportLive.value = null
 		} ?: run {
 			_reportLive.value = null
 		}

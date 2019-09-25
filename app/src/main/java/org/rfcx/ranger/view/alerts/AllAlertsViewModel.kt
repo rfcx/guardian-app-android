@@ -130,6 +130,6 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	}
 	
 	companion object {
-		const val PAGE_LIMITS = 10
+		const val PAGE_LIMITS = 20
 	}
 }
