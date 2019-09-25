@@ -51,11 +51,10 @@ fun String.toEventIcon(): Int {
 
 fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
 //	beginsAt ?: return ""
+	audioMeasuredAt ?: return ""
 	
-	val stamp = createdAt?.times(1000)?.let { Timestamp(it) }
-	val date = stamp?.time?.let { Date(it) }
-	
-	val eventDate = date
+	val stamp = audioMeasuredAt?.times(1000)?.let { Timestamp(it) }
+	val eventDate = stamp?.time?.let { Date(it) }
 	
 	val dayAgo = DAY
 	val daysAgo = 2 * DAY

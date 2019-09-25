@@ -14,7 +14,7 @@ interface EventService {
 	              @Query("offset") offset: Int,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
-	              @Query("guardian[]") guardianGroup: List<String>): Single<EventResponse>
+	              @Query("guardians[]") guardianGroup: List<String>): Single<EventResponse>
 	
 	@POST("v1/events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,

@@ -30,8 +30,8 @@ open class Event() : RealmObject(), Parcelable {
 	@SerializedName("value")
 	var value: String? = ""
 	
-	@SerializedName("createdAt")
-	var createdAt: Long? = null
+	@SerializedName("audioMeasuredAt")
+	var audioMeasuredAt: Long? = null
 	
 	@SerializedName("confidence")
 	var confidence: Float? = null
