@@ -9,6 +9,7 @@ import com.facebook.stetho.Stetho
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import io.realm.exceptions.RealmMigrationNeededException
+import net.danlew.android.joda.JodaTimeAndroid
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -26,6 +27,7 @@ class RangerApplication : MultiDexApplication() {
 		
 		MultiDex.install(this)
 		Realm.init(this)
+		JodaTimeAndroid.init(this)
 		
 		val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
 		val kit = Crashlytics.Builder().core(core).build()
