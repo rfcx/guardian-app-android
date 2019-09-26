@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.adapter
+package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.toEventIcon
-import org.rfcx.ranger.view.alerts.OnItemClickEventValuesListener
 
 class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
 	

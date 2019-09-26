@@ -12,6 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailActivity
 import org.rfcx.ranger.view.alerts.adapter.GroupByGuardianAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 

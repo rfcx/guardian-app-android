@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.adapter
+package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.view.LayoutInflater
 import android.view.View

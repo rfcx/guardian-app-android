@@ -38,7 +38,7 @@
 		<activity android:name=".view.profile.FeedbackActivity" />
 		<activity android:name=".view.report.ReportDetailActivity" />
 		<activity android:name=".view.profile.GuardianGroupActivity" />
-		<activity android:name=".view.alerts.GuardianListDetailActivity"></activity>
+		<activity android:name=".view.alerts.GuardianListDetail.GuardianListDetailActivity"></activity>
 		
 		<activity
 			android:name=".view.MainActivityNew"

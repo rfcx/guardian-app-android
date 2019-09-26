@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts
+package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alerts.adapter.GuardianListDetailAdapter
 import org.rfcx.ranger.view.base.BaseActivity
 
 class GuardianListDetailActivity : BaseActivity() {
