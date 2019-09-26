@@ -37,6 +37,7 @@ class GroupAlertsFragment : BaseFragment() {
 			it.success({
 				loadingProgress.visibility = View.INVISIBLE
 				groupByGuardianAdapter.items = it.guardians
+				viewModel.getEvents(it.guardians)
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
 				context.handleError(it)

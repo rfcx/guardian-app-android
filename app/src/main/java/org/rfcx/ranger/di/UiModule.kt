@@ -41,7 +41,7 @@ object UiModule {
 	val alertModule = module {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
-		viewModel { GroupAlertsViewModel(androidContext(), get()) }
+		viewModel { GroupAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { GuardianListDetailViewModel(androidContext(), get()) }
 		viewModel { AlertViewModel(get()) }
 	}
