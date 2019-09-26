@@ -7,6 +7,12 @@ data class EventsRequestFactory(
 		val limit: Int,
 		val offset: Int)
 
+data class EventsGuardianRequestFactory(
+		val groupList: List<String>,
+		val orderBy: String,
+		val dir: String,
+		val limit: Int,
+		val offset: Int)
 
 /**
  * A wrapper class for review Event

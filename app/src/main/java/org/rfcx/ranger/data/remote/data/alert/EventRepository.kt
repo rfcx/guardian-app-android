@@ -9,4 +9,5 @@ interface EventRepository {
 	
 	fun reviewEvent(requestFactory: ReviewEventFactory): Single<ReviewEventResponse>
 	
+	fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse>
 }

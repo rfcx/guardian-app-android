@@ -9,11 +9,12 @@ import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventInGuardianResponse
+import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 
 class GuardianListDetailViewModel(private val context: Context, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
-	private val _items = MutableLiveData<Result<EventInGuardianResponse>>()
-	val items: LiveData<Result<EventInGuardianResponse>> get() = _items
+	private val _items = MutableLiveData<Result<EventResponse>>()
+	val items: LiveData<Result<EventResponse>> get() = _items
 	
 	lateinit var value: String
 	
@@ -33,8 +34,13 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 	}
 	
 	fun loadEvantsGuardian() {
+		val list = ArrayList<String>()
 		_items.value = Result.Loading
-		getEventInGuardian.execute(GetEventInGuardianDisposable(_items), value)
+		
+		list.add(value)
+		
+		val requestFactory = EventsGuardianRequestFactory(list, "begins_at", "DESC", LIMITS, 0)
+		getEventInGuardian.execute(GetEventInGuardianDisposable(_items), requestFactory)
 	}
 	
 	fun makeGroupOfValue(events: List<Event>) {
@@ -100,17 +106,21 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 			eventAll.addAll(listOf(eventOfOther))
 		}
 	}
+	
+	companion object {
+		const val LIMITS = 50
+	}
 }
 
 class GetEventInGuardianDisposable(
-		private val liveData: MutableLiveData<Result<EventInGuardianResponse>>)
-	: BaseDisposableSingle<EventInGuardianResponse>() {
-	override fun onSuccess(success: Result<EventInGuardianResponse>) {
+		private val liveData: MutableLiveData<Result<EventResponse>>)
+	: BaseDisposableSingle<EventResponse>() {
+	override fun onSuccess(success: Result<EventResponse>) {
 		Log.d("success", success.toString())
 		liveData.value = success
 	}
 	
-	override fun onError(e: Throwable, error: Result<EventInGuardianResponse>) {
+	override fun onError(e: Throwable, error: Result<EventResponse>) {
 		Log.d("error", error.toString())
 		liveData.value = error
 	}
