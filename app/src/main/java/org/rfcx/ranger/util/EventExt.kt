@@ -1,12 +1,13 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
+import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.DateHelper.DAY
-import java.sql.Timestamp
+import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 fun Event.getIconRes(): Int {
 	
@@ -50,25 +51,17 @@ fun String.toEventIcon(): Int {
 }
 
 fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
-//	beginsAt ?: return ""
 	audioMeasuredAt ?: return ""
-	
-	val stamp = audioMeasuredAt?.times(1000)?.let { Timestamp(it) }
-	val eventDate = stamp?.time?.let { Date(it) }
-	
-	val dayAgo = DAY
-	val daysAgo = 2 * DAY
-	
-	val diff = Date().time - eventDate!!.time
-	
+	val date = Date(audioMeasuredAt!!)
 	val timeFormat = SimpleDateFormat(DateHelper.timeFormat, Locale.US)
+	val diff = Duration(date.time, Date().time).standardHours
 	
-	return if (diff < dayAgo) {
-		timeFormat.format(eventDate.time)
-	} else if (diff < daysAgo) {
-		"${context.getString(R.string.yesterday)} ${timeFormat.format(eventDate.time)}"
-	} else {
-		val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
-		dateFormat.format(eventDate.time)
+	return when {
+		date.isToday() -> timeFormat.format(date.time)
+		diff < 48 -> "${context.getString(R.string.yesterday)} ${timeFormat.format(date.time)}"
+		else -> {
+			val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
+			dateFormat.format(date.time)
+		}
 	}
 }
