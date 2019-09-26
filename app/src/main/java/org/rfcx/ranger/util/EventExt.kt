@@ -1,6 +1,9 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
+import android.util.Log
+import org.joda.time.Days
+import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.DateHelper.DAY
@@ -52,17 +55,14 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 	beginsAt ?: return ""
 	
 	val eventDate = DateHelper.getDateTime(beginsAt)
-	// timestamp
-	val dayAgo = DAY
-	val daysAgo = 2 * DAY
-	
-	val diff = Date().time - eventDate!!.time
+	eventDate ?: return ""
 	
 	val timeFormat = SimpleDateFormat(DateHelper.timeFormat, Locale.US)
 	
-	return if (diff < dayAgo) {
+	val diff = Duration(eventDate.time, Date().time).standardHours
+	return if (eventDate.isToday()) {
 		timeFormat.format(eventDate.time)
-	} else if (diff < daysAgo) {
+	} else if (diff < 48) {
 		"${context.getString(R.string.yesterday)} ${timeFormat.format(eventDate.time)}"
 	} else {
 		val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
