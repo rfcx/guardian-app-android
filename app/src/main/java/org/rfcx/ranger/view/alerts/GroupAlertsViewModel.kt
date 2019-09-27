@@ -1,11 +1,11 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
@@ -13,19 +13,15 @@ import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGu
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.Preferences
-import java.util.*
-import kotlin.collections.ArrayList
 
-class GroupAlertsViewModel(private val context: Context, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
+class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
 	
 	private val _items = MutableLiveData<Result<GroupByGuardiansResponse>>()
 	val items: LiveData<Result<GroupByGuardiansResponse>> get() = _items
-	
-	private val _groupsEventsGuardian = MutableLiveData<Result<ArrayList<MutableList<Event>>>>()
-	val groupsEventsGuardian: LiveData<Result<ArrayList<MutableList<Event>>>> get() = _groupsEventsGuardian
 	
 	init {
 		loadGuardianGroups()
@@ -47,7 +43,10 @@ class GroupAlertsViewModel(private val context: Context, private val groupByGuar
 		val requestFactory = EventsGuardianRequestFactory(groupGuid, "begins_at", "DESC", LIMITS, 0)
 		getEventInGuardian.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				t.events?.let { makeGroupGuardian(it) }
+				val groupGuardian = t.events?.let { groupGuardian(it) }
+				if (groupGuardian != null) {
+					countEvents(groupGuardian)
+				}
 			}
 			
 			override fun onError(e: Throwable) {
@@ -57,27 +56,43 @@ class GroupAlertsViewModel(private val context: Context, private val groupByGuar
 		}, requestFactory)
 	}
 	
-	private fun makeGroupGuardian(list: List<Event>){
-		val name = Array(list.size){ i -> list[i].guardianShortname.toString()}
-		val listShortName = removeArrayDuplicates(name)
+	private fun groupGuardian(events: List<Event>): List<GroupAlert> {
+		// find main group
+		val mainGroups = arrayListOf<String>()
+		events.distinctBy { it.guardianGUID }.mapTo(mainGroups, { it.guardianGUID!! })
 		
-		val listEvents = ArrayList<Event>()
-		val allListEvents: ArrayList<MutableList<Event>> = ArrayList()
-		
-		listShortName.forEach { shortName ->
-			list.forEach { event ->
-				if(shortName == event.guardianShortname){
-					listEvents.add(event)
+		// split group
+		val groupAlerts = arrayListOf<GroupAlert>()
+		mainGroups.forEach { guid ->
+			val eventList = arrayListOf<Event>()
+			
+			events.forEach { event ->
+				if (event.guardianGUID == guid) {
+					eventList.add(event)
 				}
 			}
-			allListEvents.addAll(listOf(listEvents))
-			listEvents.clear()
+			groupAlerts.add(GroupAlert(eventList))
 		}
-		Log.d("AllListEvents", allListEvents.size.toString())
+		return groupAlerts
 	}
 	
-	private fun removeArrayDuplicates(duplicates: Array<String>): Array<String> {
-		return Arrays.asList(*duplicates).toSet().toTypedArray()
+	private fun countEvents(groupAlert: List<GroupAlert>) {
+		val countList = ArrayList<Int>()
+		var count = 0
+		
+		groupAlert.forEach { listEvent ->
+			listEvent.events.forEach { event ->
+				val state = eventDb.getEventState(event.event_guid)
+				state?.let {
+					when (it) {
+						ReviewEventFactory.confirmEvent -> count += 1
+						ReviewEventFactory.rejectEvent -> count += 1
+					}
+				}
+			}
+			countList.add(count)
+			count = 0
+		}
 	}
 	
 	companion object {
@@ -96,3 +111,5 @@ class GetGroupByGuardianDisposable(
 		liveData.value = error
 	}
 }
+
+data class GroupAlert(val events: List<Event>)
