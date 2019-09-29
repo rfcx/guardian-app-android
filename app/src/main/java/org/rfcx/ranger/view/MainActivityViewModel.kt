@@ -8,7 +8,7 @@ import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.service.DownLoadEventWorker
+import org.rfcx.ranger.service.DownLoadEvent
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 
@@ -32,7 +32,7 @@ class MainActivityViewModel(private val profileData: ProfileData, credentialKeep
 				AllAlertsViewModel.PAGE_LIMITS, 0)
 		getEventsUseCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				DownLoadEventWorker.enqueue()
+				DownLoadEvent.enqueue()
 			}
 			
 			override fun onError(e: Throwable) {
