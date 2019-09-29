@@ -16,7 +16,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
-import org.rfcx.ranger.service.DownLoadEvent
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
@@ -77,7 +76,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		observeEventFromNotification()
 		
 		getEventFromIntentIfHave(intent)
-		DownLoadEvent.enqueue()
 	}
 	
 	override fun onStart() {

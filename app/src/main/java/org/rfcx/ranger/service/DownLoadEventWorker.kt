@@ -21,49 +21,67 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class DownLoadEvent(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 	
+	private val needTobeDownloadEvent = arrayListOf<Event>()
 	override fun doWork(): Result {
 		Log.d(TAG, "doWork")
 		val eventDb = EventDb()
 		val events = eventDb.getEventsSync()
-		val needTobeDownloadEvent = arrayListOf<Event>()
-		
-		
+		needTobeDownloadEvent.clear()
 		for (event in events) {
-			
 			val file = File(applicationContext.cacheDir, "${event.audioGUID}.opus")
 			if (!file.exists()) {
 				needTobeDownloadEvent.add(event)
 			}
-			if (needTobeDownloadEvent.size == 1) {
-				break
-			}
 		}
-		if (needTobeDownloadEvent.isNotEmpty()) {
-			Log.w("saveFile", "${needTobeDownloadEvent.count()}")
-			val downloadEvent = needTobeDownloadEvent[0]
-			val service = createRetrofit().create(AudioEndPoint::class.java)
-			downloadEvent.audio?.opus?.let {
-				val aa = service.getRawAudio(it)
-				val body = aa.execute()
-				if (body.isSuccessful) {
-					saveFile(applicationContext, body, "${downloadEvent.audioGUID}.opus")
-				}
-			}
-		}
+		
+		startDownload()
+		
 		return if (needTobeDownloadEvent.isNotEmpty()) Result.retry() else Result.success()
 	}
 	
-	private fun saveFile(context: Context, response: Response<ResponseBody>, fileName: String) {
+	private fun startDownload() {
+		if (needTobeDownloadEvent.isNotEmpty()) {
+			downLoadFile(needTobeDownloadEvent[0]) { event, _ ->
+				needTobeDownloadEvent.remove(event)
+				startDownload()
+			}
+		}
+	}
+	
+	private fun downLoadFile(event: Event, callback: (Event, Boolean) -> Unit) {
+		val service = createRetrofit().create(AudioEndPoint::class.java)
+		val aa: Call<ResponseBody>?
+		if (event.audio?.opus != null) {
+			aa = service.getRawAudio(event.audio!!.opus)
+		} else {
+			callback.invoke(event, false)
+			return
+		}
+		
+		val body = aa.execute()
+		if (body.isSuccessful) {
+			saveFile(applicationContext, body, "${event.audioGUID}.opus") {
+				callback.invoke(event, it)
+			}
+		} else {
+			callback.invoke(event, false)
+		}
+	}
+	
+	private fun saveFile(context: Context, response: Response<ResponseBody>, fileName: String,
+	                     callback: (Boolean) -> Unit) {
 		val temp = File(context.cacheDir, "$fileName _temp")
 		val file = File(context.cacheDir, fileName)
 		
 		if (file.exists()) {
+			callback.invoke(true)
 			return
 		}
 		
 		if (response.body()?.source() == null) {
+			callback.invoke(false)
 			return
 		}
 		try {
@@ -71,9 +89,11 @@ class DownLoadEvent(context: Context, workerParams: WorkerParameters) : Worker(c
 			sink.writeAll(response.body()!!.source())
 			sink.close()
 			temp.renameTo(file)
+			callback.invoke(true)
 			Log.d("saveFile", "$fileName Success")
 		} catch (e: IOException) {
 			e.printStackTrace()
+			callback.invoke(false)
 		}
 	}
 	
@@ -96,7 +116,7 @@ class DownLoadEvent(context: Context, workerParams: WorkerParameters) : Worker(c
 					.setRequiresStorageNotLow(true)
 					.setRequiresDeviceIdle(false)
 					.build()
-			val workRequest = OneTimeWorkRequestBuilder<DownLoadEvent>().setConstraints(constraints).build()
+			val workRequest = OneTimeWorkRequestBuilder<DownLoadEventWorker>().setConstraints(constraints).build()
 			WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.REPLACE, workRequest)
 		}
 		
