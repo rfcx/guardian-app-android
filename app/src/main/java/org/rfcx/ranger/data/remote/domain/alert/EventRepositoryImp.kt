@@ -27,6 +27,7 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 			
 			if (requestFactory.offset == 0) {
 				it.events?.let {
+					
 					eventDb.saveEvents(it)
 				}
 			}
