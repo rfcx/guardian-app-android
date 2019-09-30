@@ -41,7 +41,7 @@ class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.Group
 
         init {
             itemView.setOnClickListener {
-                currentGroup?.let { it1 -> mOnItemClickListener?.onItemClick(it1, name) }
+                mOnItemClickListener?.onItemClick(currentGroup, name)
             }
         }
 

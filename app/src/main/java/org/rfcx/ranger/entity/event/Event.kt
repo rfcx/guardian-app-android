@@ -67,7 +67,11 @@ open class Event() : RealmObject(), Parcelable {
 		timezone = parcel.readString()
 		isOpened = parcel.readByte() != 0.toByte()
 		audio = parcel.readParcelable(Audio::class.java.classLoader)
-		reviewerConfirmed = parcel.readValue(Boolean::class.java.classLoader) as Boolean
+		reviewerConfirmed = when(parcel.readByte()) {
+			0.toByte() -> false
+			1.toByte() -> true
+			else -> null
+		}
 		aiGuid = parcel.readString()
 	}
 	
@@ -87,7 +91,11 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeString(timezone)
 		parcel.writeByte(if (isOpened) 1 else 0)
 		parcel.writeParcelable(audio, flags)
-		parcel.writeValue(reviewerConfirmed)
+		parcel.writeValue(when(reviewerConfirmed) {
+			true -> 1
+			false -> 0
+			else -> -1
+		})
 		parcel.writeString(aiGuid)
 	}
 	

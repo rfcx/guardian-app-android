@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +47,14 @@ class GroupAlertsFragment : BaseFragment() {
 		})
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(eventsList: ArrayList<Event>, name: String) {
-				context?.let { GuardianListDetailActivity.startActivity(it) }
+			override fun onItemClick(eventsList: ArrayList<Event>?, name: String) {
+				Log.d("onItemClick","$eventsList")
+				if (eventsList != null) {
+//					context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
+					context?.let { GuardianListDetailActivity.startActivity(it, arrayListOf(eventsList[5]), name) }
+				}else{
+					context?.let { GuardianListDetailActivity.startActivity(it, null, name) }
+				}
 			}
 		}
 	}
@@ -61,5 +68,5 @@ class GroupAlertsFragment : BaseFragment() {
 }
 
 interface OnItemClickListener {
-	fun onItemClick(eventsList: ArrayList<Event>, name: String)
+	fun onItemClick(eventsList: ArrayList<Event>?, name: String)
 }
