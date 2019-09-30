@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
 import org.rfcx.ranger.entity.event.Event
@@ -35,7 +34,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		val preferenceHelper = Preferences.getInstance(context)
 		val shortName = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		_groupGuardianAlert.value = Result.Loading
-		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>(){
+		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>() {
 			override fun onSuccess(t: GroupByGuardiansResponse) {
 				getEvents(t.guardians)
 			}
@@ -47,11 +46,10 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}, shortName.toString())
 	}
 	
-	fun getEvents(list: List<Guardian>) {
+	private fun getEvents(list: List<Guardian>) {
 		val groupGuid = ArrayList<String>()
 		val groupShortname = ArrayList<String>()
 		
-		// list = [{guid, name}, {guid, name}]
 		list.forEach { guardian ->
 			groupGuid.add(guardian.guid)
 			groupShortname.add(guardian.name)
@@ -73,23 +71,20 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}, requestFactory)
 	}
 	
-	private fun handleOnSuccess(listGroupAlert: List<GroupAlert>, groupGuardian: ArrayList<String>){
+	private fun handleOnSuccess(listGroupAlert: List<GroupAlert>, groupGuardian: ArrayList<String>) {
 		val group = ArrayList<GroupGuardianAlert>()
-
+		
 		groupGuardian.forEach { guardianShortname ->
-			for(i in listGroupAlert.indices){
-				if (guardianShortname == listGroupAlert[i].events[0].guardianShortname){
-					val eventList = ArrayList<Event>()
-					listGroupAlert[i].events.forEach {
-						eventList.add(it)
-					}
-					val numEvents = listGroupAlert[i].events.size - numEvents(listGroupAlert[i].events)
-					val groupGuardianAlert = GroupGuardianAlert(eventList, numEvents, guardianShortname)
-					group.add(groupGuardianAlert)
-				}else{
-					val groupGuardianAlert = GroupGuardianAlert(null, null, guardianShortname)
-					group.add(groupGuardianAlert)
-				}
+			val filters = listGroupAlert.filter { it.events[0].guardianShortname == guardianShortname }
+			if (filters.isNotEmpty()) {
+				val eventList = ArrayList<Event>()
+				filters[0].events.forEach { eventList.add(it) }
+				val numEvents = filters[0].events.size - numEvents(filters[0].events)
+				val groupGuardianAlert = GroupGuardianAlert(eventList, numEvents, guardianShortname)
+				group.add(groupGuardianAlert)
+			} else {
+				val groupGuardianAlert = GroupGuardianAlert(null, null, guardianShortname)
+				group.add(groupGuardianAlert)
 			}
 		}
 		_groupGuardianAlert.value = Result.Success(group)
@@ -117,9 +112,9 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private fun numEvents(groupAlert: List<Event>): Int {
 		var count = 0
 		groupAlert.forEach { event ->
-
+			
 			val state = eventDb.getEventState(event.event_guid)
-			if(state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent){
+			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) {
 				count += 1
 			}
 		}
