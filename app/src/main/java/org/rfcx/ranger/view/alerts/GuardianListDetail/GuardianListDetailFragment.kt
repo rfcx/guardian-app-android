@@ -38,7 +38,7 @@ class GuardianListDetailFragment : BaseFragment() {
 		viewModel.items.observe(this, Observer { it ->
 			it.success({
 				loadingProgress.visibility = View.INVISIBLE
-				guardianListDetailAdapter.allItem = viewModel.eventAll
+				guardianListDetailAdapter.allItem = it
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
 				context.handleError(it)

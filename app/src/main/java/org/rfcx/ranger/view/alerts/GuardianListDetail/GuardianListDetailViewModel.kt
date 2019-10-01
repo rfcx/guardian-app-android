@@ -1,20 +1,17 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
-import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 
-class GuardianListDetailViewModel(private val context: Context, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
-	private val _items = MutableLiveData<Result<ArrayList<MutableList<Event>>>>()
-	val items: LiveData<Result<ArrayList<MutableList<Event>>>> get() = _items
+class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb) : ViewModel() {
+	private val _items = MutableLiveData<Result<ArrayList<GuardianListDetail>>>()
+	val items: LiveData<Result<ArrayList<GuardianListDetail>>> get() = _items
 	
 	lateinit var value: String
 	
@@ -92,6 +89,29 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 		if (eventOfOther.isNotEmpty()) {
 			eventAll.addAll(listOf(eventOfOther))
 		}
-		_items.value = Result.Success(eventAll)
+		addList(eventAll)
+	}
+	
+	private fun numEvents(groupAlert: List<Event>): Int {
+		var count = 0
+		groupAlert.forEach { event ->
+			
+			val state = eventDb.getEventState(event.event_guid)
+			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) {
+				count += 1
+			}
+		}
+		return count
+	}
+	
+	private fun addList(array: ArrayList<MutableList<Event>>){
+		val arrayList = ArrayList<GuardianListDetail>()
+		array.forEach { events ->
+			val num = events.size - numEvents(events)
+			arrayList.add(GuardianListDetail(events, num))
+		}
+		_items.value = Result.Success(arrayList)
 	}
 }
+
+data class GuardianListDetail(val events: MutableList<Event>, val unread: Int)

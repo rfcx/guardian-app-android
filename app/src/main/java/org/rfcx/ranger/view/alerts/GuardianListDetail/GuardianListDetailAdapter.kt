@@ -16,7 +16,7 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<Event>? = null
 	
-	var allItem: ArrayList<MutableList<Event>> = arrayListOf()
+	var allItem: ArrayList<GuardianListDetail> = arrayListOf()
 		set(value) {
 			field = value
 			notifyDataSetChanged()
@@ -32,7 +32,7 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 	override fun getItemCount(): Int = allItem.size
 	
 	override fun onBindViewHolder(holder: GuardianListDetailViewHolder, position: Int) {
-		holder.bind(allItem[position], position)
+		holder.bind(allItem[position].events, allItem[position].unread, position)
 	}
 	
 	inner class GuardianListDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,13 +43,14 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		private val iconAlert = itemView.ivAlertIcon
 		
 		@SuppressLint("DefaultLocale")
-		fun bind(eventList: MutableList<Event>, position: Int) {
+		fun bind(eventList: MutableList<Event>, num: Int, position: Int) {
 			eventList[0].value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
 			circleImageView.visibility = View.VISIBLE
-			if(eventList[0].value !== null){
+			if (eventList[0].value !== null) {
 				groupByGuardianTextView.text = eventList[0].value!!.capitalize()
 			}
-			numOfEventsNotOpen.text = eventList.size.toString()
+			numOfEventsNotOpen.text = num.toString()
+			
 			stutasVisibility.add(position, false)
 			
 			guardianListDetailRecycler.apply {
