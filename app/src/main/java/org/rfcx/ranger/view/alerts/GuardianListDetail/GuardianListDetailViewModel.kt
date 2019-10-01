@@ -8,6 +8,7 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.view.alerts.adapter.EventItem
 
 class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb) : ViewModel() {
 	private val _items = MutableLiveData<Result<ArrayList<GuardianListDetail>>>()
@@ -104,14 +105,34 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		return count
 	}
 	
-	private fun addList(array: ArrayList<MutableList<Event>>){
+	fun itemsEvent(list: MutableList<Event>): MutableList<EventItem> {
+		val itemsEvent = arrayListOf<EventItem>()
+		
+		list.forEach { event ->
+			val state = eventDb.getEventState(event.event_guid)
+			state?.let {
+				val result = when (it) {
+					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+					else -> EventItem.State.NONE
+				}
+				itemsEvent.add(EventItem(event, result))
+			} ?: run {
+				itemsEvent.add(EventItem(event, EventItem.State.NONE))
+			}
+		}
+		return itemsEvent
+	}
+	
+	private fun addList(array: ArrayList<MutableList<Event>>) {
 		val arrayList = ArrayList<GuardianListDetail>()
 		array.forEach { events ->
 			val num = events.size - numEvents(events)
-			arrayList.add(GuardianListDetail(events, num))
+			val item = itemsEvent(events)
+			arrayList.add(GuardianListDetail(item, num))
 		}
 		_items.value = Result.Success(arrayList)
 	}
 }
 
-data class GuardianListDetail(val events: MutableList<Event>, val unread: Int)
+data class GuardianListDetail(val events: MutableList<EventItem>, val unread: Int)

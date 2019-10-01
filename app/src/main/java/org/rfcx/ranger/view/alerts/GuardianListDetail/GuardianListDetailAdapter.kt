@@ -10,11 +10,12 @@ import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.view.alerts.adapter.EventItem
 
 class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
 	
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
-	var currentEventList: MutableList<Event>? = null
+	var currentEventList: MutableList<EventItem>? = null
 	
 	var allItem: ArrayList<GuardianListDetail> = arrayListOf()
 		set(value) {
@@ -45,8 +46,8 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		private val iconAlert = itemView.ivAlertIcon
 		
 		@SuppressLint("DefaultLocale")
-		fun bind(eventList: MutableList<Event>, num: Int, position: Int) {
-			eventList[0].value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
+		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int) {
+			eventList[0].event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
 			upChevronImageView.visibility = View.INVISIBLE
 			
 			if (num == 0) {
@@ -62,8 +63,8 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 			
 			numOfEventsNotOpen.text = num.toString()
 			
-			if (eventList[0].value !== null) {
-				groupByGuardianTextView.text = eventList[0].value!!.capitalize()
+			if (eventList[0].event.value !== null) {
+				groupByGuardianTextView.text = eventList[0].event.value!!.capitalize()
 			}
 			
 			stutasVisibility.add(position, false)

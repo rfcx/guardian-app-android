@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.alerts.EmptyAlertFragment
+import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.base.BaseActivity
 
 class GuardianListDetailActivity : BaseActivity() {
@@ -61,5 +62,5 @@ class GuardianListDetailActivity : BaseActivity() {
 }
 
 interface OnItemClickEventValuesListener {
-	fun onItemClick(event: MutableList<Event>)
+	fun onItemClick(event: MutableList<EventItem>)
 }
