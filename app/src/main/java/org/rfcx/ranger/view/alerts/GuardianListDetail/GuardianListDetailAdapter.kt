@@ -13,7 +13,6 @@ import org.rfcx.ranger.util.toEventIcon
 
 class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
 	
-	private val viewPool = RecyclerView.RecycledViewPool()
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<Event>? = null
 	
@@ -56,7 +55,6 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
 				adapter = EventsInEventNameAdater(eventList)
-				setRecycledViewPool(viewPool)
 			}
 			
 			itemView.setOnClickListener {

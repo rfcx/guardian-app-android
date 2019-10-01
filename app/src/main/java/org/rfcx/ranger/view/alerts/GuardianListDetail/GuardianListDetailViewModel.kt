@@ -13,8 +13,8 @@ import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 
 class GuardianListDetailViewModel(private val context: Context, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
-	private val _items = MutableLiveData<Result<EventResponse>>()
-	val items: LiveData<Result<EventResponse>> get() = _items
+	private val _items = MutableLiveData<Result<ArrayList<MutableList<Event>>>>()
+	val items: LiveData<Result<ArrayList<MutableList<Event>>>> get() = _items
 	
 	lateinit var value: String
 	
@@ -29,21 +29,8 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 	
 	var eventAll: ArrayList<MutableList<Event>> = ArrayList()
 	
-	fun setEventGuid(value: String) {
-		this.value = value
-	}
-	
-	fun loadEvantsGuardian() {
-		val list = ArrayList<String>()
-		_items.value = Result.Loading
-		
-		list.add(value)
-		
-		val requestFactory = EventsGuardianRequestFactory(list, "begins_at", "DESC", LIMITS, 0)
-		getEventInGuardian.execute(GetEventInGuardianDisposable(_items), requestFactory)
-	}
-	
 	fun makeGroupOfValue(events: List<Event>) {
+		_items.value = Result.Loading
 		events.forEach { event ->
 			when {
 				event.value == "amazon" -> {
@@ -73,7 +60,7 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 		groupAll()
 	}
 	
-	fun groupAll() {
+	private fun groupAll() {
 		if (eventOfAmazon.isNotEmpty()) {
 			eventAll.addAll(listOf(eventOfAmazon))
 		}
@@ -105,23 +92,6 @@ class GuardianListDetailViewModel(private val context: Context, private val getE
 		if (eventOfOther.isNotEmpty()) {
 			eventAll.addAll(listOf(eventOfOther))
 		}
-	}
-	
-	companion object {
-		const val LIMITS = 50
-	}
-}
-
-class GetEventInGuardianDisposable(
-		private val liveData: MutableLiveData<Result<EventResponse>>)
-	: BaseDisposableSingle<EventResponse>() {
-	override fun onSuccess(success: Result<EventResponse>) {
-		Log.d("success", success.toString())
-		liveData.value = success
-	}
-	
-	override fun onError(e: Throwable, error: Result<EventResponse>) {
-		Log.d("error", error.toString())
-		liveData.value = error
+		_items.value = Result.Success(eventAll)
 	}
 }

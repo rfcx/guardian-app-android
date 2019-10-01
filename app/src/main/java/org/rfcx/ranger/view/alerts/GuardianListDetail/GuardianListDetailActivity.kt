@@ -22,7 +22,7 @@ class GuardianListDetailActivity : BaseActivity() {
 			Log.d("GuardianListDetail", "$event")
 			
 			supportFragmentManager.beginTransaction()
-					.replace(guardianListDetailContainer.id, GuardianListDetailFragment(),
+					.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(event),
 							"GuardianListDetailFragment").commit()
 		} else {
 			supportFragmentManager.beginTransaction()

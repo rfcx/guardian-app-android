@@ -51,7 +51,6 @@ class GroupAlertsFragment : BaseFragment() {
 				Log.d("onItemClick","$eventsList")
 				if (eventsList != null) {
 					context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
-//					context?.let { GuardianListDetailActivity.startActivity(it, arrayListOf(eventsList[5]), name) }
 				}else{
 					context?.let { GuardianListDetailActivity.startActivity(it, null, name) }
 				}
