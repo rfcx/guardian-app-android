@@ -91,14 +91,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onResume() {
 		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
-		Log.d("MapFragment", "registerReceiver")
 		super.onResume()
 		analytics?.trackScreen(Screen.MAP)
 	}
 	
 	override fun onPause() {
 		activity?.unregisterReceiver(airplaneModeReceiver)
-		Log.d("MapFragment", "unregisterReceiver")
 		super.onPause()
 	}
 	
@@ -135,6 +133,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
 					googleMap?.isMyLocationEnabled = isAllowed
+					googleMap?.uiSettings?.isMyLocationButtonEnabled = true
 					getLocation()
 				} else {
 					setDisplay()
