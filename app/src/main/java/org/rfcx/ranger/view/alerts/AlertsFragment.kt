@@ -18,11 +18,11 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.base.BaseFragment
 
-class AlertsFragment : BaseFragment(), AlertListener {
+class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener {
 	
 	private val alertViewModel: AlertViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
-
+	
 	private val observeGuardianGroup = Observer<Boolean> {
 		if (it) {
 			val tabSelected = alertsTabLayout.selectedTabPosition
@@ -109,6 +109,10 @@ class AlertsFragment : BaseFragment(), AlertListener {
 		}
 	}
 	
+	override fun emptyAlert() {
+		startFragment(EmptyAlertFragment.newInstance(), EmptyAlertFragment.tag)
+	}
+	
 	private fun startFragment(fragment: Fragment, tag: String) {
 		val startFragment = if (!alertViewModel.hasGuardianGroup) {
 			observeSettingGuardianGroup() // start observe setting guardian group
@@ -139,4 +143,8 @@ class AlertsFragment : BaseFragment(), AlertListener {
 			}
 		}
 	}
+}
+
+interface AlertsNewInstanceListener {
+	fun emptyAlert()
 }

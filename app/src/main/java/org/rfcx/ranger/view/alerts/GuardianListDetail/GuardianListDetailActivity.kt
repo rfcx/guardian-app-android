@@ -7,6 +7,7 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.view.alerts.EmptyAlertFragment
 import org.rfcx.ranger.view.base.BaseActivity
 
 class GuardianListDetailActivity : BaseActivity() {
@@ -19,13 +20,15 @@ class GuardianListDetailActivity : BaseActivity() {
 		if (intent?.hasExtra("event") == true) {
 			val event = intent.getParcelableArrayListExtra<Event>("event")
 			Log.d("GuardianListDetail", "$event")
-			Log.d("GuardianListDetail", "$event[]")
+			
+			supportFragmentManager.beginTransaction()
+					.replace(guardianListDetailContainer.id, GuardianListDetailFragment(),
+							"GuardianListDetailFragment").commit()
+		} else {
+			supportFragmentManager.beginTransaction()
+					.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
+							"EmptyAlertFragment").commit()
 		}
-		
-		supportFragmentManager.beginTransaction()
-				.replace(guardianListDetailContainer.id, GuardianListDetailFragment(),
-						"GuardianListDetailFragment").commit()
-		
 	}
 	
 	private fun setupToolbar() {
@@ -34,9 +37,9 @@ class GuardianListDetailActivity : BaseActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-//			if (intent?.hasExtra("name") == true) {
-//				title = intent.getStringExtra("name")
-//			}
+			if (intent?.hasExtra("name") == true) {
+				title = intent.getStringExtra("name")
+			}
 		}
 	}
 	
