@@ -14,11 +14,14 @@ import org.rfcx.ranger.view.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
+import org.rfcx.ranger.view.alert.AlertListener
+import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 
-class GuardianListDetailFragment : BaseFragment() {
+class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
 	private val viewModel: GuardianListDetailViewModel by viewModel()
-	private val guardianListDetailAdapter by lazy { GuardianListDetailAdapter() }
+	private val guardianListDetailAdapter by lazy { GuardianListDetailAdapter(this) }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_guardian_list_detail, container, false)
@@ -46,7 +49,29 @@ class GuardianListDetailFragment : BaseFragment() {
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
+	}
+	
+	override fun onClickedAlert(event: Event) {
+		Log.d("onClickedAlert","${event.value}")
+		showDetail(event)
+	}
+	
+	override fun showDetail(event: Event) {
+		Log.d("onClickedAlert","showDetail ${event.value}")
 		
+		val currentShowing =
+				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
+		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
+			currentShowing.dismissAllowingStateLoss()
+		}
+		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+				AlertBottomDialogFragment.tag)	}
+	
+	override fun onReviewed(eventGuID: String, reviewValue: String) {
+		val all = childFragmentManager.findFragmentByTag(GuardianListDetailFragment.tag)
+		if (all is GuardianListDetailFragment) {
+			all.onReviewed(eventGuID, reviewValue)
+		}
 	}
 	
 	companion object {

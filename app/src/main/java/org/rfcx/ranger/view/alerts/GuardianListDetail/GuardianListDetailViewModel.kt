@@ -26,6 +26,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	private var eventOfMismatch: MutableList<Event> = mutableListOf()
 	
 	var eventAll: ArrayList<MutableList<Event>> = ArrayList()
+	private var _alertsList: List<GuardianListDetail> = listOf()
 	
 	fun makeGroupOfValue(events: List<Event>) {
 		_items.value = Result.Loading
@@ -107,7 +108,6 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	
 	fun itemsEvent(list: MutableList<Event>): MutableList<EventItem> {
 		val itemsEvent = arrayListOf<EventItem>()
-		
 		list.forEach { event ->
 			val state = eventDb.getEventState(event.event_guid)
 			state?.let {
@@ -131,6 +131,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 			val item = itemsEvent(events)
 			arrayList.add(GuardianListDetail(item, num))
 		}
+		_alertsList = arrayList
 		_items.value = Result.Success(arrayList)
 	}
 }

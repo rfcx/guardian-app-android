@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
-class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
+class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
 	
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<EventItem>? = null
@@ -71,7 +71,7 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 			
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
-				adapter = EventsInEventNameAdater(eventList)
+				adapter = EventsInEventNameAdater(eventList, listener)
 			}
 			
 			itemView.setOnClickListener {

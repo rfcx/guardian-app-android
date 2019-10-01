@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_events_in_event_name.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.timeAgoDisplay
+import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
-class EventsInEventNameAdater(private val items: MutableList<EventItem>) : ListAdapter<EventItem, EventsInEventNameAdater.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
+class EventsInEventNameAdater(private val items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, EventsInEventNameAdater.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsInEventNameViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_events_in_event_name, parent, false)
@@ -21,7 +22,9 @@ class EventsInEventNameAdater(private val items: MutableList<EventItem>) : ListA
 	override fun getItemCount(): Int = items.size
 	
 	override fun onBindViewHolder(holder: EventsInEventNameViewHolder, position: Int) {
-		holder.bind(items[position])
+		val item = items[position]
+		holder.bind(item)
+		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
 	}
 	
 	class EventsInEventNameDiffUtil : DiffUtil.ItemCallback<EventItem>() {
@@ -43,12 +46,6 @@ class EventsInEventNameAdater(private val items: MutableList<EventItem>) : ListA
 		private val reviewedImageView = itemView.reviewedImageView
 		
 		var currentEvent: EventItem? = null
-		
-		init {
-			itemView.setOnClickListener {
-				// TODO open AlertBottomDialog
-			}
-		}
 		
 		fun bind(item: EventItem) {
 			eventsInEventsTextView.text = item.event.timeAgoDisplay(itemView.context)
