@@ -26,6 +26,29 @@
 		tools:text="Vehicle" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/downChevronImageView"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
+		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:src="@drawable/ic_down_chevron"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toBottomOf="@id/guardianListDetailTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@id/guardianListDetailTextView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/upChevronImageView"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
+		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:src="@drawable/ic_down_chevron"
+		android:visibility="invisible"
+		android:rotationX="180"
+		app:layout_constraintBottom_toBottomOf="@id/guardianListDetailTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@id/guardianListDetailTextView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/circleImageView"
 		android:layout_width="20dp"
 		android:layout_height="20dp"
@@ -40,7 +63,6 @@
 		style="@style/RangerText.Caption"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="0"
 		android:textColor="@color/text_white"
 		app:layout_constraintBottom_toBottomOf="@id/circleImageView"
 		app:layout_constraintEnd_toEndOf="@id/circleImageView"

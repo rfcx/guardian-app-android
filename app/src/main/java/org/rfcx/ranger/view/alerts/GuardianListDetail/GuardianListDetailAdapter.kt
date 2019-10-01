@@ -40,16 +40,31 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 		private val circleImageView = itemView.circleImageView
 		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
 		private val guardianListDetailRecycler = itemView.guardianListDetailRecycler
+		private val downChevronImageView = itemView.downChevronImageView
+		private val upChevronImageView = itemView.upChevronImageView
 		private val iconAlert = itemView.ivAlertIcon
 		
 		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<Event>, num: Int, position: Int) {
 			eventList[0].value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
-			circleImageView.visibility = View.VISIBLE
+			upChevronImageView.visibility = View.INVISIBLE
+			
+			if (num == 0) {
+				circleImageView.visibility = View.INVISIBLE
+				numOfEventsNotOpen.visibility = View.INVISIBLE
+				downChevronImageView.visibility = View.VISIBLE
+				
+			} else {
+				circleImageView.visibility = View.VISIBLE
+				numOfEventsNotOpen.visibility = View.VISIBLE
+				downChevronImageView.visibility = View.INVISIBLE
+			}
+			
+			numOfEventsNotOpen.text = num.toString()
+			
 			if (eventList[0].value !== null) {
 				groupByGuardianTextView.text = eventList[0].value!!.capitalize()
 			}
-			numOfEventsNotOpen.text = num.toString()
 			
 			stutasVisibility.add(position, false)
 			
@@ -62,9 +77,26 @@ class GuardianListDetailAdapter : RecyclerView.Adapter<GuardianListDetailAdapter
 				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 				if (stutasVisibility[position]) {
 					guardianListDetailRecycler.visibility = View.GONE
+					
+					if (num == 0) {
+						circleImageView.visibility = View.INVISIBLE
+						numOfEventsNotOpen.visibility = View.INVISIBLE
+						downChevronImageView.visibility = View.VISIBLE
+						upChevronImageView.visibility = View.INVISIBLE
+						
+					} else {
+						circleImageView.visibility = View.VISIBLE
+						numOfEventsNotOpen.visibility = View.VISIBLE
+						downChevronImageView.visibility = View.INVISIBLE
+						upChevronImageView.visibility = View.INVISIBLE
+					}
 					stutasVisibility.add(position, false)
 				} else {
 					guardianListDetailRecycler.visibility = View.VISIBLE
+					circleImageView.visibility = View.INVISIBLE
+					numOfEventsNotOpen.visibility = View.INVISIBLE
+					downChevronImageView.visibility = View.INVISIBLE
+					upChevronImageView.visibility = View.VISIBLE
 					stutasVisibility.add(position, true)
 				}
 			}
