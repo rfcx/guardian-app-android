@@ -64,7 +64,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", AllAlertsViewModel.PAGE_LIMITS, 0)
+		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				val groupGuardian = t.events?.let { groupGuardian(it) }
