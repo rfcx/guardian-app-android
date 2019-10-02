@@ -8,6 +8,7 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
 class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb) : ViewModel() {
@@ -26,7 +27,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	private var eventOfMismatch: MutableList<Event> = mutableListOf()
 	
 	var eventAll: ArrayList<MutableList<Event>> = ArrayList()
-	private var _alertsList: List<GuardianListDetail> = listOf()
+	private var _alertsList: List<EventItem> = listOf()
 	
 	fun makeGroupOfValue(events: List<Event>) {
 		_items.value = Result.Loading
@@ -121,7 +122,28 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 				itemsEvent.add(EventItem(event, EventItem.State.NONE))
 			}
 		}
+		_alertsList = itemsEvent
 		return itemsEvent
+	}
+	
+	fun onEventReviewed(eventGuid: String, reviewValue: String) {
+		val eventItem = _alertsList.firstOrNull { it.event.event_guid == eventGuid }
+		if (eventItem != null) {
+			eventItem.state = when (reviewValue) {
+				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+				else -> EventItem.State.NONE
+			}
+			_alertsList.replace(eventItem) { it.event.event_guid == eventGuid }
+		}
+		
+		val arrayList = ArrayList<GuardianListDetail>()
+		eventAll.forEach { events ->
+			val num = events.size - numEvents(events)
+			val item = itemsEvent(events)
+			arrayList.add(GuardianListDetail(item, num))
+		}
+		_items.value = Result.Success(arrayList)
 	}
 	
 	private fun addList(array: ArrayList<MutableList<Event>>) {
@@ -131,7 +153,6 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 			val item = itemsEvent(events)
 			arrayList.add(GuardianListDetail(item, num))
 		}
-		_alertsList = arrayList
 		_items.value = Result.Success(arrayList)
 	}
 }

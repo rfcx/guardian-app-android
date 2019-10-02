@@ -1,22 +1,21 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
-import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.view.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
+import org.rfcx.ranger.view.base.BaseFragment
 
 class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
@@ -52,26 +51,21 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 	}
 	
 	override fun onClickedAlert(event: Event) {
-		Log.d("onClickedAlert","${event.value}")
 		showDetail(event)
 	}
 	
 	override fun showDetail(event: Event) {
-		Log.d("onClickedAlert","showDetail ${event.value}")
-		
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissAllowingStateLoss()
 		}
 		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
-				AlertBottomDialogFragment.tag)	}
+				AlertBottomDialogFragment.tag)
+	}
 	
 	override fun onReviewed(eventGuID: String, reviewValue: String) {
-		val all = childFragmentManager.findFragmentByTag(GuardianListDetailFragment.tag)
-		if (all is GuardianListDetailFragment) {
-			all.onReviewed(eventGuID, reviewValue)
-		}
+		viewModel.onEventReviewed(eventGuID, reviewValue)
 	}
 	
 	companion object {

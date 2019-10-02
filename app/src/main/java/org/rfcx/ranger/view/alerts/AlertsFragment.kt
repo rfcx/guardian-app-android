@@ -39,6 +39,7 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 		initView()
 		observeAlert()
 		getEventExtra()
+		alertViewModel.getEvents()
 	}
 	
 	override fun onResume() {
@@ -101,7 +102,7 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	private fun startTabSelected(position: Int) {
 		when (position) {
 			0 -> {
-				startFragment(GroupAlertsFragment(), GroupAlertsFragment.tag)
+				startFragment(GroupAlertsFragment.newInstance(), GroupAlertsFragment.tag)
 			}
 			1 -> {
 				startFragment(AllAlertsFragment.newInstance(), AllAlertsFragment.tag)

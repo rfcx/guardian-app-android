@@ -43,7 +43,7 @@ object UiModule {
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 		viewModel { GroupAlertsViewModel(androidContext(), get(), get(), get()) }
 		viewModel { GuardianListDetailViewModel(androidContext(), get()) }
-		viewModel { AlertViewModel(get()) }
+		viewModel { AlertViewModel(androidContext(), get(), get()) }
 	}
 	
 	val profileModule = module {
