@@ -2,23 +2,26 @@ package org.rfcx.ranger.view.alerts
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
-import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
-import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
-import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.entity.event.*
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.getGuardianGroup
+import org.rfcx.ranger.util.getResultError
 
-class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
+class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
+//class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
 	
 	private val _items = MutableLiveData<GroupByGuardiansResponse>()
 	val items: LiveData<GroupByGuardiansResponse> get() = _items
@@ -26,21 +29,21 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private val _groupGuardianAlert = MutableLiveData<Result<List<GroupGuardianAlert>>>()
 	val groupGuardianAlert: LiveData<Result<List<GroupGuardianAlert>>> get() = _groupGuardianAlert
 	
-	init {
-		loadGuardianGroups()
-	}
+	private var _alertsList: List<GroupGuardianAlert> = listOf()
 	
-	private fun loadGuardianGroups() {
+	fun loadGuardianGroups() {
+		_groupGuardianAlert.value = Result.Loading
+		getEventsCache()
+		
 		val preferenceHelper = Preferences.getInstance(context)
 		val shortName = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
-		_groupGuardianAlert.value = Result.Loading
 		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>() {
 			override fun onSuccess(t: GroupByGuardiansResponse) {
 				getEvents(t.guardians)
 			}
 			
 			override fun onError(e: Throwable) {
-				// TODO error @tree
+				_groupGuardianAlert.value = e.getResultError()
 			}
 			
 		}, shortName.toString())
@@ -49,14 +52,20 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private fun getEvents(list: List<Guardian>) {
 		val groupGuid = ArrayList<String>()
 		val groupShortname = ArrayList<String>()
-		
+
 		list.forEach { guardian ->
 			groupGuid.add(guardian.guid)
 			groupShortname.add(guardian.name)
 		}
 		
-		val requestFactory = EventsGuardianRequestFactory(groupGuid, "begins_at", "DESC", LIMITS, 0)
-		getEventInGuardian.execute(object : DisposableSingleObserver<EventResponse>() {
+		val group = context.getGuardianGroup()
+		if (group == null) {
+			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
+			return
+		}
+		
+		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", AllAlertsViewModel.PAGE_LIMITS, 0)
+		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				val groupGuardian = t.events?.let { groupGuardian(it) }
 				if (groupGuardian != null) {
@@ -65,10 +74,25 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			}
 			
 			override fun onError(e: Throwable) {
-				// TODO onError @tree
+				_groupGuardianAlert.value = e.getResultError()
+				
 			}
-			
 		}, requestFactory)
+		
+//		val requestFactory = EventsGuardianRequestFactory(groupGuid, "begins_at", "DESC", LIMITS, 0)
+//		getEventInGuardian.execute(object : DisposableSingleObserver<EventResponse>() {
+//			override fun onSuccess(t: EventResponse) {
+//				val groupGuardian = t.events?.let { groupGuardian(it) }
+//				if (groupGuardian != null) {
+//					handleOnSuccess(groupGuardian, groupShortname)
+//				}
+//			}
+//
+//			override fun onError(e: Throwable) {
+//				_groupGuardianAlert.value = e.getResultError()
+//			}
+//
+//		}, requestFactory)
 	}
 	
 	private fun handleOnSuccess(listGroupAlert: List<GroupAlert>, groupGuardian: ArrayList<String>) {
@@ -76,6 +100,32 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		
 		groupGuardian.forEach { guardianShortname ->
 			val filters = listGroupAlert.filter { it.events[0].guardianShortname == guardianShortname }
+			if (filters.isNotEmpty()) {
+				val eventList = ArrayList<Event>()
+				filters[0].events.forEach { eventList.add(it) }
+				val numEvents = filters[0].events.size - numEvents(filters[0].events)
+				val groupGuardianAlert = GroupGuardianAlert(eventList, numEvents, guardianShortname)
+				group.add(groupGuardianAlert)
+			} else {
+				val groupGuardianAlert = GroupGuardianAlert(null, null, guardianShortname)
+				group.add(groupGuardianAlert)
+			}
+		}
+		_alertsList = group
+		_groupGuardianAlert.value = Result.Success(group)
+	}
+	
+	private fun getEventsCache() {
+		val cacheEvents = eventDb.getEvents()
+		val groupGuardian = groupGuardian(cacheEvents)
+		
+		val mainGroups = arrayListOf<String>()
+		cacheEvents.distinctBy { it.guardianShortname }.mapTo(mainGroups, { it.guardianShortname!! })
+		
+		val group = ArrayList<GroupGuardianAlert>()
+		
+		mainGroups.forEach { guardianShortname ->
+			val filters = groupGuardian.filter { it.events[0].guardianShortname == guardianShortname }
 			if (filters.isNotEmpty()) {
 				val eventList = ArrayList<Event>()
 				filters[0].events.forEach { eventList.add(it) }
