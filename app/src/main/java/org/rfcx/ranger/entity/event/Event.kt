@@ -43,7 +43,6 @@ open class Event() : RealmObject(), Parcelable {
 	@SerializedName("timezone")
 	var timezone: String? = ""
 	
-	var isOpened: Boolean = false
 	@SerializedName("audio")
 	var audio: Audio? = null
 	@SerializedName("reviewer_confirmed")
@@ -65,7 +64,6 @@ open class Event() : RealmObject(), Parcelable {
 		guardianShortname = parcel.readString()
 		site = parcel.readString()
 		timezone = parcel.readString()
-		isOpened = parcel.readByte() != 0.toByte()
 		audio = parcel.readParcelable(Audio::class.java.classLoader)
 		reviewerConfirmed = when (parcel.readInt()) {
 			0 -> false
@@ -89,7 +87,6 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeString(guardianShortname)
 		parcel.writeString(site)
 		parcel.writeString(timezone)
-		parcel.writeByte(if (isOpened) 1 else 0)
 		parcel.writeParcelable(audio, flags)
 		parcel.writeInt(when (reviewerConfirmed) {
 			true -> 1

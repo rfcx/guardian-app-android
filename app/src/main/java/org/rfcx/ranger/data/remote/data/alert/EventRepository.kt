@@ -5,9 +5,11 @@ import org.rfcx.ranger.entity.event.*
 
 interface EventRepository {
 	
-	fun getEventList(requestFactory: EventsRequestFactory): Single<EventResponse>
+	fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventResponse>
 	
 	fun reviewEvent(requestFactory: ReviewEventFactory): Single<ReviewEventResponse>
 	
 	fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse>
+	
+	fun getLocalEvents(): Single<List<Event>>
 }

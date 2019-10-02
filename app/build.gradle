@@ -120,6 +120,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
+    implementation "com.squareup.okio:okio:2.4.0"
+
     //Joda-datetime
     implementation 'net.danlew:android.joda:2.10.3'
 

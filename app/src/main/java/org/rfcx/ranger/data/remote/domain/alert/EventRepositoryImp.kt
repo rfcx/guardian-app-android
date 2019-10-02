@@ -14,11 +14,22 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 		return eventService.getEventsGuardian(requestFactory.groupList, requestFactory.orderBy,
 				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
 			it
-		}	}
+		}
+	}
 	
-	override fun getEventList(requestFactory: EventsRequestFactory): Single<EventResponse> {
+	override fun getLocalEvents(): Single<List<Event>> {
+		return Single.just(eventDb.getEvents())
+	}
+	
+	override fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventResponse> {
 		return eventService.getEvents(requestFactory.guardianGroup, requestFactory.orderBy,
-				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
+				requestFactory.dir, requestFactory.limit, requestFactory.offset).map { it ->
+			
+			if (requestFactory.offset == 0) {
+				it.events?.let {
+					eventDb.saveEvents(it)
+				}
+			}
 			it
 		}
 	}

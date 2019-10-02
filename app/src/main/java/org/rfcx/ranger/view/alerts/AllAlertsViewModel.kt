@@ -49,7 +49,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	fun loadEvents() {
 		_alerts.value = Result.Loading
-		
+		getEventsCache()
 		// start load
 		val group = context.getGuardianGroup()
 		if (group == null) {
@@ -116,6 +116,26 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}, requestFactory)
 	}
 	
+	private fun getEventsCache() {
+		val cacheEvents = eventDb.getEvents()
+		val items: List<EventItem> = cacheEvents.map { event ->
+			val state = eventDb.getEventState(event.event_guid)
+			state?.let {
+				val result = when (it) {
+					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+					else -> EventItem.State.NONE
+				}
+				EventItem(event, result)
+			} ?: run {
+				(EventItem(event, EventItem.State.NONE))
+			}
+		}
+		if (items.isNotEmpty())
+			_alerts.value = Result.Success(items)
+		
+	}
+	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
 		val eventItem = _alertsList.firstOrNull { it.event.event_guid == eventGuid }
 		if (eventItem != null) {
@@ -124,12 +144,12 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) {it.event.event_guid == eventGuid}
+			_alertsList.replace(eventItem) { it.event.event_guid == eventGuid }
 		}
 		_alerts.value = Result.Success(_alertsList)
 	}
 	
 	companion object {
-		const val PAGE_LIMITS = 20
+		const val PAGE_LIMITS = 50
 	}
 }
