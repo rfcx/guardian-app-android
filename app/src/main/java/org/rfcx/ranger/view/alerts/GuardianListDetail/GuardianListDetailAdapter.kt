@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 	
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<EventItem>? = null
+	var updateList: Boolean = false
 	
 	var allItem: ArrayList<GuardianListDetail> = arrayListOf()
 		set(value) {
@@ -36,39 +38,81 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 		holder.bind(allItem[position].events, allItem[position].unread, position)
 	}
 	
+	fun handleShowDropDown(itemView: View, state: State){
+		val circleImageView = itemView.circleImageView
+		val numOfEventsNotOpen = itemView.numOfEventsNotOpen
+		val downChevronImageView = itemView.downChevronImageView
+		val upChevronImageView = itemView.upChevronImageView
+		
+		when (state) {
+			State.SHOW_UP -> {
+				circleImageView.visibility = View.INVISIBLE
+				numOfEventsNotOpen.visibility = View.INVISIBLE
+				downChevronImageView.visibility = View.INVISIBLE
+				upChevronImageView.visibility = View.VISIBLE
+			}
+			State.SHOW_DOWN -> {
+				circleImageView.visibility = View.INVISIBLE
+				numOfEventsNotOpen.visibility = View.INVISIBLE
+				upChevronImageView.visibility = View.INVISIBLE
+				downChevronImageView.visibility = View.VISIBLE
+			}
+			State.SHOW_NUM -> {
+				circleImageView.visibility = View.VISIBLE
+				numOfEventsNotOpen.visibility = View.VISIBLE
+				upChevronImageView.visibility = View.INVISIBLE
+				downChevronImageView.visibility = View.INVISIBLE
+			}
+		}
+	}
+	
+	fun handleVisibilityList(itemView: View, state: Boolean, num: Int, position: Int ){
+		val guardianListDetailRecycler = itemView.guardianListDetailRecycler
+		
+		if (state) {
+			guardianListDetailRecycler.visibility = View.GONE
+			if (num == 0) {
+				handleShowDropDown(itemView, State.SHOW_UP)
+			} else {
+				handleShowDropDown(itemView, State.SHOW_NUM)
+			}
+			stutasVisibility[position] = false
+			updateList = true
+		} else {
+			guardianListDetailRecycler.visibility = View.VISIBLE
+			handleShowDropDown(itemView, State.SHOW_DOWN)
+			stutasVisibility[position] = true
+			updateList = true
+		}
+	}
+	
 	inner class GuardianListDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val groupByGuardianTextView = itemView.guardianListDetailTextView
-		private val circleImageView = itemView.circleImageView
 		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
+		
 		private val guardianListDetailRecycler = itemView.guardianListDetailRecycler
-		private val downChevronImageView = itemView.downChevronImageView
-		private val upChevronImageView = itemView.upChevronImageView
+
 		private val iconAlert = itemView.ivAlertIcon
 		
 		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int) {
 			eventList[0].event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
-			upChevronImageView.visibility = View.INVISIBLE
+			numOfEventsNotOpen.text = num.toString()
 			
-			if (num == 0) {
-				circleImageView.visibility = View.INVISIBLE
-				numOfEventsNotOpen.visibility = View.INVISIBLE
-				downChevronImageView.visibility = View.VISIBLE
-				
-			} else {
-				circleImageView.visibility = View.VISIBLE
-				numOfEventsNotOpen.visibility = View.VISIBLE
-				downChevronImageView.visibility = View.INVISIBLE
+			when {
+				updateList -> {
+					handleVisibilityList(itemView, !stutasVisibility[position], num, position)
+				}
+				!updateList -> stutasVisibility.add(position, false)
+				num == 0 -> handleShowDropDown(itemView, State.SHOW_DOWN)
+				else -> handleShowDropDown(itemView, State.SHOW_NUM)
 			}
 			
-			numOfEventsNotOpen.text = num.toString()
+			
 			
 			if (eventList[0].event.value !== null) {
 				groupByGuardianTextView.text = eventList[0].event.value!!.capitalize()
 			}
-			
-			stutasVisibility.add(position, false)
-			
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
 				adapter = EventsInEventNameAdater(eventList, listener)
@@ -76,32 +120,13 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 			
 			itemView.setOnClickListener {
 				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
-				if (stutasVisibility[position]) {
-					guardianListDetailRecycler.visibility = View.GONE
-					
-					if (num == 0) {
-						circleImageView.visibility = View.INVISIBLE
-						numOfEventsNotOpen.visibility = View.INVISIBLE
-						downChevronImageView.visibility = View.VISIBLE
-						upChevronImageView.visibility = View.INVISIBLE
-						
-					} else {
-						circleImageView.visibility = View.VISIBLE
-						numOfEventsNotOpen.visibility = View.VISIBLE
-						downChevronImageView.visibility = View.INVISIBLE
-						upChevronImageView.visibility = View.INVISIBLE
-					}
-					stutasVisibility.add(position, false)
-				} else {
-					guardianListDetailRecycler.visibility = View.VISIBLE
-					circleImageView.visibility = View.INVISIBLE
-					numOfEventsNotOpen.visibility = View.INVISIBLE
-					downChevronImageView.visibility = View.INVISIBLE
-					upChevronImageView.visibility = View.VISIBLE
-					stutasVisibility.add(position, true)
-				}
+				handleVisibilityList(itemView, stutasVisibility[position], num, position)
 			}
 			currentEventList = eventList
 		}
 	}
+}
+
+enum class State {
+	SHOW_UP, SHOW_DOWN, SHOW_NUM
 }
