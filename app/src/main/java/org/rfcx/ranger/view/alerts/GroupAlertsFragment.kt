@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_group_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -30,14 +31,15 @@ class GroupAlertsFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		
 		groupAlertsRecyclerView.apply {
-			layoutManager = LinearLayoutManager(context)
+			val alertsLayoutManager = LinearLayoutManager(context)
+			layoutManager = alertsLayoutManager
 			adapter = groupByGuardianAdapter
 		}
 		
 		viewModel.groupGuardianAlert.observe(this, Observer { it ->
-			it.success({ item ->
+			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
-				groupByGuardianAdapter.items = item
+				groupByGuardianAdapter.items = items
 				
 			}, {
 				loadingProgress.visibility = View.INVISIBLE

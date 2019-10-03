@@ -83,7 +83,9 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	private fun initView() {
 		alertsTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 			override fun onTabReselected(tab: TabLayout.Tab?) {
-			
+				if (tab != null) {
+					startTabSelected(tab.position)
+				}
 			}
 			
 			override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -121,7 +123,6 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 		} else {
 			fragment
 		}
-		
 		childFragmentManager.beginTransaction()
 				.replace(contentContainer.id, startFragment,
 						tag).commit()
