@@ -39,7 +39,6 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 		initView()
 		observeAlert()
 		getEventExtra()
-		alertViewModel.getEvents()
 	}
 	
 	override fun onResume() {

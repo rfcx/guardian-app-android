@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,8 +11,10 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
-import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsRequestFactory
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.Preferences
@@ -21,7 +22,6 @@ import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 
 class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
-//class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val getEventInGuardian: GetEventInGuardian) : ViewModel() {
 	
 	private val _items = MutableLiveData<GroupByGuardiansResponse>()
 	val items: LiveData<GroupByGuardiansResponse> get() = _items
@@ -75,24 +75,8 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			
 			override fun onError(e: Throwable) {
 				_groupGuardianAlert.value = e.getResultError()
-				
 			}
 		}, requestFactory)
-		
-//		val requestFactory = EventsGuardianRequestFactory(groupGuid, "begins_at", "DESC", LIMITS, 0)
-//		getEventInGuardian.execute(object : DisposableSingleObserver<EventResponse>() {
-//			override fun onSuccess(t: EventResponse) {
-//				val groupGuardian = t.events?.let { groupGuardian(it) }
-//				if (groupGuardian != null) {
-//					handleOnSuccess(groupGuardian, groupShortname)
-//				}
-//			}
-//
-//			override fun onError(e: Throwable) {
-//				_groupGuardianAlert.value = e.getResultError()
-//			}
-//
-//		}, requestFactory)
 	}
 	
 	private fun handleOnSuccess(listGroupAlert: List<GroupAlert>, groupGuardian: ArrayList<String>) {

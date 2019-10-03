@@ -29,22 +29,4 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 		hasGuardianGroup = profileData.hasGuardianGroup()
 		_observeGuardianGroup.value = profileData.hasGuardianGroup()
 	}
-	
-	fun getEvents() {
-		val group = context.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
-		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", AllAlertsViewModel.PAGE_LIMITS, 0)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
-				Log.d("Alert", "Get Events Success")
-			}
-			
-			override fun onError(e: Throwable) {
-				Log.d("Alert", "Get Events Error")
-			}
-		}, requestFactory)
-	}
 }
