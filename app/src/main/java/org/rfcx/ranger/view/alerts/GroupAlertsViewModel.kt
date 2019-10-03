@@ -17,7 +17,6 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 
@@ -35,8 +34,11 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		_groupGuardianAlert.value = Result.Loading
 		getEventsCache()
 		
-		val preferenceHelper = Preferences.getInstance(context)
-		val shortName = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
+		val group = context.getGuardianGroup()
+		if (group == null) {
+			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
+			return
+		}
 		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>() {
 			override fun onSuccess(t: GroupByGuardiansResponse) {
 				getEvents(t.guardians)
@@ -46,13 +48,13 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 				_groupGuardianAlert.value = e.getResultError()
 			}
 			
-		}, shortName.toString())
+		}, group)
 	}
 	
 	private fun getEvents(list: List<Guardian>) {
 		val groupGuid = ArrayList<String>()
 		val groupShortname = ArrayList<String>()
-
+		
 		list.forEach { guardian ->
 			groupGuid.add(guardian.guid)
 			groupShortname.add(guardian.name)
@@ -121,6 +123,23 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 				group.add(groupGuardianAlert)
 			}
 		}
+		_alertsList = group
+		_groupGuardianAlert.value = Result.Success(group)
+	}
+	
+	fun updateNumberUnreview() {
+		val group = ArrayList<GroupGuardianAlert>()
+		_alertsList.forEach { groupGuardianAlert ->
+			if (groupGuardianAlert.events !== null) {
+				val numEvents = groupGuardianAlert.events.size - numEvents(groupGuardianAlert.events)
+				val groupGuardianAlert = GroupGuardianAlert(groupGuardianAlert.events, numEvents, groupGuardianAlert.name)
+				group.add(groupGuardianAlert)
+			} else {
+				val groupGuardianAlert = GroupGuardianAlert(null, null, groupGuardianAlert.name)
+				group.add(groupGuardianAlert)
+			}
+		}
+		_alertsList = group
 		_groupGuardianAlert.value = Result.Success(group)
 	}
 	

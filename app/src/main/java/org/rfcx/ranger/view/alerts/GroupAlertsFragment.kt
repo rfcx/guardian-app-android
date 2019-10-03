@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_group_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -53,14 +52,19 @@ class GroupAlertsFragment : BaseFragment() {
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(eventsList: ArrayList<Event>?, name: String) {
-				Log.d("onItemClick","$eventsList")
+				Log.d("onItemClick", "$eventsList")
 				if (eventsList != null) {
 					context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
-				}else{
+				} else {
 					context?.let { GuardianListDetailActivity.startActivity(it, null, name) }
 				}
 			}
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		viewModel.updateNumberUnreview()
 	}
 	
 	companion object {
