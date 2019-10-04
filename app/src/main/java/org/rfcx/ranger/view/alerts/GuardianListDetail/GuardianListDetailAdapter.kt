@@ -38,7 +38,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 		holder.bind(allItem[position].events, allItem[position].unread, position)
 	}
 	
-	fun handleShowDropDown(itemView: View, state: State){
+	fun handleShowDropDown(itemView: View, state: State) {
 		val circleImageView = itemView.circleImageView
 		val numOfEventsNotOpen = itemView.numOfEventsNotOpen
 		val downChevronImageView = itemView.downChevronImageView
@@ -66,21 +66,21 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 		}
 	}
 	
-	fun handleVisibilityList(itemView: View, state: Boolean, num: Int, position: Int ){
-		val guardianListDetailRecycler = itemView.guardianListDetailRecycler
+	fun handleVisibilityList(itemView: View, state: Boolean, num: Int, position: Int) {
+		val guardianListDetailGroupView = itemView.guardianListDetailGroupView
 		
 		if (state) {
-			guardianListDetailRecycler.visibility = View.GONE
+			guardianListDetailGroupView.visibility = View.GONE
 			if (num == 0) {
-				handleShowDropDown(itemView, State.SHOW_UP)
+				handleShowDropDown(itemView, State.SHOW_DOWN)
 			} else {
 				handleShowDropDown(itemView, State.SHOW_NUM)
 			}
 			stutasVisibility[position] = false
 			updateList = true
 		} else {
-			guardianListDetailRecycler.visibility = View.VISIBLE
-			handleShowDropDown(itemView, State.SHOW_DOWN)
+			guardianListDetailGroupView.visibility = View.VISIBLE
+			handleShowDropDown(itemView, State.SHOW_UP)
 			stutasVisibility[position] = true
 			updateList = true
 		}
@@ -91,7 +91,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
 		
 		private val guardianListDetailRecycler = itemView.guardianListDetailRecycler
-
+		
 		private val iconAlert = itemView.ivAlertIcon
 		
 		@SuppressLint("DefaultLocale")
@@ -103,12 +103,15 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 				updateList -> {
 					handleVisibilityList(itemView, !stutasVisibility[position], num, position)
 				}
-				!updateList -> stutasVisibility.add(position, false)
-				num == 0 -> handleShowDropDown(itemView, State.SHOW_DOWN)
-				else -> handleShowDropDown(itemView, State.SHOW_NUM)
+				!updateList -> {
+					stutasVisibility.add(position, false)
+					if(num == 0){
+						handleShowDropDown(itemView, State.SHOW_DOWN)
+					} else {
+						handleShowDropDown(itemView, State.SHOW_NUM)
+					}
+				}
 			}
-			
-			
 			
 			if (eventList[0].event.value !== null) {
 				groupByGuardianTextView.text = eventList[0].event.value!!.capitalize()
@@ -119,6 +122,8 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 			}
 			
 			itemView.setOnClickListener {
+				Log.d("bind 1","$stutasVisibility")
+				Log.d("bind 1","${stutasVisibility.size} $position")
 				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 				handleVisibilityList(itemView, stutasVisibility[position], num, position)
 			}

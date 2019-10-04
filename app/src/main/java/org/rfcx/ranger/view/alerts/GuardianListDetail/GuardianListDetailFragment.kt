@@ -28,14 +28,10 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		setupAlertList()
 		
 		val event = arguments?.getParcelableArrayList<Event>("events")
 		event?.let { viewModel.makeGroupOfValue(it) }
-		
-		eventsInGuardianRecycler.apply {
-			layoutManager = LinearLayoutManager(context)
-			adapter = guardianListDetailAdapter
-		}
 		
 		viewModel.items.observe(this, Observer { it ->
 			it.success({
@@ -48,6 +44,14 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
+	}
+	
+	private fun setupAlertList() {
+		val alertsLayoutManager = LinearLayoutManager(context)
+		eventsInGuardianRecycler.apply {
+			layoutManager = alertsLayoutManager
+			adapter = guardianListDetailAdapter
+		}
 	}
 	
 	override fun onClickedAlert(event: Event) {

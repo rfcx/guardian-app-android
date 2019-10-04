@@ -5,13 +5,22 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 	
+	<View
+		android:id="@+id/view"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/view_list_alerts"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/ivAlertIcon"
 		android:layout_width="@dimen/report_icon_size"
 		android:layout_height="@dimen/report_icon_size"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
 		android:layout_marginStart="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintStart_toStartOf="@id/view"
+		app:layout_constraintTop_toTopOf="@id/view"
 		tools:src="@drawable/ic_vehicle" />
 	
 	<TextView
@@ -19,44 +28,44 @@
 		style="@style/RangerText.Body"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:padding="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toBottomOf="@id/view"
 		app:layout_constraintStart_toEndOf="@id/ivAlertIcon"
-		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintTop_toTopOf="@id/view"
 		tools:text="Vehicle" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/downChevronImageView"
-		android:layout_width="15dp"
-		android:layout_height="15dp"
+		android:layout_width="@dimen/drop_down_size"
+		android:layout_height="@dimen/drop_down_size"
 		android:layout_marginEnd="@dimen/margin_padding_xlarge"
 		android:src="@drawable/ic_down_chevron"
 		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="@id/guardianListDetailTextView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@id/guardianListDetailTextView" />
+		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintEnd_toEndOf="@id/view"
+		app:layout_constraintTop_toTopOf="@id/view" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/upChevronImageView"
-		android:layout_width="15dp"
-		android:layout_height="15dp"
+		android:layout_width="@dimen/drop_down_size"
+		android:layout_height="@dimen/drop_down_size"
 		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:rotationX="180"
 		android:src="@drawable/ic_down_chevron"
 		android:visibility="invisible"
-		android:rotationX="180"
-		app:layout_constraintBottom_toBottomOf="@id/guardianListDetailTextView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@id/guardianListDetailTextView" />
+		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintEnd_toEndOf="@id/view"
+		app:layout_constraintTop_toTopOf="@id/view" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/circleImageView"
-		android:layout_width="20dp"
-		android:layout_height="20dp"
+		android:layout_width="@dimen/circle_of_number_unreview"
+		android:layout_height="@dimen/circle_of_number_unreview"
 		android:layout_marginEnd="@dimen/margin_padding_xlarge"
 		android:src="@drawable/bg_circle_green"
-		app:layout_constraintBottom_toBottomOf="@id/guardianListDetailTextView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@id/guardianListDetailTextView" />
+		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintEnd_toEndOf="@id/view"
+		app:layout_constraintTop_toTopOf="@id/view" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/numOfEventsNotOpen"
@@ -69,15 +78,33 @@
 		app:layout_constraintStart_toStartOf="@id/circleImageView"
 		app:layout_constraintTop_toTopOf="@id/circleImageView" />
 	
+	<androidx.constraintlayout.widget.Group
+		android:id="@+id/guardianListDetailGroupView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		app:constraint_referenced_ids="guardianListDetailRecycler,seeOlderTextView" />
+	
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/guardianListDetailRecycler"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:layout_constraintBottom_toBottomOf="parent"
-		android:visibility="gone"
 		android:layout_marginStart="@dimen/margin_padding_xlarge"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/guardianListDetailTextView"/>
+		app:layout_constraintTop_toBottomOf="@id/view"
+		app:layout_constraintVertical_bias="0.0" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/seeOlderTextView"
+		style="@style/TextButton.Bold"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/padding_see_older_alert"
+		android:text="@string/see_older"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/guardianListDetailRecycler" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

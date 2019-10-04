@@ -7,6 +7,10 @@
 	<dimen name="margin_padding_xlarge">32dp</dimen>
 	
 	<dimen name="button_height">44dp</dimen>
+	<dimen name="padding_see_older_alert">84dp</dimen>
+	<dimen name="circle_of_number_unreview">20dp</dimen>
+	<dimen name="drop_down_size">15dp</dimen>
+	<dimen name="view_list_alerts">52dp</dimen>
 	
 	<!-- Text size -->
 	<dimen name="text_xlarge">22sp</dimen>
