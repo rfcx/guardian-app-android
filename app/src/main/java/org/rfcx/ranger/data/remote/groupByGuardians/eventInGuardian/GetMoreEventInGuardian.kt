@@ -8,7 +8,7 @@ import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 
-class GetEventInGuardian(private val eventRepository: EventRepository,
+class GetMoreEventInGuardian(private val eventRepository: EventRepository,
                          threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
 ) : SingleUseCase<EventsGuardianRequestFactory, EventResponse>(threadExecutor, postExecutionThread) {
 	override fun buildUseCaseObservable(params: EventsGuardianRequestFactory): Single<EventResponse> {

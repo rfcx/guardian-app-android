@@ -44,6 +44,8 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
+		
+		viewModel.loadMoreEvents()
 	}
 	
 	private fun setupAlertList() {

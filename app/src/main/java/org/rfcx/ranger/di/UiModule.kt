@@ -42,7 +42,7 @@ object UiModule {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 		viewModel { GroupAlertsViewModel(androidContext(), get(), get(), get()) }
-		viewModel { GuardianListDetailViewModel(androidContext(), get()) }
+		viewModel { GuardianListDetailViewModel(androidContext(), get(), get()) }
 		viewModel { AlertViewModel(androidContext(), get(), get()) }
 	}
 	

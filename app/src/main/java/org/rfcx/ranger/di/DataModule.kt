@@ -21,7 +21,7 @@ import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepository
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepositoryImp
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
+import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
@@ -54,7 +54,7 @@ object DataModule {
 		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
-		single { GetEventInGuardian(get(), get(), get()) }
+		single { GetMoreEventInGuardian(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
 		single { GetGuardianGroups(get(), get(), get()) }

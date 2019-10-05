@@ -1,17 +1,25 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
-class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb) : ViewModel() {
+class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _items = MutableLiveData<Result<ArrayList<GuardianListDetail>>>()
 	val items: LiveData<Result<ArrayList<GuardianListDetail>>> get() = _items
 	
@@ -154,6 +162,31 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 			arrayList.add(GuardianListDetail(item, num))
 		}
 		_items.value = Result.Success(arrayList)
+	}
+	
+	fun loadMoreEvents() {
+		val value = ArrayList<String>()
+		value.add("chainsaw")
+		
+		val requestFactory = EventsGuardianRequestFactory("97519ab33e08", value, "2019-09-29T00:37:39.557Z", "begins_at", "DESC", LIMITS, 0)
+		
+		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
+			override fun onSuccess(t: EventResponse) {
+				t.events?.forEach { it ->
+					Log.d("getMoreEvent","value ${it.value}")
+					Log.d("getMoreEvent","${it.guardianGUID}")
+				}
+			}
+			
+			override fun onError(e: Throwable) {
+				Log.d("getMoreEvent", "e $e")
+			}
+			
+		}, requestFactory)
+	}
+	
+	companion object {
+		const val LIMITS = 10
 	}
 }
 

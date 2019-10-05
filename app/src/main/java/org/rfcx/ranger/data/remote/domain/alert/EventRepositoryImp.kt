@@ -11,7 +11,7 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
                          private val weeklySummaryData: WeeklySummaryData) : EventRepository {
 	
 	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse> {
-		return eventService.getEventsGuardian(requestFactory.groupList, requestFactory.orderBy,
+		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.values, requestFactory.starting, requestFactory.orderBy,
 				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
 			it
 		}

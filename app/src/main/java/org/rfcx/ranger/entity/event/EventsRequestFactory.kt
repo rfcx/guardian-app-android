@@ -8,7 +8,9 @@ data class EventsRequestFactory(
 		val offset: Int)
 
 data class EventsGuardianRequestFactory(
-		val groupList: List<String>,
+		val guardian: String,
+		val values: List<String>,
+		val starting: String,
 		val orderBy: String,
 		val dir: String,
 		val limit: Int,
