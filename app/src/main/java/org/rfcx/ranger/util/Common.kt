@@ -2,11 +2,13 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.DateHelper.DAY
-import org.rfcx.ranger.util.DateHelper.HOUR
-import org.rfcx.ranger.util.DateHelper.MINUTE
-import org.rfcx.ranger.util.DateHelper.WEEK
 import java.util.*
+
+private const val SECOND: Long = 1000
+private const val MINUTE = 60 * SECOND
+private const val HOUR = 60 * MINUTE
+private const val DAY = 24 * HOUR
+private const val WEEK = 7 * DAY
 
 fun Context?.getPastedTimeFormat(d: Date): String {
 	
