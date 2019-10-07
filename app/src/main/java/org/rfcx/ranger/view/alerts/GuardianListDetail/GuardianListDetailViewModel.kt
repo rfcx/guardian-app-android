@@ -168,13 +168,13 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		val value = ArrayList<String>()
 		value.add("chainsaw")
 		
-		val requestFactory = EventsGuardianRequestFactory("97519ab33e08", value, "2019-09-29T00:37:39.557Z", "begins_at", "DESC", LIMITS, 0)
+		val requestFactory = EventsGuardianRequestFactory("d2060b9a2272", value, "2019-01-11T14:17:29.000Z", "measured_at", "DESC", LIMITS, 0)
 		
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				t.events?.forEach { it ->
 					Log.d("getMoreEvent","value ${it.value}")
-					Log.d("getMoreEvent","${it.guardianGUID}")
+					Log.d("getMoreEvent","size ${t.events!!.size}")
 				}
 			}
 			

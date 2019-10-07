@@ -89,10 +89,9 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 	inner class GuardianListDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val groupByGuardianTextView = itemView.guardianListDetailTextView
 		private val numOfEventsNotOpen = itemView.numOfEventsNotOpen
-		
 		private val guardianListDetailRecycler = itemView.guardianListDetailRecycler
-		
 		private val iconAlert = itemView.ivAlertIcon
+		private val seeOlderTextView = itemView.seeOlderTextView
 		
 		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int) {
@@ -122,10 +121,14 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 			}
 			
 			itemView.setOnClickListener {
-				Log.d("bind 1","$stutasVisibility")
-				Log.d("bind 1","${stutasVisibility.size} $position")
 				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 				handleVisibilityList(itemView, stutasVisibility[position], num, position)
+			}
+			
+			seeOlderTextView.setOnClickListener {
+				Log.d("GuardianListDetail1 gui", eventList[eventList.size-1].event.guardianGUID)
+				Log.d("GuardianListDetail1 va", eventList[eventList.size-1].event.value)
+				Log.d("GuardianListDetail1 evt", eventList[eventList.size-1].event.endAt)
 			}
 			currentEventList = eventList
 		}
