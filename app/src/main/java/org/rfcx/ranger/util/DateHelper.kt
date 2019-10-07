@@ -10,6 +10,16 @@ private val isoSdf by lazy {
 	sdf
 }
 
+fun Date.toIsoString(): String {
+	// pattern 2008-09-15T15:53:00.000Z
+	return try {
+		return isoSdf.format(this)
+	} catch (e: Exception) {
+		e.printStackTrace()
+		""
+	}
+}
+
 object DateHelper {
 	
 	private const val shortDateFormat = "dd MMM yyyy"
@@ -38,17 +48,6 @@ object DateHelper {
 		val sdf = SimpleDateFormat(standardDateFormat, Locale.getDefault())
 		sdf.timeZone = TimeZone.getDefault()
 		sdf
-	}
-	
-	
-	fun getIsoTime(d: Date = Date()): String {
-		// pattern 2008-09-15T15:53:00.000Z
-		return try {
-			return isoSdf.format(d)
-		} catch (e: Exception) {
-			e.printStackTrace()
-			""
-		}
 	}
 	
 	fun formatShortDate(d: Date?): String {
