@@ -20,13 +20,13 @@ object DateHelper {
 	const val DAY = 24 * HOUR
 	const val WEEK = 7 * DAY
 	
-	private val inputUtcSdf by lazy {
+	private val isoSdf by lazy {
 		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
 		sdf.timeZone = TimeZone.getTimeZone("UTC")
 		sdf
 	}
 	
-	private val inputSdf by lazy {
+	private val legacyIsoSdf by lazy {
 		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US)
 		sdf
 	}
@@ -55,14 +55,14 @@ object DateHelper {
 	}
 	
 	private val inputFormatters = arrayListOf(
-			inputUtcSdf,
-			inputSdf,
+			isoSdf,
+			legacyIsoSdf,
 			legacyInputDateTimeSdf)
 	
 	fun getIsoTime(d: Date = Date()): String {
-		// pattern 2008-09-15T15:53:00+05:00
+		// pattern 2008-09-15T15:53:00.000Z
 		return try {
-			return inputSdf.format(d)
+			return isoSdf.format(d)
 		} catch (e: Exception) {
 			e.printStackTrace()
 			""
