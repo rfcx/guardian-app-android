@@ -3,10 +3,7 @@ package org.rfcx.ranger
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.legacyDateParser
-import org.rfcx.ranger.util.millisecondsSince
-import org.rfcx.ranger.util.toIsoString
+import org.rfcx.ranger.util.*
 import java.util.*
 
 class DateHelperTest {
@@ -52,7 +49,7 @@ class DateHelperTest {
 		val expectedResult = "13:30"
 		
 		// Act
-		val actualResult = DateHelper.formatTime(date)
+		val actualResult = date.formatTime()
 		
 		// Assert
 		Assert.assertNotEquals("", actualResult)

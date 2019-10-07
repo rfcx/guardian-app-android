@@ -51,9 +51,9 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 	
 	val diff = Duration(beginsAt.time, Date().time).standardHours
 	return if (beginsAt.isToday()) {
-		DateHelper.formatTime(beginsAt)
+		beginsAt.formatTime()
 	} else if (diff < 48) {
-		"${context.getString(R.string.yesterday)} ${DateHelper.formatTime(beginsAt)}"
+		"${context.getString(R.string.yesterday)} ${beginsAt.formatTime()}"
 	} else {
 		DateHelper.formatFullDate(beginsAt)
 	}
