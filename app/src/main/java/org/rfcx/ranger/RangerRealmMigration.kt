@@ -7,7 +7,7 @@ import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
 @Suppress("DEPRECATION")
-class RangerRealmlMigration : RealmMigration {
+class RangerRealmMigration : RealmMigration {
 	
 	override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
 		if (oldVersion < 3L && newVersion >= 3L) {

@@ -2,7 +2,7 @@ package org.rfcx.ranger.util
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.rfcx.ranger.RangerRealmlMigration
+import org.rfcx.ranger.RangerRealmMigration
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.message.Message
 
@@ -26,7 +26,7 @@ class RealmHelper {
 		fun migrationConfig(): RealmConfiguration {
 			return RealmConfiguration.Builder().apply {
 				schemaVersion(schemaVersion)
-				migration(RangerRealmlMigration())
+				migration(RangerRealmMigration())
 			}.build()
 		}
 		
