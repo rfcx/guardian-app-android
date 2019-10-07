@@ -34,36 +34,20 @@ private val outputStandardDateSdf by lazy {
 
 
 fun Date.toIsoString(): String {
-	// pattern 2008-09-15T15:53:00.000Z
-	return try {
-		return isoSdf.format(this)
-	} catch (e: Exception) {
-		e.printStackTrace()
-		""
-	}
+	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
-fun Date?.formatTime(): String {
-	return if (this != null)
-		outputTimeSdf.format(this)
-	else
-		""
+fun Date.formatTime(): String {
+	return outputTimeSdf.format(this)
 }
 
-fun Date?.formatShortDate(): String {
-	return if (this != null)
-		outputShortDateSdf.format(this)
-	else
-		""
+fun Date.formatShortDate(): String {
+	return outputShortDateSdf.format(this)
 }
 
-fun Date?.formatFullDate(): String {
-	return if (this != null)
-		outputStandardDateSdf.format(this)
-	else
-		""
+fun Date.formatFullDate(): String {
+	return outputStandardDateSdf.format(this)
 }
-
 
 fun Date.millisecondsSince(): Long {
 	return Date().time - this.time
