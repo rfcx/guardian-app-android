@@ -81,27 +81,17 @@ object DateHelper {
 	
 	
 	
-	private val legacyIsoSdf by lazy {
-		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US)
-		sdf
-	}
-	
-	private const val legacyDateTimeFormat = "yyyy-MM-dd HH:mm"
-	private val legacyInputDateTimeSdf by lazy {
-		val sdf = SimpleDateFormat(legacyDateTimeFormat, Locale.US)
-		sdf
-	}
-	
-	private val inputFormatters = arrayListOf(
+	private val legacyInputFormatters by lazy { arrayListOf(
 			isoSdf,
-			legacyIsoSdf,
-			legacyInputDateTimeSdf)
+			SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
+			SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US))
+	}
 	
 	// Used for migration
 	fun legacyParseToDate(input: String?): Date? {
 		input ?: return null
 		
-		inputFormatters.forEach {
+		legacyInputFormatters.forEach {
 			try {
 				val date = it.parse(input)
 				Log.i("DateHelper", "date -> $date")
