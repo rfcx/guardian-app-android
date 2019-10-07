@@ -20,6 +20,10 @@ fun Date.toIsoString(): String {
 	}
 }
 
+fun Date.millisecondsSince(): Long {
+	return Date().time - this.time
+}
+
 object DateHelper {
 	
 	private const val shortDateFormat = "dd MMM yyyy"
@@ -70,12 +74,6 @@ object DateHelper {
 		else
 			""
 	}
-	
-	fun getTimePasted(d: Date): Long {
-		val currentDateTime = Date()
-		return currentDateTime.time - d.time
-	}
-	
 }
 	
 	

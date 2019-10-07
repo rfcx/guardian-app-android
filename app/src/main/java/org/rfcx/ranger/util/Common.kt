@@ -11,7 +11,7 @@ import java.util.*
 fun Context?.getPastedTimeFormat(d: Date): String {
 	
 	if (this == null) return "-"
-	val long = DateHelper.getTimePasted(d)
+	val long = d.millisecondsSince()
 	val minAgo = MINUTE
 	val hourAgo = HOUR
 	val dayAgo = DAY

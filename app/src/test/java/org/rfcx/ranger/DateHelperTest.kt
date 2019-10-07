@@ -5,6 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.legacyDateParser
+import org.rfcx.ranger.util.millisecondsSince
 import org.rfcx.ranger.util.toIsoString
 import java.util.*
 
@@ -78,7 +79,7 @@ class DateHelperTest {
 		val millisecond = Date().time - DateHelper.DAY // get today - a day
 		
 		// Act
-		val actualResult = DateHelper.getTimePasted(Date(millisecond))
+		val actualResult = Date(millisecond).millisecondsSince()
 		
 		// Assert
 		Assert.assertTrue(actualResult >= aDay) // not less than a day
