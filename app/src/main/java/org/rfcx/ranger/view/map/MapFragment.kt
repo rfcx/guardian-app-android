@@ -244,7 +244,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				checkInMarkers.add(map.addMarker(MarkerOptions()
 						.position(latLng)
 						.anchor(0.5f, 0.5f)
-						.title(checkIn.time.formatFullDate())
+						.title(checkIn.time.toFullDateTimeString())
 						.snippet("${checkIn.latitude},${checkIn.latitude}")
 						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
 				checkInPolyline = map.addPolyline(polylineOptions)

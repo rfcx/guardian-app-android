@@ -49,7 +49,7 @@ class DateHelperTest {
 		val expectedResult = "13:30"
 		
 		// Act
-		val actualResult = date.formatTime()
+		val actualResult = date.toTimeString()
 		
 		// Assert
 		Assert.assertNotEquals("", actualResult)

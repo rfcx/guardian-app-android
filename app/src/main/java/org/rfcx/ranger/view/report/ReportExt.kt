@@ -5,8 +5,8 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.formatFullDate
-import org.rfcx.ranger.util.formatTime
+import org.rfcx.ranger.util.toFullDateTimeString
+import org.rfcx.ranger.util.toTimeString
 import java.util.*
 
 
@@ -40,10 +40,10 @@ fun Report.getReportedAtRelative(context: Context): String {
 	val dayAgo = DateHelper.DAY
 	val daysAgo = 2 * DateHelper.DAY
 	return if (diff < dayAgo) {
-		reportedAt.formatTime()
+		reportedAt.toTimeString()
 	} else if (diff < daysAgo) {
-		"${context.getString(R.string.yesterday)} ${reportedAt.formatTime()}"
+		"${context.getString(R.string.yesterday)} ${reportedAt.toTimeString()}"
 	} else {
-		reportedAt.formatFullDate()
+		reportedAt.toFullDateTimeString()
 	}
 }

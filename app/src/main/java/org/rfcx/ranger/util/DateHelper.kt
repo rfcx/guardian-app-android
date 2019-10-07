@@ -37,15 +37,15 @@ fun Date.toIsoString(): String {
 	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
-fun Date.formatTime(): String {
+fun Date.toTimeString(): String {
 	return outputTimeSdf.format(this)
 }
 
-fun Date.formatShortDate(): String {
+fun Date.toShortDateString(): String {
 	return outputShortDateSdf.format(this)
 }
 
-fun Date.formatFullDate(): String {
+fun Date.toFullDateTimeString(): String {
 	return outputStandardDateSdf.format(this)
 }
 
