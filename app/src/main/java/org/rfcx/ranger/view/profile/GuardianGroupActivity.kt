@@ -51,6 +51,7 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
+				viewModel.removeAllEvent()
 				analytics.trackSetGuardianGroupEvent()
 				// TODO what happens on failure?
 				loadingProgress.visibility = View.VISIBLE

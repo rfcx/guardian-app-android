@@ -1,6 +1,5 @@
 package org.rfcx.ranger.data.local
 
-import android.util.Log
 import io.realm.Realm
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
@@ -79,6 +78,14 @@ class EventDb {
 				val event = it.where(EventReview::class.java)
 						.equalTo("eventGuId", eventGuid).findFirst()
 				event?.syncState = syncState
+			}
+		}
+	}
+	
+	fun deleteAllEvents() {
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction {
+				it.delete(Event::class.java)
 			}
 		}
 	}

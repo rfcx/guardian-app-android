@@ -48,7 +48,7 @@ object UiModule {
 	
 	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get()) }
-		viewModel { GuardianGroupViewModel(get()) }
+		viewModel { GuardianGroupViewModel(get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 	}
 	
