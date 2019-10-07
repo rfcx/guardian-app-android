@@ -4,10 +4,7 @@ import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.toFullDateTimeString
-import org.rfcx.ranger.util.toTimeString
-import java.util.*
+import org.rfcx.ranger.util.toTimeSinceStringAlternative
 
 
 fun Report.getImageResource(): Int = when (value) {
@@ -36,14 +33,5 @@ fun Report.getLocalisedAgeEstimate(context: Context): String = when (getAgeEstim
 }
 
 fun Report.getReportedAtRelative(context: Context): String {
-	val diff = Date().time - reportedAt.time
-	val dayAgo = DateHelper.DAY
-	val daysAgo = 2 * DateHelper.DAY
-	return if (diff < dayAgo) {
-		reportedAt.toTimeString()
-	} else if (diff < daysAgo) {
-		"${context.getString(R.string.yesterday)} ${reportedAt.toTimeString()}"
-	} else {
-		reportedAt.toFullDateTimeString()
-	}
+	return reportedAt.toTimeSinceStringAlternative(context)
 }

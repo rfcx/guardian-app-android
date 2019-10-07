@@ -47,7 +47,7 @@ fun String.toEventIcon(): Int {
 	}
 }
 
-fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
+fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring to use Common
 	
 	val diff = Duration(beginsAt.time, Date().time).standardHours
 	return if (beginsAt.isToday()) {

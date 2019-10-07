@@ -6,7 +6,6 @@ import io.realm.RealmResults
 import io.realm.Sort
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
-import org.rfcx.ranger.util.DateHelper
 
 /**
  * Manage the saving and sending of reportsLive from the local database

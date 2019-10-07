@@ -16,10 +16,9 @@ import org.rfcx.ranger.databinding.ItemStatusReportBinding
 import org.rfcx.ranger.databinding.ItemStatusSyncingBinding
 import org.rfcx.ranger.databinding.ItemUserStatusBinding
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toEventName
+import org.rfcx.ranger.util.toTimeSinceString
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
@@ -301,7 +300,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		}
 		
 		fun getTimeAgo(context: Context): String {
-			return context.getPastedTimeFormat(report.reportedAt)
+			return report.reportedAt.toTimeSinceString(context)
 		}
 	}
 	

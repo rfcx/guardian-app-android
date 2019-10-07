@@ -3,7 +3,6 @@ package org.rfcx.ranger.entity.location
 import com.google.gson.annotations.Expose
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import org.rfcx.ranger.util.DateHelper
 import java.util.*
 
 open class CheckIn(
