@@ -88,7 +88,7 @@ class RangerRealmlMigration : RealmMigration {
 			
 			transform { obj ->
 				val reportedAt = obj.getString("reportedAt")
-				val date = DateHelper.parseToDate(reportedAt)
+				val date = DateHelper.legacyParseToDate(reportedAt)
 				obj.setDate("reportedAt_tmp", date)
 			}
 			
@@ -103,7 +103,7 @@ class RangerRealmlMigration : RealmMigration {
 					.setNullable("createAt_tmp", false)
 			transform { obj ->
 				val createAt = obj.getString("createAt")
-				val date = DateHelper.parseToDate(createAt)
+				val date = DateHelper.legacyParseToDate(createAt)
 				obj.setDate("createAt_tmp", date)
 			}
 			
@@ -118,7 +118,7 @@ class RangerRealmlMigration : RealmMigration {
 					.setNullable("time_tmp", false)
 			transform { obj ->
 				val time = obj.getString("time")
-				val date = DateHelper.parseToDate(time)
+				val date = DateHelper.legacyParseToDate(time)
 				obj.setDate("time_tmp", date)
 			}
 			
@@ -137,12 +137,12 @@ class RangerRealmlMigration : RealmMigration {
 			transform {
 				// beginsAt
 				val beginsAt = it.getString("beginsAt")
-				val date = DateHelper.parseToDate(beginsAt)
+				val date = DateHelper.legacyParseToDate(beginsAt)
 				it.setDate("beginsAt_tmp", date)
 				
 				// endAt
 				val endAt = it.getString("endAt")
-				val d = DateHelper.parseToDate(endAt)
+				val d = DateHelper.legacyParseToDate(endAt)
 				it.setDate("endAt_tmp", d)
 			}
 			

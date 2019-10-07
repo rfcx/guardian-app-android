@@ -102,9 +102,9 @@ class DateHelperTest {
 		val dateFormat3 = "November 6, 2019 13:30" // unexpected
 		
 		// Act
-		val actualResultFormat1 = DateHelper.parseToDate(dateFormat1)
-		val actualResultFormat2 = DateHelper.parseToDate(dateFormat2)
-		val actualResultFormat3 = DateHelper.parseToDate(dateFormat3)
+		val actualResultFormat1 = DateHelper.legacyParseToDate(dateFormat1)
+		val actualResultFormat2 = DateHelper.legacyParseToDate(dateFormat2)
+		val actualResultFormat3 = DateHelper.legacyParseToDate(dateFormat3)
 		
 		// Assert
 		Assert.assertNotNull(actualResultFormat1)

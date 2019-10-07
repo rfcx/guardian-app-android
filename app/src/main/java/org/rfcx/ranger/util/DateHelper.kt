@@ -8,8 +8,9 @@ import java.util.*
 
 object DateHelper {
 	
-	private const val dateTimeFormat = "yyyy-MM-dd HH:mm"
-	private const val dateTimeSecondFormat = "yyyy-MM-dd HH:mm:ss"
+	private const val legacyDateTimeFormat = "yyyy-MM-dd HH:mm"
+	private const val legacyDateTimeSecondFormat = "yyyy-MM-dd HH:mm:ss"
+	
 	private const val shortDateFormat = "dd MMM yyyy"
 	private const val timeFormat = "HH:mm"
 	private const val standardDateFormat = "MMMM d, yyyy HH:mm"
@@ -31,13 +32,13 @@ object DateHelper {
 		sdf
 	}
 	
-	private val inputDateTimeSdf by lazy {
-		val sdf = SimpleDateFormat(dateTimeFormat, Locale.US)
+	private val legacyInputDateTimeSdf by lazy {
+		val sdf = SimpleDateFormat(legacyDateTimeFormat, Locale.US)
 		sdf
 	}
 	
-	private val outputDateTimeSecondSdf by lazy {
-		val sdf = SimpleDateFormat(dateTimeSecondFormat, Locale.getDefault())
+	private val legacyOutputDateTimeSecondSdf by lazy {
+		val sdf = SimpleDateFormat(legacyDateTimeSecondFormat, Locale.getDefault())
 		sdf.timeZone = TimeZone.getDefault()
 		sdf
 	}
@@ -60,10 +61,10 @@ object DateHelper {
 		sdf
 	}
 	
-	private val inputFormats = arrayListOf(
+	private val inputFormatters = arrayListOf(
 			inputUtcSdf,
 			inputSdf,
-			inputDateTimeSdf)
+			legacyInputDateTimeSdf)
 	
 	fun getIsoTime(d: Date = Date()): String {
 		// pattern 2008-09-15T15:53:00+05:00
@@ -84,7 +85,7 @@ object DateHelper {
 	
 	fun formatDateTimeSecond(d: Date?): String {
 		return if (d != null)
-			outputDateTimeSecondSdf.format(d)
+			legacyOutputDateTimeSecondSdf.format(d)
 		else
 			""
 	}
@@ -108,10 +109,11 @@ object DateHelper {
 		return currentDateTime.time - d.time
 	}
 	
-	fun parseToDate(input: String?): Date? {
+	// Used for migration
+	fun legacyParseToDate(input: String?): Date? {
 		input ?: return null
 		
-		inputFormats.forEach {
+		inputFormatters.forEach {
 			try {
 				val date = it.parse(input)
 				Log.i("DateHelper", "date -> $date")
