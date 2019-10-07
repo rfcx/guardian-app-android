@@ -9,7 +9,6 @@ import java.util.*
 object DateHelper {
 	
 	private const val legacyDateTimeFormat = "yyyy-MM-dd HH:mm"
-	private const val legacyDateTimeSecondFormat = "yyyy-MM-dd HH:mm:ss"
 	
 	private const val shortDateFormat = "dd MMM yyyy"
 	private const val timeFormat = "HH:mm"
@@ -34,12 +33,6 @@ object DateHelper {
 	
 	private val legacyInputDateTimeSdf by lazy {
 		val sdf = SimpleDateFormat(legacyDateTimeFormat, Locale.US)
-		sdf
-	}
-	
-	private val legacyOutputDateTimeSecondSdf by lazy {
-		val sdf = SimpleDateFormat(legacyDateTimeSecondFormat, Locale.getDefault())
-		sdf.timeZone = TimeZone.getDefault()
 		sdf
 	}
 	
@@ -79,13 +72,6 @@ object DateHelper {
 	fun formatShortDate(d: Date?): String {
 		return if (d != null)
 			outputShortDateSdf.format(d)
-		else
-			""
-	}
-	
-	fun formatDateTimeSecond(d: Date?): String {
-		return if (d != null)
-			legacyOutputDateTimeSecondSdf.format(d)
 		else
 			""
 	}

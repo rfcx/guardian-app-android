@@ -43,19 +43,6 @@ class DateHelperTest {
 	}
 	
 	@Test
-	fun canGetFormatDateTimeSecond() {
-		// Arrange
-		val expectedResult = "2019-11-06 13:30:05"
-		
-		// Act
-		val actualResult = DateHelper.formatDateTimeSecond(date)
-		
-		// Assert
-		Assert.assertNotEquals("", actualResult)
-		Assert.assertEquals(expectedResult, actualResult)
-	}
-	
-	@Test
 	fun canGetFormatTime() {
 		// Arrange
 		val expectedResult = "13:30"
