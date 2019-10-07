@@ -4,6 +4,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.legacyDateParser
+import org.rfcx.ranger.util.toIsoString
 import java.util.*
 
 class DateHelperTest {
@@ -18,15 +20,16 @@ class DateHelperTest {
 	}
 	
 	@Test
-	fun canGetIsoDateString() { //TODO: Improve @Aa
+	fun canGetIsoDateString() {
 		// Arrange
-		val expectedResult = "2019-11-06T13:30:05.000+0700"
+		val date = Date(2019, 11, 6, 13, 40, 5)
+		val expected = "2019-11-06T13:30:05.000Z"
 		
 		// Act
-		val actualResult = DateHelper.getIsoTime(date)
+		val actual = date.toIsoString()
 		
 		// Assert
-		Assert.assertNotEquals("", actualResult)
+		Assert.assertNotEquals(expected, actual)
 	}
 	
 	@Test
@@ -82,20 +85,22 @@ class DateHelperTest {
 	}
 	
 	@Test
-	fun canParseToDate() {
+	fun canParseLegacyDates() {
 		// Arrange
+		val expected1 = Date(2019, 11, 6, 6, 30, 5)
 		val dateFormat1 = "2019-11-06T13:30:05.000+0700" // expected
+		val expected2 = Date(2019, 11, 6, 13, 30, 5)
 		val dateFormat2 = "2019-11-06 13:30:05" // expected
 		val dateFormat3 = "November 6, 2019 13:30" // unexpected
 		
 		// Act
-		val actualResultFormat1 = DateHelper.legacyParseToDate(dateFormat1)
-		val actualResultFormat2 = DateHelper.legacyParseToDate(dateFormat2)
-		val actualResultFormat3 = DateHelper.legacyParseToDate(dateFormat3)
+		val actual1 = legacyDateParser(dateFormat1)
+		val actual2 = legacyDateParser(dateFormat2)
+		val actual3 = legacyDateParser(dateFormat3)
 		
 		// Assert
-		Assert.assertNotNull(actualResultFormat1)
-		Assert.assertNotNull(actualResultFormat2)
-		Assert.assertNull(actualResultFormat3)
+		Assert.assertEquals(expected1, actual1)
+		Assert.assertEquals(expected2, actual2)
+		Assert.assertNull(actual3)
 	}
 }
