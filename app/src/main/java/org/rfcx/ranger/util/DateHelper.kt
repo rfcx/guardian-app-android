@@ -10,7 +10,6 @@ object DateHelper {
 	
 	private const val dateTimeFormat = "yyyy-MM-dd HH:mm"
 	private const val dateTimeSecondFormat = "yyyy-MM-dd HH:mm:ss"
-	private const val dateFormat = "yyyy-MM-dd"
 	private const val shortDateFormat = "dd MMM yyyy"
 	private const val timeFormat = "HH:mm"
 	private const val standardDateFormat = "MMMM d, yyyy HH:mm"
@@ -37,20 +36,8 @@ object DateHelper {
 		sdf
 	}
 	
-	private val outputDateTimeSdf by lazy {
-		val sdf = SimpleDateFormat(dateTimeFormat, Locale.getDefault())
-		sdf.timeZone = TimeZone.getDefault()
-		sdf
-	}
-	
 	private val outputDateTimeSecondSdf by lazy {
 		val sdf = SimpleDateFormat(dateTimeSecondFormat, Locale.getDefault())
-		sdf.timeZone = TimeZone.getDefault()
-		sdf
-	}
-	
-	private val outputDateSdf by lazy {
-		val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
 		sdf.timeZone = TimeZone.getDefault()
 		sdf
 	}
