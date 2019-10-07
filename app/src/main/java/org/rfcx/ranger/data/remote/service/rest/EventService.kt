@@ -23,7 +23,9 @@ interface EventService {
 	                      @Query("order") orderBy: String,
 	                      @Query("dir") dir: String,
 	                      @Query("limit") limit: Int,
-	                      @Query("offset") offset: Int): Single<EventResponse>
+	                      @Query("offset") offset: Int,
+	                      @Query("types[]") type: String): Single<EventResponse>
+	
 	
 	@POST("events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,

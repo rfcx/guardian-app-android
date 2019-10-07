@@ -164,7 +164,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	
 	fun loadMoreEvents(guid: String, value: String, endAt: String) {
 		loading.postValue(StateLoading.LOADING)
-		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "begins_at", "DESC", LIMITS, 0)
+		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "begins_at", "DESC", LIMITS, 0, "alert")
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				
