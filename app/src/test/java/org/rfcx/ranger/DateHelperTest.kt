@@ -20,7 +20,6 @@ class DateHelperTest {
 	@Test
 	fun canGetIsoDateString() {
 		// Arrange
-		val date = Date(2019, 11, 6, 13, 40, 5)
 		val expected = "2019-11-06T13:30:05.000Z"
 		
 		// Act
@@ -31,29 +30,27 @@ class DateHelperTest {
 	}
 	
 	@Test
-	fun canGetFormatShotDate() {
+	fun canGetFormatShortDate() {
 		// Arrange
-		val expectedResult = "06 Nov 2019"
+		val expected = "06 Nov 2019"
 		
 		// Act
-		val actualResult = DateHelper.formatShortDate(date)
+		val actual = date.toShortDateString()
 		
 		// Assert
-		Assert.assertNotEquals("", actualResult)
-		Assert.assertEquals(expectedResult, actualResult)
+		Assert.assertEquals(expected, actual)
 	}
 	
 	@Test
 	fun canGetFormatTime() {
 		// Arrange
-		val expectedResult = "13:30"
+		val expected = "13:30"
 		
 		// Act
-		val actualResult = date.toTimeString()
+		val actual = date.toTimeString()
 		
 		// Assert
-		Assert.assertNotEquals("", actualResult)
-		Assert.assertEquals(expectedResult, actualResult)
+		Assert.assertEquals(expected, actual)
 	}
 	
 	@Test
@@ -62,7 +59,7 @@ class DateHelperTest {
 		val expectedResult = "November 6, 2019 13:30"
 		
 		// Act
-		val actualResult = DateHelper.formatFullDate(date)
+		val actualResult = date.toFullDateTimeString()
 		
 		// Assert
 		Assert.assertNotEquals("", actualResult)
@@ -72,21 +69,22 @@ class DateHelperTest {
 	@Test
 	fun canGetTimePasted() {
 		// Arrange
-		val aDay = DateHelper.DAY
-		val millisecond = Date().time - DateHelper.DAY // get today - a day
+		val oneSecondInMs = 1000
+		val secondAgo = Date(Date().time - oneSecondInMs)
 		
 		// Act
-		val actualResult = Date(millisecond).millisecondsSince()
+		val actual = secondAgo.millisecondsSince()
 		
 		// Assert
-		Assert.assertTrue(actualResult >= aDay) // not less than a day
+		Assert.assertTrue(999 < actual)
+		Assert.assertTrue(actual < 1100)
 	}
 	
 	@Test
 	fun canParseLegacyDates() {
 		// Arrange
 		val expected1 = Date(2019, 11, 6, 6, 30, 5)
-		val dateFormat1 = "2019-11-06T13:30:05.000+0700" // expected
+		val dateFormat1 = "2019-11-06T20:30:05.000+0700" // expected
 		val expected2 = Date(2019, 11, 6, 13, 30, 5)
 		val dateFormat2 = "2019-11-06 13:30:05" // expected
 		val dateFormat3 = "November 6, 2019 13:30" // unexpected
