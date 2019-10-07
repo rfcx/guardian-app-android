@@ -3,6 +3,8 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import org.rfcx.ranger.util.DateHelper
+import java.util.*
 
 class RangerRealmlMigration : RealmMigration {
 	
@@ -18,6 +20,9 @@ class RangerRealmlMigration : RealmMigration {
 		}
 		if (oldVersion < 6L && newVersion >= 6L) {
 			migrateToV6(c)
+		}
+		if (oldVersion < 7L && newVersion >= 7L) {
+			migrateToV7(c)
 		}
 	}
 	
@@ -64,13 +69,88 @@ class RangerRealmlMigration : RealmMigration {
 			renameField("ageEstimate", "ageEstimateRaw")
 			removeField("distanceEstimate")
 		}
-
+		
 		// Add EventReview class
 		val eventReview = realm.schema.create("EventReview")
 		eventReview.apply {
 			addField("eventGuId", String::class.java, FieldAttribute.PRIMARY_KEY)
 					.setRequired("eventGuId", true)
 			addField("review", String::class.java)
+		}
+	}
+	
+	private fun migrateToV7(realm: DynamicRealm) {
+		// Edit Report's reportedAt to Date
+		val report = realm.schema.get("Report")
+		report?.apply {
+			addField("reportedAt_tmp", Date::class.java)
+					.setNullable("reportedAt_tmp", false)
+			
+			transform { obj ->
+				val reportedAt = obj.getString("reportedAt")
+				val date = DateHelper.parseToDate(reportedAt)
+				obj.setDate("reportedAt_tmp", date)
+			}
+			
+			removeField("reportedAt")
+			renameField("reportedAt_tmp", "reportedAt")
+		}
+		
+		// Edit ReportImage's createAt to Date
+		val reportImage = realm.schema.get("ReportImage")
+		reportImage?.apply {
+			addField("createAt_tmp", Date::class.java)
+					.setNullable("createAt_tmp", false)
+			transform { obj ->
+				val createAt = obj.getString("createAt")
+				val date = DateHelper.parseToDate(createAt)
+				obj.setDate("createAt_tmp", date)
+			}
+			
+			removeField("createAt")
+			renameField("createAt_tmp", "createAt")
+		}
+		
+		// Edit CheckIn's time to Date
+		val checkIn = realm.schema.get("CheckIn")
+		checkIn?.apply {
+			addField("time_tmp", Date::class.java)
+					.setNullable("time_tmp", false)
+			transform { obj ->
+				val time = obj.getString("time")
+				val date = DateHelper.parseToDate(time)
+				obj.setDate("time_tmp", date)
+			}
+			
+			removeField("time")
+			renameField("time_tmp", "time")
+		}
+		
+		// Edit Event's beginsAt and endAt to Date
+		val event = realm.schema.get("Event")
+		event?.apply {
+			addField("beginsAt_tmp", Date::class.java)
+					.setNullable("beginsAt_tmp", false)
+			addField("endAt_tmp", Date::class.java)
+					.setNullable("endAt_tmp", false)
+			
+			transform {
+				// beginsAt
+				val beginsAt = it.getString("beginsAt")
+				val date = DateHelper.parseToDate(beginsAt)
+				it.setDate("beginsAt_tmp", date)
+				
+				// endAt
+				val endAt = it.getString("endAt")
+				val d = DateHelper.parseToDate(endAt)
+				it.setDate("endAt_tmp", d)
+			}
+			
+			removeField("beginsAt")
+			renameField("beginsAt_tmp", "beginsAt")
+			
+			removeField("endAt")
+			renameField("endAt_tmp", "endAt")
 		}
 	}
 }

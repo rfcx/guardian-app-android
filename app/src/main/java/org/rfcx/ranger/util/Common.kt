@@ -8,11 +8,10 @@ import org.rfcx.ranger.util.DateHelper.MINUTE
 import org.rfcx.ranger.util.DateHelper.WEEK
 import java.util.*
 
-
-fun Context?.getPastedTimeFormat(long: Long): String {
+fun Context?.getPastedTimeFormat(d: Date): String {
 	
 	if (this == null) return "-"
-	
+	val long = DateHelper.getTimePasted(d)
 	val minAgo = MINUTE
 	val hourAgo = HOUR
 	val dayAgo = DAY

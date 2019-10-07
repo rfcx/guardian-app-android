@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.text.DecimalFormat
+import java.util.*
 
 open class Report(
 		@PrimaryKey
@@ -18,14 +19,13 @@ open class Report(
 		@SerializedName("site")
 		var site: String = "", // shortname of the site
 		@SerializedName("reported_at")
-		var reportedAt: String = "", // timestamp of when the report was created
+		var reportedAt: Date = Date(), // timestamp of when the report was created
 		@SerializedName("lat")
 		var latitude: Double = 0.0,
 		@SerializedName("long")
 		var longitude: Double = 0.0,
 		@SerializedName("age_estimate")
 		var ageEstimateRaw: Int = 0,  // 0 now, 10 last 24 hours, 20 last week, 30 last month
-		
 		@Expose(serialize = false)
 		var audioLocation: String? = null, // unused on server
 		@Expose(serialize = false)
@@ -44,7 +44,7 @@ open class Report(
 	fun getAgeEstimate(): AgeEstimate {
 		return AgeEstimate.fromInt(ageEstimateRaw) ?: AgeEstimate.NONE
 	}
-
+	
 	companion object {
 		const val FIELD_GUID = "guid"
 		const val FIELD_ID = "id"

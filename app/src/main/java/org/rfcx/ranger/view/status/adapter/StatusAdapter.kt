@@ -301,8 +301,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		}
 		
 		fun getTimeAgo(context: Context): String {
-			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
-			return context.getPastedTimeFormat(reportPasted)
+			return context.getPastedTimeFormat(report.reportedAt)
 		}
 	}
 	

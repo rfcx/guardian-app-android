@@ -1,13 +1,9 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
-import android.util.Log
-import org.joda.time.Days
 import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.DateHelper.DAY
-import java.text.SimpleDateFormat
 import java.util.*
 
 fun Event.getIconRes(): Int {
@@ -52,20 +48,13 @@ fun String.toEventIcon(): Int {
 }
 
 fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
-	beginsAt ?: return ""
 	
-	val eventDate = DateHelper.getDateTime(beginsAt)
-	eventDate ?: return ""
-	
-	val timeFormat = SimpleDateFormat(DateHelper.timeFormat, Locale.US)
-	
-	val diff = Duration(eventDate.time, Date().time).standardHours
-	return if (eventDate.isToday()) {
-		timeFormat.format(eventDate.time)
+	val diff = Duration(beginsAt.time, Date().time).standardHours
+	return if (beginsAt.isToday()) {
+		DateHelper.formatTime(beginsAt)
 	} else if (diff < 48) {
-		"${context.getString(R.string.yesterday)} ${timeFormat.format(eventDate.time)}"
+		"${context.getString(R.string.yesterday)} ${DateHelper.formatTime(beginsAt)}"
 	} else {
-		val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
-		dateFormat.format(eventDate.time)
+		DateHelper.formatFullDate(beginsAt)
 	}
 }

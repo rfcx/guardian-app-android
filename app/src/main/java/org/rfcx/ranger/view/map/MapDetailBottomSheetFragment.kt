@@ -59,8 +59,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 						else -> R.drawable.ic_pin_huge
 					}
 			)
-			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
-			reportTimePastedTextView.text = context.getPastedTimeFormat(reportPasted)
+			reportTimePastedTextView.text = context.getPastedTimeFormat(report.reportedAt)
 			
 			seeDetailTextView.setOnClickListener {
 				analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)

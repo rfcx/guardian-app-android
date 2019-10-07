@@ -11,3 +11,7 @@ fun Date.isToday() : Boolean {
 			&& today.get(Calendar.MONTH) == checkDate.get(Calendar.MONTH)
 			&& today.get(Calendar.YEAR) == checkDate.get(Calendar.YEAR)
 }
+
+fun Date.toDateString() {
+	DateHelper.getIsoTime()
+}

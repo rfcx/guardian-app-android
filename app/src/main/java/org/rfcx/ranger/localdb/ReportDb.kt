@@ -22,7 +22,7 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun save(report: Report, attachImages: List<String>) {
-		val imageCreateAt = DateHelper.parse(report.reportedAt)
+		val imageCreateAt = report.reportedAt
 		realm.executeTransaction {
 			if (report.id == 0) {
 				report.id = (it.where(Report::class.java).max("id")?.toInt() ?: 0) + 1

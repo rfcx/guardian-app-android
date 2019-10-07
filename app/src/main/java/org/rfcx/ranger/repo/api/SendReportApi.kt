@@ -15,6 +15,7 @@ import org.rfcx.ranger.repo.ApiCallback
 import org.rfcx.ranger.repo.ApiManager
 import org.rfcx.ranger.repo.responseErrorHandler
 import org.rfcx.ranger.repo.responseParser
+import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getTokenID
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,7 +67,7 @@ class SendReportApi {
 		val audioFileOrNull = if (!report.audioLocation.isNullOrEmpty()) createLocalFilePart("audio", Uri.parse(report.audioLocation!!), "audio/mpeg") else null
 
 		return ApiManager.getInstance().apiRest.sendReport(authUser =  authUser, value = createPartFromString(report.value),
-				site = createPartFromString(report.site), reportedAt = createPartFromString(report.reportedAt),
+				site = createPartFromString(report.site), reportedAt = createPartFromString(DateHelper.getIsoTime(report.reportedAt)),
 				latitude = createPartFromString(report.latitude.toString()), longitude = createPartFromString(report.longitude.toString()),
 				ageEstimate = createPartFromString(report.ageEstimateRaw.toString()), audioFile = audioFileOrNull)
 	}
