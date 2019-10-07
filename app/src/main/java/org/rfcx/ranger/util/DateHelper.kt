@@ -86,7 +86,7 @@ private val legacyInputFormatters by lazy { arrayListOf(
 	SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US))
 }
 
-// Used for migration
+@Deprecated(message = "Only used for migrating old dates from Realm.")
 fun legacyDateParser(input: String?): Date? {
 	input ?: return null
 	

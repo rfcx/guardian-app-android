@@ -6,6 +6,7 @@ import io.realm.RealmMigration
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
+@Suppress("DEPRECATION")
 class RangerRealmlMigration : RealmMigration {
 	
 	override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
