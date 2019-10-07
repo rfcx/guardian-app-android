@@ -9,8 +9,8 @@ data class EventsRequestFactory(
 
 data class EventsGuardianRequestFactory(
 		val guardian: String,
-		val values: List<String>,
-		val starting: String,
+		val value: String,
+		val time: String,
 		val orderBy: String,
 		val dir: String,
 		val limit: Int,

@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
@@ -13,7 +15,7 @@ import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
-class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView.Adapter<GuardianListDetailAdapter.GuardianListDetailViewHolder>() {
+class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, GuardianListDetailAdapter.GuardianListDetailViewHolder>(GuardianListDetailDiffUtil()) {
 	
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<EventItem>? = null
@@ -25,7 +27,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 			notifyDataSetChanged()
 		}
 	
-	var mOnItemClickListener: OnItemClickEventValuesListener? = null
+	var mOnSeeOlderClickListener: OnSeeOlderClickListener? = null
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianListDetailViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian_list_detail, parent, false)
@@ -36,6 +38,19 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 	
 	override fun onBindViewHolder(holder: GuardianListDetailViewHolder, position: Int) {
 		holder.bind(allItem[position].events, allItem[position].unread, position)
+	}
+	
+	class GuardianListDetailDiffUtil : DiffUtil.ItemCallback<EventItem>() {
+		override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
+			return oldItem.state == newItem.state
+			
+		}
+		
+		override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
+			return oldItem.event.event_guid == newItem.event.event_guid
+					&& oldItem.event.value == newItem.event.value
+					&& oldItem.state == newItem.state
+		}
 	}
 	
 	fun handleShowDropDown(itemView: View, state: State) {
@@ -121,14 +136,22 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : RecyclerView
 			}
 			
 			itemView.setOnClickListener {
-				currentEventList?.let { it1 -> mOnItemClickListener?.onItemClick(it1) }
 				handleVisibilityList(itemView, stutasVisibility[position], num, position)
 			}
 			
 			seeOlderTextView.setOnClickListener {
-				Log.d("GuardianListDetail1 gui", eventList[eventList.size-1].event.guardianGUID)
-				Log.d("GuardianListDetail1 va", eventList[eventList.size-1].event.value)
-				Log.d("GuardianListDetail1 evt", eventList[eventList.size-1].event.endAt)
+				val guid = eventList[eventList.size-1].event.guardianGUID.toString()
+				val value = eventList[eventList.size-1].event.value.toString()
+				val endAt = eventList[eventList.size-1].event.endAt.toString()
+				Log.d("onSeeOlderClick AD","guid_1 ${eventList[eventList.size-1].event.event_guid}")
+				
+				eventList.forEach{
+					Log.d("onSeeOlderClick AD","begin ${it.event.beginsAt}")
+					Log.d("onSeeOlderClick AD","end ${it.event.endAt}")
+					Log.d("onSeeOlderClick AD","guid_2 ${it.event.event_guid}")
+				}
+				Log.d("onSeeOlderClick AD","$guid $value $endAt")
+				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, endAt)
 			}
 			currentEventList = eventList
 		}

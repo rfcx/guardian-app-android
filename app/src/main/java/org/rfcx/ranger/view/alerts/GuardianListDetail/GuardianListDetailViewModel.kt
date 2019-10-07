@@ -2,12 +2,10 @@ package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
@@ -15,7 +13,6 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
@@ -106,7 +103,6 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	private fun numEvents(groupAlert: List<Event>): Int {
 		var count = 0
 		groupAlert.forEach { event ->
-			
 			val state = eventDb.getEventState(event.event_guid)
 			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) {
 				count += 1
@@ -164,17 +160,33 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		_items.value = Result.Success(arrayList)
 	}
 	
-	fun loadMoreEvents() {
-		val value = ArrayList<String>()
-		value.add("chainsaw")
-		
-		val requestFactory = EventsGuardianRequestFactory("d2060b9a2272", value, "2019-01-11T14:17:29.000Z", "measured_at", "DESC", LIMITS, 0)
-		
+	fun loadMoreEvents(guid: String, value: String, endAt: String) {
+		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 0)
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
+				
 				t.events?.forEach { it ->
-					Log.d("getMoreEvent","value ${it.value}")
-					Log.d("getMoreEvent","size ${t.events!!.size}")
+					Log.d("getMoreEvent", "value ${it.value}")
+					Log.d("getMoreEvent", "size ${t.events!!.size}")
+				}
+				
+				val arrayList = ArrayList<GuardianListDetail>()
+				eventAll.forEach { events ->
+					var index = events.size
+					
+					val mainValue = arrayListOf<String>()
+					events.distinctBy { it.value }.mapTo(mainValue, { it.value!! })
+					
+					if (mainValue.size == 1 && value == mainValue[0]) {
+						t.events?.forEach { it ->
+							events.add(index, it)
+							index += 1
+						}
+					}
+					val num = events.size - numEvents(events)
+					val item = itemsEvent(events)
+					arrayList.add(GuardianListDetail(item, num))
+					_items.value = Result.Success(arrayList)
 				}
 			}
 			

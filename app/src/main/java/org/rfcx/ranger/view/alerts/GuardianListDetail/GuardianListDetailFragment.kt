@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.base.BaseFragment
 
 class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
-	
 	private val viewModel: GuardianListDetailViewModel by viewModel()
 	private val guardianListDetailAdapter by lazy { GuardianListDetailAdapter(this) }
 	
@@ -34,9 +34,9 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		event?.let { viewModel.makeGroupOfValue(it) }
 		
 		viewModel.items.observe(this, Observer { it ->
-			it.success({
+			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
-				guardianListDetailAdapter.allItem = it
+				guardianListDetailAdapter.allItem = items
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
 				context.handleError(it)
@@ -45,7 +45,12 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			})
 		})
 		
-		viewModel.loadMoreEvents()
+		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
+			override fun onSeeOlderClick(guid: String, value: String, endAt: String) {
+				Log.d("onSeeOlderClick FM", "$guid $value $endAt")
+				viewModel.loadMoreEvents(guid, value, endAt)
+			}
+		}
 	}
 	
 	private fun setupAlertList() {
@@ -85,4 +90,8 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			}
 		}
 	}
+}
+
+interface OnSeeOlderClickListener {
+	fun onSeeOlderClick(guid: String, value: String, endAt: String)
 }

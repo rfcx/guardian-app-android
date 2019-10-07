@@ -18,8 +18,8 @@ interface EventService {
 	
 	@GET("events/event/datatable")
 	fun getEventsGuardian(@Query("guardians[]") guardian: String,
-	                      @Query("values[]") values: List<String>,
-	                      @Query("starting_after_local") starting: String,
+	                      @Query("values[]") value: String,
+	                      @Query("ending_before_local") ending: String,
 	                      @Query("order") orderBy: String,
 	                      @Query("dir") dir: String,
 	                      @Query("limit") limit: Int,
