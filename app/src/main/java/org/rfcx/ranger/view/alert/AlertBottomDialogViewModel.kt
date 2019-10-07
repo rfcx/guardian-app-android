@@ -24,6 +24,7 @@ import org.rfcx.ranger.entity.event.ClassificationBody
 import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.getResultError
 import java.io.File
 
@@ -200,6 +201,9 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 				}
 				
 			}, requests)
+			
+			ReviewEventSyncWorker.enqueue()
+			
 		} ?: run {
 			_reviewEvent.value = Result.Error(IllegalStateException("Event is null."))
 		}

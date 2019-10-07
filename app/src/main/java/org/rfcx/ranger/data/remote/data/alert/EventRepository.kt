@@ -1,10 +1,7 @@
 package org.rfcx.ranger.data.remote.data.alert
 
 import io.reactivex.Single
-import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
-import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.entity.event.*
 
 interface EventRepository {
 	

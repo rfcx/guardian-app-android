@@ -1,5 +1,6 @@
 package org.rfcx.ranger.data.local
 
+import android.util.Log
 import io.realm.Realm
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
@@ -54,5 +55,31 @@ class EventDb {
 			}
 		}
 		return reviewVal
+	}
+	
+	fun lockReviewEventUnSent(): List<EventReview> {
+		val unsentList = arrayListOf<EventReview>()
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction { realm ->
+				val unsent = realm.where(EventReview::class.java)
+						.equalTo("syncState", EventReview.UNSENT).findAll()
+				unsentList.addAll(it.copyFromRealm(unsent))
+				unsent.forEach {
+					it.syncState = EventReview.SENDING
+				}
+			}
+		}
+		
+		return unsentList
+	}
+	
+	fun markReviewEventSyncState(eventGuid: String, syncState: Int) {
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction {
+				val event = it.where(EventReview::class.java)
+						.equalTo("eventGuId", eventGuid).findFirst()
+				event?.syncState = syncState
+			}
+		}
 	}
 }

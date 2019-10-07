@@ -9,6 +9,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.service.DownLoadEventWorker
+import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 
@@ -24,6 +25,8 @@ class MainActivityViewModel(private val profileData: ProfileData, credentialKeep
 	init {
 		isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
 		isLocationTrackingOn.value = profileData.getTracking()
+		
+		ReviewEventSyncWorker.enqueue()
 	}
 	
 	fun getEventAndPreloadAudio() {
