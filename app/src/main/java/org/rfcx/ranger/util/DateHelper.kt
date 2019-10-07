@@ -8,8 +8,6 @@ import java.util.*
 
 object DateHelper {
 	
-	private const val legacyDateTimeFormat = "yyyy-MM-dd HH:mm"
-	
 	private const val shortDateFormat = "dd MMM yyyy"
 	private const val timeFormat = "HH:mm"
 	private const val standardDateFormat = "MMMM d, yyyy HH:mm"
@@ -23,16 +21,6 @@ object DateHelper {
 	private val isoSdf by lazy {
 		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
 		sdf.timeZone = TimeZone.getTimeZone("UTC")
-		sdf
-	}
-	
-	private val legacyIsoSdf by lazy {
-		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US)
-		sdf
-	}
-	
-	private val legacyInputDateTimeSdf by lazy {
-		val sdf = SimpleDateFormat(legacyDateTimeFormat, Locale.US)
 		sdf
 	}
 	
@@ -53,11 +41,7 @@ object DateHelper {
 		sdf.timeZone = TimeZone.getDefault()
 		sdf
 	}
-	
-	private val inputFormatters = arrayListOf(
-			isoSdf,
-			legacyIsoSdf,
-			legacyInputDateTimeSdf)
+
 	
 	fun getIsoTime(d: Date = Date()): String {
 		// pattern 2008-09-15T15:53:00.000Z
@@ -94,6 +78,24 @@ object DateHelper {
 		val currentDateTime = Date()
 		return currentDateTime.time - d.time
 	}
+	
+	
+	
+	private val legacyIsoSdf by lazy {
+		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US)
+		sdf
+	}
+	
+	private const val legacyDateTimeFormat = "yyyy-MM-dd HH:mm"
+	private val legacyInputDateTimeSdf by lazy {
+		val sdf = SimpleDateFormat(legacyDateTimeFormat, Locale.US)
+		sdf
+	}
+	
+	private val inputFormatters = arrayListOf(
+			isoSdf,
+			legacyIsoSdf,
+			legacyInputDateTimeSdf)
 	
 	// Used for migration
 	fun legacyParseToDate(input: String?): Date? {
