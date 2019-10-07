@@ -50,6 +50,20 @@ fun Date?.formatTime(): String {
 		""
 }
 
+fun Date?.formatShortDate(): String {
+	return if (this != null)
+		outputShortDateSdf.format(this)
+	else
+		""
+}
+
+fun Date?.formatFullDate(): String {
+	return if (this != null)
+		outputStandardDateSdf.format(this)
+	else
+		""
+}
+
 
 fun Date.millisecondsSince(): Long {
 	return Date().time - this.time
@@ -57,26 +71,11 @@ fun Date.millisecondsSince(): Long {
 
 
 object DateHelper {
-	
 	private const val SECOND: Long = 1000
 	const val MINUTE = 60 * SECOND
 	const val HOUR = 60 * MINUTE
 	const val DAY = 24 * HOUR
 	const val WEEK = 7 * DAY
-	
-	fun formatShortDate(d: Date?): String {
-		return if (d != null)
-			outputShortDateSdf.format(d)
-		else
-			""
-	}
-	
-	fun formatFullDate(d: Date?): String {
-		return if (d != null)
-			outputStandardDateSdf.format(d)
-		else
-			""
-	}
 }
 	
 	

@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_empty_holder.view.*
 import kotlinx.android.synthetic.main.item_report_list.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.formatShortDate
 
 class ReportListAdapter : ListAdapter<ReportItemBase, RecyclerView.ViewHolder>(ReportListDiffUtil()) {
 	
@@ -123,7 +122,7 @@ class ReportViewHolder(itemView: View, private val onItemClick: ((Int) -> Unit?)
 				.append(",")
 				.append(report.longitude)
 		itemView.reportLocationTextView.text = latLon
-		itemView.messageTimeTextView.text = "・${DateHelper.formatShortDate(report.reportedAt)}"
+		itemView.messageTimeTextView.text = "・${report.reportedAt.formatShortDate()}"
 		itemView.syncedTextView.setTextColor(
 				ContextCompat.getColor(itemView.context,
 						if (report.syncState == ReportDb.SENT) android.R.color.holo_green_light else android.R.color.holo_orange_light))

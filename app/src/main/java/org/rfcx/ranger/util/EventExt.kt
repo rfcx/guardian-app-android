@@ -55,6 +55,6 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 	} else if (diff < 48) {
 		"${context.getString(R.string.yesterday)} ${beginsAt.formatTime()}"
 	} else {
-		DateHelper.formatFullDate(beginsAt)
+		beginsAt.formatFullDate()
 	}
 }
