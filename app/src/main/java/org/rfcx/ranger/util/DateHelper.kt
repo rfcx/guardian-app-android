@@ -1,10 +1,14 @@
 package org.rfcx.ranger.util
 
-import android.util.Log
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+private val isoSdf by lazy {
+	val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+	sdf.timeZone = TimeZone.getTimeZone("UTC")
+	sdf
+}
 
 object DateHelper {
 	
@@ -17,12 +21,6 @@ object DateHelper {
 	const val HOUR = 60 * MINUTE
 	const val DAY = 24 * HOUR
 	const val WEEK = 7 * DAY
-	
-	private val isoSdf by lazy {
-		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-		sdf.timeZone = TimeZone.getTimeZone("UTC")
-		sdf
-	}
 	
 	private val outputTimeSdf by lazy {
 		val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
@@ -41,7 +39,7 @@ object DateHelper {
 		sdf.timeZone = TimeZone.getDefault()
 		sdf
 	}
-
+	
 	
 	fun getIsoTime(d: Date = Date()): String {
 		// pattern 2008-09-15T15:53:00.000Z
@@ -79,27 +77,23 @@ object DateHelper {
 		return currentDateTime.time - d.time
 	}
 	
+}
 	
 	
-	private val legacyInputFormatters by lazy { arrayListOf(
-			isoSdf,
-			SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
-			SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US))
+private val legacyInputFormatters by lazy { arrayListOf(
+	isoSdf,
+	SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
+	SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US))
+}
+
+// Used for migration
+fun legacyDateParser(input: String?): Date? {
+	input ?: return null
+	
+	legacyInputFormatters.forEach {
+		try {
+			return it.parse(input)
+		} catch (e: ParseException) { }
 	}
-	
-	// Used for migration
-	fun legacyParseToDate(input: String?): Date? {
-		input ?: return null
-		
-		legacyInputFormatters.forEach {
-			try {
-				val date = it.parse(input)
-				Log.i("DateHelper", "date -> $date")
-				return date
-			} catch (e: ParseException) {
-				Log.i("DateHelper", "parse fail with ${it.toPattern()}")
-			}
-		}
-		return null // not found format matching
-	}
+	return null // not found format matching
 }

@@ -3,7 +3,7 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
-import org.rfcx.ranger.util.DateHelper
+import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
 class RangerRealmlMigration : RealmMigration {
@@ -88,7 +88,7 @@ class RangerRealmlMigration : RealmMigration {
 			
 			transform { obj ->
 				val reportedAt = obj.getString("reportedAt")
-				val date = DateHelper.legacyParseToDate(reportedAt)
+				val date = legacyDateParser(reportedAt)
 				obj.setDate("reportedAt_tmp", date)
 			}
 			
@@ -103,7 +103,7 @@ class RangerRealmlMigration : RealmMigration {
 					.setNullable("createAt_tmp", false)
 			transform { obj ->
 				val createAt = obj.getString("createAt")
-				val date = DateHelper.legacyParseToDate(createAt)
+				val date = legacyDateParser(createAt)
 				obj.setDate("createAt_tmp", date)
 			}
 			
@@ -118,7 +118,7 @@ class RangerRealmlMigration : RealmMigration {
 					.setNullable("time_tmp", false)
 			transform { obj ->
 				val time = obj.getString("time")
-				val date = DateHelper.legacyParseToDate(time)
+				val date = legacyDateParser(time)
 				obj.setDate("time_tmp", date)
 			}
 			
@@ -137,12 +137,12 @@ class RangerRealmlMigration : RealmMigration {
 			transform {
 				// beginsAt
 				val beginsAt = it.getString("beginsAt")
-				val date = DateHelper.legacyParseToDate(beginsAt)
+				val date = legacyDateParser(beginsAt)
 				it.setDate("beginsAt_tmp", date)
 				
 				// endAt
 				val endAt = it.getString("endAt")
-				val d = DateHelper.legacyParseToDate(endAt)
+				val d = legacyDateParser(endAt)
 				it.setDate("endAt_tmp", d)
 			}
 			
