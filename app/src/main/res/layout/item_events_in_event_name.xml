@@ -35,10 +35,10 @@
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/circleImageView"
-		android:layout_width="10dp"
-		android:layout_height="10dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_xlarge"
-		android:src="@drawable/bg_circle_green"
+		android:src="@drawable/ic_dot_green"
 		app:layout_constraintBottom_toBottomOf="@id/eventsInEventsTextView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="@id/eventsInEventsTextView" />

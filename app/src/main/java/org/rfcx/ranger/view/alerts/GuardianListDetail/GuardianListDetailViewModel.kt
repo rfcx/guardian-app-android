@@ -13,6 +13,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
@@ -30,6 +31,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	private var eventOfTrespasser: MutableList<Event> = mutableListOf()
 	private var eventOfOther: MutableList<Event> = mutableListOf()
 	private var eventOfMismatch: MutableList<Event> = mutableListOf()
+	var loading = MutableLiveData<StateLoading>()
 	
 	var eventAll: ArrayList<MutableList<Event>> = ArrayList()
 	private var _alertsList: List<EventItem> = listOf()
@@ -161,14 +163,10 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	}
 	
 	fun loadMoreEvents(guid: String, value: String, endAt: String) {
-		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 0)
+		loading.postValue(StateLoading.LOADING)
+		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "begins_at", "DESC", LIMITS, 0)
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				
-				t.events?.forEach { it ->
-					Log.d("getMoreEvent", "value ${it.value}")
-					Log.d("getMoreEvent", "size ${t.events!!.size}")
-				}
 				
 				val arrayList = ArrayList<GuardianListDetail>()
 				eventAll.forEach { events ->
@@ -188,10 +186,12 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 					arrayList.add(GuardianListDetail(item, num))
 					_items.value = Result.Success(arrayList)
 				}
+				loading.postValue(StateLoading.NOT_LOADING)
 			}
 			
 			override fun onError(e: Throwable) {
-				Log.d("getMoreEvent", "e $e")
+				_items.value = e.getResultError()
+				loading.postValue(StateLoading.NOT_LOADING)
 			}
 			
 		}, requestFactory)
@@ -203,3 +203,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 }
 
 data class GuardianListDetail(val events: MutableList<EventItem>, val unread: Int)
+
+enum class StateLoading {
+	LOADING, NOT_LOADING
+}

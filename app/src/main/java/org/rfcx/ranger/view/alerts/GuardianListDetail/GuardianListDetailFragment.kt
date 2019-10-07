@@ -45,6 +45,14 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			})
 		})
 		
+		viewModel.loading.observe(this, Observer {
+			if(it == StateLoading.LOADING){
+				loadingProgress.visibility = View.VISIBLE
+			} else if (it == StateLoading.NOT_LOADING){
+				loadingProgress.visibility = View.INVISIBLE
+			}
+		})
+		
 		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
 			override fun onSeeOlderClick(guid: String, value: String, endAt: String) {
 				Log.d("onSeeOlderClick FM", "$guid $value $endAt")
