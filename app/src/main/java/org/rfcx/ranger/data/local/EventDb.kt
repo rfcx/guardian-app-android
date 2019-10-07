@@ -20,7 +20,7 @@ class EventDb {
 				list.addAll(it.copyFromRealm(events))
 			}
 		}
-		return  list
+		return list
 	}
 	
 	fun save(eventObj: EventReview) {
