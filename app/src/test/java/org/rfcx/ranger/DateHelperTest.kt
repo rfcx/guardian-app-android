@@ -14,6 +14,7 @@ class DateHelperTest {
 	fun setup() {
 		val calender = Calendar.getInstance()
 		calender.set(2019, 10, 6, 13, 30, 5)
+		calender.timeZone = TimeZone.getTimeZone("GMT+7")
 		date = calender.time
 	}
 	
@@ -83,15 +84,22 @@ class DateHelperTest {
 	@Test
 	fun canParseLegacyDates() {
 		// Arrange
-		val expected1 = Date(2019, 11, 6, 6, 30, 5)
+		val calendar1 = Calendar.getInstance()
+		calendar1.set(2019, 10, 6, 13, 30, 5)
+		calendar1.timeZone = TimeZone.getTimeZone("UTC")
+		val expected1 = calendar1.time.toString()
 		val dateFormat1 = "2019-11-06T20:30:05.000+0700" // expected
-		val expected2 = Date(2019, 11, 6, 13, 30, 5)
-		val dateFormat2 = "2019-11-06 13:30:05" // expected
+		
+		val calendar2 = Calendar.getInstance()
+		calendar2.set(2019, 10, 6, 13, 30, 0)
+		val expected2 = calendar2.time.toString()
+		val dateFormat2 = "2019-11-06 13:30:00" // expected yyyy-MM-dd HH:mm
+		
 		val dateFormat3 = "November 6, 2019 13:30" // unexpected
 		
 		// Act
-		val actual1 = legacyDateParser(dateFormat1)
-		val actual2 = legacyDateParser(dateFormat2)
+		val actual1 = legacyDateParser(dateFormat1).toString()
+		val actual2 = legacyDateParser(dateFormat2).toString()
 		val actual3 = legacyDateParser(dateFormat3)
 		
 		// Assert
