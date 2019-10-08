@@ -23,7 +23,7 @@ object DateHelper {
 	const val HOUR = 60 * MINUTE
 	const val DAY = 24 * HOUR
 	const val WEEK = 7 * DAY
-
+	
 	private val inputUtcSdf by lazy {
 		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
 		sdf.timeZone = TimeZone.getTimeZone("UTC")
@@ -99,6 +99,19 @@ object DateHelper {
 		return outputTimeSdf.format(d1)
 	}
 	
+	fun getEventTimeUTC(beginsAt: String): String {
+		val d1: Date
+		val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+		try {
+			d1 = inputUtcSdf.parse(beginsAt)
+		} catch (e: Exception) {
+			return ""
+		}
+		if (d1.before(Date(System.currentTimeMillis() - oneDayMs))) {
+			return sdf.format(d1)
+		}
+		return sdf.format(d1)
+	}
 	
 	fun getIsoTime(): String {
 		// pattern 2008-09-15T15:53:00+05:00

@@ -1,12 +1,10 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
-import android.util.Log
-import org.joda.time.Days
+import android.text.format.DateUtils
 import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.DateHelper.DAY
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,4 +66,13 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 		val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
 		dateFormat.format(eventDate.time)
 	}
+}
+
+fun Event.timeAgoBottomDialogDisplay(): String {
+	beginsAt ?: return ""
+	val eventDate = DateHelper.getEventTimeUTC(beginsAt!!)
+	val timeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+	val date = timeFormat.parse(eventDate)
+	val dateFormat = DateUtils.getRelativeTimeSpanString(date.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+	return dateFormat.toString()
 }

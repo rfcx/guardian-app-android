@@ -20,10 +20,7 @@ import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.GlideApp
-import org.rfcx.ranger.util.getIconRes
-import org.rfcx.ranger.util.toEventName
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
@@ -117,6 +114,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
 			eventNameTextView.text = "${context?.let { it1 -> it.value?.toEventName(it1).toString().capitalize() }} ?"
+			guardianNameTextView.text = it.guardianShortname.toString().capitalize()
+			timeTextView.text = it.timeAgoBottomDialogDisplay()
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {
