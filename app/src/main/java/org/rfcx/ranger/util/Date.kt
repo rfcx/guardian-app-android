@@ -58,7 +58,7 @@ fun Date.millisecondsSince(): Long {
 private val legacyInputFormatters by lazy { arrayListOf(
 	isoSdf,
 	SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
-	SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US))
+	SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()))
 }
 
 @Deprecated(message = "Only used for migrating old dates from Realm.")

@@ -4,6 +4,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.rfcx.ranger.util.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DateHelperTest {
@@ -82,29 +83,41 @@ class DateHelperTest {
 	}
 	
 	@Test
-	fun canParseLegacyDates() {
+	fun canParseLegacyDateFormatFromRealm() {
 		// Arrange
-		val calendar1 = Calendar.getInstance()
-		calendar1.set(2019, 10, 6, 13, 30, 5)
-		calendar1.timeZone = TimeZone.getTimeZone("UTC")
-		val expected1 = calendar1.time.toString()
-		val dateFormat1 = "2019-11-06T20:30:05.000+0700" // expected
-		
-		val calendar2 = Calendar.getInstance()
-		calendar2.set(2019, 10, 6, 13, 30, 0)
-		val expected2 = calendar2.time.toString()
-		val dateFormat2 = "2019-11-06 13:30:00" // expected yyyy-MM-dd HH:mm
-		
-		val dateFormat3 = "November 6, 2019 13:30" // unexpected
+		val calendar = Calendar.getInstance()
+		calendar.set(2019, 10, 6, 13, 30, 0)
+		calendar.timeZone = TimeZone.getTimeZone("UTC")
+		val expected = calendar.time
+		val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+		val dateAsString = dateFormatter.format(expected)
 		
 		// Act
-		val actual1 = legacyDateParser(dateFormat1).toString()
-		val actual2 = legacyDateParser(dateFormat2).toString()
+		val actual = legacyDateParser(dateAsString)
+		
+		// Assert (number of seconds)
+		Assert.assertEquals(expected.time / 1000, actual!!.time / 1000)
+	}
+	
+	@Test
+	fun canParseLegacyDateFormatWithTimezone() {
+		// Arrange
+		val calendar = Calendar.getInstance()
+		calendar.set(2019, 10, 6, 13, 30, 5)
+		calendar.timeZone = TimeZone.getTimeZone("UTC")
+		val expected = calendar.time
+		val dateFormat1 = "2019-11-06T13:30:05.000+0000"
+		val dateFormat2 = "2019-11-06T20:30:05.000+0700"
+		val dateFormat3 = "2019-11-06T10:30:05.000-0300"
+		
+		// Act
+		val actual1 = legacyDateParser(dateFormat1)
+		val actual2 = legacyDateParser(dateFormat2)
 		val actual3 = legacyDateParser(dateFormat3)
 		
-		// Assert
-		Assert.assertEquals(expected1, actual1)
-		Assert.assertEquals(expected2, actual2)
-		Assert.assertNull(actual3)
+		// Assert (number of seconds)
+		Assert.assertEquals(expected.time / 1000, actual1!!.time / 1000)
+		Assert.assertEquals(expected.time / 1000, actual2!!.time / 1000)
+		Assert.assertEquals(expected.time / 1000, actual3!!.time / 1000)
 	}
 }
