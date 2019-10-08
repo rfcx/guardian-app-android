@@ -1,11 +1,12 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.content.Context
-import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
@@ -167,26 +168,33 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "begins_at", "DESC", LIMITS, 0, "alert")
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
+				if (t.events !== null) {
 				
-				val arrayList = ArrayList<GuardianListDetail>()
-				eventAll.forEach { events ->
-					var index = events.size
-					
-					val mainValue = arrayListOf<String>()
-					events.distinctBy { it.value }.mapTo(mainValue, { it.value!! })
-					
-					if (mainValue.size == 1 && value == mainValue[0]) {
-						t.events?.forEach { it ->
-							events.add(index, it)
-							index += 1
+					if (t.events!!.isEmpty()) {
+						loading.postValue(StateLoading.NOT_LOADING)
+						Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
+					} else {
+						val arrayList = ArrayList<GuardianListDetail>()
+						eventAll.forEach { events ->
+							var index = events.size
+							
+							val mainValue = arrayListOf<String>()
+							events.distinctBy { it.value }.mapTo(mainValue, { it.value!! })
+							
+							if (mainValue.size == 1 && value == mainValue[0]) {
+								t.events?.forEach { it ->
+									events.add(index, it)
+									index += 1
+								}
+							}
+							val num = events.size - numEvents(events)
+							val item = itemsEvent(events)
+							arrayList.add(GuardianListDetail(item, num))
+							_items.value = Result.Success(arrayList)
 						}
+						loading.postValue(StateLoading.NOT_LOADING)
 					}
-					val num = events.size - numEvents(events)
-					val item = itemsEvent(events)
-					arrayList.add(GuardianListDetail(item, num))
-					_items.value = Result.Success(arrayList)
 				}
-				loading.postValue(StateLoading.NOT_LOADING)
 			}
 			
 			override fun onError(e: Throwable) {
