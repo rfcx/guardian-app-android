@@ -21,9 +21,7 @@ import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepository
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepositoryImp
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.EventInGuardianRepository
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.EventInGuardianRepositoryImp
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetEventInGuardian
+import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
@@ -56,6 +54,7 @@ object DataModule {
 		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
+		single { GetMoreEventInGuardian(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
 		single { GetGuardianGroups(get(), get(), get()) }
@@ -72,9 +71,6 @@ object DataModule {
 		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
 		single { GroupByGuardiansUseCase(get(), get(), get()) }
 		
-		single { EventInGuardianRepositoryImp(get()) } bind EventInGuardianRepository::class
-		single { GetEventInGuardian(get(), get(), get()) }
-		
 	}
 	
 	val remoteModule = module {
@@ -85,7 +81,6 @@ object DataModule {
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeEventsInGuardianService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

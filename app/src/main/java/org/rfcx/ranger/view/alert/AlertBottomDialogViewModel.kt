@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,11 +18,11 @@ import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.entity.event.*
 import org.rfcx.ranger.util.getResultError
+import java.io.File
 
 class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase,
                                  private val reviewEventUseCase: ReviewEventUseCase) : ViewModel() {
@@ -99,15 +100,24 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	
 	private fun initPlayer(audioUrl: String) {
 		
+		val descriptorFactory =
+				DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
+		
 		val thisAudioUrl: String = if (Build.VERSION.SDK_INT < 21) {
 			audioUrl.replace("https://assets.rfcx.org/", "http://api-insecure.rfcx.org/v1/assets/")
 		} else {
 			audioUrl
 		}
-		val descriptorFactory =
-				DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
 		
-		val mediaSource = ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(thisAudioUrl))
+		val audioFile = File(context.cacheDir, "${event.value?.audioGUID}.opus")
+		val mediaSource = if (audioFile.exists()) {
+			Log.d("initPlayer", "From local")
+			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
+		} else {
+			Log.d("initPlayer", "From remote")
+			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(thisAudioUrl))
+		}
+		
 		exoPlayer.playWhenReady = true
 		exoPlayer.prepare(mediaSource)
 		exoPlayer.addListener(exoPlayerListener)

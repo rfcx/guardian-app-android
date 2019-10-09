@@ -4,23 +4,21 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 	
-	<!--TODO: delete padding bottom-->
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/groupAlertsRecyclerView"
+		android:id="@+id/eventsInGuardianRecycler"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:clipToPadding="false"
-		android:paddingTop="@dimen/margin_padding_normal"
 		android:paddingBottom="@dimen/fab_height_half" />
 	
 	<ProgressBar
 		android:id="@+id/loadingProgress"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:visibility="invisible"
+		android:visibility="visible"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

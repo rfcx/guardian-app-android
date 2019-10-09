@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,9 @@ import kotlinx.android.synthetic.main.fragment_group_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.entity.guardian.Guardian
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailActivity
 import org.rfcx.ranger.view.alerts.adapter.GroupByGuardianAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -28,14 +30,16 @@ class GroupAlertsFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		
 		groupAlertsRecyclerView.apply {
-			layoutManager = LinearLayoutManager(context)
+			val alertsLayoutManager = LinearLayoutManager(context)
+			layoutManager = alertsLayoutManager
 			adapter = groupByGuardianAdapter
 		}
 		
-		viewModel.items.observe(this, Observer { it ->
-			it.success({
+		viewModel.groupGuardianAlert.observe(this, Observer { it ->
+			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
-				groupByGuardianAdapter.items = it.guardians
+				groupByGuardianAdapter.items = items
+				
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
 				context.handleError(it)
@@ -44,11 +48,23 @@ class GroupAlertsFragment : BaseFragment() {
 			})
 		})
 		
+		viewModel.loadGuardianGroups()
+		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(guardian: Guardian) {
-				context?.let { GuardianListDetailActivity.startActivity(it, guardian.guid, guardian.name) }
+			override fun onItemClick(eventsList: ArrayList<Event>?, name: String) {
+				Log.d("onItemClick", "$eventsList")
+				if (eventsList != null) {
+					context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
+				} else {
+					context?.let { GuardianListDetailActivity.startActivity(it, null, name) }
+				}
 			}
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		viewModel.updateNumberUnreview()
 	}
 	
 	companion object {
@@ -60,5 +76,5 @@ class GroupAlertsFragment : BaseFragment() {
 }
 
 interface OnItemClickListener {
-	fun onItemClick(guardian: Guardian)
+	fun onItemClick(eventsList: ArrayList<Event>?, name: String)
 }

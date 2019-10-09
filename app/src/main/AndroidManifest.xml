@@ -49,7 +49,7 @@
 			android:screenOrientation="portrait">
 		</activity>
 		<activity
-			android:name=".view.alerts.GuardianListDetailActivity"
+			android:name=".view.alerts.GuardianListDetail.GuardianListDetailActivity"
 			android:screenOrientation="portrait">
 		</activity>
 		

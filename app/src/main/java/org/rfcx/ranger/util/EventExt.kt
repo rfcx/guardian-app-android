@@ -1,6 +1,8 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
+import android.text.format.DateUtils
+import android.util.Log
 import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
@@ -57,4 +59,9 @@ fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactor
 	} else {
 		beginsAt.toFullDateTimeString()
 	}
+}
+
+fun Event.timeAgoBottomDialogDisplay(): String {
+	val dateFormat = DateUtils.getRelativeTimeSpanString(beginsAt.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+	return dateFormat.toString()
 }
