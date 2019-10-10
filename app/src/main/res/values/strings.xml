@@ -200,5 +200,8 @@
 	
 	<string name="notification_tracking_title">On-duty and tracking enabled</string>
 	<string name="notification_traking_message_format">%d minutes recorded</string>
-
+	
+	<string name="reject_text">reject</string>
+	<string name="confirm_text">confirm</string>
+	
 </resources>
