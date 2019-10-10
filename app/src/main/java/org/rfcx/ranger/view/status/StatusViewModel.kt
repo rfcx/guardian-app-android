@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.adapter.SyncInfo
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.report.Report
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit
 
 class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
                       private val locationDb: LocationDb, private val profileData: ProfileData,
-                      private val weeklySummaryData: WeeklySummaryData) : ViewModel() {
+                      private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb) : ViewModel() {
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
@@ -82,6 +83,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private val _reportItems = MutableLiveData<List<StatusAdapter.ReportItem>>()
 	val reportItems: LiveData<List<StatusAdapter.ReportItem>> = _reportItems
 	
+	private val _alertItems = MutableLiveData<List<StatusAdapter.AlertItem>>()
+	val alertItems: LiveData<List<StatusAdapter.AlertItem>> = _alertItems
+	
 	private val _syncInfo = MutableLiveData<SyncInfo>()
 	val syncInfo: LiveData<SyncInfo> = _syncInfo
 	
@@ -104,6 +108,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		updateWeeklyStat()
 		fetchReports()
 		fetchJobSyncing()
+		setAlert()
 		
 		if (profileData.getTracking()) {
 			observeRealTimeOnDuty()
@@ -145,6 +150,16 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		
 		checkinWorkInfoLiveData = LocationSyncWorker.workInfos()
 		checkinWorkInfoLiveData.observeForever(workInfoObserve)
+	}
+	
+	private fun setAlert() {
+		val cacheEvents = eventDb.getEvents()
+		val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
+		
+		for (i in 0..2){
+			newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i]))
+		}
+		_alertItems.value = newItemsList
 	}
 	
 	private fun combinedReports() {

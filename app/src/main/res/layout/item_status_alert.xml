@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+	
+	<data>
+		
+		<import type="android.view.View" />
+		
+		<variable
+			name="context"
+			type="android.content.Context" />
+		
+		<variable
+			name="alertItem"
+			type="org.rfcx.ranger.view.status.adapter.StatusAdapter.AlertItem" />
+		
+		<variable
+			name="onClickedItem"
+			type="android.view.View.OnClickListener" />
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/ivAlertIcon"
+			android:layout_width="@dimen/report_icon_size"
+			android:layout_height="@dimen/report_icon_size"
+			android:src="@{alertItem.image}"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:src="@drawable/ic_vehicle" />
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/ivReviewed"
+			android:layout_width="18dp"
+			android:layout_height="18dp"
+			android:layout_gravity="center"
+			android:background="@drawable/circle_green_stroke"
+			android:contentDescription="@string/app_name"
+			android:padding="5dp"
+			android:src="@drawable/ic_check"
+			android:visibility="invisible"
+			app:layout_constraintBottom_toBottomOf="@+id/ivAlertIcon"
+			app:layout_constraintEnd_toEndOf="@+id/ivAlertIcon" />
+		
+		<TextView
+			android:id="@+id/tvAlertTitle"
+			style="@style/RangerText.Body"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_xsmall"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:text="@{alertItem.guardianShortname}"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
+			app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Alert Title" />
+		
+		<TextView
+			android:id="@+id/tvAlertFromSite"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_xsmall"
+			android:drawableStart="@drawable/ic_place"
+			android:drawablePadding="@dimen/margin_padding_xsmall"
+			android:gravity="center_vertical"
+			app:layout_constraintStart_toStartOf="@+id/tvAlertTitle"
+			app:layout_constraintTop_toBottomOf="@+id/tvAlertTitle"
+			tools:text="@{alertItem.getSite}" />
+		
+		<TextView
+			android:id="@+id/tvAlertTimeAgo"
+			style="@style/RangerText.Caption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:text="@{alertItem.getTime(context)}"
+			android:textColor="@color/text_secondary"
+			android:textSize="@dimen/text_xsmall"
+			app:layout_constraintBottom_toBottomOf="@+id/tvAlertFromSite"
+			app:layout_constraintStart_toEndOf="@+id/tvAlertFromSite"
+			app:layout_constraintTop_toTopOf="@+id/tvAlertFromSite"
+			tools:text="time ago" />
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/ivStatusRead"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:src="@drawable/ic_dot_green"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

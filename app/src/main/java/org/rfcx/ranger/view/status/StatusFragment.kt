@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.status
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
@@ -30,7 +32,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
-				context?.getString(R.string.status_report_title))
+				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title))
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,6 +73,10 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 			statusAdapter.updateReportList(it)
 		})
 		
+		statusViewModel.alertItems.observe(this, Observer {
+			statusAdapter.updateAlertList(it)
+		})
+		
 		statusViewModel.syncInfo.observe(this, Observer {
 			statusAdapter.updateSyncInfo(it)
 		})
@@ -109,6 +115,11 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		ReportDetailActivity.startIntent(context, reportId = report.id)
 	}
 	
+	override fun onClickedAlertItem(alert: Event) {
+		Log.d("onClickedAlertItem", "${alert.value}")
+		// TODO open bottom sheet @tree
+	}
+	
 	companion object {
 		fun newInstance(): StatusFragment {
 			return StatusFragment()
@@ -121,4 +132,5 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 interface StatusFragmentListener {
 	fun enableTracking(enable: Boolean)
 	fun onClickedReportItem(report: Report)
+	fun onClickedAlertItem(alert: Event)
 }
