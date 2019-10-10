@@ -148,7 +148,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					negativeButton.apply {
 						setPadding(80, 0, 0, 0)
 						text = getString(R.string.reject_text)
-						compoundDrawablePadding = 80
 						setCompoundDrawablesWithIntrinsicBounds(
 								R.drawable.ic_wrong, 0, 0, 0)
 					}
@@ -160,12 +159,18 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					}
 				}
 				EventState.REVIEWED -> {
-					negativeButton.text = getString(R.string.follow_up_later_button)
+					negativeButton.apply {
+						setPadding(0, 0, 0, 0)
+						text = getString(R.string.follow_up_later_button)
+						setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+					}
+					
 					positiveButton.apply {
 						text = getString(R.string.open_map_button)
 						setCompoundDrawablesWithIntrinsicBounds(
 								R.drawable.ic_directions_white_24dp, 0, 0, 0)
 					}
+					
 				}
 			}
 		})
