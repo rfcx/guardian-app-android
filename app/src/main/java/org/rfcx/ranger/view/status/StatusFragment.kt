@@ -18,6 +18,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
+import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
@@ -116,8 +117,13 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	}
 	
 	override fun onClickedAlertItem(alert: Event) {
-		Log.d("onClickedAlertItem", "${alert.value}")
-		// TODO open bottom sheet @tree
+		val currentShowing =
+				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
+		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
+			currentShowing.dismissAllowingStateLoss()
+		}
+		AlertBottomDialogFragment.newInstance(alert).show(childFragmentManager,
+				AlertBottomDialogFragment.tag)
 	}
 	
 	companion object {
