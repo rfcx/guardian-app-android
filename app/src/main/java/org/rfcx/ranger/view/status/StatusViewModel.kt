@@ -154,12 +154,13 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private fun setAlert() {
 		val cacheEvents = eventDb.getEvents()
-		val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
-		
-		for (i in 0..2){
-			newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i]))
+		if(cacheEvents.isNotEmpty()){
+			val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
+			for (i in 0..2){
+				newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i]))
+			}
+			_alertItems.value = newItemsList
 		}
-		_alertItems.value = newItemsList
 	}
 	
 	private fun combinedReports() {

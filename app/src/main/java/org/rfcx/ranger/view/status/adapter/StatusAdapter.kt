@@ -1,6 +1,8 @@
 package org.rfcx.ranger.view.status.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -69,7 +71,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			alerts = arrayListOf()
 			alerts?.addAll(newLists)
 		} else {
-			alerts = null // display no reports
+			alerts = null // TODO display ???
 		}
 		update()
 	}
@@ -117,7 +119,6 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		}
 		
 		submitList(newList)
-		
 	}
 	
 	// region @link{ SyncingViewCallback }
@@ -196,6 +197,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			return oldItem.getId() == newItem.getId()
 		}
 		
+		@SuppressLint("DiffUtilEquals")
 		override fun areContentsTheSame(oldItem: StatusItemBase, newItem: StatusItemBase): Boolean {
 			if (oldItem.getViewType() != newItem.getViewType()) {
 				return false
@@ -340,7 +342,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		fun getImage(): Int = alert.value?.toEventIcon()!!
 		fun getSite(): String = alert.site.toString()
-		fun getTime(context: Context): String = alert.beginsAt.toTimeSinceStringAlternative(context)
+		fun getTime(context: Context): String = "• ${alert.beginsAt.toTimeSinceStringAlternative(context)}"
 	}
 	
 	class ReportEmpty : StatusItemBase {
