@@ -143,14 +143,6 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				val guid = eventList[eventList.size-1].event.guardianGUID.toString()
 				val value = eventList[eventList.size-1].event.value.toString()
 				val endAt = eventList[eventList.size-1].event.endAt.toString()
-				Log.d("onSeeOlderClick AD","guid_1 ${eventList[eventList.size-1].event.event_guid}")
-				
-				eventList.forEach{
-					Log.d("onSeeOlderClick AD","begin ${it.event.beginsAt}")
-					Log.d("onSeeOlderClick AD","end ${it.event.endAt}")
-					Log.d("onSeeOlderClick AD","guid_2 ${it.event.event_guid}")
-				}
-				Log.d("onSeeOlderClick AD","$guid $value $endAt")
 				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, endAt)
 			}
 			currentEventList = eventList

@@ -19,12 +19,13 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
+import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
-class StatusFragment : BaseFragment(), StatusFragmentListener {
+class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener {
 	
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
@@ -117,13 +118,20 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	}
 	
 	override fun onClickedAlertItem(alert: Event) {
+		showDetail(alert)
+	}
+	
+	override fun showDetail(event: Event) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissAllowingStateLoss()
 		}
-		AlertBottomDialogFragment.newInstance(alert).show(childFragmentManager,
-				AlertBottomDialogFragment.tag)
+		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+				AlertBottomDialogFragment.tag)	}
+	
+	override fun onReviewed(eventGuID: String, reviewValue: String) {
+		statusViewModel.onEventReviewed(eventGuID, reviewValue)
 	}
 	
 	companion object {

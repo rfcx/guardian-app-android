@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.status.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -333,16 +332,26 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		}
 	}
 	
-	data class AlertItem(val alert: Event) : StatusItemBase {
-		override fun getViewType(): Int = ITEM_ALERT
+	data class AlertItem(val alert: Event, var state: State) : StatusItemBase {
+		enum class State {
+			CONFIRM, REJECT, NONE
+		}
 		
+		override fun getViewType(): Int = ITEM_ALERT
 		override fun getId(): Int = -3
 		
 		fun getGuardianShortname(): String = alert.guardianShortname.toString()
-		
 		fun getImage(): Int = alert.value?.toEventIcon()!!
 		fun getSite(): String = alert.site.toString()
 		fun getTime(context: Context): String = "• ${alert.beginsAt.toTimeSinceStringAlternative(context)}"
+		
+		fun getIcon(): Int = when (state) {
+			State.CONFIRM -> R.drawable.ic_check
+			State.REJECT -> R.drawable.ic_wrong
+			else -> R.drawable.ic_wrong
+		}
+		
+		fun isVisibility(): Boolean = state == State.NONE
 	}
 	
 	class ReportEmpty : StatusItemBase {

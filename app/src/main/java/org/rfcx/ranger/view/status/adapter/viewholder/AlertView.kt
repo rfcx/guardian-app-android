@@ -1,6 +1,5 @@
 package org.rfcx.ranger.view.status.adapter.viewholder
 
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.databinding.ItemStatusAlertBinding
@@ -13,7 +12,6 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		binding.context = binding.root.context
 		binding.onClickedAlertItem = View.OnClickListener {
 			listener?.onClickedAlertItem(item.alert)
-			Log.d("onClickedAlertItem","${item.alert.value}")
 		}
 		binding.executePendingBindings()
 	}

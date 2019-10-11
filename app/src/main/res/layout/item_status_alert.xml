@@ -47,8 +47,8 @@
 			android:background="@drawable/circle_green_stroke"
 			android:contentDescription="@string/app_name"
 			android:padding="5dp"
-			android:src="@drawable/ic_check"
-			android:visibility="invisible"
+			android:src="@{alertItem.icon}"
+			android:visibility="@{alertItem.visibility ? View.INVISIBLE : View.VISIBLE}"
 			app:layout_constraintBottom_toBottomOf="@+id/ivAlertIcon"
 			app:layout_constraintEnd_toEndOf="@+id/ivAlertIcon" />
 		
@@ -101,6 +101,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:src="@drawable/ic_dot_green"
+			android:visibility="@{alertItem.visibility ? View.VISIBLE : View.INVISIBLE}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
