@@ -124,6 +124,7 @@
 	<string name="status_stat_title">Your weekly status</string>
 	<string name="status_report_title">Report history</string>
 	<string name="status_alert_title">Recent alerts</string>
+	<string name="status_see_more">See more</string>
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>

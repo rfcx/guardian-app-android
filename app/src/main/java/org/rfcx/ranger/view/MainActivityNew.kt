@@ -27,7 +27,7 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
-class MainActivityNew : BaseActivity(), MainActivityEventListener {
+class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
@@ -197,6 +197,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		newReportFabButton.visibility = View.VISIBLE
 	}
 	
+	override fun alertScreen() {
+		onBottomMenuClick(menuAlert)
+	}
+	
 	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
 		this.currentFragment = fragment
 		val contentContainerPaddingBottom =
@@ -290,4 +294,9 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
+	fun alertScreen()
+}
+
+interface MainActivityListener {
+	fun alertScreen()
 }

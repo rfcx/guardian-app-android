@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.TitleItem
+import org.rfcx.ranger.adapter.view.SeeMoreViewHolder
 import org.rfcx.ranger.adapter.view.TitleViewHolder
 import org.rfcx.ranger.databinding.*
 import org.rfcx.ranger.entity.event.Event
@@ -25,12 +26,13 @@ import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companio
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_SEE_MORE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_SYNC_INFO
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_TITLE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
 import org.rfcx.ranger.view.status.adapter.viewholder.*
 
-class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?)
+class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?, private val seeMoreButton: String?)
 	: ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()), SyncingViewCallback {
 	
 	private var listener: StatusFragmentListener? = null
@@ -105,6 +107,10 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			newList.addAll(alerts!!)
 		}
 		
+		seeMoreButton?.let {
+			newList.add(SeeMoreItem(it))
+		}
+		
 		reportTitle?.let {
 			newList.add(TitleItem(it))
 		}
@@ -149,6 +155,10 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 				val itemView = inflater.inflate(R.layout.item_title_holder, parent, false)
 				TitleViewHolder(itemView)
 			}
+			ITEM_SEE_MORE -> {
+				val itemView = DataBindingUtil.inflate<ItemSeeMoreBinding>(inflater, R.layout.item_see_more, parent, false)
+				SeeMoreViewHolder(itemView, listener)
+			}
 			ITEM_REPORT_EMPTY -> {
 				val itemView = inflater.inflate(R.layout.item_report_empty, parent, false)
 				EmptyReportView(itemView)
@@ -174,6 +184,9 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			}
 			is AlertView -> {
 				holder.bind(item as AlertItem)
+			}
+			is SeeMoreViewHolder -> {
+				holder.bind(item as SeeMoreItem)
 			}
 			is ReportView -> {
 				holder.bind(item as ReportItem)
@@ -248,6 +261,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			const val ITEM_REPORT_EMPTY = 4
 			const val ITEM_SYNC_INFO = 5
 			const val ITEM_ALERT = 6
+			const val ITEM_SEE_MORE =7
 		}
 	}
 	
@@ -300,6 +314,12 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getId(): Int = -2
 		
 		override fun getViewType(): Int = ITEM_USER_STATUS
+	}
+	
+	data class SeeMoreItem(val text: String) : StatusItemBase {
+		override fun getId(): Int = -8
+		
+		override fun getViewType(): Int = ITEM_SEE_MORE
 	}
 	
 	data class ReportItem(val report: Report, val imageState: ImageState) : StatusItemBase {

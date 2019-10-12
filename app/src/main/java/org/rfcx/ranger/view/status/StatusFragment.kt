@@ -18,14 +18,16 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
+import org.rfcx.ranger.view.MainActivityListener
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
+import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
-class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener {
+class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, MainActivityListener {
 	
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
@@ -34,7 +36,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener {
 	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
-				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title))
+				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title), context?.getString(R.string.status_see_more))
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -128,11 +130,21 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener {
 			currentShowing.dismissAllowingStateLoss()
 		}
 		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
-				AlertBottomDialogFragment.tag)	}
+				AlertBottomDialogFragment.tag)
+	}
 	
 	override fun onReviewed(eventGuID: String, reviewValue: String) {
 		statusViewModel.onEventReviewed(eventGuID, reviewValue)
 	}
+	
+	override fun onClickedSeeMore() {
+		alertScreen()
+	}
+	
+	override fun alertScreen() {
+		(activity as MainActivityListener).alertScreen()
+	}
+	
 	
 	companion object {
 		fun newInstance(): StatusFragment {
@@ -147,4 +159,5 @@ interface StatusFragmentListener {
 	fun enableTracking(enable: Boolean)
 	fun onClickedReportItem(report: Report)
 	fun onClickedAlertItem(alert: Event)
+	fun onClickedSeeMore()
 }
