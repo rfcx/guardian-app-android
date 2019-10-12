@@ -40,10 +40,14 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 		allAlertsViewModel.alerts.observe(this, Observer { it ->
 			
 			it.success({ items ->
-				val newList = mutableListOf<EventItem>()
-				items.forEach { item -> newList.add(item.copy()) }
-				alertsAdapter.submitList(newList)
 				loadingProgress.visibility = View.INVISIBLE
+				if (items.isEmpty()) {
+					(parentFragment as AlertsNewInstanceListener?)?.emptyAlert()
+				} else {
+					val newList = mutableListOf<EventItem>()
+					items.forEach { item -> newList.add(item.copy()) }
+					alertsAdapter.submitList(newList)
+				}
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
 				context?.handleError(it)

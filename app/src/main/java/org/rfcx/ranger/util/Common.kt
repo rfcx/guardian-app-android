@@ -2,40 +2,54 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.DateHelper.DAY
-import org.rfcx.ranger.util.DateHelper.HOUR
-import org.rfcx.ranger.util.DateHelper.MINUTE
-import org.rfcx.ranger.util.DateHelper.WEEK
 import java.util.*
 
+private const val SECOND: Long = 1000
+private const val MINUTE = 60 * SECOND
+private const val HOUR = 60 * MINUTE
+private const val DAY = 24 * HOUR
+private const val WEEK = 7 * DAY
 
-fun Context?.getPastedTimeFormat(long: Long): String {
+fun Date.toTimeSinceString(context: Context?): String {
 	
-	if (this == null) return "-"
-	
+	if (context == null) return "-"
+	val long = this.millisecondsSince()
 	val minAgo = MINUTE
 	val hourAgo = HOUR
 	val dayAgo = DAY
 	val weekAgo = WEEK
 	
 	return when {
-		long < minAgo -> this.getString(R.string.report_time_second)
+		long < minAgo -> context.getString(R.string.report_time_second)
 		long < hourAgo -> {
 			val diffMinute = (long / MINUTE).toInt()
-			this.getString(R.string.report_minutes_format, diffMinute)
+			context.getString(R.string.report_minutes_format, diffMinute)
 		}
 		long < dayAgo -> {
 			val diffHour = (long / HOUR).toInt()
-			this.getString(R.string.report_hr_format, diffHour)
+			context.getString(R.string.report_hr_format, diffHour)
 		}
 		long < weekAgo -> {
 			val diffDay = (long / DAY).toInt()
-			this.getString(R.string.report_day_format, diffDay)
+			context.getString(R.string.report_day_format, diffDay)
 		}
 		else -> {
 			val diffWeek = (long / WEEK).toInt()
-			this.getString(R.string.report_week_format, diffWeek)
+			context.getString(R.string.report_week_format, diffWeek)
 		}
+	}
+}
+
+fun Date.toTimeSinceStringAlternative(context: Context): String { // TODO: can we combine with above?
+	val diff = Date().time - this.time
+	val dayAgo = DAY
+	val daysAgo = 2 * DAY
+	return if (diff < dayAgo) {
+		this.toTimeString()
+	} else if (diff < daysAgo) {
+		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
+	} else {
+		this.toFullDateTimeString()
 	}
 }
 

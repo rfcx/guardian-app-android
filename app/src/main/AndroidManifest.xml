@@ -35,10 +35,23 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
-		<activity android:name=".view.profile.FeedbackActivity" />
-		<activity android:name=".view.report.ReportDetailActivity" />
-		<activity android:name=".view.profile.GuardianGroupActivity" />
-		<activity android:name=".view.alerts.GuardianListDetailActivity"></activity>
+		<activity
+			android:name=".view.profile.FeedbackActivity"
+			android:screenOrientation="portrait">
+		</activity>
+
+		<activity
+			android:name=".view.report.ReportDetailActivity"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:name=".view.profile.GuardianGroupActivity"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:name=".view.alerts.GuardianListDetail.GuardianListDetailActivity"
+			android:screenOrientation="portrait">
+		</activity>
 		
 		<activity
 			android:name=".view.MainActivityNew"
@@ -47,7 +60,9 @@
 			android:theme="@style/AppTheme">
 		</activity>
 		
-		<activity android:name=".view.login.LoginActivityNew">
+		<activity
+			android:name=".view.login.LoginActivityNew"
+			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				

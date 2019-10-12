@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.util.timeAgoDisplay
 import org.rfcx.ranger.util.toEventIcon
+import org.rfcx.ranger.util.toTimeSinceStringAlternative
 
 
 class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, AlertsAdapter.AlertViewHolder>(AlertsDiffUtil()) {
@@ -56,7 +55,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, A
 			if (item.event.site != null) {
 				tvFrom.text = item.event.site!!.capitalize()
 			}
-			tvTimeAgo.text = "• ${item.event.timeAgoDisplay(itemView.context)}"
+			tvTimeAgo.text = "• ${item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)}"
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					ivReviewed.setImageResource(R.drawable.ic_check)

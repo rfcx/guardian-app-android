@@ -15,8 +15,8 @@ android {
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 41
-        versionName "1.0.2-beta"
+        versionCode 49
+        versionName "1.0.0"
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
@@ -51,6 +51,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -116,10 +119,16 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
+    implementation "com.squareup.okio:okio:2.4.0"
+
     //Joda-datetime
     implementation 'net.danlew:android.joda:2.10.3'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '2.9.0'
+
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

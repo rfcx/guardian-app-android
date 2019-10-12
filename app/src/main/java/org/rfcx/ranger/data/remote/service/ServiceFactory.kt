@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansEndpoint
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.EventInGuardianEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.service.rest.ClassifiedService
@@ -62,12 +61,6 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GroupByGuardiansEndpoint::class.java)
-	}
-	
-	fun makeEventsInGuardianService(isDebug: Boolean, context: Context): EventInGuardianEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-				GsonProvider.getInstance().gson)
-				.create(EventInGuardianEndpoint::class.java)
 	}
 	
 	private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

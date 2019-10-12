@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.status.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,27 +11,28 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.adapter.entity.TitleItem
+import org.rfcx.ranger.adapter.view.SeeMoreViewHolder
 import org.rfcx.ranger.adapter.view.TitleViewHolder
-import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
-import org.rfcx.ranger.databinding.ItemStatusReportBinding
-import org.rfcx.ranger.databinding.ItemStatusSyncingBinding
-import org.rfcx.ranger.databinding.ItemUserStatusBinding
+import org.rfcx.ranger.databinding.*
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.getPastedTimeFormat
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toEventName
+import org.rfcx.ranger.util.toTimeSinceString
+import org.rfcx.ranger.util.toTimeSinceStringAlternative
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_SEE_MORE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_SYNC_INFO
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_TITLE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
 import org.rfcx.ranger.view.status.adapter.viewholder.*
 
-class StatusAdapter(private val statusTitle: String?, private val reportTitle: String?)
+class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?, private val seeMoreButton: String?)
 	: ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()), SyncingViewCallback {
 	
 	private var listener: StatusFragmentListener? = null
@@ -42,6 +44,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 	private var profile: ProfileItem? = null
 	private var stat: UserStatusItem? = null
 	private var reports: ArrayList<ReportItem>? = arrayListOf()
+	private var alerts: ArrayList<AlertItem>? = arrayListOf()
 	private var syncInfo: SyncInfoItem? = null
 	
 	fun updateHeader(header: ProfileItem) {
@@ -60,6 +63,16 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			reports?.addAll(newLists)
 		} else {
 			reports = null // display no reports
+		}
+		update()
+	}
+	
+	fun updateAlertList(newLists: List<AlertItem>) {
+		if (newLists.isNotEmpty()) {
+			alerts = arrayListOf()
+			alerts?.addAll(newLists)
+		} else {
+			alerts = null // TODO display ???
 		}
 		update()
 	}
@@ -86,6 +99,18 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			newList.add(it)
 		}
 		
+		if (alerts != null && alerts!!.isNotEmpty()) {
+			alertTitle?.let {
+				newList.add(TitleItem(it))
+			}
+			
+			newList.addAll(alerts!!)
+			
+			seeMoreButton?.let {
+				newList.add(SeeMoreItem(it))
+			}
+		}
+		
 		reportTitle?.let {
 			newList.add(TitleItem(it))
 		}
@@ -99,7 +124,6 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		}
 		
 		submitList(newList)
-		
 	}
 	
 	// region @link{ SyncingViewCallback }
@@ -119,6 +143,10 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 				val itemView = DataBindingUtil.inflate<ItemUserStatusBinding>(inflater, R.layout.item_user_status, parent, false)
 				UserStatusView(itemView)
 			}
+			ITEM_ALERT -> {
+				val itemView = DataBindingUtil.inflate<ItemStatusAlertBinding>(inflater, R.layout.item_status_alert, parent, false)
+				AlertView(itemView, listener)
+			}
 			ITEM_REPORT_HISTORY -> {
 				val itemView = DataBindingUtil.inflate<ItemStatusReportBinding>(inflater, R.layout.item_status_report, parent, false)
 				ReportView(itemView, listener)
@@ -126,6 +154,10 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			ITEM_TITLE -> {
 				val itemView = inflater.inflate(R.layout.item_title_holder, parent, false)
 				TitleViewHolder(itemView)
+			}
+			ITEM_SEE_MORE -> {
+				val itemView = DataBindingUtil.inflate<ItemSeeMoreBinding>(inflater, R.layout.item_see_more, parent, false)
+				SeeMoreViewHolder(itemView, listener)
 			}
 			ITEM_REPORT_EMPTY -> {
 				val itemView = inflater.inflate(R.layout.item_report_empty, parent, false)
@@ -150,6 +182,12 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			is UserStatusView -> {
 				holder.bind(item as UserStatusItem)
 			}
+			is AlertView -> {
+				holder.bind(item as AlertItem)
+			}
+			is SeeMoreViewHolder -> {
+				holder.bind(item as SeeMoreItem)
+			}
 			is ReportView -> {
 				holder.bind(item as ReportItem)
 			}
@@ -171,6 +209,7 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			return oldItem.getId() == newItem.getId()
 		}
 		
+		@SuppressLint("DiffUtilEquals")
 		override fun areContentsTheSame(oldItem: StatusItemBase, newItem: StatusItemBase): Boolean {
 			if (oldItem.getViewType() != newItem.getViewType()) {
 				return false
@@ -221,6 +260,8 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 			const val ITEM_REPORT_HISTORY = 3
 			const val ITEM_REPORT_EMPTY = 4
 			const val ITEM_SYNC_INFO = 5
+			const val ITEM_ALERT = 6
+			const val ITEM_SEE_MORE = 7
 		}
 	}
 	
@@ -275,6 +316,12 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		override fun getViewType(): Int = ITEM_USER_STATUS
 	}
 	
+	data class SeeMoreItem(val text: String) : StatusItemBase {
+		override fun getId(): Int = -8
+		
+		override fun getViewType(): Int = ITEM_SEE_MORE
+	}
+	
 	data class ReportItem(val report: Report, val imageState: ImageState) : StatusItemBase {
 		override fun getId(): Int = report.id
 		
@@ -301,9 +348,30 @@ class StatusAdapter(private val statusTitle: String?, private val reportTitle: S
 		}
 		
 		fun getTimeAgo(context: Context): String {
-			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
-			return context.getPastedTimeFormat(reportPasted)
+			return report.reportedAt.toTimeSinceString(context)
 		}
+	}
+	
+	data class AlertItem(val alert: Event, var state: State) : StatusItemBase {
+		enum class State {
+			CONFIRM, REJECT, NONE
+		}
+		
+		override fun getViewType(): Int = ITEM_ALERT
+		override fun getId(): Int = -3
+		
+		fun getGuardianShortname(): String = alert.guardianShortname.toString()
+		fun getImage(): Int = alert.value?.toEventIcon()!!
+		fun getSite(): String = alert.site.toString()
+		fun getTime(context: Context): String = "• ${alert.beginsAt.toTimeSinceStringAlternative(context)}"
+		
+		fun getIcon(): Int = when (state) {
+			State.CONFIRM -> R.drawable.ic_check
+			State.REJECT -> R.drawable.ic_wrong
+			else -> R.drawable.ic_wrong
+		}
+		
+		fun isVisibility(): Boolean = state == State.NONE
 	}
 	
 	class ReportEmpty : StatusItemBase {

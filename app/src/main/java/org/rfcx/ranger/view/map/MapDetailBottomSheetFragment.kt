@@ -12,8 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.DateHelper
-import org.rfcx.ranger.util.getPastedTimeFormat
+import org.rfcx.ranger.util.toTimeSinceString
 import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.report.getLocalisedValue
 
@@ -59,8 +58,7 @@ class MapDetailBottomSheetFragment : BottomSheetDialogFragment() {
 						else -> R.drawable.ic_pin_huge
 					}
 			)
-			val reportPasted = DateHelper.getTimePasted(report.reportedAt)
-			reportTimePastedTextView.text = context.getPastedTimeFormat(reportPasted)
+			reportTimePastedTextView.text = report.reportedAt.toTimeSinceString(context)
 			
 			seeDetailTextView.setOnClickListener {
 				analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)

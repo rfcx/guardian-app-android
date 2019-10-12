@@ -5,7 +5,6 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
-import org.rfcx.ranger.util.DateHelper
 
 /**
  * Manage the saving and sending of reports from the local database
@@ -18,7 +17,7 @@ class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
 	}
 	
 	fun save(report: Report, attachImages: List<String>) {
-		val imageCreateAt = DateHelper.parse(report.reportedAt)
+		val imageCreateAt = report.reportedAt
 		realm.executeTransaction {
 			// save attached image to be Report Image
 			attachImages.forEach { attachImage ->

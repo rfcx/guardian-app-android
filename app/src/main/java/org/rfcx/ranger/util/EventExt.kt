@@ -1,13 +1,8 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
-import org.joda.time.Duration
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
-import java.sql.Date
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 fun Event.getIconRes(): Int {
 	
@@ -47,21 +42,5 @@ fun String.toEventIcon(): Int {
 		Event.vehicle -> R.drawable.ic_vehicle
 		Event.trespasser -> R.drawable.ic_people
 		else -> R.drawable.ic_pin_huge
-	}
-}
-
-fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring
-	audioMeasuredAt ?: return ""
-	val date = Date(audioMeasuredAt!!)
-	val timeFormat = SimpleDateFormat(DateHelper.timeFormat, Locale.US)
-	val diff = Duration(date.time, Date().time).standardHours
-	
-	return when {
-		date.isToday() -> timeFormat.format(date.time)
-		diff < 48 -> "${context.getString(R.string.yesterday)} ${timeFormat.format(date.time)}"
-		else -> {
-			val dateFormat = SimpleDateFormat("MMMM d, yyyy HH:mm", Locale.US)
-			dateFormat.format(date.time)
-		}
 	}
 }

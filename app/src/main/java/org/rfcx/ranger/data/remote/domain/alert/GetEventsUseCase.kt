@@ -12,6 +12,6 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 class GetEventsUseCase(private val eventRepository: EventRepository, threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread) :
 		SingleUseCase<EventsRequestFactory, EventResponse>(threadExecutor, postExecutionThread) {
 	override fun buildUseCaseObservable(params: EventsRequestFactory): Single<EventResponse> {
-		return eventRepository.getEventList(params)
+		return eventRepository.getRemoteEventList(params)
 	}
 }

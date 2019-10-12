@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +21,10 @@ import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.GlideApp
-import org.rfcx.ranger.util.getIconRes
-import org.rfcx.ranger.util.toEventName
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
@@ -116,7 +116,22 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
-			eventNameTextView.text = "${context?.let { it1 -> it.value?.toEventName(it1).toString().capitalize() }} ?"
+			if (it.site != null) {
+				alertFromSiteTextView.text = it.site!!.capitalize()
+			}
+			guardianNameTextView.text = it.guardianShortname.toString().capitalize()
+			val time = DateUtils.getRelativeTimeSpanString(it.beginsAt.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+			if (time.contains("0 minutes ago")) {
+				val now = Date()
+				val seconds = TimeUnit.MILLISECONDS.toSeconds(now.time - it.beginsAt.time)
+				if (seconds < 60) {
+					timeTextView.text = "• $seconds seconds ago"
+				}
+			} else if (time.contains("ago") && !time.contains("0 minutes ago")) {
+				timeTextView.text = "• $time ${it.beginsAt.toTimeString()}"
+			} else {
+				timeTextView.text = "• ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1) }}"
+			}
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {
@@ -130,16 +145,32 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.eventState.observe(this, Observer {
 			when (it!!) {
 				EventState.NONE -> {
-					negativeButton.text = getString(R.string.common_no)
-					positiveButton.text = getString(R.string.common_yes)
+					negativeButton.apply {
+						setPadding(80, 0, 0, 0)
+						text = getString(R.string.reject_text)
+						setCompoundDrawablesWithIntrinsicBounds(
+								R.drawable.ic_wrong, 0, 0, 0)
+					}
+					
+					positiveButton.apply {
+						text = getString(R.string.confirm_text)
+						setCompoundDrawablesWithIntrinsicBounds(
+								R.drawable.ic_check, 0, 0, 0)
+					}
 				}
 				EventState.REVIEWED -> {
-					negativeButton.text = getString(R.string.follow_up_later_button)
+					negativeButton.apply {
+						setPadding(0, 0, 0, 0)
+						text = getString(R.string.follow_up_later_button)
+						setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+					}
+					
 					positiveButton.apply {
 						text = getString(R.string.open_map_button)
 						setCompoundDrawablesWithIntrinsicBounds(
 								R.drawable.ic_directions_white_24dp, 0, 0, 0)
 					}
+					
 				}
 			}
 		})

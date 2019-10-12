@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.util.*
 
 open class Event() : RealmObject(), Parcelable {
 	@PrimaryKey
@@ -21,10 +22,10 @@ open class Event() : RealmObject(), Parcelable {
 	var longitude: Double? = null
 	
 	@SerializedName("begins_at")
-	var beginsAt: String? = ""
+	var beginsAt: Date = Date()
 	
 	@SerializedName("ends_at")
-	var endAt: String? = ""
+	var endAt: Date = Date()
 	@SerializedName("type")
 	var type: String? = ""
 	@SerializedName("value")
@@ -60,18 +61,21 @@ open class Event() : RealmObject(), Parcelable {
 		audioGUID = parcel.readString()
 		latitude = parcel.readValue(Double::class.java.classLoader) as? Double
 		longitude = parcel.readValue(Double::class.java.classLoader) as? Double
-		beginsAt = parcel.readString()
-		endAt = parcel.readString()
+		beginsAt = Date(parcel.readLong())
+		endAt = Date(parcel.readLong())
 		type = parcel.readString()
 		value = parcel.readString()
-		confidence = parcel.readFloat()
+		confidence = parcel.readValue(Float::class.java.classLoader) as? Float
 		guardianGUID = parcel.readString()
 		guardianShortname = parcel.readString()
 		site = parcel.readString()
 		timezone = parcel.readString()
-		isOpened = parcel.readByte() != 0.toByte()
 		audio = parcel.readParcelable(Audio::class.java.classLoader)
-		reviewerConfirmed = parcel.readValue(Boolean::class.java.classLoader) as Boolean
+		reviewerConfirmed = when (parcel.readInt()) {
+			0 -> false
+			1 -> true
+			else -> null
+		}
 		aiGuid = parcel.readString()
 	}
 	
@@ -80,8 +84,8 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeString(audioGUID)
 		parcel.writeValue(latitude)
 		parcel.writeValue(longitude)
-		parcel.writeString(beginsAt)
-		parcel.writeString(endAt)
+		parcel.writeLong(beginsAt.time)
+		parcel.writeLong(endAt.time)
 		parcel.writeString(type)
 		parcel.writeString(value)
 		parcel.writeValue(confidence)
@@ -89,9 +93,12 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeString(guardianShortname)
 		parcel.writeString(site)
 		parcel.writeString(timezone)
-		parcel.writeByte(if (isOpened) 1 else 0)
 		parcel.writeParcelable(audio, flags)
-		parcel.writeValue(reviewerConfirmed)
+		parcel.writeInt(when (reviewerConfirmed) {
+			true -> 1
+			false -> 0
+			else -> -1
+		})
 		parcel.writeString(aiGuid)
 	}
 	

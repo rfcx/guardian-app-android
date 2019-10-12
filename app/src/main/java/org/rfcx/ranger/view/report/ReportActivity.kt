@@ -38,6 +38,7 @@ import org.rfcx.ranger.widget.WhatView
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
@@ -278,7 +279,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		}
 		
 		val site = getSiteName()
-		val time = DateHelper.getIsoTime()
+		val time = Date()
 		val lat = lastLocation?.latitude ?: 0.0
 		val lon = lastLocation?.longitude ?: 0.0
 		Log.d("getSiteName", getSiteName())

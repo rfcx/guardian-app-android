@@ -27,13 +27,14 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
-class MainActivityNew : BaseActivity(), MainActivityEventListener {
+class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val analytics by lazy { Analytics(this) }
+	private lateinit var currentFragment: Fragment
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -77,6 +78,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		getEventFromIntentIfHave(intent)
 	}
 	
+	override fun onStart() {
+		super.onStart()
+		mainViewModel.getEventAndPreloadAudio()
+	}
+	
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		getEventFromIntentIfHave(intent)
@@ -91,13 +97,22 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		}
 	}
 	
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions.handleRequestResult(requestCode, grantResults)
+		
+		if (currentFragment is MapFragment) {
+			(currentFragment as MapFragment).onRequestPermissionsResult(requestCode, permissions, grantResults)
+		}
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		locationPermissions.handleActivityResult(requestCode, resultCode)
+		
+		if (currentFragment is MapFragment) {
+			(currentFragment as MapFragment).onActivityResult(requestCode, resultCode, data)
+		}
 	}
 	
 	private fun setupBottomMenu() {
@@ -182,8 +197,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		newReportFabButton.visibility = View.VISIBLE
 	}
 	
+	override fun alertScreen() {
+		onBottomMenuClick(menuAlert)
+	}
+	
 	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
-		
+		this.currentFragment = fragment
 		val contentContainerPaddingBottom =
 				if (showAboveAppbar) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
 		
@@ -275,4 +294,9 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
+	fun alertScreen()
+}
+
+interface MainActivityListener {
+	fun alertScreen()
 }

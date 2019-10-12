@@ -1,12 +1,9 @@
 package org.rfcx.ranger.view.map
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
-import android.content.pm.PackageManager
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
@@ -16,24 +13,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.gms.tasks.Task
+import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.service.LocationTrackerService
+import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -62,6 +53,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		override fun onProviderDisabled(p0: String?) {}
 	}
 	
+	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
+		if (isOnAirplaneMode && isSafe()) {
+			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
+		} else {
+			checkThenAccquireLocation()
+		}
+	}
+	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
 			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
@@ -70,6 +69,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			BitmapDescriptorFactory.fromBitmap(bitmap)
 		}
 	}
+	
+	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_map, container, false)
@@ -89,8 +90,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	override fun onResume() {
+		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
 		analytics?.trackScreen(Screen.MAP)
+	}
+	
+	override fun onPause() {
+		activity?.unregisterReceiver(airplaneModeReceiver)
+		super.onPause()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,10 +125,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun checkThenAccquireLocation() {
-		if (!context?.isOnAirplaneMode()!!) {
+		if (!isSafe()) return
+		
+		if (context?.isOnAirplaneMode()!!) {
+			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
+		} else {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
 					googleMap?.isMyLocationEnabled = isAllowed
+					googleMap?.uiSettings?.isMyLocationButtonEnabled = true
 					getLocation()
 				} else {
 					setDisplay()
@@ -132,6 +144,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
+		layoutAlertAirplaneMode.visibility = View.GONE
+		
 		locationManager?.removeUpdates(locationListener)
 		locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
@@ -145,7 +159,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	fun setDisplay(){
+	fun setDisplay() {
 		googleMap?.let { displayReport(it) }
 		googleMap?.let { displayCheckIn(it) }
 		googleMap?.setOnMapClickListener {
@@ -230,7 +244,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				checkInMarkers.add(map.addMarker(MarkerOptions()
 						.position(latLng)
 						.anchor(0.5f, 0.5f)
-						.title(DateHelper.parse(checkIn.time))
+						.title(checkIn.time.toFullDateTimeString())
 						.snippet("${checkIn.latitude},${checkIn.latitude}")
 						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
 				checkInPolyline = map.addPolyline(polylineOptions)
@@ -250,10 +264,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				LatLng(latLng.latitude, latLng.longitude), 18f))
 	}
 	
+	private fun showLocationMessageError(msg: String) {
+		tvAlertTitle.text = msg
+		layoutAlertAirplaneMode.visibility = View.VISIBLE
+	}
+	
 	companion object {
 		fun newInstance(): MapFragment {
 			return MapFragment()
 		}
+		
 		const val tag = "MapFragment"
 	}
 }

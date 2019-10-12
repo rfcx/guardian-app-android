@@ -18,11 +18,11 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.base.BaseFragment
 
-class AlertsFragment : BaseFragment(), AlertListener {
+class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener {
 	
 	private val alertViewModel: AlertViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
-
+	
 	private val observeGuardianGroup = Observer<Boolean> {
 		if (it) {
 			val tabSelected = alertsTabLayout.selectedTabPosition
@@ -82,7 +82,9 @@ class AlertsFragment : BaseFragment(), AlertListener {
 	private fun initView() {
 		alertsTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 			override fun onTabReselected(tab: TabLayout.Tab?) {
-			
+				if (tab != null) {
+					startTabSelected(tab.position)
+				}
 			}
 			
 			override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -101,12 +103,16 @@ class AlertsFragment : BaseFragment(), AlertListener {
 	private fun startTabSelected(position: Int) {
 		when (position) {
 			0 -> {
-				startFragment(GroupAlertsFragment(), GroupAlertsFragment.tag)
+				startFragment(GroupAlertsFragment.newInstance(), GroupAlertsFragment.tag)
 			}
 			1 -> {
 				startFragment(AllAlertsFragment.newInstance(), AllAlertsFragment.tag)
 			}
 		}
+	}
+	
+	override fun emptyAlert() {
+		startFragment(EmptyAlertFragment.newInstance(), EmptyAlertFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String) {
@@ -116,7 +122,6 @@ class AlertsFragment : BaseFragment(), AlertListener {
 		} else {
 			fragment
 		}
-		
 		childFragmentManager.beginTransaction()
 				.replace(contentContainer.id, startFragment,
 						tag).commit()
@@ -139,4 +144,8 @@ class AlertsFragment : BaseFragment(), AlertListener {
 			}
 		}
 	}
+}
+
+interface AlertsNewInstanceListener {
+	fun emptyAlert()
 }

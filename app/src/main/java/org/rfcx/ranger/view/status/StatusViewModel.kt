@@ -13,8 +13,11 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.adapter.SyncInfo
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.LocationDb
@@ -25,13 +28,15 @@ import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.replace
+import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
 
 class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
                       private val locationDb: LocationDb, private val profileData: ProfileData,
-                      private val weeklySummaryData: WeeklySummaryData) : ViewModel() {
+                      private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb) : ViewModel() {
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
@@ -82,6 +87,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private val _reportItems = MutableLiveData<List<StatusAdapter.ReportItem>>()
 	val reportItems: LiveData<List<StatusAdapter.ReportItem>> = _reportItems
 	
+	private val _alertItems = MutableLiveData<List<StatusAdapter.AlertItem>>()
+	val alertItems: LiveData<List<StatusAdapter.AlertItem>> = _alertItems
+	
 	private val _syncInfo = MutableLiveData<SyncInfo>()
 	val syncInfo: LiveData<SyncInfo> = _syncInfo
 	
@@ -97,6 +105,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private lateinit var checkinWorkInfoLiveData: LiveData<List<WorkInfo>>
 	private lateinit var reportWorkInfoLiveData: LiveData<List<WorkInfo>>
 	private var onDutyRealmTimeDisposable: Disposable? = null
+	private var _alertsList: List<StatusAdapter.AlertItem> = listOf()
 	
 	init {
 		resumed()
@@ -104,6 +113,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		updateWeeklyStat()
 		fetchReports()
 		fetchJobSyncing()
+		setAlert()
 		
 		if (profileData.getTracking()) {
 			observeRealTimeOnDuty()
@@ -145,6 +155,41 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		
 		checkinWorkInfoLiveData = LocationSyncWorker.workInfos()
 		checkinWorkInfoLiveData.observeForever(workInfoObserve)
+	}
+	
+	private fun setAlert() {
+		val cacheEvents = eventDb.getEvents()
+		if(cacheEvents.isNotEmpty()){
+			val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
+			for (i in 0..2){
+				val state = eventDb.getEventState(cacheEvents[i].event_guid)
+				state?.let {
+					val result = when (it) {
+						ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
+						ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
+						else -> StatusAdapter.AlertItem.State.NONE
+					}
+					newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i], result))
+				} ?: run {
+					newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i], StatusAdapter.AlertItem.State.NONE))
+				}
+			}
+			_alertsList =  newItemsList
+			_alertItems.value = newItemsList
+		}
+	}
+	
+	fun onEventReviewed(eventGuid: String, reviewValue: String) {
+		val eventItem = _alertsList.firstOrNull { it.alert.event_guid == eventGuid }
+		if (eventItem != null) {
+			eventItem.state = when (reviewValue) {
+				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
+				ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
+				else -> StatusAdapter.AlertItem.State.NONE
+			}
+			_alertsList.replace(eventItem) { it.alert.event_guid == eventGuid }
+		}
+		_alertItems.value = _alertsList
 	}
 	
 	private fun combinedReports() {

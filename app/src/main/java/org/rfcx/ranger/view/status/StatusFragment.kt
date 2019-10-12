@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.status
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +13,21 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentStatusBinding
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
+import org.rfcx.ranger.view.MainActivityListener
+import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
+import org.rfcx.ranger.view.alert.AlertListener
+import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
-class StatusFragment : BaseFragment(), StatusFragmentListener {
+class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, MainActivityListener {
 	
 	private lateinit var viewDataBinding: FragmentStatusBinding
 	private val statusViewModel: StatusViewModel by viewModel()
@@ -30,7 +36,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
-				context?.getString(R.string.status_report_title))
+				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title), context?.getString(R.string.status_see_more))
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,6 +77,10 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 			statusAdapter.updateReportList(it)
 		})
 		
+		statusViewModel.alertItems.observe(this, Observer {
+			statusAdapter.updateAlertList(it)
+		})
+		
 		statusViewModel.syncInfo.observe(this, Observer {
 			statusAdapter.updateSyncInfo(it)
 		})
@@ -109,6 +119,33 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 		ReportDetailActivity.startIntent(context, reportId = report.id)
 	}
 	
+	override fun onClickedAlertItem(alert: Event) {
+		showDetail(alert)
+	}
+	
+	override fun showDetail(event: Event) {
+		val currentShowing =
+				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
+		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
+			currentShowing.dismissAllowingStateLoss()
+		}
+		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+				AlertBottomDialogFragment.tag)
+	}
+	
+	override fun onReviewed(eventGuID: String, reviewValue: String) {
+		statusViewModel.onEventReviewed(eventGuID, reviewValue)
+	}
+	
+	override fun onClickedSeeMore() {
+		alertScreen()
+	}
+	
+	override fun alertScreen() {
+		(activity as MainActivityListener).alertScreen()
+	}
+	
+	
 	companion object {
 		fun newInstance(): StatusFragment {
 			return StatusFragment()
@@ -121,4 +158,6 @@ class StatusFragment : BaseFragment(), StatusFragmentListener {
 interface StatusFragmentListener {
 	fun enableTracking(enable: Boolean)
 	fun onClickedReportItem(report: Report)
+	fun onClickedAlertItem(alert: Event)
+	fun onClickedSeeMore()
 }

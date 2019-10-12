@@ -68,15 +68,47 @@
 			android:layout_height="@dimen/report_icon_size"
 			tools:src="@drawable/ic_vehicle" />
 		
-		<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/eventNameTextView"
-			style="@style/RangerText.Subhead"
-			android:layout_width="wrap_content"
+		<LinearLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:textStyle="bold"
-			tools:text="Vehicle?" />
+			android:orientation="vertical">
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/guardianNameTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:textStyle="bold"
+				android:gravity="center_vertical"
+				tools:text="Malapa - Fossil Site" />
+			
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:orientation="horizontal">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/alertFromSiteTextView"
+					style="@style/RangerText.Label.Secondary"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:drawableStart="@drawable/ic_place"
+					android:gravity="center_vertical"
+					tools:text="@string/default_site_label" />
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/timeTextView"
+					style="@style/RangerText.Caption"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_xsmall"
+					tools:text="2 days ago" />
+			</LinearLayout>
+		</LinearLayout>
+	
 	
 	</LinearLayout>
 	

@@ -12,11 +12,12 @@ import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.report.UploadImageResponse
 import org.rfcx.ranger.repo.ApiManager
 import org.rfcx.ranger.repo.responseParser
-import org.rfcx.ranger.util.DateHelper
 import org.rfcx.ranger.util.getTokenID
+import org.rfcx.ranger.util.toIsoString
 import retrofit2.Response
 import java.io.File
 import java.io.FileNotFoundException
+import java.util.*
 
 class UploadImageApi {
 	
@@ -25,7 +26,7 @@ class UploadImageApi {
 		val token = context.getTokenID() ?: return Err(Exception("Null token"))
 		val authUser = "Bearer $token"
 		val type = RequestBody.create(MultipartBody.FORM, "image")
-		val time = RequestBody.create(MultipartBody.FORM, DateHelper.getIsoTime())
+		val time = RequestBody.create(MultipartBody.FORM, Date().toIsoString())
 		val attachments = arrayListOf<MultipartBody.Part>()
 		
 		

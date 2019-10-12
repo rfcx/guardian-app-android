@@ -123,6 +123,8 @@
 	<!-- Status -->
 	<string name="status_stat_title">Your weekly status</string>
 	<string name="status_report_title">Report history</string>
+	<string name="status_alert_title">Recent alerts</string>
+	<string name="status_see_more">See more</string>
 	<string name="status_duty_count_desc">minutes on duty</string>
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>
@@ -164,8 +166,13 @@
 	<string name="tab_group_by_guardians">Group By Guardians</string>
 	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
-	<string name="warning_set_guardian_group">Guardian group not found. You must set a group to receive alerts!</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
+	<string name="warning_set_guardian_group">Guardian group not found. You must set a group to receive alerts!</string>
+	<string name="no_incident_occurred_recently">There is no incident occurred recently</string>
+	<string name="enjoy_you_day">Enjoy you day :)</string>
+	<string name="see_older">See Older</string>
+	<string name="not_have_event_more">Not have event more</string>
+	
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
@@ -195,5 +202,8 @@
 	
 	<string name="notification_tracking_title">On-duty and tracking enabled</string>
 	<string name="notification_traking_message_format">%d minutes recorded</string>
-
+	
+	<string name="reject_text">reject</string>
+	<string name="confirm_text">confirm</string>
+	
 </resources>

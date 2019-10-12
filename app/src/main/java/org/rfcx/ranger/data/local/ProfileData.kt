@@ -13,12 +13,12 @@ class ProfileData(private val preferences: Preferences) {
 		val guardianGroupId = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
 		val siteId = database.guardianGroup(guardianGroupId)?.siteId ?: ""
 		val site = database.site(siteId)
-		return if (site != null) site.name else defaultSiteName.capitalize()
+		return site?.name ?: defaultSiteName.capitalize()
 	}
 	
 	fun getUserNickname(): String {
 		val nickname = preferences.getString(Preferences.NICKNAME)
-		return if (nickname != null && nickname.length > 0) nickname else "${getSiteName()} Ranger"
+		return if (nickname != null && nickname.isNotEmpty()) nickname else "${getSiteName()} Ranger"
 	}
 	
 	fun getTracking(): Boolean {
@@ -45,5 +45,10 @@ class ProfileData(private val preferences: Preferences) {
 	
 	fun getLastStatusSyncing(): String {
 		return preferences.getString(Preferences.LAST_STATUS_SYNCING, SyncInfo.Status.UPLOADED.name)
+	}
+	
+	fun getGuardianGroup(): String? {
+		val group = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
+		return if (group.isEmpty()) null else group
 	}
 }

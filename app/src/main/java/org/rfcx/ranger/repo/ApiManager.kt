@@ -54,6 +54,7 @@ class ApiManager {
 	
 	private fun createDefaultGson(): Gson {
 		val builder = GsonBuilder()
+		builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 		builder.registerTypeAdapter(CheckIn::class.java, CheckInSerializer())
 		return builder.create()
 	}

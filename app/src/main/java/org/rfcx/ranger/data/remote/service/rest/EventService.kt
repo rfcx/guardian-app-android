@@ -16,8 +16,19 @@ interface EventService {
 	              @Query("dir") dir: String,
 	              @Query("guardians[]") guardianGroup: List<String>): Single<EventResponse>
 	
-	@POST("v1/events/{event_guid}/{review_confirmed}")
+	@GET("v1/events/event/datatable")
+	fun getEventsGuardian(@Query("guardians[]") guardian: String,
+	                      @Query("values[]") value: String,
+	                      @Query("ending_before") ending: String,
+	                      @Query("order") orderBy: String,
+	                      @Query("dir") dir: String,
+	                      @Query("limit") limit: Int,
+	                      @Query("offset") offset: Int,
+	                      @Query("types[]") type: String): Single<EventResponse>
+	
+	@POST("v2/events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,
 	                @Path("review_confirmed") reviewConfirm: String)
 			: Single<ReviewEventResponse>
+	
 }

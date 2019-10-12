@@ -8,7 +8,6 @@
         android:id="@+id/alertsTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/colorAccent">
 
