@@ -99,16 +99,16 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			newList.add(it)
 		}
 		
-		alertTitle?.let {
-			newList.add(TitleItem(it))
-		}
-		
 		if (alerts != null && alerts!!.isNotEmpty()) {
+			alertTitle?.let {
+				newList.add(TitleItem(it))
+			}
+			
 			newList.addAll(alerts!!)
-		}
-		
-		seeMoreButton?.let {
-			newList.add(SeeMoreItem(it))
+			
+			seeMoreButton?.let {
+				newList.add(SeeMoreItem(it))
+			}
 		}
 		
 		reportTitle?.let {
@@ -261,7 +261,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			const val ITEM_REPORT_EMPTY = 4
 			const val ITEM_SYNC_INFO = 5
 			const val ITEM_ALERT = 6
-			const val ITEM_SEE_MORE =7
+			const val ITEM_SEE_MORE = 7
 		}
 	}
 	
