@@ -15,6 +15,7 @@ import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.login.SetUserNameViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
+import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.ranger.view.profile.FeedbackViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
@@ -31,6 +32,7 @@ object UiModule {
 	val mapModule = module {
 		viewModel { MapViewModel(get(), get()) }
 		viewModel { MapDetailViewModel(get(), get()) }
+		viewModel { ReportViewPagerFragmentViewModel(get()) }
 	}
 	
 	val statusModule = module {
