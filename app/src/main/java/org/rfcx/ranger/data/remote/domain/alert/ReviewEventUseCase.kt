@@ -9,10 +9,10 @@ import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 
 class ReviewEventUseCase(private val eventRepository: EventRepository, threadExecutor: ThreadExecutor,
-                         postExecutionThread: PostExecutionThread) : SingleUseCase<ReviewEventFactory, ReviewEventResponse>(
+                         postExecutionThread: PostExecutionThread) : SingleUseCase<ReviewEventFactory, Unit>(
 		threadExecutor, postExecutionThread
 ) {
-	override fun buildUseCaseObservable(params: ReviewEventFactory): Single<ReviewEventResponse> {
+	override fun buildUseCaseObservable(params: ReviewEventFactory): Single<Unit> {
 		return eventRepository.reviewEvent(params)
 	}
 }
