@@ -131,9 +131,10 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 				(EventItem(event, EventItem.State.NONE))
 			}
 		}
-		if (items.isNotEmpty())
+		if (items.isNotEmpty()) {
 			_alertsList = items
 			_alerts.value = Result.Success(items)
+		}
 		
 	}
 	
