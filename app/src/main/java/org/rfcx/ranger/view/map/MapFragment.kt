@@ -144,7 +144,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
-		layoutAlertAirplaneMode.visibility = View.GONE
+		if (!isAdded || isDetached) return
+		layoutAlertAirplaneMode?.visibility = View.GONE
 		
 		locationManager?.removeUpdates(locationListener)
 		locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
