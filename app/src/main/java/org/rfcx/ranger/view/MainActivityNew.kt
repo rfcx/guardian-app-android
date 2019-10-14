@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
@@ -28,6 +29,7 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
+	
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
@@ -176,7 +178,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				as CoordinatorLayout.LayoutParams
 		layoutParams.anchorGravity = Gravity.BOTTOM
 		bottomSheetContainer.layoutParams = layoutParams
-		
 		supportFragmentManager.beginTransaction()
 				.replace(bottomSheetContainer.id, fragment, "BottomSheet")
 				.commit()
@@ -199,6 +200,13 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	override fun alertScreen() {
 		onBottomMenuClick(menuAlert)
+	}
+	
+	override fun moveMapIntoReportMarker(report: Report) {
+		val mapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
+		if (mapFragment is MapFragment) {
+			mapFragment.moveToReportMarker(report)
+		}
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
@@ -295,6 +303,7 @@ interface MainActivityEventListener {
 	fun hidBottomAppBar()
 	fun showBottomAppBar()
 	fun alertScreen()
+	fun moveMapIntoReportMarker(report: Report)
 }
 
 interface MainActivityListener {
