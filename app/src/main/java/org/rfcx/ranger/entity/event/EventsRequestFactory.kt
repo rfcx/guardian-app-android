@@ -1,5 +1,7 @@
 package org.rfcx.ranger.entity.event
 
+import com.google.gson.annotations.SerializedName
+
 data class EventsRequestFactory(
 		val guardianInGroup: List<String>,
 		val order: String,
@@ -29,5 +31,14 @@ data class ReviewEventFactory(val eventGuID: String, val reviewConfirm: String) 
 		const val rejectEvent = "reject"
 	}
 }
+
+data class ReviewEventRequest(
+		@SerializedName("confirmed")
+		val confirmed: Boolean,
+		@SerializedName("unreliable")
+		val unreliable: Boolean,
+		@SerializedName("windows")
+		val windows: ArrayList<String>
+)
 
 class GuardianGroupFactory

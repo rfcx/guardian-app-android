@@ -8,6 +8,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.entity.event.EventReview
+import org.rfcx.ranger.entity.event.ReviewEventRequest
 
 
 /**
@@ -31,8 +32,10 @@ class ReviewEventSyncWorker(private val context: Context, params: WorkerParamete
 		
 		for (reviewEvent in reviewEvents) {
 			Log.d(TAG, "doWork: sending ${reviewEvent.eventGuId}")
-			val result = eventService.reviewEvent(reviewEvent.eventGuId,
-					reviewEvent.review!!).execute()
+			
+			val arrayWindow = ArrayList<String>()
+			val request = ReviewEventRequest(reviewEvent.review == "confirm", true, arrayWindow)
+			val result = eventService.reviewEvent(reviewEvent.eventGuId, request).execute()
 			
 			if (result.isSuccessful) {
 				db.markReviewEventSyncState(reviewEvent.eventGuId, EventReview.SENT)

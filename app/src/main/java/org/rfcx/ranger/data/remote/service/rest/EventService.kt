@@ -2,12 +2,10 @@ package org.rfcx.ranger.data.remote.service.rest
 
 import io.reactivex.Single
 import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.ReviewEventRequest
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface EventService {
 	@GET("v2/events")
@@ -27,8 +25,8 @@ interface EventService {
 	                      @Query("offset") offset: Int,
 	                      @Query("types[]") type: String): Single<EventResponse>
 	
-	@POST("v2/events/{event_guid}/{review_confirmed}")
+	@POST("v2/events/{event_guid}/review")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,
-	                @Path("review_confirmed") reviewConfirm: String)
+	                @Body body: ReviewEventRequest)
 			: Call<ReviewEventResponse>
 }
