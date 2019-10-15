@@ -20,7 +20,7 @@ class EventDb {
 				list.addAll(it.copyFromRealm(events))
 			}
 		}
-		return  list
+		return list
 	}
 	
 	fun save(eventObj: EventReview) {
@@ -54,5 +54,39 @@ class EventDb {
 			}
 		}
 		return reviewVal
+	}
+	
+	fun lockReviewEventUnSent(): List<EventReview> {
+		val unsentList = arrayListOf<EventReview>()
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction { realm ->
+				val unsent = realm.where(EventReview::class.java)
+						.equalTo("syncState", EventReview.UNSENT).findAll()
+				unsentList.addAll(it.copyFromRealm(unsent))
+				unsent.forEach {
+					it.syncState = EventReview.SENDING
+				}
+			}
+		}
+		
+		return unsentList
+	}
+	
+	fun markReviewEventSyncState(eventGuid: String, syncState: Int) {
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction {
+				val event = it.where(EventReview::class.java)
+						.equalTo("eventGuId", eventGuid).findFirst()
+				event?.syncState = syncState
+			}
+		}
+	}
+	
+	fun deleteAllEvents() {
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction {
+				it.delete(Event::class.java)
+			}
+		}
 	}
 }

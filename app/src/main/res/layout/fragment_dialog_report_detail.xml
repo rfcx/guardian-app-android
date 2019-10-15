@@ -13,7 +13,6 @@
 		android:layout_height="wrap_content"
 		android:layout_margin="@dimen/margin_padding_small"
 		android:background="@drawable/background_report_detail_bottom_sheet"
-		android:elevation="16dp"
 		android:padding="@dimen/margin_padding_normal">
 		
 		<androidx.appcompat.widget.AppCompatImageView

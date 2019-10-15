@@ -144,7 +144,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	@SuppressLint("MissingPermission")
 	private fun getLocation() {
-		layoutAlertAirplaneMode.visibility = View.GONE
+		if (!isAdded || isDetached) return
+		layoutAlertAirplaneMode?.visibility = View.GONE
 		
 		locationManager?.removeUpdates(locationListener)
 		locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
@@ -159,7 +160,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	fun setDisplay() {
+	private fun setDisplay() {
 		googleMap?.let { displayReport(it) }
 		googleMap?.let { displayCheckIn(it) }
 		googleMap?.setOnMapClickListener {
@@ -183,7 +184,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			if (marker.tag is Report) {
 				val report = marker.tag as Report
 				(activity as MainActivityEventListener)
-						.showBottomSheet(MapDetailBottomSheetFragment.newInstance(report.id))
+						.showBottomSheet(ReportViewPagerFragment.newInstance(report.id))
+				return@setOnMarkerClickListener true
 			} else {
 				(activity as MainActivityEventListener).hideBottomSheet()
 			}
@@ -193,6 +195,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapViewModel.getReports().observe(this, Observer { reports ->
 			
 			if (!isAdded || isDetached) return@Observer
+			
 			
 			Log.d(tag, "${reports.count()}")
 			
@@ -262,6 +265,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		if (!isAdded || isDetached) return
 		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
 				LatLng(latLng.latitude, latLng.longitude), 18f))
+	}
+	
+	fun moveToReportMarker(report: Report) {
+		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+				LatLng(report.latitude, report.longitude), googleMap?.cameraPosition?.zoom ?: 18f)
+		googleMap?.animateCamera(cameraUpdate)
+		
 	}
 	
 	private fun showLocationMessageError(msg: String) {

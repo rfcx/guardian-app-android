@@ -3,6 +3,7 @@ package org.rfcx.ranger.data.remote.service.rest
 import io.reactivex.Single
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.ReviewEventResponse
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -29,6 +30,5 @@ interface EventService {
 	@POST("v2/events/{event_guid}/{review_confirmed}")
 	fun reviewEvent(@Path("event_guid") eventGuID: String,
 	                @Path("review_confirmed") reviewConfirm: String)
-			: Single<ReviewEventResponse>
-	
+			: Call<ReviewEventResponse>
 }

@@ -81,13 +81,9 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	fun listOfGuardiansInGroup(list: List<Guardian>){
 	
-//		list.forEach { guardians ->
-//			listGuardians.add(guardians.guid)
-//		}
-		
-		listGuardians.add(list[0].guid)
-		
-		Log.d("listGuardians", listGuardians.toString())
+		list.forEach { guardians ->
+			listGuardians.add(guardians.guid)
+		}
 		loadEvents(listGuardians)
 	}
 	
@@ -167,8 +163,10 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 				(EventItem(event, EventItem.State.NONE))
 			}
 		}
-		if (items.isNotEmpty())
+		if (items.isNotEmpty()) {
+			_alertsList = items
 			_alerts.value = Result.Success(items)
+		}
 		
 	}
 	

@@ -20,7 +20,11 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
-import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.entity.event.ClassificationBody
+import org.rfcx.ranger.entity.event.Confidence
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.getResultError
 import java.io.File
 
@@ -184,9 +188,8 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		_reviewEvent.value = Result.Loading
 		event.value?.let {
 			val requests = ReviewEventFactory(it.event_guid, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
-			Log.d("requests2", requests.toString())
-			reviewEventUseCase.execute(object : DisposableSingleObserver<ReviewEventResponse>() {
-				override fun onSuccess(t: ReviewEventResponse) {
+			reviewEventUseCase.execute(object : DisposableSingleObserver<Unit>() {
+				override fun onSuccess(t: Unit) {
 					_reviewEvent.value = Result.Success(requests)
 					// invoke state to review
 					_eventState.value = EventState.REVIEWED
@@ -198,6 +201,9 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 				}
 				
 			}, requests)
+			
+			ReviewEventSyncWorker.enqueue()
+			
 		} ?: run {
 			_reviewEvent.value = Result.Error(IllegalStateException("Event is null."))
 		}
