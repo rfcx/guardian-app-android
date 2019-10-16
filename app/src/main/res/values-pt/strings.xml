@@ -167,7 +167,10 @@
     
     <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
     <string name="warning_set_guardian_group">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>
+    <string name="no_incident_occurred_recently">Não há incidente ocorreu recentemente</string>
+    <string name="enjoy_you_day">Aproveite o seu dia :)</string>
     <string name="see_older">veja mais antiga</string>
+    <string name="not_have_event_more">Não há mais eventos</string>
     
     <!--Event value-->
     <string name="chainsaw">motosserra</string>

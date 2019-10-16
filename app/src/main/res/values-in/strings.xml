@@ -4,8 +4,8 @@
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
     <string name="login">Masuk</string>
-    <string name="connect_with_facebook">Continuar com o Facebook</string>
-    <string name="connect_with_sms">Continuar com o Número de Teléfono</string>
+    <string name="connect_with_facebook">Lanjutkan dengan facebook</string>
+    <string name="connect_with_sms">Lanjutkan dengan nomor telepon</string>
     <string name="pls_fill_email">Masukkan Email</string>
     <string name="pls_fill_password">Masukkan kata sandi</string>
     <string name="incorrect_username_password">Username dan kata sandi salah</string>
@@ -17,9 +17,9 @@
     <string name="login_sign_in_button_label">Masuk</string>
     <string name="invitation_submit_button_label">menyerahkan</string>
     
-    <string name="what_we_call_you">O que devemos Chama-lo?</string>
-    <string name="please_tell_name">Por favor, DIGA-nos o seu nome</string>
-    <string name="hint_name">Nome</string>
+    <string name="what_we_call_you">Apa yang harus kita sebut Anda?</string>
+    <string name="please_tell_name">Silakan beritahu kami nama Anda</string>
+    <string name="hint_name">Nama</string>
     
     <!-- common error -->
     <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
@@ -123,8 +123,8 @@
     <string name="status_stat_title">Status mingguan Anda</string>
     <string name="status_report_title">laporan sejarah</string>
     <string name="status_duty_count_desc">menit bertugas</string>
-    <string name="status_alert_title">Alertas recentes</string>
-    <string name="status_see_more">ver mais</string>
+    <string name="status_alert_title">Alerts baru-baru ini</string>
+    <string name="status_see_more">Lihat Lainnya</string>
     <string name="status_reported_desc">laporan yang disampaikan</string>
     <string name="status_reviewed_desc">mengingatkan Ulasan</string>
     <string name="format_location">%s, %s</string>
@@ -166,9 +166,11 @@
     <string name="yesterday">Kemarin</string>
     
     <string name="no_internet_connection">Tidak ada internet, Silakan coba lagi.</string>
-    <string name="warning_set_guardian_group">Grupo Guardião não foi encontrado. Você deve Definir alertas ¡um grupo para Receber!</string>
-    <string name="see_older">Veja mais antiga</string>
-    
+    <string name="warning_set_guardian_group">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>
+    <string name="no_incident_occurred_recently">Tidak ada insiden terjadi baru-baru ini</string>
+    <string name="enjoy_you_day">Nikmati Anda hari :)</string>
+    <string name="see_older">Lihat Lama</string>
+    <string name="not_have_event_more">Tidak ada kejadian lebih</string>
     <!--Event value-->
     <string name="chainsaw">gergaji</string>
     <string name="gunshot">tembakan</string>
@@ -201,7 +203,7 @@
     <string name="notification_tracking_title">On-tugas dan pelacakan diaktifkan</string>
     <string name="notification_traking_message_format">%d menit direkam</string>
     
-    <string name="reject_text">rejeitar</string>
-    <string name="confirm_text">confirme</string>
+    <string name="reject_text">menolak</string>
+    <string name="confirm_text">Konfirmasi</string>
     
 </resources>
