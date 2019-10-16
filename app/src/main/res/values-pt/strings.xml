@@ -132,7 +132,7 @@
     <string name="format_image_unsync">%s imagem (%s ainda não sincronizada)</string>
     <string name="format_images_synced">%s imagens</string>
     <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
-    <string name="empty_report_text">Não há relatos nos últimos 7 dias.</string>
+    <string name="empty_report_text">"Não há relatos nos últimos 7 dias.\nimprensa + para criar uma."</string>
     <string name="button_later">Mais tarde</string>
     <string name="button_set_guardian_group">Definir Grupo Guardião</string>
     <string name="guardian_group_not_found">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>

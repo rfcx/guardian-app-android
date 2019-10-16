@@ -132,7 +132,7 @@
     <string name="format_image_unsync">%s gambar (%s belum disinkronkan)</string>
     <string name="format_images_synced">%s gambar</string>
     <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
-    <string name="empty_report_text">Tidak ada laporan dalam 7 hari terakhir.</string>
+    <string name="empty_report_text">"Tidak ada laporan dalam 7 hari terakhir.\ntekan + untuk membuat satu."</string>
     <string name="button_later">Kemudian</string>
     <string name="button_set_guardian_group">Set Wali Grup</string>
     <string name="guardian_group_not_found">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>

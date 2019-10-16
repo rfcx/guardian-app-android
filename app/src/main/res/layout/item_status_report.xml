@@ -40,11 +40,12 @@
 		
 		<TextView
 			android:id="@+id/tvReportType"
-			style="@style/RangerText.Subhead"
+			style="@style/RangerText.Body"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:textStyle="bold"
 			android:text="@{reportItem.getReportType(context)}"
 			app:layout_constraintEnd_toStartOf="@+id/tvReportedAt"
 			app:layout_constraintStart_toEndOf="@+id/ivReportType"
@@ -64,13 +65,13 @@
 		
 		<TextView
 			android:id="@+id/tvLocation"
-			style="@style/RangerText.Label.Secondary"
+			style="@style/RangerText.Caption"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_xsmall"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:drawableStart="@drawable/ic_place"
-			android:drawablePadding="@dimen/margin_padding_small"
+			android:drawablePadding="@dimen/margin_padding_xsmall"
 			android:ellipsize="end"
 			android:gravity="center_vertical"
 			android:maxLines="2"
@@ -82,13 +83,13 @@
 		
 		<TextView
 			android:id="@+id/tvImageAttach"
-			style="@style/RangerText.Label.Secondary"
+			style="@style/RangerText.Caption"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_xsmall"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:drawableStart="@drawable/ic_image"
-			android:drawablePadding="@dimen/margin_padding_small"
+			android:drawablePadding="@dimen/margin_padding_xsmall"
 			android:gravity="center_vertical"
 			android:text="@{reportItem.getTextImageState(context)}"
 			android:visibility="@{reportItem.imageState.count != 0 ? View.VISIBLE: View.INVISIBLE}"
