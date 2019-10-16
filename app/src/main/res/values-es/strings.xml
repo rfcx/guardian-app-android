@@ -4,6 +4,8 @@
 	<string name="email">Correo electrónico</string>
 	<string name="password">Clave</string>
 	<string name="login">Entrar</string>
+	<string name="connect_with_facebook">Continuar com o Facebook</string>
+	<string name="connect_with_sms">Continuar com o Número de teléfono</string>
 	<string name="pls_fill_email">Escriba su correo electrónico</string>
 	<string name="pls_fill_password">Escriba su clave</string>
 	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
@@ -14,6 +16,10 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Entrar</string>
 	<string name="invitation_submit_button_label">Enviar</string>
+	
+	<string name="what_we_call_you">O que devemos Chamá-lo?</string>
+	<string name="please_tell_name">Por favor, diga-nos o seu nome</string>
+	<string name="hint_name">Nome</string>
 	
 	<!-- common error -->
 	<string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
@@ -117,6 +123,8 @@
 	<string name="status_stat_title">Su estado semanal</string>
 	<string name="status_report_title">Historial de Informes </string>
 	<string name="status_duty_count_desc">minutos de guardia</string>
+	<string name="status_alert_title">Alertas recentes</string>
+	<string name="status_see_more">Ver mais</string>
 	<string name="status_reported_desc">los informes presentados</string>
 	<string name="status_reviewed_desc">alertar revisado</string>
 	<string name="format_location">%s, %s</string>
@@ -158,6 +166,8 @@
 	<string name="yesterday">Ayer</string>
 	
 	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
+	<string name="warning_set_guardian_group">Grupo Guardião não foi Encontrado. Você deve Definir alertas ¡um grupo para Receber!</string>
+	<string name="see_older">veja mais antiga</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">motosierra</string>
@@ -190,5 +200,8 @@
 	
 	<string name="notification_tracking_title">De guardia y el seguimiento habilitado</string>
 	<string name="notification_traking_message_format">%d minutos registraron</string>
+	
+	<string name="reject_text">rejeitar</string>
+	<string name="confirm_text">confirme</string>
 
 </resources>

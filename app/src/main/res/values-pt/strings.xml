@@ -4,6 +4,8 @@
     <string name="email">Email</string>
     <string name="password">Senha</string>
     <string name="login">Usuário</string>
+    <string name="connect_with_facebook">Continue com o Facebook</string>
+    <string name="connect_with_sms">Continue com o número de telefone</string>
     <string name="pls_fill_email">Por favor insira um email</string>
     <string name="pls_fill_password">Por favor insira a senha</string>
     <string name="incorrect_username_password">Usuário ou senha incorretos</string>
@@ -14,7 +16,11 @@
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Assinar em </string>
     <string name="invitation_submit_button_label">Enviar</string>
-
+    
+    <string name="what_we_call_you">O que devemos chamá-lo?</string>
+    <string name="please_tell_name">Por favor, diga-nos o seu nome</string>
+    <string name="hint_name">Nome</string>
+    
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
@@ -117,6 +123,8 @@
     <string name="status_stat_title">Seu status semanal</string>
     <string name="status_report_title">Histórico de relatório</string>
     <string name="status_duty_count_desc">minutos de plantão</string>
+    <string name="status_alert_title">Alertas recentes</string>
+    <string name="status_see_more">Ver mais</string>
     <string name="status_reported_desc">relatórios enviados</string>
     <string name="status_reviewed_desc">alerta revisado</string>
     <string name="format_location">%s, %s</string>
@@ -158,6 +166,8 @@
     <string name="yesterday">Ontem</string>
     
     <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
+    <string name="warning_set_guardian_group">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>
+    <string name="see_older">veja mais antiga</string>
     
     <!--Event value-->
     <string name="chainsaw">motosserra</string>
@@ -190,5 +200,8 @@
     
     <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
     <string name="notification_traking_message_format">%d minutos gravado</string>
+    
+    <string name="reject_text">rejeitar</string>
+    <string name="confirm_text">confirme</string>
 
 </resources>
