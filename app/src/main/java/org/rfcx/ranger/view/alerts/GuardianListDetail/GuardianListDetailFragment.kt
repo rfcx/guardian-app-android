@@ -17,6 +17,8 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.base.BaseFragment
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
 	private val viewModel: GuardianListDetailViewModel by viewModel()
@@ -54,7 +56,7 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		})
 		
 		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
-			override fun onSeeOlderClick(guid: String, value: String, endAt: String) {
+			override fun onSeeOlderClick(guid: String, value: String, endAt: Date) {
 				Log.d("onSeeOlderClick FM", "$guid $value $endAt")
 				viewModel.loadMoreEvents(guid, value, endAt)
 			}
@@ -101,5 +103,5 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 }
 
 interface OnSeeOlderClickListener {
-	fun onSeeOlderClick(guid: String, value: String, endAt: String)
+	fun onSeeOlderClick(guid: String, value: String, endAt: Date)
 }

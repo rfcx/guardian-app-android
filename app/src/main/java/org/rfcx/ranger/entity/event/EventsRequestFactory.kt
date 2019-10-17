@@ -1,5 +1,7 @@
 package org.rfcx.ranger.entity.event
 
+import java.util.*
+
 data class EventsRequestFactory(
 		val guardianGroup: String,
 		val orderBy: String,
@@ -10,7 +12,7 @@ data class EventsRequestFactory(
 data class EventsGuardianRequestFactory(
 		val guardian: String,
 		val value: String,
-		val time: String,
+		val time: Date,
 		val orderBy: String,
 		val dir: String,
 		val limit: Int,
