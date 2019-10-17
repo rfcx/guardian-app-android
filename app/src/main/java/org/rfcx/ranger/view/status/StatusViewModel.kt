@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.status
 
 
 import android.content.Context
-import android.util.Log
 import android.util.SparseArray
 import androidx.lifecycle.*
 import androidx.work.WorkInfo
@@ -16,7 +15,7 @@ import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
-import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -29,7 +28,6 @@ import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.replace
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
@@ -57,7 +55,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		combinedReports()
 	}
 	
-	// TODO - Improve this {use follow MainActivity}
 	private val workInfoObserve = Observer<List<WorkInfo>> {
 		val currentWorkStatus = it?.getOrNull(0)
 		if (currentWorkStatus != null) {
@@ -72,6 +69,27 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 					updateSyncInfo()
 				}
 			}
+		}
+	}
+	
+	private val eventObserve = Observer<List<Event>> { events ->
+		if (events.isNotEmpty()) {
+			val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
+			for (i in 0..2) {
+				val state = eventDb.getEventState(events[i].event_guid)
+				state?.let {
+					val result = when (it) {
+						ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
+						ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
+						else -> StatusAdapter.AlertItem.State.NONE
+					}
+					newItemsList.add(StatusAdapter.AlertItem(events[i], result))
+				} ?: run {
+					newItemsList.add(StatusAdapter.AlertItem(events[i], StatusAdapter.AlertItem.State.NONE))
+				}
+			}
+			_alertsList = newItemsList
+			_alertItems.value = newItemsList
 		}
 	}
 	
@@ -105,15 +123,16 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private lateinit var checkinWorkInfoLiveData: LiveData<List<WorkInfo>>
 	private lateinit var reportWorkInfoLiveData: LiveData<List<WorkInfo>>
 	private var onDutyRealmTimeDisposable: Disposable? = null
+	
+	private lateinit var eventsLiveData: LiveData<List<Event>>
 	private var _alertsList: List<StatusAdapter.AlertItem> = listOf()
 	
 	init {
-		resumed()
 		updateProfile()
 		updateWeeklyStat()
 		fetchReports()
 		fetchJobSyncing()
-		setAlert()
+		fetchEventsCache()
 		
 		if (profileData.getTracking()) {
 			observeRealTimeOnDuty()
@@ -126,7 +145,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun updateWeeklyStat() {
-		Log.d("updateWeeklyStat", "updateWeeklyStat")
 		_stat.value = StatusAdapter.UserStatusItem(weeklySummaryData.getOnDutyTimeMinute(),
 				weeklySummaryData.getReportSubmitCount(), weeklySummaryData.getReviewCount())
 	}
@@ -157,26 +175,14 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		checkinWorkInfoLiveData.observeForever(workInfoObserve)
 	}
 	
-	private fun setAlert() {
-		val cacheEvents = eventDb.getEvents()
-		if(cacheEvents.isNotEmpty()){
-			val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
-			for (i in 0..2){
-				val state = eventDb.getEventState(cacheEvents[i].event_guid)
-				state?.let {
-					val result = when (it) {
-						ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
-						ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
-						else -> StatusAdapter.AlertItem.State.NONE
-					}
-					newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i], result))
-				} ?: run {
-					newItemsList.add(StatusAdapter.AlertItem(cacheEvents[i], StatusAdapter.AlertItem.State.NONE))
-				}
-			}
-			_alertsList =  newItemsList
-			_alertItems.value = newItemsList
+	private fun fetchEventsCache() {
+		// observe events
+		eventsLiveData = Transformations.map<RealmResults<Event>, List<Event>>(
+				eventDb.getAllResultsAsync().asLiveData()
+		) {
+			it
 		}
+		eventsLiveData.observeForever(eventObserve)
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
