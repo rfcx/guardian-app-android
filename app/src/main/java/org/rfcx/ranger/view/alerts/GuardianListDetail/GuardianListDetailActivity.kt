@@ -20,15 +20,15 @@ class GuardianListDetailActivity : BaseActivity() {
 		
 		if (intent?.hasExtra("event") == true) {
 			val event = intent.getParcelableArrayListExtra<Event>("event")
-			Log.d("GuardianListDetail", "$event")
-			
-			supportFragmentManager.beginTransaction()
-					.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(event),
-							"GuardianListDetailFragment").commit()
-		} else {
-			supportFragmentManager.beginTransaction()
-					.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
-							"EmptyAlertFragment").commit()
+			if(event.isNotEmpty()) {
+				supportFragmentManager.beginTransaction()
+						.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(event),
+								"GuardianListDetailFragment").commit()
+			} else {
+				supportFragmentManager.beginTransaction()
+						.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
+								"EmptyAlertFragment").commit()
+			}
 		}
 	}
 	
