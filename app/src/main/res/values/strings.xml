@@ -133,7 +133,7 @@
 	<string name="format_image_unsync">%s image (%s not yet synced)</string>
 	<string name="format_images_synced">%s images</string>
 	<string name="format_images_unsync">%s images (%s not yet synced)</string>
-	<string name="empty_report_text">No reports in the last 7 days.</string>
+	<string name="empty_report_text">No reports in the last 7 days.\npress + to create one.</string>
 	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
 	
 	<string name="button_later">Later</string>
@@ -172,7 +172,6 @@
 	<string name="enjoy_you_day">Enjoy you day :)</string>
 	<string name="see_older">See Older</string>
 	<string name="not_have_event_more">Not have event more</string>
-	
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>

@@ -4,6 +4,8 @@
 	<string name="email">Correo electrónico</string>
 	<string name="password">Clave</string>
 	<string name="login">Entrar</string>
+	<string name="connect_with_facebook">Continuar con facebook</string>
+	<string name="connect_with_sms">Continuar con el número de teléfono</string>
 	<string name="pls_fill_email">Escriba su correo electrónico</string>
 	<string name="pls_fill_password">Escriba su clave</string>
 	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
@@ -14,6 +16,10 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Entrar</string>
 	<string name="invitation_submit_button_label">Enviar</string>
+	
+	<string name="what_we_call_you">¿Como deberíamos llamarte?</string>
+	<string name="please_tell_name">Por favor, díganos su nombre</string>
+	<string name="hint_name">Nombre</string>
 	
 	<!-- common error -->
 	<string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
@@ -117,6 +123,8 @@
 	<string name="status_stat_title">Su estado semanal</string>
 	<string name="status_report_title">Historial de Informes </string>
 	<string name="status_duty_count_desc">minutos de guardia</string>
+	<string name="status_alert_title">alertas recientes</string>
+	<string name="status_see_more">Ver más</string>
 	<string name="status_reported_desc">los informes presentados</string>
 	<string name="status_reviewed_desc">alertar revisado</string>
 	<string name="format_location">%s, %s</string>
@@ -124,7 +132,7 @@
 	<string name="format_image_unsync">%s imagen (%s aún no sincronizado)</string>
 	<string name="format_images_synced">%s imágenes</string>
 	<string name="format_images_unsync">%s imágenes (%s aún no sincronizadas)</string>
-	<string name="empty_report_text">No hay informes en los últimos 7 días.</string>
+	<string name="empty_report_text">"No hay informes en los últimos 7 días.\npulse + para crear uno."</string>
 	<string name="button_later">Luego</string>
 	<string name="button_set_guardian_group">Establecer Grupo Guardián</string>
 	<string name="guardian_group_not_found">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
@@ -158,6 +166,11 @@
 	<string name="yesterday">Ayer</string>
 	
 	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
+	<string name="warning_set_guardian_group">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
+	<string name="no_incident_occurred_recently">No hay ningún incidente ocurrió recientemente</string>
+	<string name="enjoy_you_day">Usted disfruta de día :)</string>
+	<string name="see_older">ver más viejo</string>
+	<string name="not_have_event_more">No hay más eventos</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">motosierra</string>
@@ -190,5 +203,8 @@
 	
 	<string name="notification_tracking_title">De guardia y el seguimiento habilitado</string>
 	<string name="notification_traking_message_format">%d minutos registraron</string>
+	
+	<string name="reject_text">rechazar</string>
+	<string name="confirm_text">confirmar</string>
 
 </resources>

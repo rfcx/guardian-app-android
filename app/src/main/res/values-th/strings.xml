@@ -4,6 +4,8 @@
     <string name="email">อีเมล</string>
     <string name="password">รหัสผ่าน</string>
     <string name="login">เข้าสู่ระบบ</string>
+    <string name="connect_with_facebook">เชื่อมต่อกับบัญชี Facebook</string>
+    <string name="connect_with_sms">เชื่อมต่อกับเบอร์โทรศัพท์</string>
     <string name="pls_fill_email">กรุณากรอกอีเมล</string>
     <string name="pls_fill_password">กรุุณากรอกรหัสผ่าน</string>
     <string name="incorrect_username_password">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
@@ -14,7 +16,11 @@
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
     <string name="invitation_submit_button_label">บันทึก</string>
-
+    
+    <string name="what_we_call_you">ให้เราเรียกคุณว่าอะไรดี</string>
+    <string name="please_tell_name">กรุณาบอกชื่อคุณกับเรา</string>
+    <string name="hint_name">ชื่อ</string>
+    
     <!-- common error -->
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     <string name="location_permission_msg">แอป Ranger ต้องการใช้ตำแหน่งของคุณ</string>
@@ -117,6 +123,8 @@
     <string name="status_stat_title">สถานะรายสัปดาห์ของคุณ</string>
     <string name="status_report_title">ประวัติการรายงาน</string>
     <string name="status_duty_count_desc">นาทีในการปฏิบัติหน้าที่</string>
+    <string name="status_alert_title">การแจ้งเตือนล่าสุด</string>
+    <string name="status_see_more">ดูเพิ่มเติม</string>
     <string name="status_reported_desc">รายงานที่บันทึก</string>
     <string name="status_reviewed_desc">การแจ้งเตือนที่ตรวจสอบ</string>
     <string name="format_location">%s, %s</string>
@@ -124,7 +132,7 @@
     <string name="format_image_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
     <string name="format_images_synced">%s ภาพ</string>
     <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
-    <string name="empty_report_text">ไม่มีรายงานในช่วง 7 วันที่ผ่านมา</string>
+    <string name="empty_report_text">"ไม่มีรายงานในช่วง 7 วันที่ผ่านมา\nกด + เพื่อสร้างรายงานใหม่"</string>
     <string name="button_later">ไว้ทีหลัง</string>
     <string name="button_set_guardian_group">ตั้งค่ากลุ่ม Guardian</string>
     <string name="guardian_group_not_found">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
@@ -153,11 +161,16 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">ตามกลุ่ม Guardian</string>
+    <string name="tab_group_by_guardians">ตาม Guardian</string>
     <string name="tab_all_alerts">การแจ้งเตือนทั้งหมด</string>
     <string name="yesterday">เมื่อวาน</string>
     
     <string name="no_internet_connection">ไม่มีอินเทอร์เน็ตโปรดลองอีกครั้ง</string>
+    <string name="warning_set_guardian_group">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
+    <string name="no_incident_occurred_recently">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
+    <string name="enjoy_you_day">ขอให้มีเวลาที่ดี :)</string>
+    <string name="see_older">ดููแจ้งเตือนก่อนหน้านี้</string>
+    <string name="not_have_event_more">ไม่มีการแจ้งเตือนอื่นๆ</string>
     
     <!--Event value-->
     <string name="chainsaw">เลื่อย</string>
@@ -187,7 +200,10 @@
 	<string name="photos">ภาพถ่าย</string>
 	<string name="common_none">ไม่มี</string>
     
-    <string name="notification_tracking_title">กำลังปฏิบัติหน้าที่และการติดตามตำแหน่ง</string>
+    <string name="notification_tracking_title">กำลังปฏิบัติหน้าที่และติดตามตำแหน่ง</string>
     <string name="notification_traking_message_format">%d นาทีในการปฏิบัติหน้าที่</string>
+    
+    <string name="reject_text">ปฏิเสธ</string>
+    <string name="confirm_text">ยืนยัน</string>
     
 </resources>

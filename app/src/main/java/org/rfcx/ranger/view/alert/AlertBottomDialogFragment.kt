@@ -146,16 +146,15 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			when (it!!) {
 				EventState.NONE -> {
 					negativeButton.apply {
-						setPadding(80, 0, 0, 0)
 						text = getString(R.string.reject_text)
 						setCompoundDrawablesWithIntrinsicBounds(
-								R.drawable.ic_wrong, 0, 0, 0)
+								R.drawable.ic_reject_event, 0, 0, 0)
 					}
 					
 					positiveButton.apply {
 						text = getString(R.string.confirm_text)
 						setCompoundDrawablesWithIntrinsicBounds(
-								R.drawable.ic_check, 0, 0, 0)
+								R.drawable.ic_confirm_event, 0, 0, 0)
 					}
 				}
 				EventState.REVIEWED -> {

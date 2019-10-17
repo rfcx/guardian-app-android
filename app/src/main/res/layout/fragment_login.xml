@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
@@ -8,17 +8,15 @@
 	<ScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_height="match_parent">
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:clickable="true"
-			android:focusableInTouchMode="true"
 			android:layout_height="0dp"
-			android:paddingBottom="@dimen/margin_padding_normal"
-			android:focusable="true">
+			android:clickable="true"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:paddingBottom="@dimen/margin_padding_normal">
 			
 			<androidx.constraintlayout.widget.Group
 				android:id="@+id/loginGroupView"
@@ -31,12 +29,12 @@
 				android:id="@+id/bellLogoImageView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:src="@drawable/ic_notification_green"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"/>
+				app:layout_constraintTop_toTopOf="parent" />
 			
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/protectingRainforestsTextView"
@@ -44,10 +42,10 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:text="@string/app_name"
 				android:textStyle="bold"
-				android:layout_marginTop="@dimen/margin_padding_normal"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/bellLogoImageView"
@@ -165,9 +163,9 @@
 				android:layout_marginTop="@dimen/margin_padding_xlarge"
 				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:text="@string/powered_by"
-				app:layout_constraintTop_toBottomOf="@id/smsLoginButton"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent" />
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/smsLoginButton" />
 			
 			<androidx.appcompat.widget.AppCompatImageView
 				android:id="@+id/rfcxLogoImageView"
@@ -177,8 +175,7 @@
 				android:src="@drawable/rfcx_logo"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/poweredByTextView"
-				/>
+				app:layout_constraintTop_toBottomOf="@id/poweredByTextView" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
@@ -187,11 +184,8 @@
 		android:id="@+id/loginProgressBar"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_gravity="center"
 		android:background="@color/transparent"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-	
-</androidx.constraintlayout.widget.ConstraintLayout>
+		android:visibility="invisible" />
+
+</FrameLayout>
