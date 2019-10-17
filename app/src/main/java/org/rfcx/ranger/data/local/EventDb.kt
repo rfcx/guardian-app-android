@@ -1,6 +1,7 @@
 package org.rfcx.ranger.data.local
 
 import io.realm.Realm
+import io.realm.RealmResults
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 
@@ -9,6 +10,10 @@ class EventDb {
 	fun getEvents(): List<Event> {
 		return Realm.getDefaultInstance().copyFromRealm(
 				Realm.getDefaultInstance().where(Event::class.java).findAllAsync())
+	}
+	
+	fun getAllResultsAsync(): RealmResults<Event> {
+		return Realm.getDefaultInstance().where(Event::class.java).findAllAsync()
 	}
 	
 	fun getEventsSync(): List<Event> {
