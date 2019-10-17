@@ -35,7 +35,7 @@ class GroupAlertsFragment : BaseFragment() {
 			adapter = groupByGuardianAdapter
 		}
 		
-		viewModel.groupGuardianAlert.observe(this, Observer { it ->
+		viewModel.status.observe(this, Observer { it ->
 			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
 				groupByGuardianAdapter.items = items
@@ -51,19 +51,15 @@ class GroupAlertsFragment : BaseFragment() {
 		viewModel.loadGuardianGroups()
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(eventsList: ArrayList<Event>?, name: String) {
-				if (eventsList != null) {
-					context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
-				} else {
-					context?.let { GuardianListDetailActivity.startActivity(it, null, name) }
-				}
+			override fun onItemClick(eventsList: List<Event>, name: String) {
+				context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
 			}
 		}
 	}
 	
 	override fun onResume() {
 		super.onResume()
-		viewModel.updateNumberUnreview()
+		groupByGuardianAdapter.notifyDataSetChanged()
 	}
 	
 	companion object {
@@ -75,5 +71,5 @@ class GroupAlertsFragment : BaseFragment() {
 }
 
 interface OnItemClickListener {
-	fun onItemClick(eventsList: ArrayList<Event>?, name: String)
+	fun onItemClick(eventsList: List<Event>, name: String)
 }

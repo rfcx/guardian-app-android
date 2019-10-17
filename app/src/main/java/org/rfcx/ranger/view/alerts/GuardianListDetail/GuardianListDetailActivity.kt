@@ -50,11 +50,9 @@ class GuardianListDetailActivity : BaseActivity() {
 	}
 	
 	companion object {
-		fun startActivity(context: Context, event: ArrayList<Event>?, name: String) {
+		fun startActivity(context: Context, event: List<Event>, name: String) {
 			val intent = Intent(context, GuardianListDetailActivity::class.java)
-			if (event != null) {
-				intent.putParcelableArrayListExtra("event", event)
-			}
+			intent.putParcelableArrayListExtra("event", ArrayList(event))
 			intent.putExtra("name", name)
 			context.startActivity(intent)
 		}

@@ -5,14 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_group_by_guardian.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.view.alerts.GroupGuardianAlert
+import org.rfcx.ranger.view.alerts.EventGroup
 import org.rfcx.ranger.view.alerts.OnItemClickListener
 
-class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.GroupByGuardianViewHolder>() {
+class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.GroupByGuardianViewHolder>(), KoinComponent {
 	
-	var items: List<GroupGuardianAlert> = arrayListOf()
+	val eventsDb: EventDb by inject()
+	
+	var items: List<EventGroup> = arrayListOf()
 		set(value) {
 			field = value
 			notifyDataSetChanged()
@@ -36,7 +41,7 @@ class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.Group
 		private val circleImageView = itemView.circleImageView
 		private val numOfEvents = itemView.numOfEventsNotReview
 		
-		var currentGroup: ArrayList<Event>? = null
+		var currentGroup: List<Event> = listOf()
 		var name: String = ""
 		
 		init {
@@ -45,18 +50,19 @@ class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.Group
 			}
 		}
 		
-		fun bind(groupGuardianAlert: GroupGuardianAlert) {
-			groupByGuardianTextView.text = groupGuardianAlert.name
-			if (groupGuardianAlert.unread == null || groupGuardianAlert.unread == 0) {
+		fun bind(eventGroup: EventGroup) {
+			val unread = eventGroup.numberOfUnread(eventsDb)
+			groupByGuardianTextView.text = eventGroup.guardianName
+			if (unread == 0) {
 				circleImageView.visibility = View.INVISIBLE
 				numOfEvents.visibility = View.INVISIBLE
 			} else {
-				numOfEvents.text = groupGuardianAlert.unread.toString()
+				numOfEvents.text = unread.toString()
 				numOfEvents.visibility = View.VISIBLE
 				circleImageView.visibility = View.VISIBLE
 			}
-			this.currentGroup = groupGuardianAlert.events
-			this.name = groupGuardianAlert.name
+			this.currentGroup = eventGroup.events
+			this.name = eventGroup.guardianName
 		}
 	}
 }
