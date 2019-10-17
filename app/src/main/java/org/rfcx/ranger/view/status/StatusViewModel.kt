@@ -266,6 +266,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		reportLiveData.removeObserver(reportObserve)
 		reportWorkInfoLiveData.removeObserver(workInfoObserve)
 		checkinWorkInfoLiveData.removeObserver(workInfoObserve)
+		eventsLiveData.removeObserver(eventObserve)
 		onDutyRealmTimeDisposable?.dispose()
 		super.onCleared()
 	}
