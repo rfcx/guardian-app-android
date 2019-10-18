@@ -57,6 +57,9 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
+		
+		_alerts.value = Result.Loading
+		
 		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
