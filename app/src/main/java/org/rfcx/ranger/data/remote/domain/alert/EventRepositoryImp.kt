@@ -18,10 +18,6 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 		}
 	}
 	
-	override fun getLocalEvents(): Single<List<Event>> {
-		return Single.just(eventDb.getEvents())
-	}
-	
 	override fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventResponse> {
 		return eventService.getEvents(requestFactory.limit, requestFactory.offset, requestFactory.order,
 				requestFactory.dir, requestFactory.guardianInGroup ).map { it ->

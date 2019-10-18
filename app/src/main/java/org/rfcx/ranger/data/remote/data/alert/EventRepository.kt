@@ -10,6 +10,4 @@ interface EventRepository {
 	fun reviewEvent(requestFactory: ReviewEventFactory): Single<Unit>
 	
 	fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse>
-	
-	fun getLocalEvents(): Single<List<Event>>
 }
