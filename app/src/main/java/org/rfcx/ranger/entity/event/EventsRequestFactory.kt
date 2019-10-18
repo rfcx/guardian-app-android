@@ -1,6 +1,7 @@
 package org.rfcx.ranger.entity.event
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class EventsRequestFactory(
 		val guardianInGroup: List<String>,
@@ -12,7 +13,7 @@ data class EventsRequestFactory(
 data class EventsGuardianRequestFactory(
 		val guardian: String,
 		val value: String,
-		val time: String,
+		val time: Date,
 		val orderBy: String,
 		val dir: String,
 		val limit: Int,
@@ -38,7 +39,6 @@ data class ReviewEventRequest(
 		@SerializedName("unreliable")
 		val unreliable: Boolean,
 		@SerializedName("windows")
-		val windows: ArrayList<String>
-)
+		val windows: ArrayList<String>)
 
 class GuardianGroupFactory

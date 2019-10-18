@@ -140,9 +140,9 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			}
 			
 			seeOlderTextView.setOnClickListener {
-				val guid = eventList[eventList.size-1].event.guardianGUID.toString()
-				val value = eventList[eventList.size-1].event.value.toString()
-				val endAt = eventList[eventList.size-1].event.endAt.toString()
+				val guid = eventList[eventList.size-1].event.guardianGUID ?: ""
+				val value = eventList[eventList.size-1].event.value ?: ""
+				val endAt = eventList[eventList.size-1].event.endAt
 				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, endAt)
 			}
 			currentEventList = eventList

@@ -10,13 +10,12 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
-import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
-import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
-import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.entity.event.*
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.alerts.adapter.EventItem
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _items = MutableLiveData<Result<ArrayList<GuardianListDetail>>>()
@@ -163,7 +162,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		_items.value = Result.Success(arrayList)
 	}
 	
-	fun loadMoreEvents(guid: String, value: String, endAt: String) {
+	fun loadMoreEvents(guid: String, value: String, endAt: Date) {
 		loading.postValue(StateLoading.LOADING)
 		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "begins_at", "DESC", LIMITS, 0, "alert")
 		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
