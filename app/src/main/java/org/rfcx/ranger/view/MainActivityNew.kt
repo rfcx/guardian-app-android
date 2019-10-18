@@ -80,11 +80,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		getEventFromIntentIfHave(intent)
 	}
 	
-	override fun onStart() {
-		super.onStart()
-		mainViewModel.getEventAndPreloadAudio()
-	}
-	
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		getEventFromIntentIfHave(intent)

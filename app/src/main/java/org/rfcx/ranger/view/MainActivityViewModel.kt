@@ -13,8 +13,7 @@ import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 
-class MainActivityViewModel(private val profileData: ProfileData, credentialKeeper: CredentialKeeper,
-                            private val getEventsUseCase: GetEventsUseCase) : ViewModel() {
+class MainActivityViewModel(private val profileData: ProfileData, credentialKeeper: CredentialKeeper) : ViewModel() {
 	
 	val isRequireToLogin = MutableLiveData<Boolean>()
 	
@@ -27,20 +26,5 @@ class MainActivityViewModel(private val profileData: ProfileData, credentialKeep
 		isLocationTrackingOn.value = profileData.getTracking()
 		
 		ReviewEventSyncWorker.enqueue()
-	}
-	
-	fun getEventAndPreloadAudio() {
-		val guardianGroup = profileData.getGuardianGroup() ?: return
-		val requestFactory = EventsRequestFactory(guardianGroup, "begins_at", "DESC",
-				AllAlertsViewModel.PAGE_LIMITS, 0)
-		getEventsUseCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
-				DownLoadEventWorker.enqueue()
-			}
-			
-			override fun onError(e: Throwable) {
-			
-			}
-		}, requestFactory)
 	}
 }

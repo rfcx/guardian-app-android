@@ -48,20 +48,3 @@ fun String.toEventIcon(): Int {
 		else -> R.drawable.ic_pin_huge
 	}
 }
-
-fun Event.timeAgoDisplay(context: Context): String { // TODO this needs refactoring to use Common
-	
-	val diff = Duration(beginsAt.time, Date().time).standardHours
-	return if (beginsAt.isToday()) {
-		beginsAt.toTimeString()
-	} else if (diff < 48) {
-		"${context.getString(R.string.yesterday)} ${beginsAt.toTimeString()}"
-	} else {
-		beginsAt.toFullDateTimeString()
-	}
-}
-
-fun Event.timeAgoBottomDialogDisplay(): String {
-	val dateFormat = DateUtils.getRelativeTimeSpanString(beginsAt.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
-	return dateFormat.toString()
-}

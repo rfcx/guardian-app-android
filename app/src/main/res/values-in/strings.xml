@@ -161,7 +161,7 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Group By Wali</string>
+    <string name="tab_group_by_guardians">Dengan Wali</string>
     <string name="tab_all_alerts">semua Alerts</string>
     <string name="yesterday">Kemarin</string>
     

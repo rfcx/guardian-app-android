@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_events_in_event_name.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.timeAgoDisplay
+import org.rfcx.ranger.util.toTimeSinceStringAlternative
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.EventItem
 
@@ -48,7 +48,7 @@ class EventsInEventNameAdater(private val items: MutableList<EventItem>, val lis
 		var currentEvent: EventItem? = null
 		
 		fun bind(item: EventItem) {
-			eventsInEventsTextView.text = item.event.timeAgoDisplay(itemView.context)
+			eventsInEventsTextView.text = item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)
 			this.currentEvent = item
 			
 			when (item.state) {

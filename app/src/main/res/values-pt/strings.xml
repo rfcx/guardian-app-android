@@ -161,7 +161,7 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Grupo por Guardians</string>
+    <string name="tab_group_by_guardians">Pela Guardian</string>
     <string name="tab_all_alerts">Todos os alertas</string>
     <string name="yesterday">Ontem</string>
     

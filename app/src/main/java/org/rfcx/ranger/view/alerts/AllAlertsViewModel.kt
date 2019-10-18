@@ -13,6 +13,7 @@ import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.service.DownLoadEventWorker
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
@@ -59,7 +60,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				
+				DownLoadEventWorker.enqueue()
 				totalItemCount = t.total
 				handleOnSuccess(t)
 			}
