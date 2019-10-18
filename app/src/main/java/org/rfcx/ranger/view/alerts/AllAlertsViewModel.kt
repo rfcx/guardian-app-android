@@ -25,7 +25,7 @@ import org.rfcx.ranger.view.alerts.adapter.EventItem
 import kotlin.math.ceil
 
 class AllAlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
-                         private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase) : ViewModel() {
+                         private val eventDb: EventDb) : ViewModel() {
 	
 	private val _groupByGuardians = MutableLiveData<Result<GroupByGuardiansResponse>>()
 	val groupByGuardians: LiveData<Result<GroupByGuardiansResponse>> get() = _groupByGuardians
@@ -58,37 +58,16 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	fun getGuardianGroup(){
 		_alerts.value = Result.Loading
+		_groupByGuardians.value = Result.Loading
+		
 		getEventsCache()
-		// start load
+		
 		val group = context.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
-		_groupByGuardians.value = Result.Loading
-		
-		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>(){
-			override fun onSuccess(t: GroupByGuardiansResponse) {
-				listOfGuardiansInGroup(t.guardians)
-			}
-			
-			override fun onError(e: Throwable) {
-				// TODO onError @tree
-			}
-			
-		}, group)
-	}
-	
-	fun listOfGuardiansInGroup(list: List<Guardian>){
-	
-		list.forEach { guardians ->
-			listGuardians.add(guardians.guid)
-		}
-		loadEvents(listGuardians)
-	}
-	
-	private fun loadEvents(group: List<String>) {
-		val requestFactory = EventsRequestFactory(group, "measured_at", "DESC", PAGE_LIMITS, 0)
+		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				

@@ -56,7 +56,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 			})
 		})
 		allAlertsViewModel.getGuardianGroup()
-//		allAlertsViewModel.loadEvents()
+
 	}
 	
 	override fun onClickedAlert(event: Event) {

@@ -13,9 +13,9 @@ interface EventService {
 	              @Query("offset") offset: Int,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
-	              @Query("guardians[]") guardianGroup: List<String>): Single<EventResponse>
+	              @Query("guardian_groups[]") guardianGroup: List<String>): Single<EventResponse>
 	
-	@GET("v1/events/event/datatable")
+	@GET("v1/events/event/datatable") // load see older
 	fun getEventsGuardian(@Query("guardians[]") guardian: String,
 	                      @Query("values[]") value: String,
 	                      @Query("ending_before") ending: String,
