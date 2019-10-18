@@ -36,7 +36,8 @@ object UiModule {
 	}
 	
 	val statusModule = module {
-		viewModel { StatusViewModel(androidContext(), get(), get(), get(), get(), get(), get()) }
+		viewModel { StatusViewModel(androidContext(), get(), get(), get(), get(), get(), get(),
+				get()) }
 		viewModel { ReportDetailViewModel(get(), get()) }
 	}
 	
