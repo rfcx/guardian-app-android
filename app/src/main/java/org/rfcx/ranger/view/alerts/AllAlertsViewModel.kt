@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,14 +9,12 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
-import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
-import org.rfcx.ranger.entity.guardian.Guardian
+import org.rfcx.ranger.service.DownLoadEventWorker
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
@@ -70,7 +67,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				
+				DownLoadEventWorker.enqueue()
 				totalItemCount = t.total
 				handleOnSuccess(t)
 			}

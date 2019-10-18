@@ -161,7 +161,7 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">ตาม Guardian</string>
+    <string name="tab_group_by_guardians">ตามกลุ่ม Guardian</string>
     <string name="tab_all_alerts">การแจ้งเตือนทั้งหมด</string>
     <string name="yesterday">เมื่อวาน</string>
     

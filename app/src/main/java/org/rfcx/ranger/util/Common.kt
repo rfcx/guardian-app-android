@@ -1,6 +1,7 @@
 package org.rfcx.ranger.util
 
 import android.content.Context
+import org.joda.time.Duration
 import org.rfcx.ranger.R
 import java.util.*
 
@@ -40,13 +41,11 @@ fun Date.toTimeSinceString(context: Context?): String {
 	}
 }
 
-fun Date.toTimeSinceStringAlternative(context: Context): String { // TODO: can we combine with above?
-	val diff = Date().time - this.time
-	val dayAgo = DAY
-	val daysAgo = 2 * DAY
-	return if (diff < dayAgo) {
+fun Date.toTimeSinceStringAlternative(context: Context): String {
+	val diff = Duration(this.time, Date().time).standardHours
+	return if (this.isToday()) {
 		this.toTimeString()
-	} else if (diff < daysAgo) {
+	} else if (diff < 48) {
 		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
 	} else {
 		this.toFullDateTimeString()

@@ -120,18 +120,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				alertFromSiteTextView.text = it.site!!.capitalize()
 			}
 			guardianNameTextView.text = it.guardianShortname.toString().capitalize()
-			val time = DateUtils.getRelativeTimeSpanString(it.beginsAt.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
-			if (time.contains("0 minutes ago")) {
-				val now = Date()
-				val seconds = TimeUnit.MILLISECONDS.toSeconds(now.time - it.beginsAt.time)
-				if (seconds < 60) {
-					timeTextView.text = "• $seconds seconds ago"
-				}
-			} else if (time.contains("ago") && !time.contains("0 minutes ago")) {
-				timeTextView.text = "• $time ${it.beginsAt.toTimeString()}"
-			} else {
-				timeTextView.text = "• ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1) }}"
-			}
+			timeTextView.text = "• ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1)}}"
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {

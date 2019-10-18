@@ -51,12 +51,10 @@ class EventDb {
 	 */
 	fun getEventState(eventGuid: String): String? {
 		var reviewVal: String? = null
-		Realm.getDefaultInstance().use { it ->
-			it.executeTransaction {
+		Realm.getDefaultInstance().use {
 				reviewVal = it.where(EventReview::class.java)
 						.equalTo("eventGuId", eventGuid).findFirst()
 						?.review
-			}
 		}
 		return reviewVal
 	}
