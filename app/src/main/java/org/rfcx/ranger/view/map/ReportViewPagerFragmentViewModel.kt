@@ -9,14 +9,11 @@ import org.rfcx.ranger.util.asLiveData
 
 class ReportViewPagerFragmentViewModel(private val reportDb: ReportDb) : ViewModel() {
 	
-	fun getReports(firstReportId: Int?): LiveData<List<Report>> {
+	fun getReports(): LiveData<List<Report>> {
 		return Transformations.map(
 				reportDb.getAllResultsAsync().asLiveData()
-		) { it ->
-			it.sortedBy {
-				if (it.id == firstReportId) 0
-				else 1
-			}
+		) {
+			it
 		}
 	}
 }
