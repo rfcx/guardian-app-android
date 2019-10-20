@@ -13,11 +13,10 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	var lists: ArrayList<Classification> = arrayListOf()
 	var onDetectionBoxClick: ((ClassificationBox) -> Unit)? = null
 	fun setClassification(list: List<Confidence>) {
-		list.sortedBy { it.beginsAtOffset }
+		val sortedList = list.sortedBy { it.beginsAtOffset }
 		
 		for (i in 0 until list.count()) {
-			
-			val current = list[i]
+			val current = sortedList[i]
 			if (lists.isEmpty()) {
 				if (current.beginsAtOffset != 0L) {
 					lists.add(ClassificationEmptyBox(0L, current.beginsAtOffset))
@@ -27,7 +26,7 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 				}
 				
 			} else {
-				val pref = list[i - 1]
+				val pref = sortedList[i - 1]
 				val lastedBox = lists[lists.lastIndex]
 				if (current.beginsAtOffset > pref.endsAtOffset) {
 					lists.add(ClassificationEmptyBox(pref.endsAtOffset, current.beginsAtOffset))

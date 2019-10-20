@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -115,10 +114,8 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		
 		val audioFile = File(context.cacheDir, "${event.value?.audioGUID}.opus")
 		val mediaSource = if (audioFile.exists()) {
-			Log.d("initPlayer", "From local")
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
-			Log.d("initPlayer", "From remote")
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(thisAudioUrl))
 		}
 		
@@ -170,6 +167,22 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	}
 	
 	private fun getClassifiedCation() {
+		if (event.value?.windows != null && event.value?.windows?.isNotEmpty() == true) {
+			// if even has windows no need to call api
+			val eventWindows = event.value?.windows?.filter {
+				it.confidence != null && it.confidence!! > confidenceValue
+			}
+			
+			val confidence = eventWindows?.map {
+				Confidence(it.start?.toLong() ?: 0L, it.confidence ?: 0.0,
+						it.end?.toLong() ?: 0L)
+			}
+			
+			_classifiedCation.value = Result.Success(confidence ?: listOf())
+			
+			return
+		}
+		
 		event.value?.let {
 			classifiedUseCase.execute(object : DisposableSingleObserver<List<Confidence>>() {
 				override fun onSuccess(t: List<Confidence>) {
@@ -224,6 +237,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	companion object {
 		const val maxProgress = 100_000
 		private const val delayTime = 100L
+		const val confidenceValue = 0.8
 	}
 }
 

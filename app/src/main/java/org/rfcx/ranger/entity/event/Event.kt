@@ -3,6 +3,7 @@ package org.rfcx.ranger.entity.event
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.util.*
@@ -55,6 +56,8 @@ open class Event() : RealmObject(), Parcelable {
 	var reviewerConfirmed: Boolean? = null
 	@SerializedName("aiGuid")
 	var aiGuid: String? = ""
+	@SerializedName("windows")
+	var windows: RealmList<EventWindow>? = null
 	
 	constructor(parcel: Parcel) : this() {
 		event_guid = parcel.readString() ?: ""
@@ -77,6 +80,11 @@ open class Event() : RealmObject(), Parcelable {
 			else -> null
 		}
 		aiGuid = parcel.readString()
+		this.windows = RealmList()
+		parcel.createTypedArrayList(EventWindow.CREATOR)?.let {
+			this.windows!!.addAll(it)
+		}
+		
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -100,6 +108,9 @@ open class Event() : RealmObject(), Parcelable {
 			else -> -1
 		})
 		parcel.writeString(aiGuid)
+		if (windows!=null) {
+			parcel.writeTypedList(windows)
+		}
 	}
 	
 	override fun describeContents(): Int {

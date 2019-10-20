@@ -12,11 +12,11 @@ import org.rfcx.ranger.service.AlertNotification.createAlert
 
 class MessagingService : FirebaseMessagingService() {
 	
-	override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+	override fun onMessageReceived(remoteMessage: RemoteMessage) {
 		
-		if (remoteMessage?.notification == null) return
+		if (remoteMessage.notification == null) return
 		Log.i("MessagingService", "-- " + remoteMessage.data.toString())
-		if (remoteMessage.data?.containsKey("event_guid") == true) {
+		if (remoteMessage.data.containsKey("event_guid")) {
 			val alertNotification = createAlert(this, getNotificationManager()
 					, remoteMessage.notification!!, remoteMessage.data)
 			notify(createNotificationID(), alertNotification)
