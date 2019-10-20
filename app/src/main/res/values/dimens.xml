@@ -32,5 +32,6 @@
 	<dimen name="bottom_bar_height">56dp</dimen>
 	<dimen name="fab_height">56dp</dimen>
 	<dimen name="fab_height_half">28dp</dimen>
+	​<dimen name="viewpager_padding">48dp</dimen>
 
 </resources>

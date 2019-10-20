@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_report_view_pager.*
@@ -26,14 +27,30 @@ class ReportViewPagerFragment : BottomSheetDialogFragment() {
 		
 		initAdapter()
 		
-		reportViewModel.getReports(arguments?.getInt(BUNDLE_REPORT_ID)).observe(this, Observer {
+		reportViewModel.getReports().observe(this, Observer { it ->
 			viewPagerAdapter.reports = it
-			pageIndicatorView.count = if (viewPagerAdapter.itemCount >= 9) 9
-			else viewPagerAdapter.itemCount
+			
+			val reportIndex = it.indexOf(it.find {
+				it.id == arguments?.getInt(BUNDLE_REPORT_ID)
+			})
+			
+			viewPager.post {
+				viewPager.setCurrentItem(reportIndex, false)
+			}
+			
 		})
 	}
 	
 	private fun initAdapter() {
+		viewPager.clipToPadding = false
+		viewPager.clipChildren = false
+		viewPager.setPadding(resources.getDimensionPixelSize(R.dimen.viewpager_padding),
+				0, resources.getDimensionPixelSize(R.dimen.viewpager_padding), 0)
+		
+		
+		val marginTransformer = MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_padding_small))
+		viewPager.setPageTransformer(marginTransformer)
+		viewPager.offscreenPageLimit = 2
 		viewPagerAdapter = ReportViewPagerAdapter(childFragmentManager, lifecycle)
 		viewPager.adapter = viewPagerAdapter
 		viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -43,15 +60,6 @@ class ReportViewPagerFragment : BottomSheetDialogFragment() {
 							viewPagerAdapter.reports[position]
 					)
 				}
-				pageIndicatorView.onPageSelected(position)
-			}
-			
-			override fun onPageScrollStateChanged(state: Int) {
-				pageIndicatorView.onPageScrollStateChanged(state)
-			}
-			
-			override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-				pageIndicatorView.onPageScrolled(position, positionOffset, positionOffsetPixels)
 			}
 		})
 	}

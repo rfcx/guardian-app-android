@@ -12,6 +12,10 @@ class EventDb {
 				Realm.getDefaultInstance().where(Event::class.java).findAllAsync())
 	}
 	
+	fun getCount(): Long {
+		return Realm.getDefaultInstance().where(Event::class.java).count()
+	}
+	
 	fun getAllResultsAsync(): RealmResults<Event> {
 		return Realm.getDefaultInstance().where(Event::class.java).findAllAsync()
 	}

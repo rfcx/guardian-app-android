@@ -65,6 +65,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			return
 		}
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, 0)
+		
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				DownLoadEventWorker.enqueue()

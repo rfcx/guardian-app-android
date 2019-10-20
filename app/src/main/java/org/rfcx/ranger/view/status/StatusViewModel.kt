@@ -2,12 +2,14 @@ package org.rfcx.ranger.view.status
 
 
 import android.content.Context
+import android.util.Log
 import android.util.SparseArray
 import androidx.lifecycle.*
 import androidx.work.WorkInfo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
@@ -15,7 +17,10 @@ import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -25,16 +30,16 @@ import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.ReportSyncWorker
-import org.rfcx.ranger.util.asLiveData
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.util.isNetworkAvailable
-import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
 
 class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
                       private val locationDb: LocationDb, private val profileData: ProfileData,
-                      private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb) : ViewModel() {
+                      private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb,
+                      private val eventsUserCase: GetEventsUseCase) : ViewModel() {
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
@@ -74,22 +79,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private val eventObserve = Observer<List<Event>> { events ->
 		if (events.isNotEmpty()) {
-			val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
-			for (i in 0..2) {
-				val state = eventDb.getEventState(events[i].event_guid)
-				state?.let {
-					val result = when (it) {
-						ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
-						ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
-						else -> StatusAdapter.AlertItem.State.NONE
-					}
-					newItemsList.add(StatusAdapter.AlertItem(events[i], result))
-				} ?: run {
-					newItemsList.add(StatusAdapter.AlertItem(events[i], StatusAdapter.AlertItem.State.NONE))
-				}
-			}
-			_alertsList = newItemsList
-			_alertItems.value = newItemsList
+			updateRecentAlerts(events)
 		}
 	}
 	
@@ -243,6 +233,10 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		if (reportDb.unsentCount() > 0) {
 			ReportSyncWorker.enqueue()
 		}
+		
+		if (eventDb.getCount() < 1) {
+			loadEvents()
+		}
 	}
 	
 	private fun updateSyncInfo(syncStatus: SyncInfo.Status? = null) {
@@ -259,6 +253,45 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		val reportCount = reportDb.unsentCount()
 		
 		_syncInfo.value = SyncInfo(status, reportCount, locationCount)
+	}
+	
+	private fun loadEvents() {
+		// start load
+		val group = context.getGuardianGroup() ?: return
+		
+		val requestFactory = EventsRequestFactory(listOf(group), "begins_at", "DESC", 3, 0)
+		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
+			override fun onSuccess(t: EventResponse) {
+				t.events?.let { updateRecentAlerts(it) }
+			}
+			
+			override fun onError(e: Throwable) {
+				Log.i("StatusViewModel", "load events: ${e.localizedMessage}")
+			}
+		}, requestFactory)
+	}
+	
+	private fun updateRecentAlerts(events: List<Event>) {
+		val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
+		for (i in 0..2) {
+			newItemsList.add(events[i].toAlertItem())
+		}
+		_alertsList = newItemsList
+		_alertItems.value = newItemsList
+	}
+	
+	private fun Event.toAlertItem(): StatusAdapter.AlertItem {
+		val state = eventDb.getEventState(this.event_guid)
+		return state?.let {
+			val result = when (it) {
+				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
+				ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
+				else -> StatusAdapter.AlertItem.State.NONE
+			}
+			StatusAdapter.AlertItem(this, result)
+		} ?: run {
+			StatusAdapter.AlertItem(this, StatusAdapter.AlertItem.State.NONE)
+		}
 	}
 	
 	override fun onCleared() {
