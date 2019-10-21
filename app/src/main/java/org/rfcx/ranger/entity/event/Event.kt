@@ -44,7 +44,7 @@ open class Event() : RealmObject(), Parcelable {
 	var rejected: Int? = null
 	
 	@SerializedName("audioMeasuredAt")
-	var audioMeasuredAt: Int? = null
+	var audioMeasuredAt: Double? = null
 	
 	@SerializedName("audioDuration")
 	var audioDuration: Int? = null
@@ -106,7 +106,7 @@ open class Event() : RealmObject(), Parcelable {
 		}
 		confirmed = parcel.readValue(Int::class.java.classLoader) as? Int
 		rejected = parcel.readValue(Int::class.java.classLoader) as? Int
-		audioMeasuredAt = parcel.readValue(Int::class.java.classLoader) as? Int
+		audioMeasuredAt = parcel.readValue(Double::class.java.classLoader) as? Double
 		audioDuration = parcel.readValue(Int::class.java.classLoader) as? Int
 		reviewer = parcel.readParcelable(EventReviewer::class.java.classLoader)
 		review = parcel.readParcelable(Review::class.java.classLoader)
