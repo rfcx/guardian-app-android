@@ -2,6 +2,7 @@ package org.rfcx.ranger.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -16,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
@@ -37,6 +39,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val analytics by lazy { Analytics(this) }
 	private lateinit var currentFragment: Fragment
+	
+	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
+		if (isOnAirplaneMode) {
+			showLocationError()
+			LocationTracking.set(this, false)
+			locationTrackingViewModel.trackingStateChange()
+		}
+	}
+	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
+	
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -78,6 +90,17 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		observeEventFromNotification()
 		
 		getEventFromIntentIfHave(intent)
+	}
+	
+	override fun onResume() {
+		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+		super.onResume()
+		mainViewModel.updateLocationTracking()
+	}
+	
+	override fun onPause() {
+		unregisterReceiver(airplaneModeReceiver)
+		super.onPause()
 	}
 	
 	override fun onNewIntent(intent: Intent?) {
@@ -262,11 +285,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	private fun enableLocationTracking() {
 		if (isOnAirplaneMode()) {
-			AlertDialog.Builder(this)
-					.setTitle(R.string.in_air_plane_mode)
-					.setMessage(R.string.pls_off_air_plane_mode)
-					.setPositiveButton(R.string.common_ok, null)
-					.show()
+			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		} else {
@@ -275,6 +294,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
+	}
+	
+	private fun showLocationError() {
+		AlertDialog.Builder(this)
+				.setTitle(R.string.in_air_plane_mode)
+				.setMessage(R.string.pls_off_air_plane_mode)
+				.setPositiveButton(R.string.common_ok, null)
+				.show()
 	}
 	
 	private fun disableLocationTracking() {
