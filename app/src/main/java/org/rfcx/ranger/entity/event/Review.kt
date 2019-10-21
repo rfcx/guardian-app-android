@@ -4,14 +4,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmModel
-import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass
 open class Review() : RealmModel, Parcelable {
 	
-	@PrimaryKey
 	@SerializedName("created")
 	var created: Date = Date()
 	@SerializedName("confirmed")
