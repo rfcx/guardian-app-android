@@ -4,11 +4,13 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.event.ReviewEventRequest
+import org.rfcx.ranger.util.RealmHelper
 
 
 /**
@@ -22,7 +24,7 @@ class ReviewEventSyncWorker(private val context: Context, params: WorkerParamete
 		Log.d(TAG, "doWork")
 		
 		val eventService = ServiceFactory.makeEventService(BuildConfig.DEBUG, context)
-		val db = EventDb()
+		val db = EventDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		
 		val reviewEvents = db.lockReviewEventUnSent()
 		

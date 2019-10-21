@@ -5,24 +5,23 @@ import io.realm.RealmResults
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 
-class EventDb {
+class EventDb(val realm: Realm) {
 	
 	fun getEvents(): List<Event> {
-		return Realm.getDefaultInstance().copyFromRealm(
-				Realm.getDefaultInstance().where(Event::class.java).findAllAsync())
+		return realm.copyFromRealm(realm.where(Event::class.java).findAllAsync())
 	}
 	
 	fun getCount(): Long {
-		return Realm.getDefaultInstance().where(Event::class.java).count()
+		return realm.where(Event::class.java).count()
 	}
 	
 	fun getAllResultsAsync(): RealmResults<Event> {
-		return Realm.getDefaultInstance().where(Event::class.java).findAllAsync()
+		return realm.where(Event::class.java).findAllAsync()
 	}
 	
 	fun getEventsSync(): List<Event> {
 		val list = arrayListOf<Event>()
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction {
 				val events = it.where(Event::class.java)
 						.findAll()
@@ -33,7 +32,7 @@ class EventDb {
 	}
 	
 	fun save(eventObj: EventReview) {
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction {
 				it.copyToRealmOrUpdate(eventObj)
 			}
@@ -41,7 +40,7 @@ class EventDb {
 	}
 	
 	fun saveEvents(events: List<Event>) {
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction {
 				it.delete(Event::class.java)
 				it.insertOrUpdate(events)
@@ -55,7 +54,7 @@ class EventDb {
 	 */
 	fun getEventState(eventGuid: String): String? {
 		var reviewVal: String? = null
-		Realm.getDefaultInstance().use {
+		realm.use {
 				reviewVal = it.where(EventReview::class.java)
 						.equalTo("eventGuId", eventGuid).findFirst()
 						?.review
@@ -65,7 +64,7 @@ class EventDb {
 	
 	fun lockReviewEventUnSent(): List<EventReview> {
 		val unsentList = arrayListOf<EventReview>()
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction { realm ->
 				val unsent = realm.where(EventReview::class.java)
 						.equalTo("syncState", EventReview.UNSENT).findAll()
@@ -80,7 +79,7 @@ class EventDb {
 	}
 	
 	fun markReviewEventSyncState(eventGuid: String, syncState: Int) {
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction {
 				val event = it.where(EventReview::class.java)
 						.equalTo("eventGuId", eventGuid).findFirst()
@@ -90,7 +89,7 @@ class EventDb {
 	}
 	
 	fun deleteAllEvents() {
-		Realm.getDefaultInstance().use { it ->
+		realm.use { it ->
 			it.executeTransaction {
 				it.delete(Event::class.java)
 			}

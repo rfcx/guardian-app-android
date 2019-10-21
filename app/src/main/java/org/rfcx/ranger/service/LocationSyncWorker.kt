@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.repo.api.SendLocationApi
+import org.rfcx.ranger.util.RealmHelper
 
 
 /**
@@ -20,7 +22,7 @@ class LocationSyncWorker(context: Context, params: WorkerParameters) : Worker(co
         Log.d(TAG, "doWork")
 
         val api = SendLocationApi()
-        val db = LocationDb()
+        val db = LocationDb(Realm.getInstance(RealmHelper.migrationConfig()))
         var checkins = db.unsent()
 
         if (checkins.isEmpty()) {

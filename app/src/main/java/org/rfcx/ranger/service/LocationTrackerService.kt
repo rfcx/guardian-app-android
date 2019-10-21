@@ -16,12 +16,14 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
+import io.realm.Realm
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.MainActivityNew
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
@@ -187,7 +189,7 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun saveLocation(location: Location) {
-		LocationDb().save(CheckIn(latitude = location.latitude, longitude = location.longitude))
+		LocationDb(Realm.getInstance(RealmHelper.migrationConfig())).save(CheckIn(latitude = location.latitude, longitude = location.longitude))
 		LocationSyncWorker.enqueue()
 		Preferences.getInstance(this).putLong(LASTEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}

@@ -1,15 +1,17 @@
 package org.rfcx.ranger.data.local
 
+import io.realm.Realm
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.RealmHelper
 
 class ProfileData(private val preferences: Preferences) {
 	
 	fun getSiteName(): String {
 		val defaultSiteName = preferences.getString(Preferences.DEFAULT_SITE, "")
-		val database = SiteGuardianDb()
+		val database = SiteGuardianDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val guardianGroupId = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
 		val siteId = database.guardianGroup(guardianGroupId)?.siteId ?: ""
 		val site = database.site(siteId)

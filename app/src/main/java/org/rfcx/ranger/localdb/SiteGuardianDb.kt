@@ -9,7 +9,7 @@ import org.rfcx.ranger.entity.guardian.Site
  * Data access for sites and guardian groups in the local realm db
  */
 
-class SiteGuardianDb(val realm: Realm = Realm.getDefaultInstance()) {
+class SiteGuardianDb(val realm: Realm) {
 
     fun site(id: String): Site? {
         return realm.where(Site::class.java).equalTo("id", id).findFirst()

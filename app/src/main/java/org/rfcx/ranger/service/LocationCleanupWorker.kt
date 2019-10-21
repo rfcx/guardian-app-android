@@ -3,7 +3,9 @@ package org.rfcx.ranger.service
 import android.content.Context
 import android.util.Log
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.localdb.LocationDb
+import org.rfcx.ranger.util.RealmHelper
 import java.util.concurrent.TimeUnit
 
 
@@ -14,7 +16,7 @@ class LocationCleanupWorker(context: Context, params: WorkerParameters) : Worker
 
     override fun doWork(): Result {
         // Delete locations older than 72 hours
-        val count = LocationDb().deleteSynced()
+        val count = LocationDb(Realm.getInstance(RealmHelper.migrationConfig())).deleteSynced()
         Log.d(TAG, "doWork: $count for deletion")
 
         return Result.success()

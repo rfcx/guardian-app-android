@@ -11,6 +11,7 @@ import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.localdb.ReportImageDb.Companion.SENT
+import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.util.asLiveData
 
 class MapDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
@@ -26,7 +27,7 @@ class MapDetailViewModel(private val reportDb: ReportDb, private val reportImage
 		_report = reportDb.getReportAsync(reportId)
 		_report?.addChangeListener<Report> { t ->
 			if (t.isValid)
-				_reportLive.value = Realm.getDefaultInstance().copyFromRealm(t)
+				_reportLive.value = t.realm.copyFromRealm(t)
 			else _reportLive.value = null
 		} ?: run {
 			_reportLive.value = null

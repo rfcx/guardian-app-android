@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.repo.api.UploadImageApi
+import org.rfcx.ranger.util.RealmHelper
 import java.io.FileNotFoundException
 
 
@@ -22,7 +24,7 @@ class ImageUploadWorker(context: Context, params: WorkerParameters)
 		Log.d(TAG, "doWork")
 		
 		val api = UploadImageApi()
-		val db = ReportImageDb()
+		val db = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val images = db.lockUnsent()
 		
 		var someFailed = false

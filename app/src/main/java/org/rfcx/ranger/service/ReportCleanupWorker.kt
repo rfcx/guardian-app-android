@@ -3,7 +3,9 @@ package org.rfcx.ranger.service
 import android.content.Context
 import android.util.Log
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.util.RealmHelper
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +27,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
 	}
 	
 	private fun deleteSentReports() {
-		val db = ReportDb()
+		val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val leftoverFiles = db.deleteSent()
 		
 		for (filename in leftoverFiles) {
@@ -39,7 +41,7 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
 	}
 	
 	private fun resendIfRequired() {
-		val db = ReportDb()
+		val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val unsent = db.unsentCount()
 		Log.d(TAG, "resendIfRequired: found $unsent unsent")
 		

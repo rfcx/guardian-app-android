@@ -1,5 +1,6 @@
 package org.rfcx.ranger.di
 
+import io.realm.Realm
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -40,6 +41,7 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.RealmHelper
 
 object DataModule {
 	
@@ -84,10 +86,11 @@ object DataModule {
 	}
 	
 	val localModule = module {
-		factory { LocationDb() }
-		factory { ReportDb() }
-		factory { ReportImageDb() }
-		factory { EventDb() }
+		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
+		factory { LocationDb(get()) }
+		factory { ReportDb(get()) }
+		factory { ReportImageDb(get()) }
+		factory { EventDb(get()) }
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get()) }
 		factory { Preferences.getInstance(androidContext()) }

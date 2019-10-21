@@ -48,15 +48,23 @@ class RangerApplication : MultiDexApplication() {
 	}
 	
 	private fun setUpRealm() {
-		val realm: Realm
+		var realmNeedsMigration = false
 		try {
-			realm = Realm.getInstance(RealmHelper.migrationConfig())
+			val realm = Realm.getInstance(RealmHelper.migrationConfig())
 			realm.close()
 			Realm.setDefaultConfiguration(RealmHelper.migrationConfig())
 		} catch (e: RealmMigrationNeededException) {
 			Log.e("RealmMigration", e.message)
 			CrashlyticsCore.getInstance().logException(e)
-			Realm.setDefaultConfiguration(RealmHelper.defaultConfig())
+			realmNeedsMigration = true
+		}
+		
+		// Falback for release (delete realm on error)
+		if (realmNeedsMigration && !BuildConfig.DEBUG) {
+			try {
+				val realm = Realm.getInstance(RealmHelper.fallbackConfig())
+				realm.close()
+			} catch (e: RealmMigrationNeededException) { }
 		}
 	}
 	

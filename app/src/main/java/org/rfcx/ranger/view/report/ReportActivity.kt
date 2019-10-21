@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
@@ -287,7 +288,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 				latitude = lat, longitude = lon, ageEstimateRaw = whenState.value,
 				audioLocation = recordFile?.canonicalPath)
 		
-		ReportDb().save(report, reportImageAdapter.getNewAttachImage())
+		ReportDb(Realm.getInstance(RealmHelper.migrationConfig())).save(report, reportImageAdapter.getNewAttachImage())
 		WeeklySummaryData(Preferences(this)).adJustReportSubmitCount()
 		ReportSyncWorker.enqueue()
 		finish()

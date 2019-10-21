@@ -37,17 +37,17 @@ open class Event() : RealmObject(), Parcelable {
 	@SerializedName("confidence")
 	var confidence: Float? = null
 	
-	@SerializedName("confirmed")
-	var confirmed: Int? = null
-	
-	@SerializedName("rejected")
-	var rejected: Int? = null
-	
-	@SerializedName("audioMeasuredAt")
-	var audioMeasuredAt: Double? = null
-	
-	@SerializedName("audioDuration")
-	var audioDuration: Int? = null
+//	@SerializedName("confirmed")
+//	var confirmed: Int? = null
+//
+//	@SerializedName("rejected")
+//	var rejected: Int? = null
+//
+//	@SerializedName("audioMeasuredAt")
+//	var audioMeasuredAt: Date = Date()
+//
+//	@SerializedName("audioDuration")
+//	var audioDuration: Int? = null
 	
 	@SerializedName("guardianGuid")
 	var guardianGUID: String? = ""
@@ -73,11 +73,11 @@ open class Event() : RealmObject(), Parcelable {
 	@SerializedName("windows")
 	var windows: RealmList<EventWindow>? = null
 	
-	@SerializedName("reviewer")
-	var reviewer: EventReviewer? = null
-	
-	@SerializedName("review")
-	var review: Review? = null
+//	@SerializedName("reviewer")
+//	var reviewer: EventReviewer? = null
+//
+//	@SerializedName("review")
+//	var review: Review? = null
 	
 	constructor(parcel: Parcel) : this() {
 		event_guid = parcel.readString() ?: ""
@@ -101,15 +101,15 @@ open class Event() : RealmObject(), Parcelable {
 		}
 		aiGuid = parcel.readString()
 		this.windows = RealmList()
-		parcel.createTypedArrayList(EventWindow.CREATOR)?.let {
-			this.windows!!.addAll(it)
-		}
-		confirmed = parcel.readValue(Int::class.java.classLoader) as? Int
-		rejected = parcel.readValue(Int::class.java.classLoader) as? Int
-		audioMeasuredAt = parcel.readValue(Double::class.java.classLoader) as? Double
-		audioDuration = parcel.readValue(Int::class.java.classLoader) as? Int
-		reviewer = parcel.readParcelable(EventReviewer::class.java.classLoader)
-		review = parcel.readParcelable(Review::class.java.classLoader)
+//		parcel.createTypedArrayList(EventWindow.CREATOR)?.let {
+//			this.windows!!.addAll(it)
+//		}
+//		confirmed = parcel.readValue(Int::class.java.classLoader) as? Int
+//		rejected = parcel.readValue(Int::class.java.classLoader) as? Int
+//		audioMeasuredAt = Date(parcel.readLong())
+//		audioDuration = parcel.readValue(Int::class.java.classLoader) as? Int
+//		reviewer = parcel.readParcelable(EventReviewer::class.java.classLoader)
+//		review = parcel.readParcelable(Review::class.java.classLoader)
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -136,12 +136,12 @@ open class Event() : RealmObject(), Parcelable {
 		if (windows!=null) {
 			parcel.writeTypedList(windows)
 		}
-		parcel.writeValue(confirmed)
-		parcel.writeValue(rejected)
-		parcel.writeValue(audioMeasuredAt)
-		parcel.writeValue(audioDuration)
-		parcel.writeParcelable(reviewer, flags)
-		parcel.writeParcelable(review, flags)
+//		parcel.writeValue(confirmed)
+//		parcel.writeValue(rejected)
+//		parcel.writeLong(audioMeasuredAt.time)
+//		parcel.writeValue(audioDuration)
+//		parcel.writeParcelable(reviewer, flags)
+//		parcel.writeParcelable(review, flags)
 	}
 	
 	override fun describeContents(): Int {

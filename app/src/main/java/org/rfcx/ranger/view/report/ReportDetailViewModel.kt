@@ -3,11 +3,13 @@ package org.rfcx.ranger.view.report
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.util.RealmHelper
 
 class ReportDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
 	
@@ -50,7 +52,7 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 	
 	fun addReportImages(imagePaths: List<String>) {
 		report?.let {
-			val reportImageDb = ReportImageDb()
+			val reportImageDb = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
 			reportImageDb.save(it, imagePaths)
 		}
 	}

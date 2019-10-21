@@ -8,7 +8,7 @@ import org.rfcx.ranger.entity.location.CheckIn
  * Data access for location data in the local realm db
  */
 
-class LocationDb(val realm: Realm = Realm.getDefaultInstance()) {
+class LocationDb(val realm: Realm) {
 
     init {
         realm.refresh()

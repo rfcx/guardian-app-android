@@ -10,7 +10,7 @@ import org.rfcx.ranger.entity.report.ReportImage
  * Manage the saving and sending of reports from the local database
  */
 
-class ReportImageDb(val realm: Realm = Realm.getDefaultInstance()) {
+class ReportImageDb(val realm: Realm) {
 	
 	fun unsentCount(): Long {
 		return realm.where(ReportImage::class.java).notEqualTo("syncState", SENT).count()

@@ -5,6 +5,7 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
+import org.koin.core.context.GlobalContext.get
 import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
@@ -17,7 +18,7 @@ fun Context.getTokenID(): String? {
 
 fun Context.getSiteName(): String {
 	val defaultSiteName = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE, "")
-	val database = SiteGuardianDb()
+	val database = SiteGuardianDb(Realm.getInstance(RealmHelper.migrationConfig()))
 	val guardianGroupId = Preferences.getInstance(this).getString(Preferences.SELECTED_GUARDIAN_GROUP)
 			?: ""
 	val siteId = database.guardianGroup(guardianGroupId)?.siteId ?: ""
@@ -51,7 +52,7 @@ fun Context?.logout() {
 		CloudMessaging.unsubscribe(this)
 		Preferences.getInstance(this).clear()
 		LocationTracking.set(this, false)
-		Realm.getDefaultInstance().use { realm ->
+		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
 			realm.executeTransaction {
 				it.deleteAll()
 			}

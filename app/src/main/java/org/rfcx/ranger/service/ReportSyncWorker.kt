@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import io.realm.Realm
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.repo.api.SendReportApi
+import org.rfcx.ranger.util.RealmHelper
 import java.io.File
 
 
@@ -22,7 +24,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
         Log.d(TAG, "doWork")
 
         val api = SendReportApi()
-        val db = ReportDb()
+        val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
         val reports = db.lockUnsent()
 
         Log.d(TAG, "doWork: found ${reports.size} unsent")
@@ -57,7 +59,7 @@ class ReportSyncWorker(context: Context, params: WorkerParameters)
     }
 
     private fun deleteSentReports() {
-        val db = ReportDb()
+        val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
         val leftoverFiles = db.deleteSent()
 
         for (filename in leftoverFiles) {

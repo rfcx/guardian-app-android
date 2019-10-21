@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okio.BufferedSink
@@ -12,6 +13,7 @@ import okio.sink
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.RealmHelper
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -26,7 +28,7 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 	private val needTobeDownloadEvent = arrayListOf<Event>()
 	override fun doWork(): Result {
 		Log.d(TAG, "doWork")
-		val eventDb = EventDb()
+		val eventDb = EventDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val events = eventDb.getEventsSync()
 		needTobeDownloadEvent.clear()
 		for (event in events) {

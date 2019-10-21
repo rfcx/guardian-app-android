@@ -20,7 +20,7 @@ class RealmHelper {
 			}.build()
 		}
 		
-		fun defaultConfig(): RealmConfiguration {
+		fun fallbackConfig(): RealmConfiguration {
 			return RealmConfiguration.Builder().apply {
 				schemaVersion(schemaVersion)
 				deleteRealmIfMigrationNeeded()

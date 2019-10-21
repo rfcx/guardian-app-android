@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_report_list.*
 import org.rfcx.ranger.R
@@ -13,6 +14,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.util.RealmHelper
 
 class ReportListFragment : Fragment() {
 	
@@ -105,7 +107,7 @@ class ReportListFragment : Fragment() {
 	}
 	
 	private fun initDatabase() {
-		reportDB = ReportDb()
-		reportImageDb = ReportImageDb()
+		reportDB = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
+		reportImageDb = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
 	}
 }

@@ -193,7 +193,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		
 		reportList.forEach {
 			val imageState: ImageState = reportsImage.get(it.id, ImageState(0, 0))
-			newItemsList.add(StatusAdapter.ReportItem(Realm.getDefaultInstance().copyFromRealm(it), imageState))
+			newItemsList.add(StatusAdapter.ReportItem(it.realm.copyFromRealm(it), imageState))
 		}
 		_reportItems.value = newItemsList
 	}

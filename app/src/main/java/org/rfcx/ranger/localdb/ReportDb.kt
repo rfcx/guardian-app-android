@@ -11,7 +11,7 @@ import org.rfcx.ranger.entity.report.ReportImage
  * Manage the saving and sending of reportsLive from the local database
  */
 
-class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
+class ReportDb(val realm: Realm) {
 	fun unsentCount(): Long {
 		return realm.where(Report::class.java).notEqualTo("syncState", SENT).count()
 	}
@@ -110,9 +110,10 @@ class ReportDb(val realm: Realm = Realm.getDefaultInstance()) {
 				.sort("id", Sort.ASCENDING)
 				.limit(shouldDeleteCount)
 				.findAll()
-		val imageDb = ReportImageDb()
+//		val imageDb = ReportImageDb()
 		reports.forEach {
-			imageDb.deleteAll(it.id)
+//			imageDb.deleteAll(it.id)
+			it.realm.deleteAll()
 		}
 		val filenames = reports.mapNotNull { it.audioLocation }
 		realm.executeTransaction {
