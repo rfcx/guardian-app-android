@@ -3,6 +3,7 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
@@ -152,6 +153,16 @@ class RangerRealmMigration : RealmMigration {
 			
 			removeField("endAt")
 			renameField("endAt_tmp", "endAt")
+			removeField("isOpened")
+			
+		}
+		
+		val eventReview = realm.schema.get("EventReview")
+		eventReview?.apply {
+			addField("syncState", Int::class.java)
+			transform { obj ->
+				obj.setInt("syncState", EventReview.SENT)
+			}
 		}
 	}
 }
