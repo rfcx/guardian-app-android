@@ -6,18 +6,19 @@ import com.google.gson.annotations.SerializedName
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import java.util.*
 
 @RealmClass
 open class Review() : RealmModel, Parcelable {
 	
 	@PrimaryKey
 	@SerializedName("created")
-	var created: Int? = null
+	var created: Date = Date()
 	@SerializedName("confirmed")
 	var confirmed: Boolean? = null
 	
 	constructor(parcel: Parcel) : this() {
-		created = parcel.readValue(Int::class.java.classLoader) as? Int
+		created = Date(parcel.readLong())
 		confirmed = when (parcel.readInt()) {
 			0 -> false
 			1 -> true
@@ -26,7 +27,7 @@ open class Review() : RealmModel, Parcelable {
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
-		parcel.writeValue(created)
+		parcel.writeLong(created.time)
 		parcel.writeInt(when (confirmed) {
 			true -> 1
 			false -> 0
