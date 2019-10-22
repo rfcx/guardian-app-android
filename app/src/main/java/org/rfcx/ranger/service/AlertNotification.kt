@@ -67,6 +67,7 @@ object AlertNotification {
 			
 			value = data["value"]
 			guardianGUID = data["guardian_guid"]
+			guardianShortname = data["guardian_shortname"]
 			type = data["type"]
 			site = data["site_guid"]
 			aiGuid = data["ai_guid"]
