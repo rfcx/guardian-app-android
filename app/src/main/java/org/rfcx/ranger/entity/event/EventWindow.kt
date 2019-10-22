@@ -12,7 +12,7 @@ open class EventWindow() : RealmModel, Parcelable {
 	
 	@PrimaryKey
 	@SerializedName("guid")
-	var guid: String? = ""
+	var guid: String = ""
 	@SerializedName("confidence")
 	var confidence: Double? = null
 	@SerializedName("start")

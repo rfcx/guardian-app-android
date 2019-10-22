@@ -26,6 +26,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 7L && newVersion >= 7L) {
 			migrateToV7(c)
 		}
+		if (oldVersion < 8L && newVersion >= 8L) {
+			migrateToV8(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -163,6 +166,63 @@ class RangerRealmMigration : RealmMigration {
 			transform { obj ->
 				obj.setInt("syncState", EventReview.SENT)
 			}
+		}
+	}
+	
+	private fun migrateToV8(realm: DynamicRealm) {
+		val reviewer = realm.schema.create("EventReviewer")
+		reviewer?.apply {
+			addField("guid", String::class.java, FieldAttribute.PRIMARY_KEY)
+					.setRequired("guid", true)
+			addField("firstName", String::class.java)
+			addField("lastName", String::class.java)
+			addField("createdAt", Date::class.java)
+					.setRequired("createdAt", true)
+			addField("lastLogin", Date::class.java)
+					.setRequired("lastLogin", true)
+			addField("freezeUsername", Boolean::class.java)
+					.setNullable("freezeUsername", true)
+			addField("pictureUrl", String::class.java)
+			addField("locale", String::class.java)
+			addField("email", String::class.java)
+			addField("updatedAt", Date::class.java)
+					.setRequired("updatedAt", true)
+			addField("username", String::class.java)
+		}
+		
+		val review = realm.schema.create("Review")
+		review?.apply {
+			addField("created", Date::class.java)
+					.setRequired("created", true)
+			addField("confirmed", Boolean::class.java)
+					.setNullable("confirmed", true)
+		}
+		
+		val windows = realm.schema.create("EventWindow")
+		windows?.apply {
+			addField("guid", String::class.java, FieldAttribute.PRIMARY_KEY)
+					.setRequired("guid", true)
+			addField("confidence", Double::class.java)
+					.setNullable("confidence", true)
+			addField("start", Int::class.java)
+					.setNullable("start", true)
+			addField("end", Int::class.java)
+					.setNullable("end", true)
+		}
+		
+		val event = realm.schema.get("Event")
+		event?.apply {
+			addField("confirmed", Int::class.java)
+					.setNullable("confirmed", true)
+			addField("rejected", Int::class.java)
+					.setNullable("rejected", true)
+			addField("audioDuration", Long::class.java)
+					.setNullable("audioDuration", true)
+			addField("audioMeasuredAt", Date::class.java)
+					.setRequired("audioMeasuredAt", true)
+			addRealmObjectField("reviewer", reviewer)
+			addRealmObjectField("review", review)
+			addRealmListField("windows", windows)
 		}
 	}
 }

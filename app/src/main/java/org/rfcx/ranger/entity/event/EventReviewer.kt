@@ -12,6 +12,8 @@ import java.util.*
 open class EventReviewer() : RealmModel, Parcelable {
 	
 	@PrimaryKey
+	@SerializedName("guid")
+	var guid: String = ""
 	@SerializedName("firstName")
 	var firstName: String? = ""
 	@SerializedName("lastName")
@@ -24,8 +26,6 @@ open class EventReviewer() : RealmModel, Parcelable {
 	var freezeUsername: Boolean? = null
 	@SerializedName("pictureUrl")
 	var pictureUrl: String? = ""
-	@SerializedName("guid")
-	var guid: String? = ""
 	@SerializedName("locale")
 	var locale: String? = ""
 	@SerializedName("email")
