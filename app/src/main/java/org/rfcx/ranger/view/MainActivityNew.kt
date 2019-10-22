@@ -2,6 +2,7 @@ package org.rfcx.ranger.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -16,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
@@ -36,7 +38,17 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val analytics by lazy { Analytics(this) }
-	private lateinit var currentFragment: Fragment
+	private var currentFragment: Fragment? = null
+	
+	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
+		if (isOnAirplaneMode) {
+			showLocationError()
+			LocationTracking.set(this, false)
+			locationTrackingViewModel.trackingStateChange()
+		}
+	}
+	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
+	
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -80,6 +92,17 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		getEventFromIntentIfHave(intent)
 	}
 	
+	override fun onResume() {
+		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+		super.onResume()
+		mainViewModel.updateLocationTracking()
+	}
+	
+	override fun onPause() {
+		unregisterReceiver(airplaneModeReceiver)
+		super.onPause()
+	}
+	
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
 		getEventFromIntentIfHave(intent)
@@ -98,8 +121,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions.handleRequestResult(requestCode, grantResults)
 		
-		if (currentFragment is MapFragment) {
-			(currentFragment as MapFragment).onRequestPermissionsResult(requestCode, permissions, grantResults)
+		currentFragment?.let {
+			if (it is MapFragment) {
+				it.onRequestPermissionsResult(requestCode, permissions, grantResults)
+			}
 		}
 	}
 	
@@ -107,8 +132,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		super.onActivityResult(requestCode, resultCode, data)
 		locationPermissions.handleActivityResult(requestCode, resultCode)
 		
-		if (currentFragment is MapFragment) {
-			(currentFragment as MapFragment).onActivityResult(requestCode, resultCode, data)
+		currentFragment?.let {
+			if (it is MapFragment) {
+				it.onActivityResult(requestCode, resultCode, data)
+			}
 		}
 	}
 	
@@ -262,11 +289,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	private fun enableLocationTracking() {
 		if (isOnAirplaneMode()) {
-			AlertDialog.Builder(this)
-					.setTitle(R.string.in_air_plane_mode)
-					.setMessage(R.string.pls_off_air_plane_mode)
-					.setPositiveButton(R.string.common_ok, null)
-					.show()
+			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		} else {
@@ -275,6 +298,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
+	}
+	
+	private fun showLocationError() {
+		AlertDialog.Builder(this)
+				.setTitle(R.string.in_air_plane_mode)
+				.setMessage(R.string.pls_off_air_plane_mode)
+				.setPositiveButton(R.string.common_ok, null)
+				.show()
 	}
 	
 	private fun disableLocationTracking() {

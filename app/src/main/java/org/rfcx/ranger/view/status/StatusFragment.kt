@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.status
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityListener
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
-import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity

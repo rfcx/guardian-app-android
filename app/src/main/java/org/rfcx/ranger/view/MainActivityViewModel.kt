@@ -17,14 +17,19 @@ class MainActivityViewModel(private val profileData: ProfileData, credentialKeep
 	
 	val isRequireToLogin = MutableLiveData<Boolean>()
 	
-	val isLocationTrackingOn = MutableLiveData<Boolean>()
+	private val _isLocationTrackingOn = MutableLiveData<Boolean>()
+	val isLocationTrackingOn = _isLocationTrackingOn
 	
 	val eventFromNotification = MutableLiveData<Event>()
 	
 	init {
 		isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
-		isLocationTrackingOn.value = profileData.getTracking()
+		_isLocationTrackingOn.value = profileData.getTracking()
 		
 		ReviewEventSyncWorker.enqueue()
+	}
+	
+	fun updateLocationTracking() {
+		_isLocationTrackingOn.value = profileData.getTracking()
 	}
 }
