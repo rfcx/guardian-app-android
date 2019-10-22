@@ -38,7 +38,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val analytics by lazy { Analytics(this) }
-	private lateinit var currentFragment: Fragment
+	private var currentFragment: Fragment? = null
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
 		if (isOnAirplaneMode) {
@@ -121,8 +121,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions.handleRequestResult(requestCode, grantResults)
 		
-		if (currentFragment is MapFragment) {
-			(currentFragment as MapFragment).onRequestPermissionsResult(requestCode, permissions, grantResults)
+		currentFragment?.let {
+			if (it is MapFragment) {
+				it.onRequestPermissionsResult(requestCode, permissions, grantResults)
+			}
 		}
 	}
 	
@@ -130,8 +132,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		super.onActivityResult(requestCode, resultCode, data)
 		locationPermissions.handleActivityResult(requestCode, resultCode)
 		
-		if (currentFragment is MapFragment) {
-			(currentFragment as MapFragment).onActivityResult(requestCode, resultCode, data)
+		currentFragment?.let {
+			if (it is MapFragment) {
+				it.onActivityResult(requestCode, resultCode, data)
+			}
 		}
 	}
 	
