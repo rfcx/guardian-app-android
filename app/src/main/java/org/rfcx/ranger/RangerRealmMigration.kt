@@ -225,4 +225,12 @@ class RangerRealmMigration : RealmMigration {
 			addRealmListField("windows", windows)
 		}
 	}
+	
+	override fun hashCode(): Int {
+		return 1
+	}
+	
+	override fun equals(other: Any?): Boolean {
+		return other.hashCode() == hashCode()
+	}
 }
