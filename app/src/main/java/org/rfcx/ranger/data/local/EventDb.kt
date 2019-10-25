@@ -40,7 +40,7 @@ class EventDb(val realm: Realm) {
 	}
 	
 	fun saveEvents(events: List<Event>) {
-		realm.use { it ->
+		Realm.getDefaultInstance().use { it ->
 			it.executeTransaction {
 				it.delete(Event::class.java)
 				it.insertOrUpdate(events)
@@ -54,7 +54,7 @@ class EventDb(val realm: Realm) {
 	 */
 	fun getEventState(eventGuid: String): String? {
 		var reviewVal: String? = null
-		realm.use {
+		Realm.getDefaultInstance().use {
 				reviewVal = it.where(EventReview::class.java)
 						.equalTo("eventGuId", eventGuid).findFirst()
 						?.review

@@ -3,6 +3,7 @@ package org.rfcx.ranger.data.remote.service
 import android.content.Context
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
@@ -14,16 +15,18 @@ import org.rfcx.ranger.data.remote.service.rest.EventService
 import org.rfcx.ranger.data.remote.setusername.SetNameEndpoint
 import org.rfcx.ranger.data.remote.usertouch.UserTouchEndPoint
 import org.rfcx.ranger.util.GsonProvider
+import org.rfcx.ranger.util.ImprovedDateTypeAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object ServiceFactory {
 	
 	fun makeEventService(isDebug: Boolean, context: Context): EventService {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
-				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
+				AuthTokenInterceptor(context)), createDateGson())
 				.create(EventService::class.java)
 	}
 	
@@ -69,6 +72,14 @@ object ServiceFactory {
 				.addConverterFactory(GsonConverterFactory.create(gson))
 				.client(okHttpClient)
 				.build()
+	}
+	
+	private fun createDateGson(): Gson {
+		val builder = GsonBuilder()
+		builder.setLenient()
+		builder.registerTypeAdapter(Date::class.java, ImprovedDateTypeAdapter())
+		
+		return builder.create()
 	}
 	
 	/**

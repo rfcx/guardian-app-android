@@ -218,8 +218,6 @@ class RangerRealmMigration : RealmMigration {
 					.setNullable("rejected", true)
 			addField("audioDuration", Long::class.java)
 					.setNullable("audioDuration", true)
-			addField("audioMeasuredAt", Date::class.java)
-					.setRequired("audioMeasuredAt", true)
 			addRealmObjectField("reviewer", reviewer)
 			addRealmObjectField("review", review)
 			addRealmListField("windows", windows)

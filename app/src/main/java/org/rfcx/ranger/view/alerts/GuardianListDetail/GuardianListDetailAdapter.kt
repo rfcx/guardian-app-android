@@ -14,6 +14,8 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.EventItem
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, GuardianListDetailAdapter.GuardianListDetailViewHolder>(GuardianListDetailDiffUtil()) {
 	
@@ -140,10 +142,16 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			}
 			
 			seeOlderTextView.setOnClickListener {
-				val guid = eventList[eventList.size-1].event.guardianGUID ?: ""
-				val value = eventList[eventList.size-1].event.value ?: ""
-				val endAt = eventList[eventList.size-1].event.endAt
-				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, endAt)
+				val lastEvent = eventList[eventList.size-1].event
+				val guid = lastEvent.guardianGUID ?: ""
+				val value = lastEvent.value ?: ""
+				val beginsAt = lastEvent.beginsAt.time
+				val audioDuration = lastEvent.audioDuration
+				var timeEndAt = Date()
+				if(audioDuration !== null){
+					timeEndAt = Date(beginsAt + audioDuration)
+				}
+				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, timeEndAt)
 			}
 			currentEventList = eventList
 		}

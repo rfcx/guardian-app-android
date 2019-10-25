@@ -30,9 +30,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
 	val alerts: LiveData<Result<List<EventItem>>>
 		get() = _alerts
-	
 	private var _alertsList: List<EventItem> = listOf()
-	private val listGuardians = ArrayList<String>()
 	
 	// data loading events
 	private val items = arrayListOf<EventItem>()
@@ -50,7 +48,6 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	init {
 		currentOffset = 0
-		
 	}
 	
 	fun getGuardianGroup(){
@@ -111,7 +108,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(listGuardians, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
+		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, nextOffset)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				totalItemCount = t.total

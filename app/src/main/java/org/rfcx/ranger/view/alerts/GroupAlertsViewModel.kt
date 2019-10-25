@@ -57,7 +57,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}
 		val guardianGroup = ArrayList<String>()
 		guardianGroup.add(group)
-		val requestFactory = EventsRequestFactory(guardianGroup, "begins_at", "DESC", LIMITS, 0)
+		val requestFactory = EventsRequestFactory(guardianGroup, "measured_at", "DESC", LIMITS, 0)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				t.events?.let { events ->
