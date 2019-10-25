@@ -13,7 +13,7 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 	
 	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse> {
 		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.value, requestFactory.time.toIsoString(), requestFactory.orderBy,
-				requestFactory.dir, requestFactory.limit, requestFactory.offset, requestFactory.type).map {
+				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
 			it
 		}
 	}
