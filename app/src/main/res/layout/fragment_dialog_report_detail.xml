@@ -11,7 +11,7 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/margin_padding_small"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:background="@drawable/background_report_detail_bottom_sheet"
 		android:padding="@dimen/margin_padding_normal">
 		
@@ -75,11 +75,13 @@
 		
 		<TextView
 			android:id="@+id/seeDetailTextView"
-			style="@style/TextButton.Bold"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_normal"
+			android:padding="0dp"
 			android:text="@string/see_report_detail"
+			android:textColor="@color/text_green"
+			android:textStyle="bold"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/reportImageStateTextView" />
