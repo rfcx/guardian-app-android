@@ -273,11 +273,13 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private fun updateRecentAlerts(events: List<Event>) {
 		val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
-		for (i in 0..2) {
-			newItemsList.add(events[i].toAlertItem())
+		if(events.isNotEmpty()) {
+			events.take(3).map { event ->
+				newItemsList.add(event.toAlertItem())
+			}
+			_alertsList = newItemsList
+			_alertItems.value = newItemsList
 		}
-		_alertsList = newItemsList
-		_alertItems.value = newItemsList
 	}
 	
 	private fun Event.toAlertItem(): StatusAdapter.AlertItem {

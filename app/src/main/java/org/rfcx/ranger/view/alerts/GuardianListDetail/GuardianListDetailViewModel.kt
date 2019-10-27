@@ -99,6 +99,10 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		if (eventOfOther.isNotEmpty()) {
 			eventAll.addAll(listOf(eventOfOther))
 		}
+		
+		if (eventOfMismatch.isNotEmpty()) {
+			eventAll.addAll(listOf(eventOfMismatch))
+		}
 		addList(eventAll)
 	}
 	
