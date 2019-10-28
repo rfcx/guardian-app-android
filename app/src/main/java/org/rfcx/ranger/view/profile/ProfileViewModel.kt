@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.ProfileData
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getGuardianGroup
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData) : ViewModel() {
@@ -35,6 +36,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun updateSiteName() {
-		guardianGroup.value = context.getGuardianGroup()
+		guardianGroup.value = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 	}
 }
