@@ -82,6 +82,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 				
 				value = intent.getStringExtra("value")
 				guardianGUID = intent.getStringExtra("guardian_guid")
+				guardianShortname = intent.getStringExtra("guardian_shortname")
 				type = intent.getStringExtra("type")
 				site = intent.getStringExtra("site_guid")
 				aiGuid = intent.getStringExtra("ai_guid")
