@@ -44,7 +44,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}
 	var isLoadMore = false
 	val isLastPage: Boolean
-		get() = currentOffset >= totalPage
+		get() = currentOffset >= (PAGE_LIMITS * totalPage)
 	
 	init {
 		currentOffset = 0
@@ -77,7 +77,6 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
 				DownLoadEventWorker.enqueue()
-				totalItemCount = t.total
 				handleOnSuccess(t)
 			}
 			
@@ -89,6 +88,8 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	}
 	
 	private fun handleOnSuccess(t: EventResponse) {
+		this.totalItemCount = t.total
+		
 		t.events?.forEach { event ->
 			val state = eventDb.getEventState(event.event_guid)
 			state?.let {
@@ -107,6 +108,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	}
 	
 	fun loadMoreEvents() {
+		
 		if (isLastPage) {
 			return
 		}
@@ -123,7 +125,6 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		val requestFactory = EventsRequestFactory(group, "begins_at", "DESC", PAGE_LIMITS, nextOffset)
 		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
 			override fun onSuccess(t: EventResponse) {
-				totalItemCount = t.total
 				handleOnSuccess(t)
 				isLoadMore = false
 			}
