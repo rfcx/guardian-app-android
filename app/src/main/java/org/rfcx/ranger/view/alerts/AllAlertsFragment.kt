@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_all_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.Analytics
@@ -17,7 +19,6 @@ import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.AlertsAdapter
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.base.BaseFragment
 
 class AllAlertsFragment : BaseFragment(), AlertClickListener {
@@ -36,27 +37,40 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupAlertList()
+		setupSwipeRefresh()
 		
 		allAlertsViewModel.alerts.observe(this, Observer { it ->
 			
 			it.success({ items ->
-				loadingProgress.visibility = View.INVISIBLE
+				alertsSwipeRefresh.isRefreshing = false
 				if (items.isEmpty()) {
 					(parentFragment as AlertsNewInstanceListener?)?.emptyAlert()
 				} else {
-					val newList = mutableListOf<EventItem>()
+					val newList = mutableListOf<BaseItem>()
 					items.forEach { item -> newList.add(item.copy()) }
 					alertsAdapter.submitList(newList)
 				}
 			}, {
-				loadingProgress.visibility = View.INVISIBLE
+				alertsSwipeRefresh.isRefreshing = false
 				context?.handleError(it)
 			}, {
-				loadingProgress.visibility = View.VISIBLE
+				alertsSwipeRefresh.isRefreshing = !allAlertsViewModel.isLoadMore
+				
+				if (allAlertsViewModel.isLoadMore) {
+					alertsAdapter.submitList(allAlertsViewModel.getItemsWithLoading())
+				}
 			})
 		})
 		
 		allAlertsViewModel.loadEvents()
+	}
+	
+	private fun setupSwipeRefresh() {
+		context?.let { alertsSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(it,
+				R.color.colorPrimary))}
+		alertsSwipeRefresh.setOnRefreshListener {
+			allAlertsViewModel.refresh()
+		}
 	}
 	
 	override fun onClickedAlert(event: Event) {
@@ -79,10 +93,11 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 					val visibleItemCount = alertsLayoutManager.childCount
 					val total = alertsLayoutManager.itemCount
 					val firstVisibleItemPosition = alertsLayoutManager.findFirstVisibleItemPosition()
-					if (loadingProgress.visibility != View.VISIBLE && !allAlertsViewModel.isLastPage) {
+					if (!alertsSwipeRefresh.isRefreshing && !allAlertsViewModel.isLastPage) {
 						if ((visibleItemCount + firstVisibleItemPosition) >= total
 								&& firstVisibleItemPosition >= 0
-								&& total >= AllAlertsViewModel.PAGE_LIMITS) {
+								&& total >= AllAlertsViewModel.PAGE_LIMITS
+								&& !allAlertsViewModel.isLoadMore) {
 							
 							// load events
 							allAlertsViewModel.loadMoreEvents()
