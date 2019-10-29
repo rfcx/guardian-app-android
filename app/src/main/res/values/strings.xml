@@ -90,8 +90,8 @@
 	<!-- Report list -->
 	<string name="report_list_title">Report History</string>
 	<string name="report_list_empty_message">You do not have any reports</string>
-	<string name="images_sync_format">%d images (synced)</string>
-	<string name="images_unsync_format">%1d images (%2d unsynced)</string>
+	<string name="images_sync_format">%d photos (synced)</string>
+	<string name="images_unsync_format">%1d photos (%2d unsynced)</string>
 	<string name="report_detail_title">Report detail</string>
 	
 	<string name="in_air_plane_mode">Unable to determine your location</string>
@@ -131,8 +131,8 @@
 	<string name="format_location">%s, %s</string>
 	<string name="format_image_synced">%s image</string>
 	<string name="format_image_unsync">%s image (%s not yet synced)</string>
-	<string name="format_images_synced">%s images</string>
-	<string name="format_images_unsync">%s images (%s not yet synced)</string>
+	<string name="format_images_synced">%s photos</string>
+	<string name="format_images_unsync">%s photos (%s not yet synced)</string>
 	<string name="empty_report_text">No reports in the last 7 days.\npress + to create one.</string>
 	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
 	
