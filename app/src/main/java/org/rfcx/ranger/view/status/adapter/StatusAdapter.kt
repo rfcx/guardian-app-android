@@ -16,13 +16,12 @@ import org.rfcx.ranger.adapter.view.TitleViewHolder
 import org.rfcx.ranger.databinding.*
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.toEventIcon
-import org.rfcx.ranger.util.toEventName
-import org.rfcx.ranger.util.toTimeSinceString
-import org.rfcx.ranger.util.toTimeSinceStringAlternative
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_EMPTY
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_SET_GUARDIAN_GROUP
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_HISTORY
@@ -32,7 +31,7 @@ import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companio
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
 import org.rfcx.ranger.view.status.adapter.viewholder.*
 
-class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?, private val seeMoreButton: String?)
+class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?, private val seeMoreButton: String?, private val context: Context?)
 	: ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()), SyncingViewCallback {
 	
 	private var listener: StatusFragmentListener? = null
@@ -72,7 +71,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			alerts = arrayListOf()
 			alerts?.addAll(newLists)
 		} else {
-			alerts = null // TODO display ???
+			alerts = null
 		}
 		update()
 	}
@@ -99,11 +98,19 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			newList.add(it)
 		}
 		
-		if (alerts != null && alerts!!.isNotEmpty()) {
-			alertTitle?.let {
-				newList.add(TitleItem(it))
+		alertTitle?.let {
+			newList.add(TitleItem(it))
+		}
+		
+		if (alerts != null && alerts!!.isEmpty()) {
+			if (context?.getGuardianGroup() == null) {     // not have group
+				newList.add(AlertSetGuardianGroupItem())
+			} else if (alerts!!.size == 0) {                 // have group but not have alert
+				newList.add(AlertEmpty())
 			}
-			
+		}
+		
+		if (alerts != null && alerts!!.isNotEmpty()) {
 			newList.addAll(alerts!!)
 			
 			seeMoreButton?.let {
@@ -146,6 +153,14 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			ITEM_ALERT -> {
 				val itemView = DataBindingUtil.inflate<ItemStatusAlertBinding>(inflater, R.layout.item_status_alert, parent, false)
 				AlertView(itemView, listener)
+			}
+			ITEM_ALERT_EMPTY -> {
+				val itemView = inflater.inflate(R.layout.item_alert_empty, parent, false)
+				EmptyAlertView(itemView)
+			}
+			ITEM_ALERT_SET_GUARDIAN_GROUP -> {
+				val itemView = DataBindingUtil.inflate<ItemAlertSetGuardianGroupBinding>(inflater, R.layout.item_alert_set_guardian_group, parent, false)
+				AlertSetGuardianGroupView(itemView, listener)
 			}
 			ITEM_REPORT_HISTORY -> {
 				val itemView = DataBindingUtil.inflate<ItemStatusReportBinding>(inflater, R.layout.item_status_report, parent, false)
@@ -196,6 +211,9 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			}
 			is SyncingView -> {
 				holder.bind(item as SyncInfoItem)
+			}
+			is AlertSetGuardianGroupView -> {
+				holder.bind(item as AlertSetGuardianGroupItem)
 			}
 		}
 	}
@@ -262,6 +280,9 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			const val ITEM_SYNC_INFO = 5
 			const val ITEM_ALERT = 6
 			const val ITEM_SEE_MORE = 7
+			const val ITEM_ALERT_EMPTY = 8
+			const val ITEM_ALERT_SET_GUARDIAN_GROUP = 9
+			
 		}
 	}
 	
@@ -378,5 +399,17 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getViewType(): Int = ITEM_REPORT_EMPTY
 		
 		override fun getId(): Int = -6
+	}
+	
+	class AlertEmpty : StatusItemBase {
+		override fun getViewType(): Int = ITEM_ALERT_EMPTY
+		
+		override fun getId(): Int = -4
+	}
+	
+	class AlertSetGuardianGroupItem : StatusItemBase {
+		override fun getId(): Int = -5
+		
+		override fun getViewType(): Int = ITEM_ALERT_SET_GUARDIAN_GROUP
 	}
 }
