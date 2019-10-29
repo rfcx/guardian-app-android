@@ -2,6 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.service.LocationTrackerService
 
@@ -37,7 +38,7 @@ class LocationTracking {
 			val weeklySummaryData = WeeklySummaryData(Preferences(context))
 			
 			if (isOn(context)) {
-				context.startService(Intent(context, LocationTrackerService::class.java))
+				ContextCompat.startForegroundService(context, Intent(context, LocationTrackerService::class.java))
 				weeklySummaryData.startDutyTracking()
 			} else {
 				context.stopService(Intent(context, LocationTrackerService::class.java))
