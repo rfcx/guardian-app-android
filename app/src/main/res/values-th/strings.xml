@@ -170,7 +170,7 @@
     <string name="no_incident_occurred_recently">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
     <string name="enjoy_you_day">ขอให้มีเวลาที่ดี :)</string>
     <string name="see_older">ดููแจ้งเตือนก่อนหน้านี้</string>
-    <string name="not_have_event_more">ไม่มีการแจ้งเตือนอื่นๆ</string>
+    <string name="not_have_event_more">ไม่มีการแจ้งเตือน</string>
     
     <!--Event value-->
     <string name="chainsaw">เลื่อย</string>
