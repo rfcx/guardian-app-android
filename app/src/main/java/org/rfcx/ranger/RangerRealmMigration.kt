@@ -26,9 +26,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 7L && newVersion >= 7L) {
 			migrateToV7(c)
 		}
-//		if (oldVersion < 8L && newVersion >= 8L) {
-//			migrateToV8(c)
-//		}
+		if (oldVersion < 8L && newVersion >= 8L) {
+			migrateToV8(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -169,60 +169,59 @@ class RangerRealmMigration : RealmMigration {
 		}
 	}
 	
-//	private fun migrateToV8(realm: DynamicRealm) {
-//		val reviewer = realm.schema.create("EventReviewer")
-//		reviewer?.apply {
-//			addField("guid", String::class.java, FieldAttribute.PRIMARY_KEY)
-//					.setRequired("guid", true)
-//			addField("firstName", String::class.java)
-//			addField("lastName", String::class.java)
-//			addField("createdAt", Date::class.java)
-//					.setRequired("createdAt", true)
-//			addField("lastLogin", Date::class.java)
-//					.setRequired("lastLogin", true)
-//			addField("freezeUsername", Boolean::class.java)
-//					.setNullable("freezeUsername", true)
-//			addField("pictureUrl", String::class.java)
-//			addField("locale", String::class.java)
-//			addField("email", String::class.java)
-//			addField("updatedAt", Date::class.java)
-//					.setRequired("updatedAt", true)
-//			addField("username", String::class.java)
-//		}
-//
-//		val review = realm.schema.create("Review")
-//		review?.apply {
-//			addField("created", Date::class.java)
-//					.setRequired("created", true)
-//			addField("confirmed", Boolean::class.java)
-//					.setNullable("confirmed", true)
-//		}
-//
-//		val windows = realm.schema.create("EventWindow")
-//		windows?.apply {
-//			addField("guid", String::class.java, FieldAttribute.PRIMARY_KEY)
-//					.setRequired("guid", true)
-//			addField("confidence", Double::class.java)
-//					.setNullable("confidence", true)
-//			addField("start", Int::class.java)
-//					.setNullable("start", true)
-//			addField("end", Int::class.java)
-//					.setNullable("end", true)
-//		}
-//
-//		val event = realm.schema.get("Event")
-//		event?.apply {
-//			addField("confirmed", Int::class.java)
-//					.setNullable("confirmed", true)
-//			addField("rejected", Int::class.java)
-//					.setNullable("rejected", true)
-//			addField("audioDuration", Long::class.java)
-//					.setNullable("audioDuration", true)
-//			addRealmObjectField("reviewer", reviewer)
-//			addRealmObjectField("review", review)
-//			addRealmListField("windows", windows)
-//		}
-//	}
+	private fun migrateToV8(realm: DynamicRealm) {
+		val windows = realm.schema.create("EventWindow")
+		windows?.apply {
+			addField("guid", String::class.java, FieldAttribute.PRIMARY_KEY)
+					.setRequired("guid", true)
+			addField("confidence", Double::class.java)
+			addField("start", Int::class.java)
+			addField("end", Int::class.java)
+		}
+		
+		val audio = realm.schema.get("Audio")
+		audio?.apply {
+			removeField("mp3")
+		}
+
+		val event = realm.schema.get("Event")
+		event?.apply {
+			//review
+			addField("reviewConfirmed", Boolean::class.java).setNullable("reviewConfirmed", true)
+			addField("reviewCreated", Date::class.java).setRequired("reviewCreated", true)
+			
+			//windows
+			addRealmListField("windows", windows)
+			
+			//audio
+			addField("audioOpusUrl", String::class.java).setRequired("audioOpusUrl", true)
+			addField("audioPngUrl", String::class.java).setRequired("audioPngUrl", true)
+			
+			//event
+			addField("audioDuration", Long::class.java)
+			addField("rejectedCount", Int::class.java)
+			addField("confirmedCount", Int::class.java)
+			addField("label", String::class.java).setRequired("label", true)
+			addField("audioId", String::class.java).setRequired("audioId", true)
+			
+			renameField("event_guid", "id")
+			renameField("guardianShortname", "guardianName")
+			renameField("guardianGUID", "guardianId")
+			
+			setRequired("value", true)
+			setRequired("guardianId", true)
+			setRequired("guardianName", true)
+			setRequired("site", true)
+			
+			removeField("endAt")
+			removeField("aiGuid")
+			removeField("audio")
+			removeField("reviewerConfirmed")
+			removeField("confidence")
+			removeField("timezone")
+			removeField("audioGUID")
+		}
+	}
 	
 	override fun hashCode(): Int {
 		return 1
