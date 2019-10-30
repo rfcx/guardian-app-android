@@ -21,7 +21,7 @@ open class EventWindow() : RealmModel, Parcelable {
 	var end: Int? = null
 	
 	constructor(parcel: Parcel) : this() {
-		guid = parcel.readString()
+		guid = parcel.readString().toString()
 		confidence = parcel.readValue(Double::class.java.classLoader) as? Double
 		start = parcel.readValue(Int::class.java.classLoader) as? Int
 		end = parcel.readValue(Int::class.java.classLoader) as? Int

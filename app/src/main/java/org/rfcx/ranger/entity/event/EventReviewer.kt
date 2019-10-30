@@ -46,7 +46,7 @@ open class EventReviewer() : RealmModel, Parcelable {
 			else -> null
 		}
 		pictureUrl = parcel.readString()
-		guid = parcel.readString()
+		guid = parcel.readString().toString()
 		locale = parcel.readString()
 		email = parcel.readString()
 		updatedAt = Date(parcel.readLong())

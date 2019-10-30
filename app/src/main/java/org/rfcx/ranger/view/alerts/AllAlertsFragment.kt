@@ -61,8 +61,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 				}
 			})
 		})
-		allAlertsViewModel.getGuardianGroup()
-
+		
+		allAlertsViewModel.loadEvents()
 	}
 	
 	private fun setupSwipeRefresh() {

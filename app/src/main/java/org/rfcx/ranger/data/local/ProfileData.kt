@@ -20,7 +20,7 @@ class ProfileData(private val preferences: Preferences) {
 	
 	fun getSiteId(): String {
 		val defaultSiteName = preferences.getString(Preferences.DEFAULT_SITE, "")
-		val database = SiteGuardianDb()
+		val database = SiteGuardianDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val guardianGroupId = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
 		return database.guardianGroup(guardianGroupId)?.siteId ?: defaultSiteName
 	}
