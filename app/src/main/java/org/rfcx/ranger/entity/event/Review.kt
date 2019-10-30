@@ -3,12 +3,9 @@ package org.rfcx.ranger.entity.event
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import io.realm.RealmModel
-import io.realm.annotations.RealmClass
 import java.util.*
 
-@RealmClass
-open class Review() : RealmModel, Parcelable {
+open class Review() : Parcelable {
 	
 	@SerializedName("created")
 	var created: Date = Date()
