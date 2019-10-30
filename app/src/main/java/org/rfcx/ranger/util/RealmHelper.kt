@@ -1,6 +1,5 @@
 package org.rfcx.ranger.util
 
-import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.rfcx.ranger.RangerRealmMigration
 
@@ -11,7 +10,7 @@ import org.rfcx.ranger.RangerRealmMigration
 class RealmHelper {
 	
 	companion object {
-		private const val schemaVersion = 8L
+		private const val schemaVersion = 7L
 		
 		fun migrationConfig(): RealmConfiguration {
 			return RealmConfiguration.Builder().apply {
