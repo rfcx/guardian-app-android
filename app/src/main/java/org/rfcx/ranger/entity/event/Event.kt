@@ -48,6 +48,21 @@ open class Event() : RealmObject(), Parcelable {
 		confirmedCount = parcel.readInt()
 		rejectedCount = parcel.readInt()
 		audioDuration = parcel.readLong()
+		
+		audioOpusUrl = parcel.readString() ?: ""
+		audioPngUrl = parcel.readString() ?: ""
+		
+		this.windows = RealmList()
+		parcel.createTypedArrayList(EventWindow.CREATOR)?.let {
+			this.windows!!.addAll(it)
+		}
+		
+		reviewCreated = Date(parcel.readLong())
+		reviewConfirmed = when (parcel.readInt()) {
+			0 -> false
+			1 -> true
+			else -> null
+		}
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -65,6 +80,18 @@ open class Event() : RealmObject(), Parcelable {
 		parcel.writeValue(confirmedCount)
 		parcel.writeValue(rejectedCount)
 		parcel.writeValue(audioDuration)
+		
+		parcel.writeString(audioOpusUrl)
+		parcel.writeString(audioPngUrl)
+		
+		parcel.writeTypedList(windows)
+		
+		parcel.writeLong(reviewCreated.time)
+		parcel.writeInt(when (reviewConfirmed) {
+			true -> 1
+			false -> 0
+			else -> -1
+		})
 	}
 	
 	override fun describeContents(): Int {

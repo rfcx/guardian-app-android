@@ -44,7 +44,7 @@ data class EventResponse(
 		@SerializedName("guardianGuid")
 		val guardianId: String,
 		
-		@SerializedName("guardianName")
+		@SerializedName("guardianShortname")
 		val guardianName: String,
 		
 		@SerializedName("siteGuid")
