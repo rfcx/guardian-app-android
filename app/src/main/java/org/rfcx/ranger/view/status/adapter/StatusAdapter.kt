@@ -381,9 +381,9 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getViewType(): Int = ITEM_ALERT
 		override fun getId(): Int = -3
 		
-		fun getGuardianShortname(): String = alert.guardianShortname.toString()
-		fun getImage(): Int = alert.value?.toEventIcon()!!
-		fun getSite(): String = alert.site.toString()
+		fun getGuardianShortname(): String = alert.guardianName
+		fun getImage(): Int = alert.value.toEventIcon()
+		fun getSite(): String = alert.site
 		fun getTime(context: Context): String = "• ${alert.beginsAt.toTimeSinceStringAlternative(context)}"
 		
 		fun getIcon(): Int = when (state) {

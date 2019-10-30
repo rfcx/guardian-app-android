@@ -12,8 +12,8 @@ import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
@@ -58,11 +58,10 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		val guardianGroup = ArrayList<String>()
 		guardianGroup.add(group)
 		val requestFactory = EventsRequestFactory(guardianGroup, "measured_at", "DESC", LIMITS, 0)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
-				t.events?.let { events ->
-					updateEvents(events, guardians, true)
-				}
+		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
+			override fun onSuccess(t: EventsResponse) {
+				val events = t.events?.map { it.toEvent() } ?: listOf()
+				updateEvents(events, guardians, true)
 			}
 			
 			override fun onError(e: Throwable) {
@@ -72,13 +71,13 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	}
 	
 	private fun updateEvents(events: List<Event>, guardians: List<Guardian>, complete: Boolean = false) {
-		val guardianGuidsWithEvents = events.map { it.guardianGUID }.toSet()
+		val guardianGuidsWithEvents = events.map { it.guardianId }.toSet()
 		val guardiansWithoutEvents = guardians.filter { !guardianGuidsWithEvents.contains(it.guid) }.map { EventGroup(listOf(), it.guid, it.name) }
 		val guardiansWithEvents = groupGuardian(events)
 		
 		_eventGroups = guardiansWithEvents + guardiansWithoutEvents
 		
-		if (complete || events.size > 0) {
+		if (complete || events.isNotEmpty()) {
 			_status.value = Result.Success(_eventGroups)
 		}
 	}
@@ -86,15 +85,15 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private fun groupGuardian(events: List<Event>): List<EventGroup> {
 		// find main group
 		val mainGroups = arrayListOf<String>()
-		events.distinctBy { it.guardianGUID }.mapTo(mainGroups, { it.guardianGUID!! })
+		events.distinctBy { it.guardianId }.mapTo(mainGroups, { it.guardianId })
 		// split group
 		val groupAlerts = arrayListOf<EventGroup>()
 		mainGroups.forEach { guid ->
-			val shortname = events.filter { it.guardianGUID == guid }.first().guardianShortname ?: ""
+			val shortname = events.filter { it.guardianId == guid }.first().guardianName
 			val eventList = arrayListOf<Event>()
 			
 			events.forEach { event ->
-				if (event.guardianGUID == guid) {
+				if (event.guardianId == guid) {
 					eventList.add(event)
 				}
 			}
@@ -102,7 +101,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}
 		return groupAlerts
 	}
-
+	
 	
 	companion object {
 		const val LIMITS = 50
@@ -113,7 +112,7 @@ data class EventGroup(val events: List<Event>, val guardianGuid: String, val gua
 	
 	fun numberOfUnread(eventDb: EventDb): Int {
 		val read = events.fold(0) { acc, event ->
-			val state = eventDb.getEventState(event.event_guid)
+			val state = eventDb.getEventState(event.id)
 			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) acc + 1 else acc
 		}
 		return events.size - read

@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 		}
 		
 		override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
-			return oldItem.event.event_guid == newItem.event.event_guid
+			return oldItem.event.id == newItem.event.id
 					&& oldItem.event.value == newItem.event.value
 					&& oldItem.state == newItem.state
 		}
@@ -112,7 +111,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 		
 		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int) {
-			eventList[0].event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
+			eventList[0].event.value.toEventIcon().let { iconAlert.setImageResource(it) }
 			numOfEventsNotOpen.text = num.toString()
 			
 			when {
@@ -129,9 +128,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				}
 			}
 			
-			if (eventList[0].event.value !== null) {
-				groupByGuardianTextView.text = eventList[0].event.value!!.capitalize()
-			}
+			groupByGuardianTextView.text = eventList[0].event.value.capitalize()
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
 				adapter = EventsInEventNameAdater(eventList, listener)
@@ -143,14 +140,11 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			
 			seeOlderTextView.setOnClickListener {
 				val lastEvent = eventList[eventList.size-1].event
-				val guid = lastEvent.guardianGUID ?: ""
-				val value = lastEvent.value ?: ""
+				val guid = lastEvent.guardianId
+				val value = lastEvent.value
 				val beginsAt = lastEvent.beginsAt.time
 				val audioDuration = lastEvent.audioDuration
-				var timeEndAt = Date()
-				if(audioDuration !== null){
-					timeEndAt = Date(beginsAt + audioDuration)
-				}
+				val timeEndAt = Date(beginsAt + audioDuration)
 				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, timeEndAt)
 			}
 			currentEventList = eventList

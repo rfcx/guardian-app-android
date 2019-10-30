@@ -5,18 +5,15 @@ import android.os.Parcelable
 import io.realm.RealmObject
 
 open class Audio() : RealmObject(), Parcelable{
-    var mp3: String = ""
     var opus: String = ""
     var png: String = ""
 
     constructor(parcel: Parcel) : this() {
-        mp3 = parcel.readString() ?: ""
         opus = parcel.readString() ?: ""
         png = parcel.readString() ?: ""
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(mp3)
         parcel.writeString(opus)
         parcel.writeString(png)
     }

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +22,6 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
@@ -85,9 +82,9 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		negativeButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(false)
-				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.event_guid, it1.value.toString(), "0") }
+				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "0") }
 			} else {
-				alertViewModel.event.value?.let { it1 -> analytics?.trackFollowAlertEvent(it1.event_guid, it1.value.toString()) }
+				alertViewModel.event.value?.let { it1 -> analytics?.trackFollowAlertEvent(it1.id, it1.value.toString()) }
 				dismissDialog()
 			}
 		}
@@ -95,7 +92,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		positiveButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(true)
-				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.event_guid, it1.value.toString(), "1") }
+				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "1") }
 			} else {
 				alertViewModel.event.value?.let { event ->
 					val gmmIntentUri = Uri.parse("geo:<${event.latitude}>,<${event.longitude}>" +
@@ -112,14 +109,12 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		}
 	}
 	
-	@SuppressLint("SetTextI18n")
+	@SuppressLint("SetTextI18n", "DefaultLocale")
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
-			if (it.site != null) {
-				alertFromSiteTextView.text = it.site!!.capitalize()
-			}
-			guardianNameTextView.text = it.guardianShortname.toString().capitalize()
+			alertFromSiteTextView.text = it.site.capitalize()
+			guardianNameTextView.text = it.guardianName.capitalize()
 			timeTextView.text = "• ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1)}}"
 		})
 		

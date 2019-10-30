@@ -32,7 +32,7 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 		val events = eventDb.getEventsSync()
 		needTobeDownloadEvent.clear()
 		for (event in events) {
-			val file = File(applicationContext.cacheDir, "${event.audioGUID}.opus")
+			val file = File(applicationContext.cacheDir, "${event.audioId}.opus")
 			if (!file.exists()) {
 				needTobeDownloadEvent.add(event)
 			}
@@ -55,16 +55,11 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 	private fun downLoadFile(event: Event, callback: (Event, Boolean) -> Unit) {
 		val service = createRetrofit().create(AudioEndPoint::class.java)
 		val aa: Call<ResponseBody>?
-		if (event.audio?.opus != null) {
-			aa = service.getRawAudio(event.audio!!.opus)
-		} else {
-			callback.invoke(event, false)
-			return
-		}
+		aa = service.getRawAudio(event.audioOpusUrl)
 		
 		val body = aa.execute()
 		if (body.isSuccessful) {
-			saveFile(applicationContext, body, "${event.audioGUID}.opus") {
+			saveFile(applicationContext, body, "${event.audioId}.opus") {
 				callback.invoke(event, it)
 			}
 		} else {

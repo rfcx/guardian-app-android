@@ -11,7 +11,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.data.local.EventDb
@@ -20,7 +19,7 @@ import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
@@ -186,14 +185,14 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.alert.event_guid == eventGuid }
+		val eventItem = _alertsList.firstOrNull { it.alert.id == eventGuid }
 		if (eventItem != null) {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
 				else -> StatusAdapter.AlertItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.alert.event_guid == eventGuid }
+			_alertsList.replace(eventItem) { it.alert.id == eventGuid }
 		}
 		_alertItems.value = _alertsList
 	}
@@ -268,9 +267,10 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		val group = context.getGuardianGroup() ?: return
 		
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", 3, 0)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
-				t.events?.let { updateRecentAlerts(it) }
+		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
+			override fun onSuccess(t: EventsResponse) {
+				val events = t.events?.map { it.toEvent() } ?: listOf()
+				updateRecentAlerts(events)
 			}
 			
 			override fun onError(e: Throwable) {
@@ -291,7 +291,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun Event.toAlertItem(): StatusAdapter.AlertItem {
-		val state = eventDb.getEventState(this.event_guid)
+		val state = eventDb.getEventState(this.id)
 		return state?.let {
 			val result = when (it) {
 				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM

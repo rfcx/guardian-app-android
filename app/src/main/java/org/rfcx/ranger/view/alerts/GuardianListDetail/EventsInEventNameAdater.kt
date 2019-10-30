@@ -34,7 +34,7 @@ class EventsInEventNameAdater(private val items: MutableList<EventItem>, val lis
 		}
 		
 		override fun areContentsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
-			return oldItem.event.event_guid == newItem.event.event_guid
+			return oldItem.event.id == newItem.event.id
 					&& oldItem.event.value == newItem.event.value
 					&& oldItem.state == newItem.state
 		}

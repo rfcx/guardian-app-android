@@ -4,7 +4,7 @@ import android.content.Context
 import com.crashlytics.android.Crashlytics
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.util.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -50,13 +50,13 @@ class EventsApi {
 		}
 		
 		ApiManager.getInstance().apiRest.getEvents("Bearer $token", group, "begins_at", "DESC", limit, offset)
-				.enqueue(object : Callback<EventResponse> {
-					override fun onFailure(call: Call<EventResponse>?, t: Throwable?) {
+				.enqueue(object : Callback<EventsResponse> {
+					override fun onFailure(call: Call<EventsResponse>?, t: Throwable?) {
 						Crashlytics.logException(t)
 						onEventsCallBack.onFailed(t, null)
 					}
 					
-					override fun onResponse(call: Call<EventResponse>?, response: Response<EventResponse>?) {
+					override fun onResponse(call: Call<EventsResponse>?, response: Response<EventsResponse>?) {
 						val result = responseParser(response)
 						when (result) {
 							is Ok -> {
@@ -72,6 +72,6 @@ class EventsApi {
 	}
 	
 	interface OnEventsCallBack: ApiCallback {
-		fun onSuccess(event: EventResponse)
+		fun onSuccess(event: EventsResponse)
 	}
 }

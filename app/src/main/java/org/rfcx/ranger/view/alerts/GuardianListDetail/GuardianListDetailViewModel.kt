@@ -109,7 +109,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	private fun numEvents(groupAlert: List<Event>): Int {
 		var count = 0
 		groupAlert.forEach { event ->
-			val state = eventDb.getEventState(event.event_guid)
+			val state = eventDb.getEventState(event.id)
 			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) {
 				count += 1
 			}
@@ -120,7 +120,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	fun itemsEvent(list: MutableList<Event>): MutableList<EventItem> {
 		val itemsEvent = arrayListOf<EventItem>()
 		list.forEach { event ->
-			val state = eventDb.getEventState(event.event_guid)
+			val state = eventDb.getEventState(event.id)
 			state?.let {
 				val result = when (it) {
 					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
@@ -137,14 +137,14 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.event.event_guid == eventGuid }
+		val eventItem = _alertsList.firstOrNull { it.event.id == eventGuid }
 		if (eventItem != null) {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.event.event_guid == eventGuid }
+			_alertsList.replace(eventItem) { it.event.id == eventGuid }
 		}
 		
 		val arrayList = ArrayList<GuardianListDetail>()
@@ -169,8 +169,8 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	fun loadMoreEvents(guid: String, value: String, endAt: Date) {
 		loading.postValue(StateLoading.LOADING)
 		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 1)
-		getMoreEvent.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
+		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
+			override fun onSuccess(t: EventsResponse) {
 				if (t.events !== null) {
 				
 					if (t.events!!.isEmpty()) {
@@ -182,11 +182,11 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 							var index = events.size
 							
 							val mainValue = arrayListOf<String>()
-							events.distinctBy { it.value }.mapTo(mainValue, { it.value!! })
+							events.distinctBy { it.value }.mapTo(mainValue, { it.value })
 							
 							if (mainValue.size == 1 && value == mainValue[0]) {
 								t.events?.forEach { it ->
-									events.add(index, it)
+									events.add(index, it.toEvent())
 									index += 1
 								}
 							}

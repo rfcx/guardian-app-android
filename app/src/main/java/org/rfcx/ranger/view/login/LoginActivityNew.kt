@@ -68,10 +68,10 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
-		if (intent?.hasExtra("event_guid") == true) {
+		if (intent?.hasExtra("id") == true) {
 			eventFromNotification = Event().apply {
-				event_guid = intent.getStringExtra("event_guid") ?: ""
-				audioGUID = intent.getStringExtra("audio_guid")
+				id = intent.getStringExtra("id") ?: ""
+				audioId = intent.getStringExtra("audio_guid") ?: ""
 				try {
 					longitude = intent.getStringExtra("longitude")?.toDouble()
 					latitude = intent.getStringExtra("latitude")?.toDouble()
@@ -80,17 +80,12 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 					CrashlyticsCore.getInstance().logException(e)
 				}
 				
-				value = intent.getStringExtra("value")
-				guardianGUID = intent.getStringExtra("guardian_guid")
-				guardianShortname = intent.getStringExtra("guardian_shortname")
+				value = intent.getStringExtra("value") ?: ""
+				guardianId = intent.getStringExtra("guardian_guid") ?: ""
+				guardianName = intent.getStringExtra("guardian_shortname") ?: ""
 				type = intent.getStringExtra("type")
-				site = intent.getStringExtra("site_guid")
-				aiGuid = intent.getStringExtra("ai_guid")
-				
-				audio = Audio().apply {
-					opus = "https://assets.rfcx.org/audio/$audioGUID.opus"
-				}
-				reviewerConfirmed = false
+				site = intent.getStringExtra("site_guid") ?: ""
+				audioOpusUrl = "https://assets.rfcx.org/audio/$audioId.opus"
 			}
 		}
 	}

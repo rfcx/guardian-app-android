@@ -55,8 +55,8 @@ object AlertNotification {
 	private fun createEvent(data: Map<String, String>): Event {
 		val event = Event()
 		event.apply {
-			event_guid = data["event_guid"] ?: ""
-			audioGUID = data["audio_guid"]
+			id = data["id"] ?: ""
+			audioId = data["audio_guid"] ?: ""
 			try {
 				longitude = data["longitude"]?.toDouble()
 				latitude = data["latitude"]?.toDouble()
@@ -65,18 +65,15 @@ object AlertNotification {
 				CrashlyticsCore.getInstance().logException(e)
 			}
 			
-			value = data["value"]
-			guardianGUID = data["guardian_guid"]
-			guardianShortname = data["guardian_shortname"]
+			value = data["value"] ?: ""
+			guardianId = data["guardian_guid"] ?: ""
+			guardianName = data["guardian_shortname"] ?: ""
 			type = data["type"]
-			site = data["site_guid"]
-			aiGuid = data["ai_guid"]
+			site = data["site_guid"] ?: ""
 			
-			audio = Audio().apply {
-				opus = "https://assets.rfcx.org/audio/$audioGUID.opus"
-			}
-			
-			reviewerConfirmed = false
+//			audio = Audio().apply {
+//				opus = "https://assets.rfcx.org/audio/$audioId.opus"
+//			}
 		}
 		return event
 	}

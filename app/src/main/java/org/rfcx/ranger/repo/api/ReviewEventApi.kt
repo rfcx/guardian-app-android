@@ -27,7 +27,7 @@ class ReviewEventApi {
 
 		val authUser = "Bearer $token"
 		
-		ApiManager.getInstance().apiRest.reviewEvent(authUser, event.event_guid, if (isReviewConfirm) confirmEvent else rejectEvent)
+		ApiManager.getInstance().apiRest.reviewEvent(authUser, event.id, if (isReviewConfirm) confirmEvent else rejectEvent)
 				.enqueue(object : Callback<ReviewEventResponse> {
 					override fun onResponse(call: Call<ReviewEventResponse>?, response: Response<ReviewEventResponse>?) {
 						val result = responseParser(response)

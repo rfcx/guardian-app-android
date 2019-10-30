@@ -71,14 +71,12 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		this._event.value = event
 		setSpectrogramImage()
 		this._eventState.value = EventState.NONE
-		event.audio?.opus?.let {
-			initPlayer(it)
-		}
+		initPlayer(event.audioOpusUrl)
 		getClassifiedCation()
 	}
 	
 	private fun setSpectrogramImage() {
-		_spectrogramImage.value = "https://assets.rfcx.org/audio/${event.value?.audioGUID}.png?width=512&height=256" +
+		_spectrogramImage.value = "https://assets.rfcx.org/audio/${event.value?.audioId}.png?width=512&height=256" +
 				"&offset=${0}&duration=${90L * 1000}"
 	}
 	
@@ -88,9 +86,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			exoPlayer.seekTo(0)
 			exoPlayer.playWhenReady = true
 		} else {
-			event.value?.audio?.opus?.let {
-				initPlayer(it)
-			}
+			event.value?.audioOpusUrl?.let { initPlayer(it) }
 		}
 	}
 	
@@ -112,7 +108,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			audioUrl
 		}
 		
-		val audioFile = File(context.cacheDir, "${event.value?.audioGUID}.opus")
+		val audioFile = File(context.cacheDir, "${event.value?.audioId}.opus")
 		val mediaSource = if (audioFile.exists()) {
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
@@ -170,37 +166,37 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		if (event.value?.windows != null && event.value?.windows?.isNotEmpty() == true) {
 			// if even has windows no need to call api
 			val eventWindows = event.value?.windows?.filter {
-				it.confidence != null && it.confidence!! > confidenceValue
+				it.confidence > confidenceValue
 			}
 			
 			val confidence = eventWindows?.map {
-				Confidence(it.start?.toLong() ?: 0L, it.confidence ?: 0.0,
-						it.end?.toLong() ?: 0L)
+				Confidence(it.start.toLong(), it.confidence,
+						it.end.toLong())
 			}
 			
 			_classifiedCation.value = Result.Success(confidence ?: listOf())
 			
 			return
 		}
-		
-		event.value?.let {
-			classifiedUseCase.execute(object : DisposableSingleObserver<List<Confidence>>() {
-				override fun onSuccess(t: List<Confidence>) {
-					_classifiedCation.value = Result.Success(t)
-				}
-				
-				override fun onError(e: Throwable) {
-					_classifiedCation.value = e.getResultError()
-					e.printStackTrace()
-				}
-			}, ClassificationBody(audioGuids = it.audioGUID, value = it.value, annotatorGuid = it.aiGuid))
-		}
+		// TODO can delete it
+//		event.value?.let {
+//			classifiedUseCase.execute(object : DisposableSingleObserver<List<Confidence>>() {
+//				override fun onSuccess(t: List<Confidence>) {
+//					_classifiedCation.value = Result.Success(t)
+//				}
+//
+//				override fun onError(e: Throwable) {
+//					_classifiedCation.value = e.getResultError()
+//					e.printStackTrace()
+//				}
+//			}, ClassificationBody(audioGuids = it.audioId, value = it.value, annotatorGuid = it.aiGuid))
+//		}
 	}
 	
 	fun reviewEvent(confirm: Boolean) {
 		_reviewEvent.value = Result.Loading
 		event.value?.let {
-			val requests = ReviewEventFactory(it.event_guid, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
+			val requests = ReviewEventFactory(it.id, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
 			reviewEventUseCase.execute(object : DisposableSingleObserver<Unit>() {
 				override fun onSuccess(t: Unit) {
 					_reviewEvent.value = Result.Success(requests)

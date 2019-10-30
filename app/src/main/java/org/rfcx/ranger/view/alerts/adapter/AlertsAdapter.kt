@@ -58,7 +58,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		
 		override fun areContentsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean {
 			return if (oldItem is EventItem && newItem is EventItem) {
-				oldItem.event.event_guid == newItem.event.event_guid
+				oldItem.event.id == newItem.event.id
 						&& oldItem.event.value == newItem.event.value
 						&& oldItem.state == newItem.state
 			} else {
@@ -77,11 +77,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		
 		@SuppressLint("SetTextI18n", "DefaultLocale")
 		fun bind(item: EventItem) {
-			tvTitle.text = item.event.guardianShortname
-			item.event.value?.toEventIcon()?.let { iconAlert.setImageResource(it) }
-			if (item.event.site != null) {
-				tvFrom.text = item.event.site!!.capitalize()
-			}
+			tvTitle.text = item.event.guardianName
+			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
+			tvFrom.text = item.event.site.capitalize()
 			tvTimeAgo.text = "• ${item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)}"
 			when (item.state) {
 				EventItem.State.CONFIRM -> {

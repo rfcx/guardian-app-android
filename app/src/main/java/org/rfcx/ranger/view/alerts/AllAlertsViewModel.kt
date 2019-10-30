@@ -11,7 +11,7 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
-import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
@@ -75,8 +75,8 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, 0)
 		
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
+		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
+			override fun onSuccess(t: EventsResponse) {
 				DownLoadEventWorker.enqueue()
 				handleOnSuccess(t)
 			}
@@ -88,11 +88,12 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}, requestFactory)
 	}
 	
-	private fun handleOnSuccess(t: EventResponse) {
+	private fun handleOnSuccess(t: EventsResponse) {
 		this.totalItemCount = t.total
 		
-		t.events?.forEach { event ->
-			val state = eventDb.getEventState(event.event_guid)
+		val events = t.events?.map { it.toEvent() } ?: listOf()
+		events.forEach { event ->
+			val state = eventDb.getEventState(event.id)
 			state?.let {
 				val result = when (it) {
 					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
@@ -124,8 +125,11 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}
 		
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, nextOffset)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventResponse>() {
-			override fun onSuccess(t: EventResponse) {
+		
+		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
+			override fun onSuccess(t: EventsResponse) {
+				totalItemCount = t.total
+
 				handleOnSuccess(t)
 				isLoadMore = false
 			}
@@ -141,7 +145,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	private fun getEventsCache() {
 		val cacheEvents = eventDb.getEvents()
 		val items: List<EventItem> = cacheEvents.map { event ->
-			val state = eventDb.getEventState(event.event_guid)
+			val state = eventDb.getEventState(event.id)
 			state?.let {
 				val result = when (it) {
 					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
@@ -161,14 +165,14 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.event.event_guid == eventGuid }
+		val eventItem = _alertsList.firstOrNull { it.event.id == eventGuid }
 		if (eventItem != null) {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.event.event_guid == eventGuid }
+			_alertsList.replace(eventItem) { it.event.id == eventGuid }
 		}
 		_alerts.value = Result.Success(_alertsList)
 	}

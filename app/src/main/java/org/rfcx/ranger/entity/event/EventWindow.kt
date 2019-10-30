@@ -14,17 +14,17 @@ open class EventWindow() : RealmModel, Parcelable {
 	@SerializedName("guid")
 	var guid: String = ""
 	@SerializedName("confidence")
-	var confidence: Double? = null
+	var confidence: Double = 0.0
 	@SerializedName("start")
-	var start: Int? = null
+	var start: Int = 0
 	@SerializedName("end")
-	var end: Int? = null
+	var end: Int = 0
 	
 	constructor(parcel: Parcel) : this() {
 		guid = parcel.readString().toString()
-		confidence = parcel.readValue(Double::class.java.classLoader) as? Double
-		start = parcel.readValue(Int::class.java.classLoader) as? Int
-		end = parcel.readValue(Int::class.java.classLoader) as? Int
+		confidence = parcel.readDouble()
+		start = parcel.readInt()
+		end = parcel.readInt()
 	}
 	
 	override fun writeToParcel(parcel: Parcel, flags: Int) {

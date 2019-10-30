@@ -1,7 +1,7 @@
 package org.rfcx.ranger.data.remote.service.rest
 
 import io.reactivex.Single
-import org.rfcx.ranger.entity.event.EventResponse
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventRequest
 import org.rfcx.ranger.entity.event.ReviewEventResponse
 import retrofit2.Call
@@ -13,7 +13,7 @@ interface EventService {
 	              @Query("offset") offset: Int,
 	              @Query("order") orderBy: String,
 	              @Query("dir") dir: String,
-	              @Query("guardian_groups[]") guardianGroup: List<String>): Single<EventResponse>
+	              @Query("guardian_groups[]") guardianGroup: List<String>): Single<EventsResponse>
 	
 	@GET("v2/events") // load see older
 	fun getEventsGuardian(@Query("guardians[]") guardian: String,
@@ -22,10 +22,10 @@ interface EventService {
 	                      @Query("order") orderBy: String,
 	                      @Query("dir") dir: String,
 	                      @Query("limit") limit: Int,
-	                      @Query("offset") offset: Int): Single<EventResponse>
+	                      @Query("offset") offset: Int): Single<EventsResponse>
 	
-	@POST("v2/events/{event_guid}/review")
-	fun reviewEvent(@Path("event_guid") eventGuID: String,
+	@POST("v2/events/{id}/review")
+	fun reviewEvent(@Path("id") eventGuID: String,
 	                @Body body: ReviewEventRequest)
 			: Call<ReviewEventResponse>
 }

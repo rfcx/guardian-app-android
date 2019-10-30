@@ -11,21 +11,20 @@ import org.rfcx.ranger.util.toIsoString
 class EventRepositoryImp(private val eventService: EventService, private val eventDb: EventDb,
                          private val weeklySummaryData: WeeklySummaryData) : EventRepository {
 	
-	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventResponse> {
+	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventsResponse> {
 		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.value, requestFactory.time.toIsoString(), requestFactory.orderBy,
 				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
 			it
 		}
 	}
 	
-	override fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventResponse> {
+	override fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventsResponse> {
 		return eventService.getEvents(requestFactory.limit, requestFactory.offset, requestFactory.order,
 				requestFactory.dir, requestFactory.guardianInGroup ).map { it ->
 			
 			if (requestFactory.offset == 0) {
-				it.events?.let {
-					eventDb.saveEvents(it)
-				}
+				val events = it.events?.map { it.toEvent() } ?: listOf()
+				eventDb.saveEvents(events)
 			}
 			it
 		}
