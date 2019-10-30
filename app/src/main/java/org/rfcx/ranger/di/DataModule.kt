@@ -32,6 +32,9 @@ import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
 import org.rfcx.ranger.data.remote.setusername.SetNameRepository
 import org.rfcx.ranger.data.remote.setusername.SetNameRepositoryImp
+import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
+import org.rfcx.ranger.data.remote.site.SiteRepository
+import org.rfcx.ranger.data.remote.site.SiteRepositoryImp
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
@@ -71,6 +74,9 @@ object DataModule {
 		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
 		single { GroupByGuardiansUseCase(get(), get(), get()) }
 		
+		single { SiteRepositoryImp(get()) } bind SiteRepository::class
+		single { GetSiteNameUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -81,6 +87,7 @@ object DataModule {
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

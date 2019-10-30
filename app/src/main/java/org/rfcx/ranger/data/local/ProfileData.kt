@@ -16,6 +16,13 @@ class ProfileData(private val preferences: Preferences) {
 		return site?.name ?: defaultSiteName.capitalize()
 	}
 	
+	fun getSiteId(): String {
+		val defaultSiteName = preferences.getString(Preferences.DEFAULT_SITE, "")
+		val database = SiteGuardianDb()
+		val guardianGroupId = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP) ?: ""
+		return database.guardianGroup(guardianGroupId)?.siteId ?: defaultSiteName
+	}
+	
 	fun getUserNickname(): String {
 		val nickname = preferences.getString(Preferences.NICKNAME)
 		return if (nickname != null && nickname.isNotEmpty()) nickname else "${getSiteName()} Ranger"
