@@ -7,6 +7,7 @@
 	<dimen name="margin_padding_xlarge">32dp</dimen>
 	
 	<dimen name="button_height">44dp</dimen>
+	<dimen name="image_empty_alert_size">100dp</dimen>
 	<dimen name="padding_see_older_alert">84dp</dimen>
 	<dimen name="circle_of_number_unreview">20dp</dimen>
 	<dimen name="drop_down_size">15dp</dimen>
@@ -33,5 +34,6 @@
 	<dimen name="fab_height">56dp</dimen>
 	<dimen name="fab_height_half">28dp</dimen>
 	​<dimen name="viewpager_padding">48dp</dimen>
+	<dimen name="mini_progress_loading">24dp</dimen>
 
 </resources>

@@ -34,7 +34,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 	
 	private val statusAdapter by lazy {
 		StatusAdapter(context?.getString(R.string.status_stat_title),
-				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title), context?.getString(R.string.status_see_more))
+				context?.getString(R.string.status_alert_title), context?.getString(R.string.status_report_title), context?.getString(R.string.status_see_more), context)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,10 +51,6 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		viewDataBinding.statusViewModel = statusViewModel // set view model
-		
-		// setup onClick
-		setupOnClick()
 		
 		// setup recycler view
 		statusAdapter.setListener(this)
@@ -90,16 +86,6 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			statusViewModel.updateTracking()
 		})
-	}
-	
-	private fun setupOnClick() {
-		viewDataBinding.onLater = View.OnClickListener {
-			viewDataBinding.layoutSetting.visibility = View.GONE
-		}
-		viewDataBinding.onSetGuardianGroup = View.OnClickListener {
-			analytics?.trackSetGuardianGroupStartEvent(Screen.STATUS)
-			context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
-		}
 	}
 	
 	override fun enableTracking(enable: Boolean) {
@@ -143,6 +129,10 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 		(activity as MainActivityListener).alertScreen()
 	}
 	
+	override fun onClickedSetGuardianGroup() {
+		analytics?.trackSetGuardianGroupStartEvent(Screen.STATUS)
+		context?.let { it1 -> GuardianGroupActivity.startActivity(it1) }
+	}
 	
 	companion object {
 		fun newInstance(): StatusFragment {
@@ -158,4 +148,5 @@ interface StatusFragmentListener {
 	fun onClickedReportItem(report: Report)
 	fun onClickedAlertItem(alert: Event)
 	fun onClickedSeeMore()
+	fun onClickedSetGuardianGroup()
 }

@@ -37,7 +37,7 @@ object UiModule {
 	
 	val statusModule = module {
 		viewModel { StatusViewModel(androidContext(), get(), get(), get(), get(), get(), get(),
-				get()) }
+				get(), get()) }
 		viewModel { ReportDetailViewModel(get(), get()) }
 	}
 	
@@ -50,7 +50,7 @@ object UiModule {
 	}
 	
 	val profileModule = module {
-		viewModel { ProfileViewModel(androidContext(), get()) }
+		viewModel { ProfileViewModel(androidContext(), get(), get()) }
 		viewModel { GuardianGroupViewModel(get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 	}

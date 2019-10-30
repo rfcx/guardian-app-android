@@ -18,12 +18,14 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
+import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
@@ -39,7 +41,7 @@ import java.util.concurrent.TimeUnit
 class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
                       private val locationDb: LocationDb, private val profileData: ProfileData,
                       private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb,
-                      private val eventsUserCase: GetEventsUseCase) : ViewModel() {
+                      private val eventsUserCase: GetEventsUseCase, private val getSiteName: GetSiteNameUseCase) : ViewModel() {
 	
 	private val reportObserve = Observer<List<Report>> {
 		reportList = it
@@ -101,9 +103,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private val _syncInfo = MutableLiveData<SyncInfo>()
 	val syncInfo: LiveData<SyncInfo> = _syncInfo
 	
-	private val _hasGuardianGroup = MutableLiveData<Boolean>()
-	val hasGuardianGroup: LiveData<Boolean> = _hasGuardianGroup
-	
 	private var reportsImage: SparseArray<ImageState> = SparseArray()
 	private var reportList = listOf<Report>()
 	
@@ -132,6 +131,17 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private fun updateProfile() {
 		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 				profileData.getSiteName(), profileData.getTracking())
+		
+		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
+			override fun onSuccess(t: List<SiteResponse>) {
+				_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
+						t[0].name, profileData.getTracking())
+			}
+
+			override fun onError(e: Throwable) {
+				Log.d("getSiteName","error $e")
+			}
+		}, profileData.getSiteId())
 	}
 	
 	private fun updateWeeklyStat() {
@@ -222,10 +232,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	fun resumed() {
-		_hasGuardianGroup.value = profileData.hasGuardianGroup()
-		
 		ImageUploadWorker.enqueue()
-		
+
 		if (locationDb.unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
 		}

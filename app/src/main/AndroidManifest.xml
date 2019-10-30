@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<!-- Required for foreground services on P+. -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	
@@ -19,10 +19,11 @@
 		android:allowBackup="false"
 		android:icon="${icon}"
 		android:label="@string/app_name"
+		android:requestLegacyExternalStorage="true"
+		android:resizeableActivity="false"
 		android:roundIcon="${roundIcon}"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
-		android:resizeableActivity="false"
 		tools:ignore="GoogleAppIndexingWarning">
 		
 		<provider
@@ -37,28 +38,23 @@
 		
 		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait">
-		</activity>
-
+			android:screenOrientation="portrait"></activity>
+		
 		<activity
 			android:name=".view.report.ReportDetailActivity"
-			android:screenOrientation="portrait">
-		</activity>
+			android:screenOrientation="portrait"></activity>
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
-			android:screenOrientation="portrait">
-		</activity>
+			android:screenOrientation="portrait"></activity>
 		<activity
 			android:name=".view.alerts.GuardianListDetail.GuardianListDetailActivity"
-			android:screenOrientation="portrait">
-		</activity>
+			android:screenOrientation="portrait"></activity>
 		
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme">
-		</activity>
+			android:theme="@style/AppTheme"></activity>
 		
 		<activity
 			android:name=".view.login.LoginActivityNew"
@@ -72,9 +68,12 @@
 		<activity
 			android:name=".view.report.ReportActivity"
 			android:screenOrientation="portrait" />
+		
 		<service
 			android:name=".service.LocationTrackerService"
-			android:exported="false" />
+			android:exported="false"
+			android:foregroundServiceType="location" />
+		
 		<service
 			android:name=".service.MessagingService"
 			android:exported="false">
@@ -104,7 +103,7 @@
 			android:resource="@drawable/ic_notification" />
 		<meta-data
 			android:name="firebase_crashlytics_collection_enabled"
-			android:value="false"/>
+			android:value="false" />
 		
 		<!-- Required for google maps: https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
 		<uses-library

@@ -47,15 +47,15 @@ class ReportViewPagerFragment : BottomSheetDialogFragment() {
 		viewPager.setPadding(resources.getDimensionPixelSize(R.dimen.viewpager_padding),
 				0, resources.getDimensionPixelSize(R.dimen.viewpager_padding), 0)
 		
-		
-		val marginTransformer = MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_padding_small))
+		val marginTransformer = MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_padding_normal))
 		viewPager.setPageTransformer(marginTransformer)
 		viewPager.offscreenPageLimit = 2
 		viewPagerAdapter = ReportViewPagerAdapter(childFragmentManager, lifecycle)
 		viewPager.adapter = viewPagerAdapter
 		viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 			override fun onPageSelected(position: Int) {
-				if (activity is MainActivityNew) {
+				
+				if (activity is MainActivityNew && position < viewPagerAdapter.itemCount) {
 					(activity as MainActivityNew).moveMapIntoReportMarker(
 							viewPagerAdapter.reports[position]
 					)

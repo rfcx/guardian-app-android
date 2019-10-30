@@ -29,7 +29,7 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 	private val storage = FirebaseStorage.getInstance()
 	private val storageRef = storage.reference
 	private val pathImages = mutableListOf<String>()
-
+	
 	private var _statusToSaveData: MutableLiveData<String> = MutableLiveData()
 	val statusToSaveData: LiveData<String>
 		get() = _statusToSaveData
@@ -50,7 +50,7 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 					
 					if (uris != null) uploadFile(uris, documentReference)
 					_statusToSaveData.postValue("Success")
-				
+					
 				}
 				.addOnFailureListener { e ->
 					Log.d("error", e.message)
@@ -69,17 +69,21 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 		
 		uris.forEach {
 			val file = Uri.fromFile(File(it))
-			val ref = storageRef.child(file.lastPathSegment)
-			val uploadTask = ref.putFile(file)
 			
-			uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+			val ref =
+					file.lastPathSegment?.let {
+						storageRef.child(file.lastPathSegment!!)
+					}
+			val uploadTask = ref?.putFile(file)
+			
+			uploadTask?.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
 				if (!task.isSuccessful) {
 					task.exception?.let {
 						throw it
 					}
 				}
 				return@Continuation ref.downloadUrl
-			}).addOnCompleteListener { task ->
+			})?.addOnCompleteListener { task ->
 				if (task.isSuccessful) {
 					counter += 1
 					val downloadUri = task.result

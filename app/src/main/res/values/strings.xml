@@ -90,8 +90,8 @@
 	<!-- Report list -->
 	<string name="report_list_title">Report History</string>
 	<string name="report_list_empty_message">You do not have any reports</string>
-	<string name="images_sync_format">%d images (synced)</string>
-	<string name="images_unsync_format">%1d images (%2d unsynced)</string>
+	<string name="images_sync_format">%d photos (synced)</string>
+	<string name="images_unsync_format">%1d photos (%2d unsynced)</string>
 	<string name="report_detail_title">Report detail</string>
 	
 	<string name="in_air_plane_mode">Unable to determine your location</string>
@@ -129,10 +129,10 @@
 	<string name="status_reported_desc">reports submitted</string>
 	<string name="status_reviewed_desc">alert reviewed</string>
 	<string name="format_location">%s, %s</string>
-	<string name="format_image_synced">%s image</string>
-	<string name="format_image_unsync">%s image (%s not yet synced)</string>
-	<string name="format_images_synced">%s images</string>
-	<string name="format_images_unsync">%s images (%s not yet synced)</string>
+	<string name="format_image_synced">%s photo</string>
+	<string name="format_image_unsync">%s photo (%s not yet synced)</string>
+	<string name="format_images_synced">%s photos</string>
+	<string name="format_images_unsync">%s photos (%s not yet synced)</string>
 	<string name="empty_report_text">No reports in the last 7 days.\npress + to create one.</string>
 	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
 	
@@ -153,10 +153,10 @@
 	<string name="error_under_quality">Under quality</string>
 	<string name="error_over_quality">Over quality</string>
 	<string name="error_file_type">Unsupported file type</string>
-	<string name="error_type_conflict">Can\'t select images and videos at the same time</string>
+	<string name="error_type_conflict">Can\'t select photos and videos at the same time</string>
 	<string name="error_no_video_activity">No App found supporting video preview</string>
-	<string name="error_over_original_size">Can\'t select the images larger than %1$d MB</string>
-	<string name="error_over_original_count">%1$d images over %2$d MB. Original will be unchecked</string>
+	<string name="error_over_original_size">Can\'t select the photos larger than %1$d MB</string>
+	<string name="error_over_original_count">%1$d photos over %2$d MB. Original will be unchecked</string>
 	<string name="button_original">Original</string>
 	<string name="button_sure_default">OK</string>
 	<string name="button_sure">OK(%1$d)</string>
@@ -171,7 +171,7 @@
 	<string name="no_incident_occurred_recently">There is no incident occurred recently</string>
 	<string name="enjoy_you_day">Enjoy you day :)</string>
 	<string name="see_older">See Older</string>
-	<string name="not_have_event_more">Not have event more</string>
+	<string name="not_have_event_more">There is no more events</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
