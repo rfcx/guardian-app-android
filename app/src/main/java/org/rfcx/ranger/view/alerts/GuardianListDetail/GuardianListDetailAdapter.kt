@@ -133,7 +133,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				}
 			}
 			
-			groupByGuardianTextView.text = eventList[0].event.value.capitalize()
+			groupByGuardianTextView.text = eventList[0].event.label.capitalize()
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
 				adapter = EventsInEventNameAdater(eventList, listener)

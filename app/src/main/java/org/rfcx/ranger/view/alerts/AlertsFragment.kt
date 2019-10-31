@@ -97,7 +97,7 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 				}
 			}
 		})
-		alertsTabLayout.getTabAt(1)?.select()
+		alertsTabLayout.getTabAt(0)?.select()
 	}
 	
 	private fun startTabSelected(position: Int) {
