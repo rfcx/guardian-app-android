@@ -37,7 +37,7 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			viewModel.getEventFromDatabase(guardianName)
 		}
 		
-		viewModel.items.observe(this, Observer { it ->
+		viewModel.arrayEventGroup.observe(this, Observer { it ->
 			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
 				guardianListDetailAdapter.allItem = items
