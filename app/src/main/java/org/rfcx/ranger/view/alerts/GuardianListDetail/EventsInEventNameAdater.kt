@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_events_in_event_name.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toTimeSinceStringAlternative
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 
 class EventsInEventNameAdater(private val items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, EventsInEventNameAdater.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
 	

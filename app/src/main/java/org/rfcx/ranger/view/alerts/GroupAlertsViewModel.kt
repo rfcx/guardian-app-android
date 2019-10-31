@@ -69,7 +69,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			}
 		}, requestFactory)
 	}
-	
+
 	private fun updateEvents(events: List<Event>, guardians: List<Guardian>, complete: Boolean = false) {
 		val guardianGuidsWithEvents = events.map { it.guardianGUID }.toSet()
 		val guardiansWithoutEvents = guardians.filter { !guardianGuidsWithEvents.contains(it.guid) }.map { EventGroup(listOf(), it.guid, it.name) }
@@ -77,7 +77,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		
 		_eventGroups = guardiansWithEvents + guardiansWithoutEvents
 		
-		if (complete || events.size > 0) {
+		if (complete || events.isNotEmpty()) {
 			_status.value = Result.Success(_eventGroups)
 		}
 	}

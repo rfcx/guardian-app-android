@@ -32,8 +32,10 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		super.onViewCreated(view, savedInstanceState)
 		setupAlertList()
 		
-		val event = arguments?.getParcelableArrayList<Event>("events")
-		event?.let { viewModel.makeGroupOfValue(it) }
+		val guardianName = arguments?.getString("GUARDIAN_NAME")
+		if (guardianName != null) {
+			viewModel.getEventFromDatabase(guardianName)
+		}
 		
 		viewModel.items.observe(this, Observer { it ->
 			it.success({ items ->
@@ -57,7 +59,6 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		
 		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
 			override fun onSeeOlderClick(guid: String, value: String, endAt: Date) {
-				Log.d("onSeeOlderClick FM", "$guid $value $endAt")
 				viewModel.loadMoreEvents(guid, value, endAt)
 			}
 		}
@@ -92,10 +93,10 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 	companion object {
 		const val tag = "GuardianListDetailFragment"
 		
-		fun newInstance(events: ArrayList<Event>): GuardianListDetailFragment {
+		fun newInstance(guardianName: String): GuardianListDetailFragment {
 			return GuardianListDetailFragment().apply {
 				arguments = Bundle().apply {
-					putParcelableArrayList("events", events)
+					putString("GUARDIAN_NAME", guardianName)
 				}
 			}
 		}

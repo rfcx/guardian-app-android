@@ -3,12 +3,9 @@ package org.rfcx.ranger.view.alerts.GuardianListDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.alerts.EmptyAlertFragment
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.base.BaseActivity
 
 class GuardianListDetailActivity : BaseActivity() {
@@ -18,16 +15,20 @@ class GuardianListDetailActivity : BaseActivity() {
 		setContentView(R.layout.activity_guardian_list_detail)
 		setupToolbar()
 		
-		if (intent?.hasExtra("event") == true) {
-			val event = intent.getParcelableArrayListExtra<Event>("event")
-			if(event.isNotEmpty()) {
-				supportFragmentManager.beginTransaction()
-						.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(event),
-								"GuardianListDetailFragment").commit()
-			} else {
-				supportFragmentManager.beginTransaction()
-						.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
-								"EmptyAlertFragment").commit()
+		if (intent?.hasExtra("GUARDIAN_NAME") == true && intent?.hasExtra("HAVE_EVENTS") == true) {
+			val guardianName = intent.getStringExtra("GUARDIAN_NAME")
+			val haveEvents = intent.getBooleanExtra("HAVE_EVENTS", false)
+			
+			if (guardianName !== null) {
+				if (haveEvents) {
+					supportFragmentManager.beginTransaction()
+							.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(guardianName),
+									"GuardianListDetailFragment").commit()
+				} else {
+					supportFragmentManager.beginTransaction()
+							.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
+									"EmptyAlertFragment").commit()
+				}
 			}
 		}
 	}
@@ -38,8 +39,8 @@ class GuardianListDetailActivity : BaseActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			if (intent?.hasExtra("name") == true) {
-				title = intent.getStringExtra("name")
+			if (intent?.hasExtra("GUARDIAN_NAME") == true) {
+				title = intent.getStringExtra("GUARDIAN_NAME")
 			}
 		}
 	}
@@ -50,15 +51,11 @@ class GuardianListDetailActivity : BaseActivity() {
 	}
 	
 	companion object {
-		fun startActivity(context: Context, event: List<Event>, name: String) {
+		fun startActivity(context: Context, guardianName: String, haveEvents: Boolean) {
 			val intent = Intent(context, GuardianListDetailActivity::class.java)
-			intent.putParcelableArrayListExtra("event", ArrayList(event))
-			intent.putExtra("name", name)
+			intent.putExtra("GUARDIAN_NAME", guardianName)
+			intent.putExtra("HAVE_EVENTS", haveEvents)
 			context.startActivity(intent)
 		}
 	}
-}
-
-interface OnItemClickEventValuesListener {
-	fun onItemClick(event: MutableList<EventItem>)
 }

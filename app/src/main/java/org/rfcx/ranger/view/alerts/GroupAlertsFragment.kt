@@ -52,7 +52,7 @@ class GroupAlertsFragment : BaseFragment() {
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(eventsList: List<Event>, name: String) {
-				context?.let { GuardianListDetailActivity.startActivity(it, eventsList, name) }
+				context?.let { GuardianListDetailActivity.startActivity(it, name, eventsList.isNotEmpty()) }
 			}
 		}
 	}

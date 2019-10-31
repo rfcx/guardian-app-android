@@ -5,7 +5,11 @@ import android.text.format.DateUtils
 import android.util.Log
 import org.joda.time.Duration
 import org.rfcx.ranger.R
+import org.rfcx.ranger.adapter.entity.BaseItem
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.*
 
 fun Event.getIconRes(): Int {
@@ -46,5 +50,26 @@ fun String.toEventIcon(): Int {
 		Event.vehicle -> R.drawable.ic_vehicle
 		Event.trespasser -> R.drawable.ic_people
 		else -> R.drawable.ic_pin_huge
+	}
+}
+
+fun Event.toEventItem(eventDb: EventDb): EventItem {
+	val state = eventDb.getEventState(this.event_guid)
+	return state?.let {
+		val result = when (it) {
+			ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+			ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+			else -> EventItem.State.NONE
+		}
+		EventItem(this, result)
+	} ?: run {
+		EventItem(this, EventItem.State.NONE)
+	}
+}
+
+data class EventItem(val event: Event, var state: State = State.NONE) : BaseItem {
+	
+	enum class State {
+		CONFIRM, REJECT, NONE
 	}
 }
