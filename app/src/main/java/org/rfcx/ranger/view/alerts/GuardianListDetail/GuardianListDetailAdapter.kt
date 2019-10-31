@@ -9,20 +9,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 import java.util.*
-import kotlin.collections.ArrayList
 
-class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, GuardianListDetailAdapter.GuardianListDetailViewHolder>(GuardianListDetailDiffUtil()) {
+class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, GuardianListDetailAdapter.GuardianListDetailViewHolder>(GuardianListDetailDiffUtil()), KoinComponent {
+	
+	private val eventsDb: EventDb by inject()
 	
 	var stutasVisibility: ArrayList<Boolean> = arrayListOf()
 	var currentEventList: MutableList<EventItem>? = null
 	var updateList: Boolean = false
 	
-	var allItem: ArrayList<GuardianListDetail> = arrayListOf()
+	
+	var allItem: ArrayList<EventGroupByValue> = arrayListOf()
 		set(value) {
 			field = value
 			notifyDataSetChanged()
@@ -38,7 +43,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 	override fun getItemCount(): Int = allItem.size
 	
 	override fun onBindViewHolder(holder: GuardianListDetailViewHolder, position: Int) {
-		holder.bind(allItem[position].events, allItem[position].unread, position)
+		holder.bind(allItem[position].events, allItem[position].numberOfUnread(eventsDb), position)
 	}
 	
 	class GuardianListDetailDiffUtil : DiffUtil.ItemCallback<EventItem>() {
@@ -120,7 +125,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				}
 				!updateList -> {
 					stutasVisibility.add(position, false)
-					if(num == 0){
+					if (num == 0) {
 						handleShowDropDown(itemView, State.SHOW_DOWN)
 					} else {
 						handleShowDropDown(itemView, State.SHOW_NUM)
@@ -139,7 +144,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			}
 			
 			seeOlderTextView.setOnClickListener {
-				val lastEvent = eventList[eventList.size-1].event
+				val lastEvent = eventList[eventList.size - 1].event
 				val guid = lastEvent.guardianId
 				val value = lastEvent.value
 				val beginsAt = lastEvent.beginsAt.time

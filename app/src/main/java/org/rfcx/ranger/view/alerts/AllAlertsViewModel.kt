@@ -16,10 +16,10 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.service.DownLoadEventWorker
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
-import org.rfcx.ranger.view.alerts.adapter.EventItem
 import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 import kotlin.math.ceil
 

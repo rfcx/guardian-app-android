@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toTimeSinceStringAlternative
 
@@ -104,10 +105,3 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 }
 
 class LoadingItem : BaseItem
-
-data class EventItem(val event: Event, var state: State = State.NONE) : BaseItem {
-	
-	enum class State {
-		CONFIRM, REJECT, NONE
-	}
-}

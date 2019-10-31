@@ -11,159 +11,62 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
-import org.rfcx.ranger.view.alerts.adapter.EventItem
+import org.rfcx.ranger.util.toEventItem
 import java.util.*
 import kotlin.collections.ArrayList
 
 class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
-	private val _items = MutableLiveData<Result<ArrayList<GuardianListDetail>>>()
-	val items: LiveData<Result<ArrayList<GuardianListDetail>>> get() = _items
 	
-	lateinit var value: String
+	private val _arrayEventGroup = MutableLiveData<Result<ArrayList<EventGroupByValue>>>()      // keep only 50 events
+	val arrayEventGroup: LiveData<Result<ArrayList<EventGroupByValue>>> get() = _arrayEventGroup
 	
-	private var eventOfAmazon: MutableList<Event> = mutableListOf()
-	private var eventOfMacaw: MutableList<Event> = mutableListOf()
-	private var eventOfChainsaw: MutableList<Event> = mutableListOf()
-	private var eventOfVehicle: MutableList<Event> = mutableListOf()
-	private var eventOfGunshot: MutableList<Event> = mutableListOf()
-	private var eventOfTrespasser: MutableList<Event> = mutableListOf()
-	private var eventOfOther: MutableList<Event> = mutableListOf()
-	private var eventOfMismatch: MutableList<Event> = mutableListOf()
+	var arrayEventGroupMore = ArrayList<EventGroupByValue>() // keep when see older and use updete ui when review
 	var loading = MutableLiveData<StateLoading>()
 	
-	var eventAll: ArrayList<MutableList<Event>> = ArrayList()
-	private var _alertsList: List<EventItem> = listOf()
-	
-	fun makeGroupOfValue(events: List<Event>) {
-		_items.value = Result.Loading
+	fun getEventFromDatabase(guardianName: String) {
+		val events = eventDb.getEvents().filter { it.guardianName == guardianName }
+		val eventItem = ArrayList<EventGroupByValue>()
+		val eventsMap: MutableMap<String, MutableList<Event>> = mutableMapOf()
+		
 		events.forEach { event ->
-			when {
-				event.value == "amazon" -> {
-					eventOfAmazon.add(event)
-				}
-				event.value == "macaw" -> {
-					eventOfMacaw.add(event)
-				}
-				event.value == "chainsaw" -> {
-					eventOfChainsaw.add(event)
-				}
-				event.value == "vehicle" -> {
-					eventOfVehicle.add(event)
-				}
-				event.value == "gunshot" -> {
-					eventOfGunshot.add(event)
-				}
-				event.value == "trespasser" -> {
-					eventOfTrespasser.add(event)
-				}
-				event.value == "other" -> {
-					eventOfOther.add(event)
-				}
-				else -> eventOfMismatch.add(event)
+			if (!eventsMap.containsKey(event.value)) {
+				eventsMap[event.value] = mutableListOf(event)
+			} else {
+				eventsMap[event.value]?.add(event)
 			}
 		}
-		groupAll()
+		eventsMap.forEach {
+			eventItem.add(EventGroupByValue(makeListEventItem(it.value)))
+		}
+		arrayEventGroupMore = eventItem
+		_arrayEventGroup.value = Result.Success(eventItem)
 	}
 	
-	private fun groupAll() {
-		if (eventOfAmazon.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfAmazon))
-		}
-		
-		if (eventOfMacaw.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfMacaw))
-		}
-		
-		if (eventOfChainsaw.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfChainsaw))
-		}
-		
-		if (eventOfVehicle.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfVehicle))
-		}
-		
-		if (eventOfGunshot.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfGunshot))
-		}
-		
-		if (eventOfTrespasser.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfTrespasser))
-		}
-		
-		if (eventOfOther.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfOther))
-		}
-		
-		if (eventOfOther.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfOther))
-		}
-		
-		if (eventOfMismatch.isNotEmpty()) {
-			eventAll.addAll(listOf(eventOfMismatch))
-		}
-		addList(eventAll)
-	}
-	
-	private fun numEvents(groupAlert: List<Event>): Int {
-		var count = 0
-		groupAlert.forEach { event ->
-			val state = eventDb.getEventState(event.id)
-			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) {
-				count += 1
-			}
-		}
-		return count
-	}
-	
-	fun itemsEvent(list: MutableList<Event>): MutableList<EventItem> {
+	private fun makeListEventItem(list: MutableList<Event>): MutableList<EventItem> {
 		val itemsEvent = arrayListOf<EventItem>()
 		list.forEach { event ->
-			val state = eventDb.getEventState(event.id)
-			state?.let {
-				val result = when (it) {
-					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-					else -> EventItem.State.NONE
-				}
-				itemsEvent.add(EventItem(event, result))
-			} ?: run {
-				itemsEvent.add(EventItem(event, EventItem.State.NONE))
-			}
+			itemsEvent.add(event.toEventItem(eventDb))
 		}
-		_alertsList = itemsEvent
 		return itemsEvent
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.event.id == eventGuid }
-		if (eventItem != null) {
-			eventItem.state = when (reviewValue) {
-				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-				else -> EventItem.State.NONE
+		arrayEventGroupMore.forEach { arr ->
+			val arrayEvent = arr.events
+			val updateEventItem = arrayEvent.firstOrNull { it.event.id == eventGuid }
+			if (updateEventItem != null) {
+				updateEventItem.state = when (reviewValue) {
+					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+					else -> EventItem.State.NONE
+				}
+				arrayEvent.replace(updateEventItem) { it.event.id == eventGuid }
 			}
-			_alertsList.replace(eventItem) { it.event.id == eventGuid }
 		}
-		
-		val arrayList = ArrayList<GuardianListDetail>()
-		eventAll.forEach { events ->
-			val num = events.size - numEvents(events)
-			val item = itemsEvent(events)
-			arrayList.add(GuardianListDetail(item, num))
-		}
-		_items.value = Result.Success(arrayList)
-	}
-	
-	private fun addList(array: ArrayList<MutableList<Event>>) {
-		val arrayList = ArrayList<GuardianListDetail>()
-		array.forEach { events ->
-			val num = events.size - numEvents(events)
-			val item = itemsEvent(events)
-			arrayList.add(GuardianListDetail(item, num))
-		}
-		_items.value = Result.Success(arrayList)
+		_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 	}
 	
 	fun loadMoreEvents(guid: String, value: String, endAt: Date) {
@@ -171,37 +74,29 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 1)
 		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
 			override fun onSuccess(t: EventsResponse) {
-				if (t.events !== null) {
+				val events = t.events?.map { it.toEvent() } ?: listOf()
 				
-					if (t.events!!.isEmpty()) {
-						loading.postValue(StateLoading.NOT_LOADING)
-						Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
-					} else {
-						val arrayList = ArrayList<GuardianListDetail>()
-						eventAll.forEach { events ->
-							var index = events.size
-							
-							val mainValue = arrayListOf<String>()
-							events.distinctBy { it.value }.mapTo(mainValue, { it.value })
-							
-							if (mainValue.size == 1 && value == mainValue[0]) {
-								t.events?.forEach { it ->
-									events.add(index, it.toEvent())
-									index += 1
-								}
+				if (t.events!!.isEmpty()) {
+					loading.postValue(StateLoading.NOT_LOADING)
+					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
+				} else {
+					arrayEventGroupMore.forEach { arr ->
+						val arrayEvent = arr.events
+						if (arrayEvent[0].event.value == value) {
+							var index = arrayEvent.size
+							events.forEach {
+								arrayEvent.add(index, it.toEventItem(eventDb))
+								index += 1
 							}
-							val num = events.size - numEvents(events)
-							val item = itemsEvent(events)
-							arrayList.add(GuardianListDetail(item, num))
-							_items.value = Result.Success(arrayList)
 						}
-						loading.postValue(StateLoading.NOT_LOADING)
+						_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 					}
+					loading.postValue(StateLoading.NOT_LOADING)
 				}
 			}
 			
 			override fun onError(e: Throwable) {
-				_items.value = e.getResultError()
+				_arrayEventGroup.value = e.getResultError()
 				loading.postValue(StateLoading.NOT_LOADING)
 			}
 			
@@ -213,7 +108,15 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	}
 }
 
-data class GuardianListDetail(val events: MutableList<EventItem>, val unread: Int)
+data class EventGroupByValue(val events: MutableList<EventItem>) {
+	fun numberOfUnread(eventDb: EventDb): Int {
+		val read = events.fold(0) { acc, event ->
+			val state = eventDb.getEventState(event.event.id)
+			if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) acc + 1 else acc
+		}
+		return events.size - read
+	}
+}
 
 enum class StateLoading {
 	LOADING, NOT_LOADING
