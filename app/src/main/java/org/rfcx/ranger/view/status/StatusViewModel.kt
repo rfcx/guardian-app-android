@@ -118,6 +118,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	init {
 		updateProfile()
+		getGuardianGroupName()
 		updateWeeklyStat()
 		fetchReports()
 		fetchJobSyncing()
@@ -153,7 +154,23 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 					site, profileData.getTracking())
 		}
+	}
+	
+	private fun getGuardianGroupName() {
+		val guardianGroupFullName = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+		val guardianGroup = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		
+		if(guardianGroupFullName.isNullOrEmpty() && !guardianGroup.isNullOrEmpty()){
+			profileData.getGuardianGroup()?.let {
+				getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
+					override fun onSuccess(t: List<SiteResponse>) {
+						val preferences = Preferences.getInstance(context)
+						preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, t[0].name)
+					}
+					override fun onError(e: Throwable) {}
+				}, it)
+			}
+		}
 	}
 	
 	private fun updateWeeklyStat() {
