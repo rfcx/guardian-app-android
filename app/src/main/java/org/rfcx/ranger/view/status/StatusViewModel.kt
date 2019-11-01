@@ -129,19 +129,31 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun updateProfile() {
-		_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
-				profileData.getSiteName(), profileData.getTracking())
 		
-		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
-			override fun onSuccess(t: List<SiteResponse>) {
-				_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
-						t[0].name, profileData.getTracking())
-			}
-
-			override fun onError(e: Throwable) {
-				Log.d("getSiteName","error $e")
-			}
-		}, profileData.getSiteId())
+		val site = Preferences.getInstance(context).getString(Preferences.SITE_FULLNAME)
+		
+		if(site.isNullOrEmpty()){
+			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
+					profileData.getSiteName(), profileData.getTracking())
+			
+			getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
+				override fun onSuccess(t: List<SiteResponse>) {
+					val preferences = Preferences.getInstance(context)
+					preferences.putString(Preferences.SITE_FULLNAME, t[0].name)
+					
+					_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
+							t[0].name, profileData.getTracking())
+				}
+				
+				override fun onError(e: Throwable) {
+					Log.d("getSiteName","error $e")
+				}
+			}, profileData.getSiteId())
+		} else {
+			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
+					site, profileData.getTracking())
+		}
+		
 	}
 	
 	private fun updateWeeklyStat() {
