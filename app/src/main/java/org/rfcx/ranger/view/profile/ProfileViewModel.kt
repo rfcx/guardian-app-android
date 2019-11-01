@@ -10,7 +10,7 @@ import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.util.Preferences
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData) : ViewModel() {
 	
 	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
@@ -28,17 +28,13 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	private fun getSiteName() {
-		userSite.value = profileData.getSiteName()
+		val site = Preferences.getInstance(context).getString(Preferences.SITE_FULLNAME)
 		
-		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
-			override fun onSuccess(t: List<SiteResponse>) {
-				userSite.value = t[0].name
-			}
-			
-			override fun onError(e: Throwable) {
-				userSite.value = profileData.getSiteName()
-			}
-		}, profileData.getSiteId())
+		if(site.isNullOrEmpty()){
+			userSite.value = profileData.getSiteName()
+		} else {
+			userSite.value = site
+		}
 	}
 	
 	
