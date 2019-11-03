@@ -67,7 +67,14 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				reportTypeImageView.setImageResource(report.getImageResource())
 				dateTimeTextView.text = report.getReportedAtRelative(this)
 				whenTextView.text = report.getLocalisedAgeEstimate(this)
-
+				if (report.notes.isNullOrEmpty()) {
+					noteTextView.visibility = View.GONE
+					noteTitle.visibility = View.GONE
+				} else {
+					noteTextView.text = report.notes
+					noteTextView.visibility = View.VISIBLE
+					noteTitle.visibility = View.VISIBLE
+				}
 				this.location = LatLng(report.latitude, report.longitude)
 				setMapPin()
 				
@@ -85,7 +92,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			mapView?.mapType = GoogleMap.MAP_TYPE_SATELLITE
 			mapView?.uiSettings?.isScrollGesturesEnabled = false
 			val horizontalPadding = 16.px
-			mapView?.setPadding(horizontalPadding,0,horizontalPadding,0)
+			mapView?.setPadding(horizontalPadding, 0, horizontalPadding, 0)
 			runOnUiThread { setMapPin() }
 		}
 	}
@@ -141,7 +148,8 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			when (state) {
 				SoundRecordState.PLAYING -> startPlaying()
 				SoundRecordState.STOP_PLAYING -> stopPlaying()
-				else -> {}
+				else -> {
+				}
 			}
 		}
 	}
@@ -174,7 +182,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	override fun didAddImages(imagePaths: List<String>) {
-	    viewModel.addReportImages(imagePaths)
+		viewModel.addReportImages(imagePaths)
 	}
 	
 	override fun didRemoveImage(imagePath: String) {

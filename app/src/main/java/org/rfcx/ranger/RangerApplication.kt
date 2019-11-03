@@ -54,7 +54,7 @@ class RangerApplication : MultiDexApplication() {
 			realm.close()
 			Realm.setDefaultConfiguration(RealmHelper.migrationConfig())
 		} catch (e: RealmMigrationNeededException) {
-			Log.e("RealmMigration", e.message)
+			Log.e("RealmMigration", "${e.message}")
 			CrashlyticsCore.getInstance().logException(e)
 			realmNeedsMigration = true
 		}

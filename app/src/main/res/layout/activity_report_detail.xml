@@ -11,27 +11,27 @@
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="?android:actionBarSize"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:title="← Report detail"/>
+		tools:title="← Report detail" />
 	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/leftGutter"
-		app:layout_constraintGuide_begin="@dimen/margin_padding_normal"
-		android:orientation="vertical"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_begin="@dimen/margin_padding_normal" />
 	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/rightGutter"
-		app:layout_constraintGuide_end="@dimen/margin_padding_normal"
-		android:orientation="vertical"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-		
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_end="@dimen/margin_padding_normal" />
+	
 	
 	<!-- Header section -->
 	
@@ -41,10 +41,10 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toBottomOf="@id/whenTextView"
 		app:layout_constraintStart_toStartOf="@id/leftGutter"
 		app:layout_constraintTop_toBottomOf="@id/toolbar"
-		app:layout_constraintBottom_toBottomOf="@id/whenTextView"
-		tools:src="@drawable/ic_chainsaw"/>
+		tools:src="@drawable/ic_chainsaw" />
 	
 	<TextView
 		android:id="@+id/dateTimeTextView"
@@ -52,53 +52,53 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
-		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/toolbar"
 		app:layout_constraintBottom_toTopOf="@id/reportTypeTextView"
-		tools:text="June 6, 2019 - 18:07"/>
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
+		app:layout_constraintTop_toBottomOf="@id/toolbar"
+		tools:text="June 6, 2019 - 18:07" />
 	
 	<TextView
 		android:id="@+id/reportTypeTextView"
 		style="@style/RangerText.Subhead"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		app:layout_constraintStart_toStartOf="@id/dateTimeTextView"
-		app:layout_constraintEnd_toStartOf="@id/syncStatusImageView"
-		app:layout_constraintTop_toBottomOf="@id/dateTimeTextView"
 		app:layout_constraintBottom_toTopOf="@id/whenTextView"
-		tools:text="Chainsaw"/>
+		app:layout_constraintEnd_toStartOf="@id/syncStatusImageView"
+		app:layout_constraintStart_toStartOf="@id/dateTimeTextView"
+		app:layout_constraintTop_toBottomOf="@id/dateTimeTextView"
+		tools:text="Chainsaw" />
 	
 	<TextView
 		android:id="@+id/whenTextView"
 		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:drawableStart="@drawable/ic_place"
 		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:drawableStart="@drawable/ic_place"
 		android:drawablePadding="@dimen/margin_padding_xsmall"
 		android:ellipsize="end"
-		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toEndOf="@id/reportTypeImageView"
 		app:layout_constraintTop_toBottomOf="@id/reportTypeTextView"
-		tools:text="At that moment"/>
+		tools:text="At that moment" />
 	
 	<ImageView
 		android:id="@+id/syncStatusImageView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		app:layout_constraintStart_toEndOf="@id/reportTypeTextView"
-		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintBottom_toBottomOf="@id/reportTypeTextView"
 		android:src="@drawable/ic_sync"
-		android:visibility="gone"/>
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/reportTypeTextView"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toEndOf="@id/reportTypeTextView" />
 	
 	<androidx.constraintlayout.widget.Barrier
 		android:id="@+id/headerBottom"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		app:barrierDirection="bottom"
-		app:constraint_referenced_ids="reportTypeImageView,whenTextView"/>
+		app:constraint_referenced_ids="reportTypeImageView,whenTextView" />
 	
 	<!-- Location section -->
 	
@@ -108,11 +108,11 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		app:layout_constraintStart_toStartOf="@id/leftGutter"
-		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/headerBottom"
+		android:text="@string/location"
 		app:layout_constraintBottom_toTopOf="@id/mapView"
-		android:text="@string/location" />
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/headerBottom" />
 	
 	<fragment
 		android:id="@+id/mapView"
@@ -120,9 +120,9 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_marginTop="@dimen/margin_padding_normal"
-		app:layout_constraintTop_toBottomOf="@id/locationTitle"
 		app:layout_constraintBottom_toTopOf="@+id/photosTitle"
-		app:layout_constraintDimensionRatio="11:4" />
+		app:layout_constraintDimensionRatio="11:4"
+		app:layout_constraintTop_toBottomOf="@id/locationTitle" />
 	
 	<TextView
 		android:id="@+id/photosTitle"
@@ -131,11 +131,11 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toStartOf="@id/leftGutter"
-		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/mapView"
+		android:text="@string/photos"
 		app:layout_constraintBottom_toTopOf="@id/imageRecycler"
-		android:text="@string/photos" />
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/mapView" />
 	
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/imageRecycler"
@@ -151,16 +151,38 @@
 		tools:orientation="horizontal" />
 	
 	<TextView
+		android:id="@+id/noteTitle"
+		style="@style/RangerText.Title"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/report_note_label"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/imageRecycler" />
+	
+	<TextView
+		android:id="@+id/noteTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="@id/rightGutter"
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/noteTitle"
+		tools:text="Note here" />
+	
+	<TextView
 		android:id="@+id/audioTitle"
 		style="@style/RangerText.Title"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		android:text="@string/audio_notes"
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/imageRecycler"
-		android:text="@string/audio_notes" />
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
 	
 	<org.rfcx.ranger.widget.SoundRecordProgressView
 		android:id="@+id/audioProgressView"
@@ -168,21 +190,21 @@
 		android:layout_height="48dp"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toStartOf="@id/leftGutter"
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/audioTitle"/>
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/audioTitle" />
 	
 	<TextView
 		android:id="@+id/audioNoneLabel"
-		android:layout_width="0dp"
 		style="@style/RangerText.Label"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/common_none"
 		android:visibility="gone"
-		app:layout_constraintStart_toStartOf="@id/leftGutter"
 		app:layout_constraintEnd_toEndOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/audioTitle"
-		android:text="@string/common_none"/>
+		app:layout_constraintStart_toStartOf="@id/leftGutter"
+		app:layout_constraintTop_toBottomOf="@id/audioTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
