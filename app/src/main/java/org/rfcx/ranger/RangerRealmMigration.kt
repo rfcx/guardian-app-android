@@ -29,6 +29,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 8L && newVersion >= 8L) {
 			migrateToV8(c)
 		}
+		if (oldVersion < 9L && newVersion >= 9L) {
+			migrateToV9(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -220,6 +223,14 @@ class RangerRealmMigration : RealmMigration {
 			removeField("confidence")
 			removeField("timezone")
 			removeField("audioGUID")
+		}
+	}
+	
+	private fun migrateToV9(realm: DynamicRealm) {
+		// Add field notes to Report
+		val report = realm.schema.get("Report")
+		report?.apply {
+			addField("notes", String::class.java)
 		}
 	}
 	

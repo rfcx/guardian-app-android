@@ -65,11 +65,11 @@ class SendReportApi {
 
 		val authUser = "Bearer $token"
 		val audioFileOrNull = if (!report.audioLocation.isNullOrEmpty()) createLocalFilePart("audio", Uri.parse(report.audioLocation!!), "audio/mpeg") else null
-
+		val notes = if(!report.notes.isNullOrEmpty()) createPartFromString(report.notes!!) else null
 		return ApiManager.getInstance().apiRest.sendReport(authUser =  authUser, value = createPartFromString(report.value),
 				site = createPartFromString(report.site), reportedAt = createPartFromString(report.reportedAt.toIsoString()),
 				latitude = createPartFromString(report.latitude.toString()), longitude = createPartFromString(report.longitude.toString()),
-				ageEstimate = createPartFromString(report.ageEstimateRaw.toString()), audioFile = audioFileOrNull)
+				notes = notes, ageEstimate = createPartFromString(report.ageEstimateRaw.toString()), audioFile = audioFileOrNull)
 	}
 
 	private fun createPartFromString(descriptionString: String): RequestBody {

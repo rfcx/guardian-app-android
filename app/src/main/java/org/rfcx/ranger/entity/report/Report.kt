@@ -26,6 +26,8 @@ open class Report(
 		var longitude: Double = 0.0,
 		@SerializedName("age_estimate")
 		var ageEstimateRaw: Int = 0,  // 0 now, 10 last 24 hours, 20 last week, 30 last month
+		@SerializedName("notes")
+		var notes: String? = null,
 		@Expose(serialize = false)
 		var audioLocation: String? = null, // unused on server
 		@Expose(serialize = false)

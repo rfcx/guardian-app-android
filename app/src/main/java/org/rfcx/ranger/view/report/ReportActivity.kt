@@ -141,8 +141,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		recordPermissions.handleRequestResult(requestCode, grantResults)
 	}
 	
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-		when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
 			android.R.id.home -> finish()
 		}
 		return super.onOptionsItemSelected(item)
@@ -283,9 +283,13 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		val time = Date()
 		val lat = lastLocation?.latitude ?: 0.0
 		val lon = lastLocation?.longitude ?: 0.0
+		val note: String? = if (noteEditText.text?.trim().toString().isEmpty()) {
+			null
+		} else noteEditText.text?.trim().toString()
 		Log.d("getSiteName", getSiteName())
+		
 		val report = Report(value = eventSelected, site = site, reportedAt = time,
-				latitude = lat, longitude = lon, ageEstimateRaw = whenState.value,
+				latitude = lat, longitude = lon, notes = note, ageEstimateRaw = whenState.value,
 				audioLocation = recordFile?.canonicalPath)
 		
 		ReportDb(Realm.getInstance(RealmHelper.migrationConfig())).save(report, reportImageAdapter.getNewAttachImage())
@@ -372,8 +376,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		reportImageAdapter.setImages(arrayListOf())
 	}
 	
-	override fun didAddImages(imagePaths: List<String>) { }
-	override fun didRemoveImage(imagePath: String) { }
+	override fun didAddImages(imagePaths: List<String>) {}
+	override fun didRemoveImage(imagePath: String) {}
 	
 	companion object {
 		fun startIntent(context: Context?) {
@@ -395,5 +399,5 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		locationStatusTextView.setBackgroundResource(R.color.location_status_loading_bg)
 		locationStatusTextView.visibility = View.VISIBLE
 	}
-
+	
 }

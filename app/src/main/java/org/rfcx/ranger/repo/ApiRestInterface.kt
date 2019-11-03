@@ -37,8 +37,10 @@ interface ApiRestInterface {
 	fun sendReport(@Header("Authorization") authUser: String, @Part("value") value: RequestBody,
 	               @Part("site") site: RequestBody, @Part("reported_at") reportedAt: RequestBody,
 	               @Part("lat") latitude: RequestBody, @Part("long") longitude: RequestBody,
-	               @Part("age_estimate") ageEstimate: RequestBody, @Part("distance") distanceEstimate: RequestBody? = null,
-	               @Part() audioFile: MultipartBody.Part? = null): Call<SendReportResponse>
+	               @Part("age_estimate") ageEstimate: RequestBody,
+	               @Part("distance") distanceEstimate: RequestBody? = null,
+	               @Part("notes") notes: RequestBody?,
+	               @Part audioFile: MultipartBody.Part? = null): Call<SendReportResponse>
 	
 	@POST("v1/events/{id}/{review_confirmed}")
 	fun reviewEvent(@Header("Authorization") authUser: String,
