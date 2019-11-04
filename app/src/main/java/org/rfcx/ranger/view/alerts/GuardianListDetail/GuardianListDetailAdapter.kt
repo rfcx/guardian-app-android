@@ -136,7 +136,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			groupByGuardianTextView.text = eventList[0].event.label.capitalize()
 			guardianListDetailRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
-				adapter = EventsInEventNameAdater(eventList, listener)
+				adapter = EventsInEventNameAdapter(eventList, listener)
 			}
 			
 			itemView.setOnClickListener {

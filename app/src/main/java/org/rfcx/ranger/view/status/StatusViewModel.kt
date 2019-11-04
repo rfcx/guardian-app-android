@@ -19,8 +19,8 @@ import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.EventsRequestFactory
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -32,7 +32,6 @@ import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
@@ -132,7 +131,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		
 		val site = Preferences.getInstance(context).getString(Preferences.SITE_FULLNAME)
 		
-		if(site.isNullOrEmpty()){
+		if (site.isNullOrEmpty()) {
 			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 					profileData.getSiteName(), profileData.getTracking())
 			
@@ -146,7 +145,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 				}
 				
 				override fun onError(e: Throwable) {
-					Log.d("getSiteName","error $e")
+					Log.d("getSiteName", "error $e")
 				}
 			}, profileData.getSiteId())
 		} else {
@@ -159,13 +158,14 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		val guardianGroupFullName = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 		val guardianGroup = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP)
 		
-		if(guardianGroupFullName.isNullOrEmpty() && !guardianGroup.isNullOrEmpty()){
+		if (guardianGroupFullName.isNullOrEmpty() && !guardianGroup.isNullOrEmpty()) {
 			profileData.getGuardianGroup()?.let {
 				getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 					override fun onSuccess(t: List<SiteResponse>) {
 						val preferences = Preferences.getInstance(context)
 						preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, t[0].name)
 					}
+					
 					override fun onError(e: Throwable) {}
 				}, it)
 			}
@@ -223,6 +223,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			}
 			_alertsList.replace(eventItem) { it.alert.id == eventGuid }
 		}
+		updateWeeklyStat()
 		_alertItems.value = _alertsList
 	}
 	
@@ -243,7 +244,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 				.subscribe {
 					updateWeeklyStat()
 				}
-		
 	}
 	
 	fun updateTracking() {
@@ -261,7 +261,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	fun resumed() {
 		ImageUploadWorker.enqueue()
-
+		
 		if (locationDb.unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
 		}
@@ -310,7 +310,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private fun updateRecentAlerts(events: List<Event>) {
 		val newItemsList = arrayListOf<StatusAdapter.AlertItem>()
-		if(events.isNotEmpty()) {
+		if (events.isNotEmpty()) {
 			events.take(3).map { event ->
 				newItemsList.add(event.toAlertItem())
 			}

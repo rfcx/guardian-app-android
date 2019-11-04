@@ -75,9 +75,8 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
 			override fun onSuccess(t: EventsResponse) {
 				val events = t.events?.map { it.toEvent() } ?: listOf()
-				
+				loading.postValue(StateLoading.NOT_LOADING)
 				if (t.events!!.isEmpty()) {
-					loading.postValue(StateLoading.NOT_LOADING)
 					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
 				} else {
 					arrayEventGroupMore.forEach { arr ->
@@ -91,7 +90,6 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 						}
 						_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 					}
-					loading.postValue(StateLoading.NOT_LOADING)
 				}
 			}
 			

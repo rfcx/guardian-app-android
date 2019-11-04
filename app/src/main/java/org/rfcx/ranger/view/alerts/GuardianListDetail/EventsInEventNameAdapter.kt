@@ -12,7 +12,7 @@ import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toTimeSinceStringAlternative
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 
-class EventsInEventNameAdater(private val items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, EventsInEventNameAdater.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
+class EventsInEventNameAdapter(private val items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, EventsInEventNameAdapter.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsInEventNameViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_events_in_event_name, parent, false)
