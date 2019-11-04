@@ -31,7 +31,9 @@ import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companio
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_USER_STATUS
 import org.rfcx.ranger.view.status.adapter.viewholder.*
 
-class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?, private val reportTitle: String?, private val seeMoreButton: String?, private val context: Context?)
+class StatusAdapter(private val statusTitle: String?, private val alertTitle: String?,
+                    private val reportTitle: String?, private val seeMoreButton: String?,
+                    private val context: Context?)
 	: ListAdapter<StatusAdapter.StatusItemBase, RecyclerView.ViewHolder>(StatusListDiffUtil()), SyncingViewCallback {
 	
 	private var listener: StatusFragmentListener? = null
