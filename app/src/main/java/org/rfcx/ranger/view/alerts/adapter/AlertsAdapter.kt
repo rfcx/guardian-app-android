@@ -51,7 +51,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 	class AlertsDiffUtil : DiffUtil.ItemCallback<BaseItem>() {
 		override fun areItemsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean {
 			return if (oldItem is EventItem && newItem is EventItem) {
-				oldItem.state == newItem.state
+				oldItem.event.id == newItem.event.id
 			} else {
 				false
 			}
@@ -62,6 +62,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 				oldItem.event.id == newItem.event.id
 						&& oldItem.event.value == newItem.event.value
 						&& oldItem.state == newItem.state
+						&& oldItem.event.reviewCreated.compareTo(newItem.event.reviewCreated) == 0
 			} else {
 				false
 			}
