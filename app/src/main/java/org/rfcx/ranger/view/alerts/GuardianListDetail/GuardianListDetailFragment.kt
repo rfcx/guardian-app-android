@@ -1,13 +1,13 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
+import kotlinx.android.synthetic.main.item_guardian_list_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
@@ -18,7 +18,6 @@ import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.base.BaseFragment
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
 	private val viewModel: GuardianListDetailViewModel by viewModel()
@@ -49,17 +48,9 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			})
 		})
 		
-		viewModel.loading.observe(this, Observer {
-			if(it == StateLoading.LOADING){
-				loadingProgress.visibility = View.VISIBLE
-			} else if (it == StateLoading.NOT_LOADING){
-				loadingProgress.visibility = View.INVISIBLE
-			}
-		})
-		
 		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
-			override fun onSeeOlderClick(guid: String, value: String, endAt: Date) {
-				viewModel.loadMoreEvents(guid, value, endAt)
+			override fun onSeeOlderClick(guid: String, value: String, endAt: Date, position: Int) {
+				viewModel.loadMoreEvents(guid, value, endAt, position)
 			}
 		}
 	}
@@ -104,5 +95,5 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 }
 
 interface OnSeeOlderClickListener {
-	fun onSeeOlderClick(guid: String, value: String, endAt: Date)
+	fun onSeeOlderClick(guid: String, value: String, endAt: Date, position: Int)
 }

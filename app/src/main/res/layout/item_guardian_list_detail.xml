@@ -78,18 +78,12 @@
 		app:layout_constraintStart_toStartOf="@id/circleImageView"
 		app:layout_constraintTop_toTopOf="@id/circleImageView" />
 	
-	<androidx.constraintlayout.widget.Group
-		android:id="@+id/guardianListDetailGroupView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		app:constraint_referenced_ids="guardianListDetailRecycler,seeOlderTextView" />
-	
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/guardianListDetailRecycler"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_xlarge"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.0"
@@ -101,11 +95,22 @@
 		android:id="@+id/seeOlderTextView"
 		style="@style/RangerText.Title"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="@dimen/mini_progress_loading"
 		android:layout_marginStart="@dimen/padding_see_older_alert"
 		android:text="@string/see_older"
 		android:textColor="@color/colorPrimary"
+		android:visibility="gone"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/guardianListDetailRecycler" />
+	
+	<ProgressBar
+		android:id="@+id/progressBar"
+		android:layout_width="@dimen/mini_progress_loading"
+		android:layout_height="@dimen/mini_progress_loading"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/seeOlderTextView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

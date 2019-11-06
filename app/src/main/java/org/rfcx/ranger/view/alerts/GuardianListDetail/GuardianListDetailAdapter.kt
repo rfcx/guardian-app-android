@@ -26,7 +26,6 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 	var currentEventList: MutableList<EventItem>? = null
 	var updateList: Boolean = false
 	
-	
 	var allItem: ArrayList<EventGroupByValue> = arrayListOf()
 		set(value) {
 			field = value
@@ -43,7 +42,8 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 	override fun getItemCount(): Int = allItem.size
 	
 	override fun onBindViewHolder(holder: GuardianListDetailViewHolder, position: Int) {
-		holder.bind(allItem[position].events, allItem[position].numberOfUnread(eventsDb), position)
+		val item = allItem[position]
+		holder.bind(item.events, item.numberOfUnread(eventsDb), position, item.stateSeeOlder)
 	}
 	
 	class GuardianListDetailDiffUtil : DiffUtil.ItemCallback<EventItem>() {
@@ -88,10 +88,12 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 	}
 	
 	fun handleVisibilityList(itemView: View, state: Boolean, num: Int, position: Int) {
-		val guardianListDetailGroupView = itemView.guardianListDetailGroupView
+		val guardianListDetailRecycler = itemView.guardianListDetailRecycler
+		val seeOlderTextView = itemView.seeOlderTextView
 		
 		if (state) {
-			guardianListDetailGroupView.visibility = View.GONE
+			guardianListDetailRecycler.visibility = View.GONE
+			seeOlderTextView.visibility = View.GONE
 			if (num == 0) {
 				handleShowDropDown(itemView, State.SHOW_DOWN)
 			} else {
@@ -100,10 +102,34 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			stutasVisibility[position] = false
 			updateList = true
 		} else {
-			guardianListDetailGroupView.visibility = View.VISIBLE
+			guardianListDetailRecycler.visibility = View.VISIBLE
+			seeOlderTextView.visibility = View.VISIBLE
 			handleShowDropDown(itemView, State.SHOW_UP)
 			stutasVisibility[position] = true
 			updateList = true
+		}
+	}
+	
+	fun handleStateSeeOlder(itemView: View, state: StateSeeOlder) {
+		val progressBar = itemView.progressBar
+		val seeOlderTextView = itemView.seeOlderTextView
+		
+		when (state) {
+			StateSeeOlder.LOADING -> {
+				progressBar.visibility = View.VISIBLE
+				seeOlderTextView.visibility = View.GONE
+				
+			}
+			StateSeeOlder.HAVE_ALERTS -> {
+				progressBar.visibility = View.GONE
+				seeOlderTextView.visibility = View.VISIBLE
+				
+			}
+			StateSeeOlder.NOT_HAVE_ALERT -> {
+				progressBar.visibility = View.INVISIBLE
+				seeOlderTextView.visibility = View.INVISIBLE
+			}
+			else -> progressBar.visibility = View.GONE
 		}
 	}
 	
@@ -115,7 +141,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 		private val seeOlderTextView = itemView.seeOlderTextView
 		
 		@SuppressLint("DefaultLocale")
-		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int) {
+		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int, stateSeeOlder: StateSeeOlder) {
 			eventList[0].event.value.toEventIcon().let { iconAlert.setImageResource(it) }
 			numOfEventsNotOpen.text = num.toString()
 			
@@ -125,6 +151,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				}
 				!updateList -> {
 					stutasVisibility.add(position, false)
+					
 					if (num == 0) {
 						handleShowDropDown(itemView, State.SHOW_DOWN)
 					} else {
@@ -143,6 +170,8 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				handleVisibilityList(itemView, stutasVisibility[position], num, position)
 			}
 			
+			handleStateSeeOlder(itemView, stateSeeOlder)
+			
 			seeOlderTextView.setOnClickListener {
 				val lastEvent = eventList[eventList.size - 1].event
 				val guid = lastEvent.guardianId
@@ -150,7 +179,8 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 				val beginsAt = lastEvent.beginsAt.time
 				val audioDuration = lastEvent.audioDuration
 				val timeEndAt = Date(beginsAt + audioDuration)
-				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, timeEndAt)
+				handleStateSeeOlder(itemView, StateSeeOlder.LOADING)
+				mOnSeeOlderClickListener?.onSeeOlderClick(guid, value, timeEndAt, position)
 			}
 			currentEventList = eventList
 		}

@@ -24,7 +24,6 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	val arrayEventGroup: LiveData<Result<ArrayList<EventGroupByValue>>> get() = _arrayEventGroup
 	
 	var arrayEventGroupMore = ArrayList<EventGroupByValue>() // keep when see older and use updete ui when review
-	var loading = MutableLiveData<StateLoading>()
 	
 	fun getEventFromDatabase(guardianName: String) {
 		val events = eventDb.getEvents().filter { it.guardianName == guardianName }
@@ -39,7 +38,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 			}
 		}
 		eventsMap.forEach {
-			eventItem.add(EventGroupByValue(makeListEventItem(it.value)))
+			eventItem.add(EventGroupByValue(makeListEventItem(it.value), StateSeeOlder.DEFAULT))
 		}
 		arrayEventGroupMore = eventItem
 		_arrayEventGroup.value = Result.Success(eventItem)
@@ -69,14 +68,13 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 	}
 	
-	fun loadMoreEvents(guid: String, value: String, endAt: Date) {
-		loading.postValue(StateLoading.LOADING)
+	fun loadMoreEvents(guid: String, value: String, endAt: Date, position: Int) {
 		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 1)
 		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
 			override fun onSuccess(t: EventsResponse) {
 				val events = t.events?.map { it.toEvent() } ?: listOf()
-				loading.postValue(StateLoading.NOT_LOADING)
 				if (t.events!!.isEmpty()) {
+					arrayEventGroupMore[position].stateSeeOlder = StateSeeOlder.NOT_HAVE_ALERT
 					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
 				} else {
 					arrayEventGroupMore.forEach { arr ->
@@ -87,17 +85,16 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 								arrayEvent.add(index, it.toEventItem(eventDb))
 								index += 1
 							}
+							arr.stateSeeOlder = StateSeeOlder.HAVE_ALERTS
 						}
-						_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 					}
 				}
+				_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 			}
 			
 			override fun onError(e: Throwable) {
 				_arrayEventGroup.value = e.getResultError()
-				loading.postValue(StateLoading.NOT_LOADING)
 			}
-			
 		}, requestFactory)
 	}
 	
@@ -106,7 +103,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 	}
 }
 
-data class EventGroupByValue(val events: MutableList<EventItem>) {
+data class EventGroupByValue(val events: MutableList<EventItem>, var stateSeeOlder: StateSeeOlder) {
 	fun numberOfUnread(eventDb: EventDb): Int {
 		val read = events.fold(0) { acc, event ->
 			val state = eventDb.getEventState(event.event.id)
@@ -116,6 +113,6 @@ data class EventGroupByValue(val events: MutableList<EventItem>) {
 	}
 }
 
-enum class StateLoading {
-	LOADING, NOT_LOADING
+enum class StateSeeOlder {
+	LOADING, HAVE_ALERTS, NOT_HAVE_ALERT, DEFAULT
 }
