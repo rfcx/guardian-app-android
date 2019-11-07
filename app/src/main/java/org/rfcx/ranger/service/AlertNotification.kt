@@ -70,10 +70,7 @@ object AlertNotification {
 			guardianName = data["guardian_shortname"] ?: ""
 			type = data["type"]
 			site = data["site_guid"] ?: ""
-			
-//			audio = Audio().apply {
-//				opus = "https://assets.rfcx.org/audio/$audioId.opus"
-//			}
+			audioOpusUrl =  "https://assets.rfcx.org/audio/$audioId.opus"
 		}
 		return event
 	}
