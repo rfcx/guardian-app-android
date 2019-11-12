@@ -53,8 +53,8 @@ open class Event() : RealmObject(), Parcelable {
 		audioPngUrl = parcel.readString() ?: ""
 		
 		this.windows = RealmList()
-		parcel.createTypedArrayList(EventWindow.CREATOR)?.let {
-			this.windows!!.addAll(it)
+		parcel.createTypedArrayList(EventWindow.CREATOR)?.let { windows ->
+			this.windows.addAll(windows.filterNotNull())
 		}
 		
 		reviewCreated = Date(parcel.readLong())
