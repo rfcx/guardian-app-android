@@ -1,8 +1,10 @@
 package org.rfcx.ranger.view.profile
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,17 +22,42 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 	}
 	
 	var onFeedbackImageAdapterClickListener: OnFeedbackImageAdapterClickListener? = null
-	
+	private var context: Context? = null
 	private var imagesSource = arrayListOf<BaseListItem>()
 	
 	fun addImages(uris: List<String>) {
+		val allLocalPathImages = getLocalImageItem() + uris
+		val groups = allLocalPathImages.groupBy { it }
+		val localPathImages = groups.filter { it.value.size < 2 }
+		val localPathImagesForAdd = ArrayList<String>()
+		
+		localPathImages.forEach {
+			if (it.key !in getLocalImageItem()) {
+				localPathImagesForAdd.add(it.key)
+			}
+		}
+		
 		var index: Int = if (imagesSource.isEmpty()) 0 else {
 			imagesSource[imagesSource.count() - 1].getItemId() + 1
 		}
-		uris.forEach {
-			imagesSource.add(LocalImageItem(index, it, true))
-			index++
+		
+		if (localPathImagesForAdd.isNotEmpty()) {
+			if (localPathImagesForAdd.size != uris.size){
+				Toast.makeText(context, R.string.some_photo_already_exists, Toast.LENGTH_SHORT).show()
+			}
+			
+			localPathImagesForAdd.forEach {
+				imagesSource.add(LocalImageItem(index, it, true))
+				index++
+			}
+		} else {
+			if (uris.size > 1) {
+				Toast.makeText(context, R.string.these_photos_already_exists, Toast.LENGTH_SHORT).show()
+			} else {
+				Toast.makeText(context, R.string.this_photo_already_exists, Toast.LENGTH_SHORT).show()
+			}
 		}
+
 		submitList(ArrayList(imagesSource))
 		onFeedbackImageAdapterClickListener?.pathListArray(imagesSource)
 	}
@@ -48,7 +75,16 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 		return imagesSource.count()
 	}
 	
+	private fun getLocalImageItem(): List<String> {
+		return imagesSource.filter {
+			(it is LocalImageItem && it.canDelete)
+		}.map {
+			(it as LocalImageItem).localPath
+		}
+	}
+	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+		context = parent.context
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_feedback_image, parent, false)
 		return FeedbackImageAdapterViewHolder(view, onFeedbackImageAdapterClickListener)
 	}
