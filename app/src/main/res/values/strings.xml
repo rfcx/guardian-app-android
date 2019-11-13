@@ -45,6 +45,9 @@
 	<string name="report_location_null">Location not found. Please try again.</string>
 	<string name="report_note_label">NOTES</string>
 	<string name="report_note_hint">Put some notes here</string>
+	<string name="some_photo_already_exists">Some photo already exists</string>
+	<string name="these_photos_already_exists">These photos already exists</string>
+	<string name="this_photo_already_exists">This photo already exists</string>
 	
 	<!-- Notification -->
 	<string name="notification_location_loading">Loading location…</string>

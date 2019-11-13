@@ -1,9 +1,11 @@
 package org.rfcx.ranger.adapter
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +25,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	}
 	
 	var onReportImageAdapterClickListener: OnReportImageAdapterClickListener? = null
-	
-	
+	private var context: Context? = null
 	private var imagesSource = arrayListOf<BaseListItem>()
 	
 	fun setImages(reportImages: List<ReportImage>) {
@@ -47,15 +48,39 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	}
 	
 	fun addImages(uris: List<String>) {
+		val allLocalPathImages = getNewAttachImage() + uris
+		val groups = allLocalPathImages.groupBy { it }
+		val localPathImages = groups.filter { it.value.size < 2 }
+		val localPathImagesForAdd = ArrayList<String>()
+		
+		localPathImages.forEach {
+			if (it.key !in getNewAttachImage()) {
+				localPathImagesForAdd.add(it.key)
+			}
+		}
+		
 		if (getItem(imagesSource.count() - 1) is AddImageItem) {
 			imagesSource.removeAt(imagesSource.count() - 1)
 		}
 		var index: Int = if (imagesSource.isEmpty()) 0 else {
 			imagesSource[imagesSource.count() - 1].getItemId() + 1
 		}
-		uris.forEach {
-			imagesSource.add(LocalImageItem(index, it, true))
-			index++
+		
+		if (localPathImagesForAdd.isNotEmpty()) {
+			if (localPathImagesForAdd.size != uris.size){
+				Toast.makeText(context, R.string.some_photo_already_exists, Toast.LENGTH_SHORT).show()
+			}
+			
+			localPathImagesForAdd.forEach {
+				imagesSource.add(LocalImageItem(index, it, true))
+				index++
+			}
+		} else {
+			if (uris.size > 1) {
+				Toast.makeText(context, R.string.these_photos_already_exists, Toast.LENGTH_SHORT).show()
+			} else {
+				Toast.makeText(context, R.string.this_photo_already_exists, Toast.LENGTH_SHORT).show()
+			}
 		}
 		
 		if (imagesSource.count() < MAX_IMAGE_SIZE) {
@@ -89,7 +114,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	else imagesSource.count()
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-		
+		context = parent.context
 		return when (viewType) {
 			VIEW_TYPE_IMAGE -> {
 				val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_report_image, parent, false)
