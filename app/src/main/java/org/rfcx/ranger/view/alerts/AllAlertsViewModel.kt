@@ -11,11 +11,11 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
-import org.rfcx.ranger.entity.event.EventsResponse
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
+import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
-import org.rfcx.ranger.service.DownLoadEventWorker
 import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
@@ -30,6 +30,8 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	val groupByGuardians: LiveData<Result<GroupByGuardiansResponse>> get() = _groupByGuardians
 	
 	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
+	val alertsFromDatabase = MutableLiveData<List<Event>>()
+	
 	val alerts: LiveData<Result<List<EventItem>>>
 		get() = _alerts
 	private var _alertsList: List<EventItem> = listOf()
@@ -50,6 +52,8 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		get() = currentOffset >= (PAGE_LIMITS * totalPage)
 	
 	init {
+		_alerts.value = Result.Loading
+		alertsFromDatabase.value = eventDb.getEvents()
 		currentOffset = 0
 	}
 	
@@ -64,53 +68,13 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	
 	fun loadEvents() {
 		isLoadMore = false
-		_alerts.value = Result.Loading
 		
-		getEventsCache()
-		
-		val group = context.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, 0)
-		
-		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				DownLoadEventWorker.enqueue()
-				handleOnSuccess(t)
-			}
-			
-			override fun onError(e: Throwable) {
-				_alerts.value = e.getResultError()
-				
-			}
-		}, requestFactory)
-	}
-	
-	private fun handleOnSuccess(t: EventsResponse) {
-		this.totalItemCount = t.total
-		
-		val events = t.events?.map { it.toEvent() } ?: listOf()
-		events.forEach { event ->
-			val state = eventDb.getEventState(event.id)
-			state?.let {
-				val result = when (it) {
-					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-					else -> EventItem.State.NONE
-				}
-				items.add(EventItem(event, result))
-			} ?: run {
-				items.add(EventItem(event, EventItem.State.NONE))
-			}
-		}
-		_alertsList = items
-		_alerts.value = Result.Success(items)
+		val cacheEvents = eventDb.getEvents()
+		this.totalItemCount = cacheEvents.size
+		handleAlerts(cacheEvents)
 	}
 	
 	fun loadMoreEvents() {
-		
 		if (isLastPage) {
 			return
 		}
@@ -129,11 +93,11 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
 			override fun onSuccess(t: EventsResponse) {
 				totalItemCount = t.total
-
-				handleOnSuccess(t)
+				val events = t.events?.map { it.toEvent() } ?: listOf()
+				handleAlerts(events)
 				isLoadMore = false
 			}
-
+			
 			override fun onError(e: Throwable) {
 				currentOffset -= PAGE_LIMITS
 				_alerts.value = e.getResultError()
@@ -142,9 +106,8 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		}, requestFactory)
 	}
 	
-	private fun getEventsCache() {
-		val cacheEvents = eventDb.getEvents()
-		val items: List<EventItem> = cacheEvents.map { event ->
+	private fun handleAlerts(events: List<Event>) {
+		events.forEach { event ->
 			val state = eventDb.getEventState(event.id)
 			state?.let {
 				val result = when (it) {
@@ -152,16 +115,13 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 					else -> EventItem.State.NONE
 				}
-				EventItem(event, result)
+				items.add(EventItem(event, result))
 			} ?: run {
-				(EventItem(event, EventItem.State.NONE))
+				items.add(EventItem(event, EventItem.State.NONE))
 			}
 		}
-		if (items.isNotEmpty()) {
-			_alertsList = items
-			_alerts.value = Result.Success(items)
-		}
-		
+		_alertsList = items
+		_alerts.value = Result.Success(items)
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
@@ -178,7 +138,7 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	}
 	
 	// Loading more update list
-	fun getItemsWithLoading() : List<BaseItem> {
+	fun getItemsWithLoading(): List<BaseItem> {
 		val listResult = arrayListOf<BaseItem>()
 		items.forEach { item -> listResult.add(item.copy()) }
 		listResult.add(LoadingItem())

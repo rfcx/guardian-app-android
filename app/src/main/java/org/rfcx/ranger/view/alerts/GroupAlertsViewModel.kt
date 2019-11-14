@@ -25,13 +25,15 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private val _status = MutableLiveData<Result<List<EventGroup>>>()
 	val status: LiveData<Result<List<EventGroup>>> get() = _status
 	
+	val alerts = MutableLiveData<List<Event>>()
 	private var _eventGroups: List<EventGroup> = listOf()
 	
-	fun loadGuardianGroups() {
+	init {
 		_status.value = Result.Loading
-		
-		updateEvents(eventDb.getEvents(), listOf())
-		
+		alerts.value = eventDb.getEvents()
+	}
+	
+	fun loadGuardianGroups() {
 		val group = context.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
@@ -39,45 +41,23 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}
 		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>() {
 			override fun onSuccess(t: GroupByGuardiansResponse) {
-				getEvents(t.guardians)
+				updateEvents(eventDb.getEvents(), t.guardians)
 			}
 			
 			override fun onError(e: Throwable) {
 				_status.value = e.getResultError()
 			}
-			
 		}, group)
 	}
 	
-	private fun getEvents(guardians: List<Guardian>) {
-		val group = context.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
-		val guardianGroup = ArrayList<String>()
-		guardianGroup.add(group)
-		val requestFactory = EventsRequestFactory(guardianGroup, "measured_at", "DESC", LIMITS, 0)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				val events = t.events?.map { it.toEvent() } ?: listOf()
-				updateEvents(events, guardians, true)
-			}
-			
-			override fun onError(e: Throwable) {
-				_status.value = e.getResultError()
-			}
-		}, requestFactory)
-	}
-
-	private fun updateEvents(events: List<Event>, guardians: List<Guardian>, complete: Boolean = false) {
+	private fun updateEvents(events: List<Event>, guardians: List<Guardian>) {
 		val guardianGuidsWithEvents = events.map { it.guardianId }.toSet()
 		val guardiansWithoutEvents = guardians.filter { !guardianGuidsWithEvents.contains(it.guid) }.map { EventGroup(listOf(), it.guid, it.name) }
 		val guardiansWithEvents = groupGuardian(events)
 		
 		_eventGroups = guardiansWithEvents + guardiansWithoutEvents
 		
-		if (complete || events.isNotEmpty()) {
+		if (events.isNotEmpty()) {
 			_status.value = Result.Success(_eventGroups)
 		}
 	}
@@ -100,11 +80,6 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			groupAlerts.add(EventGroup(eventList, guid, shortname))
 		}
 		return groupAlerts
-	}
-	
-	
-	companion object {
-		const val LIMITS = 50
 	}
 }
 

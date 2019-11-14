@@ -35,6 +35,12 @@ class GroupAlertsFragment : BaseFragment() {
 			adapter = groupByGuardianAdapter
 		}
 		
+		viewModel.alerts.observe(this, Observer { alerts ->
+			if(alerts.isNotEmpty()){
+				viewModel.loadGuardianGroups()
+			}
+		})
+		
 		viewModel.status.observe(this, Observer { it ->
 			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
@@ -47,8 +53,6 @@ class GroupAlertsFragment : BaseFragment() {
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
-		
-		viewModel.loadGuardianGroups()
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(eventsList: List<Event>, name: String) {

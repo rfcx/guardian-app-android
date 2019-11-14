@@ -38,9 +38,13 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 		super.onViewCreated(view, savedInstanceState)
 		setupAlertList()
 		setupSwipeRefresh()
+		allAlertsViewModel.alertsFromDatabase.observe(this, Observer {
+			if(it.isNotEmpty()){
+				allAlertsViewModel.loadEvents()
+			}
+		})
 		
 		allAlertsViewModel.alerts.observe(this, Observer { it ->
-			
 			it.success({ items ->
 				alertsSwipeRefresh.isRefreshing = false
 				if (items.isEmpty()) {
@@ -61,8 +65,6 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 				}
 			})
 		})
-		
-		allAlertsViewModel.loadEvents()
 	}
 	
 	private fun setupSwipeRefresh() {
