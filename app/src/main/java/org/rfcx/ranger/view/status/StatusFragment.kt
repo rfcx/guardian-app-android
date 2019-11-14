@@ -47,6 +47,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 		super.onResume()
 		analytics?.trackScreen(Screen.STATUS)
 		statusViewModel.resumed()
+		statusAdapter.update()
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

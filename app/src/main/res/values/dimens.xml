@@ -12,6 +12,7 @@
 	<dimen name="circle_of_number_unreview">20dp</dimen>
 	<dimen name="drop_down_size">15dp</dimen>
 	<dimen name="view_list_alerts">52dp</dimen>
+	<dimen name="view_alert_show_load">100dp</dimen>
 	
 	<!-- Text size -->
 	<dimen name="text_xlarge">22sp</dimen>

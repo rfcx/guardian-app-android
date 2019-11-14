@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.status.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -21,6 +22,7 @@ import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_EMPTY
+import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_LOADING
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_SET_GUARDIAN_GROUP
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_PROFILE
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_REPORT_EMPTY
@@ -83,7 +85,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		update()
 	}
 	
-	private fun update() {
+	fun update() {
 		val newList = arrayListOf<StatusItemBase>()
 		profile?.let {
 			newList.add(it)
@@ -105,10 +107,13 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		}
 		
 		if (alerts != null && alerts!!.isEmpty()) {
-			if (context?.getGuardianGroup() == null) {     // not have group
-				newList.add(AlertSetGuardianGroupItem())
-			} else if (alerts!!.size == 0) {                 // have group but not have alert
-				newList.add(AlertEmpty())
+			when {
+				context?.getGuardianGroup() == null -> // not have group
+					newList.add(AlertSetGuardianGroupItem())
+				context.getGuardianGroup() !== null ->
+					newList.add(AlertLoading())
+				alerts!!.size == 0 -> // have group but not have alert
+					newList.add(AlertEmpty())
 			}
 		}
 		
@@ -159,6 +164,10 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			ITEM_ALERT_EMPTY -> {
 				val itemView = inflater.inflate(R.layout.item_alert_empty, parent, false)
 				EmptyAlertView(itemView)
+			}
+			ITEM_ALERT_LOADING -> {
+				val itemView = inflater.inflate(R.layout.item_alert_loading, parent, false)
+				AlertLoadingView(itemView)
 			}
 			ITEM_ALERT_SET_GUARDIAN_GROUP -> {
 				val itemView = DataBindingUtil.inflate<ItemAlertSetGuardianGroupBinding>(inflater, R.layout.item_alert_set_guardian_group, parent, false)
@@ -284,6 +293,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			const val ITEM_SEE_MORE = 7
 			const val ITEM_ALERT_EMPTY = 8
 			const val ITEM_ALERT_SET_GUARDIAN_GROUP = 9
+			const val ITEM_ALERT_LOADING = 10
 			
 		}
 	}
@@ -414,4 +424,12 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		override fun getViewType(): Int = ITEM_ALERT_SET_GUARDIAN_GROUP
 	}
+	
+	class AlertLoading : StatusItemBase {
+		override fun getViewType(): Int = ITEM_ALERT_LOADING
+		
+		override fun getId(): Int = -9
+	}
 }
+
+class AlertLoadingView(itemView: View) : RecyclerView.ViewHolder(itemView)
