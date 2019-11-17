@@ -8,7 +8,9 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.site.SiteResponse
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.logout
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData) : ViewModel() {
 	
@@ -37,10 +39,19 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		}
 	}
 	
-	
 	fun onReceiving(enable: Boolean) {
 		profileData.updateReceivingNotification(enable)
 		notificationReceiving.value = enable
+		// set messaging
+		if (enable) {
+			CloudMessaging.subscribeIfRequired(context)
+		} else {
+			CloudMessaging.unsubscribe(context)
+		}
+	}
+	
+	fun onLogout() {
+		context.logout()
 	}
 	
 	fun onTracingStatusChange() {

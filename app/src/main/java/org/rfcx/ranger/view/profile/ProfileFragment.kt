@@ -9,12 +9,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.databinding.FragmentProfileBinding
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Screen
@@ -29,14 +31,20 @@ class ProfileFragment : BaseFragment() {
 	private val profileViewModel: ProfileViewModel by viewModel()
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
+	private lateinit var viewDataBinding: FragmentProfileBinding
+	
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as MainActivityEventListener)
 	}
 	
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_profile, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?): View? {
+		viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_profile,
+				container, false)
+		viewDataBinding.lifecycleOwner = this
+		return viewDataBinding.root
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -52,50 +60,16 @@ class ProfileFragment : BaseFragment() {
 	@SuppressLint("DefaultLocale")
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		
-		setupButtonListeners()
-		
-		profileViewModel.locationTracking.observe(this, Observer {
-			Log.e("BaseActivity", "$it")
-			locationTrackingSwitch.isChecked = it
-		})
-		
-		profileViewModel.notificationReceiving.observe(this, Observer { on ->
-			notificationReceiveSwitch.isChecked = on
-			// TODO this should be in the VM
-			// TODO need to protect again continuous presses
-			context?.let {
-				if (on) {
-					CloudMessaging.subscribeIfRequired(it)
-				} else {
-					CloudMessaging.unsubscribe(it)
-				}
-			}
-		})
-		
-		profileViewModel.userSite.observe(this, Observer {
-			userLocationTextView.text = it
-		})
-		
-		profileViewModel.appVersion.observe(this, Observer {
-			versionTextView.text = it
-		})
-		
-		profileViewModel.userName.observe(this, Observer {
-			userNameTextView.text = it.capitalize()
-		})
-		
-		profileViewModel.guardianGroup.observe(this, Observer {
-			siteNameTextView.text = it
-		})
+		viewDataBinding.viewModel = profileViewModel
+		setOnClickButton()
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
 		})
 	}
 	
-	private fun setupButtonListeners() {
-		locationTrackingSwitchLayout.setOnClickListener {
+	private fun setOnClickButton() {
+		viewDataBinding.onClickLocationTracking = View.OnClickListener {
 			if (locationTrackingSwitch.isChecked) {
 				// off location tracking
 				locationTrackingViewModel.requireDisableLocationTracking()
@@ -104,20 +78,13 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		notificationReceiveSwitch.setOnCheckedChangeListener { _, isChecked ->
-			profileViewModel.onReceiving(isChecked)
-		}
-		
-		guardianGroupLayout.setOnClickListener {
+		// TODO: track analytics in view model?
+		viewDataBinding.onClickGuardingGroup = View.OnClickListener {
 			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
 			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
-		logoutTextView.setOnClickListener {
-			context.logout()
-		}
-		
-		rateAppTextView.setOnClickListener {
+		viewDataBinding.onClickRatingApp = View.OnClickListener  {
 			analytics?.trackRateAppEvent()
 			val appPackageName = activity?.packageName
 			try {
@@ -131,7 +98,7 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		feedbackTextView.setOnClickListener {
+		viewDataBinding.onClickFeedback = View.OnClickListener  {
 			analytics?.trackFeedbackStartEvent()
 			val intent = Intent(activity, FeedbackActivity::class.java)
 			startActivityForResult(intent, REQUEST_CODE)
