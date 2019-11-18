@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.crashlytics.android.core.CrashlyticsCore
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Audio
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.getSiteName
@@ -59,7 +58,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 						"InvitationCodeFragment").commit()
 	}
 	
-
+	
 	override fun openSetUserNameFragmentFragment() {
 		supportFragmentManager.beginTransaction()
 				.replace(loginContainer.id, SetUserNameFragment(),
@@ -68,9 +67,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
-		if (intent?.hasExtra("id") == true) {
+		if (intent?.hasExtra("event_guid") == true) {
 			eventFromNotification = Event().apply {
-				id = intent.getStringExtra("id") ?: ""
+				id = intent.getStringExtra("event_guid") ?: ""
 				audioId = intent.getStringExtra("audio_guid") ?: ""
 				try {
 					longitude = intent.getStringExtra("longitude")?.toDouble()
