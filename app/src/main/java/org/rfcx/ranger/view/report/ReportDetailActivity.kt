@@ -9,6 +9,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,6 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.databinding.ActivityReportDetailBinding
+import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.widget.SoundRecordState
@@ -38,7 +41,6 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	private var player: MediaPlayer? = null
 	private val analytics by lazy { Analytics(this) }
 	
-	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
 			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
@@ -50,7 +52,8 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_report_detail)
+		val binding: ActivityReportDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_report_detail)
+		binding.context = this
 		setupToolbar()
 		setupAudioPlaying()
 		setupImageRecycler()
@@ -63,22 +66,11 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				reportTypeTextView.text = getString(R.string.other)
 				reportTypeImageView.setImageResource(R.drawable.ic_pin_huge)
 			} else {
-				reportTypeTextView.text = report.getLocalisedValue(this)
-				reportTypeImageView.setImageResource(report.getImageResource())
-				dateTimeTextView.text = report.getReportedAtRelative(this)
-				whenTextView.text = report.getLocalisedAgeEstimate(this)
-				if (report.notes.isNullOrEmpty()) {
-					noteTextView.visibility = View.GONE
-					noteTitle.visibility = View.GONE
-				} else {
-					noteTextView.text = report.notes
-					noteTextView.visibility = View.VISIBLE
-					noteTitle.visibility = View.VISIBLE
-				}
+				binding.report = DetailReport(report, this)
 				this.location = LatLng(report.latitude, report.longitude)
 				setMapPin()
 				
-				setAudio(report.audioLocation)
+				setAudio(report.audioLocation, binding)
 			}
 		})
 		
@@ -94,6 +86,21 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			val horizontalPadding = 16.px
 			mapView?.setPadding(horizontalPadding, 0, horizontalPadding, 0)
 			runOnUiThread { setMapPin() }
+		}
+	}
+	
+	data class DetailReport(val report: Report, val context: Context) {
+		fun getImage(): Int = report.getImageResource()
+		fun getReportValue(): String = report.getLocalisedValue(context)
+		fun getDateTime(): String = report.getReportedAtRelative(context)
+		fun getWhenText(): String = report.getLocalisedAgeEstimate(context)
+		fun getNote(): String? = report.notes
+		fun getVisibility(): Int {
+			return if (report.notes.isNullOrEmpty()) {
+				View.GONE
+			} else {
+				View.VISIBLE
+			}
 		}
 	}
 	
@@ -130,15 +137,30 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				location, 15f))
 	}
 	
-	private fun setAudio(path: String?) {
+	private fun setAudio(path: String?, binding: ActivityReportDetailBinding) {
 		audioFile = path?.let { File(it) }
+		binding.audio = Audio(audioFile)
+		
 		if (audioFile?.exists() == true) {
 			audioProgressView.state = SoundRecordState.STOP_PLAYING
-			audioProgressView.visibility = View.VISIBLE
-			audioNoneLabel.visibility = View.GONE
-		} else {
-			audioProgressView.visibility = View.GONE
-			audioNoneLabel.visibility = View.VISIBLE
+		}
+	}
+	
+	data class Audio(val audioFile: File?) {
+		fun getVisibility(): Int {
+			return if (audioFile?.exists() == true) {
+				View.VISIBLE
+			} else {
+				View.GONE
+			}
+		}
+		
+		fun getNoneLabelVisibility(): Int {
+			return if (audioFile?.exists() == true) {
+				View.GONE
+			} else {
+				View.VISIBLE
+			}
 		}
 	}
 	
@@ -196,7 +218,6 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			setHasFixedSize(true)
 		}
 	}
-	
 	
 	companion object {
 		private const val EXTRA_REPORT_ID = "extra_report_id"
