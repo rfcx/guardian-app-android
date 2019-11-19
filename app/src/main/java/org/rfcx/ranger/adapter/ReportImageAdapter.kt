@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_report_image.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
+import org.rfcx.ranger.databinding.AdapterReportImageBinding
+import org.rfcx.ranger.databinding.ItemAddImageReportBinding
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.GlideApp
@@ -67,7 +70,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		}
 		
 		if (localPathImagesForAdd.isNotEmpty()) {
-			if (localPathImagesForAdd.size != uris.size){
+			if (localPathImagesForAdd.size != uris.size) {
 				Toast.makeText(context, R.string.some_photo_already_exists, Toast.LENGTH_SHORT).show()
 			}
 			
@@ -115,14 +118,15 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		context = parent.context
+		val inflater = LayoutInflater.from(parent.context)
 		return when (viewType) {
 			VIEW_TYPE_IMAGE -> {
-				val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_report_image, parent, false)
-				ReportImageAdapterViewHolder(view, onReportImageAdapterClickListener)
+				val itemView = DataBindingUtil.inflate<AdapterReportImageBinding>(inflater, R.layout.adapter_report_image, parent, false)
+				ReportImageAdapterViewHolder(itemView, onReportImageAdapterClickListener)
 			}
 			VIEW_TYPE_ADD_IMAGE -> {
-				val view = LayoutInflater.from(parent.context).inflate(R.layout.item_add_image_report, parent, false)
-				AddImageViewHolder(view, onReportImageAdapterClickListener)
+				val itemView = DataBindingUtil.inflate<ItemAddImageReportBinding>(inflater, R.layout.item_add_image_report, parent, false)
+				AddImageViewHolder(itemView, onReportImageAdapterClickListener)
 			}
 			else -> throw IllegalAccessException("View type $viewType not found.")
 		}
@@ -147,30 +151,27 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		}
 	}
 	
-	inner class ReportImageAdapterViewHolder(itemView: View, private val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(itemView) {
-		
+	inner class ReportImageAdapterViewHolder(val binding: AdapterReportImageBinding, private val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(binding.root) {
 		fun bind(imagePath: String, canDelete: Boolean) {
-			GlideApp.with(itemView.imageReport)
+			GlideApp.with(binding.imageReport)
 					.load(imagePath)
 					.placeholder(R.drawable.bg_grey_light)
 					.error(R.drawable.bg_grey_light)
 					.into(itemView.imageReport)
-			
-			itemView.deleteImageButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
-			itemView.deleteImageButton.setOnClickListener {
+			binding.onClickDeleteImageButton = View.OnClickListener {
 				onReportImageAdapterClickListener?.onDeleteImageClick(adapterPosition, imagePath)
 			}
+			binding.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
 		}
 	}
 	
-	inner class AddImageViewHolder(itemView: View, onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(itemView) {
+	inner class AddImageViewHolder(val binding: ItemAddImageReportBinding, onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(binding.root) {
 		init {
-			itemView.setOnClickListener {
+			binding.setOnClickListener = View.OnClickListener {
 				onReportImageAdapterClickListener?.onAddImageClick()
 			}
 		}
 	}
-	
 	
 	class ReportImageAdapterDiffUtil : DiffUtil.ItemCallback<BaseListItem>() {
 		override fun areItemsTheSame(oldItem: BaseListItem, newItem: BaseListItem): Boolean {
