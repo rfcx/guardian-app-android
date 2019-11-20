@@ -113,9 +113,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
-			alertFromSiteTextView.text = it.site.capitalize()
 			guardianNameTextView.text = it.guardianName.capitalize()
-			timeTextView.text = "• ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1)}}"
+			timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1)}}"
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {

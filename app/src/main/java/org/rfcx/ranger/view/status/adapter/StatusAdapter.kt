@@ -395,8 +395,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		fun getGuardianShortname(): String = alert.guardianName
 		fun getImage(): Int = alert.value.toEventIcon()
-		fun getSite(): String = alert.site
-		fun getTime(context: Context): String = "• ${alert.beginsAt.toTimeSinceStringAlternative(context)}"
+		fun getTime(context: Context): String = "  ${alert.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 		
 		fun getIcon(): Int = when (state) {
 			State.CONFIRM -> R.drawable.ic_check

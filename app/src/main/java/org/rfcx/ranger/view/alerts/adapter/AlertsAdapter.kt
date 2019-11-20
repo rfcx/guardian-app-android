@@ -72,7 +72,6 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 	inner class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val tvTitle = itemView.tvAlertTitle
 		private val iconAlert = itemView.ivAlertIcon
-		private val tvFrom = itemView.tvAlertFromSite
 		private val tvTimeAgo = itemView.tvAlertTimeAgo
 		private val ivStatusRead = itemView.ivStatusRead
 		private val ivReviewed = itemView.ivReviewed
@@ -81,8 +80,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		fun bind(item: EventItem) {
 			tvTitle.text = item.event.guardianName
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
-			tvFrom.text = item.event.site.capitalize()
-			tvTimeAgo.text = "• ${item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)}"
+			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)}"
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					ivReviewed.setImageResource(R.drawable.ic_check)

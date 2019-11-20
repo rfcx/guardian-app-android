@@ -90,22 +90,13 @@
 				android:orientation="horizontal">
 				
 				<androidx.appcompat.widget.AppCompatTextView
-					android:id="@+id/alertFromSiteTextView"
-					style="@style/RangerText.Label.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:drawableStart="@drawable/ic_place"
-					android:gravity="center_vertical"
-					tools:text="@string/default_site_label" />
-				
-				<androidx.appcompat.widget.AppCompatTextView
 					android:id="@+id/timeTextView"
 					style="@style/RangerText.Caption"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_xsmall"
-					tools:text="2 days ago" />
+					android:drawableStart="@drawable/ic_clock_circular_outline"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					tools:text="  2 days ago" />
 			</LinearLayout>
 		</LinearLayout>
 	

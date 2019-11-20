@@ -1,8 +1,13 @@
 package org.rfcx.ranger.util
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.text.format.DateUtils
+import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.util.Log
 import org.joda.time.Duration
 import org.rfcx.ranger.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 private const val SECOND: Long = 1000
@@ -49,6 +54,21 @@ fun Date.toTimeSinceStringAlternative(context: Context): String {
 		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
 	} else {
 		this.toFullDateTimeString()
+	}
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
+	val niceDateStr = DateUtils.getRelativeTimeSpanString(this.time, Calendar.getInstance().timeInMillis, MINUTE_IN_MILLIS)
+	
+	return if (niceDateStr.toString() == "0 minutes ago") {
+		context.getString(R.string.report_time_second)
+	} else if (niceDateStr.toString() == "Yesterday") {
+		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
+	} else if (!niceDateStr.toString().contains("ago")){
+		this.toFullDateTimeString()
+	}else{
+		niceDateStr.toString()
 	}
 }
 
