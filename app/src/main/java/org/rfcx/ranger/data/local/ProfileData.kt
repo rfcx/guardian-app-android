@@ -27,7 +27,7 @@ class ProfileData(private val preferences: Preferences) {
 	
 	fun getUserNickname(): String {
 		val nickname = preferences.getString(Preferences.NICKNAME)
-		return if (nickname != null && nickname.isNotEmpty()) nickname else "${getSiteName()} Ranger"
+		return if (nickname != null && nickname.isNotEmpty()) nickname.capitalize() else "${getSiteName()} Ranger"
 	}
 	
 	fun getTracking(): Boolean {

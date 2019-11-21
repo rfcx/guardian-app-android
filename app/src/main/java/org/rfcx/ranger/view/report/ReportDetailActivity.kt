@@ -102,6 +102,14 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				View.VISIBLE
 			}
 		}
+		
+		fun getNoneLabelVisibility(): Int {
+			return if (report.notes.isNullOrEmpty()) {
+				View.VISIBLE
+			} else {
+				View.GONE
+			}
+		}
 	}
 	
 	override fun onResume() {
