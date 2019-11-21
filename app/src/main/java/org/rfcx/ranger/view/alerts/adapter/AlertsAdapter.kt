@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toEventIcon
-import org.rfcx.ranger.util.toTimeSinceStringAlternative
+import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
 
 class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, RecyclerView.ViewHolder>(AlertsDiffUtil()) {
@@ -80,7 +79,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		fun bind(item: EventItem) {
 			tvTitle.text = item.event.guardianName
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
-			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternative(itemView.context)}"
+			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)}"
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					ivReviewed.setImageResource(R.drawable.ic_check)

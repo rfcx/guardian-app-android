@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
-import android.util.Log
 import org.joda.time.Duration
 import org.rfcx.ranger.R
-import java.text.SimpleDateFormat
 import java.util.*
 
 private const val SECOND: Long = 1000
@@ -65,9 +63,11 @@ fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
 		context.getString(R.string.report_time_second)
 	} else if (niceDateStr.toString() == "Yesterday") {
 		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
-	} else if (!niceDateStr.toString().contains("ago")){
+	} else if (!niceDateStr.toString().contains("ago")) {
 		this.toFullDateTimeString()
-	}else{
+	} else if (niceDateStr.toString().contains("days ago")) {
+		this.toFullDateTimeString()
+	} else {
 		niceDateStr.toString()
 	}
 }

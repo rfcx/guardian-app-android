@@ -20,7 +20,10 @@ import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.GlideApp
+import org.rfcx.ranger.util.getIconRes
+import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
@@ -114,7 +117,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.event.observe(this, Observer {
 			eventIconImageView.setImageResource(it.getIconRes())
 			guardianNameTextView.text = it.guardianName.capitalize()
-			timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternative(it1)}}"
+			timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {
