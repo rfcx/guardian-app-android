@@ -200,30 +200,16 @@
 				
 				<TextView
 					android:id="@+id/noteTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="@dimen/margin_padding_normal"
-					android:layout_marginBottom="@dimen/margin_padding_normal"
-					android:text="@{report.note}"
-					android:visibility="@{report.visibility}"
-					app:layout_constraintEnd_toEndOf="@id/rightGutter"
-					app:layout_constraintStart_toStartOf="@id/leftGutter"
-					app:layout_constraintTop_toBottomOf="@id/noteTitle"
-					tools:text="Note here" />
-				
-				<TextView
-					android:id="@+id/noteNoneLabel"
 					style="@style/RangerText.Label"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_padding_normal"
 					android:layout_marginBottom="@dimen/margin_padding_normal"
-					android:text="@string/common_none"
-					android:visibility="@{report.noneLabelVisibility}"
+					android:text="@{report.note}"
 					app:layout_constraintEnd_toEndOf="@id/rightGutter"
 					app:layout_constraintStart_toStartOf="@id/leftGutter"
-					app:layout_constraintTop_toBottomOf="@id/noteTitle" />
+					app:layout_constraintTop_toBottomOf="@id/noteTitle"
+					tools:text="Note here" />
 				
 				<TextView
 					android:id="@+id/audioTitle"
@@ -235,7 +221,7 @@
 					android:text="@string/audio_notes"
 					app:layout_constraintEnd_toEndOf="@id/rightGutter"
 					app:layout_constraintStart_toStartOf="@id/leftGutter"
-					app:layout_constraintTop_toBottomOf="@+id/noteNoneLabel" />
+					app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
 				
 				<org.rfcx.ranger.widget.SoundRecordProgressView
 					android:id="@+id/audioProgressView"

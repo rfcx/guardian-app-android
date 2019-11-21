@@ -94,20 +94,11 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		fun getReportValue(): String = report.getLocalisedValue(context)
 		fun getDateTime(): String = report.getReportedAtRelative(context)
 		fun getWhenText(): String = report.getLocalisedAgeEstimate(context)
-		fun getNote(): String? = report.notes
-		fun getVisibility(): Int {
-			return if (report.notes.isNullOrEmpty()) {
-				View.GONE
+		fun getNote(): String {
+			return if (report.notes.isNullOrEmpty()){
+				"None"
 			} else {
-				View.VISIBLE
-			}
-		}
-		
-		fun getNoneLabelVisibility(): Int {
-			return if (report.notes.isNullOrEmpty()) {
-				View.VISIBLE
-			} else {
-				View.GONE
+				report.notes.toString()
 			}
 		}
 	}

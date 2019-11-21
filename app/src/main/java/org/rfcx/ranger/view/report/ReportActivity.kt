@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -40,6 +41,8 @@ import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
 import java.util.*
+import org.rfcx.ranger.databinding.ActivityReportBinding
+
 
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
@@ -53,6 +56,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
 	private val analytics by lazy { Analytics(this) }
+	
+	private lateinit var binding: ActivityReportBinding
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -92,7 +97,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_report)
+		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
+		
 		
 		bindActionbar()
 		setupMap()
@@ -101,7 +107,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		setupRecordSoundProgressView()
 		setupImageRecycler()
 		
-		reportButton.setOnClickListener {
+		binding.onClickReportButton = View.OnClickListener {
 			analytics.trackSubmitTheReportEvent()
 			submitReport()
 		}

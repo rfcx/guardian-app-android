@@ -1,200 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/rootView"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 	
-	<androidx.appcompat.widget.Toolbar
-		android:id="@+id/toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="?android:actionBarSize"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-		tools:title="← Report" />
-	
-	<ScrollView
-		android:id="@+id/scrollView"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/toolbar">
+	<data>
 		
-		<androidx.constraintlayout.widget.ConstraintLayout
+		<variable
+			name="view"
+			type="android.view.View" />
+		
+		<variable
+			name="onClickReportButton"
+			type="android.view.View.OnClickListener" />
+	
+	</data>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/rootView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		
+		<androidx.appcompat.widget.Toolbar
+			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingBottom="@dimen/margin_padding_normal">
-			
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineHorizontal25"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				app:layout_constraintGuide_percent="0.25" />
-			
-			<fragment
-				android:id="@+id/mapView"
-				android:name="com.google.android.gms.maps.SupportMapFragment"
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				tools:layout_editor_absoluteX="0dp"
-				tools:layout_editor_absoluteY="0dp" />
-			
-			<TextView
-				android:id="@+id/reportTypeTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:text="@string/report_what_label"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/mapView" />
-			
-			<org.rfcx.ranger.widget.WhatView
-				android:id="@+id/whatView"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
-			
-			<TextView
-				android:id="@+id/reportWhenTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:text="@string/report_when_label"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/whatView" />
-			
-			<org.rfcx.ranger.widget.WhenView
-				android:id="@+id/whenView"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
-			
-			<TextView
-				android:id="@+id/attachImageTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
-				android:text="@string/report_attach_image_label"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/whenView" />
-			
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/attachImageRecycler"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:clipToPadding="false"
-				android:paddingStart="@dimen/margin_padding_small"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:visibility="visible"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/attachImageTextView"
-				tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
-				tools:listitem="@layout/adapter_report_image"
-				tools:orientation="horizontal" />
-			
-			<TextView
-				android:id="@+id/noteTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
-				android:text="@string/report_note_label"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
-			
-			<androidx.appcompat.widget.AppCompatEditText
-				android:id="@+id/noteEditText"
-				style="@style/RangerEditText.Background"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:hint="@string/report_note_hint"
-				android:inputType="textMultiLine"
-				android:paddingStart="@dimen/margin_padding_xsmall"
-				android:paddingTop="0dp"
-				android:paddingEnd="@dimen/margin_padding_xsmall"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
-			
-			<TextView
-				android:id="@+id/reportRecordTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
-				android:text="@string/report_record_label"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/noteEditText" />
-			
-			<org.rfcx.ranger.widget.SoundRecordProgressView
-				android:id="@+id/soundRecordProgressView"
-				android:layout_width="0dp"
-				android:layout_height="48dp"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
-			
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/reportButton"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_margin="@dimen/margin_padding_normal"
-				android:background="@drawable/bg_report_submit_button"
-				android:enabled="false"
-				android:paddingStart="48dp"
-				android:paddingEnd="48dp"
-				android:text="@string/report_submit_button_label"
-				android:textColor="@android:color/white"
-				android:textStyle="bold"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/soundRecordProgressView" />
+			android:layout_height="?android:actionBarSize"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+			tools:title="← Report" />
 		
-		</androidx.constraintlayout.widget.ConstraintLayout>
+		<ScrollView
+			android:id="@+id/scrollView"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/toolbar">
+			
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingBottom="@dimen/margin_padding_normal">
+				
+				<androidx.constraintlayout.widget.Guideline
+					android:id="@+id/guidelineHorizontal25"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					app:layout_constraintGuide_percent="0.25" />
+				
+				<fragment
+					android:id="@+id/mapView"
+					android:name="com.google.android.gms.maps.SupportMapFragment"
+					android:layout_width="match_parent"
+					android:layout_height="0dp"
+					app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					tools:layout_editor_absoluteX="0dp"
+					tools:layout_editor_absoluteY="0dp" />
+				
+				<TextView
+					android:id="@+id/reportTypeTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_normal"
+					android:text="@string/report_what_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/mapView" />
+				
+				<org.rfcx.ranger.widget.WhatView
+					android:id="@+id/whatView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
+				
+				<TextView
+					android:id="@+id/reportWhenTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_normal"
+					android:text="@string/report_when_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/whatView" />
+				
+				<org.rfcx.ranger.widget.WhenView
+					android:id="@+id/whenView"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_small"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
+				
+				<TextView
+					android:id="@+id/attachImageTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_xlarge"
+					android:text="@string/report_attach_image_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/whenView" />
+				
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/attachImageRecycler"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/margin_padding_normal"
+					android:clipToPadding="false"
+					android:paddingStart="@dimen/margin_padding_small"
+					android:paddingEnd="@dimen/margin_padding_small"
+					android:visibility="visible"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/attachImageTextView"
+					tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+					tools:listitem="@layout/adapter_report_image"
+					tools:orientation="horizontal" />
+				
+				<TextView
+					android:id="@+id/noteTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_xlarge"
+					android:text="@string/report_note_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
+				
+				<androidx.appcompat.widget.AppCompatEditText
+					android:id="@+id/noteEditText"
+					style="@style/RangerEditText.Background"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:hint="@string/report_note_hint"
+					android:inputType="textMultiLine"
+					android:paddingStart="@dimen/margin_padding_xsmall"
+					android:paddingTop="0dp"
+					android:paddingEnd="@dimen/margin_padding_xsmall"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
+				
+				<TextView
+					android:id="@+id/reportRecordTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_xlarge"
+					android:text="@string/report_record_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/noteEditText" />
+				
+				<org.rfcx.ranger.widget.SoundRecordProgressView
+					android:id="@+id/soundRecordProgressView"
+					android:layout_width="0dp"
+					android:layout_height="48dp"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+				
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/reportButton"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="@dimen/margin_padding_normal"
+					android:background="@drawable/bg_report_submit_button"
+					android:enabled="false"
+					android:paddingStart="48dp"
+					android:paddingEnd="48dp"
+					android:text="@string/report_submit_button_label"
+					android:textColor="@android:color/white"
+					android:textStyle="bold"
+					android:onClick="@{onClickReportButton}"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/soundRecordProgressView" />
+			
+			</androidx.constraintlayout.widget.ConstraintLayout>
+		
+		</ScrollView>
+		
+		<TextView
+			android:id="@+id/locationStatusTextView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="@dimen/margin_padding_small"
+			android:textColor="@color/text_white"
+			android:textSize="@dimen/text_medium"
+			android:visibility="invisible"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/toolbar"
+			tools:text="Location status text view. \n Here" />
 	
-	</ScrollView>
-	
-	<TextView
-		android:id="@+id/locationStatusTextView"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:padding="@dimen/margin_padding_small"
-		android:textColor="@color/text_white"
-		android:textSize="@dimen/text_medium"
-		android:visibility="invisible"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/toolbar"
-		tools:text="Location status text view. \n Here" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
