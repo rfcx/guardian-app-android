@@ -7,9 +7,7 @@ import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
-import org.rfcx.ranger.data.local.EventDb
-import org.rfcx.ranger.data.local.ProfileData
-import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.data.local.*
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
@@ -74,7 +72,7 @@ object DataModule {
 		single { SendNameUseCase(get(), get(), get()) }
 		
 		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
-		single { GroupByGuardiansUseCase(get(), get(), get()) }
+		single { GroupByGuardiansUseCase(get(), get(), get(), get(), get()) }
 		
 		single { SiteRepositoryImp(get()) } bind SiteRepository::class
 		single { GetSiteNameUseCase(get(), get(), get()) }
@@ -94,6 +92,8 @@ object DataModule {
 	
 	val localModule = module {
 		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
+		factory { CachedEndpointDb(get()) }
+		factory { GuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
 		factory { ReportImageDb(get()) }

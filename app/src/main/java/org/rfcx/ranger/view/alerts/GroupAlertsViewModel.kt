@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
@@ -20,7 +21,8 @@ import org.rfcx.ranger.entity.guardian.Guardian
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 
-class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb, private val groupByGuardiansUseCase: GroupByGuardiansUseCase, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
+class GroupAlertsViewModel(private val context: Context, private val eventDb: EventDb,
+                           private val groupByGuardiansUseCase: GroupByGuardiansUseCase) : ViewModel() {
 	
 	private val _status = MutableLiveData<Result<List<EventGroup>>>()
 	val status: LiveData<Result<List<EventGroup>>> get() = _status
@@ -39,9 +41,9 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
-		groupByGuardiansUseCase.execute(object : DisposableSingleObserver<GroupByGuardiansResponse>() {
-			override fun onSuccess(t: GroupByGuardiansResponse) {
-				updateEvents(eventDb.getEvents(), t.guardians)
+		groupByGuardiansUseCase.execute(object : ResponseCallback<List<Guardian>> {
+			override fun onSuccess(t: List<Guardian>) {
+				updateEvents(eventDb.getEvents(), t)
 			}
 			
 			override fun onError(e: Throwable) {
