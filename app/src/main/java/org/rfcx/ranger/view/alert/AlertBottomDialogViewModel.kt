@@ -16,10 +16,11 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
-import org.rfcx.ranger.entity.event.ClassificationBody
 import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
@@ -27,11 +28,14 @@ import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.getResultError
 import java.io.File
 
-class AlertBottomDialogViewModel(private val context: Context, private val classifiedUseCase: GetClassifiedUseCase,
-                                 private val reviewEventUseCase: ReviewEventUseCase) : ViewModel() {
-	
-	private var _event: MutableLiveData<Event> = MutableLiveData()
-	val event: LiveData<Event>
+class AlertBottomDialogViewModel(private val context: Context,
+                                 private val reviewEventUseCase: ReviewEventUseCase,
+                                 private val eventDb: EventDb,
+                                 private val getEventUseCase: GetEventUseCase) : ViewModel() {
+	var eventResult: Event? = null
+		private set
+	private var _event: MutableLiveData<Result<Event>> = MutableLiveData()
+	val event: LiveData<Result<Event>>
 		get() = _event
 	
 	private var _spectrogramImage: MutableLiveData<String> = MutableLiveData()
@@ -64,11 +68,37 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 		get() = _reviewEvent
 	
 	init {
-		_playerState.value = Player.STATE_IDLE
+		_playerState.value = Player.STATE_BUFFERING
 	}
 	
-	fun setEvent(event: Event) {
-		this._event.value = event
+	fun setEventGuid(eventGuID: String) {
+		getEventDetail(eventGuID)
+	}
+	
+	private fun getEventDetail(eventGuID: String) {
+		_event.value = Result.Loading
+		val eventCache = eventDb.getEvent(eventGuID)
+		if (eventCache != null)
+			setEvent(eventCache)
+		else
+			getRemoteDetail(eventGuID)
+	}
+	
+	private fun getRemoteDetail(eventGuID: String) {
+		getEventUseCase.execute(object : DisposableSingleObserver<Event>() {
+			override fun onSuccess(t: Event) {
+				setEvent(t)
+			}
+			
+			override fun onError(e: Throwable) {
+				_event.value = Result.Error(e)
+			}
+		}, eventGuID)
+	}
+	
+	private fun setEvent(event: Event) {
+		this.eventResult = event
+		this._event.value = Result.Success(event)
 		setSpectrogramImage()
 		this._eventState.value = EventState.NONE
 		initPlayer(event.audioOpusUrl)
@@ -76,7 +106,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	}
 	
 	private fun setSpectrogramImage() {
-		_spectrogramImage.value = "https://assets.rfcx.org/audio/${event.value?.audioId}.png?width=512&height=512" +
+		_spectrogramImage.value = "https://assets.rfcx.org/audio/${eventResult?.audioId}.png?width=512&height=512" +
 				"&inline=1"
 	}
 	
@@ -86,7 +116,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			exoPlayer.seekTo(0)
 			exoPlayer.playWhenReady = true
 		} else {
-			event.value?.audioOpusUrl?.let { initPlayer(it) }
+			eventResult?.audioOpusUrl?.let { initPlayer(it) }
 		}
 	}
 	
@@ -108,7 +138,7 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			audioUrl
 		}
 		
-		val audioFile = File(context.cacheDir, "${event.value?.audioId}.opus")
+		val audioFile = File(context.cacheDir, "${eventResult?.audioId}.opus")
 		val mediaSource = if (audioFile.exists()) {
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
@@ -163,9 +193,9 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 	}
 	
 	private fun getClassifiedCation() {
-		if (event.value?.windows != null && event.value?.windows?.isNotEmpty() == true) {
+		if (eventResult?.windows != null && eventResult?.windows?.isNotEmpty() == true) {
 			// if even has windows no need to call api
-			val eventWindows = event.value?.windows?.filter {
+			val eventWindows = eventResult?.windows?.filter {
 				it.confidence > confidenceValue
 			}
 			
@@ -178,24 +208,11 @@ class AlertBottomDialogViewModel(private val context: Context, private val class
 			
 			return
 		}
-		// TODO can delete it
-//		event.value?.let {
-//			classifiedUseCase.execute(object : DisposableSingleObserver<List<Confidence>>() {
-//				override fun onSuccess(t: List<Confidence>) {
-//					_classifiedCation.value = Result.Success(t)
-//				}
-//
-//				override fun onError(e: Throwable) {
-//					_classifiedCation.value = e.getResultError()
-//					e.printStackTrace()
-//				}
-//			}, ClassificationBody(audioGuids = it.audioId, value = it.value, annotatorGuid = it.aiGuid))
-//		}
 	}
 	
 	fun reviewEvent(confirm: Boolean) {
 		_reviewEvent.value = Result.Loading
-		event.value?.let {
+		eventResult?.let {
 			val requests = ReviewEventFactory(it.id, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
 			reviewEventUseCase.execute(object : DisposableSingleObserver<Unit>() {
 				override fun onSuccess(t: Unit) {

@@ -1,6 +1,7 @@
 package org.rfcx.ranger.data.remote.service.rest
 
 import io.reactivex.Single
+import org.rfcx.ranger.entity.event.EventResponse
 import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventRequest
 import org.rfcx.ranger.entity.event.ReviewEventResponse
@@ -28,4 +29,10 @@ interface EventService {
 	fun reviewEvent(@Path("id") eventGuID: String,
 	                @Body body: ReviewEventRequest)
 			: Call<ReviewEventResponse>
+	
+	@GET("v2/events/{event_guid}")
+	fun getEvent(@Path("event_guid") eventGuID: String)
+			: Single<EventResponse>
+	
+	
 }

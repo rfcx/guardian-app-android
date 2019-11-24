@@ -20,10 +20,7 @@ import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.GlideApp
-import org.rfcx.ranger.util.getIconRes
-import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
@@ -56,7 +53,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		if (event == null) {
 			dismissDialog()
 		} else {
-			alertViewModel.setEvent(event)
+			alertViewModel.setEventGuid(event.id)
 		}
 	}
 	
@@ -82,12 +79,15 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			alertViewModel.replaySound()
 		}
 		
+	}
+	
+	private fun initReviewButtonClick(){
 		negativeButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(false)
-				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "0") }
+				alertViewModel.eventResult?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "0") }
 			} else {
-				alertViewModel.event.value?.let { it1 -> analytics?.trackFollowAlertEvent(it1.id, it1.value.toString()) }
+				alertViewModel.eventResult?.let { it1 -> analytics?.trackFollowAlertEvent(it1.id, it1.value.toString()) }
 				dismissDialog()
 			}
 		}
@@ -95,9 +95,9 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		positiveButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(true)
-				alertViewModel.event.value?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "1") }
+				alertViewModel.eventResult?.let { it1 -> analytics?.trackReviewAlertEvent(it1.id, it1.value.toString(), "1") }
 			} else {
-				alertViewModel.event.value?.let { event ->
+				alertViewModel.eventResult?.let { event ->
 					val gmmIntentUri = Uri.parse("geo:<${event.latitude}>,<${event.longitude}>" +
 							"?q=<${event.latitude}>,<${event.longitude}>")
 					val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -114,10 +114,18 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
 	@SuppressLint("SetTextI18n", "DefaultLocale")
 	private fun observeEventView() {
-		alertViewModel.event.observe(this, Observer {
-			eventIconImageView.setImageResource(it.getIconRes())
-			guardianNameTextView.text = it.guardianName.capitalize()
-			timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
+		alertViewModel.event.observe(this, Observer { it ->
+			it.success({
+				eventIconImageView.setImageResource(it.getIconRes())
+				guardianNameTextView.text = it.guardianName.capitalize()
+				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
+				initReviewButtonClick()
+			}, {
+				context?.handleError(it)
+				dismissDialog()
+			}, {
+				loadingSoundProgressBar.visibility = View.VISIBLE
+			})
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {

@@ -55,7 +55,7 @@ object AlertNotification {
 	private fun createEvent(data: Map<String, String>): Event {
 		val event = Event()
 		event.apply {
-			id = data["id"] ?: ""
+			id = data["event_guid"] ?: ""
 			audioId = data["audio_guid"] ?: ""
 			try {
 				longitude = data["longitude"]?.toDouble()

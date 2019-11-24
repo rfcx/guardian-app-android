@@ -13,6 +13,7 @@ import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
+import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.data.remote.domain.classified.ClassifiedRepositoryImp
@@ -60,6 +61,7 @@ object DataModule {
 		single { GetEventsUseCase(get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		single { GetMoreEventInGuardian(get(), get(), get()) }
+		single { GetEventUseCase(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
 		single { GetGuardianGroups(get(), get(), get()) }
@@ -93,7 +95,7 @@ object DataModule {
 	}
 	
 	val localModule = module {
-		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
+		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
 		factory { ReportImageDb(get()) }

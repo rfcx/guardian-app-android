@@ -7,8 +7,16 @@ import org.rfcx.ranger.entity.event.EventReview
 
 class EventDb(val realm: Realm) {
 	
+	
 	fun getEvents(): List<Event> {
 		return realm.copyFromRealm(realm.where(Event::class.java).findAllAsync())
+	}
+	
+	fun getEvent(eventGuid: String): Event? {
+		val event = realm.where(Event::class.java)
+				.equalTo("id", eventGuid)
+				.findFirst()
+		return if (event != null) realm.copyFromRealm(event) else null
 	}
 	
 	fun getCount(): Long {
@@ -55,9 +63,9 @@ class EventDb(val realm: Realm) {
 	fun getEventState(eventGuid: String): String? {
 		var reviewVal: String? = null
 		Realm.getDefaultInstance().use {
-				reviewVal = it.where(EventReview::class.java)
-						.equalTo("eventGuId", eventGuid).findFirst()
-						?.review
+			reviewVal = it.where(EventReview::class.java)
+					.equalTo("eventGuId", eventGuid).findFirst()
+					?.review
 		}
 		return reviewVal
 	}

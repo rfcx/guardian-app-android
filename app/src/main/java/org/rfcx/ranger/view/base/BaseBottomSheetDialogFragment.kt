@@ -19,7 +19,7 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 		loadingDialog?.dismissDialog()
 	}
 	
-	protected fun dismissDialog() {
+	fun dismissDialog() {
 		try {
 			dismiss()
 		} catch (e: Exception) {

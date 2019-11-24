@@ -71,7 +71,7 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
-			currentShowing.dismissAllowingStateLoss()
+			currentShowing.dismissDialog()
 		}
 		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
