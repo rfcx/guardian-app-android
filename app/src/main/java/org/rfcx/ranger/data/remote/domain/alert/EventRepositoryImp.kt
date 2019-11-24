@@ -20,14 +20,7 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 	
 	override fun getRemoteEventList(requestFactory: EventsRequestFactory): Single<EventsResponse> {
 		return eventService.getEvents(requestFactory.limit, requestFactory.offset, requestFactory.order,
-				requestFactory.dir, requestFactory.guardianInGroup ).map { it ->
-			
-			if (requestFactory.offset == 0) {
-				val events = it.events?.map { it.toEvent() } ?: listOf()
-				eventDb.saveEvents(events)
-			}
-			it
-		}
+				requestFactory.dir, requestFactory.guardianInGroup )
 	}
 	
 	override fun reviewEvent(requestFactory: ReviewEventFactory): Single<Unit> {

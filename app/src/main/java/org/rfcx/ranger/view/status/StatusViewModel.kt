@@ -16,6 +16,7 @@ import org.rfcx.ranger.adapter.SyncInfo
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
@@ -296,10 +297,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		val group = context.getGuardianGroup() ?: return
 		
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", 3, 0)
-		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				val events = t.events?.map { it.toEvent() } ?: listOf()
-				updateRecentAlerts(events)
+		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
+			override fun onSuccess(t: Pair<List<Event>, Int>) {
+				updateRecentAlerts(t.first)
 			}
 			
 			override fun onError(e: Throwable) {

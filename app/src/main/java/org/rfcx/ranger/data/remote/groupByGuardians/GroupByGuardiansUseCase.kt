@@ -25,7 +25,7 @@ class GroupByGuardiansUseCase(private val groupByGuardiansRepository: GroupByGua
 	            params: String, force: Boolean = false) {
 		val endpoint = "guardians/group/${params}"
 		
-		val result = cachedEndpointDb.hasCachedEndpoint(endpoint, 3)
+		val result = cachedEndpointDb.hasCachedEndpoint(endpoint, 3.0)
 		if (!force && result) {
 			Log.d("GuardiansUseCase", "$endpoint -> used cached!")
 			val guardians = guardianDb.getGuardians() ?: listOf()

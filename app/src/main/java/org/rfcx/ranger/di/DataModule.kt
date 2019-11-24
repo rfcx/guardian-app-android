@@ -55,7 +55,7 @@ object DataModule {
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
 		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
-		single { GetEventsUseCase(get(), get(), get()) }
+		single { GetEventsUseCase(get(), get(), get(), get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		single { GetMoreEventInGuardian(get(), get(), get()) }
 		

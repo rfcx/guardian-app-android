@@ -8,7 +8,7 @@ import org.rfcx.ranger.entity.event.EventReview
 class EventDb(val realm: Realm) {
 	
 	fun getEvents(): List<Event> {
-		return realm.copyFromRealm(realm.where(Event::class.java).findAllAsync())
+		return realm.copyFromRealm(realm.where(Event::class.java).findAll())
 	}
 	
 	fun getCount(): Long {
@@ -42,7 +42,6 @@ class EventDb(val realm: Realm) {
 	fun saveEvents(events: List<Event>) {
 		Realm.getDefaultInstance().use { it ->
 			it.executeTransaction {
-				it.delete(Event::class.java)
 				it.insertOrUpdate(events)
 			}
 		}

@@ -19,9 +19,9 @@ class CachedEndpointDb(val realm: Realm) {
 				"$endpoint*").findAll().deleteAllFromRealm()
 	}
 	
-	fun hasCachedEndpoint(endpoint: String, hours: Int = 1): Boolean {
+	fun hasCachedEndpoint(endpoint: String, hours: Double = 1.0): Boolean {
 		val cachedEndpoint = realm.where(CachedEndpoint::class.java).equalTo(
 				CachedEndpoint.FIELD_ENDPOINT, endpoint).findFirst() ?: return false
-		return cachedEndpoint.updatedAt.after(Date(System.currentTimeMillis() - hours * 60 * 60 * 1000))
+		return cachedEndpoint.updatedAt.after(Date(System.currentTimeMillis() - (hours * 60 * 60 * 1000).toInt()))
 	}
 }

@@ -4,11 +4,15 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
@@ -16,22 +20,20 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
-import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getGuardianGroup
-import org.rfcx.ranger.util.getResultError
-import org.rfcx.ranger.util.replace
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 import kotlin.math.ceil
 
-class AllAlertsViewModel(private val context: Context, private val eventsUserCase: GetEventsUseCase,
-                         private val eventDb: EventDb) : ViewModel() {
+class AllAlertsViewModel(private val context: Context,
+                         private val eventsUserCase: GetEventsUseCase,
+                         private val eventDb: EventDb,
+                         private val pref: Preferences) : ViewModel() {
 	
 	private val _groupByGuardians = MutableLiveData<Result<GroupByGuardiansResponse>>()
 	val groupByGuardians: LiveData<Result<GroupByGuardiansResponse>> get() = _groupByGuardians
 	
+	private lateinit var eventLiveData: LiveData<List<Event>>
 	private var _alerts = MutableLiveData<Result<List<EventItem>>>()
-	val alertsFromDatabase = MutableLiveData<List<Event>>()
-	
 	val alerts: LiveData<Result<List<EventItem>>>
 		get() = _alerts
 	private var _alertsList: List<EventItem> = listOf()
@@ -42,19 +44,23 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 	private var totalItemCount: Int = 0
 	private val totalPage: Int
 		get() = ceil(totalItemCount.toFloat() / PAGE_LIMITS).toInt()
-	private val nextOffset: Int
-		get() {
-			currentOffset += PAGE_LIMITS
-			return currentOffset
-		}
 	var isLoadMore = false
 	val isLastPage: Boolean
 		get() = currentOffset >= (PAGE_LIMITS * totalPage)
 	
+	private val eventObserve = Observer<List<Event>> {
+		if (it.isNotEmpty()) {
+			val cacheEvents = eventDb.getEvents()
+			this.currentOffset = cacheEvents.size
+			handleAlerts(events = cacheEvents)
+		}
+	}
+	
 	init {
 		_alerts.value = Result.Loading
-		alertsFromDatabase.value = eventDb.getEvents()
 		currentOffset = 0
+		totalItemCount = pref.getInt(Preferences.EVENT_ONLINE_TOTAL, 0)
+		fetchEvents()
 	}
 	
 	fun refresh() {
@@ -66,20 +72,15 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 		loadEvents()
 	}
 	
-	fun loadEvents() {
-		isLoadMore = false
-		
-		val cacheEvents = eventDb.getEvents()
-		this.totalItemCount = cacheEvents.size
-		handleAlerts(cacheEvents)
+	private fun fetchEvents() {
+		eventLiveData = Transformations.map<RealmResults<Event>,
+				List<Event>>(eventDb.getAllResultsAsync().asLiveData()) {
+			it
+		}
+		eventLiveData.observeForever(eventObserve)
 	}
 	
-	fun loadMoreEvents() {
-		if (isLastPage) {
-			return
-		}
-		
-		isLoadMore = true
+	private fun loadEvents() {
 		_alerts.value = Result.Loading
 		
 		val group = context.getGuardianGroup()
@@ -88,13 +89,12 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", PAGE_LIMITS, nextOffset)
+		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC",
+				PAGE_LIMITS, currentOffset)
 		
-		eventsUserCase.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				totalItemCount = t.total
-				val events = t.events?.map { it.toEvent() } ?: listOf()
-				handleAlerts(events)
+		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
+			override fun onSuccess(t: Pair<List<Event>, Int>) {
+				totalItemCount = t.second
 				isLoadMore = false
 			}
 			
@@ -103,10 +103,20 @@ class AllAlertsViewModel(private val context: Context, private val eventsUserCas
 				_alerts.value = e.getResultError()
 				isLoadMore = false
 			}
-		}, requestFactory)
+		}, requestFactory, true)
+	}
+	
+	fun loadMoreEvents() {
+		if (isLastPage) {
+			return
+		}
+		
+		isLoadMore = true
+		loadEvents()
 	}
 	
 	private fun handleAlerts(events: List<Event>) {
+		this.items.clear()
 		events.forEach { event ->
 			val state = eventDb.getEventState(event.id)
 			state?.let {
