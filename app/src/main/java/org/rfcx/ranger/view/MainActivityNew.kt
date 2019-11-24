@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
@@ -263,7 +262,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	private fun observeEventFromNotification() {
-		mainViewModel.eventFromNotification.observe(this, Observer {
+		mainViewModel.eventGuIdFromNotification.observe(this, Observer {
 			
 			val alertsFragment =
 					supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
@@ -281,9 +280,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
-		if (intent?.hasExtra(AlertNotification.ALERT_NOTI_INTENT) == true) {
-			val event = intent.getParcelableExtra<Event>(AlertNotification.ALERT_NOTI_INTENT)
-			mainViewModel.eventFromNotification.value = event
+		if (intent?.hasExtra(AlertNotification.ALERT_ID_NOTI_INTENT) == true) {
+			val eventGuId: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
+			mainViewModel.eventGuIdFromNotification.value = eventGuId
 		}
 	}
 	
@@ -314,10 +313,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	companion object {
-		fun startActivity(context: Context, event: Event?) {
+		fun startActivity(context: Context, eventGuId: String?) {
 			val intent = Intent(context, MainActivityNew::class.java)
-			if (event != null)
-				intent.putExtra(AlertNotification.ALERT_NOTI_INTENT, event)
+			if (eventGuId != null)
+				intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
 			context.startActivity(intent)
 		}
 	}

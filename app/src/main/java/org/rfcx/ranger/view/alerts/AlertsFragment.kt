@@ -10,7 +10,6 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
@@ -49,27 +48,27 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	}
 	
 	private fun getEventExtra() {
-		if (arguments?.containsKey(AlertNotification.ALERT_NOTI_INTENT) == true) {
+		if (arguments?.containsKey(AlertNotification.ALERT_ID_NOTI_INTENT) == true) {
 			arguments?.let {
-				alertViewModel.eventFromNotification.value =
-						it.getParcelable<Event>(AlertNotification.ALERT_NOTI_INTENT)
+				alertViewModel.eventIdFromNotification.value =
+						it.getString(AlertNotification.ALERT_ID_NOTI_INTENT)
 			}
 		}
 	}
 	
 	private fun observeAlert() {
-		alertViewModel.eventFromNotification.observe(this, Observer {
+		alertViewModel.eventIdFromNotification.observe(this, Observer {
 			showDetail(it)
 		})
 	}
 	
-	override fun showDetail(event: Event) {
+	override fun showDetail(eventGuID: String) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissDialog()
 		}
-		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	
@@ -135,11 +134,11 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	
 	companion object {
 		const val tag = "AlertsFragment"
-		fun newInstance(event: Event?): AlertsFragment {
+		fun newInstance(eventGuId: String?): AlertsFragment {
 			return AlertsFragment().apply {
-				if (event != null) {
+				if (eventGuId != null) {
 					arguments = Bundle().apply {
-						putParcelable(AlertNotification.ALERT_NOTI_INTENT, event)
+						putString(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
 					}
 				}
 			}

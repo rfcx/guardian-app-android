@@ -31,9 +31,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
-		getEventFromIntentIfHave(intent)
+		val eventGuId = getEventFromIntentIfHave(intent)
 		if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty() && getUserNickname().substring(0, 1) != "+") {
-			MainActivityNew.startActivity(this@LoginActivityNew, eventFromNotification)
+			MainActivityNew.startActivity(this@LoginActivityNew, eventGuId)
 			finish()
 		} else {
 			supportFragmentManager.beginTransaction()
@@ -48,7 +48,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	override fun openMain() {
-		MainActivityNew.startActivity(this@LoginActivityNew, eventFromNotification)
+		MainActivityNew.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
 		finish()
 	}
 	
@@ -66,27 +66,11 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 	}
 	
-	private fun getEventFromIntentIfHave(intent: Intent?) {
+	private fun getEventFromIntentIfHave(intent: Intent?) :String? {
 		if (intent?.hasExtra("event_guid") == true) {
-			eventFromNotification = Event().apply {
-				id = intent.getStringExtra("event_guid") ?: ""
-				audioId = intent.getStringExtra("audio_guid") ?: ""
-				try {
-					longitude = intent.getStringExtra("longitude")?.toDouble()
-					latitude = intent.getStringExtra("latitude")?.toDouble()
-				} catch (e: Exception) {
-					e.printStackTrace()
-					CrashlyticsCore.getInstance().logException(e)
-				}
-				
-				value = intent.getStringExtra("value") ?: ""
-				guardianId = intent.getStringExtra("guardian_guid") ?: ""
-				guardianName = intent.getStringExtra("guardian_shortname") ?: ""
-				type = intent.getStringExtra("type")
-				site = intent.getStringExtra("site_guid") ?: ""
-				audioOpusUrl = "https://assets.rfcx.org/audio/$audioId.opus"
-			}
+			return intent.getStringExtra("event_guid")
 		}
+		return null
 	}
 }
 

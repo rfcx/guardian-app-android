@@ -64,16 +64,16 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 	}
 	
 	override fun onClickedAlert(event: Event) {
-		showDetail(event)
+		showDetail(event.id)
 	}
 	
-	override fun showDetail(event: Event) {
+	override fun showDetail(eventGuID: String) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissDialog()
 		}
-		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	

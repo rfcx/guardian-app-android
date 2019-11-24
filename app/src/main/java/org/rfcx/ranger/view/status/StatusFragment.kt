@@ -105,16 +105,16 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 	}
 	
 	override fun onClickedAlertItem(alert: Event) {
-		showDetail(alert)
+		showDetail(alert.id)
 	}
 	
-	override fun showDetail(event: Event) {
+	override fun showDetail(eventGuID: String) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissDialog()
 		}
-		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	

@@ -12,7 +12,6 @@ import androidx.core.app.NotificationCompat
 import com.crashlytics.android.core.CrashlyticsCore
 import com.google.firebase.messaging.RemoteMessage
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Audio
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.MainActivityNew
 
@@ -25,7 +24,7 @@ object AlertNotification {
 		
 		val intent = Intent(context, MainActivityNew::class.java)
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-		intent.putExtra(ALERT_NOTI_INTENT, createEvent(data))
+		intent.putExtra(ALERT_ID_NOTI_INTENT, getEventGuId(data))
 		
 		val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 		val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -52,31 +51,12 @@ object AlertNotification {
 		return notificationBuilder.build()
 	}
 	
-	private fun createEvent(data: Map<String, String>): Event {
-		val event = Event()
-		event.apply {
-			id = data["event_guid"] ?: ""
-			audioId = data["audio_guid"] ?: ""
-			try {
-				longitude = data["longitude"]?.toDouble()
-				latitude = data["latitude"]?.toDouble()
-			} catch (e: Exception) {
-				e.printStackTrace()
-				CrashlyticsCore.getInstance().logException(e)
-			}
-			
-			value = data["value"] ?: ""
-			guardianId = data["guardian_guid"] ?: ""
-			guardianName = data["guardian_shortname"] ?: ""
-			type = data["type"]
-			site = data["site_guid"] ?: ""
-			audioOpusUrl =  "https://assets.rfcx.org/audio/$audioId.opus"
-		}
-		return event
+	private fun getEventGuId(data: Map<String, String>): String? {
+		return data["event_guid"]
 	}
 	
 	private const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"
 	private const val NOTIFICATION_CHANNEL_NAME = "Alert"
 	private const val NOTIFICATION_CHANNEL_DESCRIPTION = "Alert"
-	const val ALERT_NOTI_INTENT = "ALERT_NOTI_INTENT"
+	const val ALERT_ID_NOTI_INTENT = "ALERT_ID_NOTI_INTENT"
 }

@@ -76,7 +76,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	}
 	
 	override fun onClickedAlert(event: Event) {
-		(parentFragment as AlertListener?)?.showDetail(event)
+		(parentFragment as AlertListener?)?.showDetail(event.id)
 		event.value.let { analytics?.trackSeeAlertDetailEvent(event.id, it) }
 	}
 	

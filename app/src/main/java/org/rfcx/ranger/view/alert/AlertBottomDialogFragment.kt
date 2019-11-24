@@ -49,11 +49,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
-		val event: Event? = arguments?.getParcelable(BUNDLE_EVENT)
-		if (event == null) {
+		val eventGuId: String? = arguments?.getString(BUNDLE_EVENT)
+		if (eventGuId == null) {
 			dismissDialog()
 		} else {
-			alertViewModel.setEventGuid(event.id)
+			alertViewModel.setEventGuid(eventGuId)
 		}
 	}
 	
@@ -81,7 +81,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		
 	}
 	
-	private fun initReviewButtonClick(){
+	private fun initReviewButtonClick() {
 		negativeButton.setOnClickListener {
 			if (alertViewModel.eventState.value == EventState.NONE) {
 				alertViewModel.reviewEvent(false)
@@ -259,10 +259,10 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		const val tag = "AlertBottomDialogFragment"
 		private const val BUNDLE_EVENT = "BUNDLE_EVENT"
 		
-		fun newInstance(event: Event): AlertBottomDialogFragment {
+		fun newInstance(eventGuId: String): AlertBottomDialogFragment {
 			return AlertBottomDialogFragment().apply {
 				arguments = Bundle().apply {
-					putParcelable(BUNDLE_EVENT, event)
+					putString(BUNDLE_EVENT, eventGuId)
 				}
 			}
 		}

@@ -21,7 +21,7 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	
 	var hasGuardianGroup = profileData.hasGuardianGroup()
 	
-	val eventFromNotification = MutableLiveData<Event>()
+	val eventIdFromNotification = MutableLiveData<String>()
 	
 	private val _observeGuardianGroup = MutableLiveData<Boolean>()
 	val observeGuardianGroup: LiveData<Boolean> = _observeGuardianGroup
