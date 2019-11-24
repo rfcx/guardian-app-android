@@ -11,7 +11,6 @@ import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
-import org.rfcx.ranger.repo.ApiCallback
 
 class GroupByGuardiansUseCase(private val groupByGuardiansRepository: GroupByGuardiansRepository,
                               private val cachedEndpointDb: CachedEndpointDb,
@@ -31,6 +30,7 @@ class GroupByGuardiansUseCase(private val groupByGuardiansRepository: GroupByGua
 			Log.d("GuardiansUseCase", "$endpoint -> used cached!")
 			val guardians = guardianDb.getGuardians() ?: listOf()
 			callback.onSuccess(guardians)
+			return
 		}
 		
 		Log.d("GuardiansUseCase", "call $endpoint")
