@@ -99,17 +99,26 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		super.onCreate(savedInstanceState)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
 		
-		
 		bindActionbar()
 		setupMap()
-		setupWhatView()
-		setupWhenView()
 		setupRecordSoundProgressView()
 		setupImageRecycler()
 		
 		binding.onClickReportButton = View.OnClickListener {
 			analytics.trackSubmitTheReportEvent()
 			submitReport()
+		}
+		
+		binding.onWhatViewChangedListener = object : WhatView.OnWhatViewChangedListener {
+			override fun onViewChange(event: String?) {
+				validateForm()
+			}
+		}
+		
+		binding.onWhenViewStateChangedListener = object : WhenView.OnWhenViewStateChangedListener {
+			override fun onStateChange(state: Report.AgeEstimate) {
+				validateForm()
+			}
 		}
 	}
 	
@@ -221,22 +230,6 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		googleMap?.uiSettings?.isScrollGesturesEnabled = false
 		locationStatusTextView.visibility = View.GONE
 		validateForm()
-	}
-	
-	private fun setupWhatView() {
-		whatView.onWhatViewChangedListener = object : WhatView.OnWhatViewChangedListener {
-			override fun onViewChange(event: String?) {
-				validateForm()
-			}
-		}
-	}
-	
-	private fun setupWhenView() {
-		whenView.onWhenViewStateChangedListener = object : WhenView.OnWhenViewStateChangedListener {
-			override fun onStateChange(state: Report.AgeEstimate) {
-				validateForm()
-			}
-		}
 	}
 	
 	private fun setupRecordSoundProgressView() {
