@@ -28,13 +28,14 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:contentDescription="@string/app_name"
-				android:src="@drawable/ic_location_24dp_grey" />
+				android:src="@drawable/ic_point" />
 			
 			<TextView
 				android:id="@+id/locationTextView"
 				style="@style/RangerText.Label.Secondary"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_small"
 				android:text="@{profile.location}"
 				tools:text="Tembe" />
 		
