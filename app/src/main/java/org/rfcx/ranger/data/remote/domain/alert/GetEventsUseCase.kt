@@ -35,9 +35,8 @@ class GetEventsUseCase(private val eventRepository: EventRepository,
 				"&order=${params.order}&dir=${params.dir}" +
 				"&limit=${params.limit}&offset=${params.offset}"
 		val isStarting = params.offset == 0 && params.limit == AllAlertsViewModel.PAGE_LIMITS
-		val result = cachedEndpointDb.hasCachedEndpoint(endpoint, 0.05) // 3 min
 		
-		if (!force && result) {
+		if (!force && cachedEndpointDb.hasCachedEndpoint(endpoint, 0.05)) {
 			Log.d("GetEventsUseCase", "$endpoint -> used cached!")
 			val events = eventDb.getEvents()
 			var total = pref.getInt(Preferences.EVENT_ONLINE_TOTAL, 0)

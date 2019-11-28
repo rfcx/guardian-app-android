@@ -78,7 +78,6 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		// TODO: track analytics in view model?
 		viewDataBinding.onClickGuardingGroup = View.OnClickListener {
 			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
 			context?.let { GuardianGroupActivity.startActivity(it) }

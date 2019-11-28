@@ -40,6 +40,7 @@ import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
@@ -60,7 +61,7 @@ object DataModule {
 		single { GetMoreEventInGuardian(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
-		single { GetGuardianGroups(get(), get(), get()) }
+		single { GetGuardianGroups(get(), get(), get(), get(), get()) }
 		
 		single { InviteCodeRepositoryImp(get()) } bind InviteCodeRepository::class
 		single { SendInviteCodeUseCase(get(), get(), get()) }
@@ -94,6 +95,7 @@ object DataModule {
 		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
 		factory { CachedEndpointDb(get()) }
 		factory { GuardianDb(get()) }
+		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
 		factory { ReportImageDb(get()) }

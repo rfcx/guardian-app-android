@@ -2,12 +2,7 @@ package org.rfcx.ranger.view.alerts
 
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import io.reactivex.observers.DisposableSingleObserver
+import androidx.lifecycle.*
 import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
@@ -17,7 +12,6 @@ import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.util.*
