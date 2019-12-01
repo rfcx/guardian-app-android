@@ -143,7 +143,12 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 		@SuppressLint("DefaultLocale")
 		fun bind(eventList: MutableList<EventItem>, num: Int, position: Int, stateSeeOlder: StateSeeOlder) {
 			eventList[0].event.value.toEventIcon().let { iconAlert.setImageResource(it) }
-			numOfEventsNotOpen.text = num.toString()
+			
+			numOfEventsNotOpen.text = if (num > 999) {
+				"999+"
+			} else {
+				num.toString()
+			}
 			
 			when {
 				updateList -> {

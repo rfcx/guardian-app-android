@@ -59,24 +59,30 @@
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/circleImageView"
-		android:layout_width="@dimen/circle_of_number_unreview"
-		android:layout_height="@dimen/circle_of_number_unreview"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginTop="12dp"
 		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:layout_marginBottom="12dp"
 		android:src="@drawable/bg_circle_green"
 		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintDimensionRatio="1:1"
 		app:layout_constraintEnd_toEndOf="@id/view"
 		app:layout_constraintTop_toTopOf="@id/view" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/numOfEventsNotOpen"
 		style="@style/RangerText.Caption"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:gravity="center"
+		android:maxLines="1"
 		android:textColor="@color/text_white"
 		app:layout_constraintBottom_toBottomOf="@id/circleImageView"
 		app:layout_constraintEnd_toEndOf="@id/circleImageView"
 		app:layout_constraintStart_toStartOf="@id/circleImageView"
-		app:layout_constraintTop_toTopOf="@id/circleImageView" />
+		app:layout_constraintTop_toTopOf="@id/circleImageView"
+		tools:text="999" />
 	
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/guardianListDetailRecycler"
