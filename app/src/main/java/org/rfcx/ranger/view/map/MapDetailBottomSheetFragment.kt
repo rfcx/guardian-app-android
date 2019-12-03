@@ -11,6 +11,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.limitDecimalPlace
 import org.rfcx.ranger.util.toTimeSinceString
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.report.ReportDetailActivity
@@ -42,9 +43,10 @@ class MapDetailBottomSheetFragment : BaseFragment() {
 	private fun bindReportView(report: Report?) {
 		if (report != null) {
 			reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
-			val latLon = StringBuilder(report.latitude.toString())
+			val latLon = StringBuilder(
+					report.longitude.limitDecimalPlace(6))
 					.append(",")
-					.append(report.longitude)
+					.append(report.longitude.limitDecimalPlace(6))
 			reportLocationTextView.text = latLon
 			reportTypeImageView.setImageResource(
 					when (report.value) {
