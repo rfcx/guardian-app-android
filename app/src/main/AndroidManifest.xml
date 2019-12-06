@@ -37,6 +37,11 @@
 		</provider>
 		
 		<activity
+			android:name=".view.alerts.GuardianListDetail.AlertDetailByType.AlertDetailByTypeActivity"
+			android:screenOrientation="portrait"></activity>
+		
+		
+		<activity
 			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait"></activity>
 		

@@ -9,6 +9,7 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertViewModel
 import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 import org.rfcx.ranger.view.alerts.GroupAlertsViewModel
+import org.rfcx.ranger.view.alerts.GuardianListDetail.AlertDetailByType.AlertDetailByTypeViewModel
 import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailViewModel
 import org.rfcx.ranger.view.login.InvitationCodeViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
@@ -45,8 +46,9 @@ object UiModule {
 		viewModel { AllAlertsViewModel(androidContext(), get(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get()) }
 		viewModel { GroupAlertsViewModel(androidContext(), get(), get()) }
-		viewModel { GuardianListDetailViewModel(androidContext(), get(), get()) }
+		viewModel { GuardianListDetailViewModel(get()) }
 		viewModel { AlertViewModel(androidContext(), get(), get()) }
+		viewModel { AlertDetailByTypeViewModel(androidContext(), get(), get()) }
 	}
 	
 	val profileModule = module {

@@ -1,24 +1,17 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
-import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.util.toEventItem
-import java.util.*
-import kotlin.collections.ArrayList
 
-class GuardianListDetailViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
+class GuardianListDetailViewModel(private val eventDb: EventDb) : ViewModel() {
 	
 	private val _arrayEventGroup = MutableLiveData<Result<ArrayList<EventGroupByValue>>>()      // keep only 50 events
 	val arrayEventGroup: LiveData<Result<ArrayList<EventGroupByValue>>> get() = _arrayEventGroup
@@ -38,7 +31,7 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 			}
 		}
 		eventsMap.forEach {
-			eventItem.add(EventGroupByValue(makeListEventItem(it.value), StateSeeOlder.DEFAULT))
+			eventItem.add(EventGroupByValue(makeListEventItem(it.value)))
 		}
 		arrayEventGroupMore = eventItem
 		_arrayEventGroup.value = Result.Success(eventItem)
@@ -67,43 +60,9 @@ class GuardianListDetailViewModel(private val context: Context, private val even
 		}
 		_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 	}
-	
-	fun loadMoreEvents(guid: String, value: String, endAt: Date, position: Int) {
-		val requestFactory = EventsGuardianRequestFactory(guid, value, endAt, "measured_at", "DESC", LIMITS, 1)
-		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				val events = t.events?.map { it.toEvent() } ?: listOf()
-				if (t.events!!.isEmpty()) {
-					arrayEventGroupMore[position].stateSeeOlder = StateSeeOlder.NOT_HAVE_ALERT
-					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
-				} else {
-					arrayEventGroupMore.forEach { arr ->
-						val arrayEvent = arr.events
-						if (arrayEvent[0].event.value == value) {
-							var index = arrayEvent.size
-							events.forEach {
-								arrayEvent.add(index, it.toEventItem(eventDb))
-								index += 1
-							}
-							arr.stateSeeOlder = StateSeeOlder.HAVE_ALERTS
-						}
-					}
-				}
-				_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
-			}
-			
-			override fun onError(e: Throwable) {
-				_arrayEventGroup.value = e.getResultError()
-			}
-		}, requestFactory)
-	}
-	
-	companion object {
-		const val LIMITS = 10
-	}
 }
 
-data class EventGroupByValue(val events: MutableList<EventItem>, var stateSeeOlder: StateSeeOlder) {
+data class EventGroupByValue(val events: MutableList<EventItem>) {
 	fun numberOfUnread(eventDb: EventDb): Int {
 		val read = events.fold(0) { acc, event ->
 			val state = eventDb.getEventState(event.event.id)
@@ -111,8 +70,4 @@ data class EventGroupByValue(val events: MutableList<EventItem>, var stateSeeOld
 		}
 		return events.size - read
 	}
-}
-
-enum class StateSeeOlder {
-	LOADING, HAVE_ALERTS, NOT_HAVE_ALERT, DEFAULT
 }

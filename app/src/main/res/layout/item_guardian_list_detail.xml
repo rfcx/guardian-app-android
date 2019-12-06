@@ -35,29 +35,6 @@
 		tools:text="Vehicle" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/downChevronImageView"
-		android:layout_width="@dimen/drop_down_size"
-		android:layout_height="@dimen/drop_down_size"
-		android:layout_marginEnd="@dimen/margin_padding_xlarge"
-		android:src="@drawable/ic_down_chevron"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="@id/view"
-		app:layout_constraintEnd_toEndOf="@id/view"
-		app:layout_constraintTop_toTopOf="@id/view" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/upChevronImageView"
-		android:layout_width="@dimen/drop_down_size"
-		android:layout_height="@dimen/drop_down_size"
-		android:layout_marginEnd="@dimen/margin_padding_xlarge"
-		android:rotationX="180"
-		android:src="@drawable/ic_down_chevron"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="@id/view"
-		app:layout_constraintEnd_toEndOf="@id/view"
-		app:layout_constraintTop_toTopOf="@id/view" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/circleImageView"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
@@ -84,39 +61,4 @@
 		app:layout_constraintTop_toTopOf="@id/circleImageView"
 		tools:text="999" />
 	
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/guardianListDetailRecycler"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_xlarge"
-		android:visibility="gone"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.0"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/view"
-		app:layout_constraintVertical_bias="0.0" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/seeOlderTextView"
-		style="@style/RangerText.Title"
-		android:layout_width="wrap_content"
-		android:layout_height="@dimen/mini_progress_loading"
-		android:layout_marginStart="@dimen/padding_see_older_alert"
-		android:text="@string/see_older"
-		android:textColor="@color/colorPrimary"
-		android:visibility="gone"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/guardianListDetailRecycler" />
-	
-	<ProgressBar
-		android:id="@+id/progressBar"
-		android:layout_width="@dimen/mini_progress_loading"
-		android:layout_height="@dimen/mini_progress_loading"
-		android:visibility="gone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/seeOlderTextView" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
