@@ -9,37 +9,29 @@ import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_alert_detail_by_type.*
+import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
 import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailFragment
 
 class AlertDetailByTypeActivity : AppCompatActivity() {
-	private val viewModel: AlertDetailByTypeViewModel by viewModel()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_alert_detail_by_type)
 		setupToolbar()
 		
-		if (intent?.hasExtra("ALERT_VALUE") == true) {
-			val value = intent.getStringExtra("ALERT_VALUE")
+		if (intent?.hasExtra(ALERT_VALUE) == true) {
+			val value = intent.getStringExtra(ALERT_VALUE)
 			if (value != null) {
-				viewModel.getEventFromDatabase(value)
+				supportFragmentManager.beginTransaction()
+						.replace(alertDetailByTypeContainer.id, AlertDetailByTypeFragment.newInstance(value),
+								"AlertDetailByTypeFragment").commit()
 			}
 		}
-		
-		viewModel.arrayEvent.observe(this, Observer {
-			it.success({ items ->
-				Log.d("items","items size ${items.size}")
-				
-				alertDetailByTypeRecycler.apply {
-					layoutManager = LinearLayoutManager(context)
-					adapter = AlertDetailByTypeAdapter(items)
-				}
-			})
-		})
 	}
 	
 	private fun setupToolbar() {
@@ -48,8 +40,8 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			if (intent?.hasExtra("GUARDIAN_NAME") == true) {
-				title = "${intent.getStringExtra("GUARDIAN_NAME")} - ${intent.getStringExtra("ALERT_VALUE")}"
+			if (intent?.hasExtra(GUARDIAN_NAME) == true) {
+				title = "${intent.getStringExtra(GUARDIAN_NAME)} - ${intent.getStringExtra(ALERT_VALUE)}"
 			}
 		}
 	}
@@ -60,10 +52,13 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 	}
 	
 	companion object {
+		const val ALERT_VALUE = "ALERT_VALUE"
+		const val GUARDIAN_NAME = "GUARDIAN_NAME"
+		
 		fun startActivity(context: Context, value: String, guardianName: String) {
 			val intent = Intent(context, AlertDetailByTypeActivity::class.java)
-			intent.putExtra("ALERT_VALUE", value)
-			intent.putExtra("GUARDIAN_NAME", guardianName)
+			intent.putExtra(ALERT_VALUE, value)
+			intent.putExtra(GUARDIAN_NAME, guardianName)
 			context.startActivity(intent)
 		}
 	}

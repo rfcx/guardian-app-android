@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
+import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.util.toEventItem
 
 class AlertDetailByTypeViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
@@ -18,7 +20,6 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 //	var arrayEventGroupMore = ArrayList<EventGroupByValue>() // keep when see older and use updete ui when review
 	
 	fun getEventFromDatabase(value: String) {
-		Log.d("getEventFromDatabase","getEventFromDatabase $value")
 		val events = eventDb.getEvents().filter { it.value == value }
 		
 		val itemsEvent = arrayListOf<EventItem>()
@@ -27,5 +28,21 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 		}
 
 		_arrayEvent.value = Result.Success(itemsEvent)
+	}
+	
+	fun onEventReviewed(eventGuid: String, reviewValue: String) {
+//		arrayEventGroupMore.forEach { arr ->
+//			val arrayEvent = arr.events
+//			val updateEventItem = arrayEvent.firstOrNull { it.event.id == eventGuid }
+//			if (updateEventItem != null) {
+//				updateEventItem.state = when (reviewValue) {
+//					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+//					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+//					else -> EventItem.State.NONE
+//				}
+//				arrayEvent.replace(updateEventItem) { it.event.id == eventGuid }
+//			}
+//		}
+//		_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
 	}
 }

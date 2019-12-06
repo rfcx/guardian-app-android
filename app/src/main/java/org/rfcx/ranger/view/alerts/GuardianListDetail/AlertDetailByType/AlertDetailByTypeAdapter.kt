@@ -10,8 +10,15 @@ import kotlinx.android.synthetic.main.item_events_in_event_name.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 
-class AlertDetailByTypeAdapter(private val items: MutableList<EventItem>) : ListAdapter<EventItem, AlertDetailByTypeAdapter.AlertDetailByTypeViewHolder>(AlertDetailByTypeDiffUtil()) {
+class AlertDetailByTypeAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, AlertDetailByTypeAdapter.AlertDetailByTypeViewHolder>(AlertDetailByTypeDiffUtil()) {
+	var items: MutableList<EventItem> = arrayListOf()
+		set(value) {
+			field = value
+			notifyDataSetChanged()
+		}
+	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertDetailByTypeViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_events_in_event_name, parent, false)
 		return AlertDetailByTypeViewHolder(view)
@@ -22,6 +29,7 @@ class AlertDetailByTypeAdapter(private val items: MutableList<EventItem>) : List
 	override fun onBindViewHolder(holder: AlertDetailByTypeViewHolder, position: Int) {
 		val item = items[position]
 		holder.bind(item)
+		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
 	}
 	
 	class AlertDetailByTypeDiffUtil : DiffUtil.ItemCallback<EventItem>() {
