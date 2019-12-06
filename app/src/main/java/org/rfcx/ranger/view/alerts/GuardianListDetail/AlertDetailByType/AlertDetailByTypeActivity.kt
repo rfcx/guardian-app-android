@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_alert_detail_by_type.*
 import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,16 +32,12 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 		
 		viewModel.arrayEvent.observe(this, Observer {
 			it.success({ items ->
-				items.forEach {
-					Log.d("items","items size ${items.size}")
+				Log.d("items","items size ${items.size}")
+				
+				alertDetailByTypeRecycler.apply {
+					layoutManager = LinearLayoutManager(context)
+					adapter = AlertDetailByTypeAdapter(items)
 				}
-//				loadingProgress.visibility = View.INVISIBLE
-//				guardianListDetailAdapter.allItem = items
-			}, {
-//				loadingProgress.visibility = View.INVISIBLE
-//				context.handleError(it)
-			}, {
-//				loadingProgress.visibility = View.VISIBLE
 			})
 		})
 	}

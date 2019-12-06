@@ -17,10 +17,12 @@
 		app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
 		tools:title=" ← Bear Hut #2 - Chainsaw" />
 	
-	<FrameLayout
-		android:id="@+id/alertDetailByTypeContainer"
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/alertDetailByTypeRecycler"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:clipToPadding="false"
+		android:paddingBottom="@dimen/fab_height_half"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/toolbarForType" />
 
