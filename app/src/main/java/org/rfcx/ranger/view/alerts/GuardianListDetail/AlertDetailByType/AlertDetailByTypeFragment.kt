@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail.AlertDetailByType
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 	private val viewModel: AlertDetailByTypeViewModel by viewModel()
 	private val alertDetailByTypeAdapter by lazy { AlertDetailByTypeAdapter(this) }
 	
-	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_alert_detail_by_type, container, false)
 	}
@@ -39,12 +37,18 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 			layoutManager = LinearLayoutManager(context)
 			adapter = alertDetailByTypeAdapter
 		}
-
+		
 		viewModel.arrayEvent.observe(this, Observer {
 			it.success({ items ->
 				alertDetailByTypeAdapter.items = items
 			})
 		})
+		
+		alertDetailByTypeAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
+			override fun onSeeOlderClick() {
+				viewModel.loadMoreEvents()
+			}
+		}
 	}
 	
 	override fun onClickedAlert(event: Event) {
@@ -58,7 +62,8 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 			currentShowing.dismissAllowingStateLoss()
 		}
 		AlertBottomDialogFragment.newInstance(event).show(childFragmentManager,
-				AlertBottomDialogFragment.tag)	}
+				AlertBottomDialogFragment.tag)
+	}
 	
 	override fun onReviewed(eventGuID: String, reviewValue: String) {
 		viewModel.onEventReviewed(eventGuID, reviewValue)
@@ -74,4 +79,8 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 			}
 		}
 	}
+}
+
+interface OnSeeOlderClickListener {
+	fun onSeeOlderClick()
 }
