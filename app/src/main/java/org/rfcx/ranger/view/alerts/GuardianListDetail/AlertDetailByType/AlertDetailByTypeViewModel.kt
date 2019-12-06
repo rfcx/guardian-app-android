@@ -17,7 +17,7 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 	private val _arrayEvent = MutableLiveData<Result<ArrayList<EventItem>>>()      // keep only 50 events
 	val arrayEvent: LiveData<Result<ArrayList<EventItem>>> get() = _arrayEvent
 
-//	var arrayEventGroupMore = ArrayList<EventGroupByValue>() // keep when see older and use updete ui when review
+	var arrayEventGroupMore = ArrayList<EventItem>() // keep when see older and use updete ui when review
 	
 	fun getEventFromDatabase(value: String) {
 		val events = eventDb.getEvents().filter { it.value == value }
@@ -26,23 +26,20 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 		events.forEach { event ->
 			itemsEvent.add(event.toEventItem(eventDb))
 		}
-
+		arrayEventGroupMore = itemsEvent
 		_arrayEvent.value = Result.Success(itemsEvent)
 	}
 	
 	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-//		arrayEventGroupMore.forEach { arr ->
-//			val arrayEvent = arr.events
-//			val updateEventItem = arrayEvent.firstOrNull { it.event.id == eventGuid }
-//			if (updateEventItem != null) {
-//				updateEventItem.state = when (reviewValue) {
-//					ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-//					ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-//					else -> EventItem.State.NONE
-//				}
-//				arrayEvent.replace(updateEventItem) { it.event.id == eventGuid }
-//			}
-//		}
-//		_arrayEventGroup.value = Result.Success(arrayEventGroupMore)
+		val updateEventItem = arrayEventGroupMore.firstOrNull { it.event.id == eventGuid }
+		if (updateEventItem != null) {
+			updateEventItem.state = when (reviewValue) {
+				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+				else -> EventItem.State.NONE
+			}
+			arrayEventGroupMore.replace(updateEventItem) { it.event.id == eventGuid }
+		}
+		_arrayEvent.value = Result.Success(arrayEventGroupMore)
 	}
 }
