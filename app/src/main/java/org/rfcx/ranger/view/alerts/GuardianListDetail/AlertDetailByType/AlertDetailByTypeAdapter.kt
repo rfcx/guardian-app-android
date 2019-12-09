@@ -13,12 +13,11 @@ import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 
 class AlertDetailByTypeAdapter(val listener: AlertClickListener) : ListAdapter<EventItem, AlertDetailByTypeAdapter.AlertDetailByTypeViewHolder>(AlertDetailByTypeDiffUtil()) {
-	var items: MutableList<EventItem> = arrayListOf()
+	var items: EventGroupByValue = EventGroupByValue(arrayListOf(), EventGroupByValue.StateSeeOlder.DEFAULT)
 		set(value) {
 			field = value
 			notifyDataSetChanged()
 		}
-	
 	var mOnSeeOlderClickListener: OnSeeOlderClickListener? = null
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertDetailByTypeViewHolder {
@@ -29,7 +28,7 @@ class AlertDetailByTypeAdapter(val listener: AlertClickListener) : ListAdapter<E
 	override fun getItemCount(): Int = 1
 	
 	override fun onBindViewHolder(holder: AlertDetailByTypeViewHolder, position: Int) {
-		val item = items[position]
+		val item = items.events[position]
 		holder.bind()
 		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
 	}
@@ -55,12 +54,28 @@ class AlertDetailByTypeAdapter(val listener: AlertClickListener) : ListAdapter<E
 		fun bind() {
 			itemEventsInEventNameRecycler.apply {
 				layoutManager = LinearLayoutManager(context)
-				adapter = ItemAlertDetailByTypeAdapter(items, listener)
+				adapter = ItemAlertDetailByTypeAdapter(items.events, listener)
 			}
 			
 			seeOlderTextView.setOnClickListener {
 				mOnSeeOlderClickListener?.onSeeOlderClick()
 			}
+			
+			when {
+				items.stateSeeOlder == EventGroupByValue.StateSeeOlder.LOADING -> {
+					progressBar.visibility = View.VISIBLE
+					seeOlderTextView.visibility = View.GONE
+				}
+				items.stateSeeOlder == EventGroupByValue.StateSeeOlder.HAVE_ALERTS -> {
+					progressBar.visibility = View.GONE
+					seeOlderTextView.visibility = View.VISIBLE
+				}
+				items.stateSeeOlder == EventGroupByValue.StateSeeOlder.NOT_HAVE_ALERT -> {
+					progressBar.visibility = View.GONE
+					seeOlderTextView.visibility = View.GONE
+				}
+			}
 		}
 	}
 }
+

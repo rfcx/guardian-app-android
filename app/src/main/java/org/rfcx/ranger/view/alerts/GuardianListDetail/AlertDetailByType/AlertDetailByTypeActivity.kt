@@ -3,19 +3,9 @@ package org.rfcx.ranger.view.alerts.GuardianListDetail.AlertDetailByType
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_alert_detail_by_type.*
-import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
-import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailFragment
 
 class AlertDetailByTypeActivity : AppCompatActivity() {
 	
@@ -41,7 +31,7 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
 			if (intent?.hasExtra(GUARDIAN_NAME) == true) {
-				title = "${intent.getStringExtra(GUARDIAN_NAME)} - ${intent.getStringExtra(ALERT_VALUE)}"
+				title = "${intent.getStringExtra(GUARDIAN_NAME)} - ${intent.getStringExtra(ALERT_VALUE).capitalize()}"
 			}
 		}
 	}

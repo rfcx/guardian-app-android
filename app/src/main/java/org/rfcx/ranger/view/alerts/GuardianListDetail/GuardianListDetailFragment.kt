@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.GuardianListDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +51,14 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			override fun onItemViewClick(value: String, guardianName: String) {
 				context?.let { AlertDetailByTypeActivity.startActivity(it, value, guardianName) }
 			}
+		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		val guardianName = arguments?.getString("GUARDIAN_NAME")
+		if (guardianName != null) {
+			viewModel.getEventFromDatabase(guardianName)
 		}
 	}
 	
