@@ -97,7 +97,9 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 				}
 			}
 		})
-		alertsTabLayout.getTabAt(0)?.select()
+		arguments?.let {
+			alertsTabLayout.getTabAt(it.getInt("TAB_SELECTED"))?.select()
+		}
 	}
 	
 	private fun startTabSelected(position: Int) {
@@ -134,12 +136,13 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	
 	companion object {
 		const val tag = "AlertsFragment"
-		fun newInstance(eventGuId: String?): AlertsFragment {
+		fun newInstance(eventGuId: String?, tabSelected: Int): AlertsFragment {
 			return AlertsFragment().apply {
-				if (eventGuId != null) {
-					arguments = Bundle().apply {
+				arguments = Bundle().apply {
+					if (eventGuId != null) {
 						putString(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
 					}
+					putInt("TAB_SELECTED", tabSelected)
 				}
 			}
 		}

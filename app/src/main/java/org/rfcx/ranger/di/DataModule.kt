@@ -7,9 +7,7 @@ import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
-import org.rfcx.ranger.data.local.EventDb
-import org.rfcx.ranger.data.local.ProfileData
-import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.data.local.*
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
@@ -43,6 +41,7 @@ import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
@@ -58,13 +57,13 @@ object DataModule {
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
 		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
-		single { GetEventsUseCase(get(), get(), get()) }
+		single { GetEventsUseCase(get(), get(), get(), get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		single { GetMoreEventInGuardian(get(), get(), get()) }
 		single { GetEventUseCase(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
-		single { GetGuardianGroups(get(), get(), get()) }
+		single { GetGuardianGroups(get(), get(), get(), get(), get()) }
 		
 		single { InviteCodeRepositoryImp(get()) } bind InviteCodeRepository::class
 		single { SendInviteCodeUseCase(get(), get(), get()) }
@@ -76,7 +75,7 @@ object DataModule {
 		single { SendNameUseCase(get(), get(), get()) }
 		
 		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
-		single { GroupByGuardiansUseCase(get(), get(), get()) }
+		single { GroupByGuardiansUseCase(get(), get(), get(), get(), get()) }
 		
 		single { SiteRepositoryImp(get()) } bind SiteRepository::class
 		single { GetSiteNameUseCase(get(), get(), get()) }
@@ -95,7 +94,10 @@ object DataModule {
 	}
 	
 	val localModule = module {
-		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
+		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
+		factory { CachedEndpointDb(get()) }
+		factory { GuardianDb(get()) }
+		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
 		factory { ReportImageDb(get()) }

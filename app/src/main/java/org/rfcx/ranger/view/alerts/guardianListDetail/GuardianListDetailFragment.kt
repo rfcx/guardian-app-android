@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.GuardianListDetail
+package org.rfcx.ranger.view.alerts.guardianListDetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_list_detail.*
-import kotlinx.android.synthetic.main.item_guardian_list_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
@@ -15,9 +14,9 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
+import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.base.BaseFragment
-import java.util.*
 
 class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertListener {
 	private val viewModel: GuardianListDetailViewModel by viewModel()
@@ -48,10 +47,18 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 			})
 		})
 		
-		guardianListDetailAdapter.mOnSeeOlderClickListener = object : OnSeeOlderClickListener {
-			override fun onSeeOlderClick(guid: String, value: String, endAt: Date, position: Int) {
-				viewModel.loadMoreEvents(guid, value, endAt, position)
+		guardianListDetailAdapter.mOnItemViewClickListener = object : OnItemViewClickListener {
+			override fun onItemViewClick(value: String, guardianName: String) {
+				context?.let { AlertDetailByTypeActivity.startActivity(it, value, guardianName) }
 			}
+		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		val guardianName = arguments?.getString("GUARDIAN_NAME")
+		if (guardianName != null) {
+			viewModel.getEventFromDatabase(guardianName)
 		}
 	}
 	
@@ -94,6 +101,6 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 	}
 }
 
-interface OnSeeOlderClickListener {
-	fun onSeeOlderClick(guid: String, value: String, endAt: Date, position: Int)
+interface OnItemViewClickListener {
+	fun onItemViewClick(value: String, guardianName: String)
 }

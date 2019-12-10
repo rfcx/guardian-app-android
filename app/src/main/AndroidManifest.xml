@@ -37,24 +37,29 @@
 		</provider>
 		
 		<activity
+			android:name=".view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity"
+			android:screenOrientation="portrait"/>
+		
+		
+		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait"></activity>
+			android:screenOrientation="portrait"/>
 		
 		<activity
 			android:name=".view.report.ReportDetailActivity"
-			android:screenOrientation="portrait"></activity>
+			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
-			android:screenOrientation="portrait"></activity>
+			android:screenOrientation="portrait"/>
 		<activity
-			android:name=".view.alerts.GuardianListDetail.GuardianListDetailActivity"
-			android:screenOrientation="portrait"></activity>
+			android:name=".view.alerts.guardianListDetail.GuardianListDetailActivity"
+			android:screenOrientation="portrait"/>
 		
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme"></activity>
+			android:theme="@style/AppTheme"/>
 		
 		<activity
 			android:name=".view.login.LoginActivityNew"

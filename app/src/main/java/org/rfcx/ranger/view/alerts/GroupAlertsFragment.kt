@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alerts.GuardianListDetail.GuardianListDetailActivity
+import org.rfcx.ranger.view.alerts.guardianListDetail.GuardianListDetailActivity
 import org.rfcx.ranger.view.alerts.adapter.GroupByGuardianAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 

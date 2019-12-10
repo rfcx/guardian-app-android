@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
+import kotlinx.android.synthetic.main.activity_main_new.contentContainer
+import kotlinx.android.synthetic.main.fragment_alerts.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -180,7 +182,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(null), AlertsFragment.tag, true)
+				startFragment(AlertsFragment.newInstance(null, 0), AlertsFragment.tag, true)
 			}
 			
 			menuProfile.id -> {
@@ -220,7 +222,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	override fun alertScreen() {
-		onBottomMenuClick(menuAlert)
+		menuStatus.menuSelected = false
+		menuMap.menuSelected = false
+		menuAlert.menuSelected = true
+		menuProfile.menuSelected = false
+		
+		startFragment(AlertsFragment.newInstance(null, 1), AlertsFragment.tag, true)
 	}
 	
 	override fun moveMapIntoReportMarker(report: Report) {
@@ -273,9 +280,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(it), AlertsFragment.tag, true)
+				startFragment(AlertsFragment.newInstance(it, 1), AlertsFragment.tag, true)
 			}
-			
 		})
 	}
 	

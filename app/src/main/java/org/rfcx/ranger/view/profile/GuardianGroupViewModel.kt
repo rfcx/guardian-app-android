@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.entity.event.GuardianGroupFactory
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.getResultError
 
 class GuardianGroupViewModel(private val getGuardianGroups: GetGuardianGroups,
                              private val eventDb: EventDb) : ViewModel() {
@@ -22,14 +24,23 @@ class GuardianGroupViewModel(private val getGuardianGroups: GetGuardianGroups,
 	
 	private fun loadGuardianGroups() {
 		_items.value = Result.Loading
-		getGuardianGroups.execute(GetGuardianGroupDisposable(_items), GuardianGroupFactory())
+		getGuardianGroups.execute(object : ResponseCallback<List<GuardianGroup>> {
+			override fun onSuccess(t: List<GuardianGroup>) {
+				_items.value = Result.Success(t)
+			}
+			
+			override fun onError(e: Throwable) {
+				_items.value = e.getResultError()
+			}
+			
+		}, GuardianGroupFactory())
 	}
 	
 	/**
 	 * remove all events when select guardian group
 	 */
 	fun removeAllEvent() {
-			eventDb.deleteAllEvents()
+		eventDb.deleteAllEvents()
 	}
 }
 

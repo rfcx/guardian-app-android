@@ -31,8 +31,8 @@ class SiteGuardianDb(val realm: Realm) {
         return realm.where(GuardianGroup::class.java).equalTo("shortname", shortname).findFirst()
     }
 
-    fun guardianGroups(): RealmResults<GuardianGroup> {
-        return realm.where(GuardianGroup::class.java).findAll()
+    fun guardianGroups(): List<GuardianGroup> {
+        return realm.copyFromRealm(realm.where(GuardianGroup::class.java).findAll())
     }
 
     fun saveGuardianGroups(groups: List<GuardianGroup>) {

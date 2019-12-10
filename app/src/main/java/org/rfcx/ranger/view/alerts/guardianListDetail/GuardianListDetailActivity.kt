@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.GuardianListDetail
+package org.rfcx.ranger.view.alerts.guardianListDetail
 
 import android.content.Context
 import android.content.Intent

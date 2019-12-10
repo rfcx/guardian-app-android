@@ -3,6 +3,7 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
+import org.rfcx.ranger.entity.CachedEndpoint
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
@@ -31,6 +32,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 9L && newVersion >= 9L) {
 			migrateToV9(c)
+		}
+		if (oldVersion < 10L && newVersion >= 10L) {
+			migrateToV10(c)
 		}
 	}
 	
@@ -232,6 +236,18 @@ class RangerRealmMigration : RealmMigration {
 		report?.apply {
 			addField("notes", String::class.java)
 		}
+	}
+	
+	private fun migrateToV10(realm: DynamicRealm) {
+		val cachedEndpoint = realm.schema.create(CachedEndpoint.TABEL_NAME)
+		cachedEndpoint?.apply {
+			addField(CachedEndpoint.FIELD_ENDPOINT, String::class.java, FieldAttribute.PRIMARY_KEY)
+			setRequired(CachedEndpoint.FIELD_ENDPOINT, true)
+			
+			addField(CachedEndpoint.FIELD_UPDATED_AT, Date::class.java)
+			setRequired(CachedEndpoint.FIELD_UPDATED_AT, true)
+		}
+		
 	}
 	
 	override fun hashCode(): Int {

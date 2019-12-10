@@ -175,6 +175,11 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		}
 	}
 	
+	override fun onDestroy() {
+		super.onDestroy()
+		stopPlaying()
+	}
+	
 	private fun startPlaying() {
 		val file = audioFile
 		if (file == null) {

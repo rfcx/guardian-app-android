@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.GuardianListDetail
+package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,28 +6,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_events_in_event_name.view.*
+import kotlinx.android.synthetic.main.item_alert_detail_by_type.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 
-class EventsInEventNameAdapter(private val items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, EventsInEventNameAdapter.EventsInEventNameViewHolder>(EventsInEventNameDiffUtil()) {
+class ItemAlertDetailByTypeAdapter (var items: MutableList<EventItem>, val listener: AlertClickListener) : ListAdapter<EventItem, ItemAlertDetailByTypeAdapter.ItemAlertDetailByTypeViewHolder>(ItemAlertDetailByTypeDiffUtil()) {
 	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsInEventNameViewHolder {
-		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_events_in_event_name, parent, false)
-		return EventsInEventNameViewHolder(view)
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAlertDetailByTypeViewHolder {
+		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_alert_detail_by_type, parent, false)
+		return ItemAlertDetailByTypeViewHolder(view)
 	}
 	
 	override fun getItemCount(): Int = items.size
 	
-	override fun onBindViewHolder(holder: EventsInEventNameViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: ItemAlertDetailByTypeViewHolder, position: Int) {
 		val item = items[position]
 		holder.bind(item)
 		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
 	}
 	
-	class EventsInEventNameDiffUtil : DiffUtil.ItemCallback<EventItem>() {
+	class ItemAlertDetailByTypeDiffUtil : DiffUtil.ItemCallback<EventItem>() {
 		override fun areItemsTheSame(oldItem: EventItem, newItem: EventItem): Boolean {
 			return oldItem.state == newItem.state
 			
@@ -40,7 +40,7 @@ class EventsInEventNameAdapter(private val items: MutableList<EventItem>, val li
 		}
 	}
 	
-	inner class EventsInEventNameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+	inner class ItemAlertDetailByTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val eventsInEventsTextView = itemView.eventsInEventsTextView
 		private val circleImageView = itemView.circleImageView
 		private val reviewedImageView = itemView.reviewedImageView

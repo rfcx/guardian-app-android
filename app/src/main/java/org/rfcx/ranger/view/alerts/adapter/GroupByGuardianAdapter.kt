@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.alerts.EventGroup
 import org.rfcx.ranger.view.alerts.OnItemClickListener
+import kotlin.random.Random
 
 class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.GroupByGuardianViewHolder>(), KoinComponent {
 	
@@ -50,16 +52,26 @@ class GroupByGuardianAdapter : RecyclerView.Adapter<GroupByGuardianAdapter.Group
 			}
 		}
 		
+		@SuppressLint("SetTextI18n")
 		fun bind(eventGroup: EventGroup) {
 			val unread = eventGroup.numberOfUnread(eventsDb)
 			groupByGuardianTextView.text = eventGroup.guardianName
-			if (unread == 0) {
-				circleImageView.visibility = View.INVISIBLE
-				numOfEvents.visibility = View.INVISIBLE
-			} else {
-				numOfEvents.text = unread.toString()
-				numOfEvents.visibility = View.VISIBLE
-				circleImageView.visibility = View.VISIBLE
+			when {
+				unread == 0 -> {
+					numOfEvents.text = ""
+					circleImageView.visibility = View.INVISIBLE
+					numOfEvents.visibility = View.INVISIBLE
+				}
+				unread > 999 -> {
+					numOfEvents.text = "999+"
+					numOfEvents.visibility = View.VISIBLE
+					circleImageView.visibility = View.VISIBLE
+				}
+				else -> {
+					numOfEvents.text = unread.toString()
+					numOfEvents.visibility = View.VISIBLE
+					circleImageView.visibility = View.VISIBLE
+				}
 			}
 			this.currentGroup = eventGroup.events
 			this.name = eventGroup.guardianName
