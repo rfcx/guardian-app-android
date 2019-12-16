@@ -20,7 +20,6 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
-import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
@@ -77,11 +76,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 	
 	private fun getEventDetail(eventGuID: String) {
 		_event.value = Result.Loading
-		val eventCache = eventDb.getEvent(eventGuID)
-		if (eventCache != null)
-			setEvent(eventCache)
-		else
-			getRemoteDetail(eventGuID)
+		getRemoteDetail(eventGuID)
 	}
 	
 	private fun getRemoteDetail(eventGuID: String) {
