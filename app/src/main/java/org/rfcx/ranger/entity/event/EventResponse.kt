@@ -51,7 +51,7 @@ data class EventResponse(
 		val site: String,
 		
 		@SerializedName("windows")
-		val windows: List<EventWindow>,
+		val windows: List<EventWindow>?,
 		
 		@SerializedName("review")
 		val review: Review?
@@ -75,8 +75,9 @@ data class EventResponse(
 		event.site = site
 		event.audioOpusUrl = audio.opus
 		event.audioPngUrl = audio.png
-		event.windows.addAll(windows)
-		
+		if (windows != null) {
+			event.windows.addAll(windows)
+		}
 		if (review != null) {
 			event.reviewCreated = review.created
 		}
