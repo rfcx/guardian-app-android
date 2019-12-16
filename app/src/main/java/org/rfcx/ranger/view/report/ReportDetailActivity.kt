@@ -7,6 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -66,6 +69,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				reportTypeTextView.text = getString(R.string.other)
 				reportTypeImageView.setImageResource(R.drawable.ic_pin_huge)
 			} else {
+				Log.d("start time","${report.reportedAt}")
 				binding.report = DetailReport(report, this)
 				this.location = LatLng(report.latitude, report.longitude)
 				setMapPin()
@@ -95,7 +99,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		fun getDateTime(): String = report.getReportedAtRelative(context)
 		fun getWhenText(): String = report.getLocalisedAgeEstimate(context)
 		fun getNote(): String {
-			return if (report.notes.isNullOrEmpty()){
+			return if (report.notes.isNullOrEmpty()) {
 				"None"
 			} else {
 				report.notes.toString()
@@ -121,6 +125,31 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	override fun onSupportNavigateUp(): Boolean {
 		onBackPressed()
 		return true
+	}
+	
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		val inflater = menuInflater
+		inflater.inflate(R.menu.share_reports, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+	
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		R.id.attachView
+		when (item?.itemId) {
+			android.R.id.home -> finish()
+			R.id.shareReportsView -> shareReports()
+		}
+		return super.onOptionsItemSelected(item)
+	}
+	
+	private fun shareReports() {
+		val s = "https://dashboard.rfcx.org/rangers?site=tembe&live-view=false&rangers-tab=reports&start-aft=2019-11-08T00:00:00.000&end-bef=2019-11-09T23:59:59.999&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
+		//Intent to share the text
+		val shareIntent = Intent()
+		shareIntent.action = Intent.ACTION_SEND
+		shareIntent.type="text/plain"
+		shareIntent.putExtra(Intent.EXTRA_TEXT, s)
+		startActivity(Intent.createChooser(shareIntent,"Share via"))
 	}
 	
 	private fun setMapPin() {
