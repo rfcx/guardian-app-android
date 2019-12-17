@@ -77,7 +77,7 @@ class GuardianListDetailAdapter(val listener: AlertClickListener) : ListAdapter<
 			groupByGuardianTextView.text = eventList[0].event.label.capitalize()
 			
 			itemView.setOnClickListener {
-				mOnItemViewClickListener?.onItemViewClick(eventList[0].event.value, eventList[0].event.guardianName)
+				mOnItemViewClickListener?.onItemViewClick(eventList[0].event.value, eventList[0].event.label, eventList[0].event.guardianName)
 			}
 		}
 	}

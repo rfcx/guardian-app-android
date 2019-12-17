@@ -48,8 +48,8 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 		})
 		
 		guardianListDetailAdapter.mOnItemViewClickListener = object : OnItemViewClickListener {
-			override fun onItemViewClick(value: String, guardianName: String) {
-				context?.let { AlertDetailByTypeActivity.startActivity(it, value, guardianName) }
+			override fun onItemViewClick(value: String, label: String, guardianName: String) {
+				context?.let { AlertDetailByTypeActivity.startActivity(it, value, label, guardianName) }
 			}
 		}
 	}
@@ -102,5 +102,5 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 }
 
 interface OnItemViewClickListener {
-	fun onItemViewClick(value: String, guardianName: String)
+	fun onItemViewClick(value: String, label: String, guardianName: String)
 }

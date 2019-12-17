@@ -34,7 +34,7 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 			elevation = 0f
 			if (intent?.hasExtra(GUARDIAN_NAME) == true) {
 				title = intent.getStringExtra(GUARDIAN_NAME)
-				subtitle = intent.getStringExtra(ALERT_VALUE).capitalize()
+				subtitle = intent.getStringExtra(ALERT_LABEL)
 			}
 		}
 	}
@@ -46,12 +46,14 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 	
 	companion object {
 		const val ALERT_VALUE = "ALERT_VALUE"
+		const val ALERT_LABEL = "ALERT_LABEL"
 		const val GUARDIAN_NAME = "GUARDIAN_NAME"
 		
-		fun startActivity(context: Context, value: String, guardianName: String) {
+		fun startActivity(context: Context, value: String, label: String, guardianName: String) {
 			val intent = Intent(context, AlertDetailByTypeActivity::class.java)
 			intent.putExtra(ALERT_VALUE, value)
 			intent.putExtra(GUARDIAN_NAME, guardianName)
+			intent.putExtra(ALERT_LABEL, label)
 			context.startActivity(intent)
 		}
 	}
