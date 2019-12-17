@@ -90,7 +90,7 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 					val visibleItemCount = alertsLayoutManager.childCount
 					val total = alertsLayoutManager.itemCount
 					val firstVisibleItemPosition = alertsLayoutManager.findFirstVisibleItemPosition()
-					if (!alertsSwipeRefresh.isRefreshing && !allAlertsViewModel.isLastPage) {
+					if (!alertsSwipeRefresh.isRefreshing) {
 						if ((visibleItemCount + firstVisibleItemPosition) >= total
 								&& firstVisibleItemPosition >= 0
 								&& total >= AllAlertsViewModel.PAGE_LIMITS

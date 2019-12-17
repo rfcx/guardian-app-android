@@ -16,7 +16,6 @@ import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.adapter.LoadingItem
-import kotlin.math.ceil
 
 class AllAlertsViewModel(private val context: Context,
                          private val eventsUserCase: GetEventsUseCase,
@@ -36,11 +35,7 @@ class AllAlertsViewModel(private val context: Context,
 	private val items = arrayListOf<EventItem>()
 	private var currentOffset: Int = 0
 	private var totalItemCount: Int = 0
-	private val totalPage: Int
-		get() = ceil(totalItemCount.toFloat() / PAGE_LIMITS).toInt()
 	var isLoadMore = false
-	val isLastPage: Boolean
-		get() = currentOffset >= (PAGE_LIMITS * totalPage)
 	
 	private val eventObserve = Observer<List<Event>> {
 		if (it.isNotEmpty()) {
@@ -101,10 +96,6 @@ class AllAlertsViewModel(private val context: Context,
 	}
 	
 	fun loadMoreEvents() {
-		if (isLastPage) {
-			return
-		}
-		
 		isLoadMore = true
 		loadEvents()
 	}
