@@ -18,12 +18,12 @@ class CloudMessaging {
         fun subscribeIfRequired(context: Context, callback: ((Boolean) -> Unit)? = null) {
             val preferenceHelper = Preferences.getInstance(context)
             val hasSubscribed = preferenceHelper.getBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP)
-            val group = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
+            val group = "guardiangroup-" + preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
             val shouldReceiveNotifications = preferenceHelper.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
 
             Log.d("CloudMessaging", "subscribe: group $group, hasSubscribed $hasSubscribed, shouldReceiveNotifications $shouldReceiveNotifications")
 
-            if (!hasSubscribed && shouldReceiveNotifications && group != null) {
+            if (!hasSubscribed && shouldReceiveNotifications) {
                 FirebaseMessaging.getInstance().subscribeToTopic(group).addOnCompleteListener {
                     if (it.isSuccessful) {
                         preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, true)
@@ -41,24 +41,17 @@ class CloudMessaging {
 
         fun unsubscribe(context: Context, callback: ((Boolean) -> Unit)? = null) {
             val preferenceHelper = Preferences.getInstance(context)
-            val group = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
-
-            if (group != null) {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(group).addOnCompleteListener {
-                    if (!it.isSuccessful) {
-                        Crashlytics.logException(Exception("Unable to unsubscribe to cloud messaging for guardian group: $group"))
-                        Log.e("CloudMessaging", "Unable to unsubscribe to cloud messaging for guardian group")
-                    }
-                    else {
-                        preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
-                        Log.d("CloudMessaging", "unsubscribe: success to $group")
-                    }
-                    callback?.invoke(it.isSuccessful)
+            val group = "guardiangroup-" + preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP)
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(group).addOnCompleteListener {
+                if (!it.isSuccessful) {
+                    Crashlytics.logException(Exception("Unable to unsubscribe to cloud messaging for guardian group: $group"))
+                    Log.e("CloudMessaging", "Unable to unsubscribe to cloud messaging for guardian group")
                 }
-            } else {
-                preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
-                Log.d("CloudMessaging", "unsubscribe: no group")
-                callback?.invoke(true)
+                else {
+                    preferenceHelper.putBoolean(Preferences.HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP, false)
+                    Log.d("CloudMessaging", "unsubscribe: success to $group")
+                }
+                callback?.invoke(it.isSuccessful)
             }
         }
     }
