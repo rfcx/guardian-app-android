@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_alert_detail_by_type.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.toEventIcon
 
 class AlertDetailByTypeActivity : AppCompatActivity() {
 	
@@ -32,7 +33,8 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
 			if (intent?.hasExtra(GUARDIAN_NAME) == true) {
-				title = "${intent.getStringExtra(GUARDIAN_NAME)} - ${intent.getStringExtra(ALERT_VALUE).capitalize()}"
+				title = intent.getStringExtra(GUARDIAN_NAME)
+				subtitle = intent.getStringExtra(ALERT_VALUE).capitalize()
 			}
 		}
 	}

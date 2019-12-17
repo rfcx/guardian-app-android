@@ -21,7 +21,7 @@
 		style="@style/RangerText.Title"
 		android:layout_width="wrap_content"
 		android:layout_height="@dimen/mini_progress_loading"
-		android:layout_marginStart="@dimen/margin_padding_xlarge"
+		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:text="@string/see_older"
 		android:textColor="@color/colorPrimary"
 		app:layout_constraintStart_toStartOf="parent"
