@@ -9,7 +9,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:clipToPadding="false"
-		android:paddingTop="@dimen/margin_padding_normal"
 		android:paddingBottom="@dimen/fab_height_half"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintStart_toStartOf="parent"/>

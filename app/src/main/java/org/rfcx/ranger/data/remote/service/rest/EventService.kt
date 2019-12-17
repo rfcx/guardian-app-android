@@ -19,7 +19,6 @@ interface EventService {
 	@GET("v2/events") // load see older
 	fun getEventsGuardian(@Query("guardians[]") guardian: String,
 	                      @Query("values[]") value: String,
-	                      @Query("starting_before_local") ending: String,
 	                      @Query("order") orderBy: String,
 	                      @Query("dir") dir: String,
 	                      @Query("limit") limit: Int,

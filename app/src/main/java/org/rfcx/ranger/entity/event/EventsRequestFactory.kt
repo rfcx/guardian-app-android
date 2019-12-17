@@ -13,7 +13,6 @@ data class EventsRequestFactory(
 data class EventsGuardianRequestFactory(
 		val guardian: String,
 		val value: String,
-		val time: Date,
 		val orderBy: String,
 		val dir: String,
 		val limit: Int,

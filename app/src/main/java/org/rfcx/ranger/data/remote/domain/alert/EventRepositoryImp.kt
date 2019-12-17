@@ -6,13 +6,12 @@ import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.service.rest.EventService
 import org.rfcx.ranger.entity.event.*
-import org.rfcx.ranger.util.toIsoString
 
 class EventRepositoryImp(private val eventService: EventService, private val eventDb: EventDb,
                          private val weeklySummaryData: WeeklySummaryData) : EventRepository {
 	
 	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventsResponse> {
-		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.value, requestFactory.time.toIsoString(), requestFactory.orderBy,
+		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.value, requestFactory.orderBy,
 				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
 			it
 		}

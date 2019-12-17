@@ -16,9 +16,10 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 		
 		if (intent?.hasExtra(ALERT_VALUE) == true) {
 			val value = intent.getStringExtra(ALERT_VALUE)
+			val guardianName = intent.getStringExtra(GUARDIAN_NAME)
 			if (value != null) {
 				supportFragmentManager.beginTransaction()
-						.replace(alertDetailByTypeContainer.id, AlertDetailByTypeFragment.newInstance(value),
+						.replace(alertDetailByTypeContainer.id, AlertDetailByTypeFragment.newInstance(value, guardianName),
 								"AlertDetailByTypeFragment").commit()
 			}
 		}

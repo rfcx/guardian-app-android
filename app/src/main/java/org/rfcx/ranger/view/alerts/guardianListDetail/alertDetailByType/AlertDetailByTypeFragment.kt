@@ -15,6 +15,7 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity.Companion.ALERT_VALUE
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
+import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity.Companion.GUARDIAN_NAME
 import org.rfcx.ranger.view.base.BaseFragment
 
 class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListener {
@@ -29,8 +30,9 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 		super.onViewCreated(view, savedInstanceState)
 		
 		val value = arguments?.getString(ALERT_VALUE)
-		if (value != null) {
-			viewModel.getEventFromDatabase(value)
+		val guardianName = arguments?.getString(GUARDIAN_NAME)
+		if (value != null && guardianName != null) {
+			viewModel.getEventFromDatabase(value, guardianName)
 		}
 		
 		alertDetailByTypeRecycler.apply {
@@ -71,10 +73,11 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 	
 	companion object {
 		const val tag = "AlertDetailByTypeFragment"
-		fun newInstance(value: String): AlertDetailByTypeFragment {
+		fun newInstance(value: String, guardianName: String): AlertDetailByTypeFragment {
 			return AlertDetailByTypeFragment().apply {
 				arguments = Bundle().apply {
 					putString(ALERT_VALUE, value)
+					putString(GUARDIAN_NAME, guardianName)
 				}
 			}
 		}

@@ -17,8 +17,6 @@ import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.util.toEventItem
-import java.util.*
-import kotlin.collections.ArrayList
 
 class AlertDetailByTypeViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _arrayEvent = MutableLiveData<Result<EventGroupByValue>>()      // keep only 50 events
@@ -26,8 +24,9 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 	
 	var arrayEventGroupMore = EventGroupByValue(ArrayList(), EventGroupByValue.StateSeeOlder.DEFAULT) // keep when see older and use updete ui when review
 	
-	fun getEventFromDatabase(value: String) {
-		val events = eventDb.getEvents().filter { it.value == value }
+	fun getEventFromDatabase(value: String, guardianName: String) {
+		val eventsFirstTime = eventDb.getEvents().filter { it.guardianName == guardianName }
+		val events = eventsFirstTime.filter { it.value == value }
 		
 		val itemsEvent = arrayListOf<EventItem>()
 		events.forEach { event ->
@@ -54,13 +53,10 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 		val lastEvent = arrayEventGroupMore.events[arrayEventGroupMore.events.size - 1].event
 		val guid = lastEvent.guardianId
 		val value = lastEvent.value
-		val beginsAt = lastEvent.beginsAt.time
-		val audioDuration = lastEvent.audioDuration
-		val timeEndAt = Date(beginsAt + audioDuration)
 		
 		_arrayEvent.value = Result.Success(EventGroupByValue(arrayEventGroupMore.events, EventGroupByValue.StateSeeOlder.LOADING))
 		
-		val requestFactory = EventsGuardianRequestFactory(guid, value, timeEndAt, "measured_at", "DESC", LIMITS, 1)
+		val requestFactory = EventsGuardianRequestFactory(guid, value, "measured_at", "DESC", LIMITS, arrayEventGroupMore.events.size)
 		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
 			override fun onSuccess(t: EventsResponse) {
 				val events = t.events?.map { it.toEvent() } ?: listOf()
