@@ -8,7 +8,8 @@ data class EventsRequestFactory(
 		val order: String,
 		val dir: String,
 		val limit: Int,
-		val offset: Int)
+		val offset: Int,
+		val value: List<String>)
 
 data class EventsGuardianRequestFactory(
 		val guardian: String,

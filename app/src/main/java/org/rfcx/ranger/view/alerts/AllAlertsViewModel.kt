@@ -79,7 +79,7 @@ class AllAlertsViewModel(private val context: Context,
 		}
 		
 		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC",
-				PAGE_LIMITS, currentOffset)
+				PAGE_LIMITS, currentOffset, listOf("chainsaw", "vehicle"))
 		
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {

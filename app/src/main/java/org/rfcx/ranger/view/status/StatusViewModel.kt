@@ -296,7 +296,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		// start load
 		val group = context.getGuardianGroup() ?: return
 		
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", 3, 0)
+		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", 3, 0, listOf("chainsaw", "vehicle"))
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {
 				updateRecentAlerts(t.first)
