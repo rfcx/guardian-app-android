@@ -3,7 +3,8 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:background="?attr/selectableItemBackground">
 	
 	<TextView
 		android:id="@+id/eventsInEventsTextView"
@@ -19,7 +20,7 @@
 		android:id="@+id/circleImageView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:src="@drawable/ic_dot_green"
 		app:layout_constraintBottom_toBottomOf="@id/eventsInEventsTextView"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +31,7 @@
 		android:layout_width="18dp"
 		android:layout_height="18dp"
 		android:layout_gravity="center"
-		android:layout_marginEnd="@dimen/margin_padding_xlarge"
+		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:background="@drawable/circle_green_stroke"
 		android:contentDescription="@string/app_name"
 		android:padding="5dp"
