@@ -169,7 +169,7 @@
     <string name="warning_set_guardian_group">ไม่มีกลุ่ม Guardian กรุณาตั้งค่ากลุ่ม Guardian เพื่อรับการแจ้งเตือน</string>
     <string name="no_incident_occurred_recently">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
     <string name="enjoy_you_day">ขอให้มีเวลาที่ดี :)</string>
-    <string name="see_older">ดููแจ้งเตือนก่อนหน้านี้</string>
+    <string name="see_older">ดูแจ้งเตือนก่อนหน้านี้</string>
     <string name="not_have_event_more">ไม่มีการแจ้งเตือน</string>
     
     <!--Event value-->

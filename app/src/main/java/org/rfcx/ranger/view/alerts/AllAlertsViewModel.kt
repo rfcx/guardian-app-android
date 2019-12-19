@@ -20,7 +20,7 @@ import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 class AllAlertsViewModel(private val context: Context,
                          private val eventsUserCase: GetEventsUseCase,
                          private val eventDb: EventDb,
-                         private val pref: Preferences) : ViewModel() {
+                         pref: Preferences) : ViewModel() {
 	
 	private val _groupByGuardians = MutableLiveData<Result<GroupByGuardiansResponse>>()
 	val groupByGuardians: LiveData<Result<GroupByGuardiansResponse>> get() = _groupByGuardians
@@ -85,6 +85,11 @@ class AllAlertsViewModel(private val context: Context,
 			override fun onSuccess(t: Pair<List<Event>, Int>) {
 				totalItemCount = t.second
 				isLoadMore = false
+				
+				// response is empty?
+				if (t.first.isEmpty()) {
+					_alerts.value = Result.Success(items)
+				}
 			}
 			
 			override fun onError(e: Throwable) {
