@@ -32,6 +32,9 @@ import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
 import org.rfcx.ranger.data.remote.setusername.SetNameRepository
 import org.rfcx.ranger.data.remote.setusername.SetNameRepositoryImp
+import org.rfcx.ranger.data.remote.shortlink.ShortLinkRepository
+import org.rfcx.ranger.data.remote.shortlink.ShortLinkRepositoryImp
+import org.rfcx.ranger.data.remote.shortlink.ShortLinkUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.data.remote.site.SiteRepository
 import org.rfcx.ranger.data.remote.site.SiteRepositoryImp
@@ -80,6 +83,9 @@ object DataModule {
 		single { SiteRepositoryImp(get()) } bind SiteRepository::class
 		single { GetSiteNameUseCase(get(), get(), get()) }
 		
+		single { ShortLinkRepositoryImp(get()) } bind ShortLinkRepository::class
+		single { ShortLinkUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -91,6 +97,7 @@ object DataModule {
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeShortLinkService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

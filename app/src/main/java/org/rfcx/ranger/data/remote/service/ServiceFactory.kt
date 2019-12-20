@@ -13,6 +13,7 @@ import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.service.rest.ClassifiedService
 import org.rfcx.ranger.data.remote.service.rest.EventService
 import org.rfcx.ranger.data.remote.setusername.SetNameEndpoint
+import org.rfcx.ranger.data.remote.shortlink.ShortLinkEndpoint
 import org.rfcx.ranger.data.remote.site.SiteEndpoint
 import org.rfcx.ranger.data.remote.usertouch.UserTouchEndPoint
 import org.rfcx.ranger.util.GsonProvider
@@ -71,6 +72,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SiteEndpoint::class.java)
+	}
+	
+	fun makeShortLinkService(isDebug: Boolean, context: Context): ShortLinkEndpoint {
+		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(ShortLinkEndpoint::class.java)
 	}
 	
 	private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

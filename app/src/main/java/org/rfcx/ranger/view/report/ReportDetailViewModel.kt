@@ -1,23 +1,32 @@
 package org.rfcx.ranger.view.report
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.observers.DisposableSingleObserver
 import io.realm.Realm
 import io.realm.RealmResults
+import org.rfcx.ranger.data.remote.shortlink.ShortLinkUseCase
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.entity.shortlink.ShortLinkRequest
+import org.rfcx.ranger.entity.shortlink.ShortLinkResponse
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.RealmHelper
 
-class ReportDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
+class ReportDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb, private val shortLinkUseCase: ShortLinkUseCase) : ViewModel() {
 	
 	private var report: Report? = null
 	private var reportLive = MutableLiveData<Report>()
 	
 	private var reportImages: RealmResults<ReportImage>? = null
 	private var reportImagesLive = MutableLiveData<List<ReportImage>>()
+	
+	private var _shortLink: MutableLiveData<String> = MutableLiveData()
+	val shortLink: LiveData<String>
+		get() = _shortLink
 	
 	override fun onCleared() {
 		super.onCleared()
@@ -40,6 +49,20 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 		reportImages?.addChangeListener { results ->
 			reportImagesLive.value = results.toList()
 		}
+	}
+	
+	fun getShortLink(url: String) {
+		
+		shortLinkUseCase.execute(object : DisposableSingleObserver<String>() {
+			override fun onError(e: Throwable) {
+				Log.d("shortLinkUseCase","onError ${e.message}")
+			}
+			
+			override fun onSuccess(t: String) {
+				Log.d("shortLinkUseCase","onSuccess")
+			}
+			
+		}, ShortLinkRequest(url, "temp", "86400000"))
 	}
 	
 	fun getReport(): LiveData<Report> {
