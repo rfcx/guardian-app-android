@@ -7,6 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -25,11 +28,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.ActivityReportDetailBinding
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class ReportDetailActivity : BaseReportImageActivity() {
 	
@@ -40,6 +46,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
 	private val analytics by lazy { Analytics(this) }
+	private var lastReport: Report? = null
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -62,6 +69,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		viewModel.setReport(reportId)
 		
 		viewModel.getReport().observe(this, Observer { report ->
+			lastReport = report
 			if (report == null) {
 				reportTypeTextView.text = getString(R.string.other)
 				reportTypeImageView.setImageResource(R.drawable.ic_pin_huge)
@@ -87,6 +95,47 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			mapView?.setPadding(horizontalPadding, 0, horizontalPadding, 0)
 			runOnUiThread { setMapPin() }
 		}
+	}
+	
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		val inflater = menuInflater
+		inflater.inflate(R.menu.share_reports, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+	
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		R.id.attachView
+		when (item?.itemId) {
+			android.R.id.home -> finish()
+			R.id.shareReportsView -> shareReports()
+		}
+		return super.onOptionsItemSelected(item)
+	}
+	
+	private fun shareReports() {
+		val timeStart = (lastReport?.reportedAt?.time?.minus((28802 * 1000L))?.let { Timestamp(it) })?.time?.let { Date(it) }
+		val timeEnd = (lastReport?.reportedAt?.time?.minus((28798 * 1000L))?.let { Timestamp(it) })?.time?.let { Date(it) }
+		Log.d("URL1", " ${lastReport?.reportedAt}")
+		Log.d("URL1", " ${lastReport?.reportedAt?.toIsoString()}")
+//		val timeStart = dateParser(lastReport?.reportedAt?.toFullDateTimeString())
+//		val timeEnd = timeStart?.time?.plus((59* 1000L))?.let { Timestamp(it) }
+//		Log.d("URL1","${timeStart?.toIsoString()}")
+//		Log.d("URL1","${timeEnd?.toIsoString()}")
+//
+		val site = 	Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE)
+		
+		val url = "https://dashboard.rfcx.org/rangers?site=$site&live-view=false&rangers-tab=reports&rngs=%5B%22d98489c7-ff04-4cab-8f1d-7af76deec298%22%5D&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart?.toIsoString()}&end-bef=${timeEnd?.toIsoString()}&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
+//		val url = "https://dashboard.rfcx.org/rangers?=$site&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart?.toIsoString()}&end-bef=${timeEnd?.toIsoString()}&range=Custom%20Range&live-view=false&rangers-tab=reports"
+//				"https://dashboard.rfcx.org/rangers?site=$site&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=$timeStart&end-bef=$timeEnd&range=Custom%20Range&live-view=false&rangers-tab=reports"
+		Log.d("URL1"," $url")
+		val s = "$url \nLink is copied to clipboard (expires in 24h)"
+		
+		//Intent to share the text
+		val shareIntent = Intent()
+		shareIntent.action = Intent.ACTION_SEND
+		shareIntent.type="text/plain"
+		shareIntent.putExtra(Intent.EXTRA_TEXT, s)
+		startActivity(Intent.createChooser(shareIntent,"Share via"))
 	}
 	
 	data class DetailReport(val report: Report, val context: Context) {

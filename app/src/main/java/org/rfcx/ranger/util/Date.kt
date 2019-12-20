@@ -54,7 +54,7 @@ fun Date.millisecondsSince(): Long {
 }
 
 
-	
+
 private val legacyInputFormatters by lazy { arrayListOf(
 	isoSdf,
 	SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
@@ -71,4 +71,9 @@ fun legacyDateParser(input: String?): Date? {
 		} catch (e: ParseException) { }
 	}
 	return null // not found format matching
+}
+
+fun dateParser(input: String?): Date? {
+	input ?: return null
+	return outputStandardDateSdf.parse(input)
 }
