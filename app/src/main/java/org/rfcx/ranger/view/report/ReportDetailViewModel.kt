@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import io.realm.Realm
 import io.realm.RealmResults
+import okhttp3.ResponseBody
 import org.rfcx.ranger.data.remote.shortlink.ShortLinkUseCase
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.shortlink.ShortLinkRequest
-import org.rfcx.ranger.entity.shortlink.ShortLinkResponse
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.util.RealmHelper
@@ -53,13 +53,13 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 	
 	fun getShortLink(url: String) {
 		
-		shortLinkUseCase.execute(object : DisposableSingleObserver<String>() {
+		shortLinkUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onError(e: Throwable) {
 				Log.d("shortLinkUseCase","onError ${e.message}")
 			}
 			
-			override fun onSuccess(t: String) {
-				Log.d("shortLinkUseCase","onSuccess")
+			override fun onSuccess(t: ResponseBody) {
+				Log.d("shortLinkUseCase", t.string())
 			}
 			
 		}, ShortLinkRequest(url, "temp", "86400000"))
