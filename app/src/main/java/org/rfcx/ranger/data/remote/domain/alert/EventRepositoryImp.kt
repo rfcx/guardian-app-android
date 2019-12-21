@@ -6,14 +6,24 @@ import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.service.rest.EventService
 import org.rfcx.ranger.entity.event.*
+import org.rfcx.ranger.service.DownLoadEventWorker
 
 class EventRepositoryImp(private val eventService: EventService, private val eventDb: EventDb,
                          private val weeklySummaryData: WeeklySummaryData) : EventRepository {
 	
-	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<EventsResponse> {
+	override fun getEventsGuardian(requestFactory: EventsGuardianRequestFactory): Single<List<Event>> {
 		return eventService.getEventsGuardian(requestFactory.guardian, requestFactory.value, requestFactory.orderBy,
-				requestFactory.dir, requestFactory.limit, requestFactory.offset).map {
-			it
+				requestFactory.dir, requestFactory.limit, requestFactory.offset).map { r ->
+			
+			val events = r.events?.map { it.toEvent() } ?: listOf()
+			// store events
+			if (events.isNotEmpty()) {
+				eventDb.saveEvents(events)
+				// start worker download event for offline
+				DownLoadEventWorker.enqueue()
+			}
+			
+			events
 		}
 	}
 	

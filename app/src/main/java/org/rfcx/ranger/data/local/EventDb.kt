@@ -2,6 +2,7 @@ package org.rfcx.ranger.data.local
 
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 
@@ -9,7 +10,7 @@ class EventDb(val realm: Realm) {
 	
 	
 	fun getEvents(): List<Event> {
-		return realm.copyFromRealm(realm.where(Event::class.java).findAll())
+		return realm.copyFromRealm(realm.where(Event::class.java).sort("beginsAt", Sort.DESCENDING).findAll())
 	}
 	
 	fun getEvent(eventGuid: String): Event? {

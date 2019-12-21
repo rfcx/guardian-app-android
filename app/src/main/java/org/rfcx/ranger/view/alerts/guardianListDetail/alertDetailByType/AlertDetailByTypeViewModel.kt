@@ -10,6 +10,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
 import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
@@ -57,10 +58,9 @@ class AlertDetailByTypeViewModel(private val context: Context, private val event
 		_arrayEvent.value = Result.Success(EventGroupByValue(arrayEventGroupMore.events, EventGroupByValue.StateSeeOlder.LOADING))
 		
 		val requestFactory = EventsGuardianRequestFactory(guid, value, "measured_at", "DESC", LIMITS, arrayEventGroupMore.events.size)
-		getMoreEvent.execute(object : DisposableSingleObserver<EventsResponse>() {
-			override fun onSuccess(t: EventsResponse) {
-				val events = t.events?.map { it.toEvent() } ?: listOf()
-				if (t.events!!.isEmpty()) {
+		getMoreEvent.execute(object : DisposableSingleObserver<List<Event>>() {
+			override fun onSuccess(events: List<Event>) {
+				if (events.isEmpty()) {
 					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
 					_arrayEvent.value = Result.Success(EventGroupByValue(arrayEventGroupMore.events, EventGroupByValue.StateSeeOlder.NOT_HAVE_ALERT))
 					
