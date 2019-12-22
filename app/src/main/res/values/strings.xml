@@ -43,7 +43,7 @@
 	<string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
 	<string name="report_attach_image_label">PHOTOS (Optional)</string>
 	<string name="report_location_null">Location not found. Please try again.</string>
-	<string name="report_note_label">NOTES</string>
+	<string name="report_note_label">Notes</string>
 	<string name="report_note_hint">Put some notes here</string>
 	<string name="some_photo_already_exists">Some photo already exists</string>
 	<string name="these_photos_already_exists">These photos already exists</string>

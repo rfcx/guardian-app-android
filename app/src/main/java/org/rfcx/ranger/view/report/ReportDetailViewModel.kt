@@ -55,7 +55,7 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 		
 		shortLinkUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onError(e: Throwable) {
-				Log.d("shortLinkUseCase","onError ${e.message}")
+				Log.d("shortLinkUseCase", "onError ${e.message}")
 			}
 			
 			override fun onSuccess(t: ResponseBody) {
@@ -84,4 +84,16 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 		reportImageDb.deleteUnsent(imagePath)
 	}
 	
+	fun saveEditedNoteIfChanged(newNote: String?) {
+		if (newNote != reportLive.value?.notes) {
+			val editedReport = reportLive.value?.let { t ->
+				Report(t.id, t.guid, t.value, t.site, t.reportedAt, t.latitude,
+						t.longitude, t.ageEstimateRaw, newNote, t.audioLocation, t.syncState)
+			}
+			editedReport?.let {
+				editedReport.syncState = ReportDb.UNSENT
+				reportDb.update(editedReport)
+			}
+		}
+	}
 }

@@ -37,6 +37,15 @@ class ReportDb(val realm: Realm) {
 		}
 	}
 	
+	fun update(report: Report) {
+		realm.executeTransaction {
+			if (report.id == 0) {
+				report.id = (it.where(Report::class.java).max("id")?.toInt() ?: 0) + 1
+			}
+			it.insertOrUpdate(report)
+		}
+	}
+	
 	fun lockUnsent(): List<Report> {
 		var unsentCopied: List<Report> = listOf()
 		realm.executeTransaction {
@@ -112,7 +121,7 @@ class ReportDb(val realm: Realm) {
 				.findAll()
 //		val imageDb = ReportImageDb()
 		reports.forEach {
-//			imageDb.deleteAll(it.id)
+			//			imageDb.deleteAll(it.id)
 			it.realm.deleteAll()
 		}
 		val filenames = reports.mapNotNull { it.audioLocation }

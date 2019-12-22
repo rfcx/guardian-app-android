@@ -135,7 +135,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		})
 	}
 	
-	fun shareReports(shortLink:String) {
+	fun shareReports(shortLink: String) {
 		val s = "$shortLink \nLink is copied to clipboard (expires in 24h)"
 		
 		//Intent to share the text
@@ -153,7 +153,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		fun getWhenText(): String = report.getLocalisedAgeEstimate(context)
 		fun getNote(): String {
 			return if (report.notes.isNullOrEmpty()) {
-				"None"
+				""
 			} else {
 				report.notes.toString()
 			}
@@ -233,6 +233,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	override fun onDestroy() {
+		saveEditedNoteIfChange()
 		super.onDestroy()
 		stopPlaying()
 	}
@@ -278,6 +279,13 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			layoutManager = LinearLayoutManager(this@ReportDetailActivity, LinearLayoutManager.HORIZONTAL, false)
 			setHasFixedSize(true)
 		}
+	}
+	
+	private fun saveEditedNoteIfChange() {
+		val note: String? = if (noteTextView.text?.trim().toString().isEmpty()) {
+			""
+		} else noteTextView.text?.trim().toString()
+		viewModel.saveEditedNoteIfChanged(note)
 	}
 	
 	companion object {
