@@ -7,10 +7,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -31,7 +31,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.toIsoString
+import org.rfcx.ranger.util.toIsoNotZString
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
@@ -47,7 +47,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
 	private val analytics by lazy { Analytics(this) }
-	private var lastReport: Report? = null
+	private var urlBeforeGetShortLink: String? = null
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -70,7 +70,8 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		viewModel.setReport(reportId)
 		
 		viewModel.getReport().observe(this, Observer { report ->
-			lastReport = report
+			getShortLink(report)
+			
 			if (report == null) {
 				reportTypeTextView.text = getString(R.string.other)
 				reportTypeImageView.setImageResource(R.drawable.ic_pin_huge)
@@ -108,35 +109,33 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		R.id.attachView
 		when (item?.itemId) {
 			android.R.id.home -> finish()
-			R.id.shareReportsView -> getShortLink()
+			R.id.shareReportsView -> shareShortLinkReports()
 		}
 		return super.onOptionsItemSelected(item)
 	}
 	
-	private fun getShortLink() {
-		val timeStart = (lastReport?.reportedAt?.time?.minus((28802 * 1000L))?.let { Timestamp(it) })?.time?.let { Date(it) }
-		val timeEnd = (lastReport?.reportedAt?.time?.minus((28798 * 1000L))?.let { Timestamp(it) })?.time?.let { Date(it) }
-		Log.d("URL1", " ${lastReport?.reportedAt}")
-		Log.d("URL1", " ${lastReport?.reportedAt?.toIsoString()}")
-//		val timeStart = dateParser(lastReport?.reportedAt?.toFullDateTimeString())
-//		val timeEnd = timeStart?.time?.plus((59* 1000L))?.let { Timestamp(it) }
-//		Log.d("URL1","${timeStart?.toIsoString()}")
-//		Log.d("URL1","${timeEnd?.toIsoString()}")
-//
-		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE)
+	private fun getShortLink(report: Report) {
+		val timeStart = Date((report.reportedAt.time.minus((28805 * 1000L)).let { Timestamp(it) }).time)
+		val timeEnd = Date((report.reportedAt.time.minus((28795 * 1000L)).let { Timestamp(it) }).time)
 		
-		val url = "https://dashboard.rfcx.org/rangers?site=$site&live-view=false&rangers-tab=reports&rngs=%5B%22d98489c7-ff04-4cab-8f1d-7af76deec298%22%5D&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart?.toIsoString()}&end-bef=${timeEnd?.toIsoString()}&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
-//		val url = "https://dashboard.rfcx.org/rangers?=$site&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart?.toIsoString()}&end-bef=${timeEnd?.toIsoString()}&range=Custom%20Range&live-view=false&rangers-tab=reports"
-//				"https://dashboard.rfcx.org/rangers?site=$site&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=$timeStart&end-bef=$timeEnd&range=Custom%20Range&live-view=false&rangers-tab=reports"
-		Log.d("URL1", " $url")
+		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE)
+		val url = "https://dashboard.rfcx.org/rangers?site=$site&live-view=false&rangers-tab=reports&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart.toIsoNotZString()}&end-bef=${timeEnd.toIsoNotZString()}&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
+		urlBeforeGetShortLink = url
 		viewModel.getShortLink(url)
+	}
+	
+	private fun shareShortLinkReports() {
 		viewModel.shortLink.observe(this, Observer {
 			shareReports(it)
 		})
 	}
 	
-	fun shareReports(shortLink: String) {
-		val s = "$shortLink \nLink is copied to clipboard (expires in 24h)"
+	private fun shareReports(shortLink: String) {
+		val s :String = if (shortLink == "") {
+			urlBeforeGetShortLink.toString()
+		} else {
+			"$shortLink \nLink is copied to clipboard (expires in 24h)"
+		}
 		
 		//Intent to share the text
 		val shareIntent = Intent()

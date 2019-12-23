@@ -55,11 +55,12 @@ class ReportDetailViewModel(private val reportDb: ReportDb, private val reportIm
 		
 		shortLinkUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onError(e: Throwable) {
+				_shortLink.value = ""
 				Log.d("shortLinkUseCase", "onError ${e.message}")
 			}
 			
 			override fun onSuccess(t: ResponseBody) {
-				Log.d("shortLinkUseCase", t.string())
+				_shortLink.value = t.string()
 			}
 			
 		}, ShortLinkRequest(url, "temp", "86400000"))
