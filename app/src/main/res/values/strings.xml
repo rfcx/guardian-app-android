@@ -177,6 +177,8 @@
 	<string name="enjoy_you_day">Enjoy you day :)</string>
 	<string name="see_older">See Older</string>
 	<string name="not_have_event_more">There is no more events</string>
+	<string name="last_reviewed_by">Last reviewed by</string>
+	<string name="not_have_review">Not have anyone review</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
@@ -209,5 +211,4 @@
 	
 	<string name="reject_text">reject</string>
 	<string name="confirm_text">confirm</string>
-	
 </resources>

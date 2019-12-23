@@ -30,6 +30,7 @@
 	<dimen name="spectrogram_height">224dp</dimen>
 	<dimen name="event_icon_width">96dp</dimen>
 	<dimen name="event_map_height">160dp</dimen>
+	<dimen name="event_confirm_icon">16dp</dimen>
 	
 	<dimen name="bottom_bar_height">56dp</dimen>
 	<dimen name="fab_height">56dp</dimen>

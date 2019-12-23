@@ -1,9 +1,12 @@
 package org.rfcx.ranger.view.alerts.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +14,7 @@ import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -73,31 +77,67 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		private val iconAlert = itemView.ivAlertIcon
 		private val tvTimeAgo = itemView.tvAlertTimeAgo
 		private val ivStatusRead = itemView.ivStatusRead
-		private val ivReviewed = itemView.ivReviewed
+		private val tvReviewed = itemView.reviewedTextView
+		private val tvNameReviewer = itemView.nameReviewerTextView
+		private val tvAgreeValue = itemView.agreeTextView
+		private val tvRejectValue = itemView.rejectTextView
+		private val ivAgree = itemView.agreeImageView
+		private val ivReject = itemView.rejectImageView
+		private val context = itemView.context
 		
 		@SuppressLint("SetTextI18n", "DefaultLocale")
 		fun bind(item: EventItem) {
 			tvTitle.text = item.event.guardianName
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
-			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)}"
+			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
+			tvAgreeValue.text = item.event.confirmedCount.toString()
+			tvRejectValue.text = item.event.rejectedCount.toString()
+			val count = item.event.confirmedCount + item.event.rejectedCount
+			tvReviewed.text = context.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
-					ivReviewed.setImageResource(R.drawable.ic_check)
-					ivReviewed.setBackgroundResource(R.drawable.circle_green_stroke)
-					ivReviewed.visibility = View.VISIBLE
 					ivStatusRead.visibility = View.INVISIBLE
+					ivAgree.background = context.getImage(R.drawable.bg_circle_green)
+					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
+					
+					//TODO: remove
+					if (count == 0) {
+						tvAgreeValue.text = "1"
+						tvReviewed.text = context.getString(R.string.last_reviewed_by)
+						tvNameReviewer.text = context.getUserNickname()
+						tvNameReviewer.visibility = View.VISIBLE
+					}
 				}
 				EventItem.State.REJECT -> {
-					ivReviewed.setImageResource(R.drawable.ic_wrong)
-					ivReviewed.setBackgroundResource(R.drawable.circle_green_stroke)
-					ivReviewed.visibility = View.VISIBLE
 					ivStatusRead.visibility = View.INVISIBLE
+					ivReject.background = context.getImage(R.drawable.bg_circle_green)
+					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
+					
+					//TODO: remove
+					if (count == 0) {
+						tvRejectValue.text = "1"
+						tvReviewed.text = context.getString(R.string.last_reviewed_by)
+						tvNameReviewer.text = context.getUserNickname()
+						tvNameReviewer.visibility = View.VISIBLE
+					}
 				}
 				EventItem.State.NONE -> {
-					ivReviewed.visibility = View.INVISIBLE
 					ivStatusRead.visibility = View.VISIBLE
+					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
+					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
+					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
+					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
 				}
 			}
+		}
+		
+		private fun Context.getImage(res: Int): Drawable? {
+			return ContextCompat.getDrawable(this, res)
+		}
+		
+		private fun Context.getBackgroundColor(res: Int): Int {
+			return ContextCompat.getColor(this, res)
 		}
 	}
 }

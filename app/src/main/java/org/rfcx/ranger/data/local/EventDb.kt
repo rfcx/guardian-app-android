@@ -88,9 +88,11 @@ class EventDb(val realm: Realm) {
 	
 	fun markReviewEventSyncState(eventGuid: String, syncState: Int) {
 		realm.use {
-			val event = it.where(EventReview::class.java)
-					.equalTo("eventGuId", eventGuid).findFirst()
-			event?.syncState = syncState
+			it.executeTransaction {realm ->
+				val event = realm.where(EventReview::class.java)
+						.equalTo("eventGuId", eventGuid).findFirst()
+				event?.syncState = syncState
+			}
 		}
 	}
 	

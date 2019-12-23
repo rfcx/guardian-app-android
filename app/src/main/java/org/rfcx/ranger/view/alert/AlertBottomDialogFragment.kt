@@ -18,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
@@ -142,13 +141,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					negativeButton.apply {
 						text = getString(R.string.reject_text)
 						setCompoundDrawablesWithIntrinsicBounds(
-								R.drawable.ic_reject_event, 0, 0, 0)
+								R.drawable.ic_reject_event_white, 0, 0, 0)
 					}
 					
 					positiveButton.apply {
 						text = getString(R.string.confirm_text)
 						setCompoundDrawablesWithIntrinsicBounds(
-								R.drawable.ic_confirm_event, 0, 0, 0)
+								R.drawable.ic_confirm_event_white, 0, 0, 0)
 					}
 				}
 				EventState.REVIEWED -> {
