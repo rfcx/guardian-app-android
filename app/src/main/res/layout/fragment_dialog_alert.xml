@@ -73,15 +73,38 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 			
-			<androidx.appcompat.widget.AppCompatTextView
-				android:id="@+id/guardianNameTextView"
-				style="@style/RangerText.Body"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:gravity="center_vertical"
-				android:textStyle="bold"
-				tools:text="Malapa - Fossil Site" />
+				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:orientation="horizontal">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/guardianNameTextView"
+					style="@style/RangerText.Body"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:gravity="center_vertical"
+					android:textStyle="bold"
+					tools:text="Malapa - Fossil Site" />
+				
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:orientation="vertical">
+					
+					<androidx.appcompat.widget.AppCompatTextView
+						android:id="@+id/timeTextView"
+						style="@style/RangerText.Caption"
+						android:layout_width="wrap_content"
+						android:layout_height="match_parent"
+						android:layout_gravity="right"
+						tools:text="  2 days ago" />
+				</LinearLayout>
+			
+			</LinearLayout>
 			
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -90,17 +113,70 @@
 				android:orientation="horizontal">
 				
 				<androidx.appcompat.widget.AppCompatTextView
-					android:id="@+id/timeTextView"
+					android:id="@+id/reviewedTextView"
 					style="@style/RangerText.Caption"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:drawableStart="@drawable/ic_clock_circular_outline"
 					android:layout_marginStart="@dimen/margin_padding_normal"
-					tools:text="  2 days ago" />
+					android:gravity="center_vertical"
+					tools:text="Last reviewed by" />
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/nameReviewerTextView"
+					style="@style/RangerText.Caption"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_xsmall"
+					android:ellipsize="end"
+					android:gravity="center_vertical"
+					android:maxLines="1"
+					android:textStyle="bold"
+					tools:text="Ratree" />
+				
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+					
+					<LinearLayout
+						android:id="@+id/linearLayout"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="right"
+						android:orientation="horizontal">
+						
+						<androidx.appcompat.widget.AppCompatImageView
+							android:id="@+id/agreeImageView"
+							android:layout_width="@dimen/event_confirm_icon"
+							android:layout_height="@dimen/event_confirm_icon"
+							android:src="@drawable/ic_confirm_event_gray" />
+						
+						<TextView
+							android:id="@+id/agreeTextView"
+							style="@style/RangerText.Caption"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginStart="@dimen/margin_padding_xsmall"
+							tools:text="0" />
+						
+						<androidx.appcompat.widget.AppCompatImageView
+							android:id="@+id/rejectImageView"
+							android:layout_width="@dimen/event_confirm_icon"
+							android:layout_height="@dimen/event_confirm_icon"
+							android:layout_marginStart="@dimen/margin_padding_normal"
+							android:src="@drawable/ic_reject_event_gray" />
+						
+						<TextView
+							android:id="@+id/rejectTextView"
+							style="@style/RangerText.Caption"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginStart="@dimen/margin_padding_xsmall"
+							tools:text="0" />
+					</LinearLayout>
+				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
-	
-	
 	</LinearLayout>
 	
 	<LinearLayout

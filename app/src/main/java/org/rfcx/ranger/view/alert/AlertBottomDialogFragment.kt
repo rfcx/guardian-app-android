@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
 import android.content.Context
+import kotlinx.android.synthetic.main.item_alert.view.*
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -115,9 +116,17 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
+				val count = it.confirmedCount + it.rejectedCount
+				
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
+				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
+				agreeTextView.text = it.confirmedCount.toString()
+				rejectTextView.text = it.rejectedCount.toString()
+				nameReviewerTextView.text = context?.getUserNickname() ?: ""
+				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+				
 				initReviewButtonClick()
 			}, {
 				context?.handleError(it)
