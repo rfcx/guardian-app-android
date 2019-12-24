@@ -386,6 +386,8 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 	}
 	
 	data class AlertItem(val alert: Event, var state: State) : StatusItemBase {
+		val count = alert.confirmedCount + alert.rejectedCount
+		
 		enum class State {
 			CONFIRM, REJECT, NONE
 		}
@@ -395,12 +397,22 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		fun getGuardianShortname(): String = alert.guardianName
 		fun getImage(): Int = alert.value.toEventIcon()
+		fun getConfirmedCount(): String = alert.confirmedCount.toString()
+		fun getRejectedCount(): String = alert.rejectedCount.toString()
 		fun getTime(context: Context): String = "  ${alert.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
+		fun getReviewed(context: Context) : String = context.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review)
+		fun getNameOfReviewed(context: Context) : String = context.getUserNickname()
+		fun getNameOfReviewedIsVisibility() : Boolean = count > 0
+		fun getConfirmIcon(): Int = when (state) {
+			State.CONFIRM -> R.drawable.ic_confirm_event_white
+			State.NONE -> R.drawable.ic_confirm_event_gray
+			else -> R.drawable.ic_confirm_event_gray
+		}
 		
-		fun getIcon(): Int = when (state) {
-			State.CONFIRM -> R.drawable.ic_check
-			State.REJECT -> R.drawable.ic_wrong
-			else -> R.drawable.ic_wrong
+		fun getRejectIcon(): Int = when (state) {
+			State.REJECT -> R.drawable.ic_reject_event_white
+			State.NONE -> R.drawable.ic_reject_event_gray
+			else -> R.drawable.ic_reject_event_gray
 		}
 		
 		fun isVisibility(): Boolean = state == State.NONE
