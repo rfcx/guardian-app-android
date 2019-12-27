@@ -11,7 +11,6 @@ import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.util.getGuardianGroup
 
 class AlertViewModel(private val context: Context, private val profileData: ProfileData,
                      private val eventsUserCase: GetEventsUseCase) : ViewModel() {
@@ -29,14 +28,14 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	}
 	
 	fun loadAlerts() {
-		val group = context.getGuardianGroup()
+		val group = profileData.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC",
-				AllAlertsViewModel.PAGE_LIMITS, 0, listOf("chainsaw", "vehicle"))
+		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC",
+				AllAlertsViewModel.PAGE_LIMITS, 0, group.values)
 		
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {

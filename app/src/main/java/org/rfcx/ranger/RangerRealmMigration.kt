@@ -36,6 +36,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 10L && newVersion >= 10L) {
 			migrateToV10(c)
 		}
+		if (oldVersion < 11L && newVersion >= 11L) {
+			migrateToV11(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -246,6 +249,14 @@ class RangerRealmMigration : RealmMigration {
 			
 			addField(CachedEndpoint.FIELD_UPDATED_AT, Date::class.java)
 			setRequired(CachedEndpoint.FIELD_UPDATED_AT, true)
+		}
+	}
+	
+	private fun migrateToV11(realm: DynamicRealm) {
+		val guardianGroup = realm.schema.get("GuardianGroup")
+		guardianGroup?.apply {
+			addRealmListField("values",  String::class.java)
+			
 		}
 		
 	}

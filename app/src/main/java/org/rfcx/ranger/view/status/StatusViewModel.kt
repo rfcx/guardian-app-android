@@ -168,7 +168,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 					}
 					
 					override fun onError(e: Throwable) {}
-				}, it)
+				}, it.shortname)
 			}
 		}
 	}
@@ -294,9 +294,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	private fun loadEvents() {
 		// start load
-		val group = context.getGuardianGroup() ?: return
+		val group = profileData.getGuardianGroup() ?: return  // has guardian group
 		
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC", 3, 0, listOf("chainsaw", "vehicle"))
+		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC", 3, 0, group.values)
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {
 				updateRecentAlerts(t.first)

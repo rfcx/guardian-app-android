@@ -104,13 +104,14 @@ object DataModule {
 		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
 		factory { CachedEndpointDb(get()) }
 		factory { GuardianDb(get()) }
+		factory { GuardianGroupDb(get()) }
 		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
 		factory { ReportImageDb(get()) }
 		factory { EventDb(get()) }
 		factory { WeeklySummaryData(get()) }
-		factory { ProfileData(get()) }
+		factory { ProfileData(get(), get()) }
 		factory { Preferences.getInstance(androidContext()) }
 		single { CredentialKeeper(androidContext()) }
 	}
