@@ -7,6 +7,8 @@ import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.local.GuardianGroupDb
+import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
@@ -20,6 +22,7 @@ import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 class AllAlertsViewModel(private val context: Context,
                          private val eventsUserCase: GetEventsUseCase,
                          private val eventDb: EventDb,
+                         private val profileData: ProfileData,
                          pref: Preferences) : ViewModel() {
 	
 	private val _groupByGuardians = MutableLiveData<Result<GroupByGuardiansResponse>>()
@@ -72,14 +75,14 @@ class AllAlertsViewModel(private val context: Context,
 	private fun loadEvents() {
 		_alerts.value = Result.Loading
 		
-		val group = context.getGuardianGroup()
+		val group = profileData.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
 			return
 		}
 		
-		val requestFactory = EventsRequestFactory(listOf(group), "measured_at", "DESC",
-				PAGE_LIMITS, currentOffset, listOf("chainsaw", "vehicle"))
+		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC",
+				PAGE_LIMITS, currentOffset, group.values)
 		
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {

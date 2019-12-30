@@ -2,12 +2,13 @@ package org.rfcx.ranger.data.local
 
 import io.realm.Realm
 import org.rfcx.ranger.adapter.SyncInfo
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
 
-class ProfileData(private val preferences: Preferences) {
+class ProfileData(private val preferences: Preferences,private val guardianGroupDb: GuardianGroupDb) {
 	
 	fun getSiteName(): String {
 		val defaultSiteName = preferences.getString(Preferences.DEFAULT_SITE, "")
@@ -56,8 +57,8 @@ class ProfileData(private val preferences: Preferences) {
 		return preferences.getString(Preferences.LAST_STATUS_SYNCING, SyncInfo.Status.UPLOADED.name)
 	}
 	
-	fun getGuardianGroup(): String? {
+	fun getGuardianGroup(): GuardianGroup? {
 		val group = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP, "")
-		return if (group.isEmpty()) null else group
+		return if (group.isEmpty()) null else guardianGroupDb.getGuardianGroup(group)
 	}
 }

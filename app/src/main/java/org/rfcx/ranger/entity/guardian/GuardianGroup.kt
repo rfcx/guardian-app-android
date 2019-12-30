@@ -17,6 +17,9 @@ open class GuardianGroup : RealmObject() {
 	var guardians: RealmList<Guardian>? = null
 	@SerializedName("site")
 	var siteId: String = ""
+	@SerializedName("event_values")
+	var values: RealmList<String> = RealmList()
+		get() = if (field.isEmpty()) RealmList("chainsaw", "vehicle") else field
 	
 	companion object {
 		val noneGuardianGroup =
