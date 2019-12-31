@@ -25,9 +25,10 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	fun resumed() {
 		hasGuardianGroup = profileData.hasGuardianGroup()
 		_observeGuardianGroup.value = profileData.hasGuardianGroup()
+		loadAlerts()
 	}
 	
-	fun loadAlerts() {
+	private fun loadAlerts() {
 		val group = profileData.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()

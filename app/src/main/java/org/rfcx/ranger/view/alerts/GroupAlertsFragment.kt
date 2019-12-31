@@ -34,12 +34,6 @@ class GroupAlertsFragment : BaseFragment() {
 			adapter = groupByGuardianAdapter
 		}
 		
-		viewModel.alerts.observe(this, Observer { alerts ->
-			if(alerts.isNotEmpty()){
-				viewModel.loadGuardianGroups()
-			}
-		})
-		
 		viewModel.status.observe(this, Observer { it ->
 			it.success({ items ->
 				loadingProgress.visibility = View.INVISIBLE
