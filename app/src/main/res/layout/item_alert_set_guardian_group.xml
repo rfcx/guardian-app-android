@@ -17,7 +17,9 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_xlarge"
+		android:paddingTop="@dimen/margin_padding_xlarge"
+		android:paddingStart="@dimen/margin_padding_xlarge"
+		android:paddingEnd="@dimen/margin_padding_xlarge"
 		android:gravity="center"
 		android:orientation="vertical">
 		
@@ -45,6 +47,7 @@
 			android:paddingBottom="@dimen/margin_padding_small"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:paddingStart="@dimen/margin_padding_normal"
+			android:layout_marginBottom="@dimen/margin_padding_xlarge"
 			android:text="@string/button_set_guardian_group"/>
 	
 	</LinearLayout>
