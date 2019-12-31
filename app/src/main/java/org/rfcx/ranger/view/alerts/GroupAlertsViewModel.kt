@@ -4,20 +4,19 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import io.reactivex.observers.DisposableSingleObserver
+import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.entity.guardian.GroupByGuardiansResponse
 import org.rfcx.ranger.entity.guardian.Guardian
+import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
 
@@ -27,15 +26,30 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	private val _status = MutableLiveData<Result<List<EventGroup>>>()
 	val status: LiveData<Result<List<EventGroup>>> get() = _status
 	
-	val alerts = MutableLiveData<List<Event>>()
+	private lateinit var eventLiveData: LiveData<List<Event>>
 	private var _eventGroups: List<EventGroup> = listOf()
+	
+	private val eventObserve = Observer<List<Event>> {
+		if (it.isNotEmpty()) {
+			val events = eventDb.getEvents()
+			loadGuardianGroups(events)
+		}
+	}
 	
 	init {
 		_status.value = Result.Loading
-		alerts.value = eventDb.getEvents()
+		fetchEvents()
 	}
 	
-	fun loadGuardianGroups() {
+	private fun fetchEvents() {
+		eventLiveData = Transformations.map<RealmResults<Event>,
+				List<Event>>(eventDb.getAllResultsAsync().asLiveData()) {
+			it
+		}
+		eventLiveData.observeForever(eventObserve)
+	}
+	
+	private fun loadGuardianGroups(events: List<Event>) {
 		val group = context.getGuardianGroup()
 		if (group == null) {
 			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
@@ -43,7 +57,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		}
 		groupByGuardiansUseCase.execute(object : ResponseCallback<List<Guardian>> {
 			override fun onSuccess(t: List<Guardian>) {
-				updateEvents(eventDb.getEvents(), t)
+				updateEvents(events, t)
 			}
 			
 			override fun onError(e: Throwable) {
