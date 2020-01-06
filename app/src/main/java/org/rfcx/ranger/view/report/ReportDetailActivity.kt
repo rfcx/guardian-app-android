@@ -134,7 +134,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		val s :String = if (shortLink == "") {
 			urlBeforeGetShortLink.toString()
 		} else {
-			"$shortLink \nLink is copied to clipboard (expires in 24h)"
+			"$shortLink (${this.getString(R.string.expires_in_24h)})"
 		}
 		
 		//Intent to share the text
