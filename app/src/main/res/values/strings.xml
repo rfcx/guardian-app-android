@@ -179,7 +179,7 @@
 	<string name="see_older">See Older</string>
 	<string name="not_have_event_more">There is no more events</string>
 	<string name="last_reviewed_by">Last reviewed by</string>
-	<string name="not_have_review">Not have anyone review</string>
+	<string name="not_have_review">Not yet reviewed</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
