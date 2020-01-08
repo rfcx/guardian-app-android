@@ -64,6 +64,12 @@ class Analytics(context: Context) {
 		trackEvent("add_report_submit", bundle)
 	}
 	
+	fun trackLocationTracking(status: String) {
+		val bundle = Bundle()
+		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, status)
+		trackEvent("add_location_tracking", bundle)
+	}
+	
 	fun trackSetGuardianGroupStartEvent(screen: Screen) {
 		val bundle = Bundle()
 		bundle.putString(FirebaseAnalytics.Param.SOURCE, screen.toString())

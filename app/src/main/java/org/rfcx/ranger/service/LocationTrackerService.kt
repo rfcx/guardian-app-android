@@ -22,10 +22,13 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
+import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.MainActivityNew
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.fixedRateTimer
 
 /**
@@ -55,12 +58,26 @@ class LocationTrackerService : Service() {
 	private var isLocationAvailability: Boolean = true
 	private var trackingStatTimer: Timer? = null
 	private lateinit var weeklySummaryData: WeeklySummaryData
+	var lastUpdated: Date? = null
+	private val analytics by lazy { Analytics(this) }
+	
+	fun calculateTime(newTime: Date, lastTime: Date): Long {
+		val differenceTime1 = newTime.time - lastTime.time
+		lastUpdated = newTime
+		return TimeUnit.MILLISECONDS.toSeconds(differenceTime1)
+	}
 	
 	private val locationListener = object : android.location.LocationListener {
 		
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
 				Log.i(TAG, "${it.longitude} , ${it.longitude}")
+				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
+				when {
+					time < 120 -> analytics.trackLocationTracking("tracking_ok")
+					time in 121..599 -> analytics.trackLocationTracking("tracking_slow")
+					time > 600 -> analytics.trackLocationTracking("tracking_veryslow")
+				}
 				saveLocation(it)
 				if (BuildConfig.DEBUG) playSound()
 			}
