@@ -56,8 +56,7 @@
 	
 	</FrameLayout>
 	
-	<androidx.constraintlayout.widget.ConstraintLayout
-		xmlns:app="http://schemas.android.com/apk/res-auto"
+	<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:background="?attr/selectableItemBackground"
@@ -79,11 +78,12 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginTop="@dimen/margin_padding_xsmall"
+			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			app:layout_constraintEnd_toStartOf="@+id/timeTextView"
 			app:layout_constraintStart_toEndOf="@+id/eventIconImageView"
 			app:layout_constraintTop_toTopOf="parent">
+<!--		if do last reviewer change it - android:layout_marginTop="@dimen/margin_padding_xsmall" -->
 			
 			<TextView
 				android:id="@+id/guardianNameTextView"
@@ -100,7 +100,7 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				tools:text="Alert Tilte" />
-			
+		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 		
 		<TextView
@@ -114,74 +114,74 @@
 			app:layout_constraintTop_toTopOf="@+id/alertTitleLayout"
 			tools:text="October 29, 2019 19:06" />
 		
-		<TextView
-			android:id="@+id/reviewedTextView"
-			style="@style/RangerText.Caption"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:gravity="center_vertical"
-			app:layout_constraintStart_toStartOf="@+id/alertTitleLayout"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
-			tools:text="Last reviewed by" />
+		<!--		<TextView-->
+		<!--			android:id="@+id/reviewedTextView"-->
+		<!--			style="@style/RangerText.Caption"-->
+		<!--			android:layout_width="wrap_content"-->
+		<!--			android:layout_height="wrap_content"-->
+		<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+		<!--			android:gravity="center_vertical"-->
+		<!--			app:layout_constraintStart_toStartOf="@+id/alertTitleLayout"-->
+		<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"-->
+		<!--			tools:text="Last reviewed by" />-->
 		
-		<TextView
-			android:id="@+id/nameReviewerTextView"
-			style="@style/RangerText.Caption"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_xsmall"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:ellipsize="end"
-			android:gravity="center_vertical"
-			android:maxLines="1"
-			android:textStyle="bold"
-			android:visibility="invisible"
-			app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-			app:layout_constraintStart_toEndOf="@+id/reviewedTextView"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
-			tools:text="Anuphap" />
+		<!--		<TextView-->
+		<!--			android:id="@+id/nameReviewerTextView"-->
+		<!--			style="@style/RangerText.Caption"-->
+		<!--			android:layout_width="0dp"-->
+		<!--			android:layout_height="wrap_content"-->
+		<!--			android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+		<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+		<!--			android:layout_marginEnd="@dimen/margin_padding_normal"-->
+		<!--			android:ellipsize="end"-->
+		<!--			android:gravity="center_vertical"-->
+		<!--			android:maxLines="1"-->
+		<!--			android:textStyle="bold"-->
+		<!--			android:visibility="invisible"-->
+		<!--			app:layout_constraintEnd_toStartOf="@+id/linearLayout"-->
+		<!--			app:layout_constraintStart_toEndOf="@+id/reviewedTextView"-->
+		<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"-->
+		<!--			tools:text="Anuphap" />-->
 		
-		<LinearLayout
-			android:id="@+id/linearLayout"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:orientation="horizontal"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">
-			
-			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/agreeImageView"
-				android:layout_width="@dimen/event_confirm_icon"
-				android:layout_height="@dimen/event_confirm_icon"
-				android:src="@drawable/ic_confirm_event_gray" />
-			
-			<TextView
-				android:id="@+id/agreeTextView"
-				style="@style/RangerText.Caption"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_xsmall"
-				tools:text="0" />
-			
-			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/rejectImageView"
-				android:layout_width="@dimen/event_confirm_icon"
-				android:layout_height="@dimen/event_confirm_icon"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:src="@drawable/ic_reject_event_gray" />
-			
-			<TextView
-				android:id="@+id/rejectTextView"
-				style="@style/RangerText.Caption"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_xsmall"
-				tools:text="0" />
-		</LinearLayout>
+		<!--		<LinearLayout-->
+		<!--			android:id="@+id/linearLayout"-->
+		<!--			android:layout_width="wrap_content"-->
+		<!--			android:layout_height="wrap_content"-->
+		<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+		<!--			android:orientation="horizontal"-->
+		<!--			app:layout_constraintBottom_toBottomOf="parent"-->
+		<!--			app:layout_constraintEnd_toEndOf="parent"-->
+		<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">-->
+		<!--			-->
+		<!--			<androidx.appcompat.widget.AppCompatImageView-->
+		<!--				android:id="@+id/agreeImageView"-->
+		<!--				android:layout_width="@dimen/event_confirm_icon"-->
+		<!--				android:layout_height="@dimen/event_confirm_icon"-->
+		<!--				android:src="@drawable/ic_confirm_event_gray" />-->
+		<!--			-->
+		<!--			<TextView-->
+		<!--				android:id="@+id/agreeTextView"-->
+		<!--				style="@style/RangerText.Caption"-->
+		<!--				android:layout_width="wrap_content"-->
+		<!--				android:layout_height="wrap_content"-->
+		<!--				android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+		<!--				tools:text="0" />-->
+		<!--			-->
+		<!--			<androidx.appcompat.widget.AppCompatImageView-->
+		<!--				android:id="@+id/rejectImageView"-->
+		<!--				android:layout_width="@dimen/event_confirm_icon"-->
+		<!--				android:layout_height="@dimen/event_confirm_icon"-->
+		<!--				android:layout_marginStart="@dimen/margin_padding_normal"-->
+		<!--				android:src="@drawable/ic_reject_event_gray" />-->
+		<!--			-->
+		<!--			<TextView-->
+		<!--				android:id="@+id/rejectTextView"-->
+		<!--				style="@style/RangerText.Caption"-->
+		<!--				android:layout_width="wrap_content"-->
+		<!--				android:layout_height="wrap_content"-->
+		<!--				android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+		<!--				tools:text="0" />-->
+		<!--		</LinearLayout>-->
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 	

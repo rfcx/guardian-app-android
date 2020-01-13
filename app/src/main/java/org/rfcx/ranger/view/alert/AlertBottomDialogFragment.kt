@@ -121,11 +121,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
-				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
-				agreeTextView.text = it.confirmedCount.toString()
-				rejectTextView.text = it.rejectedCount.toString()
-				nameReviewerTextView.text = context?.getUserNickname() ?: ""
-				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+//				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
+//				agreeTextView.text = it.confirmedCount.toString()
+//				rejectTextView.text = it.rejectedCount.toString()
+//				nameReviewerTextView.text = context?.getUserNickname() ?: ""
+//				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
 				
 				initReviewButtonClick()
 			}, {
