@@ -39,130 +39,202 @@
 			app:layout_constraintTop_toTopOf="parent"
 			tools:src="@drawable/ic_vehicle" />
 		
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/alertTitleLayout"
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/agreeImageView"
+			android:layout_width="18dp"
+			android:layout_height="18dp"
+			android:layout_gravity="center"
+			android:background="@drawable/circle_green_stroke"
+			android:contentDescription="@string/app_name"
+			android:padding="5dp"
+			android:visibility="@{alertItem.visibility ? View.INVISIBLE : View.VISIBLE}"
+			app:layout_constraintBottom_toBottomOf="@+id/ivAlertIcon"
+			app:layout_constraintEnd_toEndOf="@+id/ivAlertIcon" />
+		
+		<TextView
+			android:id="@+id/tvAlertTitle"
+			style="@style/RangerText.Body"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
 			android:layout_marginTop="@dimen/margin_padding_xsmall"
 			android:layout_marginEnd="@dimen/margin_padding_small"
-			app:layout_constraintEnd_toStartOf="@+id/tvAlertTimeAgo"
+			android:text="@{alertItem.guardianShortname}"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
 			app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"
-			app:layout_constraintTop_toTopOf="parent">
-			
-			<TextView
-				android:id="@+id/tvAlertTitle"
-				style="@style/RangerText.Body"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:textStyle="bold"
-				android:text="@{alertItem.guardianShortname}"
-				app:layout_constrainedWidth="true"
-				app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
-				app:layout_constraintHorizontal_bias="0"
-				app:layout_constraintHorizontal_chainStyle="packed"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				tools:text="Alert Tilte" />
-			
-			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/ivStatusRead"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_small"
-				android:src="@drawable/ic_dot_green"
-				android:visibility="@{alertItem.visibility ? View.VISIBLE : View.INVISIBLE}"
-				app:layout_constraintBottom_toBottomOf="@+id/tvAlertTitle"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toEndOf="@+id/tvAlertTitle"
-				app:layout_constraintTop_toTopOf="@+id/tvAlertTitle" />
-		</androidx.constraintlayout.widget.ConstraintLayout>
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Alert Title" />
 		
 		<TextView
 			android:id="@+id/tvAlertTimeAgo"
 			style="@style/RangerText.Caption"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_xsmall"
+			android:drawableStart="@drawable/ic_clock_circular_outline"
+			android:drawablePadding="@dimen/margin_padding_xsmall"
 			android:gravity="center_vertical"
+			app:layout_constraintStart_toStartOf="@+id/tvAlertTitle"
+			app:layout_constraintTop_toBottomOf="@+id/tvAlertTitle"
 			android:text="@{alertItem.getTime(context)}"
-			app:layout_constraintBottom_toBottomOf="@+id/alertTitleLayout"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/alertTitleLayout"
-			tools:text="October 29, 2019 19:06" />
+			tools:text="time ago" />
 		
-		<TextView
-			android:id="@+id/reviewedTextView"
-			style="@style/RangerText.Caption"
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/ivStatusRead"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:gravity="center_vertical"
-			android:text="@{alertItem.getReviewed(context)}"
-			app:layout_constraintStart_toStartOf="@+id/alertTitleLayout"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
-			tools:text="Last reviewed by" />
-		
-		<TextView
-			android:id="@+id/nameReviewerTextView"
-			style="@style/RangerText.Caption"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_xsmall"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:ellipsize="end"
-			android:gravity="center_vertical"
-			android:maxLines="1"
-			android:textStyle="bold"
-			android:visibility="@{alertItem.nameOfReviewedIsVisibility ? View.VISIBLE : View.INVISIBLE}"
-			android:text="@{alertItem.getNameOfReviewed(context)}"
-			app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-			app:layout_constraintStart_toEndOf="@+id/reviewedTextView"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
-			tools:text="Anuphap" />
-		
-		<LinearLayout
-			android:id="@+id/linearLayout"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:orientation="horizontal"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:src="@drawable/ic_dot_green"
+			android:visibility="@{alertItem.visibility ? View.VISIBLE : View.INVISIBLE}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">
-			
-			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/agreeImageView"
-				android:layout_width="@dimen/event_confirm_icon"
-				android:layout_height="@dimen/event_confirm_icon"
-				android:src="@{alertItem.confirmIcon}" />
-			
-			<TextView
-				android:id="@+id/agreeTextView"
-				style="@style/RangerText.Caption"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_xsmall"
-				android:text="@{alertItem.confirmedCount}"
-				tools:text="0" />
-			
-			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/rejectImageView"
-				android:layout_width="@dimen/event_confirm_icon"
-				android:layout_height="@dimen/event_confirm_icon"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:src="@{alertItem.rejectIcon}" />
-			
-			<TextView
-				android:id="@+id/rejectTextView"
-				style="@style/RangerText.Caption"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_xsmall"
-				android:text="@{alertItem.rejectedCount}"
-				tools:text="0" />
-		</LinearLayout>
+			app:layout_constraintTop_toTopOf="parent" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
+	
+<!--	<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--		android:layout_width="match_parent"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:background="?attr/selectableItemBackground"-->
+<!--		android:onClick="@{onClickedAlertItem}"-->
+<!--		android:paddingStart="@dimen/margin_padding_normal"-->
+<!--		android:paddingTop="@dimen/margin_padding_small"-->
+<!--		android:paddingEnd="@dimen/margin_padding_normal"-->
+<!--		android:paddingBottom="@dimen/margin_padding_normal">-->
+<!--		-->
+<!--		<androidx.appcompat.widget.AppCompatImageView-->
+<!--			android:id="@+id/ivAlertIcon"-->
+<!--			android:layout_width="@dimen/report_icon_size"-->
+<!--			android:layout_height="@dimen/report_icon_size"-->
+<!--			android:src="@{alertItem.image}"-->
+<!--			app:layout_constraintStart_toStartOf="parent"-->
+<!--			app:layout_constraintTop_toTopOf="parent"-->
+<!--			tools:src="@drawable/ic_vehicle" />-->
+<!--		-->
+<!--		<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--			android:id="@+id/alertTitleLayout"-->
+<!--			android:layout_width="0dp"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:layout_marginStart="@dimen/margin_padding_small"-->
+<!--			android:layout_marginTop="@dimen/margin_padding_xsmall"-->
+<!--			android:layout_marginEnd="@dimen/margin_padding_small"-->
+<!--			app:layout_constraintEnd_toStartOf="@+id/tvAlertTimeAgo"-->
+<!--			app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"-->
+<!--			app:layout_constraintTop_toTopOf="parent">-->
+<!--			-->
+<!--			<TextView-->
+<!--				android:id="@+id/tvAlertTitle"-->
+<!--				style="@style/RangerText.Body"-->
+<!--				android:layout_width="wrap_content"-->
+<!--				android:layout_height="wrap_content"-->
+<!--				android:ellipsize="end"-->
+<!--				android:maxLines="1"-->
+<!--				android:textStyle="bold"-->
+<!--				android:text="@{alertItem.guardianShortname}"-->
+<!--				app:layout_constrainedWidth="true"-->
+<!--				app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"-->
+<!--				app:layout_constraintHorizontal_bias="0"-->
+<!--				app:layout_constraintHorizontal_chainStyle="packed"-->
+<!--				app:layout_constraintStart_toStartOf="parent"-->
+<!--				app:layout_constraintTop_toTopOf="parent"-->
+<!--				tools:text="Alert Tilte" />-->
+<!--			-->
+<!--			<androidx.appcompat.widget.AppCompatImageView-->
+<!--				android:id="@+id/ivStatusRead"-->
+<!--				android:layout_width="wrap_content"-->
+<!--				android:layout_height="wrap_content"-->
+<!--				android:layout_marginStart="@dimen/margin_padding_small"-->
+<!--				android:src="@drawable/ic_dot_green"-->
+<!--				android:visibility="@{alertItem.visibility ? View.VISIBLE : View.INVISIBLE}"-->
+<!--				app:layout_constraintBottom_toBottomOf="@+id/tvAlertTitle"-->
+<!--				app:layout_constraintEnd_toEndOf="parent"-->
+<!--				app:layout_constraintStart_toEndOf="@+id/tvAlertTitle"-->
+<!--				app:layout_constraintTop_toTopOf="@+id/tvAlertTitle" />-->
+<!--		</androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--		-->
+<!--		<TextView-->
+<!--			android:id="@+id/tvAlertTimeAgo"-->
+<!--			style="@style/RangerText.Caption"-->
+<!--			android:layout_width="wrap_content"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:gravity="center_vertical"-->
+<!--			android:text="@{alertItem.getTime(context)}"-->
+<!--			app:layout_constraintBottom_toBottomOf="@+id/alertTitleLayout"-->
+<!--			app:layout_constraintEnd_toEndOf="parent"-->
+<!--			app:layout_constraintTop_toTopOf="@+id/alertTitleLayout"-->
+<!--			tools:text="October 29, 2019 19:06" />-->
+<!--		-->
+<!--		<TextView-->
+<!--			android:id="@+id/reviewedTextView"-->
+<!--			style="@style/RangerText.Caption"-->
+<!--			android:layout_width="wrap_content"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+<!--			android:gravity="center_vertical"-->
+<!--			android:text="@{alertItem.getReviewed(context)}"-->
+<!--			app:layout_constraintStart_toStartOf="@+id/alertTitleLayout"-->
+<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"-->
+<!--			tools:text="Last reviewed by" />-->
+<!--		-->
+<!--		<TextView-->
+<!--			android:id="@+id/nameReviewerTextView"-->
+<!--			style="@style/RangerText.Caption"-->
+<!--			android:layout_width="0dp"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+<!--			android:layout_marginEnd="@dimen/margin_padding_normal"-->
+<!--			android:ellipsize="end"-->
+<!--			android:gravity="center_vertical"-->
+<!--			android:maxLines="1"-->
+<!--			android:textStyle="bold"-->
+<!--			android:visibility="@{alertItem.nameOfReviewedIsVisibility ? View.VISIBLE : View.INVISIBLE}"-->
+<!--			android:text="@{alertItem.getNameOfReviewed(context)}"-->
+<!--			app:layout_constraintEnd_toStartOf="@+id/linearLayout"-->
+<!--			app:layout_constraintStart_toEndOf="@+id/reviewedTextView"-->
+<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"-->
+<!--			tools:text="Anuphap" />-->
+<!--		-->
+<!--		<LinearLayout-->
+<!--			android:id="@+id/linearLayout"-->
+<!--			android:layout_width="wrap_content"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:layout_marginTop="@dimen/margin_padding_small"-->
+<!--			android:orientation="horizontal"-->
+<!--			app:layout_constraintBottom_toBottomOf="parent"-->
+<!--			app:layout_constraintEnd_toEndOf="parent"-->
+<!--			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">-->
+<!--			-->
+<!--			<androidx.appcompat.widget.AppCompatImageView-->
+<!--				android:id="@+id/agreeImageView"-->
+<!--				android:layout_width="@dimen/event_confirm_icon"-->
+<!--				android:layout_height="@dimen/event_confirm_icon"-->
+<!--				android:src="@{alertItem.confirmIcon}" />-->
+<!--			-->
+<!--			<TextView-->
+<!--				android:id="@+id/agreeTextView"-->
+<!--				style="@style/RangerText.Caption"-->
+<!--				android:layout_width="wrap_content"-->
+<!--				android:layout_height="wrap_content"-->
+<!--				android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+<!--				android:text="@{alertItem.confirmedCount}"-->
+<!--				tools:text="0" />-->
+<!--			-->
+<!--			<androidx.appcompat.widget.AppCompatImageView-->
+<!--				android:id="@+id/rejectImageView"-->
+<!--				android:layout_width="@dimen/event_confirm_icon"-->
+<!--				android:layout_height="@dimen/event_confirm_icon"-->
+<!--				android:layout_marginStart="@dimen/margin_padding_normal"-->
+<!--				android:src="@{alertItem.rejectIcon}" />-->
+<!--			-->
+<!--			<TextView-->
+<!--				android:id="@+id/rejectTextView"-->
+<!--				style="@style/RangerText.Caption"-->
+<!--				android:layout_width="wrap_content"-->
+<!--				android:layout_height="wrap_content"-->
+<!--				android:layout_marginStart="@dimen/margin_padding_xsmall"-->
+<!--				android:text="@{alertItem.rejectedCount}"-->
+<!--				tools:text="0" />-->
+<!--		</LinearLayout>-->
+<!--	</androidx.constraintlayout.widget.ConstraintLayout>-->
 </layout>

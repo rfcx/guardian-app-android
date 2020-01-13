@@ -15,11 +15,23 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		binding.alertItem = item
 		binding.context = binding.root.context
 		
-		if (item.state != StatusAdapter.AlertItem.State.NONE){
-			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_green)
+		when {
+			item.state == StatusAdapter.AlertItem.State.CONFIRM -> {
+				binding.agreeImageView.visibility = View.VISIBLE
+				binding.agreeImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_check))
+			}
+			item.state == StatusAdapter.AlertItem.State.REJECT -> {
+				binding.agreeImageView.visibility = View.VISIBLE
+				binding.agreeImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_wrong))
+			}
+			else -> binding.agreeImageView.visibility = View.INVISIBLE
 		}
+
+//		if (item.state != StatusAdapter.AlertItem.State.NONE) {
+//			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_green)
+//		}
 		
-		binding.agreeImageView.background
+//		binding.agreeImageView.background
 		binding.onClickedAlertItem = View.OnClickListener {
 			listener?.onClickedAlertItem(item.alert)
 		}
