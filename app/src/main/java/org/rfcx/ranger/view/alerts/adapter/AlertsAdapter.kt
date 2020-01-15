@@ -6,15 +6,16 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.inappmessaging.internal.injection.components.AppComponent
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -76,67 +77,55 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		private val tvTitle = itemView.tvAlertTitle
 		private val iconAlert = itemView.ivAlertIcon
 		private val tvTimeAgo = itemView.tvAlertTimeAgo
+		private val tvTimeAgoAfterReview = itemView.tvAlertTimeAgoAfterReview
 		private val ivStatusRead = itemView.ivStatusRead
-		private val ivReviewed = itemView.ivReviewed
-//		private val tvReviewed = itemView.reviewedTextView
-//		private val tvNameReviewer = itemView.nameReviewerTextView
-//		private val tvAgreeValue = itemView.agreeTextView
-//		private val tvRejectValue = itemView.rejectTextView
-//		private val ivAgree = itemView.agreeImageView
-//		private val ivReject = itemView.rejectImageView
+		private val tvReviewed = itemView.reviewedTextView
+		private val linearLayout = itemView.linearLayout
+		private val tvNameReviewer = itemView.nameReviewerTextView
+		private val tvAgreeValue = itemView.agreeTextView
+		private val tvRejectValue = itemView.rejectTextView
+		private val ivAgree = itemView.agreeImageView
+		private val ivReject = itemView.rejectImageView
 		private val context = itemView.context
+		
+		fun setUpAlert(drawable: Drawable, imageView: AppCompatImageView) {
+			ivStatusRead.visibility = View.INVISIBLE
+			tvNameReviewer.visibility = View.VISIBLE
+			linearLayout.visibility = View.VISIBLE
+			tvReviewed.visibility = View.VISIBLE
+			tvTimeAgoAfterReview.visibility = View.VISIBLE
+			tvTimeAgo.visibility = View.INVISIBLE
+			
+			imageView.background = context.getImage(R.drawable.bg_circle_green)
+			imageView.setImageDrawable(drawable)
+		}
 		
 		@SuppressLint("SetTextI18n", "DefaultLocale")
 		fun bind(item: EventItem) {
 			tvTitle.text = item.event.guardianName
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
 			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
-//			tvAgreeValue.text = item.event.confirmedCount.toString()
-//			tvRejectValue.text = item.event.rejectedCount.toString()
-//			val count = item.event.confirmedCount + item.event.rejectedCount
-//			tvReviewed.text = context.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review)
-//			tvNameReviewer.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+			tvTimeAgoAfterReview.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
+			tvAgreeValue.text = item.event.confirmedCount.toString()
+			tvRejectValue.text = item.event.rejectedCount.toString()
+			val count = item.event.confirmedCount + item.event.rejectedCount
+			tvReviewed.text = context.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
-					ivStatusRead.visibility = View.INVISIBLE
-					ivReviewed.visibility = View.VISIBLE
-					ivReviewed.background = context.getImage(R.drawable.circle_green_stroke)
-					ivReviewed.setImageDrawable(context.getImage(R.drawable.ic_check))
-//					ivAgree.background = context.getImage(R.drawable.bg_circle_green)
-//					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
-					
-//					TODO: remove
-//					if (count == 0) {
-//						tvAgreeValue.text = "1"
-//						tvReviewed.text = context.getString(R.string.last_reviewed_by)
-//						tvNameReviewer.text = context.getUserNickname()
-//						tvNameReviewer.visibility = View.VISIBLE
-//					}
+					context.getImage(R.drawable.ic_confirm_event_white)?.let { setUpAlert(it, ivAgree) }
 				}
 				EventItem.State.REJECT -> {
-					ivStatusRead.visibility = View.INVISIBLE
-					ivReviewed.visibility = View.VISIBLE
-					ivReviewed.background = context.getImage(R.drawable.circle_green_stroke)
-					ivReviewed.setImageDrawable(context.getImage(R.drawable.ic_wrong))
-//					ivReject.background = context.getImage(R.drawable.bg_circle_green)
-//					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
-					
-					//TODO: remove
-//					if (count == 0) {
-//						tvRejectValue.text = "1"
-//						tvReviewed.text = context.getString(R.string.last_reviewed_by)
-//						tvNameReviewer.text = context.getUserNickname()
-//						tvNameReviewer.visibility = View.VISIBLE
-//					}
+					context.getImage(R.drawable.ic_reject_event_white)?.let { setUpAlert(it, ivReject) }
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE
-					ivReviewed.visibility = View.INVISIBLE
-//					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
-//					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
-//					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
-//					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
+					tvNameReviewer.visibility = View.INVISIBLE
+					linearLayout.visibility = View.INVISIBLE
+					tvReviewed.visibility = View.INVISIBLE
+					tvTimeAgoAfterReview.visibility = View.INVISIBLE
+					tvTimeAgo.visibility = View.VISIBLE
 				}
 			}
 		}
