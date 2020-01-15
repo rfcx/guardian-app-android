@@ -54,7 +54,10 @@ data class EventResponse(
 		val windows: List<EventWindow>?,
 		
 		@SerializedName("review")
-		val review: Review?
+		val review: Review?,
+		
+		@SerializedName("reviewer")
+		val reviewer: Reviewer?
 
 ) {
 	fun toEvent(): Event {
@@ -83,6 +86,9 @@ data class EventResponse(
 		}
 		if (review != null) {
 			event.reviewConfirmed = review.confirmed
+		}
+		if (reviewer != null) {
+			event.firstNameReviewer = reviewer.firstName
 		}
 		
 		return event

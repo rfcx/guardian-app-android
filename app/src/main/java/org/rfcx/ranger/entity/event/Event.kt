@@ -27,6 +27,7 @@ open class Event : RealmObject() {
 	var windows: RealmList<EventWindow> = RealmList()
 	var reviewCreated: Date = Date()
 	var reviewConfirmed: Boolean? = null
+	var firstNameReviewer: String = ""
 	
 	companion object {
 		// Event value

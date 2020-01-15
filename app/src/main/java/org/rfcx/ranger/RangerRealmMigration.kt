@@ -39,6 +39,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 11L && newVersion >= 11L) {
 			migrateToV11(c)
 		}
+		if (oldVersion < 12L && newVersion >= 12L) {
+			migrateToV12(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -258,7 +261,14 @@ class RangerRealmMigration : RealmMigration {
 			addRealmListField("values",  String::class.java)
 			
 		}
-		
+	}
+	
+	private fun migrateToV12(realm: DynamicRealm) {
+		val event = realm.schema.get("Event")
+		event?.apply {
+			//reviewer
+			addField("firstNameReviewer", String::class.java).setRequired("firstNameReviewer", true)
+		}
 	}
 	
 	override fun hashCode(): Int {

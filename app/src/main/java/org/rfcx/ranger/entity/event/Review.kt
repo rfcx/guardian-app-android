@@ -11,3 +11,8 @@ open class Review {
 	var confirmed: Boolean? = null
 	
 }
+
+open class Reviewer {
+	@SerializedName("firstName")
+	var firstName: String = ""
+}
