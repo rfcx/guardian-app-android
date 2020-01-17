@@ -125,9 +125,9 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
-				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
+				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
 				nameReviewerTextView.text = it.firstNameReviewer
-				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				eventsDb.updateEvents(it)
 				initReviewButtonClick()
 			}, {

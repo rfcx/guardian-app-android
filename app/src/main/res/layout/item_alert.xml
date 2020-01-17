@@ -52,7 +52,7 @@
 			android:textStyle="bold"
 			android:paddingBottom="@dimen/margin_padding_xsmall"
 			app:layout_constrainedWidth="true"
-			app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
+			app:layout_constraintEnd_toStartOf="@+id/tvAlertTimeAgoAfterReview"
 			app:layout_constraintHorizontal_bias="0"
 			app:layout_constraintHorizontal_chainStyle="packed"
 			app:layout_constraintStart_toStartOf="parent"

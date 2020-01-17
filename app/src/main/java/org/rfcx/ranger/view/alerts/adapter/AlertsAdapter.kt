@@ -108,9 +108,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvTimeAgoAfterReview.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
-			val count = item.event.confirmedCount + item.event.rejectedCount
-			tvReviewed.text = context.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review)
-			tvNameReviewer.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+			tvReviewed.text = context.getString(if (item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.text = item.event.firstNameReviewer
+			tvNameReviewer.visibility = if (item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
