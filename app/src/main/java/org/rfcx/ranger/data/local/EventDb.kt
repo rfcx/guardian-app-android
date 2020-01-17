@@ -56,6 +56,14 @@ class EventDb(val realm: Realm) {
 		}
 	}
 	
+	fun updateEvents(event: Event) {
+		Realm.getDefaultInstance().use { it ->
+			it.executeTransaction {
+				it.insertOrUpdate(event)
+			}
+		}
+	}
+	
 	/**
 	 * @param eventGuid :String of Event
 	 * return event state of review -> null,confirm,reject

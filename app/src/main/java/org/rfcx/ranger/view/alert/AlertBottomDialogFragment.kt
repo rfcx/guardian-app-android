@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,20 +17,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
-class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
+class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent {
 	
 	private val alertViewModel: AlertBottomDialogViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private var alertListener: AlertListener? = null
+	val eventsDb: EventDb by inject()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -117,16 +122,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
 				val count = it.confirmedCount + it.rejectedCount
-				
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
-//				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
-//				agreeTextView.text = it.confirmedCount.toString()
-//				rejectTextView.text = it.rejectedCount.toString()
-//				nameReviewerTextView.text = context?.getUserNickname() ?: ""
-//				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
-				
+				reviewedTextView.text = context?.getString(if (count > 0) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
+				nameReviewerTextView.text = it.firstNameReviewer
+				nameReviewerTextView.visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+				eventsDb.updateEvents(it)
 				initReviewButtonClick()
 			}, {
 				context?.handleError(it)
