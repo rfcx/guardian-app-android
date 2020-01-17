@@ -17,21 +17,32 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		
 		when {
 			item.state == StatusAdapter.AlertItem.State.CONFIRM -> {
-				binding.agreeImageView.visibility = View.VISIBLE
-				binding.agreeImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_check))
+				binding.linearLayout.visibility = View.VISIBLE
+				binding.reviewedTextView.visibility = View.VISIBLE
+				binding.nameReviewerTextView.visibility = View.VISIBLE
+				binding.tvAlertTimeAgoAfterReview.visibility = View.VISIBLE
+				binding.tvAlertTimeAgo.visibility = View.INVISIBLE
 			}
 			item.state == StatusAdapter.AlertItem.State.REJECT -> {
-				binding.agreeImageView.visibility = View.VISIBLE
-				binding.agreeImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_wrong))
+				binding.linearLayout.visibility = View.VISIBLE
+				binding.reviewedTextView.visibility = View.VISIBLE
+				binding.nameReviewerTextView.visibility = View.VISIBLE
+				binding.tvAlertTimeAgoAfterReview.visibility = View.VISIBLE
+				binding.tvAlertTimeAgo.visibility = View.INVISIBLE
 			}
-			else -> binding.agreeImageView.visibility = View.INVISIBLE
+			item.state == StatusAdapter.AlertItem.State.NONE -> {
+				binding.linearLayout.visibility = View.INVISIBLE
+				binding.reviewedTextView.visibility = View.INVISIBLE
+				binding.nameReviewerTextView.visibility = View.INVISIBLE
+				binding.tvAlertTimeAgoAfterReview.visibility = View.INVISIBLE
+				binding.tvAlertTimeAgo.visibility = View.VISIBLE
+			}
 		}
 
-//		if (item.state != StatusAdapter.AlertItem.State.NONE) {
-//			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_green)
-//		}
+		if (item.state != StatusAdapter.AlertItem.State.NONE) {
+			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_green)
+		}
 		
-//		binding.agreeImageView.background
 		binding.onClickedAlertItem = View.OnClickListener {
 			listener?.onClickedAlertItem(item.alert)
 		}
