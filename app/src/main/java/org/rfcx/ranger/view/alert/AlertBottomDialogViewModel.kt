@@ -76,7 +76,11 @@ class AlertBottomDialogViewModel(private val context: Context,
 	
 	private fun getEventDetail(eventGuID: String) {
 		_event.value = Result.Loading
-		getRemoteDetail(eventGuID)
+		val eventCache = eventDb.getEvent(eventGuID)
+		if (eventCache != null)
+			setEvent(eventCache)
+		else
+			getRemoteDetail(eventGuID)
 	}
 	
 	private fun getRemoteDetail(eventGuID: String) {
