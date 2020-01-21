@@ -73,11 +73,7 @@ class LocationTrackerService : Service() {
 			p0?.let {
 				Log.i(TAG, "${it.longitude} , ${it.longitude}")
 				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
-				when {
-					time < 120 -> analytics.trackLocationTracking("tracking_ok")
-					time in 121..599 -> analytics.trackLocationTracking("tracking_slow")
-					time > 600 -> analytics.trackLocationTracking("tracking_veryslow")
-				}
+				analytics.trackLocationTracking(time)
 				saveLocation(it)
 				if (BuildConfig.DEBUG) playSound()
 			}

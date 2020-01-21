@@ -74,3 +74,17 @@ fun Context?.getUserId(): String {
 	}
 	return userID
 }
+
+fun Context?.getUserEmail(): String {
+	var userID = ""
+	val token = this?.getTokenID()
+	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	try {
+		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+		userID = untrusted.body["email"] as String
+	} catch (e: Exception) {
+		e.printStackTrace()
+		Crashlytics.logException(e)
+	}
+	return userID
+}
