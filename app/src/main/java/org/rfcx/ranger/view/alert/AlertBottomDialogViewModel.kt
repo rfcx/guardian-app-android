@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
+import androidx.core.net.ConnectivityManagerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +25,9 @@ import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.service.ReviewEventSyncWorker
+import org.rfcx.ranger.util.NetworkNotConnection
 import org.rfcx.ranger.util.getResultError
+import org.rfcx.ranger.util.isNetworkAvailable
 import java.io.File
 
 class AlertBottomDialogViewModel(private val context: Context,
@@ -76,11 +79,14 @@ class AlertBottomDialogViewModel(private val context: Context,
 	
 	private fun getEventDetail(eventGuID: String) {
 		_event.value = Result.Loading
-		val eventCache = eventDb.getEvent(eventGuID)
-		if (eventCache != null)
-			setEvent(eventCache)
-		else
+		if (context.isNetworkAvailable()) {
 			getRemoteDetail(eventGuID)
+		} else {
+			val eventCache = eventDb.getEvent(eventGuID)
+			if (eventCache != null)
+				setEvent(eventCache)
+			else _event.value = Result.Error(NetworkNotConnection())
+		}
 	}
 	
 	private fun getRemoteDetail(eventGuID: String) {
@@ -90,7 +96,11 @@ class AlertBottomDialogViewModel(private val context: Context,
 			}
 			
 			override fun onError(e: Throwable) {
-				_event.value = Result.Error(e)
+				val eventCache = eventDb.getEvent(eventGuID)
+				if (eventCache != null)
+					setEvent(eventCache)
+				else
+					_event.value = Result.Error(e)
 			}
 		}, eventGuID)
 	}
