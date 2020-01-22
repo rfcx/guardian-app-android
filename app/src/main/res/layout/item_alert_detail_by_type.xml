@@ -25,7 +25,6 @@
 		android:layout_marginStart="@dimen/margin_padding_small"
 		android:layout_marginTop="@dimen/margin_padding_xsmall"
 		android:layout_marginEnd="@dimen/margin_padding_small"
-		app:layout_constraintEnd_toStartOf="@+id/tvAlertTimeAgo"
 		app:layout_constraintStart_toEndOf="@+id/ivAlertIcon"
 		app:layout_constraintTop_toTopOf="parent">
 		
@@ -38,46 +37,23 @@
 			android:maxLines="1"
 			android:textStyle="bold"
 			app:layout_constrainedWidth="true"
-			app:layout_constraintEnd_toStartOf="@+id/ivStatusRead"
+			app:layout_constraintEnd_toStartOf="@+id/circleImageView"
 			app:layout_constraintHorizontal_bias="0"
 			app:layout_constraintHorizontal_chainStyle="packed"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			tools:text="October 29, 2019 19:06" />
-	</androidx.constraintlayout.widget.ConstraintLayout>
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/circleImageView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:src="@drawable/ic_dot_green"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-	
-	<LinearLayout
-		android:id="@+id/linearAgreeLayout"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:orientation="horizontal"
-		app:layout_constraintEnd_toEndOf="parent"
-		tools:ignore="MissingConstraints">
 		
 		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/agreeImageView"
-			android:layout_width="@dimen/event_confirm_icon"
-			android:layout_height="@dimen/event_confirm_icon"
-			android:src="@drawable/ic_confirm_event_gray" />
-		
-		<TextView
-			android:id="@+id/agreeTextView"
-			style="@style/RangerText.Caption"
+			android:id="@+id/circleImageView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_xsmall"
-			tools:text="0" />
-	</LinearLayout>
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:src="@drawable/ic_dot_green"
+			app:layout_constraintBottom_toBottomOf="@id/eventsInEventsTextView"
+			app:layout_constraintStart_toEndOf="@id/eventsInEventsTextView"
+			app:layout_constraintTop_toTopOf="@id/eventsInEventsTextView" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
 	
 	<TextView
 		android:id="@+id/reviewedTextView"
@@ -108,7 +84,7 @@
 		tools:text="Anuphap" />
 	
 	<LinearLayout
-		android:id="@+id/linearRejectLayout"
+		android:id="@+id/linearLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_small"
@@ -116,6 +92,20 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/agreeImageView"
+			android:layout_width="@dimen/event_confirm_icon"
+			android:layout_height="@dimen/event_confirm_icon"
+			android:src="@drawable/ic_confirm_event_gray" />
+		
+		<TextView
+			android:id="@+id/agreeTextView"
+			style="@style/RangerText.Caption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			tools:text="0" />
 		
 		<androidx.appcompat.widget.AppCompatImageView
 			android:id="@+id/rejectImageView"
