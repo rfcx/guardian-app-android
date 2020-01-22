@@ -33,6 +33,7 @@ class Analytics(context: Context) {
 	// region track event
 	
 	private fun trackEvent(eventName: String, params: Bundle) {
+		firebaseAnalytics.setUserProperty("user_email", context?.getUserEmail())
 		firebaseAnalytics.logEvent(eventName, params)
 	}
 	
@@ -64,9 +65,15 @@ class Analytics(context: Context) {
 		trackEvent("add_report_submit", bundle)
 	}
 	
-	fun trackLocationTracking(status: String) {
+	fun trackLocationTracking(time: Long) {
 		val bundle = Bundle()
+		val status = when {
+			time < 120 -> "tracking_ok"
+			time in 121..599 -> "tracking_slow"
+			else -> "tracking_veryslow" // > 600
+		}
 		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, status)
+		bundle.putLong(FirebaseAnalytics.Param.VALUE, time)
 		trackEvent("add_location_tracking", bundle)
 	}
 	
