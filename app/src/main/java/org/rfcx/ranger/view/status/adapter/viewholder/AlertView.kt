@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.ItemStatusAlertBinding
 import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.view.alert.EventState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -16,33 +15,32 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 	fun bind(item: StatusAdapter.AlertItem) {
 		binding.alertItem = item
 		binding.context = binding.root.context
-		
 		when {
 			item.state == StatusAdapter.AlertItem.State.CONFIRM -> {
+				binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_red)
+				binding.rejectImageView.background = binding.root.context.getImage(R.drawable.bg_circle_white)
 				binding.linearLayout.visibility = View.VISIBLE
 				binding.reviewedTextView.visibility = View.VISIBLE
 				binding.nameReviewerTextView.visibility = View.VISIBLE
-				binding.tvAlertTimeAgoAfterReview.visibility = View.VISIBLE
-				binding.tvAlertTimeAgo.visibility = View.INVISIBLE
+				//TODO remove
+				binding.agreeTextView.text = (item.getConfirmedCount().toInt() + 1).toString()
+				binding.rejectTextView.text = item.getRejectedCount()
 			}
 			item.state == StatusAdapter.AlertItem.State.REJECT -> {
+				binding.rejectImageView.background = binding.root.context.getImage(R.drawable.bg_circle_grey)
+				binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_white)
 				binding.linearLayout.visibility = View.VISIBLE
 				binding.reviewedTextView.visibility = View.VISIBLE
 				binding.nameReviewerTextView.visibility = View.VISIBLE
-				binding.tvAlertTimeAgoAfterReview.visibility = View.VISIBLE
-				binding.tvAlertTimeAgo.visibility = View.INVISIBLE
+				//TODO remove
+				binding.agreeTextView.text = item.getRejectedCount()
+				binding.rejectTextView.text = (item.getRejectedCount().toInt() + 1).toString()
 			}
 			item.state == StatusAdapter.AlertItem.State.NONE -> {
 				binding.linearLayout.visibility = View.INVISIBLE
-				binding.reviewedTextView.visibility = View.INVISIBLE
+				binding.reviewedTextView.visibility = View.VISIBLE
 				binding.nameReviewerTextView.visibility = View.INVISIBLE
-				binding.tvAlertTimeAgoAfterReview.visibility = View.INVISIBLE
-				binding.tvAlertTimeAgo.visibility = View.VISIBLE
 			}
-		}
-
-		if (item.state != StatusAdapter.AlertItem.State.NONE) {
-			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_red)
 		}
 		
 		binding.onClickedAlertItem = View.OnClickListener {
