@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.ItemStatusAlertBinding
+import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.view.alert.EventState
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -44,7 +46,14 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		}
 		
 		binding.onClickedAlertItem = View.OnClickListener {
-			listener?.onClickedAlertItem(item.alert)
+			var state = EventItem.State.NONE
+			
+			if( item.state == StatusAdapter.AlertItem.State.REJECT ) {
+				state = EventItem.State.REJECT
+			} else if (item.state == StatusAdapter.AlertItem.State.CONFIRM) {
+				state = EventItem.State.CONFIRM
+			}
+			listener?.onClickedAlertItem(item.alert, state)
 		}
 		binding.executePendingBindings()
 	}

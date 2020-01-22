@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity.Companion.ALERT_VALUE
@@ -53,17 +54,17 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 		}
 	}
 	
-	override fun onClickedAlert(event: Event) {
-		showDetail(event.id)
+	override fun onClickedAlert(event: Event, state: EventItem.State) {
+		showDetail(event.id, state)
 	}
 	
-	override fun showDetail(eventGuID: String) {
+	override fun showDetail(eventGuID: String, state: EventItem.State) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissAllowingStateLoss()
 		}
-		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID, state).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	

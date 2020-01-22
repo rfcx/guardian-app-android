@@ -12,6 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
@@ -57,17 +58,17 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	
 	private fun observeAlert() {
 		alertViewModel.eventIdFromNotification.observe(this, Observer {
-			showDetail(it)
+			showDetail(it, EventItem.State.NONE)
 		})
 	}
 	
-	override fun showDetail(eventGuID: String) {
+	override fun showDetail(eventGuID: String, state: EventItem.State) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissDialog()
 		}
-		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID, state).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	

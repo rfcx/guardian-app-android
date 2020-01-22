@@ -15,6 +15,7 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -70,8 +71,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 		}
 	}
 	
-	override fun onClickedAlert(event: Event) {
-		(parentFragment as AlertListener?)?.showDetail(event.id)
+	override fun onClickedAlert(event: Event, state: EventItem.State) {
+		(parentFragment as AlertListener?)?.showDetail(event.id, state)
 		event.value.let { analytics?.trackSeeAlertDetailEvent(event.id, it) }
 	}
 	

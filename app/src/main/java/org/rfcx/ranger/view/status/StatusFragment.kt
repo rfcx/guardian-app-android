@@ -15,11 +15,13 @@ import org.rfcx.ranger.databinding.FragmentStatusBinding
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityListener
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
+import org.rfcx.ranger.view.alert.EventState
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
@@ -104,17 +106,17 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 		ReportDetailActivity.startIntent(context, reportId = report.id)
 	}
 	
-	override fun onClickedAlertItem(alert: Event) {
-		showDetail(alert.id)
+	override fun onClickedAlertItem(alert: Event, state: EventItem.State) {
+		showDetail(alert.id, state)
 	}
 	
-	override fun showDetail(eventGuID: String) {
+	override fun showDetail(eventGuID: String, state: EventItem.State) {
 		val currentShowing =
 				childFragmentManager.findFragmentByTag(AlertBottomDialogFragment.tag)
 		if (currentShowing != null && currentShowing is AlertBottomDialogFragment) {
 			currentShowing.dismissDialog()
 		}
-		AlertBottomDialogFragment.newInstance(eventGuID).show(childFragmentManager,
+		AlertBottomDialogFragment.newInstance(eventGuID, state).show(childFragmentManager,
 				AlertBottomDialogFragment.tag)
 	}
 	
@@ -147,7 +149,7 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 interface StatusFragmentListener {
 	fun enableTracking(enable: Boolean)
 	fun onClickedReportItem(report: Report)
-	fun onClickedAlertItem(alert: Event)
+	fun onClickedAlertItem(alert: Event, state: EventItem.State)
 	fun onClickedSeeMore()
 	fun onClickedSetGuardianGroup()
 }

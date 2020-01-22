@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
 import android.content.Context
-import kotlinx.android.synthetic.main.item_alert.view.*
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -34,7 +33,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private var alertListener: AlertListener? = null
-	val eventsDb: EventDb by inject()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -121,12 +119,26 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
+				val state: String = arguments?.getString(STATE_EVENT) ?: "NONE"
+				
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
 				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
 				nameReviewerTextView.text = it.firstNameReviewer
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
+				linearLayout.visibility = View.INVISIBLE
+				agreeTextView.text = it.confirmedCount.toString()
+				rejectTextView.text = it.rejectedCount.toString()
+				
+				if (state == "CONFIRM") {
+					linearLayout.visibility = View.VISIBLE
+					agreeTextView.text = (it.confirmedCount + 1).toString()
+				} else if (state == "REJECT") {
+					linearLayout.visibility = View.VISIBLE
+					rejectTextView.text = (it.rejectedCount + 1).toString()
+				}
+				
 				initReviewButtonClick()
 			}, {
 				context?.handleError(it)
@@ -266,11 +278,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	companion object {
 		const val tag = "AlertBottomDialogFragment"
 		private const val BUNDLE_EVENT = "BUNDLE_EVENT"
+		private const val STATE_EVENT = "STATE_EVENT"
 		
-		fun newInstance(eventGuId: String): AlertBottomDialogFragment {
+		fun newInstance(eventGuId: String, state: EventItem.State): AlertBottomDialogFragment {
 			return AlertBottomDialogFragment().apply {
 				arguments = Bundle().apply {
 					putString(BUNDLE_EVENT, eventGuId)
+					putString(STATE_EVENT, state.toString())
 				}
 			}
 		}

@@ -274,7 +274,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			val alertsFragment =
 					supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
 			if (alertsFragment != null && alertsFragment is AlertsFragment) {
-				alertsFragment.showDetail(it)
+				alertsFragment.showDetail(it, EventItem.State.NONE)
 			} else {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = false

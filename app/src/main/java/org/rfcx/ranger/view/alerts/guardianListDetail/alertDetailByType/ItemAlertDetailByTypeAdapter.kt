@@ -28,7 +28,7 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 	override fun onBindViewHolder(holder: ItemAlertDetailByTypeViewHolder, position: Int) {
 		val item = items[position]
 		holder.bind(item)
-		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
+		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event, item.state) }
 	}
 	
 	class ItemAlertDetailByTypeDiffUtil : DiffUtil.ItemCallback<EventItem>() {

@@ -36,7 +36,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		val item = getItem(position)
 		if (holder is AlertViewHolder) {
 			holder.bind(item as EventItem)
-			holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
+			holder.itemView.setOnClickListener { listener.onClickedAlert(item.event, item.state) }
 		}
 	}
 	

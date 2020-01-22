@@ -30,7 +30,7 @@ class AlertDetailByTypeAdapter(val listener: AlertClickListener) : ListAdapter<E
 	override fun onBindViewHolder(holder: AlertDetailByTypeViewHolder, position: Int) {
 		val item = items.events[position]
 		holder.bind()
-		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event) }
+		holder.itemView.setOnClickListener { listener.onClickedAlert(item.event, item.state) }
 	}
 	
 	class AlertDetailByTypeDiffUtil : DiffUtil.ItemCallback<EventItem>() {

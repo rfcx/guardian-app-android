@@ -79,7 +79,6 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
 			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
 			app:layout_constraintStart_toEndOf="@+id/eventIconImageView"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintEnd_toEndOf="parent">
@@ -141,6 +140,47 @@
 			app:layout_constraintStart_toEndOf="@+id/reviewedTextView"
 			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
 			tools:text="Anuphap" />
+		
+		<LinearLayout
+			android:id="@+id/linearLayout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:orientation="horizontal"
+			android:visibility="invisible"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout">
+			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/agreeImageView"
+				android:layout_width="@dimen/event_confirm_icon"
+				android:layout_height="@dimen/event_confirm_icon"
+				android:src="@drawable/ic_confirm_event_gray" />
+			
+			<TextView
+				android:id="@+id/agreeTextView"
+				style="@style/RangerText.Caption"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_xsmall"
+				tools:text="0" />
+			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/rejectImageView"
+				android:layout_width="@dimen/event_confirm_icon"
+				android:layout_height="@dimen/event_confirm_icon"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:src="@drawable/ic_reject_event_gray" />
+			
+			<TextView
+				android:id="@+id/rejectTextView"
+				style="@style/RangerText.Caption"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_xsmall"
+				tools:text="0" />
+		</LinearLayout>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 	
