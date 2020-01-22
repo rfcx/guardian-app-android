@@ -11,11 +11,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.inappmessaging.internal.injection.components.AppComponent
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -77,7 +77,6 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		private val tvTitle = itemView.tvAlertTitle
 		private val iconAlert = itemView.ivAlertIcon
 		private val tvTimeAgo = itemView.tvAlertTimeAgo
-		private val tvTimeAgoAfterReview = itemView.tvAlertTimeAgoAfterReview
 		private val ivStatusRead = itemView.ivStatusRead
 		private val tvReviewed = itemView.reviewedTextView
 		private val linearLayout = itemView.linearLayout
@@ -88,44 +87,44 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		private val ivReject = itemView.rejectImageView
 		private val context = itemView.context
 		
-		fun setUpAlert(drawable: Drawable, imageView: AppCompatImageView) {
-			ivStatusRead.visibility = View.INVISIBLE
-			tvNameReviewer.visibility = View.VISIBLE
-			linearLayout.visibility = View.VISIBLE
-			tvReviewed.visibility = View.VISIBLE
-			tvTimeAgoAfterReview.visibility = View.VISIBLE
-			tvTimeAgo.visibility = View.INVISIBLE
-			
-			imageView.background = context.getImage(R.drawable.bg_circle_green)
-			imageView.setImageDrawable(drawable)
-		}
-		
 		@SuppressLint("SetTextI18n", "DefaultLocale")
 		fun bind(item: EventItem) {
 			tvTitle.text = item.event.guardianName
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
 			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
-			tvTimeAgoAfterReview.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
 			tvReviewed.text = context.getString(if (item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
-			tvNameReviewer.text = item.event.firstNameReviewer
+			tvNameReviewer.text = if (item.event.firstNameReviewer.isNotBlank()) item.event.firstNameReviewer else context.getUserNickname()
 			tvNameReviewer.visibility = if (item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
-					context.getImage(R.drawable.ic_confirm_event_white)?.let { setUpAlert(it, ivAgree) }
+					ivStatusRead.visibility = View.INVISIBLE
+					tvNameReviewer.visibility = View.VISIBLE
+					linearLayout.visibility = View.VISIBLE
+					
+					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
+					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
+					
+					//TODO: remove
+					tvAgreeValue.text = (item.event.confirmedCount + 1).toString()
 				}
 				EventItem.State.REJECT -> {
-					context.getImage(R.drawable.ic_reject_event_white)?.let { setUpAlert(it, ivReject) }
+					ivStatusRead.visibility = View.INVISIBLE
+					tvNameReviewer.visibility = View.VISIBLE
+					linearLayout.visibility = View.VISIBLE
+					
+					ivReject.background = context.getImage(R.drawable.bg_circle_grey)
+					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
+					
+					//TODO: remove
+					tvRejectValue.text = (item.event.rejectedCount + 1).toString()
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE
 					tvNameReviewer.visibility = View.INVISIBLE
 					linearLayout.visibility = View.INVISIBLE
-					tvReviewed.visibility = View.INVISIBLE
-					tvTimeAgoAfterReview.visibility = View.INVISIBLE
-					tvTimeAgo.visibility = View.VISIBLE
 				}
 			}
 		}

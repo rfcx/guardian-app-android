@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_alert_detail_by_type.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.util.toEventIcon
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -77,7 +75,7 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					circleImageView.visibility = View.INVISIBLE
-					ivAgree.background = context.getImage(R.drawable.bg_circle_green)
+					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
 					tvNameReviewer.visibility = View.VISIBLE
 //					//TODO: remove
@@ -90,7 +88,7 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 				}
 				EventItem.State.REJECT -> {
 					circleImageView.visibility = View.INVISIBLE
-					ivReject.background = context.getImage(R.drawable.bg_circle_green)
+					ivReject.background = context.getImage(R.drawable.bg_circle_red)
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
 					tvNameReviewer.visibility = View.VISIBLE
 

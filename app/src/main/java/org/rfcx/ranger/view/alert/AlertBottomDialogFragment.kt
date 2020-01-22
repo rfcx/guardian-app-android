@@ -121,14 +121,12 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
-				val count = it.confirmedCount + it.rejectedCount
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
 				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
 				nameReviewerTextView.text = it.firstNameReviewer
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
-				eventsDb.updateEvents(it)
 				initReviewButtonClick()
 			}, {
 				context?.handleError(it)

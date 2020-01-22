@@ -40,7 +40,7 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		}
 
 		if (item.state != StatusAdapter.AlertItem.State.NONE) {
-			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_green)
+			binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_red)
 		}
 		
 		binding.onClickedAlertItem = View.OnClickListener {
