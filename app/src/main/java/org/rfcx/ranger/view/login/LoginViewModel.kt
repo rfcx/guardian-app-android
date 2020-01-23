@@ -24,6 +24,7 @@ import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.user.UserAuthResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserNickname
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) : ViewModel() {
@@ -165,6 +166,8 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 					} else {
 						_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
 						
+						val preferences = Preferences.getInstance(context)
+						preferences.putString(Preferences.LOGIN_WITH, "email")
 					}
 				} else {
 					_redirectPage.postValue(LoginRedirect.INVITE_CODE_PAGE)

@@ -191,6 +191,7 @@
 	<!--Profile -->
 	<string name="profile_receive_noti_label">Receive notifications</string>
 	<string name="profile_sign_out_label">Sign out</string>
+	<string name="profile_change_password_label">Password</string>
 	<string name="profile_aditional_label">Additional</string>
 	<string name="profile_app_version_label">App version</string>
 	<string name="profile_feedback_label">Feedback</string>

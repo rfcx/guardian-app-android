@@ -17,10 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.CloudMessaging
-import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.logout
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -62,6 +59,12 @@ class ProfileFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		viewDataBinding.viewModel = profileViewModel
 		setOnClickButton()
+		
+		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
+		if (loginWith == "email"){
+			changePasswordTextView.visibility = View.VISIBLE
+			
+		}
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
