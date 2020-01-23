@@ -17,6 +17,10 @@
 			type="android.view.View.OnClickListener" />
 		
 		<variable
+			name="onClickPassword"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
 			name="onClickGuardingGroup"
 			type="android.view.View.OnClickListener" />
 		
@@ -215,7 +219,7 @@
 				android:layout_height="wrap_content"
 				android:background="?attr/selectableItemBackground"
 				android:visibility="gone"
-				android:onClick="@{onClickFeedback}"
+				android:onClick="@{onClickPassword}"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_small"

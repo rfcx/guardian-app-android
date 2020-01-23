@@ -105,6 +105,10 @@ class ProfileFragment : BaseFragment() {
 			val intent = Intent(activity, FeedbackActivity::class.java)
 			startActivityForResult(intent, REQUEST_CODE)
 		}
+		
+		viewDataBinding.onClickPassword = View.OnClickListener  {
+			context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
+		}
 	}
 	
 	override fun onStart() {
