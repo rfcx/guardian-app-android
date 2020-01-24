@@ -24,6 +24,7 @@ class PasswordChangeActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_password_change)
 		
 		setupToolbar()
+		newPasswordEditText.showKeyboard()
 		
 		passwordChangeViewModel.status.observe(this, Observer { it ->
 			it.success({
@@ -62,18 +63,18 @@ class PasswordChangeActivity : AppCompatActivity() {
 		sendFeedbackView.hideKeyboard()
 		
 		if (newPasswordEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "Please enter your new password.", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, "Please enter your new password", Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordAgainEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "Confirm new password Empty", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, "Please confirm your new password", Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordEditText.text!!.length < 6 || newPasswordAgainEditText.text!!.length < 6) {
-			Toast.makeText(this, "Should have more than 5 characters", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, "Password must have at least 6 characters", Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordEditText.text.toString() == newPasswordAgainEditText.text.toString()) {
 			passwordChangeViewModel.changeUserPassword(newPasswordEditText.text.toString())
 		} else {
-			Toast.makeText(this, "not same", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, "Confirm password does not match", Toast.LENGTH_SHORT).show()
 		}
 	}
 	
@@ -92,8 +93,15 @@ class PasswordChangeActivity : AppCompatActivity() {
 		imm.hideSoftInputFromWindow(windowToken, 0)
 	}
 	
+	private fun View.showKeyboard() = this.let {
+		val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+	}
+	
 	override fun onSupportNavigateUp(): Boolean {
 		onBackPressed()
+		newPasswordEditText.hideKeyboard()
+		newPasswordAgainEditText.hideKeyboard()
 		return true
 	}
 	
