@@ -28,6 +28,9 @@ import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepository
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeRepositoryImp
 import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
+import org.rfcx.ranger.data.remote.password.PasswordChangeRepository
+import org.rfcx.ranger.data.remote.password.PasswordChangeRepositoryImp
+import org.rfcx.ranger.data.remote.password.PasswordChangeUseCase
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
 import org.rfcx.ranger.data.remote.setusername.SetNameRepository
@@ -71,6 +74,9 @@ object DataModule {
 		single { InviteCodeRepositoryImp(get()) } bind InviteCodeRepository::class
 		single { SendInviteCodeUseCase(get(), get(), get()) }
 		
+		single { PasswordChangeRepositoryImp(get()) } bind PasswordChangeRepository::class
+		single { PasswordChangeUseCase(get(), get(), get()) }
+		
 		single { UserTouchRepositoryImp(get()) } bind UserTouchRepository::class
 		single { CheckUserTouchUseCase(get(), get(), get()) }
 		
@@ -98,6 +104,7 @@ object DataModule {
 		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeShortLinkService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

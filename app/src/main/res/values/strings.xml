@@ -72,6 +72,8 @@
 	<string name="at_that_time">At that moment</string>
 	
 	<string name="tab_to_record_label">Tap and hold the button to record notes</string>
+	<string name="new_password">New password</string>
+	<string name="new_password_again">Confirm new password</string>
 	
 	<!-- Invitation -->
 	<string name="invitation_title">Connect to a site</string>
@@ -191,6 +193,7 @@
 	<!--Profile -->
 	<string name="profile_receive_noti_label">Receive notifications</string>
 	<string name="profile_sign_out_label">Sign out</string>
+	<string name="profile_change_password_label">Password</string>
 	<string name="profile_aditional_label">Additional</string>
 	<string name="profile_app_version_label">App version</string>
 	<string name="profile_feedback_label">Feedback</string>

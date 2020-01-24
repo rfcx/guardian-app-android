@@ -19,6 +19,7 @@ import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.ranger.view.profile.FeedbackViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
+import org.rfcx.ranger.view.profile.PasswordChangeViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.report.ReportDetailViewModel
 import org.rfcx.ranger.view.status.StatusViewModel
@@ -57,6 +58,7 @@ object UiModule {
 		viewModel { ProfileViewModel(androidContext(), get()) }
 		viewModel { GuardianGroupViewModel(get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
+		viewModel { PasswordChangeViewModel(get()) }
 	}
 	
 	var loginModule = module {
