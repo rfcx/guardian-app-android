@@ -9,17 +9,37 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_password_change.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.success
 
 class PasswordChangeActivity : AppCompatActivity() {
 	private var menu: Menu? = null
+	private val passwordChangeViewModel: PasswordChangeViewModel by viewModel()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_password_change)
 		
 		setupToolbar()
+		
+		passwordChangeViewModel.status.observe(this, Observer { it ->
+			it.success({
+				if (it == "true") {
+					loadingProgress.visibility = View.INVISIBLE
+					Toast.makeText(this, "The password has been changed successfully.", Toast.LENGTH_SHORT).show()
+					finish()
+				}
+			}, {
+				loadingProgress.visibility = View.INVISIBLE
+				Toast.makeText(this, "Something is wrong.", Toast.LENGTH_SHORT).show()
+			}, {
+				// Loading block
+				loadingProgress.visibility = View.VISIBLE
+			})
+		})
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -42,17 +62,18 @@ class PasswordChangeActivity : AppCompatActivity() {
 		sendFeedbackView.hideKeyboard()
 		
 		if (newPasswordEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "New Password Empty", Toast.LENGTH_LONG).show()
+			Toast.makeText(this, "Please enter your new password.", Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordAgainEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "Confirm new password Empty", Toast.LENGTH_LONG).show()
+			Toast.makeText(this, "Confirm new password Empty", Toast.LENGTH_SHORT).show()
+			
+		} else if (newPasswordEditText.text!!.length < 6 || newPasswordAgainEditText.text!!.length < 6) {
+			Toast.makeText(this, "Should have more than 5 characters", Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordEditText.text.toString() == newPasswordAgainEditText.text.toString()) {
-			Toast.makeText(this, "newPassword same", Toast.LENGTH_LONG).show()
-			
+			passwordChangeViewModel.changeUserPassword(newPasswordEditText.text.toString())
 		} else {
-			Toast.makeText(this, "not same", Toast.LENGTH_LONG).show()
-			
+			Toast.makeText(this, "not same", Toast.LENGTH_SHORT).show()
 		}
 	}
 	
