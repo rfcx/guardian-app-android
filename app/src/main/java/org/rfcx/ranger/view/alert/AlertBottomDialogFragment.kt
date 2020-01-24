@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.alert
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
@@ -134,9 +136,19 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
 					agreeTextView.text = (it.confirmedCount + 1).toString()
+					
+					if(context !== null){
+						agreeImageView.background = context!!.getImage(R.drawable.bg_circle_red)
+						agreeImageView.setImageDrawable(context!!.getImage(R.drawable.ic_confirm_event_white))
+					}
 				} else if (state == "REJECT") {
 					linearLayout.visibility = View.VISIBLE
 					rejectTextView.text = (it.rejectedCount + 1).toString()
+					
+					if(context !== null){
+						rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
+						rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
+					}
 				}
 				
 				initReviewButtonClick()
@@ -273,6 +285,10 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 						showLoading()
 					})
 		})
+	}
+	
+	private fun Context.getImage(res: Int): Drawable? {
+		return ContextCompat.getDrawable(this, res)
 	}
 	
 	companion object {
