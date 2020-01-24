@@ -62,7 +62,7 @@ class PasswordChangeActivity : AppCompatActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			title = getString(R.string.profile_send_feedback)
+			title = getString(R.string.password)
 		}
 	}
 	
