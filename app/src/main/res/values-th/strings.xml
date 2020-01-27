@@ -196,6 +196,7 @@
     <string name="profile_app_version_label">เวอร์ชั่น</string>
     <string name="profile_feedback_label">ฟีดแบค</string>
     <string name="profile_rate_app_label">ให้คะแนนแอป</string>
+    <string name="save_changed">บันทึกการเปลี่ยนแปลง</string>
     
     <string name="feedback_submitted">ขอขอบคุณสำหรับความคิดเห็นของคุณ :)</string>
     <string name="feedback_submission_failed">การส่งความคิดเห็นล้มเหลว กรุณาลองใหม่อีกครั้ง</string>

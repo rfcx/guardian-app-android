@@ -197,6 +197,7 @@
     <string name="profile_app_version_label">versi aplikasi</string>
     <string name="profile_feedback_label">Masukan</string>
     <string name="profile_rate_app_label">Menilai aplikasi</string>
+    <string name="save_changed">Simpan perubahan</string>
     
     <string name="feedback_submitted">Umpan balik yang disampaikan. Terima kasih atas waktu Anda :)</string>
     <string name="feedback_submission_failed">Pengiriman umpan balik gagal! Silakan coba lagi.</string>

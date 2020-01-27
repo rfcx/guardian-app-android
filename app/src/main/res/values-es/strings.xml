@@ -197,6 +197,7 @@
 	<string name="profile_app_version_label">Version de aplicacion</string>
 	<string name="profile_feedback_label">Realimentación</string>
 	<string name="profile_rate_app_label">Califica la aplicación</string>
+	<string name="save_changed">Guardar cambios</string>
 	
 	<string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
 	<string name="feedback_submission_failed">envío de comentarios no! Inténtalo de nuevo.</string>
