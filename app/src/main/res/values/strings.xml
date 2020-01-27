@@ -193,7 +193,12 @@
 	<!--Profile -->
 	<string name="profile_receive_noti_label">Receive notifications</string>
 	<string name="profile_sign_out_label">Sign out</string>
-	<string name="profile_change_password_label">Password</string>
+	<string name="please_enter_your_new_password">Please enter your new password</string>
+	<string name="please_confirm_your_new_password">Please confirm your new password</string>
+	<string name="password_must_have_at_least_6_characters">Password must have at least 6 characters</string>
+	<string name="confirm_password_does_not_match">Confirm password does not match</string>
+	<string name="password_changed_successfully">The password has been changed successfully.</string>
+	<string name="something_is_wrong">Something is wrong.</string>
 	<string name="profile_aditional_label">Additional</string>
 	<string name="profile_app_version_label">App version</string>
 	<string name="profile_feedback_label">Feedback</string>

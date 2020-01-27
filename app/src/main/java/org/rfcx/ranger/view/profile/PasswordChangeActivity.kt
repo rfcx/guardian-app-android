@@ -30,12 +30,12 @@ class PasswordChangeActivity : AppCompatActivity() {
 			it.success({
 				if (it == "true") {
 					loadingProgress.visibility = View.INVISIBLE
-					Toast.makeText(this, "The password has been changed successfully.", Toast.LENGTH_SHORT).show()
+					Toast.makeText(this, getString(R.string.password_changed_successfully), Toast.LENGTH_SHORT).show()
 					finish()
 				}
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
-				Toast.makeText(this, "Something is wrong.", Toast.LENGTH_SHORT).show()
+				Toast.makeText(this, getString(R.string.something_is_wrong), Toast.LENGTH_SHORT).show()
 			}, {
 				// Loading block
 				loadingProgress.visibility = View.VISIBLE
@@ -63,18 +63,18 @@ class PasswordChangeActivity : AppCompatActivity() {
 		sendFeedbackView.hideKeyboard()
 		
 		if (newPasswordEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "Please enter your new password", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, getString(R.string.please_enter_your_new_password), Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordAgainEditText.text.isNullOrEmpty()) {
-			Toast.makeText(this, "Please confirm your new password", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, getString(R.string.please_confirm_your_new_password), Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordEditText.text!!.length < 6 || newPasswordAgainEditText.text!!.length < 6) {
-			Toast.makeText(this, "Password must have at least 6 characters", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, getString(R.string.password_must_have_at_least_6_characters), Toast.LENGTH_SHORT).show()
 			
 		} else if (newPasswordEditText.text.toString() == newPasswordAgainEditText.text.toString()) {
 			passwordChangeViewModel.changeUserPassword(newPasswordEditText.text.toString())
 		} else {
-			Toast.makeText(this, "Confirm password does not match", Toast.LENGTH_SHORT).show()
+			Toast.makeText(this, getString(R.string.confirm_password_does_not_match), Toast.LENGTH_SHORT).show()
 		}
 	}
 	
