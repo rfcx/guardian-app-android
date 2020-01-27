@@ -43,6 +43,12 @@
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
     <string name="report_attach_image_label">FOTOS (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
+    <string name="report_note_label">Notas</string>
+    <string name="report_note_hint">Coloque algumas notas aqui</string>
+    <string name="some_photo_already_exists">Algumas fotos já existe</string>
+    <string name="these_photos_already_exists">Essas fotos já existem</string>
+    <string name="this_photo_already_exists">Esta foto já existe</string>
+    <string name="expires_in_24h">expira em 24h</string>
     
     <!-- Notification -->
 	<string name="notification_location_loading">Carregando localização…</string>
@@ -66,7 +72,9 @@
     <string name="at_that_time">Naquele momento</string>
 
     <string name="tab_to_record_label">Toque e segure o botão para gravar áudio.</string>
-	
+    <string name="new_password">Nova senha</string>
+    <string name="new_password_again">Confirme a nova senha</string>
+    
 	<!-- Invitation -->
     <string name="invitation_title">Conectar a uma localidade.</string>
     <string name="invitation_desc">Por favor insira o seu código de convite</string>
@@ -171,6 +179,9 @@
     <string name="enjoy_you_day">Aproveite o seu dia :)</string>
     <string name="see_older">veja mais antiga</string>
     <string name="not_have_event_more">Não há mais eventos</string>
+    
+    <string name="last_reviewed_by">Última avaliação por</string>
+    <string name="not_have_review">ainda não revistos</string>
     
     <!--Event value-->
     <string name="chainsaw">motosserra</string>
