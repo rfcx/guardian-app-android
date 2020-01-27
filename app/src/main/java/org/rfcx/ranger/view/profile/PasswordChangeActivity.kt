@@ -143,6 +143,7 @@ class PasswordChangeActivity : AppCompatActivity() {
 			
 		} else if (newPasswordEditText.text.toString() == newPasswordAgainEditText.text.toString()) {
 			passwordChangeViewModel.changeUserPassword(newPasswordEditText.text.toString())
+			sendFeedbackView.hideKeyboard()
 			
 		} else {
 			errorNewPasswordAgainTextView.text = getString(R.string.confirm_password_does_not_match)
