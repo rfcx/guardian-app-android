@@ -43,7 +43,13 @@
     <string name="report_record_label">CATATAN PEREKAM (Opsional)</string>
     <string name="report_attach_image_label">FOTO (Opsional)</string>
     <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
-
+    <string name="report_note_label">Catatan</string>
+    <string name="report_note_hint">Menaruh beberapa catatan di sini</string>
+    <string name="some_photo_already_exists">Beberapa foto sudah ada</string>
+    <string name="these_photos_already_exists">Foto ini sudah ada</string>
+    <string name="this_photo_already_exists">foto ini sudah ada</string>
+    <string name="expires_in_24h">berakhir di 24h</string>
+    
     <!-- Notification -->
 	<string name="notification_location_loading">Memuat lokasi…</string>
     <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
@@ -66,7 +72,9 @@
     <string name="at_that_time">Pada saat itu</string>
 
     <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
-	
+    <string name="new_password">Kata sandi baru</string>
+    <string name="new_password_again">Konfirmasi password baru</string>
+    
 	<!-- Invitation -->
     <string name="invitation_title">Hubungkan ke suatu tempat</string>
     <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
@@ -171,6 +179,10 @@
     <string name="enjoy_you_day">Nikmati Anda hari :)</string>
     <string name="see_older">Lihat Lama</string>
     <string name="not_have_event_more">Tidak ada kejadian lebih</string>
+    
+    <string name="last_reviewed_by">Ulasan terakhir oleh</string>
+    <string name="not_have_review">Belum Ulasan</string>
+    
     <!--Event value-->
     <string name="chainsaw">gergaji</string>
     <string name="gunshot">tembakan</string>

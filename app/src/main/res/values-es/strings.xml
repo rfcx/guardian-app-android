@@ -43,6 +43,12 @@
 	<string name="report_record_label">REGISTRO DE NOTAS (Opcional)</string>
 	<string name="report_attach_image_label">FOTOS (Opcional)</string>
 	<string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
+	<string name="report_note_label">notas</string>
+	<string name="report_note_hint">Poner algunas notas aquí</string>
+	<string name="some_photo_already_exists">Algunos foto ya existe</string>
+	<string name="these_photos_already_exists">Estas fotos ya existen</string>
+	<string name="this_photo_already_exists">Esta foto ya existe</string>
+	<string name="expires_in_24h">expira en 24h</string>
 	
 	<!-- Notification -->
 	<string name="notification_location_loading">Cargando ubicación…</string>
@@ -66,6 +72,8 @@
 	<string name="at_that_time">En ese momento</string>
 	
 	<string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
+	<string name="new_password">Nueva contraseña</string>
+	<string name="new_password_again">Confirmar nueva contraseña</string>
 	
 	<!-- Invitation -->
 	<string name="invitation_title">Conectarse a un sitio.</string>
@@ -171,6 +179,9 @@
 	<string name="enjoy_you_day">Usted disfruta de día :)</string>
 	<string name="see_older">ver más viejo</string>
 	<string name="not_have_event_more">No hay más eventos</string>
+	
+	<string name="last_reviewed_by">Último revisado por</string>
+	<string name="not_have_review">Todavía no revisado</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">motosierra</string>

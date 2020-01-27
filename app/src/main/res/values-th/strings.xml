@@ -43,7 +43,12 @@
     <string name="report_record_label">บันทึกเสียง</string>
     <string name="report_attach_image_label">ภาพถ่าย</string>
     <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
-
+    <string name="report_note_label">หมายเหตุ</string>
+    <string name="report_note_hint">บันทึกข้อมูลเพิ่มเติมที่นี่</string>
+    <string name="some_photo_already_exists">ภาพบางส่วนมีอยู่แล้ว</string>
+    <string name="these_photos_already_exists">ภาพเหล่านี้มีอยู่แล้ว</string>
+    <string name="this_photo_already_exists">ภาพนี้มีอยู่แล้ว</string>
+    <string name="expires_in_24h">หมดอายุภายใน 24 ชม</string>
     <!-- Notification -->
 	<string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
@@ -66,7 +71,9 @@
     <string name="at_that_time">ขณะนั้น</string>
 
     <string name="tab_to_record_label">แตะปุ่มค้างไว้เพื่อบันทึกเสียง</string>
-	
+    <string name="new_password">รหัสผ่านใหม่</string>
+    <string name="new_password_again">ยืนยันรหัสผ่านใหม่</string>
+    
 	<!-- Invitation -->
     <string name="invitation_title">เชื่่อมต่อกับพื้นที่ของคุณ</string>
     <string name="invitation_desc">กรุณากรอกรหัสเชิญ (invitation code)</string>
@@ -171,6 +178,9 @@
     <string name="enjoy_you_day">ขอให้มีเวลาที่ดี :)</string>
     <string name="see_older">ดูแจ้งเตือนก่อนหน้านี้</string>
     <string name="not_have_event_more">ไม่มีการแจ้งเตือน</string>
+    
+    <string name="last_reviewed_by">ตรวจสอบล่าสุดโดย</string>
+    <string name="not_have_review">ยังไม่ได้รับการตรวจสอบ</string>
     
     <!--Event value-->
     <string name="chainsaw">เลื่อย</string>
