@@ -67,14 +67,18 @@ class Analytics(context: Context) {
 	
 	fun trackLocationTracking(time: Long) {
 		val bundle = Bundle()
-		val status = when {
-			time < 120 -> "tracking_ok"
-			time in 121..599 -> "tracking_slow"
-			else -> "tracking_veryslow" // > 600
+		if(time == 0L){
+			Log.d("LocationTrackerService", "time == 0")
+		} else {
+			val status = when {
+				time < 120 -> "tracking_ok"
+				time in 121..599 -> "tracking_slow"
+				else -> "tracking_veryslow" // > 600
+			}
+			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, status)
+			bundle.putLong(FirebaseAnalytics.Param.VALUE, time)
+			trackEvent("add_location_tracking", bundle)
 		}
-		bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, status)
-		bundle.putLong(FirebaseAnalytics.Param.VALUE, time)
-		trackEvent("add_location_tracking", bundle)
 	}
 	
 	fun trackSetGuardianGroupStartEvent(screen: Screen) {
