@@ -197,6 +197,7 @@
     <string name="profile_app_version_label">versi aplikasi</string>
     <string name="profile_feedback_label">Masukan</string>
     <string name="profile_rate_app_label">Menilai aplikasi</string>
+    <string name="save_changed">Simpan perubahan</string>
     
     <string name="feedback_submitted">Umpan balik yang disampaikan. Terima kasih atas waktu Anda :)</string>
     <string name="feedback_submission_failed">Pengiriman umpan balik gagal! Silakan coba lagi.</string>
@@ -205,6 +206,13 @@
     <string name="from">Dari:</string>
     <string name="app_feedback_share_ideas">Meninggalkan umpan balik aplikasi atau berbagi ide</string>
     <string name="maximum_number_of_attachments">Anda telah mencapai max dipilih. Cobalah menghapus beberapa item sebelum menambahkan lebih lampiran.</string>
+    
+    <string name="please_enter_your_new_password">Masukkan password baru anda</string>
+    <string name="please_confirm_your_new_password">Silahkan konfirmasi password baru anda</string>
+    <string name="password_must_have_at_least_6_characters">Password harus memiliki minimal 6 karakter</string>
+    <string name="confirm_password_does_not_match">Konfirmasi sandi tidak cocok</string>
+    <string name="password_changed_successfully">Password telah berhasil diubah.</string>
+    <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>

@@ -197,6 +197,7 @@
 	<string name="profile_app_version_label">Version de aplicacion</string>
 	<string name="profile_feedback_label">Realimentación</string>
 	<string name="profile_rate_app_label">Califica la aplicación</string>
+	<string name="save_changed">Guardar cambios</string>
 	
 	<string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
 	<string name="feedback_submission_failed">envío de comentarios no! Inténtalo de nuevo.</string>
@@ -205,6 +206,13 @@
 	<string name="from">De:</string>
 	<string name="app_feedback_share_ideas">Votar aplicación o compartir sus ideas</string>
 	<string name="maximum_number_of_attachments">Usted ha llegado seleccionable máx. Trate de eliminar algunos artículos antes de añadir más elementos adjuntos.</string>
+	
+	<string name="please_enter_your_new_password">Por favor, introduzca su nueva contraseña</string>
+	<string name="please_confirm_your_new_password">Por favor confirme su nueva contraseña</string>
+	<string name="password_must_have_at_least_6_characters">La contraseña debe tener al menos 6 caracteres</string>
+	<string name="confirm_password_does_not_match">Confirmar contraseña no coincide</string>
+	<string name="password_changed_successfully">La contraseña ha sido cambiada con éxito.</string>
+	<string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de grupos de la guarda</string>

@@ -55,6 +55,15 @@
 		<item name="android:backgroundTint" tools:targetApi="lollipop">@color/gray_30</item>
 	</style>
 	
+	<style name="RangerEditText.EditTextBox" parent="RangerEditText">
+		<item name="android:textColor">@color/text_primary</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:padding">@dimen/margin_padding_normal</item>
+		<item name="android:typeface">monospace</item>
+		<item name="android:background">@android:drawable/editbox_background_normal</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+	</style>
+	
 	<!-- TextView -->
 	<style name="RangerText" parent="Widget.AppCompat.TextView"/>
 	
