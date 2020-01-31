@@ -56,7 +56,7 @@ data class EventResponse(
 		@SerializedName("review")
 		val review: Review?,
 		
-		@SerializedName("reviewer")
+		@SerializedName("last_review")
 		val reviewer: Reviewer?
 
 ) {

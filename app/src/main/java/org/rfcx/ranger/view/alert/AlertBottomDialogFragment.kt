@@ -135,7 +135,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 				
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
-					agreeTextView.text = (it.confirmedCount + 1).toString()
 					
 					if(context !== null){
 						agreeImageView.background = context!!.getImage(R.drawable.bg_circle_red)
@@ -143,7 +142,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 					}
 				} else if (state == "REJECT") {
 					linearLayout.visibility = View.VISIBLE
-					rejectTextView.text = (it.rejectedCount + 1).toString()
 					
 					if(context !== null){
 						rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)

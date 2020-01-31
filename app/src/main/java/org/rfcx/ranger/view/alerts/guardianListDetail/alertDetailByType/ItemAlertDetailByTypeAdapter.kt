@@ -65,8 +65,8 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
-			tvReviewed.text = context.getString(if (item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
-			tvNameReviewer.visibility = if (item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 			tvNameReviewer.text = if (item.event.firstNameReviewer.isNotBlank()) item.event.firstNameReviewer else context.getUserNickname()
 			linearLayout.visibility = View.INVISIBLE
 			this.currentEvent = item
@@ -74,7 +74,6 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					circleImageView.visibility = View.INVISIBLE
-					tvNameReviewer.visibility = View.VISIBLE
 					linearLayout.visibility = View.VISIBLE
 					
 					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
@@ -87,7 +86,6 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 					circleImageView.visibility = View.INVISIBLE
 					ivReject.background = context.getImage(R.drawable.bg_circle_grey)
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
-					tvNameReviewer.visibility = View.VISIBLE
 					linearLayout.visibility = View.VISIBLE
 					
 					//TODO: remove
@@ -96,7 +94,6 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 				}
 				EventItem.State.NONE -> {
 					circleImageView.visibility = View.VISIBLE
-					tvNameReviewer.visibility = View.INVISIBLE
 					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))

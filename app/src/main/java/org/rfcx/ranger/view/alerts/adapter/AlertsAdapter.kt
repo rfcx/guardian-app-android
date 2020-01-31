@@ -94,36 +94,29 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
-			tvReviewed.text = context.getString(if (item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
 			tvNameReviewer.text = if (item.event.firstNameReviewer.isNotBlank()) item.event.firstNameReviewer else context.getUserNickname()
-			tvNameReviewer.visibility = if (item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
 					ivStatusRead.visibility = View.INVISIBLE
-					tvNameReviewer.visibility = View.VISIBLE
 					linearLayout.visibility = View.VISIBLE
 					
 					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
-					
-					//TODO: remove
-					tvAgreeValue.text = (item.event.confirmedCount + 1).toString()
+
 				}
 				EventItem.State.REJECT -> {
 					ivStatusRead.visibility = View.INVISIBLE
-					tvNameReviewer.visibility = View.VISIBLE
 					linearLayout.visibility = View.VISIBLE
 					
 					ivReject.background = context.getImage(R.drawable.bg_circle_grey)
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
 					
-					//TODO: remove
-					tvRejectValue.text = (item.event.rejectedCount + 1).toString()
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE
-					tvNameReviewer.visibility = View.INVISIBLE
 					linearLayout.visibility = View.INVISIBLE
 				}
 			}

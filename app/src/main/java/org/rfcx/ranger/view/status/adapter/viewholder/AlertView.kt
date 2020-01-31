@@ -15,38 +15,37 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 	fun bind(item: StatusAdapter.AlertItem) {
 		binding.alertItem = item
 		binding.context = binding.root.context
+		binding.reviewedTextView.visibility = View.VISIBLE
+		
+		binding.agreeTextView.text = item.getConfirmedCount()
+		binding.rejectTextView.text = item.getRejectedCount()
+		
+		if (item.alert.firstNameReviewer.isNotBlank()) {
+			binding.nameReviewerTextView.visibility = View.VISIBLE
+		} else {
+			binding.nameReviewerTextView.visibility = View.INVISIBLE
+		}
+		
 		when {
 			item.state == StatusAdapter.AlertItem.State.CONFIRM -> {
 				binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_red)
 				binding.rejectImageView.background = binding.root.context.getImage(R.drawable.bg_circle_white)
 				binding.linearLayout.visibility = View.VISIBLE
-				binding.reviewedTextView.visibility = View.VISIBLE
-				binding.nameReviewerTextView.visibility = View.VISIBLE
-				//TODO remove
-				binding.agreeTextView.text = (item.getConfirmedCount().toInt() + 1).toString()
-				binding.rejectTextView.text = item.getRejectedCount()
 			}
 			item.state == StatusAdapter.AlertItem.State.REJECT -> {
 				binding.rejectImageView.background = binding.root.context.getImage(R.drawable.bg_circle_grey)
 				binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_white)
 				binding.linearLayout.visibility = View.VISIBLE
-				binding.reviewedTextView.visibility = View.VISIBLE
-				binding.nameReviewerTextView.visibility = View.VISIBLE
-				//TODO remove
-				binding.agreeTextView.text = item.getRejectedCount()
-				binding.rejectTextView.text = (item.getRejectedCount().toInt() + 1).toString()
 			}
 			item.state == StatusAdapter.AlertItem.State.NONE -> {
 				binding.linearLayout.visibility = View.INVISIBLE
-				binding.reviewedTextView.visibility = View.VISIBLE
-				binding.nameReviewerTextView.visibility = View.INVISIBLE
 			}
 		}
 		
 		binding.onClickedAlertItem = View.OnClickListener {
 			var state = EventItem.State.NONE
 			
-			if( item.state == StatusAdapter.AlertItem.State.REJECT ) {
+			if (item.state == StatusAdapter.AlertItem.State.REJECT) {
 				state = EventItem.State.REJECT
 			} else if (item.state == StatusAdapter.AlertItem.State.CONFIRM) {
 				state = EventItem.State.CONFIRM
