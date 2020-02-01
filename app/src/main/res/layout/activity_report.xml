@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 	
 	<data>
 		
@@ -85,8 +85,8 @@
 					android:id="@+id/whatView"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					app:onWhatViewChangedListener="@{onWhatViewChangedListener}"
-					app:layout_constraintTop_toBottomOf="@id/reportTypeTextView" />
+					app:layout_constraintTop_toBottomOf="@id/reportTypeTextView"
+					app:onWhatViewChangedListener="@{onWhatViewChangedListener}" />
 				
 				<TextView
 					android:id="@+id/reportWhenTextView"
@@ -105,10 +105,10 @@
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_padding_small"
 					android:layout_marginEnd="@dimen/margin_padding_small"
-					app:onWhenViewStateChangedListener = "@{onWhenViewStateChangedListener}"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/reportWhenTextView" />
+					app:layout_constraintTop_toBottomOf="@id/reportWhenTextView"
+					app:onWhenViewStateChangedListener="@{onWhenViewStateChangedListener}" />
 				
 				<TextView
 					android:id="@+id/attachImageTextView"
@@ -138,6 +138,28 @@
 					tools:orientation="horizontal" />
 				
 				<TextView
+					android:id="@+id/reportRecordTextView"
+					style="@style/RangerText.Title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_xlarge"
+					android:text="@string/report_record_label"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
+				
+				<org.rfcx.ranger.widget.SoundRecordProgressView
+					android:id="@+id/soundRecordProgressView"
+					android:layout_width="0dp"
+					android:layout_height="48dp"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+				
+				<TextView
 					android:id="@+id/noteTextView"
 					style="@style/RangerText.Title"
 					android:layout_width="wrap_content"
@@ -146,7 +168,7 @@
 					android:layout_marginTop="@dimen/margin_padding_xlarge"
 					android:text="@string/report_note_label"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
+					app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView" />
 				
 				<androidx.appcompat.widget.AppCompatEditText
 					android:id="@+id/noteEditText"
@@ -164,27 +186,6 @@
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
 				
-				<TextView
-					android:id="@+id/reportRecordTextView"
-					style="@style/RangerText.Title"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginTop="@dimen/margin_padding_xlarge"
-					android:text="@string/report_record_label"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/noteEditText" />
-				
-				<org.rfcx.ranger.widget.SoundRecordProgressView
-					android:id="@+id/soundRecordProgressView"
-					android:layout_width="0dp"
-					android:layout_height="48dp"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginTop="@dimen/margin_padding_small"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
 				
 				<androidx.appcompat.widget.AppCompatButton
 					android:id="@+id/reportButton"
@@ -194,15 +195,15 @@
 					android:layout_margin="@dimen/margin_padding_normal"
 					android:background="@drawable/bg_report_submit_button"
 					android:enabled="false"
+					android:onClick="@{onClickReportButton}"
 					android:paddingStart="48dp"
 					android:paddingEnd="48dp"
 					android:text="@string/report_submit_button_label"
 					android:textColor="@android:color/white"
 					android:textStyle="bold"
-					android:onClick="@{onClickReportButton}"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/soundRecordProgressView" />
+					app:layout_constraintTop_toBottomOf="@+id/noteEditText" />
 			
 			</androidx.constraintlayout.widget.ConstraintLayout>
 		
