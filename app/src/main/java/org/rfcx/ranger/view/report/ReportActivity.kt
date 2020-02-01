@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ScrollView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -103,23 +105,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		setupMap()
 		setupRecordSoundProgressView()
 		setupImageRecycler()
-		
-		binding.onClickReportButton = View.OnClickListener {
-			analytics.trackSubmitTheReportEvent()
-			submitReport()
-		}
-		
-		binding.onWhatViewChangedListener = object : WhatView.OnWhatViewChangedListener {
-			override fun onViewChange(event: String?) {
-				validateForm()
-			}
-		}
-		
-		binding.onWhenViewStateChangedListener = object : WhenView.OnWhenViewStateChangedListener {
-			override fun onStateChange(state: Report.AgeEstimate) {
-				validateForm()
-			}
-		}
+		setupOnClick()
 	}
 	
 	override fun onResume() {
@@ -171,6 +157,31 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			elevation = 0f
 			title = getString(R.string.report_title)
 		}
+	}
+	
+	private fun setupOnClick() {
+		binding.onClickReportButton = View.OnClickListener {
+			analytics.trackSubmitTheReportEvent()
+			submitReport()
+		}
+		
+		binding.onWhatViewChangedListener = object : WhatView.OnWhatViewChangedListener {
+			override fun onViewChange(event: String?) {
+				validateForm()
+			}
+		}
+		
+		binding.onWhenViewStateChangedListener = object : WhenView.OnWhenViewStateChangedListener {
+			override fun onStateChange(state: Report.AgeEstimate) {
+				validateForm()
+			}
+		}
+		
+		binding.onClickCheckSubmit = View.OnClickListener {
+			showInputRequired()
+		}
+		
+		binding.canSubmitReport = false // default
 	}
 	
 	private fun setupMap() {
@@ -258,13 +269,36 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private fun validateForm() {
 		val eventSelected = whatView.getEventSelected()
 		val whenState = whenView.getState()
-		reportButton.isEnabled = eventSelected != null && whenState != Report.AgeEstimate.NONE && lastLocation != null
+		val enable = eventSelected != null && whenState != Report.AgeEstimate.NONE && lastLocation != null
+		
+		// validate input requited
+		if (eventSelected != null) {
+			binding.warningWhatRequired = false
+		}
+		
+		if (whenState != Report.AgeEstimate.NONE) {
+			binding.warningWhenRequired = false
+		}
+		
+		reportButton.isEnabled = enable
+		binding.canSubmitReport = enable
+	}
+	
+	private fun showInputRequired() {
+		val eventSelected = whatView.getEventSelected()
+		val whenState = whenView.getState()
+		binding.warningWhatRequired = (eventSelected == null)
+		binding.warningWhenRequired = (whenState == Report.AgeEstimate.NONE)
+		if (eventSelected == null || whenState == Report.AgeEstimate.NONE) {
+			scrollView.fullScroll(ScrollView.FOCUS_UP)
+		}
 	}
 	
 	private fun submitReport() {
 		val eventSelected = whatView.getEventSelected()
 		val whenState = whenView.getState()
 		if (eventSelected == null || whenState == Report.AgeEstimate.NONE) {
+			Log.d("Report", "submit! but no successful!")
 			validateForm()
 			return
 		}
