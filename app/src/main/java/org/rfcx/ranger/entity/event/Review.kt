@@ -21,4 +21,5 @@ open class Reviewer {
 	
 	var email: String = ""
 	
+	var confirmed: Boolean? = null
 }

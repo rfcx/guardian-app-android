@@ -107,6 +107,8 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
+					
+					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
 					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 
 				}
@@ -116,8 +118,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivReject.background = context.getImage(R.drawable.bg_circle_grey)
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
-					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
+					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
+					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE
