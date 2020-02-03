@@ -83,12 +83,11 @@ data class EventResponse(
 		}
 		if (review != null) {
 			event.reviewCreated = review.created
-		}
-		if (review != null) {
 			event.reviewConfirmed = review.confirmed
 		}
-		if (reviewer != null) {
-			event.firstNameReviewer = reviewer.firstName
+		
+		reviewer?.let {
+			event.firstNameReviewer = it.firstName ?: it.email.split("@")[0]
 		}
 		
 		return event

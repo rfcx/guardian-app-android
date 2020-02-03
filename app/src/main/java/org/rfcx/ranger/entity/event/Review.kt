@@ -13,7 +13,12 @@ open class Review {
 }
 
 open class Reviewer {
-	@SerializedName("email")
-//	@SerializedName("firstname")
-	var firstName: String = ""
+	@SerializedName("firstname")
+	var firstName: String? = ""
+	
+	@SerializedName("lastname")
+	var lastName: String? = ""
+	
+	var email: String = ""
+	
 }
