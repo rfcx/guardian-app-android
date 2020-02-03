@@ -214,15 +214,15 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		eventsLiveData.observeForever(eventObserve)
 	}
 	
-	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.alert.id == eventGuid }
+	fun onEventReviewed(event: Event, reviewValue: String) {
+		val eventItem = _alertsList.firstOrNull { it.alert.id == event.id }
 		if (eventItem != null) {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
 				else -> StatusAdapter.AlertItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.alert.id == eventGuid }
+			_alertsList.replace(eventItem) { it.alert.id == event.id }
 		}
 		updateWeeklyStat()
 		_alertItems.value = _alertsList

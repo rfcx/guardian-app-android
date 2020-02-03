@@ -397,11 +397,9 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		fun getGuardianShortname(): String = alert.guardianName
 		fun getImage(): Int = alert.value.toEventIcon()
-		fun getConfirmedCount(): String = alert.confirmedCount.toString()
-		fun getRejectedCount(): String = alert.rejectedCount.toString()
 		fun getTime(context: Context): String = "  ${alert.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
-		fun getReviewed(context: Context) : String = context.getString(if (alert.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
-		fun getNameOfReviewed(context: Context) : String = if(alert.firstNameReviewer.isNotBlank()) alert.firstNameReviewer else context.getUserNickname()
+		fun getReviewed(context: Context): String = context.getString(if (alert.firstNameReviewer.isNotBlank() || state !== State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+		
 		fun getConfirmIcon(): Int = when (state) {
 			State.CONFIRM -> R.drawable.ic_confirm_event_white
 			State.NONE -> R.drawable.ic_confirm_event_gray
@@ -416,6 +414,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		
 		fun isVisibility(): Boolean = state == State.NONE
 	}
+	
 	
 	class ReportEmpty : StatusItemBase {
 		override fun getViewType(): Int = ITEM_REPORT_EMPTY
