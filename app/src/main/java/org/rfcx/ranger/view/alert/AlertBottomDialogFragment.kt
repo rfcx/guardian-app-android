@@ -295,22 +295,22 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		nameReviewerTextView.text = context.getNameEmail()
 		
 		if (event !== null) {
-			if (event!!.reviewConfirmed == null) {
+			if (event!!.firstNameReviewer == context.getNameEmail()) {
+				if (event!!.reviewConfirmed!!) {
+					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+						rejectedCount()
+					}
+				} else {
+					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+						confirmedCount()
+					}
+				}
+			} else {
 				if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
 					confirmedCount()
 					
 				} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
 					rejectedCount()
-					
-				}
-			} else if (event!!.reviewConfirmed!!) {
-				if (reviewEventFactory.reviewConfirm !== ReviewEventFactory.confirmEvent) {
-					rejectedCount()
-					
-				}
-			} else {
-				if (reviewEventFactory.reviewConfirm !== ReviewEventFactory.rejectEvent) {
-					confirmedCount()
 					
 				}
 			}
@@ -339,7 +339,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
 		rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
 		
-		agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_reject_event_gray))
+		agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_gray))
 		context?.getBackgroundColor(R.color.transparent)?.let { agreeImageView.setBackgroundColor(it) }
 		
 		if (event?.firstNameReviewer == context.getNameEmail()) {

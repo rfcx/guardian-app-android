@@ -69,7 +69,7 @@ class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListe
 	}
 	
 	override fun onReviewed(reviewValue: String, event: Event) {
-		viewModel.onEventReviewed(event.id, reviewValue)
+		viewModel.onEventReviewed(event, reviewValue)
 	}
 	
 	companion object {
