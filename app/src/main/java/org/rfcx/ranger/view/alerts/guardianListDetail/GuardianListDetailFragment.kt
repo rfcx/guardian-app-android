@@ -85,8 +85,8 @@ class GuardianListDetailFragment : BaseFragment(), AlertClickListener, AlertList
 				AlertBottomDialogFragment.tag)
 	}
 	
-	override fun onReviewed(eventGuID: String, reviewValue: String) {
-		viewModel.onEventReviewed(eventGuID, reviewValue)
+	override fun onReviewed(reviewValue: String, event: Event) {
+		viewModel.onEventReviewed(event.id, reviewValue)
 	}
 	
 	companion object {

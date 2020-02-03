@@ -14,10 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_alert.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
-import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getUserNickname
-import org.rfcx.ranger.util.toEventIcon
-import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.ranger.util.*
 
 
 class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, RecyclerView.ViewHolder>(AlertsDiffUtil()) {
@@ -94,9 +91,14 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvTimeAgo.text = " ${item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
-			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
-			tvNameReviewer.text = if (item.event.firstNameReviewer.isNotBlank()) item.event.firstNameReviewer else context.getUserNickname()
-			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
+			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			
+			if (item.state !== EventItem.State.NONE) {
+				tvNameReviewer.text = context.getNameEmail()
+			} else if (item.event.firstNameReviewer.isNotBlank()) {
+				tvNameReviewer.text = item.event.firstNameReviewer
+			}
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
@@ -105,6 +107,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivAgree.background = context.getImage(R.drawable.bg_circle_red)
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_white))
+					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 
 				}
 				EventItem.State.REJECT -> {
@@ -113,11 +116,16 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivReject.background = context.getImage(R.drawable.bg_circle_grey)
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_white))
+					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE
 					linearLayout.visibility = View.INVISIBLE
+					
+					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
+					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
+					
 				}
 			}
 		}

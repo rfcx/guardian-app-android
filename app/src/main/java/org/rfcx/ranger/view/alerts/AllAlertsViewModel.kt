@@ -127,15 +127,32 @@ class AllAlertsViewModel(private val context: Context,
 		_alerts.value = Result.Success(items)
 	}
 	
-	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.event.id == eventGuid }
+	fun onEventReviewed(reviewValue: String, event: Event) {
+		val eventItem = _alertsList.firstOrNull { it.event.id == event.id }
 		if (eventItem != null) {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.event.id == eventGuid }
+			
+			if (reviewValue == ReviewEventFactory.confirmEvent) {
+				eventItem.event.confirmedCount = event.confirmedCount + 1
+				if (event.firstNameReviewer == context.getNameEmail()) {
+					eventItem.event.rejectedCount = event.rejectedCount - 1
+				} else {
+					eventItem.event.rejectedCount = event.rejectedCount
+				}
+			} else if (reviewValue == ReviewEventFactory.rejectEvent) {
+				eventItem.event.rejectedCount = event.rejectedCount + 1
+				if (event.firstNameReviewer == context.getNameEmail()) {
+					eventItem.event.confirmedCount = event.confirmedCount - 1
+				} else {
+					eventItem.event.confirmedCount = event.confirmedCount
+				}
+			}
+			
+			_alertsList.replace(eventItem) { it.event.id == event.id }
 		}
 		_alerts.value = Result.Success(_alertsList)
 	}

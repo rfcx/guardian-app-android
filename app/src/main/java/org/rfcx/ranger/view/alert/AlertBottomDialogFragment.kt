@@ -24,6 +24,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
@@ -45,6 +46,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 					"not implemented @AlertListener")*/
 		}
 	}
+	
+	private var event: Event? = null
 	
 	override fun onDetach() {
 		super.onDetach()
@@ -121,6 +124,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
+				event = it
 				val state: String = arguments?.getString(STATE_EVENT) ?: "NONE"
 				
 				eventIconImageView.setImageResource(it.getIconRes())
@@ -267,7 +271,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 			it.success(
 					{
 						hideLoading()
-						alertListener?.onReviewed(it.eventGuID, it.reviewConfirm)
+						event?.let { it1 -> alertListener?.onReviewed(it.reviewConfirm, it1) }
 						
 						// is rejectEvent?
 						if (it.reviewConfirm == ReviewEventFactory.rejectEvent) {
