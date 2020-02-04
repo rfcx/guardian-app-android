@@ -9,6 +9,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
@@ -18,6 +19,7 @@ import org.rfcx.ranger.util.*
 
 class AlertDetailByTypeViewModel(private val context: Context,
                                  private val eventDb: EventDb,
+                                 private val eventUseCase: GetEventUseCase,
                                  private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _arrayEvent = MutableLiveData<Result<EventGroupByValue>>()      // keep only 50 events
 	val arrayEvent: LiveData<Result<EventGroupByValue>> get() = _arrayEvent
@@ -37,30 +39,41 @@ class AlertDetailByTypeViewModel(private val context: Context,
 	}
 	
 	fun onEventReviewed(event: Event, reviewValue: String) {
-		val updateEventItem = arrayEventGroupMore.events.firstOrNull { it.event.id == event.id }
-		if (updateEventItem != null) {
-			updateEventItem.state = when (reviewValue) {
+		val eventItem = arrayEventGroupMore.events.firstOrNull { it.event.id == event.id }
+		
+		eventItem?.let {
+			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			if (reviewValue == ReviewEventFactory.confirmEvent) {
-				updateEventItem.event.confirmedCount = event.confirmedCount + 1
-				if (event.firstNameReviewer == context.getNameEmail()) {
-					updateEventItem.event.rejectedCount = event.rejectedCount - 1
-				} else {
-					updateEventItem.event.rejectedCount = event.rejectedCount
-				}
-			} else if (reviewValue == ReviewEventFactory.rejectEvent) {
-				updateEventItem.event.rejectedCount = event.rejectedCount + 1
-				if (event.firstNameReviewer == context.getNameEmail()) {
-					updateEventItem.event.confirmedCount = event.confirmedCount - 1
-				} else {
-					updateEventItem.event.confirmedCount = event.confirmedCount
-				}
-			}
-			arrayEventGroupMore.events.replace(updateEventItem) { it.event.id == event.id }
+			
+			getEventDetail(eventItem)
+			
+		} ?: run {
+			_arrayEvent.value = Result.Success(arrayEventGroupMore)
 		}
+	}
+	
+	private fun getEventDetail(eventItem: EventItem) {
+		_arrayEvent.value = Result.Loading
+		val eventId = eventItem.event.id
+		eventUseCase.execute(object : DisposableSingleObserver<Event>() {
+			override fun onSuccess(event: Event) {
+				updateEventItem(eventItem, event)
+			}
+			
+			override fun onError(e: Throwable) {
+				// just need update view
+				updateEventItem(eventItem, eventItem.event)
+			}
+		}, eventId)
+	}
+	
+	private fun updateEventItem(eventItem: EventItem, newEvent: Event) {
+		eventItem.event = newEvent // set new event
+		
+		arrayEventGroupMore.events.replace(eventItem) { it.event.id == newEvent.id }
 		_arrayEvent.value = Result.Success(arrayEventGroupMore)
 	}
 	

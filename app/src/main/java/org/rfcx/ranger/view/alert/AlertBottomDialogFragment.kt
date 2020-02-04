@@ -294,6 +294,22 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
 		nameReviewerTextView.text = context.getNameEmail()
 		
+		if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+			agreeImageView.background = context?.getImage(R.drawable.bg_circle_red)
+			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_white))
+			
+			rejectImageView.setImageDrawable(context?.getImage(R.drawable.ic_reject_event_gray))
+			context?.getBackgroundColor(R.color.transparent)?.let { rejectImageView.setBackgroundColor(it) }
+			
+		} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+			rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
+			rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
+			
+			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_gray))
+			context?.getBackgroundColor(R.color.transparent)?.let { agreeImageView.setBackgroundColor(it) }
+			
+		}
+		
 		if (event !== null) {
 			if (event!!.firstNameReviewer == context.getNameEmail()) {
 				if (event!!.reviewConfirmed!!) {
@@ -320,12 +336,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun confirmedCount() {
 		agreeTextView.text = (event?.confirmedCount?.plus(1)).toString()
 		
-		agreeImageView.background = context?.getImage(R.drawable.bg_circle_red)
-		agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_white))
-		
-		rejectImageView.setImageDrawable(context?.getImage(R.drawable.ic_reject_event_gray))
-		context?.getBackgroundColor(R.color.transparent)?.let { rejectImageView.setBackgroundColor(it) }
-		
 		if (event?.firstNameReviewer == context.getNameEmail()) {
 			rejectTextView.text = event?.rejectedCount?.minus(1).toString()
 		} else {
@@ -335,12 +345,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
 	private fun rejectedCount() {
 		rejectTextView.text = (event?.rejectedCount?.plus(1)).toString()
-		
-		rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
-		rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
-		
-		agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_gray))
-		context?.getBackgroundColor(R.color.transparent)?.let { agreeImageView.setBackgroundColor(it) }
 		
 		if (event?.firstNameReviewer == context.getNameEmail()) {
 			agreeTextView.text = event?.confirmedCount?.minus(1).toString()

@@ -51,7 +51,7 @@ object UiModule {
 		viewModel { GroupAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { GuardianListDetailViewModel(get()) }
 		viewModel { AlertViewModel(androidContext(), get(), get()) }
-		viewModel { AlertDetailByTypeViewModel(androidContext(), get(), get()) }
+		viewModel { AlertDetailByTypeViewModel(androidContext(), get(), get(), get()) }
 	}
 	
 	val profileModule = module {
