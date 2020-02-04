@@ -14,6 +14,22 @@
 			type="android.view.View.OnClickListener" />
 		
 		<variable
+			name="onClickCheckSubmit"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="canSubmitReport"
+			type="Boolean" />
+		
+		<variable
+			name="warningWhatRequired"
+			type="Boolean" />
+		
+		<variable
+			name="warningWhenRequired"
+			type="Boolean" />
+		
+		<variable
 			name="onWhatViewChangedListener"
 			type="org.rfcx.ranger.widget.WhatView.OnWhatViewChangedListener" />
 		
@@ -81,6 +97,18 @@
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/mapView" />
 				
+				<TextView
+					style="@style/RangerText.Caption"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_small"
+					android:text="@string/required"
+					android:textColor="@color/text_error"
+					android:visibility="@{warningWhatRequired ? view.VISIBLE : view.INVISIBLE}"
+					app:layout_constraintBottom_toBottomOf="@+id/reportTypeTextView"
+					app:layout_constraintStart_toEndOf="@+id/reportTypeTextView"
+					app:layout_constraintTop_toTopOf="@+id/reportTypeTextView" />
+				
 				<org.rfcx.ranger.widget.WhatView
 					android:id="@+id/whatView"
 					android:layout_width="match_parent"
@@ -98,6 +126,18 @@
 					android:text="@string/report_when_label"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/whatView" />
+				
+				<TextView
+					style="@style/RangerText.Caption"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_small"
+					android:text="@string/required"
+					android:textColor="@color/text_error"
+					android:visibility="@{warningWhenRequired ? view.VISIBLE : view.INVISIBLE}"
+					app:layout_constraintBottom_toBottomOf="@+id/reportWhenTextView"
+					app:layout_constraintStart_toEndOf="@+id/reportWhenTextView"
+					app:layout_constraintTop_toTopOf="@+id/reportWhenTextView" />
 				
 				<org.rfcx.ranger.widget.WhenView
 					android:id="@+id/whenView"
@@ -204,7 +244,17 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@+id/noteEditText" />
-			
+				
+				<View
+					android:id="@+id/validateSubmitView"
+					android:layout_width="0dp"
+					android:layout_height="0dp"
+					android:onClick="@{onClickCheckSubmit}"
+					android:visibility="@{canSubmitReport ? view.INVISIBLE : view.VISIBLE}"
+					app:layout_constraintBottom_toBottomOf="@id/reportButton"
+					app:layout_constraintEnd_toEndOf="@id/reportButton"
+					app:layout_constraintStart_toStartOf="@id/reportButton"
+					app:layout_constraintTop_toTopOf="@id/reportButton" />
 			</androidx.constraintlayout.widget.ConstraintLayout>
 		
 		</ScrollView>
