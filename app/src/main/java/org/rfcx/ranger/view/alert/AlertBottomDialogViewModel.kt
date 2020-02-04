@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import androidx.core.net.ConnectivityManagerCompat
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,10 +23,10 @@ import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
-import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.isNetworkAvailable
 import java.io.File
 
@@ -232,7 +232,10 @@ class AlertBottomDialogViewModel(private val context: Context,
 				
 				override fun onError(e: Throwable) {
 					e.printStackTrace()
-					_reviewEvent.value = e.getResultError()
+					// save to review unsent
+					eventDb.save(EventReview(requests.eventGuID, requests.reviewConfirm,
+							EventReview.UNSENT))
+					_reviewEvent.value = Result.Success(requests)
 				}
 				
 			}, requests)

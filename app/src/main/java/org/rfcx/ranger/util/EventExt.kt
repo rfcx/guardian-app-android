@@ -62,7 +62,7 @@ fun Event.toEventItem(eventDb: EventDb): EventItem {
 	}
 }
 
-data class EventItem(val event: Event, var state: State = State.NONE) : BaseItem {
+data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem {
 	
 	enum class State {
 		CONFIRM, REJECT, NONE

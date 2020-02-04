@@ -30,6 +30,11 @@ interface EventService {
 	                @Body body: ReviewEventRequest)
 			: Call<ReviewEventResponse>
 	
+	@POST("v2/events/{id}/review")
+	fun reviewEventOnline(@Path("id") eventGuID: String,
+	                @Body body: ReviewEventRequest)
+			: Single<ReviewEventResponse>
+	
 	@GET("v2/events/{event_guid}")
 	fun getEvent(@Path("event_guid") eventGuID: String)
 			: Single<EventResponse>

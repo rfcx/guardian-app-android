@@ -16,7 +16,9 @@ import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 
-class AlertDetailByTypeViewModel(private val context: Context, private val eventDb: EventDb, private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
+class AlertDetailByTypeViewModel(private val context: Context,
+                                 private val eventDb: EventDb,
+                                 private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _arrayEvent = MutableLiveData<Result<EventGroupByValue>>()      // keep only 50 events
 	val arrayEvent: LiveData<Result<EventGroupByValue>> get() = _arrayEvent
 	
