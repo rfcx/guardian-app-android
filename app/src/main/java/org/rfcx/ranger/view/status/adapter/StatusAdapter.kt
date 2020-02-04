@@ -385,7 +385,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		}
 	}
 	
-	data class AlertItem(val alert: Event, var state: State) : StatusItemBase {
+	data class AlertItem(var alert: Event, var state: State) : StatusItemBase {
 		val count = alert.confirmedCount + alert.rejectedCount
 		
 		enum class State {
