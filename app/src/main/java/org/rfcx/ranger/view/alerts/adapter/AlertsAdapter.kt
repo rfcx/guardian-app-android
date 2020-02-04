@@ -132,14 +132,6 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 				}
 			}
 		}
-		
-		private fun Context.getImage(res: Int): Drawable? {
-			return ContextCompat.getDrawable(this, res)
-		}
-		
-		private fun Context.getBackgroundColor(res: Int): Int {
-			return ContextCompat.getColor(this, res)
-		}
 	}
 }
 

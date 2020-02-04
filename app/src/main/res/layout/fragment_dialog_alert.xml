@@ -190,9 +190,9 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		android:paddingStart="@dimen/margin_padding_normal"
+		android:gravity="top"
 		android:paddingTop="0dp"
 		android:paddingEnd="@dimen/margin_padding_normal"
-		android:paddingBottom="@dimen/margin_padding_normal"
 		android:weightSum="2">
 		
 		<androidx.appcompat.widget.AppCompatButton
@@ -203,6 +203,7 @@
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
 			tools:text="Negative" />
 		
 		<androidx.appcompat.widget.AppCompatButton

@@ -136,14 +136,14 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
-					
+
 					if (context !== null) {
 						agreeImageView.background = context!!.getImage(R.drawable.bg_circle_red)
 						agreeImageView.setImageDrawable(context!!.getImage(R.drawable.ic_confirm_event_white))
 					}
 				} else if (state == "REJECT") {
 					linearLayout.visibility = View.VISIBLE
-					
+
 					if (context !== null) {
 						rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
 						rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
@@ -288,7 +288,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	}
 	
 	private fun showCountReviewer(reviewEventFactory: ReviewEventFactory) {
-		linearLayout.visibility = View.VISIBLE
 		nameReviewerTextView.visibility = View.VISIBLE
 		
 		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
@@ -351,14 +350,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		} else {
 			agreeTextView.text = event?.confirmedCount.toString()
 		}
-	}
-	
-	private fun Context.getImage(res: Int): Drawable? {
-		return ContextCompat.getDrawable(this, res)
-	}
-	
-	private fun Context.getBackgroundColor(res: Int): Int {
-		return ContextCompat.getColor(this, res)
 	}
 	
 	companion object {

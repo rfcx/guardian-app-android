@@ -2,8 +2,10 @@ package org.rfcx.ranger.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import androidx.core.content.ContextCompat
 import org.joda.time.Duration
 import org.rfcx.ranger.R
 import java.util.*
@@ -76,4 +78,12 @@ fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
 	return map {
 		if (block(it)) newValue else it
 	}
+}
+
+fun Context.getImage(res: Int): Drawable? {
+	return ContextCompat.getDrawable(this, res)
+}
+
+fun Context.getBackgroundColor(res: Int): Int {
+	return ContextCompat.getColor(this, res)
 }

@@ -104,13 +104,5 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 				}
 			}
 		}
-		
-		private fun Context.getImage(res: Int): Drawable? {
-			return ContextCompat.getDrawable(this, res)
-		}
-		
-		private fun Context.getBackgroundColor(res: Int): Int {
-			return ContextCompat.getColor(this, res)
-		}
 	}
 }
