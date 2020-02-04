@@ -76,8 +76,8 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 		event.value.let { analytics?.trackSeeAlertDetailEvent(event.id, it) }
 	}
 	
-	fun onReviewed(eventGuID: String, reviewValue: String) {
-		allAlertsViewModel.onEventReviewed(eventGuID, reviewValue)
+	fun onReviewed(reviewValue: String, event: Event) {
+		allAlertsViewModel.onEventReviewed(reviewValue, event)
 	}
 	
 	private fun setupAlertList() {

@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.EventItem
@@ -72,10 +73,10 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 				AlertBottomDialogFragment.tag)
 	}
 	
-	override fun onReviewed(eventGuID: String, reviewValue: String) {
+	override fun onReviewed(reviewValue: String, event: Event) {
 		val all = childFragmentManager.findFragmentByTag(AllAlertsFragment.tag)
 		if (all is AllAlertsFragment) {
-			all.onReviewed(eventGuID, reviewValue)
+			all.onReviewed(reviewValue, event)
 		}
 	}
 	

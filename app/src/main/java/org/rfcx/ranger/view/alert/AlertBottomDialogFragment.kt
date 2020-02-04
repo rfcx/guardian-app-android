@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +17,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.classifycation.ClassificationAdapter
-import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseBottomSheetDialogFragment
 
 
-class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent {
+class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	
 	private val alertViewModel: AlertBottomDialogViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
@@ -45,6 +42,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 					"not implemented @AlertListener")*/
 		}
 	}
+	
+	private var event: Event? = null
 	
 	override fun onDetach() {
 		super.onDetach()
@@ -121,12 +120,14 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
+				event = it
 				val state: String = arguments?.getString(STATE_EVENT) ?: "NONE"
 				
 				eventIconImageView.setImageResource(it.getIconRes())
 				guardianNameTextView.text = it.guardianName.capitalize()
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
-				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review) ?: ""
+				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
+						?: ""
 				nameReviewerTextView.text = it.firstNameReviewer
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
@@ -135,17 +136,15 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 				
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
-					agreeTextView.text = (it.confirmedCount + 1).toString()
-					
-					if(context !== null){
+
+					if (context !== null) {
 						agreeImageView.background = context!!.getImage(R.drawable.bg_circle_red)
 						agreeImageView.setImageDrawable(context!!.getImage(R.drawable.ic_confirm_event_white))
 					}
 				} else if (state == "REJECT") {
 					linearLayout.visibility = View.VISIBLE
-					rejectTextView.text = (it.rejectedCount + 1).toString()
-					
-					if(context !== null){
+
+					if (context !== null) {
 						rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
 						rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
 					}
@@ -269,12 +268,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 			it.success(
 					{
 						hideLoading()
-						alertListener?.onReviewed(it.eventGuID, it.reviewConfirm)
+						event?.let { it1 -> alertListener?.onReviewed(it.reviewConfirm, it1) }
 						
 						// is rejectEvent?
 						if (it.reviewConfirm == ReviewEventFactory.rejectEvent) {
 							dismiss()
 						}
+						showCountReviewer(it)
 					},
 					{
 						hideLoading()
@@ -287,8 +287,69 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment(), KoinComponent
 		})
 	}
 	
-	private fun Context.getImage(res: Int): Drawable? {
-		return ContextCompat.getDrawable(this, res)
+	private fun showCountReviewer(reviewEventFactory: ReviewEventFactory) {
+		nameReviewerTextView.visibility = View.VISIBLE
+		
+		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
+		nameReviewerTextView.text = context.getNameEmail()
+		
+		if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+			agreeImageView.background = context?.getImage(R.drawable.bg_circle_red)
+			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_white))
+			
+			rejectImageView.setImageDrawable(context?.getImage(R.drawable.ic_reject_event_gray))
+			context?.getBackgroundColor(R.color.transparent)?.let { rejectImageView.setBackgroundColor(it) }
+			
+		} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+			rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
+			rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
+			
+			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_gray))
+			context?.getBackgroundColor(R.color.transparent)?.let { agreeImageView.setBackgroundColor(it) }
+			
+		}
+		
+		if (event !== null) {
+			if (event!!.firstNameReviewer == context.getNameEmail()) {
+				if (event!!.reviewConfirmed!!) {
+					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+						rejectedCount()
+					}
+				} else {
+					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+						confirmedCount()
+					}
+				}
+			} else {
+				if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+					confirmedCount()
+					
+				} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+					rejectedCount()
+					
+				}
+			}
+		}
+	}
+	
+	private fun confirmedCount() {
+		agreeTextView.text = (event?.confirmedCount?.plus(1)).toString()
+		
+		if (event?.firstNameReviewer == context.getNameEmail()) {
+			rejectTextView.text = event?.rejectedCount?.minus(1).toString()
+		} else {
+			rejectTextView.text = event?.rejectedCount.toString()
+		}
+	}
+	
+	private fun rejectedCount() {
+		rejectTextView.text = (event?.rejectedCount?.plus(1)).toString()
+		
+		if (event?.firstNameReviewer == context.getNameEmail()) {
+			agreeTextView.text = event?.confirmedCount?.minus(1).toString()
+		} else {
+			agreeTextView.text = event?.confirmedCount.toString()
+		}
 	}
 	
 	companion object {

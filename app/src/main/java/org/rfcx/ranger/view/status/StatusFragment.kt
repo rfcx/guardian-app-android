@@ -120,8 +120,8 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 				AlertBottomDialogFragment.tag)
 	}
 	
-	override fun onReviewed(eventGuID: String, reviewValue: String) {
-		statusViewModel.onEventReviewed(eventGuID, reviewValue)
+	override fun onReviewed(reviewValue: String, event: Event) {
+		statusViewModel.onEventReviewed(event, reviewValue)
 	}
 	
 	override fun onClickedSeeMore() {

@@ -88,3 +88,7 @@ fun Context?.getUserEmail(): String {
 	}
 	return userID
 }
+
+fun Context?.getNameEmail(): String {
+	return getUserEmail().split("@")[0]
+}

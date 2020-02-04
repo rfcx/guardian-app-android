@@ -17,11 +17,11 @@ import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.data.remote.ResponseCallback
+import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
-import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
@@ -38,7 +38,7 @@ import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
 
 class StatusViewModel(private val context: Context, private val reportDb: ReportDb, private val reportImageDb: ReportImageDb,
-                      private val locationDb: LocationDb, private val profileData: ProfileData,
+                      private val locationDb: LocationDb, private val profileData: ProfileData, private val eventUseCase: GetEventUseCase,
                       private val weeklySummaryData: WeeklySummaryData, private val eventDb: EventDb,
                       private val eventsUserCase: GetEventsUseCase, private val getSiteName: GetSiteNameUseCase) : ViewModel() {
 	
@@ -214,17 +214,44 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		eventsLiveData.observeForever(eventObserve)
 	}
 	
-	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.alert.id == eventGuid }
-		if (eventItem != null) {
+	fun onEventReviewed(event: Event, reviewValue: String) {
+		val eventItem = _alertsList.firstOrNull { it.alert.id == event.id }
+		
+		eventItem?.let {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> StatusAdapter.AlertItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> StatusAdapter.AlertItem.State.REJECT
 				else -> StatusAdapter.AlertItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.alert.id == eventGuid }
+			
+			getEventDetail(eventItem)
+			
+		} ?: run {
+			_alertItems.value = _alertsList
 		}
-		updateWeeklyStat()
+	}
+	
+	private fun getEventDetail(eventItem: StatusAdapter.AlertItem?) {
+		val eventId = eventItem?.alert?.id.toString()
+		eventUseCase.execute(object : DisposableSingleObserver<Event>() {
+			override fun onSuccess(event: Event) {
+				updateEventItem(eventItem, event)
+			}
+			
+			override fun onError(e: Throwable) {
+				// just need update view
+				if (eventItem != null) {
+					updateEventItem(eventItem, eventItem.alert)
+				}
+			}
+		}, eventId)
+	}
+	
+	private fun updateEventItem(eventItem: StatusAdapter.AlertItem?, newEvent: Event) {
+		if (eventItem != null) {
+			eventItem.alert = newEvent // set new event
+			_alertsList.replace(eventItem) { it.alert.id == newEvent.id }
+		}
 		_alertItems.value = _alertsList
 	}
 	

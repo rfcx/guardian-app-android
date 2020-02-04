@@ -3,14 +3,15 @@ package org.rfcx.ranger.view.alerts
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.*
+import io.reactivex.observers.DisposableSingleObserver
 import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
-import org.rfcx.ranger.data.local.GuardianGroupDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
@@ -21,6 +22,7 @@ import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 
 class AllAlertsViewModel(private val context: Context,
                          private val eventsUserCase: GetEventsUseCase,
+                         private val eventUseCase: GetEventUseCase,
                          private val eventDb: EventDb,
                          private val profileData: ProfileData,
                          pref: Preferences) : ViewModel() {
@@ -127,16 +129,41 @@ class AllAlertsViewModel(private val context: Context,
 		_alerts.value = Result.Success(items)
 	}
 	
-	fun onEventReviewed(eventGuid: String, reviewValue: String) {
-		val eventItem = _alertsList.firstOrNull { it.event.id == eventGuid }
-		if (eventItem != null) {
+	fun onEventReviewed(reviewValue: String, event: Event) {
+		val eventItem = _alertsList.firstOrNull { it.event.id == event.id }
+		eventItem?.let {
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) { it.event.id == eventGuid }
+			
+			getEventDetail(eventItem)
+			
+		} ?: run {
+			_alerts.value = Result.Success(_alertsList)
 		}
+	}
+	
+	private fun getEventDetail(eventItem: EventItem) {
+		_alerts.value = Result.Loading
+		val eventId = eventItem.event.id
+		eventUseCase.execute(object : DisposableSingleObserver<Event>() {
+			override fun onSuccess(event: Event) {
+				updateEventItem(eventItem, event)
+			}
+			
+			override fun onError(e: Throwable) {
+				// just need update view
+				updateEventItem(eventItem, eventItem.event)
+			}
+		}, eventId)
+	}
+	
+	private fun updateEventItem(eventItem: EventItem, newEvent: Event) {
+		eventItem.event = newEvent // set new event
+		
+		_alertsList.replace(eventItem) { it.event.id == newEvent.id }
 		_alerts.value = Result.Success(_alertsList)
 	}
 	

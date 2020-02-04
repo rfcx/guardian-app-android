@@ -37,9 +37,11 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 		if (reviewedEventState == null)
 			weeklySummaryData.adJustReviewCount()
 		
-		eventDb.save(EventReview(requestFactory.eventGuID, requestFactory.reviewConfirm,
-				EventReview.UNSENT))
-		return Single.just(Unit)
+		val request = ReviewEventRequest(requestFactory.reviewConfirm == "confirm", true, arrayListOf())
+		return eventService.reviewEventOnline(requestFactory.eventGuID, request).map {
+			eventDb.save(EventReview(requestFactory.eventGuID, requestFactory.reviewConfirm,
+					if (it.success) EventReview.SENT else EventReview.UNSENT))
+		}
 	}
 	
 	override fun getEvent(eventGuID: String): Single<Event> {

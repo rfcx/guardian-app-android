@@ -56,7 +56,7 @@ data class EventResponse(
 		@SerializedName("review")
 		val review: Review?,
 		
-		@SerializedName("reviewer")
+		@SerializedName("last_review")
 		val reviewer: Reviewer?
 
 ) {
@@ -83,12 +83,12 @@ data class EventResponse(
 		}
 		if (review != null) {
 			event.reviewCreated = review.created
+//			event.reviewConfirmed = review.confirmed
 		}
-		if (review != null) {
-			event.reviewConfirmed = review.confirmed
-		}
-		if (reviewer != null) {
-			event.firstNameReviewer = reviewer.firstName
+		
+		reviewer?.let {
+			event.firstNameReviewer = it.firstName ?: it.email.split("@")[0]
+			event.reviewConfirmed = it.confirmed
 		}
 		
 		return event

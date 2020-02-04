@@ -41,8 +41,8 @@ class EventDb(val realm: Realm) {
 	}
 	
 	fun save(eventObj: EventReview) {
-		realm.use { it ->
-			it.executeTransaction {
+		Realm.getDefaultInstance().use { realm ->
+			realm.executeTransaction {
 				it.copyToRealmOrUpdate(eventObj)
 			}
 		}
