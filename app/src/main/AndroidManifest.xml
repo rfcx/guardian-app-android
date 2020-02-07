@@ -36,6 +36,9 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
+		<activity android:name=".view.tutorial.TutorialActivity"
+			android:screenOrientation="portrait" />
+		
 		<activity android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
