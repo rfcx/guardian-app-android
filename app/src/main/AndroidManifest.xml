@@ -37,6 +37,7 @@
 		</provider>
 		
 		<activity android:name=".view.tutorial.TutorialActivity"
+			android:theme="@style/AppTheme.ForTutorial"
 			android:screenOrientation="portrait" />
 		
 		<activity android:name=".view.profile.PasswordChangeActivity"
