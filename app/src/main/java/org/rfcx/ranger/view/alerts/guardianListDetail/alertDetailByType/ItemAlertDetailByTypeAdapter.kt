@@ -1,11 +1,8 @@
 package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -55,8 +52,6 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 		private val ivReject = itemView.rejectImageView
 		private val linearLayout = itemView.linearLayout
 		
-		var currentEvent: EventItem? = null
-		
 		fun bind(item: EventItem) {
 			eventsInEventsTextView.text = item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
@@ -65,7 +60,6 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
 			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			linearLayout.visibility = View.INVISIBLE
-			this.currentEvent = item
 			
 			if (item.state !== EventItem.State.NONE) {
 				tvNameReviewer.text = context.getNameEmail()
@@ -84,6 +78,8 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
 					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
+					val confirmCount = if (item.event.confirmedCount > 0) item.event.confirmedCount  else 1
+					tvAgreeValue.text = confirmCount.toString()
 				}
 				EventItem.State.REJECT -> {
 					circleImageView.visibility = View.INVISIBLE
@@ -94,6 +90,8 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
 					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
+					val rejectedCount = if (item.event.rejectedCount > 0) item.event.rejectedCount  else 1
+					tvRejectValue.text = rejectedCount.toString()
 				}
 				EventItem.State.NONE -> {
 					circleImageView.visibility = View.VISIBLE

@@ -19,7 +19,6 @@ import org.rfcx.ranger.util.*
 
 class AlertDetailByTypeViewModel(private val context: Context,
                                  private val eventDb: EventDb,
-                                 private val eventUseCase: GetEventUseCase,
                                  private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _arrayEvent = MutableLiveData<Result<EventGroupByValue>>()      // keep only 50 events
 	val arrayEvent: LiveData<Result<EventGroupByValue>> get() = _arrayEvent
@@ -38,43 +37,22 @@ class AlertDetailByTypeViewModel(private val context: Context,
 		_arrayEvent.value = Result.Success(EventGroupByValue(itemsEvent, EventGroupByValue.StateSeeOlder.DEFAULT))
 	}
 	
-	fun onEventReviewed(event: Event, reviewValue: String) {
-		val eventItem = arrayEventGroupMore.events.firstOrNull { it.event.id == event.id }
+	fun onEventReviewed(newEvent: Event, reviewValue: String) {
+		val eventItem = arrayEventGroupMore.events.firstOrNull { it.event.id == newEvent.id }
 		
 		eventItem?.let {
-			eventItem.state = when (reviewValue) {
+			it.event = newEvent
+			it.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			
-			getEventDetail(eventItem)
+			arrayEventGroupMore.events.replace(eventItem) {it2 -> it2.event.id == newEvent.id }
+			_arrayEvent.value = Result.Success(arrayEventGroupMore)
 			
 		} ?: run {
 			_arrayEvent.value = Result.Success(arrayEventGroupMore)
 		}
-	}
-	
-	private fun getEventDetail(eventItem: EventItem) {
-		_arrayEvent.value = Result.Loading
-		val eventId = eventItem.event.id
-		eventUseCase.execute(object : DisposableSingleObserver<Event>() {
-			override fun onSuccess(event: Event) {
-				updateEventItem(eventItem, event)
-			}
-			
-			override fun onError(e: Throwable) {
-				// just need update view
-				updateEventItem(eventItem, eventItem.event)
-			}
-		}, eventId)
-	}
-	
-	private fun updateEventItem(eventItem: EventItem, newEvent: Event) {
-		eventItem.event = newEvent // set new event
-		
-		arrayEventGroupMore.events.replace(eventItem) { it.event.id == newEvent.id }
-		_arrayEvent.value = Result.Success(arrayEventGroupMore)
 	}
 	
 	fun loadMoreEvents() {
