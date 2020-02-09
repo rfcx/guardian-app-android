@@ -33,8 +33,8 @@ class TutorialActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_tutorial)
 		
-		val preferenceHelper = Preferences.getInstance(this)
-		preferenceHelper.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, false)
+//		val preferenceHelper = Preferences.getInstance(this)
+//		preferenceHelper.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, false)
 		
 		val viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
 		
