@@ -95,9 +95,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			
 			if (item.state !== EventItem.State.NONE) {
-				tvNameReviewer.text = context.getNameEmail()
+				tvNameReviewer.text = context.getNameEmail().capitalize()
 			} else if (item.event.firstNameReviewer.isNotBlank()) {
-				tvNameReviewer.text = item.event.firstNameReviewer
+				tvNameReviewer.text = item.event.firstNameReviewer.capitalize()
 			}
 			
 			when (item.state) {

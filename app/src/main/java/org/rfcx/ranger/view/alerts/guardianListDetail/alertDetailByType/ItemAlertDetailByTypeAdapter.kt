@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 		private val ivReject = itemView.rejectImageView
 		private val linearLayout = itemView.linearLayout
 		
+		@SuppressLint("DefaultLocale")
 		fun bind(item: EventItem) {
 			eventsInEventsTextView.text = item.event.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			item.event.value.toEventIcon().let { iconAlert.setImageResource(it) }
@@ -62,9 +64,9 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			linearLayout.visibility = View.INVISIBLE
 			
 			if (item.state !== EventItem.State.NONE) {
-				tvNameReviewer.text = context.getNameEmail()
+				tvNameReviewer.text = context.getNameEmail().capitalize()
 			} else if (item.event.firstNameReviewer.isNotBlank()) {
-				tvNameReviewer.text = item.event.firstNameReviewer
+				tvNameReviewer.text = item.event.firstNameReviewer.capitalize()
 			}
 			
 			when (item.state) {

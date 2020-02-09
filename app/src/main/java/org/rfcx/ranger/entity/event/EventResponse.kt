@@ -83,7 +83,6 @@ data class EventResponse(
 		}
 		if (review != null) {
 			event.reviewCreated = review.created
-//			event.reviewConfirmed = review.confirmed
 		}
 		
 		reviewer?.let {

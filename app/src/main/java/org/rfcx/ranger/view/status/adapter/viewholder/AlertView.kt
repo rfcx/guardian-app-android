@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.status.adapter.viewholder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -13,6 +14,7 @@ import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
 class AlertView(private val binding: ItemStatusAlertBinding, private val listener: StatusFragmentListener?) : RecyclerView.ViewHolder(binding.root) {
+	@SuppressLint("DefaultLocale")
 	fun bind(item: StatusAdapter.AlertItem) {
 		binding.alertItem = item
 		binding.context = binding.root.context
@@ -26,9 +28,9 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		}
 		
 		if (item.state !== StatusAdapter.AlertItem.State.NONE) {
-			binding.nameReviewerTextView.text = binding.root.context.getNameEmail()
+			binding.nameReviewerTextView.text = binding.root.context.getNameEmail().capitalize()
 		} else if (item.event.firstNameReviewer.isNotBlank()) {
-			binding.nameReviewerTextView.text = item.event.firstNameReviewer
+			binding.nameReviewerTextView.text = item.event.firstNameReviewer.capitalize()
 		}
 		
 		when (item.state) {

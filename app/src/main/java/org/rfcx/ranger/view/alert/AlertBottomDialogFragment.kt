@@ -126,11 +126,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
 				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
 						?: ""
+				
 				nameReviewerTextView.text = if (it.firstNameReviewer.isNotBlank()) {
-					it.firstNameReviewer
+					it.firstNameReviewer.capitalize()
 				} else {
-					if (state != "NONE" && context != null) context.getNameEmail() else ""
+					if (state != "NONE" && context != null) context.getNameEmail().capitalize() else ""
 				}
+				
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
 				agreeTextView.text = it.confirmedCount.toString()
@@ -291,6 +293,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		})
 	}
 	
+	@SuppressLint("DefaultLocale")
 	private fun showCountReviewer(event: Event, reviewConfirm: String) {
 		nameReviewerTextView.visibility = View.VISIBLE
 		
@@ -299,7 +302,8 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 			event.firstNameReviewer
 		} else {
 			context.getNameEmail()
-		}
+		}.capitalize()
+		
 		agreeTextView.text = event.confirmedCount.toString()
 		rejectTextView.text = event.rejectedCount.toString()
 		
