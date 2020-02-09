@@ -18,21 +18,35 @@
 	
 	<TextView
 		android:id="@+id/nextTextView"
-		android:layout_width="wrap_content"
+		style="@style/RangerText.Tutorial"
+		android:layout_width="80dp"
 		android:layout_height="wrap_content"
-		android:textColor="@android:color/white"
-		android:layout_margin="@dimen/margin_padding_normal"
+		android:gravity="center"
+		android:padding="@dimen/margin_padding_normal"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		android:text="Next"/>
+		android:text="@string/next"/>
+	
+	<TextView
+		android:id="@+id/skipTextView"
+		style="@style/RangerText.Tutorial"
+		android:layout_width="70dp"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_normal"
+		android:text="@string/skip"
+		android:gravity="center"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 	
 	<LinearLayout
 		android:id="@+id/indicatorsContainer"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:gravity="center"
 		android:orientation="horizontal"
+		app:layout_constraintStart_toEndOf="@id/skipTextView"
+		app:layout_constraintEnd_toStartOf="@id/nextTextView"
 		app:layout_constraintBottom_toBottomOf="parent"/>
 	
 </androidx.constraintlayout.widget.ConstraintLayout>

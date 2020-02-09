@@ -4,15 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.viewpager.widget.ViewPager
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.android.synthetic.main.activity_tutorial.*
-import kotlinx.android.synthetic.main.fragment_report_view_pager.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.Preferences
@@ -21,11 +22,11 @@ import org.rfcx.ranger.view.MainActivityNew
 
 class TutorialActivity : AppCompatActivity() {
 	
-	private val viewPagerAdapter = ViewPagerAdapter(
-			listOf(R.drawable.fragment_slider_one,
-					R.drawable.fragment_slider_two,
-					R.drawable.fragment_slider_three,
-					R.drawable.fragment_slider_four)
+	private val fragmentList: ArrayList<Fragment> = arrayListOf(
+			SliderOneFragment.newInstance(),
+			SliderTwoFragment.newInstance(),
+			SliderThreeFragment.newInstance(),
+			SliderFourFragment.newInstance()
 	)
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +36,9 @@ class TutorialActivity : AppCompatActivity() {
 		val preferenceHelper = Preferences.getInstance(this)
 		preferenceHelper.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, false)
 		
-		viewPager2.adapter = viewPagerAdapter
+		val viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
 		
+		viewPager2.adapter = ViewPagerAdapter(this, fragmentList)
 		setUpIndicators()
 		setCurrentIndicator(0)
 		
@@ -45,25 +47,35 @@ class TutorialActivity : AppCompatActivity() {
 				super.onPageSelected(position)
 				setCurrentIndicator(position)
 				if (position == 3) {
-					nextTextView.text = "Done"
+					skipTextView.visibility = View.INVISIBLE
+					nextTextView.text = this@TutorialActivity.getString(R.string.done)
 				} else {
-					nextTextView.text = "Next"
+					skipTextView.visibility = View.VISIBLE
+					nextTextView.text = this@TutorialActivity.getString(R.string.next)
 				}
 			}
 		})
 		
 		nextTextView.setOnClickListener {
-			if (viewPager2.currentItem + 1 < viewPagerAdapter.itemCount) {
+			if (viewPager2.currentItem + 1 < fragmentList.size) {
 				viewPager2.currentItem += 1
 			} else {
 				MainActivityNew.startActivity(this@TutorialActivity, null)
 				finish()
 			}
 		}
+		
+		skipTextView.setOnClickListener {
+			Toast.makeText(this, R.string.available_in_settings, Toast.LENGTH_SHORT).show()
+			
+			MainActivityNew.startActivity(this@TutorialActivity, null)
+			finish()
+		}
+		
 	}
 	
 	private fun setUpIndicators() {
-		val indicators = arrayOfNulls<ImageView>(viewPagerAdapter.itemCount)
+		val indicators = arrayOfNulls<ImageView>(fragmentList.size)
 		val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
 		layoutParams.setMargins(8, 0, 8, 0)
 		for (i in indicators.indices) {
@@ -92,6 +104,13 @@ class TutorialActivity : AppCompatActivity() {
 		}
 	}
 	
+	class ViewPagerAdapter(fa: FragmentActivity, private val fragments: ArrayList<Fragment>) : FragmentStateAdapter(fa) {
+		override fun getItemCount(): Int = fragments.size
+		
+		override fun createFragment(position: Int): Fragment {
+			return fragments[position]
+		}
+	}
 	
 	companion object {
 		fun startActivity(context: Context, eventGuId: String?) {
@@ -103,6 +122,3 @@ class TutorialActivity : AppCompatActivity() {
 	}
 }
 
-interface OnItemClickListener {
-	fun onItemClick(eventGuId: String?)
-}
