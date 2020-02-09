@@ -385,8 +385,8 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		}
 	}
 	
-	data class AlertItem(var alert: Event, var state: State) : StatusItemBase {
-		val count = alert.confirmedCount + alert.rejectedCount
+	data class AlertItem(var event: Event, var state: State) : StatusItemBase {
+		val count = event.confirmedCount + event.rejectedCount
 		
 		enum class State {
 			CONFIRM, REJECT, NONE
@@ -395,10 +395,10 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getViewType(): Int = ITEM_ALERT
 		override fun getId(): Int = -3
 		
-		fun getGuardianShortname(): String = alert.guardianName
-		fun getImage(): Int = alert.value.toEventIcon()
-		fun getTime(context: Context): String = "  ${alert.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
-		fun getReviewed(context: Context): String = context.getString(if (alert.firstNameReviewer.isNotBlank() || state !== State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+		fun getGuardianShortname(): String = event.guardianName
+		fun getImage(): Int = event.value.toEventIcon()
+		fun getTime(context: Context): String = "  ${event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
+		fun getReviewed(context: Context): String = context.getString(if (event.firstNameReviewer.isNotBlank() || state !== State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
 		
 		fun getConfirmIcon(): Int = when (state) {
 			State.CONFIRM -> R.drawable.ic_confirm_event_white

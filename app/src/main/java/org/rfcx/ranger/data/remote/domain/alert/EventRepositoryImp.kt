@@ -46,7 +46,10 @@ class EventRepositoryImp(private val eventService: EventService, private val eve
 	
 	override fun getEvent(eventGuID: String): Single<Event> {
 		return eventService.getEvent(eventGuID).map {
-			it.toEvent()
+			val event = it.toEvent()
+			eventDb.saveEvent(event)
+			
+			event
 		}
 	}
 }

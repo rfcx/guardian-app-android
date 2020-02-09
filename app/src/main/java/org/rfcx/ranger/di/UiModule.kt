@@ -40,13 +40,13 @@ object UiModule {
 	val statusModule = module {
 		viewModel {
 			StatusViewModel(androidContext(), get(), get(), get(), get(), get(), get(),
-					get(), get(), get())
+					get(), get())
 		}
 		viewModel { ReportDetailViewModel(get(), get(), get()) }
 	}
 	
 	val alertModule = module {
-		viewModel { AllAlertsViewModel(androidContext(), get(), get(), get(), get(), get()) }
+		viewModel { AllAlertsViewModel(androidContext(), get(), get(), get(), get()) }
 		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get(), get()) }
 		viewModel { GroupAlertsViewModel(androidContext(), get(), get()) }
 		viewModel { GuardianListDetailViewModel(get()) }

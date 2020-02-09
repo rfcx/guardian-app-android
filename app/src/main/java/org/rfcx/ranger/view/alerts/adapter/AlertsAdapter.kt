@@ -110,7 +110,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
 					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
-
+					
+					val confirmCount = if (item.event.confirmedCount > 0) item.event.confirmedCount  else 1
+					tvAgreeValue.text = confirmCount.toString()
 				}
 				EventItem.State.REJECT -> {
 					ivStatusRead.visibility = View.INVISIBLE
@@ -121,6 +123,9 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
 					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
+					
+					val rejectedCount = if (item.event.rejectedCount > 0) item.event.rejectedCount  else 1
+					tvRejectValue.text = rejectedCount.toString()
 				}
 				EventItem.State.NONE -> {
 					ivStatusRead.visibility = View.VISIBLE

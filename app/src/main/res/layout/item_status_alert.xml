@@ -18,6 +18,14 @@
 		<variable
 			name="onClickedAlertItem"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="confirmCount"
+			type="String" />
+		
+		<variable
+			name="rejectCount"
+			type="String" />
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -143,6 +151,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_padding_xsmall"
+					android:text="@{confirmCount}"
 					tools:text="0" />
 				
 				<androidx.appcompat.widget.AppCompatImageView
@@ -158,6 +167,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_padding_xsmall"
+					android:text="@{rejectCount}"
 					tools:text="0" />
 			</LinearLayout>
 		</androidx.constraintlayout.widget.ConstraintLayout>

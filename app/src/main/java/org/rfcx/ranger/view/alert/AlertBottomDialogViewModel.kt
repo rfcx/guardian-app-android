@@ -65,8 +65,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 	val classifiedCation: LiveData<Result<List<Confidence>>>
 		get() = _classifiedCation
 	
-	private var _reviewEvent: MutableLiveData<Result<ReviewEventFactory>> = MutableLiveData()
-	val reviewEvent: LiveData<Result<ReviewEventFactory>>
+	private var _reviewEvent: MutableLiveData<Result<Pair<Event, ReviewEventFactory>>> = MutableLiveData()
+	val reviewEvent: LiveData<Result<Pair<Event, ReviewEventFactory>>>
 		get() = _reviewEvent
 	
 	init {
@@ -160,7 +160,6 @@ class AlertBottomDialogViewModel(private val context: Context,
 		_playerState.value = Player.STATE_BUFFERING
 	}
 	
-	
 	private val exoPlayerListener = object : Player.EventListener {
 		override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
 			_playerState.value = playbackState
@@ -189,7 +188,6 @@ class AlertBottomDialogViewModel(private val context: Context,
 			updateSoundProgress()
 			playerTimeHandler.postDelayed(this, delayTime)
 		}
-		
 	}
 	
 	private fun updateSoundProgress() {
@@ -225,9 +223,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 			val requests = ReviewEventFactory(it.id, if (confirm) ReviewEventFactory.confirmEvent else ReviewEventFactory.rejectEvent)
 			reviewEventUseCase.execute(object : DisposableSingleObserver<Unit>() {
 				override fun onSuccess(t: Unit) {
-					_reviewEvent.value = Result.Success(requests)
-					// invoke state to review
-					_eventState.value = EventState.REVIEWED
+					requestUpdateEvent(requests)
 				}
 				
 				override fun onError(e: Throwable) {
@@ -235,7 +231,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 					// save to review unsent
 					eventDb.save(EventReview(requests.eventGuID, requests.reviewConfirm,
 							EventReview.UNSENT))
-					_reviewEvent.value = Result.Success(requests)
+					_reviewEvent.value = Result.Success(Pair(eventResult!!, requests))
+					_eventState.value = EventState.REVIEWED	// invoke state to review
 				}
 				
 			}, requests)
@@ -245,6 +242,27 @@ class AlertBottomDialogViewModel(private val context: Context,
 		} ?: run {
 			_reviewEvent.value = Result.Error(IllegalStateException("Event is null."))
 		}
+	}
+	
+	fun requestUpdateEvent(requests: ReviewEventFactory) {
+		if (!context.isNetworkAvailable()) {
+			_reviewEvent.value = Result.Success(Pair(eventResult!!, requests))
+		}
+		
+		getEventUseCase.execute(object : DisposableSingleObserver<Event>() {
+			override fun onSuccess(event: Event) {
+				_reviewEvent.value = Result.Success(Pair(event, requests))
+				// invoke state to review
+				_eventState.value = EventState.REVIEWED
+			}
+			
+			override fun onError(e: Throwable) {
+				e.printStackTrace()
+				
+				_event.value = Result.Error(e)
+				_reviewEvent.value = Result.Success(Pair(eventResult!!, requests))
+			}
+		}, requests.eventGuID)
 	}
 	
 	

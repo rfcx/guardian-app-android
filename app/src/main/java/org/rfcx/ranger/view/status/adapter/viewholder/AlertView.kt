@@ -17,11 +17,9 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		binding.alertItem = item
 		binding.context = binding.root.context
 		binding.reviewedTextView.visibility = View.VISIBLE
-		
-		binding.agreeTextView.text = item.alert.confirmedCount.toString()
-		binding.rejectTextView.text = item.alert.rejectedCount.toString()
-		
-		if (item.alert.firstNameReviewer.isNotBlank() || item.state !== StatusAdapter.AlertItem.State.NONE) {
+		binding.confirmCount = item.event.confirmedCount.toString()
+		binding.rejectCount = item.event.rejectedCount.toString()
+		if (item.event.firstNameReviewer.isNotBlank() || item.state !== StatusAdapter.AlertItem.State.NONE) {
 			binding.nameReviewerTextView.visibility = View.VISIBLE
 		} else {
 			binding.nameReviewerTextView.visibility = View.INVISIBLE
@@ -29,12 +27,12 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		
 		if (item.state !== StatusAdapter.AlertItem.State.NONE) {
 			binding.nameReviewerTextView.text = binding.root.context.getNameEmail()
-		} else if (item.alert.firstNameReviewer.isNotBlank()) {
-			binding.nameReviewerTextView.text = item.alert.firstNameReviewer
+		} else if (item.event.firstNameReviewer.isNotBlank()) {
+			binding.nameReviewerTextView.text = item.event.firstNameReviewer
 		}
 		
-		when {
-			item.state == StatusAdapter.AlertItem.State.CONFIRM -> {
+		when (item.state) {
+			StatusAdapter.AlertItem.State.CONFIRM -> {
 				binding.linearLayout.visibility = View.VISIBLE
 				
 				binding.agreeImageView.background = binding.root.context.getImage(R.drawable.bg_circle_red)
@@ -43,8 +41,10 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 				binding.rejectImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_reject_event_gray))
 				binding.rejectImageView.setBackgroundColor(binding.root.context.getBackgroundColor(R.color.transparent))
 				
+				val confirmCount = if (item.event.confirmedCount > 0) item.event.confirmedCount  else 1
+				binding.confirmCount = confirmCount.toString()
 			}
-			item.state == StatusAdapter.AlertItem.State.REJECT -> {
+			StatusAdapter.AlertItem.State.REJECT -> {
 				binding.linearLayout.visibility = View.VISIBLE
 				
 				binding.rejectImageView.background = binding.root.context.getImage(R.drawable.bg_circle_grey)
@@ -53,8 +53,10 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 				binding.agreeImageView.setImageDrawable(binding.root.context.getImage(R.drawable.ic_confirm_event_gray))
 				binding.agreeImageView.setBackgroundColor(binding.root.context.getBackgroundColor(R.color.transparent))
 				
+				val rejectedCount = if (item.event.rejectedCount > 0) item.event.rejectedCount  else 1
+				binding.rejectCount = rejectedCount.toString()
 			}
-			item.state == StatusAdapter.AlertItem.State.NONE -> {
+			StatusAdapter.AlertItem.State.NONE -> {
 				binding.linearLayout.visibility = View.INVISIBLE
 				binding.agreeImageView.setBackgroundColor(binding.root.context.getBackgroundColor(R.color.transparent))
 				binding.rejectImageView.setBackgroundColor(binding.root.context.getBackgroundColor(R.color.transparent))
@@ -69,7 +71,7 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 			} else if (item.state == StatusAdapter.AlertItem.State.CONFIRM) {
 				state = EventItem.State.CONFIRM
 			}
-			listener?.onClickedAlertItem(item.alert, state)
+			listener?.onClickedAlertItem(item.event, state)
 		}
 		binding.executePendingBindings()
 	}

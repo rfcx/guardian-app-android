@@ -3,7 +3,6 @@ package org.rfcx.ranger.view.alert
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
@@ -128,7 +126,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				timeTextView.text = "  ${context?.let { it1 -> it.beginsAt.toTimeSinceStringAlternativeTimeAgo(it1) }}"
 				reviewedTextView.text = context?.getString(if (it.firstNameReviewer.isNotBlank()) R.string.last_reviewed_by else R.string.not_have_review)
 						?: ""
-				nameReviewerTextView.text = it.firstNameReviewer
+				nameReviewerTextView.text = if (it.firstNameReviewer.isNotBlank()) {
+					it.firstNameReviewer
+				} else {
+					if (state != "NONE" && context != null) context.getNameEmail() else ""
+				}
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
 				agreeTextView.text = it.confirmedCount.toString()
@@ -136,17 +138,17 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
-
-					if (context !== null) {
-						agreeImageView.background = context!!.getImage(R.drawable.bg_circle_red)
-						agreeImageView.setImageDrawable(context!!.getImage(R.drawable.ic_confirm_event_white))
+					updateConfirmCount(it)
+					context?.let { it2 ->
+						agreeImageView.background = it2.getImage(R.drawable.bg_circle_red)
+						agreeImageView.setImageDrawable(it2.getImage(R.drawable.ic_confirm_event_white))
 					}
 				} else if (state == "REJECT") {
 					linearLayout.visibility = View.VISIBLE
-
-					if (context !== null) {
-						rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
-						rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
+					updateRejectCount(it)
+					context?.let { it2 ->
+						rejectImageView.background = it2.getImage(R.drawable.bg_circle_grey)
+						rejectImageView.setImageDrawable(it2.getImage(R.drawable.ic_reject_event_white))
 					}
 				}
 				
@@ -267,14 +269,16 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.reviewEvent.observe(this, Observer { it ->
 			it.success(
 					{
+						val reviewConfirm = it.second.reviewConfirm
+						val newEvent = it.first
 						hideLoading()
-						event?.let { it1 -> alertListener?.onReviewed(it.reviewConfirm, it1) }
+						 alertListener?.onReviewed(reviewConfirm, newEvent)
 						
 						// is rejectEvent?
-						if (it.reviewConfirm == ReviewEventFactory.rejectEvent) {
+						if (reviewConfirm == ReviewEventFactory.rejectEvent) {
 							dismiss()
 						}
-						showCountReviewer(it)
+						showCountReviewer(newEvent, reviewConfirm)
 					},
 					{
 						hideLoading()
@@ -287,69 +291,43 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		})
 	}
 	
-	private fun showCountReviewer(reviewEventFactory: ReviewEventFactory) {
+	private fun showCountReviewer(event: Event, reviewConfirm: String) {
 		nameReviewerTextView.visibility = View.VISIBLE
 		
 		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
-		nameReviewerTextView.text = context.getNameEmail()
+		nameReviewerTextView.text = if (event.firstNameReviewer.isNotBlank()) {
+			event.firstNameReviewer
+		} else {
+			context.getNameEmail()
+		}
+		agreeTextView.text = event.confirmedCount.toString()
+		rejectTextView.text = event.rejectedCount.toString()
 		
-		if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
+		if (reviewConfirm == ReviewEventFactory.confirmEvent) {
 			agreeImageView.background = context?.getImage(R.drawable.bg_circle_red)
 			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_white))
 			
 			rejectImageView.setImageDrawable(context?.getImage(R.drawable.ic_reject_event_gray))
 			context?.getBackgroundColor(R.color.transparent)?.let { rejectImageView.setBackgroundColor(it) }
-			
-		} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
+			updateConfirmCount(event)
+		} else {
 			rejectImageView.background = context!!.getImage(R.drawable.bg_circle_grey)
 			rejectImageView.setImageDrawable(context!!.getImage(R.drawable.ic_reject_event_white))
 			
 			agreeImageView.setImageDrawable(context?.getImage(R.drawable.ic_confirm_event_gray))
 			context?.getBackgroundColor(R.color.transparent)?.let { agreeImageView.setBackgroundColor(it) }
-			
-		}
-		
-		if (event !== null) {
-			if (event!!.firstNameReviewer == context.getNameEmail()) {
-				if (event!!.reviewConfirmed!!) {
-					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
-						rejectedCount()
-					}
-				} else {
-					if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
-						confirmedCount()
-					}
-				}
-			} else {
-				if (reviewEventFactory.reviewConfirm == ReviewEventFactory.confirmEvent) {
-					confirmedCount()
-					
-				} else if (reviewEventFactory.reviewConfirm == ReviewEventFactory.rejectEvent) {
-					rejectedCount()
-					
-				}
-			}
+			updateRejectCount(event)
 		}
 	}
 	
-	private fun confirmedCount() {
-		agreeTextView.text = (event?.confirmedCount?.plus(1)).toString()
-		
-		if (event?.firstNameReviewer == context.getNameEmail()) {
-			rejectTextView.text = event?.rejectedCount?.minus(1).toString()
-		} else {
-			rejectTextView.text = event?.rejectedCount.toString()
-		}
+	private fun updateConfirmCount(event: Event) {
+		val confirmCount = if (event.confirmedCount > 0) event.confirmedCount  else 1
+		agreeTextView.text = confirmCount.toString()
 	}
 	
-	private fun rejectedCount() {
-		rejectTextView.text = (event?.rejectedCount?.plus(1)).toString()
-		
-		if (event?.firstNameReviewer == context.getNameEmail()) {
-			agreeTextView.text = event?.confirmedCount?.minus(1).toString()
-		} else {
-			agreeTextView.text = event?.confirmedCount.toString()
-		}
+	private fun updateRejectCount(event: Event) {
+		val rejectCount = if (event.rejectedCount > 0) event.rejectedCount else 1
+		rejectTextView.text = rejectCount.toString()
 	}
 	
 	companion object {

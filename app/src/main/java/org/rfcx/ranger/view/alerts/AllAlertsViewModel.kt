@@ -3,7 +3,6 @@ package org.rfcx.ranger.view.alerts
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.*
-import io.reactivex.observers.DisposableSingleObserver
 import io.realm.RealmResults
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
@@ -22,7 +21,6 @@ import org.rfcx.ranger.view.alerts.adapter.LoadingItem
 
 class AllAlertsViewModel(private val context: Context,
                          private val eventsUserCase: GetEventsUseCase,
-                         private val eventUseCase: GetEventUseCase,
                          private val eventDb: EventDb,
                          private val profileData: ProfileData,
                          pref: Preferences) : ViewModel() {
@@ -129,42 +127,22 @@ class AllAlertsViewModel(private val context: Context,
 		_alerts.value = Result.Success(items)
 	}
 	
-	fun onEventReviewed(reviewValue: String, event: Event) {
-		val eventItem = _alertsList.firstOrNull { it.event.id == event.id }
+	fun onEventReviewed(reviewValue: String, newEvent: Event) {
+		val eventItem = _alertsList.firstOrNull { it.event.id == newEvent.id }
 		eventItem?.let {
+			it.event = newEvent
 			eventItem.state = when (reviewValue) {
 				ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
 			
-			getEventDetail(eventItem)
+			_alertsList.replace(eventItem) { it2 -> it2.event.id == newEvent.id }
+			_alerts.value = Result.Success(_alertsList)
 			
 		} ?: run {
 			_alerts.value = Result.Success(_alertsList)
 		}
-	}
-	
-	private fun getEventDetail(eventItem: EventItem) {
-		_alerts.value = Result.Loading
-		val eventId = eventItem.event.id
-		eventUseCase.execute(object : DisposableSingleObserver<Event>() {
-			override fun onSuccess(event: Event) {
-				updateEventItem(eventItem, event)
-			}
-			
-			override fun onError(e: Throwable) {
-				// just need update view
-				updateEventItem(eventItem, eventItem.event)
-			}
-		}, eventId)
-	}
-	
-	private fun updateEventItem(eventItem: EventItem, newEvent: Event) {
-		eventItem.event = newEvent // set new event
-		
-		_alertsList.replace(eventItem) { it.event.id == newEvent.id }
-		_alerts.value = Result.Success(_alertsList)
 	}
 	
 	// Loading more update list
