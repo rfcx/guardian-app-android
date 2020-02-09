@@ -17,7 +17,16 @@
 	<string name="next">Next</string>
 	<string name="skip">Skip</string>
 	<string name="done">Done</string>
-	<string name="available_in_settings">Its available in settings</string>
+	<string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
+	<string name="name_of_guardian">Name of guardian</string>
+	<string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
+	<string name="when_the_event">When the event was detected</string>
+	<string name="number_of_reviews">Number of confirmed reviews</string>
+	<string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
+	<string name="confirm_it">Confirm it is  a chainsaw</string>
+	<string name="reject_it">Reject it is NOT a chainsaw</string>
+	<string name="create_new_reports">Create new reports</string>
+	<string name="view_reports">View reports by location</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>

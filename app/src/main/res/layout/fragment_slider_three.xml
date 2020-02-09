@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".view.tutorial.SliderThreeFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 	
-	<ImageView
-		android:id="@+id/imageSliderView"
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:src="@drawable/image_slider_three"/>
-
-</FrameLayout>
+		tools:context=".view.tutorial.SliderThreeFragment">
+		
+		<ImageView
+			android:id="@+id/imageSliderView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:src="@drawable/image_slider_three" />
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_percent="0.61" />
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_vertical_1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			app:layout_constraintGuide_percent="0.10" />
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_vertical_2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			app:layout_constraintGuide_percent="0.90" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			style="@style/RangerText.Tutorial"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:text="@string/enable_tracking_when"
+			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
+			app:layout_constraintStart_toStartOf="@id/guideline_vertical_1"
+			app:layout_constraintTop_toTopOf="@id/guideline_horizontal" />
+		
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
