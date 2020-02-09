@@ -2,7 +2,7 @@
 <resources>
 	<!-- LoginActivity -->
 	<string name="email">Email</string>
-	<string name="password">Password</string>
+	<string name="password">Change password</string>
 	<string name="login">Login</string>
 	<string name="connect_with_facebook">Continue with facebook</string>
 	<string name="connect_with_sms">Continue with phone number</string>
@@ -27,6 +27,7 @@
 	<string name="reject_it">Reject it is NOT a chainsaw</string>
 	<string name="create_new_reports">Create new reports</string>
 	<string name="view_reports">View reports by location</string>
+	<string name="app_intro">App intro</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>

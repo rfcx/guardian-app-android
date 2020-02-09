@@ -33,8 +33,8 @@ class TutorialActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_tutorial)
 		
-//		val preferenceHelper = Preferences.getInstance(this)
-//		preferenceHelper.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, false)
+		val preferenceHelper = Preferences.getInstance(this)
+		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME)
 		
 		val viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
 		
@@ -60,18 +60,23 @@ class TutorialActivity : AppCompatActivity() {
 			if (viewPager2.currentItem + 1 < fragmentList.size) {
 				viewPager2.currentItem += 1
 			} else {
-				MainActivityNew.startActivity(this@TutorialActivity, null)
+				if (isFirstTime) {
+					preferenceHelper.putBoolean(Preferences.IS_FIRST_TIME, false)
+					MainActivityNew.startActivity(this@TutorialActivity, null)
+				}
 				finish()
 			}
 		}
 		
 		skipTextView.setOnClickListener {
-			Toast.makeText(this, R.string.available_in_settings, Toast.LENGTH_SHORT).show()
-			
-			MainActivityNew.startActivity(this@TutorialActivity, null)
+			if (isFirstTime) {
+				preferenceHelper.putBoolean(Preferences.IS_FIRST_TIME, false)
+				MainActivityNew.startActivity(this@TutorialActivity, null)
+				
+				Toast.makeText(this, R.string.available_in_settings, Toast.LENGTH_SHORT).show()
+			}
 			finish()
 		}
-		
 	}
 	
 	private fun setUpIndicators() {

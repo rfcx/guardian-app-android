@@ -3,7 +3,6 @@ package org.rfcx.ranger.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.crashlytics.android.core.CrashlyticsCore
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
@@ -51,7 +50,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	
 	override fun openMain() {
 		val preferenceHelper = Preferences.getInstance(this)
-		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME, true)
+		preferenceHelper.putBoolean(Preferences.IS_FIRST_TIME, true)
+		
+		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME,true)
 		
 		if (isFirstTime) {
 			TutorialActivity.startActivity(this@LoginActivityNew, null)
