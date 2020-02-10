@@ -124,6 +124,8 @@
 				android:gravity="center_vertical"
 				android:maxLines="1"
 				android:textStyle="bold"
+				android:text="@{alertItem.getReviewerName(context)}"
+				android:visibility="@{alertItem.event.firstNameReviewer.length() > 0 ? View.VISIBLE : View.INVISIBLE}"
 				app:layout_constraintEnd_toStartOf="@+id/linearLayout"
 				app:layout_constraintStart_toEndOf="@+id/reviewedTextView"
 				app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"

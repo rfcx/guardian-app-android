@@ -396,6 +396,16 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getId(): Int = -3
 		
 		fun getGuardianShortname(): String = event.guardianName
+		@SuppressLint("DefaultLocale")
+		fun getReviewerName(context: Context): String = if (state != State.NONE) {
+			if (event.firstNameReviewer.isNotBlank()) {
+				event.firstNameReviewer
+			} else {
+				context.getNameEmail()
+			}.capitalize()
+		} else {
+			event.firstNameReviewer.capitalize()
+		}
 		fun getImage(): Int = event.value.toEventIcon()
 		fun getTime(context: Context): String = "  ${event.beginsAt.toTimeSinceStringAlternativeTimeAgo(context)}"
 		fun getReviewed(context: Context): String = context.getString(if (event.firstNameReviewer.isNotBlank() || state !== State.NONE) R.string.last_reviewed_by else R.string.not_have_review)

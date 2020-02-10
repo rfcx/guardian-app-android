@@ -60,14 +60,9 @@ class ItemAlertDetailByTypeAdapter(var items: MutableList<EventItem>, val listen
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
 			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
+			tvNameReviewer.text = item.getReviewerName(context)
 			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			linearLayout.visibility = View.INVISIBLE
-			
-			if (item.state !== EventItem.State.NONE) {
-				tvNameReviewer.text = context.getNameEmail().capitalize()
-			} else if (item.event.firstNameReviewer.isNotBlank()) {
-				tvNameReviewer.text = item.event.firstNameReviewer.capitalize()
-			}
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {

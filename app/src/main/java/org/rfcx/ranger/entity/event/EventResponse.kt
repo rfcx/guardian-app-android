@@ -86,7 +86,7 @@ data class EventResponse(
 		}
 		
 		reviewer?.let {
-			event.firstNameReviewer = it.firstName ?: it.email.split("@")[0]
+			event.firstNameReviewer = it.email.split("@")[0] //TODO: UPDATE LATER - WAITING API SUPPORT FIRST NAME
 			event.reviewConfirmed = it.confirmed
 		}
 		

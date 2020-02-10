@@ -1,13 +1,9 @@
 package org.rfcx.ranger.view.alerts.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -92,13 +88,8 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvAgreeValue.text = item.event.confirmedCount.toString()
 			tvRejectValue.text = item.event.rejectedCount.toString()
 			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
-			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
-			
-			if (item.state !== EventItem.State.NONE) {
-				tvNameReviewer.text = context.getNameEmail().capitalize()
-			} else if (item.event.firstNameReviewer.isNotBlank()) {
-				tvNameReviewer.text = item.event.firstNameReviewer.capitalize()
-			}
+			tvNameReviewer.text = item.getReviewerName(context)
+			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state != EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
@@ -111,7 +102,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					ivReject.setImageDrawable(context.getImage(R.drawable.ic_reject_event_gray))
 					ivReject.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
-					val confirmCount = if (item.event.confirmedCount > 0) item.event.confirmedCount  else 1
+					val confirmCount = if (item.event.confirmedCount > 0) item.event.confirmedCount else 1
 					tvAgreeValue.text = confirmCount.toString()
 				}
 				EventItem.State.REJECT -> {
@@ -124,7 +115,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 					ivAgree.setImageDrawable(context.getImage(R.drawable.ic_confirm_event_gray))
 					ivAgree.setBackgroundColor(context.getBackgroundColor(R.color.transparent))
 					
-					val rejectedCount = if (item.event.rejectedCount > 0) item.event.rejectedCount  else 1
+					val rejectedCount = if (item.event.rejectedCount > 0) item.event.rejectedCount else 1
 					tvRejectValue.text = rejectedCount.toString()
 				}
 				EventItem.State.NONE -> {

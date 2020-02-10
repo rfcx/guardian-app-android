@@ -1,5 +1,6 @@
 package org.rfcx.ranger.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
@@ -63,6 +64,21 @@ fun Event.toEventItem(eventDb: EventDb): EventItem {
 }
 
 data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem {
+	
+	@SuppressLint("DefaultLocale")
+	fun getReviewerName(context: Context):String {
+		return if (state != State.NONE) {
+			if (event.firstNameReviewer.isNotBlank()) {
+				event.firstNameReviewer
+			} else {
+				context.getNameEmail()
+			}.capitalize()
+		} else {
+			event.firstNameReviewer.capitalize()
+		}
+	}
+	
+
 	
 	enum class State {
 		CONFIRM, REJECT, NONE

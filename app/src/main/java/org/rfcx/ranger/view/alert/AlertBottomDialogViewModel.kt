@@ -27,6 +27,7 @@ import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
+import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.util.isNetworkAvailable
 import java.io.File
 
@@ -231,7 +232,11 @@ class AlertBottomDialogViewModel(private val context: Context,
 					// save to review unsent
 					eventDb.save(EventReview(requests.eventGuID, requests.reviewConfirm,
 							EventReview.UNSENT))
-					_reviewEvent.value = Result.Success(Pair(eventResult!!, requests))
+					val event = eventResult!!.apply {
+						it.firstNameReviewer = context.getNameEmail() // update reviewer on offline
+					}
+					eventDb.saveEvent(event)
+					_reviewEvent.value = Result.Success(Pair(event, requests))
 					_eventState.value = EventState.REVIEWED	// invoke state to review
 				}
 				

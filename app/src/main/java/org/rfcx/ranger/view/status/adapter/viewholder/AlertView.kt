@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.ItemStatusAlertBinding
 import org.rfcx.ranger.util.EventItem
-import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -21,17 +20,6 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		binding.reviewedTextView.visibility = View.VISIBLE
 		binding.confirmCount = item.event.confirmedCount.toString()
 		binding.rejectCount = item.event.rejectedCount.toString()
-		if (item.event.firstNameReviewer.isNotBlank() || item.state !== StatusAdapter.AlertItem.State.NONE) {
-			binding.nameReviewerTextView.visibility = View.VISIBLE
-		} else {
-			binding.nameReviewerTextView.visibility = View.INVISIBLE
-		}
-		
-		if (item.state !== StatusAdapter.AlertItem.State.NONE) {
-			binding.nameReviewerTextView.text = binding.root.context.getNameEmail().capitalize()
-		} else if (item.event.firstNameReviewer.isNotBlank()) {
-			binding.nameReviewerTextView.text = item.event.firstNameReviewer.capitalize()
-		}
 		
 		when (item.state) {
 			StatusAdapter.AlertItem.State.CONFIRM -> {
