@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 82
+        versionCode 83
         versionName "1.2.4"
         minSdkVersion 19
         targetSdkVersion 29
