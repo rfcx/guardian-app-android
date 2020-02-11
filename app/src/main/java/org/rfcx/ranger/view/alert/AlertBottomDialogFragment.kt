@@ -185,16 +185,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					}
 				}
 				EventState.REVIEWED -> {
-					negativeButton.apply {
-						setPadding(0, 0, 0, 0)
-						text = getString(R.string.follow_up_later_button)
-						setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-					}
+					negativeButton.visibility = View.GONE
 					
 					positiveButton.apply {
 						text = getString(R.string.open_map_button)
 						setCompoundDrawablesWithIntrinsicBounds(
 								R.drawable.ic_directions_white_24dp, 0, 0, 0)
+						setBackgroundResource(R.drawable.bg_color_primary_button)
 					}
 					
 				}
