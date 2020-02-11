@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -130,7 +129,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				} else {
 					if (state != "NONE" && context != null) context.getNameEmail().capitalize() else ""
 				}
-				Log.d("nameReviewerTextView", " $state")
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
 				agreeTextView.text = it.confirmedCount.toString()
