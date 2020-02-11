@@ -15,11 +15,8 @@ open class Review {
 open class Reviewer {
 	@SerializedName("firstname")
 	var firstName: String? = ""
-	
 	@SerializedName("lastname")
 	var lastName: String? = ""
-	
 	var email: String = ""
-	
 	var confirmed: Boolean? = null
 }

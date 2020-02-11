@@ -56,7 +56,7 @@ class EventDb(val realm: Realm) {
 		}
 	}
 	
-	fun updateEvents(event: Event) {
+	fun saveEvent(event: Event) {
 		Realm.getDefaultInstance().use { it ->
 			it.executeTransaction {
 				it.insertOrUpdate(event)
