@@ -309,7 +309,7 @@
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_small"
 				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/password" />
+				android:text="@string/change_password" />
 			
 			<TextView
 				android:id="@+id/logoutTextView"

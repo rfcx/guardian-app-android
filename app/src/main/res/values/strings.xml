@@ -2,7 +2,7 @@
 <resources>
 	<!-- LoginActivity -->
 	<string name="email">Email</string>
-	<string name="password">Change password</string>
+	<string name="password">Password</string>
 	<string name="login">Login</string>
 	<string name="connect_with_facebook">Continue with facebook</string>
 	<string name="connect_with_sms">Continue with phone number</string>
@@ -90,6 +90,7 @@
 	<string name="tab_to_record_label">Tap and hold the button to record notes</string>
 	<string name="new_password">New password</string>
 	<string name="new_password_again">Confirm new password</string>
+	<string name="change_password">Change password</string>
 	
 	<!-- Invitation -->
 	<string name="invitation_title">Connect to a site</string>

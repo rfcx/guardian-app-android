@@ -13,6 +13,22 @@
     <string name="or">atau</string>
     <string name="powered_by">Dipersembahkan oleh</string>
     
+    <!-- LoginActivity -->
+    <string name="next">Lanjut</string>
+    <string name="skip">Melewatkan</string>
+    <string name="done">selesai</string>
+    <string name="available_in_settings">Anda juga dapat menemukan Tutorial ini di tab Profil</string>
+    <string name="name_of_guardian">Nama wali</string>
+    <string name="enable_tracking_when">Aktifkan pelacakan ketika Anda berpatroli untuk melaporkan posisi Anda</string>
+    <string name="when_the_event">Ketika acara terdeteksi</string>
+    <string name="number_of_reviews">Jumlah dikonfirmasi ulasan</string>
+    <string name="boxes_indicate_possible">Kotak menunjukkan kemungkinan peristiwa gergaji</string>
+    <string name="confirm_it">Konfirmasi itu adalah gergaji</string>
+    <string name="reject_it">Menolaknya TIDAK gergaji</string>
+    <string name="create_new_reports">Membuat laporan baru</string>
+    <string name="view_reports">Lihat laporan berdasarkan lokasi</string>
+    <string name="app_intro">App Intro</string>
+    
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
     <string name="invitation_submit_button_label">menyerahkan</string>
@@ -74,6 +90,7 @@
     <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
     <string name="new_password">Kata sandi baru</string>
     <string name="new_password_again">Konfirmasi password baru</string>
+    <string name="change_password">Ganti kata sandi</string>
     
 	<!-- Invitation -->
     <string name="invitation_title">Hubungkan ke suatu tempat</string>
@@ -225,5 +242,6 @@
     
     <string name="reject_text">menolak</string>
     <string name="confirm_text">Konfirmasi</string>
-    
+    <string name="required">Yg dibutuhkan!</string>
+
 </resources>
