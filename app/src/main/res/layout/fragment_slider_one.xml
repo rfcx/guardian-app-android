@@ -49,11 +49,17 @@
 			android:orientation="vertical"
 			app:layout_constraintGuide_percent="0.90" />
 		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_vertical_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			app:layout_constraintGuide_percent="0.25" />
+		
 		<androidx.appcompat.widget.AppCompatTextView
 			style="@style/RangerText.Tutorial"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:text="@string/name_of_guardian"
 			app:layout_constraintStart_toStartOf="@id/guideline_vertical_name"
 			app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_name" />
@@ -62,8 +68,8 @@
 			style="@style/RangerText.Tutorial"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:text="@string/when_the_event"
+			app:layout_constraintStart_toStartOf="@id/guideline_vertical_time"
 			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
 			app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_time" />
 		
@@ -71,7 +77,6 @@
 			style="@style/RangerText.Tutorial"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/number_of_reviews"
 			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
 			app:layout_constraintTop_toTopOf="@id/guideline_horizontal" />

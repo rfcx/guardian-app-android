@@ -40,15 +40,22 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			app:layout_constraintGuide_percent="0.5" />
+			app:layout_constraintGuide_percent="0.1" />
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_vertical_map"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			app:layout_constraintGuide_percent="0.9" />
 		
 		<androidx.appcompat.widget.AppCompatTextView
 			style="@style/RangerText.Tutorial"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:text="@string/view_reports"
-			app:layout_constraintEnd_toEndOf="@id/guideline_vertical"
+			android:gravity="center"
+			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_map"
 			app:layout_constraintStart_toStartOf="@id/guideline_vertical"
 			app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_map" />
 		
@@ -56,7 +63,6 @@
 			style="@style/RangerText.Tutorial"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:text="@string/create_new_reports"
 			app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_add"
 			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_add"

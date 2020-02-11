@@ -89,8 +89,8 @@
 	
 	<style name="RangerText.Tutorial" parent="RangerText">
 		<item name="android:textColor">@android:color/white</item>
-		<item name="android:textSize">@dimen/text_xlarge</item>
-		<item name="android:fontFamily">@font/caveat_regular</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">@font/sriracha</item>
 	</style>
 	
 	<style name="RangerText.Body" parent="RangerText">

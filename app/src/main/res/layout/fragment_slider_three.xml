@@ -39,7 +39,6 @@
 			style="@style/RangerText.Tutorial"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:text="@string/enable_tracking_when"
 			app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
 			app:layout_constraintStart_toStartOf="@id/guideline_vertical_1"

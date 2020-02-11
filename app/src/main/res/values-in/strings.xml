@@ -16,7 +16,7 @@
     <!-- LoginActivity -->
     <string name="next">Lanjut</string>
     <string name="skip">Melewatkan</string>
-    <string name="done">selesai</string>
+    <string name="done">Selesai</string>
     <string name="available_in_settings">Anda juga dapat menemukan Tutorial ini di tab Profil</string>
     <string name="name_of_guardian">Nama wali</string>
     <string name="enable_tracking_when">Aktifkan pelacakan ketika Anda berpatroli untuk melaporkan posisi Anda</string>

@@ -19,7 +19,7 @@
 	<TextView
 		android:id="@+id/nextTextView"
 		style="@style/RangerText.Tutorial"
-		android:layout_width="80dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:padding="@dimen/margin_padding_normal"
@@ -30,7 +30,7 @@
 	<TextView
 		android:id="@+id/skipTextView"
 		style="@style/RangerText.Tutorial"
-		android:layout_width="70dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/margin_padding_normal"
 		android:text="@string/skip"
