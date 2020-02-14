@@ -21,6 +21,13 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
+import android.graphics.BitmapFactory
+import android.widget.ImageView
+import android.widget.LinearLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import java.net.URL
+
 
 class ProfileFragment : BaseFragment() {
 	
@@ -69,6 +76,10 @@ class ProfileFragment : BaseFragment() {
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
 		})
+		
+		val imageView = ImageView(context)
+		Glide.with(this).load("https://s.gravatar.com/avatar/a92452eb00e434f762302b6544107ef4?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fra.png").apply(RequestOptions.circleCropTransform()).into(imageView)
+		linearLayout.addView(imageView)
 	}
 	
 	private fun setOnClickButton() {
