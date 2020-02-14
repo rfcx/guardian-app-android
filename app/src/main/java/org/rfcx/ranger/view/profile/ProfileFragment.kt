@@ -78,7 +78,7 @@ class ProfileFragment : BaseFragment() {
 		})
 		
 		val imageView = ImageView(context)
-		Glide.with(this).load("https://s.gravatar.com/avatar/a92452eb00e434f762302b6544107ef4?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fra.png").apply(RequestOptions.circleCropTransform()).into(imageView)
+		Glide.with(this).load(context.getUserProfile()).apply(RequestOptions.circleCropTransform()).into(imageView)
 		linearLayout.addView(imageView)
 	}
 	

@@ -89,6 +89,20 @@ fun Context?.getUserEmail(): String {
 	return userID
 }
 
+fun Context?.getUserProfile(): String {
+	var userProfile = ""
+	val token = this?.getTokenID()
+	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	try {
+		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+		userProfile = untrusted.body["picture"] as String
+	} catch (e: Exception) {
+		e.printStackTrace()
+		Crashlytics.logException(e)
+	}
+	return userProfile
+}
+
 fun Context?.getNameEmail(): String {
 	return getUserEmail().split("@")[0]
 }
