@@ -10,6 +10,14 @@
 		<item name="titleTextColor">@android:color/white</item>
 	</style>
 	
+	<style name="AppTheme.ForTutorial" parent="Theme.MaterialComponents.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimary</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="titleTextColor">@android:color/white</item>
+	</style>
+	
 	<style name="AppTheme.SyncLoadingProgress" parent="AppTheme">
 		<item name="colorAccent">@color/grey_default</item>
 	</style>
@@ -77,6 +85,12 @@
 		<item name="android:textColor">@color/text_primary</item>
 		<item name="android:textSize">@dimen/text_large</item>
 		<item name="android:fontFamily">sans-serif</item>
+	</style>
+	
+	<style name="RangerText.Tutorial" parent="RangerText">
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textSize">@dimen/text_medium</item>
+		<item name="android:fontFamily">@font/sriracha</item>
 	</style>
 	
 	<style name="RangerText.Body" parent="RangerText">

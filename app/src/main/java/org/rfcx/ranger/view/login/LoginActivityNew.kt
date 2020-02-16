@@ -3,15 +3,16 @@ package org.rfcx.ranger.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.crashlytics.android.core.CrashlyticsCore
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.CredentialKeeper
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getSiteName
 import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.tutorial.TutorialActivity
 
 
 // TODO change class name
@@ -48,7 +49,17 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	override fun openMain() {
-		MainActivityNew.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
+		val preferenceHelper = Preferences.getInstance(this)
+		preferenceHelper.putBoolean(Preferences.IS_FIRST_TIME, true)
+		
+		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME,true)
+		
+		if (isFirstTime) {
+			TutorialActivity.startActivity(this@LoginActivityNew, null)
+		} else {
+			MainActivityNew.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
+		}
+		
 		finish()
 	}
 	

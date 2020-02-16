@@ -31,6 +31,10 @@
 		<variable
 			name="onClickFeedback"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickAppIntro"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -212,33 +216,6 @@
 			
 			</LinearLayout>
 			
-			<TextView
-				android:id="@+id/changePasswordTextView"
-				style="@style/RangerText.SubTitle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:visibility="gone"
-				android:onClick="@{onClickPassword}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/password" />
-			
-			<TextView
-				android:id="@+id/logoutTextView"
-				style="@style/RangerText.SubTitle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{() -> viewModel.onLogout()}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/profile_sign_out_label" />
-			
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
@@ -307,6 +284,45 @@
 				android:paddingEnd="@dimen/margin_padding_small"
 				android:paddingBottom="@dimen/margin_padding_normal"
 				android:text="@string/profile_rate_app_label" />
+			
+			<TextView
+				android:id="@+id/appIntroTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickAppIntro}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/app_intro" />
+			
+			<TextView
+				android:id="@+id/changePasswordTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickPassword}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/change_password" />
+			
+			<TextView
+				android:id="@+id/logoutTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{() -> viewModel.onLogout()}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/profile_sign_out_label" />
 		</LinearLayout>
 	</ScrollView>
 </layout>

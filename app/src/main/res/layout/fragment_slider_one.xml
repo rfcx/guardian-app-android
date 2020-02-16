@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	
+	<ImageView
+		android:id="@+id/imageSliderView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:src="@drawable/image_slider_one" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.67" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_horizontal_time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.28" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_horizontal_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.35" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_vertical_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.1" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_vertical_2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.90" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guideline_vertical_time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.25" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		style="@style/RangerText.Tutorial"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:text="@string/name_of_guardian"
+		app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_name"
+		app:layout_constraintStart_toStartOf="@id/guideline_vertical_name" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		style="@style/RangerText.Tutorial"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:text="@string/when_the_event"
+		app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_time"
+		app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
+		app:layout_constraintStart_toStartOf="@id/guideline_vertical_time" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		style="@style/RangerText.Tutorial"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:text="@string/number_of_reviews"
+		app:layout_constraintEnd_toEndOf="@id/guideline_vertical_2"
+		app:layout_constraintTop_toTopOf="@id/guideline_horizontal" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
