@@ -22,12 +22,11 @@ import org.rfcx.ranger.view.MainActivityNew
 
 class TutorialActivity : AppCompatActivity() {
 	
-	private val fragmentList: ArrayList<Fragment> = arrayListOf(
-			SliderOneFragment.newInstance(),
-			SliderTwoFragment.newInstance(),
-			SliderThreeFragment.newInstance(),
-			SliderFourFragment.newInstance()
-	)
+	private val tutorialAdapter by lazy {
+		TutorialAdapter()
+	}
+	
+	var items: List<Int> = listOf(TutorialAdapter.TUTORIAL_EXPLAIN_ALERT, TutorialAdapter.TUTORIAL_EXPLAIN_ALERT_BOTTOM_DIALOG, TutorialAdapter.TUTORIAL_EXPLAIN_ENABLE_TRACKING, TutorialAdapter.TUTORIAL_EXPLAIN_CREATE_REPORTS)
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -37,8 +36,9 @@ class TutorialActivity : AppCompatActivity() {
 		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME)
 		
 		val viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
+		viewPager2.adapter = tutorialAdapter
+		tutorialAdapter.items = items
 		
-		viewPager2.adapter = ViewPagerAdapter(this, fragmentList)
 		setUpIndicators()
 		setCurrentIndicator(0)
 		
@@ -57,7 +57,7 @@ class TutorialActivity : AppCompatActivity() {
 		})
 		
 		nextTextView.setOnClickListener {
-			if (viewPager2.currentItem + 1 < fragmentList.size) {
+			if (viewPager2.currentItem + 1 < items.size) {
 				viewPager2.currentItem += 1
 			} else {
 				if (isFirstTime) {
@@ -80,7 +80,7 @@ class TutorialActivity : AppCompatActivity() {
 	}
 	
 	private fun setUpIndicators() {
-		val indicators = arrayOfNulls<ImageView>(fragmentList.size)
+		val indicators = arrayOfNulls<ImageView>(items.size)
 		val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
 		layoutParams.setMargins(8, 0, 8, 0)
 		for (i in indicators.indices) {
@@ -106,14 +106,6 @@ class TutorialActivity : AppCompatActivity() {
 					
 				}
 			}
-		}
-	}
-	
-	class ViewPagerAdapter(fa: FragmentActivity, private val fragments: ArrayList<Fragment>) : FragmentStateAdapter(fa) {
-		override fun getItemCount(): Int = fragments.size
-		
-		override fun createFragment(position: Int): Fragment {
-			return fragments[position]
 		}
 	}
 	
