@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools">
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".view.tutorial.SliderTwoFragment">
@@ -40,9 +38,9 @@ xmlns:tools="http://schemas.android.com/tools">
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:text="@string/boxes_indicate_possible"
+		app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_box"
 		app:layout_constraintEnd_toEndOf="@id/guideline_vertical_box_r"
-		app:layout_constraintStart_toStartOf="@id/guideline_vertical_box_l"
-		app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_box"/>
+		app:layout_constraintStart_toStartOf="@id/guideline_vertical_box_l" />
 	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/guideline_horizontal_confirm"
@@ -57,7 +55,7 @@ xmlns:tools="http://schemas.android.com/tools">
 		android:layout_height="wrap_content"
 		android:text="@string/confirm_it"
 		app:layout_constraintEnd_toEndOf="@id/guideline_vertical_box_r"
-		app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_confirm"/>
+		app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_confirm" />
 	
 	<androidx.constraintlayout.widget.Guideline
 		android:id="@+id/guideline_horizontal_reject"
@@ -72,7 +70,6 @@ xmlns:tools="http://schemas.android.com/tools">
 		android:layout_height="wrap_content"
 		android:text="@string/reject_it"
 		app:layout_constraintStart_toStartOf="@id/guideline_vertical_box_l"
-		app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_reject"/>
+		app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_reject" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
