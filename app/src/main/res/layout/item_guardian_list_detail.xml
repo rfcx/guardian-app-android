@@ -25,12 +25,14 @@
 		tools:src="@drawable/ic_vehicle" />
 	
 	<TextView
-		android:id="@+id/guardianListDetailTextView"
+		android:id="@+id/eventTypeTextView"
 		style="@style/RangerText.Body"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
 		app:layout_constraintBottom_toBottomOf="@id/view"
+		app:layout_constraintEnd_toStartOf="@+id/circleImageView"
 		app:layout_constraintStart_toEndOf="@id/ivAlertIcon"
 		app:layout_constraintTop_toTopOf="@id/view"
 		tools:text="Vehicle" />
@@ -49,7 +51,7 @@
 		app:layout_constraintTop_toTopOf="@id/view" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/numOfEventsNotOpen"
+		android:id="@+id/countTextView"
 		style="@style/RangerText.Caption"
 		android:layout_width="0dp"
 		android:layout_height="0dp"

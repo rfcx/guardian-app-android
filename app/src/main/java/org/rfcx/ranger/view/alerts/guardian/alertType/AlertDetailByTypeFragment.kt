@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
+package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,9 +14,9 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.EventItem
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
-import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity.Companion.ALERT_VALUE
+import org.rfcx.ranger.view.alerts.guardian.alertType.AlertDetailByTypeActivity.Companion.ALERT_VALUE
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
-import org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity.Companion.GUARDIAN_NAME
+import org.rfcx.ranger.view.alerts.guardian.alertType.AlertDetailByTypeActivity.Companion.GUARDIAN_NAME
 import org.rfcx.ranger.view.base.BaseFragment
 
 class AlertDetailByTypeFragment : BaseFragment(), AlertClickListener, AlertListener {

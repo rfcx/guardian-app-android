@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
+package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_alert_detail_by_type.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.toEventIcon
 
 class AlertDetailByTypeActivity : AppCompatActivity() {
 	
@@ -15,7 +14,7 @@ class AlertDetailByTypeActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_alert_detail_by_type)
 		setupToolbar()
 		
-		if (intent?.hasExtra(ALERT_VALUE) == true) {
+		if (intent.hasExtra(ALERT_VALUE)) {
 			val value = intent.getStringExtra(ALERT_VALUE)
 			val guardianName = intent.getStringExtra(GUARDIAN_NAME)
 			if (value != null) {

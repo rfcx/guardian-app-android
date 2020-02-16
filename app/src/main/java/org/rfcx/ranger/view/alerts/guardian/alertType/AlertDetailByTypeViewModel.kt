@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.alerts.guardianListDetail.alertDetailByType
+package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.content.Context
 import android.widget.Toast
@@ -9,11 +9,9 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsGuardianRequestFactory
-import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.util.*
 

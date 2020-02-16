@@ -1,18 +1,18 @@
-package org.rfcx.ranger.view.alerts.guardianListDetail
+package org.rfcx.ranger.view.alerts.guardian
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_guardian_list_detail.*
+import kotlinx.android.synthetic.main.activity_guardian_detail.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.alerts.EmptyAlertFragment
 import org.rfcx.ranger.view.base.BaseActivity
 
-class GuardianListDetailActivity : BaseActivity() {
+class GuardianDetailActivity : BaseActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_guardian_list_detail)
+		setContentView(R.layout.activity_guardian_detail)
 		setupToolbar()
 		
 		if (intent?.hasExtra("GUARDIAN_NAME") == true && intent?.hasExtra("HAVE_EVENTS") == true) {
@@ -22,12 +22,11 @@ class GuardianListDetailActivity : BaseActivity() {
 			if (guardianName !== null) {
 				if (haveEvents) {
 					supportFragmentManager.beginTransaction()
-							.replace(guardianListDetailContainer.id, GuardianListDetailFragment.newInstance(guardianName),
-									"GuardianListDetailFragment").commit()
+							.replace(guardianListDetailContainer.id,
+									GuardianDetailFragment.newInstance(guardianName)).commit()
 				} else {
 					supportFragmentManager.beginTransaction()
-							.replace(guardianListDetailContainer.id, EmptyAlertFragment(),
-									"EmptyAlertFragment").commit()
+							.replace(guardianListDetailContainer.id, EmptyAlertFragment()).commit()
 				}
 			}
 		}
@@ -52,7 +51,7 @@ class GuardianListDetailActivity : BaseActivity() {
 	
 	companion object {
 		fun startActivity(context: Context, guardianName: String, haveEvents: Boolean) {
-			val intent = Intent(context, GuardianListDetailActivity::class.java)
+			val intent = Intent(context, GuardianDetailActivity::class.java)
 			intent.putExtra("GUARDIAN_NAME", guardianName)
 			intent.putExtra("HAVE_EVENTS", haveEvents)
 			context.startActivity(intent)
