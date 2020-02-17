@@ -206,6 +206,8 @@
 					style="@style/SwitchCompatStyle"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:checked="@{viewModel.notificationReceivingByEmail}"
+					android:onCheckedChanged="@{(switch, checked) -> viewModel.onReceivingByEmail(checked)}"
 					android:textOff="@string/location_tracking_off_label"
 					android:textOn="@string/location_tracking_on_label"
 					tools:checked="false" />
@@ -218,7 +220,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:text="sent to retreeo4574@gmail.com"
+				android:text="@{viewModel.sendToEmail}"
 				tools:text="sent to retreeo4574@gmail.com" />
 			
 			<LinearLayout
