@@ -11,12 +11,19 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alerts.guardian.alertType.AlertDetailByTypeActivity
+import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueActivity
 import org.rfcx.ranger.view.base.BaseFragment
 
 class GuardianDetailFragment : BaseFragment() {
 	private val viewModel: GuardianViewModel by viewModel()
-	private val guardianAdapter by lazy { GuardianDetailAdapter() }
+	private val guardianAdapter by lazy {
+		GuardianDetailAdapter { item ->
+			context?.let {
+				AlertValueActivity.startActivity(it,
+						item.value, item.displayName, viewModel.guardianName)
+			}
+		}
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_guardian_detail, container, false)
@@ -24,11 +31,11 @@ class GuardianDetailFragment : BaseFragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		setupAlertList()
+		setupAlertGroupRecycler()
 		
-		val guardianName = arguments?.getString("GUARDIAN_NAME")
+		val guardianName = arguments?.getString(ARG_GUARDIAN_NAME, null)
 		if (guardianName != null) {
-			viewModel.setGuardianName(guardianName)
+			viewModel.guardianName = guardianName // setGuardianName
 			viewModel.fetchEventsByGuardianName()
 		}
 		
@@ -43,15 +50,9 @@ class GuardianDetailFragment : BaseFragment() {
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
-		
-		guardianAdapter.mOnItemViewClickListener = object : OnItemViewClickListener {
-			override fun onItemViewClick(value: String, label: String, guardianName: String) {
-				context?.let { AlertDetailByTypeActivity.startActivity(it, value, label, guardianName) }
-			}
-		}
 	}
 	
-	private fun setupAlertList() {
+	private fun setupAlertGroupRecycler() {
 		val alertsLayoutManager = LinearLayoutManager(context)
 		eventsInGuardianRecycler.apply {
 			layoutManager = alertsLayoutManager
@@ -61,17 +62,14 @@ class GuardianDetailFragment : BaseFragment() {
 	
 	companion object {
 		const val tag = "GuardianListDetailFragment"
+		private const val ARG_GUARDIAN_NAME = "ARG_GUARDIAN_NAME"
 		
 		fun newInstance(guardianName: String): GuardianDetailFragment {
 			return GuardianDetailFragment().apply {
 				arguments = Bundle().apply {
-					putString("GUARDIAN_NAME", guardianName)
+					putString(ARG_GUARDIAN_NAME, guardianName)
 				}
 			}
 		}
 	}
-}
-
-interface OnItemViewClickListener {
-	fun onItemViewClick(value: String, label: String, guardianName: String)
 }

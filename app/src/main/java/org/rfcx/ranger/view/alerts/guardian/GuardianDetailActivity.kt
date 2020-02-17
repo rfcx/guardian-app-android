@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.alerts.guardian
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_guardian_detail.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.alerts.EmptyAlertFragment
@@ -15,9 +16,9 @@ class GuardianDetailActivity : BaseActivity() {
 		setContentView(R.layout.activity_guardian_detail)
 		setupToolbar()
 		
-		if (intent?.hasExtra("GUARDIAN_NAME") == true && intent?.hasExtra("HAVE_EVENTS") == true) {
-			val guardianName = intent.getStringExtra("GUARDIAN_NAME")
-			val haveEvents = intent.getBooleanExtra("HAVE_EVENTS", false)
+		if (intent.hasExtra(EXTRA_GUARDIAN_NAME) && intent.hasExtra(EXTRA_HAVE_EVENTS)) {
+			val guardianName = intent.getStringExtra(EXTRA_GUARDIAN_NAME)
+			val haveEvents = intent.getBooleanExtra(EXTRA_HAVE_EVENTS, false)
 			
 			if (guardianName !== null) {
 				if (haveEvents) {
@@ -38,8 +39,8 @@ class GuardianDetailActivity : BaseActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			if (intent?.hasExtra("GUARDIAN_NAME") == true) {
-				title = intent.getStringExtra("GUARDIAN_NAME")
+			if (intent.hasExtra(EXTRA_GUARDIAN_NAME)) {
+				title = intent.getStringExtra(EXTRA_GUARDIAN_NAME)
 			}
 		}
 	}
@@ -50,10 +51,13 @@ class GuardianDetailActivity : BaseActivity() {
 	}
 	
 	companion object {
+		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
+		private const val EXTRA_HAVE_EVENTS = "EXTRA_HAVE_EVENTS"
+		
 		fun startActivity(context: Context, guardianName: String, haveEvents: Boolean) {
 			val intent = Intent(context, GuardianDetailActivity::class.java)
-			intent.putExtra("GUARDIAN_NAME", guardianName)
-			intent.putExtra("HAVE_EVENTS", haveEvents)
+			intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
+			intent.putExtra(EXTRA_HAVE_EVENTS, haveEvents)
 			context.startActivity(intent)
 		}
 	}

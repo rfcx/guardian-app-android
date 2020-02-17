@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
-import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
 
@@ -49,24 +48,19 @@ fun String.toEventIcon(): Int {
 	}
 }
 
-fun Event.toEventItem(eventDb: EventDb): EventItem {
-	val state = eventDb.getEventState(this.id)
-	return state?.let {
-		val result = when (it) {
-			ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
-			ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
-			else -> EventItem.State.NONE
-		}
-		EventItem(this, result)
-	} ?: run {
-		EventItem(this, EventItem.State.NONE)
+fun Event.toEventItem(state: String?): EventItem {
+	val s = when (state) {
+		ReviewEventFactory.confirmEvent -> EventItem.State.CONFIRM
+		ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
+		else -> EventItem.State.NONE
 	}
+	return EventItem(this, s)
 }
 
 data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem {
 	
 	@SuppressLint("DefaultLocale")
-	fun getReviewerName(context: Context):String {
+	fun getReviewerName(context: Context) : String {
 		return if (state != State.NONE) {
 			if (event.firstNameReviewer.isNotBlank()) {
 				event.firstNameReviewer
@@ -77,8 +71,6 @@ data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem
 			event.firstNameReviewer.capitalize()
 		}
 	}
-	
-
 	
 	enum class State {
 		CONFIRM, REJECT, NONE

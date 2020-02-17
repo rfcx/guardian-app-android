@@ -14,7 +14,8 @@ import org.rfcx.ranger.util.asLiveData
 
 class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 	
-	private var guardianName: String = ""
+	var guardianName: String = ""
+	
 	private lateinit var eventLiveData: LiveData<List<Event>>
 	private val _eventGroups = MutableLiveData<Result<ArrayList<EventGroupItem>>>()
 	val eventGroups: LiveData<Result<ArrayList<EventGroupItem>>> get() = _eventGroups
@@ -24,10 +25,6 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 			val cacheEvents = eventDb.getEvents()
 			handleEvents(events = cacheEvents)
 		}
-	}
-	
-	fun setGuardianName(guardianName: String) {
-		this.guardianName = guardianName
 	}
 	
 	fun fetchEventsByGuardianName() {
@@ -54,7 +51,7 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 				if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) acc + 1 else acc
 			}
 			val unReviewedCount = it.value.size - read
-			EventGroupItem(it.key, it.value, unReviewedCount)
+			EventGroupItem(it.key, it.value[0].label, unReviewedCount)
 		})
 		
 		_eventGroups.value = Result.Success(eventItems)
@@ -62,4 +59,4 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 	
 }
 
-data class EventGroupItem(val value: String, val events: List<Event>, val unReviewedCount: Int)
+data class EventGroupItem(val value: String, val displayName: String, val unReviewedCount: Int)

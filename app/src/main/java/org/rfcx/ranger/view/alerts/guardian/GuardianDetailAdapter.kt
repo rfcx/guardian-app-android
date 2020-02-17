@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alerts.guardian
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,8 @@ import kotlinx.android.synthetic.main.item_guardian_list_detail.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.toEventIcon
 
-class GuardianDetailAdapter : ListAdapter<EventGroupItem,
+class GuardianDetailAdapter(val listener: (item:EventGroupItem) -> Unit) : ListAdapter<EventGroupItem,
 		GuardianDetailAdapter.GuardianViewHolder>(GuardianItemDiffUtil()){
-	
-	var mOnItemViewClickListener: OnItemViewClickListener? = null
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian_list_detail, parent, false)
@@ -33,8 +32,7 @@ class GuardianDetailAdapter : ListAdapter<EventGroupItem,
 		
 		override fun areContentsTheSame(oldItem: EventGroupItem, newItem: EventGroupItem): Boolean {
 			return oldItem.unReviewedCount == newItem.unReviewedCount
-					&& oldItem.events.size == newItem.events.size
-					&& oldItem.events == newItem.events
+					&& oldItem.displayName == newItem.displayName
 		}
 	}
 	
@@ -59,10 +57,9 @@ class GuardianDetailAdapter : ListAdapter<EventGroupItem,
 				countTextView.visibility = View.VISIBLE
 				circleImageView.visibility = View.VISIBLE
 			}
-			typeNameTextView.text = eventGroupItem.events[0].label.capitalize()
+			typeNameTextView.text = eventGroupItem.displayName.capitalize()
 			itemView.setOnClickListener {
-				mOnItemViewClickListener?.onItemViewClick(eventGroupItem.events[0].value,
-						eventGroupItem.events[0].label, eventGroupItem.events[0].guardianName)
+				listener(eventGroupItem)
 			}
 		}
 	}
