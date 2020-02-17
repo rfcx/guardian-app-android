@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,13 +20,10 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
-import android.graphics.BitmapFactory
 import android.widget.ImageView
-import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import java.net.URL
-
+import org.rfcx.ranger.view.tutorial.TutorialActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -90,6 +86,12 @@ class ProfileFragment : BaseFragment() {
 			} else {
 				locationTrackingViewModel.requireEnableLocationTracking()
 			}
+		}
+		
+		viewDataBinding.onClickAppIntro = View.OnClickListener {
+			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
+			preferenceHelper?.putBoolean(Preferences.IS_FIRST_TIME, false)
+			context?.let { it1 -> TutorialActivity.startActivity(it1, null) }
 		}
 		
 		viewDataBinding.onClickGuardingGroup = View.OnClickListener {

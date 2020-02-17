@@ -79,9 +79,9 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
 			android:layout_marginTop="@dimen/margin_padding_small"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/eventIconImageView"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintEnd_toEndOf="parent">
+			app:layout_constraintTop_toTopOf="parent">
 			<!--		if do last reviewer change it - android:layout_marginTop="@dimen/margin_padding_xsmall" -->
 			
 			<TextView
@@ -188,12 +188,11 @@
 		android:id="@+id/buttonView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:gravity="top"
 		android:orientation="horizontal"
 		android:paddingStart="@dimen/margin_padding_normal"
-		android:gravity="top"
 		android:paddingTop="0dp"
-		android:paddingEnd="@dimen/margin_padding_normal"
-		android:weightSum="2">
+		android:paddingEnd="@dimen/margin_padding_normal">
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/negativeButton"
@@ -201,9 +200,9 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:layout_marginBottom="@dimen/margin_padding_normal"
 			tools:text="Negative" />
 		
 		<androidx.appcompat.widget.AppCompatButton
@@ -212,6 +211,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			tools:text="Positive" />

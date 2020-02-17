@@ -13,6 +13,22 @@
 	<string name="or">OR</string>
 	<string name="powered_by">Powered by</string>
 	
+	<!-- LoginActivity -->
+	<string name="next">Next</string>
+	<string name="skip">Skip</string>
+	<string name="done">Done</string>
+	<string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
+	<string name="name_of_guardian">Name of guardian</string>
+	<string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
+	<string name="when_the_event">When the event was detected</string>
+	<string name="number_of_reviews">Number of confirmed reviews</string>
+	<string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
+	<string name="confirm_it">Confirm it is  a chainsaw</string>
+	<string name="reject_it">Reject it is NOT a chainsaw</string>
+	<string name="create_new_reports">Create new reports</string>
+	<string name="view_reports">View reports by location</string>
+	<string name="app_intro">App intro</string>
+	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>
 	<string name="invitation_submit_button_label">Submit</string>
@@ -74,6 +90,7 @@
 	<string name="tab_to_record_label">Tap and hold the button to record notes</string>
 	<string name="new_password">New password</string>
 	<string name="new_password_again">Confirm new password</string>
+	<string name="change_password">Change password</string>
 	
 	<!-- Invitation -->
 	<string name="invitation_title">Connect to a site</string>

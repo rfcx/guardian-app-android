@@ -13,6 +13,22 @@
     <string name="or">OU</string>
     <string name="powered_by">Distribuído por</string>
     
+    <!-- LoginActivity -->
+    <string name="next">Próximo</string>
+    <string name="skip">Pular</string>
+    <string name="done">Feito</string>
+    <string name="available_in_settings">Você também pode encontrar este tutorial na guia Perfil</string>
+    <string name="name_of_guardian">Nome do responsável</string>
+    <string name="enable_tracking_when">Ativar rastreamento quando você está em patrulha para relatar sua posição</string>
+    <string name="when_the_event">Quando o evento foi detectado</string>
+    <string name="number_of_reviews">Número de comentários confirmados</string>
+    <string name="boxes_indicate_possible">Caixas de indicar possíveis eventos de motosserra</string>
+    <string name="confirm_it">Confirme que é uma motosserra</string>
+    <string name="reject_it">Rejeitá-la não é uma serra elétrica</string>
+    <string name="create_new_reports">Criar novos relatórios</string>
+    <string name="view_reports">Visualizar relatórios por localização</string>
+    <string name="app_intro">App Intro</string>
+    
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Assinar em </string>
     <string name="invitation_submit_button_label">Enviar</string>
@@ -74,6 +90,7 @@
     <string name="tab_to_record_label">Toque e segure o botão para gravar áudio.</string>
     <string name="new_password">Nova senha</string>
     <string name="new_password_again">Confirme a nova senha</string>
+    <string name="change_password">Mudar senha</string>
     
 	<!-- Invitation -->
     <string name="invitation_title">Conectar a uma localidade.</string>
@@ -225,5 +242,6 @@
     
     <string name="reject_text">rejeitar</string>
     <string name="confirm_text">confirme</string>
+    <string name="required">Requeridos!</string>
 
 </resources>

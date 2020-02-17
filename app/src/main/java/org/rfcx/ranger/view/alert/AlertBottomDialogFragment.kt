@@ -41,8 +41,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		}
 	}
 	
-	private var event: Event? = null
-	
 	override fun onDetach() {
 		super.onDetach()
 		alertListener = null
@@ -118,7 +116,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun observeEventView() {
 		alertViewModel.event.observe(this, Observer { it ->
 			it.success({
-				event = it
 				val state: String = arguments?.getString(STATE_EVENT) ?: "NONE"
 				
 				eventIconImageView.setImageResource(it.getIconRes())
@@ -132,7 +129,6 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				} else {
 					if (state != "NONE" && context != null) context.getNameEmail().capitalize() else ""
 				}
-				
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
 				agreeTextView.text = it.confirmedCount.toString()
@@ -187,16 +183,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					}
 				}
 				EventState.REVIEWED -> {
-					negativeButton.apply {
-						setPadding(0, 0, 0, 0)
-						text = getString(R.string.follow_up_later_button)
-						setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-					}
+					negativeButton.visibility = View.GONE
 					
 					positiveButton.apply {
 						text = getString(R.string.open_map_button)
 						setCompoundDrawablesWithIntrinsicBounds(
 								R.drawable.ic_directions_white_24dp, 0, 0, 0)
+						setBackgroundResource(R.drawable.bg_color_primary_button)
 					}
 					
 				}
@@ -274,7 +267,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 						val reviewConfirm = it.second.reviewConfirm
 						val newEvent = it.first
 						hideLoading()
-						 alertListener?.onReviewed(reviewConfirm, newEvent)
+						alertListener?.onReviewed(reviewConfirm, newEvent)
 						
 						// is rejectEvent?
 						if (reviewConfirm == ReviewEventFactory.rejectEvent) {
@@ -296,16 +289,13 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	@SuppressLint("DefaultLocale")
 	private fun showCountReviewer(event: Event, reviewConfirm: String) {
 		nameReviewerTextView.visibility = View.VISIBLE
-		
+		showNumberReviewer(event, reviewConfirm)
 		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
 		nameReviewerTextView.text = if (event.firstNameReviewer.isNotBlank()) {
 			event.firstNameReviewer
 		} else {
 			context.getNameEmail()
 		}.capitalize()
-		
-		agreeTextView.text = event.confirmedCount.toString()
-		rejectTextView.text = event.rejectedCount.toString()
 		
 		if (reviewConfirm == ReviewEventFactory.confirmEvent) {
 			agreeImageView.background = context?.getImage(R.drawable.bg_circle_red)
@@ -324,8 +314,33 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		}
 	}
 	
+	private fun showNumberReviewer(event: Event, reviewConfirm: String) {
+		linearLayout.visibility = View.VISIBLE
+		val state: String = arguments?.getString(STATE_EVENT) ?: "NONE"
+		
+		if (state == "NONE") {
+			if (reviewConfirm == ReviewEventFactory.confirmEvent) {
+				agreeTextView.text = (event.confirmedCount + 1).toString()
+				rejectTextView.text = event.rejectedCount.toString()
+			} else {
+				rejectTextView.text = (event.rejectedCount + 1).toString()
+				agreeTextView.text = event.confirmedCount.toString()
+			}
+		} else if (state == "CONFIRM") {
+			if (reviewConfirm == ReviewEventFactory.rejectEvent) {
+				rejectTextView.text = (event.rejectedCount + 1).toString()
+				agreeTextView.text = (event.confirmedCount - 1).toString()
+			}
+		} else if (state == "REJECT") {
+			if (reviewConfirm == ReviewEventFactory.confirmEvent) {
+				agreeTextView.text = (event.confirmedCount + 1).toString()
+				rejectTextView.text = (event.rejectedCount).toString()
+			}
+		}
+	}
+	
 	private fun updateConfirmCount(event: Event) {
-		val confirmCount = if (event.confirmedCount > 0) event.confirmedCount  else 1
+		val confirmCount = if (event.confirmedCount > 0) event.confirmedCount else 1
 		agreeTextView.text = confirmCount.toString()
 	}
 	
