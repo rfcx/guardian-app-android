@@ -185,10 +185,47 @@
 			</LinearLayout>
 			
 			<LinearLayout
+				android:id="@+id/notificationEmailLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:orientation="horizontal">
+				
+				<TextView
+					android:id="@+id/notificationEmailTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:text="@string/profile_receive_noti_by_email" />
+				
+				<androidx.appcompat.widget.SwitchCompat
+					android:id="@+id/notificationEmailSwitch"
+					style="@style/SwitchCompatStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textOff="@string/location_tracking_off_label"
+					android:textOn="@string/location_tracking_on_label"
+					tools:checked="false" />
+			</LinearLayout>
+			
+			<TextView
+				android:id="@+id/sendToEmailTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_small"
+				android:text="sent to retreeo4574@gmail.com"
+				tools:text="sent to retreeo4574@gmail.com" />
+			
+			<LinearLayout
 				android:id="@+id/guardianGroupLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:background="?attr/selectableItemBackground"
 				android:onClick="@{onClickGuardingGroup}"
 				android:orientation="vertical"
