@@ -8,6 +8,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
+import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.util.CloudMessaging
@@ -15,7 +16,7 @@ import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.logout
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
 	
 	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
@@ -65,6 +66,18 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 
 			override fun onError(e: Throwable) {
 				Log.d("onSubscribe","$e")
+			}
+		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
+	}
+	
+	fun onUnsubscribe() {
+		unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
+			override fun onSuccess(t: SubscribeResponse) {
+				Log.d("onUnsubscribe","${t.success}")
+			}
+
+			override fun onError(e: Throwable) {
+				Log.d("onUnsubscribe","$e")
 			}
 		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 	}

@@ -4,8 +4,8 @@ import io.reactivex.Single
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 
-class SubscribeRepositoryImp (private val setNameEndpoint: SubscribeEndpoint) : SubscribeRepository {
+class SubscribeRepositoryImp (private val subscribeEndpoint: SubscribeEndpoint) : SubscribeRepository {
 	override fun sendBody(sendBody: SubscribeRequest): Single<SubscribeResponse> {
-		return setNameEndpoint.sendGroups(sendBody)
+		return subscribeEndpoint.sendGroups(sendBody)
 	}
 }

@@ -44,6 +44,9 @@ import org.rfcx.ranger.data.remote.site.SiteRepositoryImp
 import org.rfcx.ranger.data.remote.subscribe.SubscribeRepository
 import org.rfcx.ranger.data.remote.subscribe.SubscribeRepositoryImp
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
+import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeRepository
+import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeRepositoryImp
+import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
@@ -97,6 +100,9 @@ object DataModule {
 		
 		single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
 		single { SubscribeUseCase(get(), get(), get()) }
+		
+		single { UnsubscribeRepositoryImp(get()) } bind UnsubscribeRepository::class
+		single { UnsubscribeUseCase(get(), get(), get()) }
 		
 	}
 	
