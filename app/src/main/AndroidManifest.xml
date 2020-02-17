@@ -10,8 +10,7 @@
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<!-- Required for foreground services on P+. -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required for foreground services on P+. -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	
 	<application
@@ -36,37 +35,37 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
-		<activity android:name=".view.tutorial.TutorialActivity"
-			android:theme="@style/AppTheme.ForTutorial"
+		<activity
+			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
 		
-		<activity android:name=".view.profile.PasswordChangeActivity"
+		<activity
+			android:name=".view.tutorial.TutorialActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.ForTutorial" />
+		<activity
+			android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity"
-			android:screenOrientation="portrait"/>
-		
-		
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait"/>
-		
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.report.ReportDetailActivity"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.alerts.guardianListDetail.GuardianListDetailActivity"
-			android:screenOrientation="portrait"/>
-		
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme"/>
-		
+			android:theme="@style/AppTheme" />
 		<activity
 			android:name=".view.login.LoginActivityNew"
 			android:screenOrientation="portrait">
@@ -84,7 +83,6 @@
 			android:name=".service.LocationTrackerService"
 			android:exported="false"
 			android:foregroundServiceType="location" />
-		
 		<service
 			android:name=".service.MessagingService"
 			android:exported="false">
@@ -117,9 +115,7 @@
 			android:value="false" />
 		<meta-data
 			android:name="preloaded_fonts"
-			android:resource="@array/preloaded_fonts" />
-		
-		<!-- Required for google maps: https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
+			android:resource="@array/preloaded_fonts" /> <!-- Required for google maps: https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
 		<uses-library
 			android:name="org.apache.http.legacy"
 			android:required="false" />

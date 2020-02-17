@@ -35,6 +35,10 @@
 		<variable
 			name="onClickAppIntro"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickProfilePhoto"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -58,12 +62,13 @@
 				
 				<LinearLayout
 					android:id="@+id/linearLayout"
-					android:paddingStart="@dimen/margin_padding_normal"
-					android:paddingBottom="@dimen/margin_padding_normal"
-					android:paddingTop="@dimen/margin_padding_normal"
 					android:layout_width="90dp"
 					android:layout_height="90dp"
-					android:orientation="horizontal">
+					android:onClick="@{onClickProfilePhoto}"
+					android:orientation="horizontal"
+					android:paddingStart="@dimen/margin_padding_normal"
+					android:paddingTop="@dimen/margin_padding_normal"
+					android:paddingBottom="@dimen/margin_padding_normal">
 				</LinearLayout>
 				
 				<LinearLayout
@@ -239,7 +244,7 @@
 					tools:text="Osa Conservation" />
 			
 			</LinearLayout>
-
+			
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
@@ -329,12 +334,12 @@
 				android:layout_height="wrap_content"
 				android:background="?attr/selectableItemBackground"
 				android:onClick="@{onClickPassword}"
-				android:visibility="gone"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_small"
 				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/change_password" />
+				android:text="@string/change_password"
+				android:visibility="gone" />
 			
 			<TextView
 				android:id="@+id/logoutTextView"

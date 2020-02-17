@@ -23,6 +23,7 @@ import org.rfcx.ranger.view.base.BaseFragment
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
 
 class ProfileFragment : BaseFragment() {
@@ -121,6 +122,10 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickPassword = View.OnClickListener  {
 			context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
+		}
+		
+		viewDataBinding.onClickProfilePhoto = View.OnClickListener  {
+			context?.let { it1 -> EditProfileActivity.startActivity(it1) }
 		}
 	}
 	
