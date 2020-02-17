@@ -41,6 +41,9 @@ import org.rfcx.ranger.data.remote.shortlink.ShortLinkUseCase
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.data.remote.site.SiteRepository
 import org.rfcx.ranger.data.remote.site.SiteRepositoryImp
+import org.rfcx.ranger.data.remote.subscribe.SubscribeRepository
+import org.rfcx.ranger.data.remote.subscribe.SubscribeRepositoryImp
+import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
@@ -92,6 +95,9 @@ object DataModule {
 		single { ShortLinkRepositoryImp(get()) } bind ShortLinkRepository::class
 		single { ShortLinkUseCase(get(), get(), get()) }
 		
+		single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
+		single { SubscribeUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -105,6 +111,7 @@ object DataModule {
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeShortLinkService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

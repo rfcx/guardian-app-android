@@ -1,18 +1,21 @@
 package org.rfcx.ranger.view.profile
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.ProfileData
-import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
-import org.rfcx.ranger.entity.site.SiteResponse
+import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
+import org.rfcx.ranger.entity.SubscribeRequest
+import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.logout
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase) : ViewModel() {
 	
 	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
@@ -52,6 +55,18 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun onLogout() {
 		context.logout()
+	}
+	
+	fun onSubscribe() {
+		subscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
+			override fun onSuccess(t: SubscribeResponse) {
+				Log.d("onSubscribe","${t.success}")
+			}
+
+			override fun onError(e: Throwable) {
+				Log.d("onSubscribe","$e")
+			}
+		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 	}
 	
 	fun onTracingStatusChange() {
