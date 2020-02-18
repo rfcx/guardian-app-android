@@ -9,7 +9,6 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoUseCase
-import org.rfcx.ranger.entity.ProfilePhotoRequest
 import org.rfcx.ranger.entity.ProfilePhotoResponse
 import java.io.File
 
