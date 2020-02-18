@@ -89,7 +89,7 @@ fun Context?.getUserEmail(): String {
 	return userID
 }
 
-fun Context?.getUserProfile(): String {
+fun Context?.saveUserProfile(): String {
 	var userProfile = ""
 	val token = this?.getTokenID()
 	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
@@ -100,7 +100,22 @@ fun Context?.getUserProfile(): String {
 		e.printStackTrace()
 		Crashlytics.logException(e)
 	}
+	
+	val preferences = this?.let { Preferences.getInstance(it) }
+	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
+	
 	return userProfile
+}
+
+fun Context?.updateUserProfile(userProfile: String) {
+	val preferences = this?.let { Preferences.getInstance(it) }
+	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
+}
+
+fun Context?.getUserProfile(): String {
+	val preferences = this?.let { Preferences.getInstance(it) }
+	Log.d("getUserProfile", "${preferences?.getString(Preferences.IMAGE_PROFILE)}")
+	return preferences?.getString(Preferences.IMAGE_PROFILE).toString()
 }
 
 fun Context?.getNameEmail(): String {

@@ -9,20 +9,25 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.activity_feedback.toolbar
+import kotlinx.android.synthetic.main.fragment_group_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.util.*
 import java.io.File
+import androidx.lifecycle.Observer
 
 class EditProfileActivity : AppCompatActivity() {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
@@ -42,7 +47,7 @@ class EditProfileActivity : AppCompatActivity() {
 		setupToolbar()
 		
 		val imageView = ImageView(this)
-		Glide.with(this).load(this.getUserProfile()).apply(RequestOptions.circleCropTransform()).into(imageView)
+		Glide.with(this).load(this.getUserProfile()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(RequestOptions.circleCropTransform()).into(imageView)
 		profilePhotoLinearLayout.addView(imageView)
 		
 		profilePhotoLinearLayout.setOnClickListener {
@@ -52,6 +57,20 @@ class EditProfileActivity : AppCompatActivity() {
 		changeProfilePhotoTextView.setOnClickListener {
 			openGallery()
 		}
+		
+		editProfileViewModel.status.observe(this, Observer { it ->
+			it.success({ str ->
+				loadingChangeProfileProgress.visibility = View.INVISIBLE
+				finish()
+			}, {
+				loadingChangeProfileProgress.visibility = View.INVISIBLE
+				this.handleError(it)
+				setEnableChangeProfileView()
+			}, {
+				setEnableChangeProfileView()
+				loadingChangeProfileProgress.visibility = View.VISIBLE
+			})
+		})
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {

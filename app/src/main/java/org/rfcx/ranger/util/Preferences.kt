@@ -40,6 +40,7 @@ class Preferences(context: Context) {
 		const val LAST_STATUS_SYNCING = "${PREFIX}LAST_STATUS_SYNCING"
 		const val EVENT_ONLINE_TOTAL = "${PREFIX}EVENT_ONLINE_TOTAL"
 		const val IS_FIRST_TIME = "${PREFIX}IS_FIRST_TIME"
+		const val IMAGE_PROFILE = "${PREFIX}IMAGE_PROFILE"
 	}
 	
 	init {

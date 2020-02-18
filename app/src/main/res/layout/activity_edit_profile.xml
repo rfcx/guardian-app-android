@@ -54,5 +54,15 @@
 		app:layout_constraintStart_toStartOf="@id/guideline_vertical"
 		app:layout_constraintEnd_toEndOf="@id/guideline_vertical"
 		app:layout_constraintTop_toBottomOf="@id/profilePhotoLinearLayout"/>
+	
+	<ProgressBar
+		android:id="@+id/loadingChangeProfileProgress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		app:layout_constraintTop_toBottomOf="@id/changeProfilePhotoTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

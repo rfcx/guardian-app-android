@@ -8,21 +8,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.getUserProfile
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
 
@@ -33,7 +37,6 @@ class ProfileFragment : BaseFragment() {
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
-	
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -56,6 +59,11 @@ class ProfileFragment : BaseFragment() {
 	override fun onResume() {
 		super.onResume()
 		analytics?.trackScreen(Screen.PROFILE)
+		
+		val imageView = ImageView(context)
+		Glide.with(this).load(context.getUserProfile()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(RequestOptions.circleCropTransform()).into(imageView)
+		linearLayout.addView(imageView)
+		
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -65,18 +73,17 @@ class ProfileFragment : BaseFragment() {
 		setOnClickButton()
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "email"){
+		if (loginWith == "email") {
 			changePasswordTextView.visibility = View.VISIBLE
-			
+			linearLayout.visibility = View.VISIBLE
+		} else {
+			changePasswordTextView.visibility = View.GONE
+			linearLayout.visibility = View.GONE
 		}
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
 		})
-		
-		val imageView = ImageView(context)
-		Glide.with(this).load(context.getUserProfile()).apply(RequestOptions.circleCropTransform()).into(imageView)
-		linearLayout.addView(imageView)
 	}
 	
 	private fun setOnClickButton() {
@@ -100,7 +107,7 @@ class ProfileFragment : BaseFragment() {
 			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
-		viewDataBinding.onClickRatingApp = View.OnClickListener  {
+		viewDataBinding.onClickRatingApp = View.OnClickListener {
 			analytics?.trackRateAppEvent()
 			val appPackageName = activity?.packageName
 			try {
@@ -114,17 +121,17 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		viewDataBinding.onClickFeedback = View.OnClickListener  {
+		viewDataBinding.onClickFeedback = View.OnClickListener {
 			analytics?.trackFeedbackStartEvent()
 			val intent = Intent(activity, FeedbackActivity::class.java)
 			startActivityForResult(intent, REQUEST_CODE)
 		}
 		
-		viewDataBinding.onClickPassword = View.OnClickListener  {
+		viewDataBinding.onClickPassword = View.OnClickListener {
 			context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
 		}
 		
-		viewDataBinding.onClickProfilePhoto = View.OnClickListener  {
+		viewDataBinding.onClickProfilePhoto = View.OnClickListener {
 			context?.let { it1 -> EditProfileActivity.startActivity(it1) }
 		}
 	}
