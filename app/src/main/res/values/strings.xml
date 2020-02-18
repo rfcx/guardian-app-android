@@ -50,6 +50,7 @@
 	<string name="profile_onduty">On duty</string>
 	<string name="profile_nottracking">Not tracking</string>
 	<string name="error_no_guardian_group_set">Set guardian group in Settings</string>
+	<string name="please_set_guardian_group">Please set guardian group</string>
 	
 	<!-- report -->
 	<string name="report_title">Report</string>
@@ -208,7 +209,8 @@
 	<string name="other">other</string>
 	
 	<!--Profile -->
-	<string name="profile_receive_noti_label">Receive notifications</string>
+	<string name="profile_receive_noti_label">by push notification</string>
+	<string name="profile_receive_noti_by_email">by email</string>
 	<string name="profile_sign_out_label">Sign out</string>
 	<string name="please_enter_your_new_password">Please enter your new password</string>
 	<string name="please_confirm_your_new_password">Please confirm your new password</string>
