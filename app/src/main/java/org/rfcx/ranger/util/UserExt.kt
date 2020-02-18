@@ -5,8 +5,6 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
-import org.koin.core.context.GlobalContext.get
-import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
 
@@ -79,6 +77,7 @@ fun Context?.getUserEmail(): String {
 	var userID = ""
 	val token = this?.getTokenID()
 	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	
 	try {
 		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
 		userID = untrusted.body["email"] as String
@@ -107,6 +106,25 @@ fun Context?.saveUserProfile(): String {
 	return userProfile
 }
 
+fun Context?.saveUserLoginWith(): String {
+	var loginWith = ""
+	val token = this?.getTokenID()
+	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	try {
+		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+		loginWith = untrusted.body["sub"] as String
+		loginWith = loginWith.split("|")[0]
+	} catch (e: Exception) {
+		e.printStackTrace()
+		Crashlytics.logException(e)
+	}
+	
+	val preferences = this?.let { Preferences.getInstance(it) }
+	preferences?.putString(Preferences.LOGIN_WITH, loginWith)
+	
+	return loginWith
+}
+
 fun Context?.updateUserProfile(userProfile: String) {
 	val preferences = this?.let { Preferences.getInstance(it) }
 	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
@@ -114,7 +132,6 @@ fun Context?.updateUserProfile(userProfile: String) {
 
 fun Context?.getUserProfile(): String {
 	val preferences = this?.let { Preferences.getInstance(it) }
-	Log.d("getUserProfile", "${preferences?.getString(Preferences.IMAGE_PROFILE)}")
 	return preferences?.getString(Preferences.IMAGE_PROFILE).toString()
 }
 

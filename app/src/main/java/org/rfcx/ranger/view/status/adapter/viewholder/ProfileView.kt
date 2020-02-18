@@ -11,6 +11,7 @@ import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserProfile
 import org.rfcx.ranger.util.saveUserProfile
+import org.rfcx.ranger.util.setImageProfile
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -23,19 +24,17 @@ class ProfileView(private val binding: ItemHeaderProfileBinding, private val lis
 		}
 		
 		val loginWith = binding.root.context.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "email") {
-			binding.linearLayout.visibility = View.VISIBLE
+		if (loginWith == "auth0") {
+			binding.userProfileImageView.visibility = View.VISIBLE
 			
 			if (binding.root.context.getUserProfile() == "null") {
 				binding.root.context.saveUserProfile()
 			}
 			
-			val imageView = ImageView(binding.root.context)
-			Glide.with(binding.root.context).load(binding.root.context.getUserProfile()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(RequestOptions.circleCropTransform()).into(imageView)
-			binding.linearLayout.addView(imageView)
+			binding.userProfileImageView.setImageProfile(binding.root.context.getUserProfile())
 			
 		} else {
-			binding.linearLayout.visibility = View.GONE
+			binding.userProfileImageView.visibility = View.GONE
 		}
 		
 		binding.executePendingBindings()

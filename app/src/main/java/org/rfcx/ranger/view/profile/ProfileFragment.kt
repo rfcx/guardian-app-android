@@ -8,22 +8,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.getUserProfile
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -59,11 +52,7 @@ class ProfileFragment : BaseFragment() {
 	override fun onResume() {
 		super.onResume()
 		analytics?.trackScreen(Screen.PROFILE)
-		
-		val imageView = ImageView(context)
-		Glide.with(this).load(context.getUserProfile()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(RequestOptions.circleCropTransform()).into(imageView)
-		linearLayout.addView(imageView)
-		
+		userProfileImageView.setImageProfile(context.getUserProfile())
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -73,12 +62,12 @@ class ProfileFragment : BaseFragment() {
 		setOnClickButton()
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "email") {
+		if (loginWith == "auth0") {
 			changePasswordTextView.visibility = View.VISIBLE
-			linearLayout.visibility = View.VISIBLE
+			userProfileImageView.visibility = View.VISIBLE
 		} else {
 			changePasswordTextView.visibility = View.GONE
-			linearLayout.visibility = View.GONE
+			userProfileImageView.visibility = View.GONE
 		}
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {

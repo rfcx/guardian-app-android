@@ -31,16 +31,16 @@
 		android:orientation="vertical"
 		app:layout_constraintGuide_percent="0.5" />
 	
-	<LinearLayout
-		android:id="@+id/profilePhotoLinearLayout"
+	<ImageView
+		android:id="@+id/userProfileImageView"
 		android:layout_width="150dp"
 		android:layout_height="150dp"
+		android:contentDescription="@string/app_name"
+		android:src="@drawable/bg_circle_grey"
 		app:layout_constraintStart_toStartOf="@id/guideline_vertical"
 		app:layout_constraintEnd_toEndOf="@id/guideline_vertical"
-		app:layout_constraintTop_toTopOf="@id/guideline_horizontal"
-		android:orientation="horizontal">
-	</LinearLayout>
-	
+		app:layout_constraintTop_toTopOf="@id/guideline_horizontal"/>
+
 	<TextView
 		android:id="@+id/changeProfilePhotoTextView"
 		style="@style/RangerText.Body"
@@ -53,7 +53,7 @@
 		android:text="@string/change_profile_photo"
 		app:layout_constraintStart_toStartOf="@id/guideline_vertical"
 		app:layout_constraintEnd_toEndOf="@id/guideline_vertical"
-		app:layout_constraintTop_toBottomOf="@id/profilePhotoLinearLayout"/>
+		app:layout_constraintTop_toBottomOf="@id/userProfileImageView"/>
 	
 	<ProgressBar
 		android:id="@+id/loadingChangeProfileProgress"

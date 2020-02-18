@@ -46,11 +46,9 @@ class EditProfileActivity : AppCompatActivity() {
 		
 		setupToolbar()
 		
-		val imageView = ImageView(this)
-		Glide.with(this).load(this.getUserProfile()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(RequestOptions.circleCropTransform()).into(imageView)
-		profilePhotoLinearLayout.addView(imageView)
+		userProfileImageView.setImageProfile(this.getUserProfile())
 		
-		profilePhotoLinearLayout.setOnClickListener {
+		userProfileImageView.setOnClickListener {
 			openGallery()
 		}
 		
@@ -91,7 +89,6 @@ class EditProfileActivity : AppCompatActivity() {
 	}
 	
 	private fun sendProfileImage() {
-		Log.d("sendProfileImage", " $newImageProfilePath")
 		editProfileViewModel.updateProfilePhoto(path = newImageProfilePath)
 	}
 	
@@ -132,14 +129,11 @@ class EditProfileActivity : AppCompatActivity() {
 		
 		results.forEach {
 			val imagePath = ImageFileUtils.findRealPath(this, it)
-			profilePhotoLinearLayout.removeAllViews()
 			
 			setEnableChangeProfileView(true)
 			newImageProfilePath = imagePath.toString()
 			
-			val imageView = ImageView(this)
-			Glide.with(this).load(Uri.fromFile(File(imagePath))).apply(RequestOptions.circleCropTransform()).into(imageView)
-			profilePhotoLinearLayout.addView(imageView)
+			Glide.with(this).load(Uri.fromFile(File(imagePath))).apply(RequestOptions.circleCropTransform()).into(userProfileImageView)
 		}
 	}
 	

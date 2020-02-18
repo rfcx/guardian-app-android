@@ -57,6 +57,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		
 		setupBottomMenu()
 		
+		this.saveUserLoginWith()
+		
 		newReportFabButton.setOnClickListener {
 			analytics.trackStartToAddReportEvent()
 			ReportActivity.startIntent(this)
