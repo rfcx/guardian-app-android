@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.bumptech.glide.Glide
@@ -19,6 +19,7 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.activity_feedback.toolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.*
 import java.io.File
@@ -27,6 +28,7 @@ class EditProfileActivity : AppCompatActivity() {
 	private val galleryPermissions by lazy { GalleryPermissions(this) }
 	private var newImageProfilePath: String = ""
 	private var menuAll: Menu? = null
+	private val editProfileViewModel: EditProfileViewModel by viewModel()
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
@@ -69,8 +71,9 @@ class EditProfileActivity : AppCompatActivity() {
 		return super.onOptionsItemSelected(item)
 	}
 	
-	private fun sendProfileImage(){
-		Log.d("sendProfileImage"," $newImageProfilePath")
+	private fun sendProfileImage() {
+		Log.d("sendProfileImage", " $newImageProfilePath")
+		editProfileViewModel.updateProfilePhoto(path = newImageProfilePath)
 	}
 	
 	private fun setEnableChangeProfileView(start: Boolean = false) {
