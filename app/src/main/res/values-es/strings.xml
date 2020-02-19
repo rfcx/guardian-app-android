@@ -59,7 +59,7 @@
 	<string name="report_record_label">REGISTRO DE NOTAS (Opcional)</string>
 	<string name="report_attach_image_label">FOTOS (Opcional)</string>
 	<string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
-	<string name="report_note_label">notas</string>
+	<string name="report_note_label">Notas (Opcional)</string>
 	<string name="report_note_hint">Poner algunas notas aquí</string>
 	<string name="some_photo_already_exists">Algunos foto ya existe</string>
 	<string name="these_photos_already_exists">Estas fotos ya existen</string>
