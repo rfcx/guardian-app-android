@@ -1,11 +1,10 @@
 package org.rfcx.ranger.util
 
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import org.rfcx.ranger.R
 
 
 fun ImageView.setPath(path: String) {
@@ -15,8 +14,7 @@ fun ImageView.setPath(path: String) {
 
 fun ImageView.setImageProfile(url: String) {
     Glide.with(this.context).load(url)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
+            .placeholder(R.drawable.bg_circle_grey)
             .apply(RequestOptions.circleCropTransform())
             .into(this)
 }

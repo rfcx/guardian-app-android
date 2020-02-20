@@ -1,8 +1,6 @@
 package org.rfcx.ranger.view.profile.editprofile
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +14,6 @@ import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoUseCase
 import org.rfcx.ranger.entity.ProfilePhotoResponse
 import org.rfcx.ranger.util.getResultError
 import org.rfcx.ranger.util.updateUserProfile
-import org.rfcx.ranger.view.alerts.EventGroup
 import java.io.File
 
 class EditProfileViewModel(private val context: Context, private val profilePhotoUseCase: ProfilePhotoUseCase) : ViewModel() {
@@ -32,7 +29,7 @@ class EditProfileViewModel(private val context: Context, private val profilePhot
 		
 		profilePhotoUseCase.execute(object : DisposableSingleObserver<ProfilePhotoResponse>() {
 			override fun onSuccess(t: ProfilePhotoResponse) {
-				context.updateUserProfile(t.url)
+				context.updateUserProfile(path)
 				_status.value = Result.Success(t.url)
 				
 			}

@@ -1,12 +1,7 @@
 package org.rfcx.ranger.view.status.adapter.viewholder
 
 import android.view.View
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.fragment_profile.*
 import org.rfcx.ranger.databinding.ItemHeaderProfileBinding
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserProfile
