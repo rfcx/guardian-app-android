@@ -130,6 +130,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 					if (state != "NONE" && context != null) context.getNameEmail().capitalize() else ""
 				}
 				nameReviewerTextView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
+				placeholderIconImageView.visibility = if (it.firstNameReviewer.isNotBlank()) View.VISIBLE else View.INVISIBLE
 				linearLayout.visibility = View.INVISIBLE
 				agreeTextView.text = it.confirmedCount.toString()
 				rejectTextView.text = it.rejectedCount.toString()
@@ -289,6 +290,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	@SuppressLint("DefaultLocale")
 	private fun showCountReviewer(event: Event, reviewConfirm: String) {
 		nameReviewerTextView.visibility = View.VISIBLE
+		placeholderIconImageView.visibility = View.VISIBLE
 		showNumberReviewer(event, reviewConfirm)
 		reviewedTextView.text = context?.getString(R.string.last_reviewed_by)
 		nameReviewerTextView.text = if (event.firstNameReviewer.isNotBlank()) {
