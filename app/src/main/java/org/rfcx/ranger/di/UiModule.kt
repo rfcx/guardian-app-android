@@ -56,7 +56,7 @@ object UiModule {
 	}
 	
 	val profileModule = module {
-		viewModel { ProfileViewModel(androidContext(), get()) }
+		viewModel { ProfileViewModel(androidContext(), get(), get(), get()) }
 		viewModel { GuardianGroupViewModel(get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 		viewModel { PasswordChangeViewModel(get()) }

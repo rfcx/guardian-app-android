@@ -40,8 +40,16 @@ class ProfileData(private val preferences: Preferences,private val guardianGroup
 		return preferences.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
 	}
 	
+	fun getReceiveNotificationByEmail(): Boolean {
+		return preferences.getBoolean(Preferences.EMAIL_SUBSCRIBE, false)
+	}
+	
 	fun updateReceivingNotification(received: Boolean) {
 		preferences.putBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, received)
+	}
+	
+	fun updateReceivingNotificationByEmail(received: Boolean) {
+		preferences.putBoolean(Preferences.EMAIL_SUBSCRIBE, received)
 	}
 	
 	fun hasGuardianGroup(): Boolean {
