@@ -12,7 +12,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.alerts.guardianListDetail.GuardianListDetailActivity
+import org.rfcx.ranger.view.alerts.guardian.GuardianDetailActivity
 import org.rfcx.ranger.view.alerts.adapter.GroupByGuardianAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -49,7 +49,7 @@ class GroupAlertsFragment : BaseFragment() {
 		
 		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(eventsList: List<Event>, name: String) {
-				context?.let { GuardianListDetailActivity.startActivity(it, name, eventsList.isNotEmpty()) }
+				context?.let { GuardianDetailActivity.startActivity(it, name, eventsList.isNotEmpty()) }
 			}
 		}
 	}

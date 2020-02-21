@@ -28,6 +28,10 @@ class EventDb(val realm: Realm) {
 		return realm.where(Event::class.java).findAllAsync()
 	}
 	
+	fun getByGuardianName(guardianName: String): RealmResults<Event> {
+		return realm.where(Event::class.java).equalTo("guardianName", guardianName).findAllAsync()
+	}
+	
 	fun getEventsSync(): List<Event> {
 		val list = arrayListOf<Event>()
 		realm.use { it ->
