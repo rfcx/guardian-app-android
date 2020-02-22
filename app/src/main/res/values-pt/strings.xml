@@ -59,7 +59,7 @@
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
     <string name="report_attach_image_label">FOTOS (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
-    <string name="report_note_label">Notas</string>
+    <string name="report_note_label">Notas (Opcional)</string>
     <string name="report_note_hint">Coloque algumas notas aqui</string>
     <string name="some_photo_already_exists">Algumas fotos já existe</string>
     <string name="these_photos_already_exists">Essas fotos já existem</string>
