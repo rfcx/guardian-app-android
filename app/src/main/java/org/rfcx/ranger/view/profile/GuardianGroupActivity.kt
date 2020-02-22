@@ -54,6 +54,7 @@ class GuardianGroupActivity : BaseActivity() {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
 				viewModel.removeAllEvent()
 				analytics.trackSetGuardianGroupEvent()
+				viewModel.subscribeByEmail(guardianGroup.shortname)
 				// TODO what happens on failure?
 				loadingProgress.visibility = View.VISIBLE
 				
