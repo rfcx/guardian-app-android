@@ -219,7 +219,7 @@
 					android:text="@string/report_note_label"
 					app:layout_constraintEnd_toEndOf="@id/rightGutter"
 					app:layout_constraintStart_toStartOf="@id/leftGutter"
-					app:layout_constraintTop_toBottomOf="@id/audioProgressView" />
+					app:layout_constraintTop_toBottomOf="@id/audioNoneLabel" />
 				
 				<androidx.appcompat.widget.AppCompatEditText
 					android:id="@+id/noteTextView"
@@ -246,7 +246,9 @@
 					android:visibility="@{audio.noneLabelVisibility}"
 					app:layout_constraintEnd_toEndOf="@id/rightGutter"
 					app:layout_constraintStart_toStartOf="@id/leftGutter"
-					app:layout_constraintTop_toBottomOf="@id/audioTitle" />
+					app:layout_constraintTop_toBottomOf="@id/audioProgressView"
+					tools:visibility="gone" />
+
 			</androidx.constraintlayout.widget.ConstraintLayout>
 		</ScrollView>
 	
