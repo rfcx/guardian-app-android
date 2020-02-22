@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
-import kotlinx.android.synthetic.main.activity_main_new.contentContainer
-import kotlinx.android.synthetic.main.fragment_alerts.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -56,18 +54,17 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		setContentView(R.layout.activity_main_new)
 		
 		setupBottomMenu()
+		if (savedInstanceState == null) {
+			setupFragments()
+		}
 		
 		newReportFabButton.setOnClickListener {
 			analytics.trackStartToAddReportEvent()
 			ReportActivity.startIntent(this)
 		}
 		
-		if (savedInstanceState == null) {
-			menuStatus.performClick()
-		}
-		
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
-		bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+		bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 			override fun onSlide(bottomSheet: View, slideOffset: Float) {
 			
 			}
@@ -156,6 +153,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
+		
+		menuStatus.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
@@ -167,7 +166,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
 				
-				startFragment(StatusFragment.newInstance(), StatusFragment.tag, true)
+				showStatus()
 			}
 			menuMap.id -> {
 				menuStatus.menuSelected = false
@@ -175,14 +174,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
 				
-				startFragment(MapFragment.newInstance(), MapFragment.tag, false)
+				showMap()
 			}
 			menuAlert.id -> {
 				menuStatus.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(null, 0), AlertsFragment.tag, true)
+				
+				showAlerts()
 			}
 			
 			menuProfile.id -> {
@@ -190,7 +190,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = true
-				startFragment(ProfileFragment.newInstance(), ProfileFragment.tag, true)
+				
+				showProfile()
 			}
 		}
 	}
@@ -222,12 +223,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	override fun alertScreen() {
-		menuStatus.menuSelected = false
-		menuMap.menuSelected = false
-		menuAlert.menuSelected = true
-		menuProfile.menuSelected = false
-		
-		startFragment(AlertsFragment.newInstance(null, 1), AlertsFragment.tag, true)
+		menuAlert.performClick()
 	}
 	
 	override fun moveMapIntoReportMarker(report: Report) {
@@ -237,15 +233,85 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 	}
 	
-	private fun startFragment(fragment: Fragment, tag: String = "fragment", showAboveAppbar: Boolean) {
+	private fun startFragment(fragment: Fragment, showAboveAppbar: Boolean) {
 		this.currentFragment = fragment
-		val contentContainerPaddingBottom =
-				if (showAboveAppbar) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
-		
-		contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
+		showAboveAppbar(showAboveAppbar)
 		supportFragmentManager.beginTransaction()
-				.replace(contentContainer.id, fragment,
-						tag).commit()
+				.replace(contentContainer.id, fragment)
+				.commit()
+	}
+	
+	private fun setupFragments() {
+		supportFragmentManager.beginTransaction()
+				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
+				.add(contentContainer.id, getMap(), MapFragment.tag)
+				.add(contentContainer.id, getAlerts(), AlertsFragment.tag)
+				.add(contentContainer.id, getStatus(), StatusFragment.tag)
+				.commit()
+		
+		menuStatus.performClick()
+	}
+	
+	private fun getStatus(): StatusFragment = supportFragmentManager.findFragmentByTag(StatusFragment.tag)
+			as StatusFragment? ?: StatusFragment.newInstance()
+	
+	private fun getMap(): MapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
+			as MapFragment? ?: MapFragment.newInstance()
+	
+	private fun getAlerts(): AlertsFragment = supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
+			as AlertsFragment? ?: AlertsFragment.newInstance(null, 0)
+	
+	private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
+			as ProfileFragment? ?: ProfileFragment.newInstance()
+	
+	private fun showStatus() {
+		showAboveAppbar(true)
+		this.currentFragment = getStatus()
+		supportFragmentManager.beginTransaction()
+				.show(getStatus())
+				.hide(getMap())
+				.hide(getAlerts())
+				.hide(getProfile())
+				.commit()
+	}
+	
+	private fun showAlerts() {
+		showAboveAppbar(true)
+		this.currentFragment = getAlerts()
+		supportFragmentManager.beginTransaction()
+				.show(getAlerts())
+				.hide(getStatus())
+				.hide(getMap())
+				.hide(getProfile())
+				.commit()
+	}
+	
+	private fun showMap() {
+		showAboveAppbar(false)
+		this.currentFragment = getMap()
+		supportFragmentManager.beginTransaction()
+				.show(getMap())
+				.hide(getStatus())
+				.hide(getAlerts())
+				.hide(getProfile())
+				.commit()
+	}
+	
+	private fun showProfile() {
+		showAboveAppbar(true)
+		this.currentFragment = getProfile()
+		supportFragmentManager.beginTransaction()
+				.show(getProfile())
+				.hide(getStatus())
+				.hide(getAlerts())
+				.hide(getMap())
+				.commit()
+	}
+	
+	private fun showAboveAppbar(show: Boolean) {
+		val contentContainerPaddingBottom =
+				if (show) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
+		contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
 	}
 	
 	private fun observeLocationTracking() {
@@ -280,7 +346,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(it, 1), AlertsFragment.tag, true)
+				startFragment(AlertsFragment.newInstance(it, 1), true)
 			}
 		})
 	}
