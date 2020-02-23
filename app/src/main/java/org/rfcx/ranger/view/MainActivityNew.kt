@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.activity_main_new.contentContainer
-import kotlinx.android.synthetic.main.fragment_alerts.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -265,6 +264,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		
 		mainViewModel.isLocationTrackingOn.observe(this, Observer {
 			if (it) enableLocationTracking()
+		})
+		
+		mainViewModel.alertCount.observe(this, Observer {
+			menuAlert.badgeNumber = it
 		})
 	}
 	

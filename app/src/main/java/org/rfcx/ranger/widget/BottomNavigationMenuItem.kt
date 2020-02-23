@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import org.rfcx.ranger.R
 
@@ -21,11 +22,15 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 	
 	private var iconImageView: AppCompatImageView
 	private var titleTextView: AppCompatTextView
+	private var badgeGroup: Group
+	private var countTextView: AppCompatTextView
 	
 	init {
 		View.inflate(context, R.layout.widget_bottom_navigation_menu_item, this)
 		iconImageView = findViewById(R.id.iconImageView)
 		titleTextView = findViewById(R.id.menuTitleTextView)
+		badgeGroup = findViewById(R.id.badgeGroup)
+		countTextView = findViewById(R.id.countTextView)
 		initAttrs(attrs)
 	}
 	
@@ -58,6 +63,24 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 			menuSelected(value)
 		}
 	
+	var badgeNumber: Int = 3
+		set(value) {
+			field = value
+			updateBadge()
+		}
+	
+	var isShowBadge: Boolean = false
+		set(value) {
+			field = value
+			updateBadge()
+		}
+	
+	private fun updateBadge() {
+		val displayValue = if (badgeNumber > 99) "99+" else badgeNumber.toString()
+		countTextView.text = displayValue
+		badgeGroup.visibility = if (isShowBadge && (badgeNumber > 0)) View.VISIBLE else View.GONE
+	}
+	
 	private fun menuSelected(selected: Boolean) {
 		if (selected) {
 			titleTextView.visibility = View.VISIBLE
@@ -86,6 +109,7 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 		iconTintColor = ContextCompat.getColor(context,
 				typedArray.getResourceId(R.styleable.BottomNavigationMenuItem_iconTintColor, android.R.color.transparent))
 		menuSelected = typedArray.getBoolean(R.styleable.BottomNavigationMenuItem_menuSelected, false)
+		isShowBadge = typedArray.getBoolean(R.styleable.BottomNavigationMenuItem_showBadge, false)
 		
 		typedArray.recycle()
 	}

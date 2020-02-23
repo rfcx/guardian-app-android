@@ -98,6 +98,19 @@ class EventDb(val realm: Realm) {
 		return unsentList
 	}
 	
+	fun lockReviewEventUnread(events: List<Event>): List<Event> {
+		val readList = arrayListOf<EventReview>()
+		realm.use {
+			it.executeTransaction { realm ->
+				val unread = realm.where(EventReview::class.java).findAll()
+				readList.addAll(it.copyFromRealm(unread))
+			}
+		}
+		
+		val guidEventRead = readList.mapTo(arrayListOf(), {it.eventGuId})
+		return events.filter { !guidEventRead.contains(it.id) } // unread
+	}
+	
 	fun markReviewEventSyncState(eventGuid: String, syncState: Int) {
 		realm.use {
 			it.executeTransaction {realm ->
