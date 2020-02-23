@@ -7,9 +7,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import org.rfcx.ranger.R
@@ -18,12 +18,13 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 		context: Context,
 		attrs: AttributeSet? = null,
 		defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 	
 	private var iconImageView: AppCompatImageView
 	private var titleTextView: AppCompatTextView
 	private var badgeGroup: Group
 	private var countTextView: AppCompatTextView
+	private var circleImageView: AppCompatImageView
 	
 	init {
 		View.inflate(context, R.layout.widget_bottom_navigation_menu_item, this)
@@ -31,6 +32,7 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 		titleTextView = findViewById(R.id.menuTitleTextView)
 		badgeGroup = findViewById(R.id.badgeGroup)
 		countTextView = findViewById(R.id.countTextView)
+		circleImageView = findViewById(R.id.badgeImageView)
 		initAttrs(attrs)
 	}
 	
@@ -63,7 +65,7 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 			menuSelected(value)
 		}
 	
-	var badgeNumber: Int = 3
+	var badgeNumber: Int = 0
 		set(value) {
 			field = value
 			updateBadge()
@@ -78,11 +80,12 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 	private fun updateBadge() {
 		val displayValue = if (badgeNumber > 99) "99+" else badgeNumber.toString()
 		countTextView.text = displayValue
-		badgeGroup.visibility = if (isShowBadge && (badgeNumber > 0)) View.VISIBLE else View.GONE
+		badgeGroup.visibility = if (isShowBadge && (badgeNumber > 0) && !menuSelected) View.VISIBLE else View.GONE
 	}
 	
 	private fun menuSelected(selected: Boolean) {
 		if (selected) {
+			badgeGroup.visibility = View.GONE
 			titleTextView.visibility = View.VISIBLE
 			titleTextView.setTextColor(titleColorSelected)
 			if (iconTintColor != 0)
@@ -92,6 +95,7 @@ class BottomNavigationMenuItem @JvmOverloads constructor(
 			titleTextView.visibility = View.VISIBLE
 			titleTextView.setTextColor(titleColor)
 			iconImageView.colorFilter = null
+			updateBadge()
 		}
 	}
 	
