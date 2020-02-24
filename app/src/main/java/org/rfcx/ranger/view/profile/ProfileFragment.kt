@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -69,6 +70,13 @@ class ProfileFragment : BaseFragment() {
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
+		})
+		profileViewModel.logoutState.observe(this, Observer {
+			if (it) {
+				loginProgressBar.visibility = View.VISIBLE
+			} else {
+				loginProgressBar.visibility = View.INVISIBLE
+			}
 		})
 	}
 	
