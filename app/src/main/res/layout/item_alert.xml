@@ -79,6 +79,19 @@
 		app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
 		tools:text="Last reviewed by" />
 	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/placeholderIconImageView"
+		android:layout_width="@dimen/event_confirm_icon"
+		android:layout_height="@dimen/event_confirm_icon"
+		android:layout_marginStart="@dimen/margin_padding_xsmall"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:src="@drawable/ic_menu_profile"
+		android:tint="@color/text_secondary"
+		android:visibility="invisible"
+		app:layout_constraintEnd_toStartOf="@id/nameReviewerTextView"
+		app:layout_constraintStart_toEndOf="@id/reviewedTextView"
+		app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout" />
+	
 	<TextView
 		android:id="@+id/nameReviewerTextView"
 		style="@style/RangerText.Caption"
@@ -93,7 +106,7 @@
 		android:textStyle="bold"
 		android:visibility="invisible"
 		app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-		app:layout_constraintStart_toEndOf="@+id/reviewedTextView"
+		app:layout_constraintStart_toEndOf="@+id/placeholderIconImageView"
 		app:layout_constraintTop_toBottomOf="@+id/alertTitleLayout"
 		tools:text="Anuphap" />
 	

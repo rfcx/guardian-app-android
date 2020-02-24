@@ -74,6 +74,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 		private val tvReviewed = itemView.reviewedTextView
 		private val linearLayout = itemView.linearLayout
 		private val tvNameReviewer = itemView.nameReviewerTextView
+		private val placeholderIcon = itemView.placeholderIconImageView
 		private val tvAgreeValue = itemView.agreeTextView
 		private val tvRejectValue = itemView.rejectTextView
 		private val ivAgree = itemView.agreeImageView
@@ -90,6 +91,7 @@ class AlertsAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem, Re
 			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
 			tvNameReviewer.text = item.getReviewerName(context)
 			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state != EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			placeholderIcon.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state != EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			
 			when (item.state) {
 				EventItem.State.CONFIRM -> {
