@@ -39,18 +39,14 @@
 		<activity android:name=".view.tutorial.TutorialActivity"
 			android:theme="@style/AppTheme.ForTutorial"
 			android:screenOrientation="portrait" />
-		
 		<activity android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity"
+			android:name=".view.alerts.guardian.alertType.AlertValueActivity"
 			android:screenOrientation="portrait"/>
-		
-		
 		<activity
 			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait"/>
-		
 		<activity
 			android:name=".view.report.ReportDetailActivity"
 			android:screenOrientation="portrait"/>
@@ -58,9 +54,8 @@
 			android:name=".view.profile.GuardianGroupActivity"
 			android:screenOrientation="portrait"/>
 		<activity
-			android:name=".view.alerts.guardianListDetail.GuardianListDetailActivity"
+			android:name=".view.alerts.guardian.GuardianDetailActivity"
 			android:screenOrientation="portrait"/>
-		
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
