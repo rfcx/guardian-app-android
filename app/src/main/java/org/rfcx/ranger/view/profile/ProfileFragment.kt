@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
@@ -50,9 +51,11 @@ class ProfileFragment : BaseFragment() {
 		handleShowSnackbarResult(requestCode, resultCode, data)
 	}
 	
-	override fun onResume() {
-		super.onResume()
-		analytics?.trackScreen(Screen.PROFILE)
+	override fun onHiddenChanged(hidden: Boolean) {
+		super.onHiddenChanged(hidden)
+		if (!hidden) {
+			analytics?.trackScreen(Screen.PROFILE)
+		}
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -62,7 +65,7 @@ class ProfileFragment : BaseFragment() {
 		setOnClickButton()
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "email"){
+		if (loginWith == "email") {
 			changePasswordTextView.visibility = View.VISIBLE
 			
 		}
@@ -93,7 +96,7 @@ class ProfileFragment : BaseFragment() {
 			context?.let { GuardianGroupActivity.startActivity(it) }
 		}
 		
-		viewDataBinding.onClickRatingApp = View.OnClickListener  {
+		viewDataBinding.onClickRatingApp = View.OnClickListener {
 			analytics?.trackRateAppEvent()
 			val appPackageName = activity?.packageName
 			try {
@@ -107,13 +110,13 @@ class ProfileFragment : BaseFragment() {
 			}
 		}
 		
-		viewDataBinding.onClickFeedback = View.OnClickListener  {
+		viewDataBinding.onClickFeedback = View.OnClickListener {
 			analytics?.trackFeedbackStartEvent()
 			val intent = Intent(activity, FeedbackActivity::class.java)
 			startActivityForResult(intent, REQUEST_CODE)
 		}
 		
-		viewDataBinding.onClickPassword = View.OnClickListener  {
+		viewDataBinding.onClickPassword = View.OnClickListener {
 			context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
 		}
 	}

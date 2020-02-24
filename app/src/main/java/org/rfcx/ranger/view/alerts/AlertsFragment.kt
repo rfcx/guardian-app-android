@@ -42,10 +42,12 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 		getEventExtra()
 	}
 	
-	override fun onResume() {
-		super.onResume()
-		alertViewModel.resumed()
-		analytics?.trackScreen(Screen.ALERT)
+	override fun onHiddenChanged(hidden: Boolean) {
+		super.onHiddenChanged(hidden)
+		if (!hidden) {
+			analytics?.trackScreen(Screen.ALERT)
+			alertViewModel.resumed()
+		}
 	}
 	
 	private fun getEventExtra() {
