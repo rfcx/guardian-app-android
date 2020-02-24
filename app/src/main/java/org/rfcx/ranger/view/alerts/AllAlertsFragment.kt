@@ -64,8 +64,9 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 	}
 	
 	private fun setupSwipeRefresh() {
-		context?.let { alertsSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(it,
-				R.color.colorPrimary))}
+		context?.let {
+			alertsSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(it, R.color.colorPrimary))
+		}
 		alertsSwipeRefresh.setOnRefreshListener {
 			allAlertsViewModel.refresh()
 		}

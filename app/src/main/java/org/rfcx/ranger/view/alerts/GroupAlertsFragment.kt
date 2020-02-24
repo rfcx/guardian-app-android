@@ -4,22 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_group_alerts.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alerts.guardian.GuardianDetailActivity
 import org.rfcx.ranger.view.alerts.adapter.GroupByGuardianAdapter
 import org.rfcx.ranger.view.base.BaseFragment
 
-class GroupAlertsFragment : BaseFragment() {
+class GroupAlertsFragment : BaseFragment(), OnItemClickListener {
 	
 	private val viewModel: GroupAlertsViewModel by viewModel()
-	private val groupByGuardianAdapter by lazy { GroupByGuardianAdapter() }
+	private val groupByGuardianAdapter by lazy { GroupByGuardianAdapter(this) }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_group_alerts, container, false)
@@ -27,31 +27,24 @@ class GroupAlertsFragment : BaseFragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		
+		setupSwipeRefresh()
 		groupAlertsRecyclerView.apply {
 			val alertsLayoutManager = LinearLayoutManager(context)
 			layoutManager = alertsLayoutManager
 			adapter = groupByGuardianAdapter
 		}
 		
-		viewModel.status.observe(this, Observer { it ->
+		viewModel.groups.observe(this, Observer { it ->
 			it.success({ items ->
-				loadingProgress.visibility = View.INVISIBLE
+				swipeRefresh.isRefreshing = false
 				groupByGuardianAdapter.items = items
-				
 			}, {
-				loadingProgress.visibility = View.INVISIBLE
+				swipeRefresh.isRefreshing = false
 				context.handleError(it)
 			}, {
-				loadingProgress.visibility = View.VISIBLE
+				swipeRefresh.isRefreshing = !viewModel.isRefreshing
 			})
 		})
-		
-		groupByGuardianAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(eventsList: List<Event>, name: String) {
-				context?.let { GuardianDetailActivity.startActivity(it, name, eventsList.isNotEmpty()) }
-			}
-		}
 	}
 	
 	override fun onResume() {
@@ -59,6 +52,19 @@ class GroupAlertsFragment : BaseFragment() {
 		groupByGuardianAdapter.notifyDataSetChanged()
 	}
 	
+	override fun onItemClick(eventGroup: EventGroup) {
+		context?.let { GuardianDetailActivity.startActivity(it,
+				eventGroup.guardianName, eventGroup.events > 0) }
+	}
+	
+	private fun setupSwipeRefresh() {
+		context?.let {
+			swipeRefresh.setColorSchemeColors(ContextCompat.getColor(it, R.color.colorPrimary))
+		}
+		swipeRefresh.setOnRefreshListener {
+			viewModel.refresh()
+		}
+	}
 	companion object {
 		const val tag = "GroupAlertsFragment"
 		fun newInstance(): GroupAlertsFragment {
@@ -68,5 +74,5 @@ class GroupAlertsFragment : BaseFragment() {
 }
 
 interface OnItemClickListener {
-	fun onItemClick(eventsList: List<Event>, name: String)
+	fun onItemClick(eventGroup: EventGroup)
 }
