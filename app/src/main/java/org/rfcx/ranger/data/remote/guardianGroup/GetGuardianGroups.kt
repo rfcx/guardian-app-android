@@ -41,7 +41,9 @@ class GetGuardianGroups(private val eventRepository: GuardianGroupRepository,
 				siteGuardianDb.saveGuardianGroups(t)
 				
 				// cache endpoint
-				cachedEndpointDb.updateCachedEndpoint(endpoint)
+				if (t.isNotEmpty()) {
+					cachedEndpointDb.updateCachedEndpoint(endpoint)
+				}
 				
 				callback.onSuccess(t)
 			}

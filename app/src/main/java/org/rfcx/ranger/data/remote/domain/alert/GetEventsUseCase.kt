@@ -73,7 +73,7 @@ class GetEventsUseCase(private val eventRepository: EventRepository,
 				}
 				
 				// cache endpoint
-				if (isStarting) {
+				if (isStarting && t.events != null && t.events!!.isNotEmpty()) {
 					Log.d("GetEventsUseCase", "$endpoint -> cached endpoint!")
 					cachedEndpointDb.updateCachedEndpoint(endpoint)
 				}

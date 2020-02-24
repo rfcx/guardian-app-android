@@ -21,7 +21,6 @@ import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityListener
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
-import org.rfcx.ranger.view.alert.EventState
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.GuardianGroupActivity
 import org.rfcx.ranger.view.report.ReportDetailActivity
@@ -50,6 +49,15 @@ class StatusFragment : BaseFragment(), StatusFragmentListener, AlertListener, Ma
 		analytics?.trackScreen(Screen.STATUS)
 		statusViewModel.resumed()
 		statusAdapter.update()
+	}
+	
+	override fun onHiddenChanged(hidden: Boolean) {
+		super.onHiddenChanged(hidden)
+		if (!hidden) {
+			analytics?.trackScreen(Screen.STATUS)
+			statusViewModel.resumed()
+			statusAdapter.update()
+		}
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

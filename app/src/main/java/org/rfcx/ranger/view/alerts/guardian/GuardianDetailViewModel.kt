@@ -22,8 +22,7 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 	
 	private val eventObserve = Observer<List<Event>> {
 		if (it.isNotEmpty()) {
-			val cacheEvents = eventDb.getEvents()
-			handleEvents(events = cacheEvents)
+			handleEvents(events = it)
 		}
 	}
 	
@@ -45,6 +44,7 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 				eventsMap[event.value]?.add(event)
 			}
 		}
+		
 		val eventItems = eventsMap.mapTo(arrayListOf(), {
 			val read = it.value.fold(0) { acc, event ->
 				val state = eventDb.getEventState(event.id)
@@ -56,7 +56,6 @@ class GuardianViewModel(private val eventDb: EventDb) : ViewModel() {
 		
 		_eventGroups.value = Result.Success(eventItems)
 	}
-	
 }
 
 data class EventGroupItem(val value: String, val displayName: String, val unReviewedCount: Int)

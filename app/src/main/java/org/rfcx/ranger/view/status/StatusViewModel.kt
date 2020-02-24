@@ -77,8 +77,9 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 		}
 	}
 	
-	private val eventObserve = Observer<List<Event>> { events ->
-		if (events.isNotEmpty()) {
+	private val eventObserve = Observer<List<Event>> { it ->
+		if (it.isNotEmpty()) {
+			val events = eventDb.getEvents()
 			updateRecentAlerts(events)
 		}
 	}
@@ -195,7 +196,6 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun fetchJobSyncing() {
-		
 		reportWorkInfoLiveData = ReportSyncWorker.workInfos()
 		reportWorkInfoLiveData.observeForever(workInfoObserve)
 		
@@ -225,8 +225,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			}
 			
 			_alertsList.replace(eventItem) { it2-> it2.event.id == newEvent.id }
+			updateWeeklyStat()
 			_alertItems.value = _alertsList
-			
 		} ?: run {
 			_alertItems.value = _alertsList
 		}
@@ -266,6 +266,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	fun resumed() {
 		ImageUploadWorker.enqueue()
+		updateWeeklyStat()
 		
 		if (locationDb.unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
@@ -319,8 +320,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 				newItemsList.add(event.toAlertItem())
 			}
 			_alertsList = newItemsList
-			_alertItems.value = newItemsList
 		}
+		_alertItems.value = newItemsList
 	}
 	
 	private fun Event.toAlertItem(): StatusAdapter.AlertItem {

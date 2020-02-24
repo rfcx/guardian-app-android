@@ -24,6 +24,7 @@
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_alert"
 		app:iconTintColor="@color/colorPrimary"
+		app:showBadge="true"
 		app:title="@string/menu_alert"
 		app:titleColorSelected="@color/colorPrimary" />
 	

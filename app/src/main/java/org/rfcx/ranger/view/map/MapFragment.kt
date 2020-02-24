@@ -92,7 +92,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onResume() {
 		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
-		analytics?.trackScreen(Screen.MAP)
+	}
+	
+	override fun onHiddenChanged(hidden: Boolean) {
+		super.onHiddenChanged(hidden)
+		if (!hidden) {
+			analytics?.trackScreen(Screen.MAP)
+		}
 	}
 	
 	override fun onPause() {
