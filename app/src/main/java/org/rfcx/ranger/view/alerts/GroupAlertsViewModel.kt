@@ -89,14 +89,14 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 		mainGroups.forEach { guid ->
 			val eventsOfGuardian = events.filter { it.guardianId == guid }
 			val shortName = eventsOfGuardian.first { it.guardianId == guid }.guardianName
-			
 			var unreadCount = 0
 			if (eventsOfGuardian.isNotEmpty()) {
 				val read = eventsOfGuardian.fold(0) { acc, event ->
 					val state = eventDb.getEventState(event.id)
-					if (state == ReviewEventFactory.confirmEvent || state == ReviewEventFactory.rejectEvent) acc + 1 else acc
+					if (state == ReviewEventFactory.confirmEvent ||
+							state == ReviewEventFactory.rejectEvent) acc + 1 else acc
 				}
-				unreadCount = events.size - read
+				unreadCount = eventsOfGuardian.size - read
 			}
 			groupAlerts.add(EventGroup(eventsOfGuardian.size, guid, shortName, unreadCount))
 		}
