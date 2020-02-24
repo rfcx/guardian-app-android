@@ -332,6 +332,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		mainViewModel.isLocationTrackingOn.observe(this, Observer {
 			if (it) enableLocationTracking()
 		})
+		
+		mainViewModel.alertCount.observe(this, Observer {
+			menuAlert.badgeNumber = it
+		})
 	}
 	
 	private fun observeEventFromNotification() {

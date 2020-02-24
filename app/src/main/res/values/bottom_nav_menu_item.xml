@@ -8,6 +8,7 @@
 		<attr name="menuSelected" format="boolean" />
 		<attr name="titleColor" format="reference" />
 		<attr name="titleColorSelected" format="reference" />
+		<attr name="showBadge" format="boolean" />
 	</declare-styleable>
 	
 	<!-- Bottom navigation widget -->

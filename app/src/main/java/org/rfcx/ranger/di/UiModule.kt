@@ -28,7 +28,7 @@ object UiModule {
 	
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
-		viewModel { MainActivityViewModel(get(), get()) }
+		viewModel { MainActivityViewModel(get(), get(), get()) }
 	}
 	
 	val mapModule = module {
