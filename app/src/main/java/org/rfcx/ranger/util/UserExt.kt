@@ -88,24 +88,6 @@ fun Context?.getUserEmail(): String {
 	return userID
 }
 
-fun Context?.saveUserProfile(): String {
-	var userProfile = ""
-	val token = this?.getTokenID()
-	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
-	try {
-		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
-		userProfile = untrusted.body["picture"] as String
-	} catch (e: Exception) {
-		e.printStackTrace()
-		Crashlytics.logException(e)
-	}
-	
-	val preferences = this?.let { Preferences.getInstance(it) }
-	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
-	
-	return userProfile
-}
-
 fun Context?.saveUserLoginWith(): String {
 	var loginWith = ""
 	val token = this?.getTokenID()

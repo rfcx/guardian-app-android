@@ -19,6 +19,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.map.ImageState
+import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT
 import org.rfcx.ranger.view.status.adapter.StatusAdapter.StatusItemBase.Companion.ITEM_ALERT_EMPTY
@@ -304,6 +305,8 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		override fun getViewType(): Int = ITEM_PROFILE
 		
 		fun getProfileName(): String = nickname.trim().capitalize()
+		fun isProfileImageVisibility(context: Context): Boolean = Preferences.getInstance(context).getString(Preferences.LOGIN_WITH) == ProfileFragment.LOGIN_WITH_EMAIL
+		
 	}
 	
 	data class SyncInfoItem(val syncInfo: SyncInfo) : StatusItemBase {

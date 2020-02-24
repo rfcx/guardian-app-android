@@ -12,7 +12,7 @@
 			android:id="@+id/userProfileImageView"
 			android:layout_width="@dimen/profile_photo_size"
 			android:layout_height="@dimen/profile_photo_size"
-			android:visibility="gone"
+			android:visibility="@{profile.isProfileImageVisibility(context) ? view.VISIBLE : view.GONE}"
 			android:contentDescription="@string/app_name"
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_normal"
@@ -124,5 +124,10 @@
 		<variable
 			name="view"
 			type="android.view.View" />
+		
+		<variable
+			name="context"
+			type="android.content.Context"/>
+		
 	</data>
 </layout>
