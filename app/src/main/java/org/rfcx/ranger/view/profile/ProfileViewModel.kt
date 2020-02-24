@@ -60,13 +60,18 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun onReceivingByEmail(enable: Boolean) {
 		if (profileData.hasGuardianGroup()) {
-			profileData.updateReceivingNotificationByEmail(enable)
-			notificationReceivingByEmail.value = enable
 			// call api
 			if (enable) {
-				onSubscribe()
+				if(!profileData.getReceiveNotificationByEmail()){
+					onSubscribe()
+					
+					profileData.updateReceivingNotificationByEmail(enable)
+					notificationReceivingByEmail.value = enable
+				}
 			} else {
 				onUnsubscribe()
+				profileData.updateReceivingNotificationByEmail(enable)
+				notificationReceivingByEmail.value = enable
 			}
 		} else {
 			notificationReceivingByEmail.value = false
@@ -82,7 +87,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				}
 				
 				override fun onError(e: Throwable) {
-					Log.d("onUnsubscribe", "$e")
 				}
 			}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 		} else {
@@ -93,11 +97,13 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	private fun onSubscribe() {
 		subscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 			override fun onSuccess(t: SubscribeResponse) {
-				Log.d("onSubscribe", "${t.success}")
 			}
 
 			override fun onError(e: Throwable) {
-				Log.d("onSubscribe", "$e")
+				profileData.updateReceivingNotificationByEmail(false)
+				notificationReceivingByEmail.value = false
+				Toast.makeText(context, context.getString(R.string.error_common), Toast.LENGTH_SHORT).show()
+			
 			}
 		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 	}
@@ -105,11 +111,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	private fun onUnsubscribe() {
 		unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 			override fun onSuccess(t: SubscribeResponse) {
-				Log.d("onUnsubscribe", "${t.success}")
 			}
 			
 			override fun onError(e: Throwable) {
-				Log.d("onUnsubscribe", "$e")
+				profileData.updateReceivingNotificationByEmail(true)
+				notificationReceivingByEmail.value = true
+				Toast.makeText(context, context.getString(R.string.error_common), Toast.LENGTH_SHORT).show()
 			}
 		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 	}

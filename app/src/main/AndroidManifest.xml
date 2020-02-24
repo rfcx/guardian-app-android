@@ -41,17 +41,16 @@
 		
 		<activity
 			android:name=".view.tutorial.TutorialActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme.ForTutorial" />
-		<activity
-			android:name=".view.profile.PasswordChangeActivity"
+			android:theme="@style/AppTheme.ForTutorial"
+			android:screenOrientation="portrait" />
+		<activity android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.alerts.guardianListDetail.alertDetailByType.AlertDetailByTypeActivity"
-			android:screenOrientation="portrait" />
+			android:name=".view.alerts.guardian.alertType.AlertValueActivity"
+			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait" />
+			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.report.ReportDetailActivity"
 			android:screenOrientation="portrait" />
@@ -59,8 +58,8 @@
 			android:name=".view.profile.GuardianGroupActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.alerts.guardianListDetail.GuardianListDetailActivity"
-			android:screenOrientation="portrait" />
+			android:name=".view.alerts.guardian.GuardianDetailActivity"
+			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
@@ -115,7 +114,9 @@
 			android:value="false" />
 		<meta-data
 			android:name="preloaded_fonts"
-			android:resource="@array/preloaded_fonts" /> <!-- Required for google maps: https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
+			android:resource="@array/preloaded_fonts" />
+		
+		<!-- Required for google maps: https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
 		<uses-library
 			android:name="org.apache.http.legacy"
 			android:required="false" />
