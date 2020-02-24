@@ -7,6 +7,7 @@ import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserProfile
 import org.rfcx.ranger.util.saveUserProfile
 import org.rfcx.ranger.util.setImageProfile
+import org.rfcx.ranger.view.profile.ProfileFragment.Companion.LOGIN_WITH_EMAIL
 import org.rfcx.ranger.view.status.StatusFragmentListener
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 
@@ -19,7 +20,7 @@ class ProfileView(private val binding: ItemHeaderProfileBinding, private val lis
 		}
 		
 		val loginWith = binding.root.context.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "auth0") {
+		if (loginWith == LOGIN_WITH_EMAIL) {
 			binding.userProfileImageView.visibility = View.VISIBLE
 			
 			if (binding.root.context.getUserProfile() == "null") {

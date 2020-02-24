@@ -62,7 +62,7 @@ class ProfileFragment : BaseFragment() {
 		setOnClickButton()
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "auth0") {
+		if (loginWith == LOGIN_WITH_EMAIL) {
 			changePasswordTextView.visibility = View.VISIBLE
 			userProfileImageView.visibility = View.VISIBLE
 		} else {
@@ -148,5 +148,6 @@ class ProfileFragment : BaseFragment() {
 		const val tag = "ProfileFragment"
 		const val RESULT_CODE = 12
 		const val REQUEST_CODE = 11
+		const val LOGIN_WITH_EMAIL = "auth0"
 	}
 }
