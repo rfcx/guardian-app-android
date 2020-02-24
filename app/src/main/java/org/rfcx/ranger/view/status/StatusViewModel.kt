@@ -225,8 +225,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			}
 			
 			_alertsList.replace(eventItem) { it2-> it2.event.id == newEvent.id }
+			updateWeeklyStat()
 			_alertItems.value = _alertsList
-			
 		} ?: run {
 			_alertItems.value = _alertsList
 		}
