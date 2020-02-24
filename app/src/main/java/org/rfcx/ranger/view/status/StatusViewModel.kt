@@ -266,6 +266,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	
 	fun resumed() {
 		ImageUploadWorker.enqueue()
+		updateWeeklyStat()
 		
 		if (locationDb.unsentCount() > 0) {
 			LocationSyncWorker.enqueue()
