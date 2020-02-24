@@ -22,11 +22,6 @@ class ProfileView(private val binding: ItemHeaderProfileBinding, private val lis
 		val loginWith = binding.root.context.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
 		if (loginWith == LOGIN_WITH_EMAIL) {
 			binding.userProfileImageView.visibility = View.VISIBLE
-			
-			if (binding.root.context.getUserProfile() == "null") {
-				binding.root.context.saveUserProfile()
-			}
-			
 			binding.userProfileImageView.setImageProfile(binding.root.context.getUserProfile())
 			
 		} else {
