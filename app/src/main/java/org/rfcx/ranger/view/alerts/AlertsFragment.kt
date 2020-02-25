@@ -42,6 +42,11 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 		getEventExtra()
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		alertViewModel.resumed()
+	}
+	
 	override fun onHiddenChanged(hidden: Boolean) {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
