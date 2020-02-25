@@ -12,7 +12,7 @@ fun ImageView.setPath(path: String) {
     setImageBitmap(bitmap)
 }
 
-fun ImageView.setImageProfile(url: String) {
+fun ImageView.setImageProfile(url: String?) {
     Glide.with(this.context).load(url)
             .placeholder(R.drawable.bg_circle_grey)
             .apply(RequestOptions.circleCropTransform())

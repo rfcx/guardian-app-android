@@ -112,9 +112,9 @@ fun Context?.updateUserProfile(userProfile: String) {
 	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
 }
 
-fun Context?.getUserProfile(): String {
+fun Context?.getUserProfile(): String? {
 	val preferences = this?.let { Preferences.getInstance(it) }
-	return preferences?.getString(Preferences.IMAGE_PROFILE).toString()
+	return preferences?.getString(Preferences.IMAGE_PROFILE)
 }
 
 fun Context?.getNameEmail(): String {
