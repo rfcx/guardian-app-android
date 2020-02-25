@@ -61,6 +61,7 @@ class AlertByValueAdapter(val listener: AlertClickListener, val seeOlder: () -> 
 		private val iconAlert = itemView.ivAlertIcon
 		private val tvReviewed = itemView.reviewedTextView
 		private val tvNameReviewer = itemView.nameReviewerTextView
+		private val placeholderIcon = itemView.placeholderIconImageView
 		private val tvAgreeValue = itemView.agreeTextView
 		private val tvRejectValue = itemView.rejectTextView
 		private val ivAgree = itemView.agreeImageView
@@ -77,8 +78,8 @@ class AlertByValueAdapter(val listener: AlertClickListener, val seeOlder: () -> 
 			tvReviewed.text = context.getString(if (item.event.firstNameReviewer.isNotBlank()
 					|| item.state !== EventItem.State.NONE) R.string.last_reviewed_by else R.string.not_have_review)
 			tvNameReviewer.text = item.getReviewerName(context)
-			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank()
-					|| item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			tvNameReviewer.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
+			placeholderIcon.visibility = if (item.event.firstNameReviewer.isNotBlank() || item.state !== EventItem.State.NONE) View.VISIBLE else View.INVISIBLE
 			linearLayout.visibility = View.INVISIBLE
 			
 			when (item.state) {
