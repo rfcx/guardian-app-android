@@ -50,6 +50,8 @@
     <string name="profile_onduty">กำลังปฏิบัติหน้าที่</string>
     <string name="profile_nottracking">ปิดการติดตามตำแหน่ง</string>
 	<string name="error_no_guardian_group_set">ตั้้งค่ากลุ่มในเมนูตั้งค่า</string>
+    <string name="please_set_guardian_group">กรุณาตั้งค่ากลุ่ม Guardian</string>
+    <string name="sent_to">ส่งไปยัง</string>
 
     <!-- report -->
     <string name="report_title">รายงาน</string>
@@ -207,7 +209,8 @@
     <string name="other">อื่นๆ</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">รับการแจ้งเตือน</string>
+    <string name="profile_receive_noti_label">แจ้งเตือนผ่านแอป</string>
+    <string name="profile_receive_noti_by_email">แจ้งเตือนผ่านอีเมล</string>
     <string name="profile_sign_out_label">ออกจากระบบ</string>
     <string name="profile_aditional_label">เพิ่มเติม</string>
     <string name="profile_app_version_label">เวอร์ชั่น</string>

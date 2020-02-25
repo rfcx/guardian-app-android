@@ -51,6 +51,7 @@
 	<string name="profile_nottracking">Not tracking</string>
 	<string name="error_no_guardian_group_set">Set guardian group in Settings</string>
 	<string name="please_set_guardian_group">Please set guardian group</string>
+	<string name="sent_to">sent to</string>
 	
 	<!-- report -->
 	<string name="report_title">Report</string>
