@@ -230,6 +230,9 @@
     <string name="password_changed_successfully">การเปลี่ยนรหัสผ่านสำเร็จ</string>
     <string name="something_is_wrong">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     
+    <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
+    <string name="edit_profile">แก้ไขโปรไฟล์</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
 	<string name="photos">ภาพถ่าย</string>

@@ -231,6 +231,9 @@
     <string name="password_changed_successfully">Password telah berhasil diubah.</string>
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
     
+    <string name="change_profile_photo">Ganti Foto Profil</string>
+    <string name="edit_profile">Sunting profil</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
 	<string name="audio_notes">Catatan audio</string>

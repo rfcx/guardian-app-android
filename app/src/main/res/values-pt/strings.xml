@@ -231,6 +231,9 @@
     <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
     
+    <string name="change_profile_photo">Alterar foto do perfil</string>
+    <string name="edit_profile">Editar Perfil</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">Lista Grupo Guardião</string>
 	<string name="audio_notes">Notas de áudio</string>
