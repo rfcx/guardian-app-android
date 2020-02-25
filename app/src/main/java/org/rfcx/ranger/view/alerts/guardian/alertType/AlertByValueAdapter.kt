@@ -14,7 +14,7 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
 import org.rfcx.ranger.view.alerts.adapter.AlertsAdapter
 
-class AlertByValueAdapter(val listener: AlertClickListener, val seeOlder: () -> Unit) : ListAdapter<BaseItem,
+class AlertByValueAdapter(val listener: AlertClickListener) : ListAdapter<BaseItem,
 		RecyclerView.ViewHolder>(AlertsAdapter.AlertsDiffUtil()) {
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -120,27 +120,18 @@ class AlertByValueAdapter(val listener: AlertClickListener, val seeOlder: () -> 
 	}
 	
 	inner class LoadMoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		private val seeOlderTextView = itemView.seeOlderTextView
 		private val progressBar = itemView.progressBar
 		
 		fun bind(item: LoadMoreItem) {
-			
-			seeOlderTextView.setOnClickListener {
-				seeOlder()
-			}
-			
 			when (item) {
 				LoadMoreItem.LOADING -> {
 					progressBar.visibility = View.VISIBLE
-					seeOlderTextView.visibility = View.GONE
 				}
 				LoadMoreItem.NOT_FOUND -> {
 					progressBar.visibility = View.GONE
-					seeOlderTextView.visibility = View.GONE
 				}
 				LoadMoreItem.DEFAULT -> {
 					progressBar.visibility = View.GONE
-					seeOlderTextView.visibility = View.VISIBLE
 				}
 			}
 		}
