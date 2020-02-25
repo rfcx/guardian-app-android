@@ -50,6 +50,8 @@
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
 	<string name="error_no_guardian_group_set">Definir grupo de guardiões nas configurações</string>
+    <string name="please_set_guardian_group">Por favor grupo set tutor</string>
+    <string name="sent_to">enviar para</string>
 
     <!-- report -->
     <string name="report_title">Relatório</string>
@@ -208,7 +210,8 @@
     <string name="other">outro</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">Receber notificações</string>
+    <string name="profile_receive_noti_label">por notificação push</string>
+    <string name="profile_receive_noti_by_email">por email</string>
     <string name="profile_sign_out_label">Sair</string>
     <string name="profile_aditional_label">Adicional</string>
     <string name="profile_app_version_label">Versão do aplicativo</string>

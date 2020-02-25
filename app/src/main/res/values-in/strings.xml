@@ -50,6 +50,8 @@
     <string name="profile_onduty">Sedang mengerjakan</string>
     <string name="profile_nottracking">Tidak melacak</string>
 	<string name="error_no_guardian_group_set">Atur grup Guardian di Pengaturan</string>
+    <string name="please_set_guardian_group">Silakan kelompok set wali</string>
+    <string name="sent_to">kirim ke</string>
 
     <!-- report -->
     <string name="report_title">laporan</string>
@@ -208,7 +210,8 @@
     <string name="other">lainnya</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">menerima pemberitahuan</string>
+    <string name="profile_receive_noti_label">by pemberitahuan push</string>
+    <string name="profile_receive_noti_by_email">melalui email</string>
     <string name="profile_sign_out_label">Keluar</string>
     <string name="profile_aditional_label">Tambahan</string>
     <string name="profile_app_version_label">versi aplikasi</string>

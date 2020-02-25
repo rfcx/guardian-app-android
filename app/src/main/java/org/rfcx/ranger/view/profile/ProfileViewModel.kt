@@ -33,7 +33,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
 		appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
 		userName.value = profileData.getUserNickname()
-		sendToEmail.value = "sent to ${context.getUserEmail()}"
+		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 	}
 	
 	private fun getSiteName() {
