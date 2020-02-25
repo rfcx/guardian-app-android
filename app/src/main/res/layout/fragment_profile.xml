@@ -358,34 +358,19 @@
 				android:paddingBottom="@dimen/margin_padding_normal"
 				android:text="@string/change_password" />
 			
-			<LinearLayout
-				android:id="@+id/logoutLayout"
+			<TextView
+				android:id="@+id/logoutTextView"
+				style="@style/RangerText.SubTitle"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:onClick="@{() -> viewModel.onLogout()}"
 				android:background="?attr/selectableItemBackground"
-				android:orientation="horizontal">
-				
-				<TextView
-					android:id="@+id/logoutTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingStart="@dimen/margin_padding_normal"
-					android:paddingTop="@dimen/margin_padding_normal"
-					android:paddingEnd="@dimen/margin_padding_small"
-					android:paddingBottom="@dimen/margin_padding_normal"
-					android:text="@string/profile_sign_out_label" />
-				
-				<ProgressBar
-					android:id="@+id/loginProgressBar"
-					android:layout_width="50dp"
-					android:layout_height="50dp"
-					android:layout_gravity="center"
-					android:background="@color/transparent"
-					android:padding="@dimen/margin_padding_small"
-					android:visibility="invisible" />
-			</LinearLayout>
+				android:onClick="@{() -> viewModel.onLogout()}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/profile_sign_out_label" />
+		
 		</LinearLayout>
 	</ScrollView>
 </layout>

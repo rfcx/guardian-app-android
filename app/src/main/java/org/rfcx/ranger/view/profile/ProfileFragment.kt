@@ -73,13 +73,6 @@ class ProfileFragment : BaseFragment() {
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
 		})
-		profileViewModel.logoutState.observe(this, Observer {
-			if (it) {
-				loginProgressBar.visibility = View.VISIBLE
-			} else {
-				loginProgressBar.visibility = View.INVISIBLE
-			}
-		})
 	}
 	
 	private fun setOnClickButton() {

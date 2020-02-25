@@ -26,8 +26,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val userName = MutableLiveData<String>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
-	private val _logoutState = MutableLiveData<Boolean>()
-	val logoutState: LiveData<Boolean> = _logoutState
 	
 	init {
 		getSiteName()
@@ -82,7 +80,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun onLogout() {
-		_logoutState.value = true
 		if(profileData.getReceiveNotificationByEmail()){
 			unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 				override fun onSuccess(t: SubscribeResponse) {
@@ -90,7 +87,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				}
 				
 				override fun onError(e: Throwable) {
-					_logoutState.value = false
 				}
 			}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 		} else {
