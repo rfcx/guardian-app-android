@@ -23,6 +23,8 @@ import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.tutorial.TutorialActivity
+import android.app.ProgressDialog
+import android.os.Handler
 
 class ProfileFragment : BaseFragment() {
 	
@@ -72,6 +74,18 @@ class ProfileFragment : BaseFragment() {
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
+		})
+		
+		val progressDialog = ProgressDialog(context)
+		progressDialog.setMessage("Loading...")
+		progressDialog.setCancelable(false)
+		
+		profileViewModel.logoutState.observe(this, Observer {
+			if (it) {
+				progressDialog.show()
+			} else {
+				progressDialog.dismiss()
+			}
 		})
 	}
 	
