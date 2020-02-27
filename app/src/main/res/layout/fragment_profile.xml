@@ -90,67 +90,51 @@
 			
 			</LinearLayout>
 			
-			<TextView
-				android:id="@+id/locationTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:text="@string/location" />
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="10dp"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:background="@color/grey_light" />
 			
 			<LinearLayout
-				android:id="@+id/locationTrackingLayout"
+				android:id="@+id/guardianGroupLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:orientation="horizontal">
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickGuardingGroup}"
+				android:orientation="vertical"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small">
 				
 				<TextView
-					android:id="@+id/locationTrackingTextView"
+					android:id="@+id/guardianGroupTextView"
 					style="@style/RangerText.SubTitle"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:text="@string/location_tracking_label"
-					android:textSize="@dimen/text_small" />
-				
-				<FrameLayout
-					android:id="@+id/locationTrackingSwitchLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:clickable="true"
-					android:focusable="true"
-					android:onClick="@{onClickLocationTracking}">
-					
-					<androidx.appcompat.widget.SwitchCompat
-						android:id="@+id/locationTrackingSwitch"
-						style="@style/SwitchCompatStyle"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:checked="@{viewModel.locationTracking}"
-						android:clickable="false"
-						android:focusable="false"
-						android:textOff="@string/location_tracking_off_label"
-						android:textOn="@string/location_tracking_on_label"
-						tools:checked="false" />
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/guardian_group_label" />
 				
-				</FrameLayout>
+				<TextView
+					android:id="@+id/siteNameTextView"
+					style="@style/RangerText.SubTitle.Secondary"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@{viewModel.guardianGroup}"
+					tools:text="Osa Conservation" />
 			
 			</LinearLayout>
 			
 			<TextView
 				android:id="@+id/notificationTextView"
 				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_small"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_xsmall"
+				android:paddingBottom="@dimen/margin_padding_xsmall"
 				android:text="@string/notifications"
 				android:textSize="@dimen/text_small" />
 			
@@ -159,7 +143,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:orientation="horizontal">
 				
@@ -200,13 +183,13 @@
 					android:gravity="center"
 					android:orientation="vertical">
 					
-				<TextView
-					android:id="@+id/notificationEmailTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:text="@string/profile_receive_noti_by_email" />
+					<TextView
+						android:id="@+id/notificationEmailTextView"
+						style="@style/RangerText.SubTitle"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:text="@string/profile_receive_noti_by_email" />
 				
 				<TextView
 					android:id="@+id/sendToEmailTextView"
@@ -231,43 +214,68 @@
 					tools:checked="false" />
 			</LinearLayout>
 			
-			<LinearLayout
-				android:id="@+id/guardianGroupLayout"
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="10dp"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:background="@color/grey_light" />
+			
+			<TextView
+				android:id="@+id/locationTextView"
+				style="@style/RangerText.Title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickGuardingGroup}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_small">
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_xsmall"
+				android:text="@string/location" />
+			
+			<LinearLayout
+				android:id="@+id/locationTrackingLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:orientation="horizontal">
 				
 				<TextView
-					android:id="@+id/guardianGroupTextView"
+					android:id="@+id/locationTrackingTextView"
 					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/guardian_group_label" />
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:text="@string/location_tracking_label"
+					android:textSize="@dimen/text_small" />
 				
-				<TextView
-					android:id="@+id/siteNameTextView"
-					style="@style/RangerText.SubTitle.Secondary"
+				<FrameLayout
+					android:id="@+id/locationTrackingSwitchLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@{viewModel.guardianGroup}"
-					tools:text="Osa Conservation" />
+					android:clickable="true"
+					android:focusable="true"
+					android:onClick="@{onClickLocationTracking}">
+					
+					<androidx.appcompat.widget.SwitchCompat
+						android:id="@+id/locationTrackingSwitch"
+						style="@style/SwitchCompatStyle"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:checked="@{viewModel.locationTracking}"
+						android:clickable="false"
+						android:focusable="false"
+						android:textOff="@string/location_tracking_off_label"
+						android:textOn="@string/location_tracking_on_label"
+						tools:checked="false" />
+				
+				</FrameLayout>
 			
 			</LinearLayout>
 			
 			<View
 				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="@dimen/margin_padding_small"
-				android:background="@color/text_secondary" />
+				android:layout_height="10dp"
+				android:background="@color/grey_light" />
 			
 			<TextView
 				android:id="@+id/additionalTextView"
@@ -275,7 +283,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
 				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:text="@string/profile_aditional_label"
@@ -307,6 +315,19 @@
 				tools:text="2.0.0(135)" />
 			
 			<TextView
+				android:id="@+id/appIntroTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickAppIntro}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/app_intro" />
+			
+			<TextView
 				android:id="@+id/feedbackTextView"
 				style="@style/RangerText.SubTitle"
 				android:layout_width="match_parent"
@@ -332,18 +353,24 @@
 				android:paddingBottom="@dimen/margin_padding_normal"
 				android:text="@string/profile_rate_app_label" />
 			
-			<TextView
-				android:id="@+id/appIntroTextView"
-				style="@style/RangerText.SubTitle"
+			<View
 				android:layout_width="match_parent"
+				android:layout_height="10dp"
+				android:background="@color/grey_light" />
+			
+			<TextView
+				android:id="@+id/accountTextView"
+				style="@style/RangerText.Title"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickAppIntro}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/app_intro" />
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_small"
+				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:text="@string/account"
+				android:textAllCaps="true"
+				android:textColor="@color/text_primary"
+				android:textSize="@dimen/text_small" />
 			
 			<TextView
 				android:id="@+id/changePasswordTextView"

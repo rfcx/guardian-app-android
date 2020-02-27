@@ -233,6 +233,7 @@
     <string name="confirm_password_does_not_match">Konfirmasi sandi tidak cocok</string>
     <string name="password_changed_successfully">Password telah berhasil diubah.</string>
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
+    <string name="account">Akun</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>

@@ -233,6 +233,7 @@
     <string name="confirm_password_does_not_match">Confirmar senha não corresponde</string>
     <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
+    <string name="account">Conta</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Lista Grupo Guardião</string>

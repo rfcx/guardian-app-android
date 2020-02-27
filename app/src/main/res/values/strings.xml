@@ -232,6 +232,7 @@
 	<string name="from">From:</string>
 	<string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
 	<string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
+	<string name="account">Account</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>
