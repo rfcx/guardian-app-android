@@ -15,6 +15,7 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -48,11 +49,14 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 			adapter = alertByValueAdapter
 		}
 		
-		viewModel.baseItems.observe(this, Observer {
-			it.success({ items ->
+		viewModel.baseItems.observe(this, Observer { baseItems ->
+			baseItems.success({ items ->
 				val newList = mutableListOf<BaseItem>()
 				items.mapTo(newList, { item -> if (item is EventItem) item.copy() else item })
 				alertByValueAdapter.submitList(newList)
+			}, {
+				context?.handleError(it)
+			}, {
 			})
 		})
 	}

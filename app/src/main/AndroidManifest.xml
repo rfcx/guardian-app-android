@@ -36,7 +36,12 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
-		<activity android:name=".view.tutorial.TutorialActivity"
+		<activity
+			android:name=".view.profile.editprofile.EditProfileActivity"
+			android:screenOrientation="portrait" />
+		
+		<activity
+			android:name=".view.tutorial.TutorialActivity"
 			android:theme="@style/AppTheme.ForTutorial"
 			android:screenOrientation="portrait" />
 		<activity android:name=".view.profile.PasswordChangeActivity"
@@ -49,10 +54,10 @@
 			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.report.ReportDetailActivity"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.alerts.guardian.GuardianDetailActivity"
 			android:screenOrientation="portrait"/>
@@ -60,8 +65,7 @@
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme"/>
-		
+			android:theme="@style/AppTheme" />
 		<activity
 			android:name=".view.login.LoginActivityNew"
 			android:screenOrientation="portrait">
@@ -79,7 +83,6 @@
 			android:name=".service.LocationTrackerService"
 			android:exported="false"
 			android:foregroundServiceType="location" />
-		
 		<service
 			android:name=".service.MessagingService"
 			android:exported="false">

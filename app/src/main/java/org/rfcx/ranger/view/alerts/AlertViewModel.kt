@@ -29,11 +29,7 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	}
 	
 	private fun loadAlerts() {
-		val group = profileData.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
+		val group = profileData.getGuardianGroup() ?: return
 		
 		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC",
 				AllAlertsViewModel.PAGE_LIMITS, 0, group.values)

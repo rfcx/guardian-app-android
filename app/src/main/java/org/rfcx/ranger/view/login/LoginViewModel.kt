@@ -75,6 +75,9 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 							}
 							is Ok -> {
 								_userAuth.postValue(result.value)
+								
+								val preferences = Preferences.getInstance(context)
+								preferences.putString(Preferences.LOGIN_WITH, "email")
 							}
 						}
 					}
@@ -165,9 +168,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 						_redirectPage.postValue(LoginRedirect.SET_USER_NAME)
 					} else {
 						_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
-						
-						val preferences = Preferences.getInstance(context)
-						preferences.putString(Preferences.LOGIN_WITH, "email")
 					}
 				} else {
 					_redirectPage.postValue(LoginRedirect.INVITE_CODE_PAGE)

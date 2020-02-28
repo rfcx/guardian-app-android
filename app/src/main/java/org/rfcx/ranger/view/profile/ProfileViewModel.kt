@@ -37,9 +37,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 	}
 	
+	fun resumed(){
+		getSiteName()
+	}
+	
 	private fun getSiteName() {
 		val site = Preferences.getInstance(context).getString(Preferences.SITE_FULLNAME)
-		
 		if (site.isNullOrEmpty()) {
 			userSite.value = profileData.getSiteName()
 		} else {

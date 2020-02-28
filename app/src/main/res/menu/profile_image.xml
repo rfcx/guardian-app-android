@@ -4,8 +4,8 @@
 	xmlns:tools="http://schemas.android.com/tools">
 	
 	<item
-		android:id="@+id/passwordChangeView"
-		android:icon="@drawable/ic_confirm_event_gray"
+		android:id="@+id/changeProfilePhotoView"
+		android:icon="@drawable/ic_check_green"
 		app:showAsAction="ifRoom"
 		tools:ignore="MenuTitle" />
 </menu>

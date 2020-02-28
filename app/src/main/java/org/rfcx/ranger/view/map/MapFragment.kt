@@ -54,7 +54,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
-		if (isOnAirplaneMode && isSafe()) {
+		if (isOnAirplaneMode) {
 			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
 		} else {
 			checkThenAccquireLocation()
@@ -98,6 +98,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
 			analytics?.trackScreen(Screen.MAP)
+			checkThenAccquireLocation()
 		}
 	}
 	
@@ -131,8 +132,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun checkThenAccquireLocation() {
-		if (!isSafe()) return
-		
 		if (context?.isOnAirplaneMode()!!) {
 			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
 		} else {

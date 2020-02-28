@@ -35,6 +35,10 @@
 		<variable
 			name="onClickAppIntro"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickProfilePhoto"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -50,44 +54,70 @@
 			android:paddingTop="@dimen/margin_padding_large"
 			android:paddingBottom="@dimen/fab_height_half">
 			
-			<TextView
-				android:id="@+id/userNameTextView"
-				style="@style/RangerText.Headline"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:text="@{viewModel.userName}"
-				tools:text="Example" />
-			
 			<LinearLayout
-				android:id="@+id/userLocationLayout"
-				android:layout_width="wrap_content"
+				android:id="@+id/userProfileLayout"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xsmall"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_xsmall"
-				android:gravity="center_vertical"
-				tools:ignore="UseCompoundDrawables">
+				android:orientation="horizontal">
 				
 				<ImageView
-					android:id="@+id/userLocationImageView"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:id="@+id/userProfileImageView"
+					android:layout_width="@dimen/profile_photo_size"
+					android:layout_height="@dimen/profile_photo_size"
+					android:onClick="@{onClickProfilePhoto}"
+					android:visibility="gone"
+					android:src="@drawable/bg_circle_grey"
 					android:contentDescription="@string/app_name"
-					android:src="@drawable/ic_point" />
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginTop="@dimen/margin_padding_normal"
+					android:layout_marginBottom="@dimen/margin_padding_normal" />
 				
-				<TextView
-					android:id="@+id/userLocationTextView"
-					style="@style/RangerText.Label.Secondary"
-					android:layout_width="wrap_content"
+				<LinearLayout
+					android:id="@+id/userProfileTextLayout"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:paddingStart="@dimen/margin_padding_small"
-					android:text="@{viewModel.userSite}"
-					android:textColor="@color/text_secondary"
-					tools:text="Tembe" />
-			
+					android:orientation="vertical">
+					
+					<TextView
+						android:id="@+id/userNameTextView"
+						style="@style/RangerText.Headline"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="@dimen/margin_padding_normal"
+						android:layout_marginTop="@dimen/margin_padding_normal"
+						android:text="@{viewModel.userName}"
+						tools:text="Example" />
+					
+					<LinearLayout
+						android:id="@+id/userLocationLayout"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="@dimen/margin_padding_normal"
+						android:layout_marginTop="@dimen/margin_padding_xsmall"
+						android:layout_marginEnd="@dimen/margin_padding_small"
+						android:layout_marginBottom="@dimen/margin_padding_xsmall"
+						android:gravity="center_vertical"
+						tools:ignore="UseCompoundDrawables">
+						
+						<ImageView
+							android:id="@+id/userLocationImageView"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:contentDescription="@string/app_name"
+							android:src="@drawable/ic_point" />
+						
+						<TextView
+							android:id="@+id/userLocationTextView"
+							style="@style/RangerText.Label.Secondary"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:paddingStart="@dimen/margin_padding_small"
+							android:text="@{viewModel.userSite}"
+							android:textColor="@color/text_secondary"
+							tools:text="Tembe" />
+					
+					</LinearLayout>
+				</LinearLayout>
 			</LinearLayout>
 			
 			<TextView
@@ -96,7 +126,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_xlarge"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
 				android:text="@string/location" />
 			
@@ -356,7 +386,8 @@
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_small"
 				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/change_password" />
+				android:text="@string/change_password"
+				android:visibility="gone" />
 			
 			<TextView
 				android:id="@+id/logoutTextView"
