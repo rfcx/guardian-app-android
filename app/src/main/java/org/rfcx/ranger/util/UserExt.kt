@@ -53,11 +53,15 @@ fun Context?.logout() {
 		Preferences.getInstance(this).clear()
 		LocationTracking.set(this, false)
 		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
-			realm.executeTransaction {
-				it.deleteAll()
-			}
+			realm.executeTransactionAsync({ bgRealm ->
+				bgRealm.deleteAll()
+			}, {
+				realm.close()
+				LoginActivityNew.startActivity(this)
+			}, {
+				realm.close()
+			})
 		}
-		LoginActivityNew.startActivity(this)
 	}
 }
 
