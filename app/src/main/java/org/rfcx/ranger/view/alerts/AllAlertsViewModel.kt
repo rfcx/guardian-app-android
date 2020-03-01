@@ -1,16 +1,13 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.*
 import io.realm.RealmResults
-import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
@@ -41,11 +38,9 @@ class AllAlertsViewModel(private val context: Context,
 	var isLoadMore = false
 	
 	private val eventObserve = Observer<List<Event>> {
-		if (it.isNotEmpty()) {
-			val cacheEvents = eventDb.getEvents()
-			this.currentOffset = cacheEvents.size
-			handleAlerts(events = cacheEvents)
-		}
+		val cacheEvents = eventDb.getEvents()
+		this.currentOffset = cacheEvents.size
+		handleAlerts(events = cacheEvents)
 	}
 	
 	init {
@@ -55,12 +50,16 @@ class AllAlertsViewModel(private val context: Context,
 		fetchEvents()
 	}
 	
-	fun refresh() {
+	private fun clearDate() {
 		currentOffset = 0
 		totalItemCount = 0
 		isLoadMore = false
 		_alertsList = listOf()
 		items.clear()
+	}
+	
+	fun refresh() {
+		clearDate()
 		loadEvents()
 	}
 	

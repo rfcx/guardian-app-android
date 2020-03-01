@@ -48,7 +48,7 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 	private var profile: ProfileItem? = null
 	private var stat: UserStatusItem? = null
 	private var reports: ArrayList<ReportItem>? = arrayListOf()
-	private var alerts: ArrayList<AlertItem>? = arrayListOf()
+	private var alerts: ArrayList<AlertItem>? = null
 	private var syncInfo: SyncInfoItem? = null
 	
 	fun updateHeader(header: ProfileItem) {
@@ -71,8 +71,8 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 		update()
 	}
 	
-	fun updateAlertList(newLists: List<AlertItem>) {
-		if (newLists.isNotEmpty()) {
+	fun updateAlertList(newLists: List<AlertItem>?) {
+		if (newLists != null) {
 			alerts = arrayListOf()
 			alerts?.addAll(newLists)
 		} else {
@@ -107,22 +107,21 @@ class StatusAdapter(private val statusTitle: String?, private val alertTitle: St
 			newList.add(TitleItem(it))
 		}
 		
-		if (alerts != null && alerts!!.isEmpty()) {
-			when {
-				context?.getGuardianGroup() == null -> // not have group
-					newList.add(AlertSetGuardianGroupItem())
-				context.getGuardianGroup() !== null ->
-					newList.add(AlertLoading())
-				alerts!!.size == 0 -> // have group but not have alert
-					newList.add(AlertEmpty())
-			}
-		}
 		
-		if (alerts != null && alerts!!.isNotEmpty()) {
-			newList.addAll(alerts!!)
-			
-			seeMoreButton?.let {
-				newList.add(SeeMoreItem(it))
+		if (context?.getGuardianGroup() == null) {
+			newList.add(AlertSetGuardianGroupItem()) // have no group
+		} else {
+			if (alerts != null) {
+				if (alerts!!.isNotEmpty()) {
+					newList.addAll(alerts!!)
+					seeMoreButton?.let {
+						newList.add(SeeMoreItem(it))
+					}
+				} else {
+					newList.add(AlertEmpty()) //  alert is empty
+				}
+			} else {
+				newList.add(AlertLoading()) //  alert is loading
 			}
 		}
 		
