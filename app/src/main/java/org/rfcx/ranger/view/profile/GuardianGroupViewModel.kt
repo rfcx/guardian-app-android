@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.data.local.CachedEndpointDb
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
@@ -16,6 +17,7 @@ import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.entity.event.GuardianGroupFactory
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getGuardianGroup
 import org.rfcx.ranger.util.getResultError
@@ -23,7 +25,8 @@ import org.rfcx.ranger.util.getResultError
 class GuardianGroupViewModel(private val context: Context, private val getGuardianGroups: GetGuardianGroups,
                              private val eventDb: EventDb,
                              private val subscribeUseCase: SubscribeUseCase,
-                             private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
+                             private val unsubscribeUseCase: UnsubscribeUseCase,
+                             private val cachedEndpointDb: CachedEndpointDb) : ViewModel() {
 	
 	private val _items = MutableLiveData<Result<List<GuardianGroup>>>()
 	val items: LiveData<Result<List<GuardianGroup>>> get() = _items
@@ -57,6 +60,7 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 				}
 				
 				override fun onError(e: Throwable) {
+					// TODO what happens on failure?
 				}
 			}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 		}
@@ -75,8 +79,26 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 	/**
 	 * remove all events when select guardian group
 	 */
-	fun removeAllEvent() {
-		eventDb.deleteAllEvents()
+	fun changeGuardianGroup(guardianGroup: GuardianGroup, callback: () -> Unit) {
+		eventDb.deleteAllEvents {
+			val preferences = Preferences.getInstance(context)
+			preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
+			
+			// clear cache endpoint
+			cachedEndpointDb.clearCachedEndpoint("guardians/group/")
+			cachedEndpointDb.clearCachedEndpoint("v2/events/?guardian_groups[]=")
+			
+			// sub email
+			subscribeByEmail(guardianGroup.shortname)
+			
+			// sub&unsub email?
+			CloudMessaging.unsubscribe(context) {
+				CloudMessaging.setGroup(context, guardianGroup.shortname)
+				CloudMessaging.subscribeIfRequired(context) {
+					callback()
+				}
+			}
+		}
 	}
 }
 

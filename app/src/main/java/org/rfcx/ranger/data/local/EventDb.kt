@@ -121,6 +121,22 @@ class EventDb(val realm: Realm) {
 		}
 	}
 	
+	fun deleteAllEvents(callback: (Boolean) -> Unit) {
+		realm.use { realm ->
+			realm.executeTransactionAsync({ bgRealm ->
+				bgRealm.delete(Event::class.java)
+			}, {
+				// success
+				callback(true)
+				realm.close()
+			}, {
+				// fail
+				callback(false)
+				realm.close()
+			})
+		}
+	}
+	
 	fun deleteAllEvents() {
 		realm.use { it ->
 			it.executeTransaction {

@@ -57,8 +57,11 @@ class GetEventsUseCase(private val eventRepository: EventRepository,
 					if (isStarting) {
 						val eventCached = eventDb.getEvents()
 						val r = events.filter {
-							eventCached.firstOrNull { cached -> cached.id == it.id &&
-									cached.reviewCreated.time == it.reviewCreated.time } == null // new event?
+							
+							eventCached.firstOrNull { cached -> cached.id == it.id
+									&& cached.rejectedCount == it.rejectedCount
+									&& cached.confirmedCount == it.confirmedCount
+							} == null // new event?
 						}
 						// has new event?
 						if (r.isNotEmpty()) {

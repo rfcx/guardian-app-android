@@ -15,8 +15,12 @@ class CachedEndpointDb(val realm: Realm) {
 	}
 	
 	fun clearCachedEndpoint(endpoint: String) {
-		realm.where(CachedEndpoint::class.java).like(CachedEndpoint.FIELD_ENDPOINT,
-				"$endpoint*").findAll().deleteAllFromRealm()
+		realm.use { it ->
+			it.executeTransaction {
+				it.where(CachedEndpoint::class.java).like(CachedEndpoint.FIELD_ENDPOINT,
+						"$endpoint*").findAll().deleteAllFromRealm()
+			}
+		}
 	}
 	
 	fun hasCachedEndpoint(endpoint: String, hours: Double = 1.0): Boolean {

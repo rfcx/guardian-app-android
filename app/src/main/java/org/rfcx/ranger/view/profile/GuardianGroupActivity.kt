@@ -52,21 +52,11 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
-				viewModel.removeAllEvent()
-				analytics.trackSetGuardianGroupEvent()
-				viewModel.subscribeByEmail(guardianGroup.shortname)
-				// TODO what happens on failure?
 				loadingProgress.visibility = View.VISIBLE
-				
-				val preferences = Preferences.getInstance(this@GuardianGroupActivity)
-				preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
-				
-				// TODO should be in the VM
-				CloudMessaging.unsubscribe(this@GuardianGroupActivity) {
-					CloudMessaging.setGroup(this@GuardianGroupActivity, guardianGroup.shortname)
-					CloudMessaging.subscribeIfRequired(this@GuardianGroupActivity) {
-						finish()
-					}
+				analytics.trackSetGuardianGroupEvent()
+				viewModel.changeGuardianGroup( guardianGroup) {
+					loadingProgress.visibility = View.INVISIBLE
+					finish()
 				}
 			}
 		}
