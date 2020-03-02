@@ -250,5 +250,6 @@
     <string name="reject_text">menolak</string>
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
+    <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
 
 </resources>

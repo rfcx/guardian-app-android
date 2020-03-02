@@ -1,10 +1,12 @@
 package org.rfcx.ranger.view.profile
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.CachedEndpointDb
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.ResponseCallback
@@ -49,7 +51,7 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 		}, GuardianGroupFactory())
 	}
 	
-	fun subscribeByEmail(guardianGroup: String) {
+	private fun subscribeByEmail(guardianGroup: String) {
 		val preference = Preferences.getInstance(context)
 		val isSubscribe = preference.getBoolean(Preferences.EMAIL_SUBSCRIBE, false)
 		
@@ -60,7 +62,8 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 				}
 				
 				override fun onError(e: Throwable) {
-					// TODO what happens on failure?
+					Toast.makeText(context, context.getString(R.string.error_unsubscribe_by_email,
+							context.getGuardianGroup().toString()), Toast.LENGTH_SHORT).show()
 				}
 			}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 		}
@@ -79,24 +82,29 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 	/**
 	 * remove all events when select guardian group
 	 */
-	fun changeGuardianGroup(guardianGroup: GuardianGroup, callback: () -> Unit) {
+	fun changeGuardianGroup(guardianGroup: GuardianGroup, callback: (Boolean) -> Unit) {
 		eventDb.deleteAllEvents {
-			val preferences = Preferences.getInstance(context)
-			preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
-			
-			// clear cache endpoint
-			cachedEndpointDb.clearCachedEndpoint("guardians/group/")
-			cachedEndpointDb.clearCachedEndpoint("v2/events/?guardian_groups[]=")
-			
-			// sub email
-			subscribeByEmail(guardianGroup.shortname)
-			
-			// sub&unsub email?
-			CloudMessaging.unsubscribe(context) {
-				CloudMessaging.setGroup(context, guardianGroup.shortname)
-				CloudMessaging.subscribeIfRequired(context) {
-					callback()
+			if (it) {
+				val preferences = Preferences.getInstance(context)
+				preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
+				
+				// clear cache endpoint
+				cachedEndpointDb.clearCachedEndpoint("guardians/group/")
+				cachedEndpointDb.clearCachedEndpoint("v2/events/?guardian_groups[]=")
+				
+				// sub&unsub email
+				subscribeByEmail(guardianGroup.shortname)
+				
+				// sub&unsub noti
+				CloudMessaging.unsubscribe(context) {
+					CloudMessaging.setGroup(context, guardianGroup.shortname)
+					CloudMessaging.subscribeIfRequired(context) {
+						callback(true)
+					}
 				}
+			} else {
+				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_SHORT).show()
+				callback(false)
 			}
 		}
 	}

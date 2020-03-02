@@ -50,7 +50,7 @@ class AllAlertsViewModel(private val context: Context,
 		fetchEvents()
 	}
 	
-	private fun clearDate() {
+	private fun clearData() {
 		currentOffset = 0
 		totalItemCount = 0
 		isLoadMore = false
@@ -59,7 +59,7 @@ class AllAlertsViewModel(private val context: Context,
 	}
 	
 	fun refresh() {
-		clearDate()
+		clearData()
 		loadEvents()
 	}
 	

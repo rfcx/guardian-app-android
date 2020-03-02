@@ -250,5 +250,6 @@
 	<string name="reject_text">rechazar</string>
 	<string name="confirm_text">confirmar</string>
 	<string name="required">Necesario!</string>
+	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
 
 </resources>

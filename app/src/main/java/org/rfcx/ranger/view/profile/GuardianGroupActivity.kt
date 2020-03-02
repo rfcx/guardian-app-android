@@ -12,8 +12,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.CloudMessaging
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
 
@@ -54,9 +52,11 @@ class GuardianGroupActivity : BaseActivity() {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
 				loadingProgress.visibility = View.VISIBLE
 				analytics.trackSetGuardianGroupEvent()
-				viewModel.changeGuardianGroup( guardianGroup) {
+				viewModel.changeGuardianGroup(guardianGroup) {
 					loadingProgress.visibility = View.INVISIBLE
-					finish()
+					if (it) {
+						finish()
+					}
 				}
 			}
 		}
