@@ -7,19 +7,8 @@ import java.util.*
 class CachedEndpointDb(val realm: Realm) {
 	
 	fun updateCachedEndpoint(endpoint: String) {
-		realm.use { it ->
-			it.executeTransaction {
-				it.copyToRealmOrUpdate(CachedEndpoint(endpoint, Date()))
-			}
-		}
-	}
-	
-	fun clearCachedEndpoint(endpoint: String) {
-		realm.use { it ->
-			it.executeTransaction {
-				it.where(CachedEndpoint::class.java).like(CachedEndpoint.FIELD_ENDPOINT,
-						"$endpoint*").findAll().deleteAllFromRealm()
-			}
+		realm.executeTransaction {
+			it.copyToRealmOrUpdate(CachedEndpoint(endpoint, Date()))
 		}
 	}
 	

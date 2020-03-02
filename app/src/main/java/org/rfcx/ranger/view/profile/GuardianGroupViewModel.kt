@@ -88,10 +88,6 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 				val preferences = Preferences.getInstance(context)
 				preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
 				
-				// clear cache endpoint
-				cachedEndpointDb.clearCachedEndpoint("guardians/group/")
-				cachedEndpointDb.clearCachedEndpoint("v2/events/?guardian_groups[]=")
-				
 				// sub&unsub email
 				subscribeByEmail(guardianGroup.shortname)
 				

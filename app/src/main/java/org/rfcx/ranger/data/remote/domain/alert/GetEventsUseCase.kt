@@ -56,12 +56,15 @@ class GetEventsUseCase(private val eventRepository: EventRepository,
 				if (events.isNotEmpty()) {
 					if (isStarting) {
 						val eventCached = eventDb.getEvents()
-						val r = events.filter {
-							
-							eventCached.firstOrNull { cached -> cached.id == it.id
-									&& cached.rejectedCount == it.rejectedCount
-									&& cached.confirmedCount == it.confirmedCount
-							} == null // new event?
+						var r = listOf<Event>()
+						if (events.isNotEmpty() && eventCached.isNotEmpty()) {
+							r = events.filter {
+								eventCached.firstOrNull { cached ->
+									cached.id == it.id
+											&& cached.rejectedCount == it.rejectedCount
+											&& cached.confirmedCount == it.confirmedCount
+								} == null // new event?
+							}
 						}
 						// has new event?
 						if (r.isNotEmpty()) {
