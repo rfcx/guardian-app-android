@@ -73,6 +73,7 @@
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">กำลังโหลด...</string>
 	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
