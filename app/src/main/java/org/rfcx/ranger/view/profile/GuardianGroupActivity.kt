@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.profile
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +28,10 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		setupToolbar()
 		
+		val progressDialog = ProgressDialog(this)
+		progressDialog.setMessage("Loading...")
+		progressDialog.setCancelable(false)
+		
 		// setup list
 		guardianGroupRecycler.apply {
 			layoutManager = LinearLayoutManager(this@GuardianGroupActivity)
@@ -50,11 +55,11 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
-				loadingProgress.visibility = View.VISIBLE
+				progressDialog.show()
 				analytics.trackSetGuardianGroupEvent()
 				viewModel.changeGuardianGroup(guardianGroup) {
-					loadingProgress.visibility = View.INVISIBLE
 					if (it) {
+						progressDialog.dismiss()
 						finish()
 					}
 				}

@@ -105,17 +105,3 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 		}
 	}
 }
-
-class GetGuardianGroupDisposable(
-		private val liveData: MutableLiveData<Result<List<GuardianGroup>>>)
-	: BaseDisposableSingle<List<GuardianGroup>>() {
-	
-	override fun onError(e: Throwable, error: Result<List<GuardianGroup>>) {
-		liveData.value = error
-	}
-	
-	override fun onSuccess(success: Result<List<GuardianGroup>>) {
-		liveData.value = success
-	}
-	
-}
