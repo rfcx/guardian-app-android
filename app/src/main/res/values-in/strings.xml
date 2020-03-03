@@ -74,6 +74,7 @@
     <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">Memuat…</string>
 	<string name="location_tracking_label">Pelacakan lokasi</string>
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>

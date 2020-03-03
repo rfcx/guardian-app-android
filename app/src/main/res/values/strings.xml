@@ -74,6 +74,7 @@
 	<string name="notification_location_not_availability">Please enable your device\'s location settings</string>
 	
 	<!-- Settings -->
+	<string name="dialog_loading">Loading…</string>
 	<string name="location_tracking_label">Location tracking</string>
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>

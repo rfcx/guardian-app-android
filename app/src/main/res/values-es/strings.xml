@@ -73,6 +73,7 @@
 	<string name="notification_location_loading">Cargando ubicación…</string>
 	
 	<!-- Settings -->
+	<string name="dialog_loading">Cargando…</string>
 	<string name="notification_location_not_availability">!Por favor active la ubicación de su dispositivo!</string>
 	<string name="location_tracking_label">Seguimiento de la ubicación</string>
 	<string name="location_tracking_on_label">Encendido</string>
