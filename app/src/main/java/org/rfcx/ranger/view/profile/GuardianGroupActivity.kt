@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.profile
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_guardian_group.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -28,9 +30,10 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		setupToolbar()
 		
-		val progressDialog = ProgressDialog(this)
-		progressDialog.setMessage("Loading...")
-		progressDialog.setCancelable(false)
+		val dialog: AlertDialog = SpotsDialog.Builder()
+				.setContext(this)
+				.setTheme(R.style.Dialog_Loading)
+				.build()
 		
 		// setup list
 		guardianGroupRecycler.apply {
@@ -55,11 +58,11 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
-				progressDialog.show()
+				dialog.show()
 				analytics.trackSetGuardianGroupEvent()
 				viewModel.changeGuardianGroup(guardianGroup) {
 					if (it) {
-						progressDialog.dismiss()
+						dialog.dismiss()
 						finish()
 					}
 				}
