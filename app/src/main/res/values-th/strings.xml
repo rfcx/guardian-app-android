@@ -248,5 +248,6 @@
     <string name="reject_text">ปฏิเสธ</string>
     <string name="confirm_text">ยืนยัน</string>
     <string name="required">จำเป็นต้องกรอก!</string>
+    <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
 
 </resources>

@@ -3,6 +3,7 @@ package org.rfcx.ranger.data.local
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
+import org.rfcx.ranger.entity.CachedEndpoint
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 
@@ -118,6 +119,25 @@ class EventDb(val realm: Realm) {
 						.equalTo("eventGuId", eventGuid).findFirst()
 				event?.syncState = syncState
 			}
+		}
+	}
+	
+	fun deleteAllEvents(callback: (Boolean) -> Unit) {
+		realm.use { realm ->
+			realm.executeTransactionAsync({ bgRealm ->
+				bgRealm.delete(Event::class.java)
+				// clear cache endpoint
+				bgRealm.where(CachedEndpoint::class.java).like(CachedEndpoint.FIELD_ENDPOINT,
+						"guardians/group/*").findAll().deleteAllFromRealm()
+				bgRealm.where(CachedEndpoint::class.java).like(CachedEndpoint.FIELD_ENDPOINT,
+						"v2/events/?guardian_groups[]=*").findAll().deleteAllFromRealm()
+			}, {
+				// success
+				callback(true)
+			}, {
+				// fail
+				callback(false)
+			})
 		}
 	}
 	

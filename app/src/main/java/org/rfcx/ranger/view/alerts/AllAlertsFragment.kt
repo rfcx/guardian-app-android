@@ -44,8 +44,9 @@ class AllAlertsFragment : BaseFragment(), AlertClickListener {
 			it.success({ items ->
 				alertsSwipeRefresh.isRefreshing = false
 				if (items.isEmpty()) {
-					(parentFragment as AlertsNewInstanceListener?)?.emptyAlert()
+					(parentFragment as AlertsParentListener?)?.showEmptyView(true)
 				} else {
+					(parentFragment as AlertsParentListener?)?.showEmptyView(false)
 					val newList = mutableListOf<BaseItem>()
 					items.forEach { item -> newList.add(item.copy()) }
 					alertsAdapter.submitList(newList)

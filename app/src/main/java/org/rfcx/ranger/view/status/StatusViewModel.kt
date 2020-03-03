@@ -31,7 +31,10 @@ import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.service.ImageUploadWorker
 import org.rfcx.ranger.service.LocationSyncWorker
 import org.rfcx.ranger.service.ReportSyncWorker
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.asLiveData
+import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.view.map.ImageState
 import org.rfcx.ranger.view.status.adapter.StatusAdapter
 import java.util.concurrent.TimeUnit
@@ -78,10 +81,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private val eventObserve = Observer<List<Event>> { it ->
-		if (it.isNotEmpty()) {
-			val events = eventDb.getEvents()
-			updateRecentAlerts(events)
-		}
+		val events = eventDb.getEvents()
+		updateRecentAlerts(events)
 	}
 	
 	private val _locationTracking = MutableLiveData<Boolean>()
@@ -96,8 +97,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private val _reportItems = MutableLiveData<List<StatusAdapter.ReportItem>>()
 	val reportItems: LiveData<List<StatusAdapter.ReportItem>> = _reportItems
 	
-	private val _alertItems = MutableLiveData<List<StatusAdapter.AlertItem>>()
-	val alertItems: LiveData<List<StatusAdapter.AlertItem>> = _alertItems
+	private val _alertItems = MutableLiveData<List<StatusAdapter.AlertItem>?>()
+	val alertItems: LiveData<List<StatusAdapter.AlertItem>?> = _alertItems
 	
 	private val _syncInfo = MutableLiveData<SyncInfo>()
 	val syncInfo: LiveData<SyncInfo> = _syncInfo
@@ -300,6 +301,8 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	private fun loadEvents() {
 		// start load
 		val group = profileData.getGuardianGroup() ?: return  // has guardian group
+		
+		_alertItems.value = null
 		
 		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC", 3, 0, group.values)
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
