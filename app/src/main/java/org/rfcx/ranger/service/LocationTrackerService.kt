@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.location.Location
-import android.location.LocationManager
-import android.location.LocationProvider
+import android.location.*
 import android.media.RingtoneManager
 import android.os.*
 import android.util.Log
@@ -26,7 +24,6 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.MainActivityNew
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.fixedRateTimer
@@ -60,6 +57,16 @@ class LocationTrackerService : Service() {
 	private lateinit var weeklySummaryData: WeeklySummaryData
 	var lastUpdated: Date? = null
 	private val analytics by lazy { Analytics(this) }
+	private var satelliteCount = 0
+	
+	private val delayTime = 1000L * 30L // 30 seconds
+	private var satelliteHandler: Handler? = null
+	private val satelliteRunnable = object : Runnable {
+		override fun run() {
+			analytics.trackSatelliteCount(satelliteCount)
+			satelliteHandler?.postDelayed(this, delayTime)
+		}
+	}
 	
 	fun calculateTime(newTime: Date, lastTime: Date): Long {
 		val differenceTime1 = newTime.time - lastTime.time
@@ -67,7 +74,7 @@ class LocationTrackerService : Service() {
 		return TimeUnit.MILLISECONDS.toSeconds(differenceTime1)
 	}
 	
-	private val locationListener = object : android.location.LocationListener {
+	private val locationListener = object : LocationListener {
 		
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
@@ -104,8 +111,6 @@ class LocationTrackerService : Service() {
 		
 	}
 	
-	private val handler = Handler()
-	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
 	}
@@ -130,12 +135,52 @@ class LocationTrackerService : Service() {
 		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
-//			mLocationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
+			
+			// Get satellite count
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				mLocationManager?.registerGnssStatusCallback(object : GnssStatus.Callback() {
+					override fun onSatelliteStatusChanged(status: GnssStatus?) {
+						super.onSatelliteStatusChanged(status)
+						val satCount = status?.satelliteCount ?: 0
+						Log.i(TAG, "satellite count = $satCount")
+						satelliteCount = satCount
+					}
+				})
+			} else {
+				mLocationManager?.addGpsStatusListener { event ->
+					if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
+						var satCount : Int
+						try {
+							val status = mLocationManager?.getGpsStatus(null)
+							val sat = status?.satellites?.iterator()
+							satCount = 0
+							if (sat != null) {
+								while (sat.hasNext()) {
+									satCount++
+								}
+							}
+						} catch (e: java.lang.Exception) {
+							e.printStackTrace()
+							satCount = 0 // set min of satellite?
+						}
+						Log.i(TAG, "satellite count = $satCount")
+						satelliteCount = satCount
+					}
+				}
+			}
+			
+			// Start notification on duty tracking
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
+			
+			// Tracking stat timer
 			trackingStatTimer?.cancel()
 			trackingStatTimer = fixedRateTimer("timer", false, 60 * 1000, 60 * 1000) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(isLocationAvailability))
 			}
+			
+			// Start handle run
+			satelliteHandler = Handler()
+			satelliteHandler?.postDelayed(satelliteRunnable, delayTime)
 		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 			Log.w(TAG, "fail to request location update, ignore", ex)
@@ -149,10 +194,10 @@ class LocationTrackerService : Service() {
 	override fun onDestroy() {
 		super.onDestroy()
 		Log.e(TAG, "onDestroy")
+		clearSatelliteHandler()
 		mLocationManager?.removeUpdates(locationListener)
 		trackingStatTimer?.cancel()
 	}
-	
 	
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		super.onStartCommand(intent, flags, startId)
@@ -218,4 +263,8 @@ class LocationTrackerService : Service() {
 		}
 	}
 	
+	private fun clearSatelliteHandler() {
+		satelliteHandler?.removeCallbacks(satelliteRunnable)
+		satelliteHandler = null
+	}
 }

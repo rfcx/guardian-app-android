@@ -62,6 +62,7 @@
     <string name="report_attach_image_label">ภาพถ่าย</string>
     <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
     <string name="report_note_label">หมายเหตุ</string>
+    <string name="report_note">หมายเหตุ</string>
     <string name="report_note_hint">บันทึกข้อมูลเพิ่มเติมที่นี่</string>
     <string name="some_photo_already_exists">ภาพบางส่วนมีอยู่แล้ว</string>
     <string name="these_photos_already_exists">ภาพเหล่านี้มีอยู่แล้ว</string>
@@ -72,6 +73,7 @@
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">กำลังโหลด...</string>
 	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
@@ -234,6 +236,9 @@
     <string name="something_is_wrong">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     <string name="account">บัญชีผู้ใช้</string>
     
+    <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
+    <string name="edit_profile">แก้ไขโปรไฟล์</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>
 	<string name="photos">ภาพถ่าย</string>
@@ -245,5 +250,6 @@
     <string name="reject_text">ปฏิเสธ</string>
     <string name="confirm_text">ยืนยัน</string>
     <string name="required">จำเป็นต้องกรอก!</string>
+    <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
 
 </resources>

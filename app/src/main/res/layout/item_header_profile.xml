@@ -6,8 +6,21 @@
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingBottom="@dimen/margin_padding_small">
+		android:layout_height="wrap_content">
+		
+		<ImageView
+			android:id="@+id/userProfileImageView"
+			android:layout_width="@dimen/profile_photo_size"
+			android:layout_height="@dimen/profile_photo_size"
+			android:visibility="@{profile.isProfileImageVisibility(context) ? view.VISIBLE : view.GONE}"
+			android:contentDescription="@string/app_name"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_normal"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
+			android:src="@drawable/bg_circle_grey"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:setProfileImage="@{context}"/>
 		
 		<LinearLayout
 			android:id="@+id/layoutLocation"
@@ -19,7 +32,7 @@
 			android:layout_marginBottom="@dimen/margin_padding_xsmall"
 			android:gravity="center_vertical"
 			app:layout_constraintEnd_toStartOf="@+id/statusTextView"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toEndOf="@id/userProfileImageView"
 			app:layout_constraintTop_toBottomOf="@id/userNameTextView"
 			tools:ignore="UseCompoundDrawables">
 			
@@ -35,6 +48,8 @@
 				style="@style/RangerText.Label.Secondary"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:maxLines="1"
 				android:paddingStart="@dimen/margin_padding_small"
 				android:text="@{profile.location}"
 				tools:text="Tembe" />
@@ -63,25 +78,25 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_normal"
 			android:text="@{String.format(@string/profile_welcome, profile.profileName)}"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toEndOf="@id/userProfileImageView"
 			app:layout_constraintTop_toTopOf="parent"
 			tools:text="Hi, Ant!" />
 		
 		<!-- TODO: update this below layout-->
+		
 		<androidx.appcompat.widget.SwitchCompat
 			android:id="@+id/locationTrackingSwitch"
 			style="@style/SwitchCompatStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:layout_marginBottom="8dp"
 			android:checked="@{profile.locationTracking}"
 			android:clickable="false"
 			android:focusable="false"
 			android:textOff="@string/location_tracking_off_label"
 			android:textOn="@string/location_tracking_on_label"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/statusTextView"
+			app:layout_constraintStart_toStartOf="@id/statusTextView"
+			app:layout_constraintEnd_toEndOf="@id/statusTextView"
 			app:showText="false"
 			tools:checked="false" />
 		
@@ -110,5 +125,10 @@
 		<variable
 			name="view"
 			type="android.view.View" />
+		
+		<variable
+			name="context"
+			type="android.content.Context"/>
+		
 	</data>
 </layout>

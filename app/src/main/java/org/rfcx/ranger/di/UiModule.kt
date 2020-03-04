@@ -21,6 +21,7 @@ import org.rfcx.ranger.view.profile.FeedbackViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.PasswordChangeViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
+import org.rfcx.ranger.view.profile.editprofile.EditProfileViewModel
 import org.rfcx.ranger.view.report.ReportDetailViewModel
 import org.rfcx.ranger.view.status.StatusViewModel
 
@@ -56,9 +57,10 @@ object UiModule {
 	
 	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get(), get(), get()) }
-		viewModel { GuardianGroupViewModel(androidContext(), get(), get(), get(), get()) }
+		viewModel { GuardianGroupViewModel(androidContext(), get(), get(), get(), get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 		viewModel { PasswordChangeViewModel(get()) }
+		viewModel { EditProfileViewModel(androidContext(), get()) }
 	}
 	
 	var loginModule = module {

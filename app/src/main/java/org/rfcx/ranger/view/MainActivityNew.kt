@@ -58,6 +58,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			setupFragments()
 		}
 		
+		this.saveUserLoginWith()
+		
 		newReportFabButton.setOnClickListener {
 			analytics.trackStartToAddReportEvent()
 			ReportActivity.startIntent(this)

@@ -26,6 +26,7 @@ class AlertValueViewModel(private val context: Context,
 	val baseItems: LiveData<Result<List<BaseItem>>> get() = _baseItems
 	
 	private var _alertsList= arrayListOf<EventItem>()
+	var isLoadMore = false
 	
 	fun getEvents(value: String, guardianName: String) {
 		_alertsList.clear()
@@ -56,6 +57,11 @@ class AlertValueViewModel(private val context: Context,
 	}
 	
 	fun loadMoreEvents() {
+		isLoadMore = true
+		loadEvents()
+	}
+	
+	private fun loadEvents() {
 		val lastEvent = _alertsList.last().event
 		
 		// loadmore - show loading
@@ -65,6 +71,7 @@ class AlertValueViewModel(private val context: Context,
 				"measured_at", "DESC", LIMITS, _alertsList.size)
 		getMoreEvent.execute(object : DisposableSingleObserver<List<Event>>() {
 			override fun onSuccess(events: List<Event>) {
+				isLoadMore = false
 				if (events.isEmpty()) {
 					Toast.makeText(context, context.getString(R.string.not_have_event_more), Toast.LENGTH_SHORT).show()
 					_baseItems.value = Result.Success(buildBaseItems(_alertsList, LoadMoreItem.NOT_FOUND))
@@ -77,6 +84,7 @@ class AlertValueViewModel(private val context: Context,
 			}
 			
 			override fun onError(e: Throwable) {
+				isLoadMore = false
 				_baseItems.value = e.getResultError()
 			}
 		}, requestFactory)

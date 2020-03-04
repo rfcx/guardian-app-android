@@ -1,11 +1,13 @@
 package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_alert_detail_by_type.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -13,6 +15,7 @@ import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.EventItem
+import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.alerts.adapter.AlertClickListener
@@ -23,9 +26,7 @@ import org.rfcx.ranger.view.base.BaseFragment
 class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	private val viewModel: AlertValueViewModel by viewModel()
 	private val alertByValueAdapter by lazy {
-		AlertByValueAdapter(this) {
-			viewModel.loadMoreEvents()
-		}
+		AlertByValueAdapter(this)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,6 +35,8 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		setupAlertList()
 		
 		val value = arguments?.getString(EXTRA_ALERT_VALUE)
 		val guardianName = arguments?.getString(EXTRA_GUARDIAN_NAME)
@@ -46,11 +49,14 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 			adapter = alertByValueAdapter
 		}
 		
-		viewModel.baseItems.observe(this, Observer {
-			it.success({ items ->
+		viewModel.baseItems.observe(this, Observer { baseItems ->
+			baseItems.success({ items ->
 				val newList = mutableListOf<BaseItem>()
 				items.mapTo(newList, { item -> if (item is EventItem) item.copy() else item })
 				alertByValueAdapter.submitList(newList)
+			}, {
+				context?.handleError(it)
+			}, {
 			})
 		})
 	}
@@ -71,6 +77,32 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
 	override fun onReviewed(reviewValue: String, event: Event) {
 		viewModel.onEventReviewed(event, reviewValue)
+	}
+	
+	private fun setupAlertList() {
+		val alertsDetailLayoutManager = LinearLayoutManager(context)
+		
+		alertDetailByTypeRecycler?.apply {
+			layoutManager = alertsDetailLayoutManager
+			adapter = alertByValueAdapter
+			
+			addOnScrollListener(object : RecyclerView.OnScrollListener() {
+				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+					super.onScrolled(recyclerView, dx, dy)
+					val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
+					val total = (layoutManager as LinearLayoutManager).itemCount
+					val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+					
+					if ((visibleItemCount + firstVisibleItemPosition) >= total
+							&& firstVisibleItemPosition >= 0
+							&& !viewModel.isLoadMore) {
+						
+						// load events
+						viewModel.loadMoreEvents()
+					}
+				}
+			})
+		}
 	}
 	
 	companion object {

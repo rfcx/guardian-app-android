@@ -28,6 +28,9 @@ class CredentialKeeper(val context: Context) {
         if (user.nickname != null) {
             preferences.putString(Preferences.NICKNAME, user.nickname)
         }
+        if (user.picture != null) {
+            preferences.putString(Preferences.IMAGE_PROFILE, user.picture)
+        }
         preferences.putStringSet(Preferences.ROLES, user.roles)
         preferences.putStringSet(Preferences.ACCESSIBLE_SITES, user.accessibleSites)
         if (user.defaultSite != null) {

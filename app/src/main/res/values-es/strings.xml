@@ -62,6 +62,7 @@
 	<string name="report_attach_image_label">FOTOS (Opcional)</string>
 	<string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
 	<string name="report_note_label">Notas (Opcional)</string>
+	<string name="report_note">Notas</string>
 	<string name="report_note_hint">Poner algunas notas aquí</string>
 	<string name="some_photo_already_exists">Algunos foto ya existe</string>
 	<string name="these_photos_already_exists">Estas fotos ya existen</string>
@@ -72,6 +73,7 @@
 	<string name="notification_location_loading">Cargando ubicación…</string>
 	
 	<!-- Settings -->
+	<string name="dialog_loading">Cargando…</string>
 	<string name="notification_location_not_availability">!Por favor active la ubicación de su dispositivo!</string>
 	<string name="location_tracking_label">Seguimiento de la ubicación</string>
 	<string name="location_tracking_on_label">Encendido</string>
@@ -235,6 +237,9 @@
 	<string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
 	<string name="account">Cuenta</string>
 	
+	<string name="change_profile_photo">Cambio de perfil de fotos</string>
+	<string name="edit_profile">Editar perfil</string>
+	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de grupos de la guarda</string>
 	<string name="audio_notes">Notas de audio</string>
@@ -247,5 +252,6 @@
 	<string name="reject_text">rechazar</string>
 	<string name="confirm_text">confirmar</string>
 	<string name="required">Necesario!</string>
+	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
 
 </resources>

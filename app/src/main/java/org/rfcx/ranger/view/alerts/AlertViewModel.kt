@@ -1,11 +1,9 @@
 package org.rfcx.ranger.view.alerts
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
@@ -21,6 +19,7 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	
 	private val _observeGuardianGroup = MutableLiveData<Boolean>()
 	val observeGuardianGroup: LiveData<Boolean> = _observeGuardianGroup
+	private var _isLoading: Boolean = false
 	
 	fun resumed() {
 		hasGuardianGroup = profileData.hasGuardianGroup()
@@ -29,21 +28,19 @@ class AlertViewModel(private val context: Context, private val profileData: Prof
 	}
 	
 	private fun loadAlerts() {
-		val group = profileData.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
+		_isLoading = true
+		val group = profileData.getGuardianGroup() ?: return
 		
 		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC",
 				AllAlertsViewModel.PAGE_LIMITS, 0, group.values)
 		
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
 			override fun onSuccess(t: Pair<List<Event>, Int>) {
+				_isLoading = false
 			}
 			
 			override fun onError(e: Throwable) {
-			
+				_isLoading = false
 			}
 		}, requestFactory)
 	}

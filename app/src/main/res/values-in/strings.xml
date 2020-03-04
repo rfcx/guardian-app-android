@@ -62,6 +62,7 @@
     <string name="report_attach_image_label">FOTO (Opsional)</string>
     <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
     <string name="report_note_label">Catatan (Opsional)</string>
+    <string name="report_note">Catatan</string>
     <string name="report_note_hint">Menaruh beberapa catatan di sini</string>
     <string name="some_photo_already_exists">Beberapa foto sudah ada</string>
     <string name="these_photos_already_exists">Foto ini sudah ada</string>
@@ -73,6 +74,7 @@
     <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">Memuat…</string>
 	<string name="location_tracking_label">Pelacakan lokasi</string>
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>
@@ -235,6 +237,9 @@
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
     <string name="account">Akun</string>
     
+    <string name="change_profile_photo">Ganti Foto Profil</string>
+    <string name="edit_profile">Sunting profil</string>
+    
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
 	<string name="audio_notes">Catatan audio</string>
@@ -247,5 +252,6 @@
     <string name="reject_text">menolak</string>
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
+    <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
 
 </resources>

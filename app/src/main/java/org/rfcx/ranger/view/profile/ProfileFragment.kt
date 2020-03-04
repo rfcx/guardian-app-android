@@ -16,12 +16,11 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
 
 class ProfileFragment : BaseFragment() {
@@ -31,7 +30,6 @@ class ProfileFragment : BaseFragment() {
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
-	
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -55,7 +53,15 @@ class ProfileFragment : BaseFragment() {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
 			analytics?.trackScreen(Screen.PROFILE)
+			profileViewModel.resumed()
+			userProfileImageView.setImageProfile(context.getUserProfile())
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		profileViewModel.resumed()
+		userProfileImageView.setImageProfile(context.getUserProfile())
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -65,9 +71,12 @@ class ProfileFragment : BaseFragment() {
 		setOnClickButton()
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-		if (loginWith == "email") {
+		if (loginWith == LOGIN_WITH_EMAIL) {
 			changePasswordTextView.visibility = View.VISIBLE
-			
+			userProfileImageView.visibility = View.VISIBLE
+		} else {
+			changePasswordTextView.visibility = View.GONE
+			userProfileImageView.visibility = View.GONE
 		}
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
@@ -119,6 +128,10 @@ class ProfileFragment : BaseFragment() {
 		viewDataBinding.onClickPassword = View.OnClickListener {
 			context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
 		}
+		
+		viewDataBinding.onClickProfilePhoto = View.OnClickListener {
+			context?.let { it1 -> EditProfileActivity.startActivity(it1) }
+		}
 	}
 	
 	override fun onStart() {
@@ -144,5 +157,6 @@ class ProfileFragment : BaseFragment() {
 		const val tag = "ProfileFragment"
 		const val RESULT_CODE = 12
 		const val REQUEST_CODE = 11
+		const val LOGIN_WITH_EMAIL = "auth0"
 	}
 }

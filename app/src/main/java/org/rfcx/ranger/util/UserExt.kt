@@ -5,8 +5,6 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
-import org.koin.core.context.GlobalContext.get
-import org.rfcx.ranger.R
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
 
@@ -53,11 +51,15 @@ fun Context?.logout() {
 		Preferences.getInstance(this).clear()
 		LocationTracking.set(this, false)
 		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
-			realm.executeTransaction {
-				it.deleteAll()
-			}
+			realm.executeTransactionAsync({ bgRealm ->
+				bgRealm.deleteAll()
+			}, {
+				realm.close()
+				LoginActivityNew.startActivity(this)
+			}, {
+				realm.close()
+			})
 		}
-		LoginActivityNew.startActivity(this)
 	}
 }
 
@@ -79,6 +81,7 @@ fun Context?.getUserEmail(): String {
 	var userID = ""
 	val token = this?.getTokenID()
 	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	
 	try {
 		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
 		userID = untrusted.body["email"] as String
@@ -87,6 +90,35 @@ fun Context?.getUserEmail(): String {
 		Crashlytics.logException(e)
 	}
 	return userID
+}
+
+fun Context?.saveUserLoginWith(): String {
+	var loginWith = ""
+	val token = this?.getTokenID()
+	val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
+	try {
+		val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+		loginWith = untrusted.body["sub"] as String
+		loginWith = loginWith.split("|")[0]
+	} catch (e: Exception) {
+		e.printStackTrace()
+		Crashlytics.logException(e)
+	}
+	
+	val preferences = this?.let { Preferences.getInstance(it) }
+	preferences?.putString(Preferences.LOGIN_WITH, loginWith)
+	
+	return loginWith
+}
+
+fun Context?.updateUserProfile(userProfile: String) {
+	val preferences = this?.let { Preferences.getInstance(it) }
+	preferences?.putString(Preferences.IMAGE_PROFILE, userProfile)
+}
+
+fun Context?.getUserProfile(): String? {
+	val preferences = this?.let { Preferences.getInstance(it) }
+	return preferences?.getString(Preferences.IMAGE_PROFILE)
 }
 
 fun Context?.getNameEmail(): String {

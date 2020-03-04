@@ -1,10 +1,14 @@
 package org.rfcx.ranger.util
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import org.rfcx.ranger.R
 
 
 object ImageViewDatabinding {
@@ -18,5 +22,14 @@ object ImageViewDatabinding {
     @JvmStatic
     fun setImageResource(imageView: ImageView, @DrawableRes resource: Int) {
         imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, resource))
+    }
+    
+    @BindingAdapter("setProfileImage")
+    @JvmStatic
+    fun setProfile(imageView: ImageView, context: Context) {
+        Glide.with(imageView.context).load(context.getUserProfile())
+                .placeholder(R.drawable.bg_circle_grey)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView)
     }
 }
