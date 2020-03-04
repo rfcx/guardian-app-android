@@ -26,6 +26,8 @@
 	<dimen name="dialog_height">480dp</dimen>
 	<dimen name="invitation_icon_size">56dp</dimen>
 	<dimen name="report_icon_size">40dp</dimen>
+	<dimen name="profile_photo_size">60dp</dimen>
+	<dimen name="edit_profile_photo_size">150dp</dimen>
 	
 	<dimen name="spectrogram_height">224dp</dimen>
 	<dimen name="event_icon_width">96dp</dimen>

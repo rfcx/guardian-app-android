@@ -53,11 +53,7 @@ class GroupAlertsViewModel(private val context: Context, private val eventDb: Ev
 	}
 	
 	private fun loadGuardianGroups(force: Boolean = false, events: List<Event>) {
-		val group = context.getGuardianGroup()
-		if (group == null) {
-			Toast.makeText(context, context.getString(R.string.error_no_guardian_group_set), Toast.LENGTH_SHORT).show()
-			return
-		}
+		val group = context.getGuardianGroup() ?: return
 		groupByGuardiansUseCase.execute(object : ResponseCallback<List<Guardian>> {
 			override fun onSuccess(t: List<Guardian>) {
 				updateEvents(events, t)

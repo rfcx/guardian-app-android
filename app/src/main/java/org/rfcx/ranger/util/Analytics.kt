@@ -81,6 +81,12 @@ class Analytics(context: Context) {
 		}
 	}
 	
+	fun trackSatelliteCount(count: Int) {
+		val bundle = Bundle()
+		bundle.putString(FirebaseAnalytics.Param.VALUE, count.toString())
+		trackEvent("satellite_count", bundle)
+	}
+	
 	fun trackSetGuardianGroupStartEvent(screen: Screen) {
 		val bundle = Bundle()
 		bundle.putString(FirebaseAnalytics.Param.SOURCE, screen.toString())
