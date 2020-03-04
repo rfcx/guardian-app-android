@@ -31,6 +31,9 @@ import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
 import org.rfcx.ranger.data.remote.password.PasswordChangeRepository
 import org.rfcx.ranger.data.remote.password.PasswordChangeRepositoryImp
 import org.rfcx.ranger.data.remote.password.PasswordChangeUseCase
+import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoRepository
+import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoRepositoryImp
+import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoUseCase
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
 import org.rfcx.ranger.data.remote.setusername.SetNameRepository
@@ -98,6 +101,9 @@ object DataModule {
 		single { ShortLinkRepositoryImp(get()) } bind ShortLinkRepository::class
 		single { ShortLinkUseCase(get(), get(), get()) }
 		
+		single { ProfilePhotoRepositoryImp(get()) } bind ProfilePhotoRepository::class
+		single { ProfilePhotoUseCase(get(), get(), get()) }
+		
 		single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
 		single { SubscribeUseCase(get(), get(), get()) }
 		
@@ -117,6 +123,7 @@ object DataModule {
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeShortLinkService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
 	}
 	

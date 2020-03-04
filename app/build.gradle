@@ -42,7 +42,8 @@ android {
         develop {
             applicationIdSuffix ".dev"
             manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://staging-api.rfcx.org/"'
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
+            // Ranger staging domain: "https://staging-api.rfcx.org/" -- 20/2/2020 still no data for testing
         }
     }
     lintOptions {
@@ -71,6 +72,9 @@ dependencies {
 
     /* viewpager2 */
     implementation "androidx.viewpager2:viewpager2:1.0.0-alpha01"
+
+    /* dialog loading */
+    implementation 'com.github.d-max:spots-dialog:1.1@aar'
 
     /* firebase */
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

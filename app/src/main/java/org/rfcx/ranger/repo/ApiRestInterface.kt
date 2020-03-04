@@ -55,12 +55,6 @@ interface ApiRestInterface {
 	               @Part("notes") notes: RequestBody?,
 	               @Part audioFile: MultipartBody.Part? = null): Call<SendReportResponse>
 	
-	@POST("v1/events/{id}/{review_confirmed}")
-	fun reviewEvent(@Header("Authorization") authUser: String,
-	                @Path("id") eventGuID: String,
-	                @Path("review_confirmed") reviewConfirm: String)
-			: Call<ReviewEventResponse>
-	
 	@GET("v1/sites/{id}")
 	fun site(@Header("Authorization") authorization: String, @Path("id") id: String): Call<Site>
 	

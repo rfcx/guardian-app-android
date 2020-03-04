@@ -45,6 +45,7 @@ class CredentialVerifier(val context: Context) {
 			
 			val guid: String? = metadata["guid"] as String?
 			val email: String? = untrusted.body["email"] as String?
+			val picture: String? = untrusted.body["picture"] as String?
 			val nickname: String? = name
 			val defaultSite: String? = metadata["defaultSite"] as String?
 			
@@ -68,7 +69,7 @@ class CredentialVerifier(val context: Context) {
 					return Err(getString(R.string.an_error_occurred))
 				}
 				else -> {
-					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite))
+					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture))
 				}
 			}
 		} catch (e: Exception) {
