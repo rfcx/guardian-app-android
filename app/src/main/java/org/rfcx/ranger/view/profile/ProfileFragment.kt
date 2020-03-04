@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.profile
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -24,6 +25,7 @@ import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
 import android.app.ProgressDialog
 import android.os.Handler
+import dmax.dialog.SpotsDialog
 
 class ProfileFragment : BaseFragment() {
 	
@@ -85,15 +87,16 @@ class ProfileFragment : BaseFragment() {
 			profileViewModel.onTracingStatusChange()
 		})
 		
-		val progressDialog = ProgressDialog(context)
-		progressDialog.setMessage("Loading...")
-		progressDialog.setCancelable(false)
+		val dialog: AlertDialog = SpotsDialog.Builder()
+				.setContext(context)
+				.setTheme(R.style.Dialog_Loading)
+				.build()
 		
 		profileViewModel.logoutState.observe(this, Observer {
 			if (it) {
-				progressDialog.show()
+				dialog.show()
 			} else {
-				progressDialog.dismiss()
+				dialog.dismiss()
 			}
 		})
 	}
