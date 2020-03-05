@@ -56,25 +56,33 @@ class EditProfileViewModel(private val context: Context, private val profilePhot
 		val compressed = Compressor(context)
 				.setQuality(75)
 				.compressToBitmap(file)
-		val excessHeight = compressed.height - 2000
-		val excessWidth = compressed.width - 2000
+		val imageHeight = compressed.height
+		val imageWidth = compressed.width
+		var newWidth = 0
+		var newHeight = 0
 		
-		if (compressed.width > 2000 && compressed.height > 2000) {
-			when ((excessWidth).compareTo(excessHeight)) {
+		if (imageHeight > 2000 && imageWidth > 2000) {
+			when ((imageWidth).compareTo(imageHeight)) {
 				-1 -> { // less than
-					return bitmapToFile(resizeBitmap(compressed, compressed.width - excessHeight, compressed.height - excessHeight))
+					newWidth = (imageWidth * 2000) / imageHeight
+					newHeight = 2000
 				}
 				0 -> {  // equals
-					return bitmapToFile(resizeBitmap(compressed, compressed.width - excessWidth, compressed.height - excessHeight))
+					newWidth = 2000
+					newHeight = 2000
 				}
 				1 -> { // more than
-					return bitmapToFile(resizeBitmap(compressed, compressed.width - excessWidth, compressed.height - excessWidth))
+					newWidth = 2000
+					newHeight = (imageHeight * 2000) / imageWidth
 				}
 			}
+			return bitmapToFile(Bitmap.createScaledBitmap(compressed, newWidth, newHeight, false))
 		} else if (compressed.width > 2000) {
-			return bitmapToFile(resizeBitmap(compressed, compressed.width - excessWidth, compressed.height - excessWidth))
+			newHeight = (imageHeight * 2000) / imageWidth
+			return bitmapToFile(Bitmap.createScaledBitmap(compressed, 2000, newHeight, false))
 		} else if (compressed.height > 2000) {
-			return bitmapToFile(resizeBitmap(compressed, compressed.width - excessHeight, compressed.height - excessHeight))
+			newWidth = (imageWidth * 2000) / imageHeight
+			return bitmapToFile(Bitmap.createScaledBitmap(compressed, newWidth, 2000, false))
 		}
 		
 		val compressedFile = Compressor(context)
@@ -110,10 +118,6 @@ class EditProfileViewModel(private val context: Context, private val profilePhot
 		}
 		
 		return file
-	}
-	
-	private fun resizeBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
-		return Bitmap.createScaledBitmap(bitmap, width, height, false)
 	}
 	
 	private fun compressFile(context: Context?, file: File): File {
