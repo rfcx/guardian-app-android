@@ -111,6 +111,38 @@ class LocationTrackerService : Service() {
 		
 	}
 	
+	private val gnssStatusCallback = @RequiresApi(Build.VERSION_CODES.N)
+	object : GnssStatus.Callback() {
+		override fun onSatelliteStatusChanged(status: GnssStatus?) {
+			super.onSatelliteStatusChanged(status)
+			val satCount = status?.satelliteCount ?: 0
+			satelliteCount = satCount
+		}
+	}
+	
+	@Deprecated("For old version")
+	@SuppressLint("MissingPermission")
+	private val gpsStatusListener = GpsStatus.Listener { event ->
+		if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
+			var satCount: Int
+			try {
+				val status = mLocationManager?.getGpsStatus(null)
+				val sat = status?.satellites?.iterator()
+				satCount = 0
+				if (sat != null) {
+					while (sat.hasNext()) {
+						satCount++
+					}
+				}
+			} catch (e: java.lang.Exception) {
+				e.printStackTrace()
+				satCount = 0 // set min of satellite?
+			}
+			satelliteCount = satCount
+		}
+	}
+	
+	
 	override fun onBind(p0: Intent?): IBinder? {
 		return binder
 	}
@@ -138,33 +170,9 @@ class LocationTrackerService : Service() {
 			
 			// Get satellite count
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-				mLocationManager?.registerGnssStatusCallback(object : GnssStatus.Callback() {
-					override fun onSatelliteStatusChanged(status: GnssStatus?) {
-						super.onSatelliteStatusChanged(status)
-						val satCount = status?.satelliteCount ?: 0
-						satelliteCount = satCount
-					}
-				})
+				mLocationManager?.registerGnssStatusCallback(gnssStatusCallback)
 			} else {
-				mLocationManager?.addGpsStatusListener { event ->
-					if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
-						var satCount: Int
-						try {
-							val status = mLocationManager?.getGpsStatus(null)
-							val sat = status?.satellites?.iterator()
-							satCount = 0
-							if (sat != null) {
-								while (sat.hasNext()) {
-									satCount++
-								}
-							}
-						} catch (e: java.lang.Exception) {
-							e.printStackTrace()
-							satCount = 0 // set min of satellite?
-						}
-						satelliteCount = satCount
-					}
-				}
+				mLocationManager?.addGpsStatusListener(gpsStatusListener)
 			}
 			
 			// Start notification on duty tracking
@@ -213,6 +221,17 @@ class LocationTrackerService : Service() {
 		super.onDestroy()
 		Log.e(TAG, "onDestroy")
 		mLocationManager?.removeUpdates(locationListener)
+		
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				mLocationManager?.unregisterGnssStatusCallback(gnssStatusCallback)
+			} else {
+				mLocationManager?.removeGpsStatusListener(gpsStatusListener)
+			}
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
+		
 		// set end time of tracking service
 		logDocumentId?.let { LocationServiceLogs.setEndTime(logDb, it) }
 		clearTimer()
