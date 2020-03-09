@@ -404,6 +404,20 @@
 				android:textSize="@dimen/text_small" />
 			
 			<TextView
+				android:id="@+id/changeImageProfileTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickProfilePhoto}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/change_profile_photo"
+				android:visibility="gone" />
+			
+			<TextView
 				android:id="@+id/changePasswordTextView"
 				style="@style/RangerText.SubTitle"
 				android:layout_width="match_parent"
