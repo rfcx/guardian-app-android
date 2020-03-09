@@ -36,6 +36,8 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
+		<activity android:name=".view.profile.coordinates.CoordinatesActivity"
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />

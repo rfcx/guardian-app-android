@@ -39,6 +39,10 @@
 		<variable
 			name="onClickProfilePhoto"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickCoordinates"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -302,6 +306,19 @@
 				</FrameLayout>
 			
 			</LinearLayout>
+			
+			<TextView
+				android:id="@+id/CoordinatesTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickCoordinates}"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_small"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:text="@string/coordinates" />
 			
 			<View
 				android:layout_width="match_parent"
