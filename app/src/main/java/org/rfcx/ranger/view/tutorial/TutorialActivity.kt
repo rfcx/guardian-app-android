@@ -86,7 +86,7 @@ class TutorialActivity : AppCompatActivity() {
 		for (i in indicators.indices) {
 			indicators[i] = ImageView(applicationContext)
 			indicators[i].apply {
-				this?.setImageDrawable(context.getImage(R.drawable.ic_dot_white))
+				this?.setImageDrawable(context.getImage(R.drawable.ic_dot_grey))
 				this?.layoutParams = layoutParams
 			}
 			indicatorsContainer.addView(indicators[i])
@@ -99,10 +99,10 @@ class TutorialActivity : AppCompatActivity() {
 			val view: View = indicatorsContainer.getChildAt(i)
 			if (view is ImageView) {
 				if (i == index) {
-					view.setImageDrawable(this.getImage(R.drawable.ic_dot_grey))
+					view.setImageDrawable(this.getImage(R.drawable.ic_dot_white))
 					
 				} else {
-					view.setImageDrawable(this.getImage(R.drawable.ic_dot_white))
+					view.setImageDrawable(this.getImage(R.drawable.ic_dot_grey))
 					
 				}
 			}

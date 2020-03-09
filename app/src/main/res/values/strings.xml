@@ -234,8 +234,9 @@
 	<string name="from">From:</string>
 	<string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
 	<string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
+	<string name="account">Account</string>
 	
-	<string name="change_profile_photo">Change Profile Photo</string>
+	<string name="change_profile_photo">Change profile photo</string>
 	<string name="edit_profile">Edit Profile</string>
 	
 	<!--Guardian Group List-->

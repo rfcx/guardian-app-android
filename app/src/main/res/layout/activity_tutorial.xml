@@ -42,11 +42,11 @@
 		android:id="@+id/indicatorsContainer"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:gravity="center"
 		android:orientation="horizontal"
 		app:layout_constraintStart_toEndOf="@id/skipTextView"
 		app:layout_constraintEnd_toStartOf="@id/nextTextView"
-		app:layout_constraintBottom_toBottomOf="parent"/>
+		app:layout_constraintBottom_toBottomOf="@id/nextTextView"
+		app:layout_constraintTop_toTopOf="@id/nextTextView"/>
 	
 </androidx.constraintlayout.widget.ConstraintLayout>
