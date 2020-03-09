@@ -235,6 +235,7 @@
     <string name="confirm_password_does_not_match">Konfirmasi sandi tidak cocok</string>
     <string name="password_changed_successfully">Password telah berhasil diubah.</string>
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
+    <string name="account">Akun</string>
     
     <string name="change_profile_photo">Ganti Foto Profil</string>
     <string name="edit_profile">Sunting profil</string>

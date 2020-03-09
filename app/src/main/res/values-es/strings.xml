@@ -235,6 +235,7 @@
 	<string name="confirm_password_does_not_match">Confirmar contraseña no coincide</string>
 	<string name="password_changed_successfully">La contraseña ha sido cambiada con éxito.</string>
 	<string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
+	<string name="account">Cuenta</string>
 	
 	<string name="change_profile_photo">Cambio de perfil de fotos</string>
 	<string name="edit_profile">Editar perfil</string>
