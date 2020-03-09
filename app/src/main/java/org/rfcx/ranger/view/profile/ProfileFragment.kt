@@ -35,6 +35,13 @@ class ProfileFragment : BaseFragment() {
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
+	private val dialog: AlertDialog by lazy {
+		SpotsDialog.Builder()
+			.setContext(context)
+			.setTheme(R.style.Dialog_Loading)
+			.build()
+	}
+	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as MainActivityEventListener)
@@ -88,11 +95,6 @@ class ProfileFragment : BaseFragment() {
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
 		})
-		
-		val dialog: AlertDialog = SpotsDialog.Builder()
-				.setContext(context)
-				.setTheme(R.style.Dialog_Loading)
-				.build()
 		
 		profileViewModel.logoutState.observe(this, Observer {
 			if (it) {
@@ -156,6 +158,11 @@ class ProfileFragment : BaseFragment() {
 	override fun onStart() {
 		super.onStart()
 		profileViewModel.updateSiteName()
+	}
+	
+	override fun onPause() {
+		super.onPause()
+		dialog.dismiss()
 	}
 	
 	private fun handleShowSnackbarResult(requestCode: Int, resultCode: Int, intentData: Intent?) {

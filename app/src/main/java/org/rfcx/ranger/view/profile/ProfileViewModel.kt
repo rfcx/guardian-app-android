@@ -90,6 +90,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		if(profileData.getReceiveNotificationByEmail()){
 			unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 				override fun onSuccess(t: SubscribeResponse) {
+					_logoutState.value = false
 					context.logout()
 				}
 				
