@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_coordinates.*
 import kotlinx.android.synthetic.main.activity_feedback.toolbar
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.getCoordinatesFormat
 
 class CoordinatesActivity : AppCompatActivity() {
 	
@@ -19,8 +20,7 @@ class CoordinatesActivity : AppCompatActivity() {
 		setupToolbar()
 		
 		val preferences = Preferences.getInstance(this)
-		var format = preferences.getString(Preferences.COORDINATES_FORMAT, DD_FORMAT)
-		showChecker(format)
+		this.getCoordinatesFormat()?.let { showChecker(it) }
 		
 		ddLayout.setOnClickListener {
 			preferences.putString(Preferences.COORDINATES_FORMAT, DD_FORMAT)

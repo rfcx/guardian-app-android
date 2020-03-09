@@ -307,18 +307,36 @@
 			
 			</LinearLayout>
 			
-			<TextView
-				android:id="@+id/CoordinatesTextView"
-				style="@style/RangerText.SubTitle"
+			<LinearLayout
+				android:id="@+id/coordinatesLinearLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="?attr/selectableItemBackground"
 				android:onClick="@{onClickCoordinates}"
-				android:paddingStart="@dimen/margin_padding_normal"
+				android:orientation="vertical"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/coordinates" />
+				android:paddingBottom="@dimen/margin_padding_small">
+				
+				<TextView
+					android:id="@+id/coordinatesTextViewTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/coordinates" />
+				
+				<TextView
+					android:id="@+id/formatCoordinatesTextView"
+					style="@style/RangerText.SubTitle.Secondary"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@{viewModel.formatCoordinates}"
+					tools:text="DD" />
+			
+			</LinearLayout>
 			
 			<View
 				android:layout_width="match_parent"
