@@ -135,6 +135,12 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				agreeTextView.text = it.confirmedCount.toString()
 				rejectTextView.text = it.rejectedCount.toString()
 				
+				if (it.latitude != null || it.longitude != null) {
+					locationTextView.text = StringBuilder(it.latitudeAsDMS(5))
+							.append(",")
+							.append(it.longitudeAsDMS(5))
+				}
+				
 				if (state == "CONFIRM") {
 					linearLayout.visibility = View.VISIBLE
 					updateConfirmCount(it)

@@ -2,10 +2,13 @@ package org.rfcx.ranger.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
+import com.google.protobuf.ByteString
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import kotlin.math.absoluteValue
 
 fun Event.getIconRes(): Int {
 	
@@ -55,6 +58,35 @@ fun Event.toEventItem(state: String?): EventItem {
 		else -> EventItem.State.NONE
 	}
 	return EventItem(this, s)
+}
+
+fun Event.latitudeAsDMS(decimalPlace: Int): String {
+	val direction = if (this.latitude!! > 0) "N" else "S"
+	var strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_SECONDS)
+	strLatitude = replaceDelimiters(strLatitude, decimalPlace)
+	strLatitude += " $direction"
+	return strLatitude
+}
+
+fun Event.longitudeAsDMS(decimalPlace: Int): String {
+	val direction = if (this.longitude!! > 0) "W" else "E"
+	var strLongitude = Location.convert(this.longitude!!.absoluteValue, Location.FORMAT_SECONDS)
+	strLongitude = replaceDelimiters(strLongitude, decimalPlace)
+	strLongitude += " $direction"
+	return strLongitude
+}
+
+private fun replaceDelimiters(str: String, decimalPlace: Int): String {
+	var str = str
+	str = str.replaceFirst(":".toRegex(), "°")
+	str = str.replaceFirst(":".toRegex(), "'")
+	val pointIndex = str.indexOf(".")
+	val endIndex = pointIndex + 1 + decimalPlace
+	if (endIndex < str.length) {
+		str = str.substring(0, endIndex)
+	}
+	str += "\""
+	return str
 }
 
 data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem {

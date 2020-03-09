@@ -71,6 +71,7 @@
 			android:layout_height="@dimen/report_icon_size"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 			tools:src="@drawable/ic_vehicle" />
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
@@ -194,6 +195,17 @@
 				android:layout_marginStart="@dimen/margin_padding_xsmall"
 				tools:text="0" />
 		</LinearLayout>
+		
+		<TextView
+			android:id="@+id/locationTextView"
+			style="@style/RangerText.Caption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:drawableStart="@drawable/ic_pin_grey"
+			app:layout_constraintStart_toStartOf="@+id/reviewedTextView"
+			app:layout_constraintTop_toBottomOf="@id/reviewedTextView"
+			tools:text=" 0.000000000" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 	
