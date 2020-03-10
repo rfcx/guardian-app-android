@@ -62,7 +62,7 @@ fun Event.toEventItem(state: String?): EventItem {
 	return EventItem(this, s)
 }
 
-fun Event.locationCoordinates(context: Context): StringBuilder? {
+fun Event.locationCoordinates(context: Context): String? {
 	if (latitude != null && longitude != null) {
 		val directionLatitude = if (latitude!! > 0) "N" else "S"
 		val directionLongitude = if (longitude!! > 0) "E" else "W"
@@ -75,66 +75,65 @@ fun Event.locationCoordinates(context: Context): StringBuilder? {
 				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_DEGREES)
 				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_DEGREES)
 				
-				strLatitude = "${replaceDelimitersDD(strLatitude, 5)}$directionLatitude"
-				strLongitude = "${replaceDelimitersDD(strLongitude, 5)}$directionLongitude"
+				strLatitude = "${replaceDelimitersDD(strLatitude)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDD(strLongitude)}$directionLongitude"
 			}
 			DDM_FORMAT -> {
 				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_MINUTES)
 				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_MINUTES)
 				
-				strLatitude = "${replaceDelimitersDDM(strLatitude, 4)}$directionLatitude"
-				strLongitude = "${replaceDelimitersDDM(strLongitude, 4)}$directionLongitude"
+				strLatitude = "${replaceDelimitersDDM(strLatitude)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDDM(strLongitude)}$directionLongitude"
 			}
 			DMS_FORMAT -> {
 				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_SECONDS)
 				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_SECONDS)
 				
-				strLatitude = "${replaceDelimitersDMS(strLatitude, 1)}$directionLatitude"
-				strLongitude = "${replaceDelimitersDMS(strLongitude, 1)}$directionLongitude"
+				strLatitude = "${replaceDelimitersDMS(strLatitude)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDMS(strLongitude)}$directionLongitude"
 			}
 		}
 		return StringBuilder(strLatitude)
 				.append(", ")
-				.append(strLongitude)
+				.append(strLongitude).toString()
 	}
-	
 	return null
 }
 
-private fun replaceDelimitersDMS(str: String, decimalPlace: Int): String {
-	var str = str
-	str = str.replaceFirst(":".toRegex(), "°")
-	str = str.replaceFirst(":".toRegex(), "'")
-	val pointIndex = str.indexOf(".")
-	val endIndex = pointIndex + 1 + decimalPlace
-	if (endIndex < str.length) {
-		str = str.substring(0, endIndex)
+private fun replaceDelimitersDMS(str: String): String {
+	var strDMSFormat = str
+	strDMSFormat = strDMSFormat.replaceFirst(":".toRegex(), "°")
+	strDMSFormat = strDMSFormat.replaceFirst(":".toRegex(), "'")
+	val pointIndex = strDMSFormat.indexOf(".")
+	val endIndex = pointIndex + 2
+	if (endIndex < strDMSFormat.length) {
+		strDMSFormat = strDMSFormat.substring(0, endIndex)
 	}
-	str += "\""
-	return str
+	strDMSFormat += "\""
+	return strDMSFormat
 }
 
-private fun replaceDelimitersDD(str: String, decimalPlace: Int): String {
-	var str = str
-	val pointIndex = str.indexOf(".")
-	val endIndex = pointIndex + 1 + decimalPlace
-	if (endIndex < str.length) {
-		str = str.substring(0, endIndex)
+private fun replaceDelimitersDD(str: String): String {
+	var strDDFormat = str
+	val pointIndex = strDDFormat.indexOf(".")
+	val endIndex = pointIndex + 6
+	if (endIndex < strDDFormat.length) {
+		strDDFormat = strDDFormat.substring(0, endIndex)
 	}
-	str += "°"
-	return str
+	strDDFormat += "°"
+	return strDDFormat
 }
 
-private fun replaceDelimitersDDM(str: String, decimalPlace: Int): String {
-	var str = str
-	str = str.replaceFirst(":".toRegex(), "°")
-	val pointIndex = str.indexOf(".")
-	val endIndex = pointIndex + 1 + decimalPlace
-	if (endIndex < str.length) {
-		str = str.substring(0, endIndex)
+private fun replaceDelimitersDDM(str: String): String {
+	var strDDMFormat = str
+	strDDMFormat = strDDMFormat.replaceFirst(":".toRegex(), "°")
+	val pointIndex = strDDMFormat.indexOf(".")
+	val endIndex = pointIndex + 5
+	if (endIndex < strDDMFormat.length) {
+		strDDMFormat = strDDMFormat.substring(0, endIndex)
 	}
-	str += "\'"
-	return str
+	strDDMFormat += "\'"
+	return strDDMFormat
 }
 
 data class EventItem(var event: Event, var state: State = State.NONE) : BaseItem {
