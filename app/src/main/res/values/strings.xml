@@ -28,6 +28,7 @@
 	<string name="create_new_reports">Create new reports</string>
 	<string name="view_reports">View reports by location</string>
 	<string name="app_intro">App intro</string>
+	<string name="coordinates">Coordinates</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>
@@ -81,6 +82,14 @@
 	<string name="default_site_label">Site</string>
 	<string name="guardian_group_label">Guardian group</string>
 	<string name="notifications">Notifications</string>
+	
+	<string name="dd_coordinates">DD</string>
+	<string name="ddm_coordinates">DDM</string>
+	<string name="dms_coordinates">DMS</string>
+	
+	<string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+	<string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+	<string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
 	
 	<string name="last_month">Last\nMonth</string>
 	<string name="last_week">Last\nWeek</string>

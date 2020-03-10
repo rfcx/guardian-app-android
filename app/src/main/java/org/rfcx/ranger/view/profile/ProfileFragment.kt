@@ -26,6 +26,7 @@ import org.rfcx.ranger.view.tutorial.TutorialActivity
 import android.app.ProgressDialog
 import android.os.Handler
 import dmax.dialog.SpotsDialog
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -152,6 +153,10 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickProfilePhoto = View.OnClickListener {
 			context?.let { it1 -> EditProfileActivity.startActivity(it1) }
+		}
+		
+		viewDataBinding.onClickCoordinates = View.OnClickListener {
+			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
 		}
 	}
 	
