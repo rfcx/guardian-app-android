@@ -136,9 +136,10 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 				rejectTextView.text = it.rejectedCount.toString()
 				
 				if (it.latitude != null || it.longitude != null) {
-					locationTextView.text = StringBuilder(it.latitudeAsDMS(5))
-							.append(",")
-							.append(it.longitudeAsDMS(5))
+					locationTextView.visibility = View.VISIBLE
+					locationTextView.text = context?.let { it1 -> it.locationCoordinates(it1) }
+				} else {
+					locationTextView.visibility = View.GONE
 				}
 				
 				if (state == "CONFIRM") {
