@@ -73,6 +73,7 @@
     <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">กำลังโหลด...</string>
 	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
@@ -233,6 +234,7 @@
     <string name="confirm_password_does_not_match">การยืนยันรหัสผ่านไม่ตรงกัน</string>
     <string name="password_changed_successfully">การเปลี่ยนรหัสผ่านสำเร็จ</string>
     <string name="something_is_wrong">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
+    <string name="account">บัญชีผู้ใช้</string>
     
     <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
     <string name="edit_profile">แก้ไขโปรไฟล์</string>
@@ -248,5 +250,6 @@
     <string name="reject_text">ปฏิเสธ</string>
     <string name="confirm_text">ยืนยัน</string>
     <string name="required">จำเป็นต้องกรอก!</string>
+    <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
 
 </resources>

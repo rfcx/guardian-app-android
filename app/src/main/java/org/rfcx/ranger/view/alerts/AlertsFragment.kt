@@ -19,10 +19,12 @@ import org.rfcx.ranger.view.alert.AlertBottomDialogFragment
 import org.rfcx.ranger.view.alert.AlertListener
 import org.rfcx.ranger.view.base.BaseFragment
 
-class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener {
+class AlertsFragment : BaseFragment(), AlertListener, AlertsParentListener {
 	
 	private val alertViewModel: AlertViewModel by viewModel()
 	private val analytics by lazy { context?.let { Analytics(it) } }
+	private val groupAlertsFragment by lazy { GroupAlertsFragment.newInstance() }
+	private val allAlertsFragment by lazy { AllAlertsFragment.newInstance() }
 	
 	private val observeGuardianGroup = Observer<Boolean> {
 		if (it) {
@@ -113,16 +115,16 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	private fun startTabSelected(position: Int) {
 		when (position) {
 			0 -> {
-				startFragment(GroupAlertsFragment.newInstance(), GroupAlertsFragment.tag)
+				startFragment(groupAlertsFragment, GroupAlertsFragment.tag)
 			}
 			1 -> {
-				startFragment(AllAlertsFragment.newInstance(), AllAlertsFragment.tag)
+				startFragment(allAlertsFragment, AllAlertsFragment.tag)
 			}
 		}
 	}
 	
-	override fun emptyAlert() {
-		startFragment(EmptyAlertFragment.newInstance(), EmptyAlertFragment.tag)
+	override fun showEmptyView(show: Boolean) {
+		emptyView.visibility = if (show) View.VISIBLE else View.GONE
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String) {
@@ -157,6 +159,6 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsNewInstanceListener 
 	}
 }
 
-interface AlertsNewInstanceListener {
-	fun emptyAlert()
+interface AlertsParentListener {
+	fun showEmptyView(show: Boolean)
 }

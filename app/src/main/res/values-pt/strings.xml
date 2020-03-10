@@ -73,6 +73,7 @@
 	<string name="notification_location_loading">Carregando localização…</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">Carregando…</string>
     <string name="notification_location_not_availability">Ative a localização do dispositivo!</string>
 	<string name="location_tracking_label">Rastreamento de localização</string>
     <string name="location_tracking_on_label">Ligado</string>
@@ -234,6 +235,7 @@
     <string name="confirm_password_does_not_match">Confirmar senha não corresponde</string>
     <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
+    <string name="account">Conta</string>
     
     <string name="change_profile_photo">Alterar foto do perfil</string>
     <string name="edit_profile">Editar Perfil</string>
@@ -250,5 +252,6 @@
     <string name="reject_text">rejeitar</string>
     <string name="confirm_text">confirme</string>
     <string name="required">Requeridos!</string>
+    <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
 
 </resources>

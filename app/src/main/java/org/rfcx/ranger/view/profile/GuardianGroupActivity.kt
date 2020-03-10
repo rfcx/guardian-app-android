@@ -1,19 +1,20 @@
 package org.rfcx.ranger.view.profile
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_guardian_group.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.CloudMessaging
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
 
@@ -28,6 +29,11 @@ class GuardianGroupActivity : BaseActivity() {
 		setContentView(R.layout.activity_guardian_group)
 		
 		setupToolbar()
+		
+		val dialog: AlertDialog = SpotsDialog.Builder()
+				.setContext(this)
+				.setTheme(R.style.Dialog_Loading)
+				.build()
 		
 		// setup list
 		guardianGroupRecycler.apply {
@@ -52,19 +58,11 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
 			override fun onItemClick(guardianGroup: GuardianGroup) {
-				viewModel.removeAllEvent()
+				dialog.show()
 				analytics.trackSetGuardianGroupEvent()
-				viewModel.subscribeByEmail(guardianGroup.shortname)
-				// TODO what happens on failure?
-				loadingProgress.visibility = View.VISIBLE
-				
-				val preferences = Preferences.getInstance(this@GuardianGroupActivity)
-				preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
-				
-				// TODO should be in the VM
-				CloudMessaging.unsubscribe(this@GuardianGroupActivity) {
-					CloudMessaging.setGroup(this@GuardianGroupActivity, guardianGroup.shortname)
-					CloudMessaging.subscribeIfRequired(this@GuardianGroupActivity) {
+				viewModel.changeGuardianGroup(guardianGroup) {
+					if (it) {
+						dialog.dismiss()
 						finish()
 					}
 				}
