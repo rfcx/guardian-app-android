@@ -62,42 +62,43 @@ fun Event.toEventItem(state: String?): EventItem {
 	return EventItem(this, s)
 }
 
-fun Event.locationCoordinates(context: Context): String {
-	val directionLatitude = if (latitude!! > 0) "N" else "S"
-	val directionLongitude = if (longitude!! > 0) "E" else "W"
-	
-	var strLatitude = ""
-	var strLongitude = ""
-	
-	when (context.getCoordinatesFormat()) {
-		DD_FORMAT -> {
-			strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_DEGREES)
-			strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_DEGREES)
-			
-			strLatitude = "${replaceDelimitersDD(strLatitude, 5)}$directionLatitude"
-			strLongitude = "${replaceDelimitersDD(strLongitude, 5)}$directionLongitude"
+fun Event.locationCoordinates(context: Context): StringBuilder? {
+	if (latitude != null && longitude != null) {
+		val directionLatitude = if (latitude!! > 0) "N" else "S"
+		val directionLongitude = if (longitude!! > 0) "E" else "W"
+		
+		var strLatitude = ""
+		var strLongitude = ""
+		
+		when (context.getCoordinatesFormat()) {
+			DD_FORMAT -> {
+				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_DEGREES)
+				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_DEGREES)
+				
+				strLatitude = "${replaceDelimitersDD(strLatitude, 5)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDD(strLongitude, 5)}$directionLongitude"
+			}
+			DDM_FORMAT -> {
+				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_MINUTES)
+				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_MINUTES)
+				
+				strLatitude = "${replaceDelimitersDDM(strLatitude, 4)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDDM(strLongitude, 4)}$directionLongitude"
+			}
+			DMS_FORMAT -> {
+				strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_SECONDS)
+				strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_SECONDS)
+				
+				strLatitude = "${replaceDelimitersDMS(strLatitude, 1)}$directionLatitude"
+				strLongitude = "${replaceDelimitersDMS(strLongitude, 1)}$directionLongitude"
+			}
 		}
-		DDM_FORMAT -> {
-			strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_MINUTES)
-			strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_MINUTES)
-			
-			strLatitude = "${replaceDelimitersDDM(strLatitude, 4)}$directionLatitude"
-			strLongitude = "${replaceDelimitersDDM(strLongitude, 4)}$directionLongitude"
-		}
-		DMS_FORMAT -> {
-			strLatitude = Location.convert(latitude!!.absoluteValue, Location.FORMAT_SECONDS)
-			strLongitude = Location.convert(longitude!!.absoluteValue, Location.FORMAT_SECONDS)
-			
-			strLatitude = "${replaceDelimitersDMS(strLatitude, 1)}$directionLatitude"
-			strLongitude = "${replaceDelimitersDMS(strLongitude, 1)}$directionLongitude"
-		}
+		return StringBuilder(strLatitude)
+				.append(", ")
+				.append(strLongitude)
 	}
 	
-	val location = StringBuilder(strLatitude)
-			.append(", ")
-			.append(strLongitude)
-	
-	return location.toString()
+	return null
 }
 
 private fun replaceDelimitersDMS(str: String, decimalPlace: Int): String {
