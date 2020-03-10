@@ -74,6 +74,7 @@
     <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
 
     <!-- Settings -->
+    <string name="dialog_loading">Memuat…</string>
 	<string name="location_tracking_label">Pelacakan lokasi</string>
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>
@@ -234,8 +235,9 @@
     <string name="confirm_password_does_not_match">Konfirmasi sandi tidak cocok</string>
     <string name="password_changed_successfully">Password telah berhasil diubah.</string>
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
+    <string name="account">Akun</string>
     
-    <string name="change_profile_photo">Ganti Foto Profil</string>
+    <string name="change_profile_photo">Ganti foto profil</string>
     <string name="edit_profile">Sunting profil</string>
     
     <!--Guardian Group List-->
@@ -250,5 +252,6 @@
     <string name="reject_text">menolak</string>
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
+    <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
 
 </resources>

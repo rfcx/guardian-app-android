@@ -44,7 +44,7 @@ class MapDetailBottomSheetFragment : BaseFragment() {
 		if (report != null) {
 			reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
 			val latLon = StringBuilder(
-					report.longitude.limitDecimalPlace(6))
+					report.latitude.limitDecimalPlace(6))
 					.append(",")
 					.append(report.longitude.limitDecimalPlace(6))
 			reportLocationTextView.text = latLon

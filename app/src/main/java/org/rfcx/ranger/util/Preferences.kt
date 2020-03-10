@@ -42,6 +42,7 @@ class Preferences(context: Context) {
 		const val IS_FIRST_TIME = "${PREFIX}IS_FIRST_TIME"
 		const val IMAGE_PROFILE = "${PREFIX}IMAGE_PROFILE"
 		const val EMAIL_SUBSCRIBE = "${PREFIX}EMAIL_SUBSCRIBE"
+		const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
 	}
 	
 	init {

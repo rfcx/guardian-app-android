@@ -15,6 +15,7 @@ import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity.Companion.DD_FORMAT
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
 	
@@ -26,6 +27,10 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val userName = MutableLiveData<String>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
+	val formatCoordinates = MutableLiveData<String>()
+	
+	private val _logoutState = MutableLiveData<Boolean>()
+	val logoutState: LiveData<Boolean> = _logoutState
 	
 	init {
 		getSiteName()
@@ -35,10 +40,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
 		userName.value = profileData.getUserNickname()
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
+		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 	}
 	
 	fun resumed(){
 		getSiteName()
+		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 	}
 	
 	private fun getSiteName() {
@@ -83,13 +90,16 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun onLogout() {
+		_logoutState.value = true
 		if(profileData.getReceiveNotificationByEmail()){
 			unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 				override fun onSuccess(t: SubscribeResponse) {
+					_logoutState.value = false
 					context.logout()
 				}
 				
 				override fun onError(e: Throwable) {
+					_logoutState.value = false
 				}
 			}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 		} else {

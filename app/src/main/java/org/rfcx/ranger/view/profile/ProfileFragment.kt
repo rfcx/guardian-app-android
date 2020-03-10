@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.profile
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,6 +23,10 @@ import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
+import android.app.ProgressDialog
+import android.os.Handler
+import dmax.dialog.SpotsDialog
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -30,6 +35,13 @@ class ProfileFragment : BaseFragment() {
 	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
+	
+	private val dialog: AlertDialog by lazy {
+		SpotsDialog.Builder()
+			.setContext(context)
+			.setTheme(R.style.Dialog_Loading)
+			.build()
+	}
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -72,15 +84,25 @@ class ProfileFragment : BaseFragment() {
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
 		if (loginWith == LOGIN_WITH_EMAIL) {
+			changeImageProfileTextView.visibility = View.VISIBLE
 			changePasswordTextView.visibility = View.VISIBLE
 			userProfileImageView.visibility = View.VISIBLE
 		} else {
+			changeImageProfileTextView.visibility = View.GONE
 			changePasswordTextView.visibility = View.GONE
 			userProfileImageView.visibility = View.GONE
 		}
 		
 		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
 			profileViewModel.onTracingStatusChange()
+		})
+		
+		profileViewModel.logoutState.observe(this, Observer {
+			if (it) {
+				dialog.show()
+			} else {
+				dialog.dismiss()
+			}
 		})
 	}
 	
@@ -132,11 +154,20 @@ class ProfileFragment : BaseFragment() {
 		viewDataBinding.onClickProfilePhoto = View.OnClickListener {
 			context?.let { it1 -> EditProfileActivity.startActivity(it1) }
 		}
+		
+		viewDataBinding.onClickCoordinates = View.OnClickListener {
+			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
+		}
 	}
 	
 	override fun onStart() {
 		super.onStart()
 		profileViewModel.updateSiteName()
+	}
+	
+	override fun onPause() {
+		super.onPause()
+		dialog.dismiss()
 	}
 	
 	private fun handleShowSnackbarResult(requestCode: Int, resultCode: Int, intentData: Intent?) {

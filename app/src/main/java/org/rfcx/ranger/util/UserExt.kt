@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.realm.Realm
 import org.rfcx.ranger.localdb.SiteGuardianDb
 import org.rfcx.ranger.view.login.LoginActivityNew
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity.Companion.DD_FORMAT
 
 fun Context.getTokenID(): String? {
 	val idToken = Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "")
@@ -123,4 +124,9 @@ fun Context?.getUserProfile(): String? {
 
 fun Context?.getNameEmail(): String {
 	return getUserEmail().split("@")[0]
+}
+
+fun Context?.getCoordinatesFormat(): String? {
+	val preferences = this?.let { Preferences.getInstance(it) }
+	return preferences?.getString(Preferences.COORDINATES_FORMAT, DD_FORMAT)
 }
