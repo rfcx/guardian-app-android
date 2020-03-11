@@ -28,7 +28,15 @@
     <string name="create_new_reports">สร้างรายงานใหม่</string>
     <string name="view_reports">ดูรายงานตามพื้นที่</string>
     <string name="app_intro">คู่มือการใช้งานแอป</string>
+    <string name="coordinates">รูปแบบพิกัด GPS</string>
     
+    <string name="dd_coordinates">DD</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+    
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
     <string name="invitation_submit_button_label">บันทึก</string>
