@@ -24,6 +24,7 @@ import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.event.ReviewEventFactory
+import org.rfcx.ranger.service.CleanupAudioCacheWorker.Companion.AUDIOS_SUB_DIRECTORY
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
 import org.rfcx.ranger.util.getNameEmail
@@ -146,8 +147,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 		} else {
 			audioUrl
 		}
-		
-		val audioFile = File(context.cacheDir, "${eventResult?.audioId}.opus")
+		val audiosDirectory = File(context.cacheDir, AUDIOS_SUB_DIRECTORY)
+		val audioFile = File(audiosDirectory, "${eventResult?.audioId}.opus")
 		val mediaSource = if (audioFile.exists()) {
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
@@ -236,7 +237,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 					}
 					eventDb.saveEvent(event)
 					_reviewEvent.value = Result.Success(Pair(event, requests))
-					_eventState.value = EventState.REVIEWED	// invoke state to review
+					_eventState.value = EventState.REVIEWED    // invoke state to review
 				}
 				
 			}, requests)

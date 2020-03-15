@@ -38,6 +38,7 @@ class EventDb(val realm: Realm) {
 		realm.use { it ->
 			it.executeTransaction {
 				val events = it.where(Event::class.java)
+						.sort("beginsAt",Sort.DESCENDING)
 						.findAll()
 				list.addAll(it.copyFromRealm(events))
 			}
