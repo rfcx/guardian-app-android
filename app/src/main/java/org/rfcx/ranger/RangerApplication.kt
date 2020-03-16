@@ -15,6 +15,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.rfcx.ranger.di.DataModule
 import org.rfcx.ranger.di.UiModule
+import org.rfcx.ranger.service.CleanupAudioCacheWorker
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
 import org.rfcx.ranger.util.RealmHelper
@@ -36,6 +37,7 @@ class RangerApplication : MultiDexApplication() {
 		setupKoin()
 		ReportCleanupWorker.enqueuePeriodically()
 		LocationCleanupWorker.enqueuePeriodically()
+		CleanupAudioCacheWorker.enqueuePeriodically()
 		
 		if (BuildConfig.USE_STETHO) {
 			Stetho.initialize(Stetho.newInitializerBuilder(this)
