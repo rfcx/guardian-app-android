@@ -41,7 +41,7 @@
 			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:layout_marginBottom="@dimen/margin_padding_normal"
-			android:text="@string/invitation_submit_button_label"
+			android:text="@string/continue_text"
 			android:enabled="false"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
