@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	tools:context=".view.login.TermsAndServiceFragment">
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		android:focusable="true"
+		android:focusableInTouchMode="true"
+		android:paddingBottom="@dimen/margin_padding_normal">
+		
+		<WebView
+			android:id="@+id/termsAndConditionsWebview"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_margin="@dimen/margin_padding_normal"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/checkBox"/>
+		
+		<CheckBox
+			android:id="@+id/checkBox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_padding_normal"
+			app:layout_constraintStart_toStartOf="parent"
+			android:text="@string/terms_and_service"
+			app:layout_constraintBottom_toTopOf="@id/submitButton"/>
+		
+		<androidx.appcompat.widget.AppCompatButton
+			android:id="@+id/submitButton"
+			style="@style/RangerButton.GreenButton"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/button_height"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
+			android:text="@string/invitation_submit_button_label"
+			android:enabled="false"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"/>
+		
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
