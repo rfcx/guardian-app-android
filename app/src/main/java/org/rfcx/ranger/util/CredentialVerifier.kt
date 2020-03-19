@@ -24,6 +24,7 @@ class CredentialVerifier(val context: Context) {
 		
 		// Parsing JWT Token
 		val metaDataKey = getString(R.string.auth0_metadata_key)
+		val userMetaDataKey = getString(R.string.auth0_user_metadata_key)
 		val withoutSignature = token.substring(0, token.lastIndexOf('.') + 1)
 		try {
 			val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
@@ -64,13 +65,25 @@ class CredentialVerifier(val context: Context) {
 				}
 			}
 			
+			val userUntrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+			if (userUntrusted.body[userMetaDataKey] == null) {
+				return Err(getString(R.string.an_error_occurred))
+			}
+			
+			val userMetadata = userUntrusted.body[userMetaDataKey]
+			if (userMetadata == null || !(userMetadata is HashMap<*, *>)) {
+				return Err(getString(R.string.an_error_occurred))
+			}
+			
+			val consentGivenRangerApp: String? = userMetadata["consentGivenRangerApp"] as String?
+			
 			when {
 				guid.isNullOrEmpty() -> {
 					return Err(getString(R.string.an_error_occurred))
 				}
 				else -> {
-					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture))
-				}
+					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture, consentGivenRangerApp))
+			}
 			}
 		} catch (e: Exception) {
 			e.printStackTrace()
