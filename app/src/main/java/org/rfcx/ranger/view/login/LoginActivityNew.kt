@@ -85,6 +85,13 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 	}
 	
+	override fun openTermsAndServiceFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, TermsAndServiceFragment(),
+						"TermsAndServiceFragment").commit()
+		
+	}
+	
 	private fun getEventFromIntentIfHave(intent: Intent?) :String? {
 		if (intent?.hasExtra("event_guid") == true) {
 			return intent.getStringExtra("event_guid")
@@ -97,4 +104,5 @@ interface LoginListener {
 	fun openMain()
 	fun openInvitationCodeFragment()
 	fun openSetUserNameFragmentFragment()
+	fun openTermsAndServiceFragment()
 }

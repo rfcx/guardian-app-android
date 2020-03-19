@@ -62,7 +62,7 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 			override fun onError(e: Throwable) {
 				callback(false)
 			}
-		}, InvitationCodeRequest(code))
+		}, InvitationCodeRequest(code, true, "RangerApp"))
 	}
 	
 	private fun refreshToken(callback: (Boolean) -> Unit) {

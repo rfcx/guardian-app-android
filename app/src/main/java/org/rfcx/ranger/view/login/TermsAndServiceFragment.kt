@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.login
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,18 @@ import kotlinx.android.synthetic.main.fragment_terms_and_service.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class TermsAndServiceFragment : BaseFragment() {
-	
+	lateinit var listener: LoginListener
 	private val termsAndServiceViewModel: TermsAndServiceViewModel by viewModel()
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as LoginListener)
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -32,7 +39,16 @@ class TermsAndServiceFragment : BaseFragment() {
 		}
 		
 		submitButton.setOnClickListener {
-			termsAndServiceViewModel.acceptTerms()
+			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
+			val isConsentGiven = preferenceHelper?.getBoolean(Preferences.IS_RANGER, false)
+			
+			if (isConsentGiven != null) {
+				if(isConsentGiven){
+					termsAndServiceViewModel.acceptTerms()
+				} else {
+					listener.openInvitationCodeFragment()
+				}
+			}
 			
 			termsAndServiceViewModel.consentGivenState.observe(this, Observer {
 				it.success({ state ->
