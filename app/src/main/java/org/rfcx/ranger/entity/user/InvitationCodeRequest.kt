@@ -7,7 +7,7 @@ data class InvitationCodeRequest(
 		val code: String,
 		
 		@SerializedName("accept_terms")
-		val acceptTerms: Boolean,
+		val acceptTerms: String,
 		
 		@SerializedName("app")
 		val app: String

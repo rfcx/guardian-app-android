@@ -66,16 +66,18 @@ class CredentialVerifier(val context: Context) {
 			}
 			
 			val userUntrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
+			var consentGivenRangerApp: String? = null
+			
 			if (userUntrusted.body[userMetaDataKey] == null) {
-				return Err(getString(R.string.an_error_occurred))
+				consentGivenRangerApp = null
 			}
 			
 			val userMetadata = userUntrusted.body[userMetaDataKey]
-			if (userMetadata == null || !(userMetadata is HashMap<*, *>)) {
-				return Err(getString(R.string.an_error_occurred))
+			if (userMetadata != null) {
+				if((userMetadata is HashMap<*, *>)) {
+					consentGivenRangerApp = userMetadata["consentGivenRangerApp"] as String?
+				}
 			}
-			
-			val consentGivenRangerApp: String? = userMetadata["consentGivenRangerApp"] as String?
 			
 			when {
 				guid.isNullOrEmpty() -> {

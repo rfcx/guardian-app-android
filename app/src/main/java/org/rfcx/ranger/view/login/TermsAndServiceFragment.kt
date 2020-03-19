@@ -40,10 +40,10 @@ class TermsAndServiceFragment : BaseFragment() {
 		
 		submitButton.setOnClickListener {
 			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
-			val isConsentGiven = preferenceHelper?.getBoolean(Preferences.IS_RANGER, false)
-			
-			if (isConsentGiven != null) {
-				if(isConsentGiven){
+			val isRanger = preferenceHelper?.getBoolean(Preferences.IS_RANGER, false)
+	
+			if (isRanger != null) {
+				if(isRanger){
 					termsAndServiceViewModel.acceptTerms()
 				} else {
 					listener.openInvitationCodeFragment()
