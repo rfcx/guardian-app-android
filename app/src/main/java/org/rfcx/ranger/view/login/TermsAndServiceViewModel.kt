@@ -15,7 +15,6 @@ import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.terms.TermsUseCase
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.terms.TermsRequest
 import org.rfcx.ranger.entity.terms.TermsResponse
 import org.rfcx.ranger.util.CredentialKeeper
@@ -41,12 +40,13 @@ class TermsAndServiceViewModel(private val context: Context, private val termsUs
 	
 	fun acceptTerms() {
 		_consentGivenState.value = Result.Loading
+		
 		termsUseCase.execute(object : DisposableSingleObserver<TermsResponse>() {
 			override fun onSuccess(t: TermsResponse) {
 				if (t.success) {
 					refreshToken {
-						if(it){
-							_consentGivenState.value = Result.Success(true)
+						if (it) {
+							_consentGivenState.postValue(Result.Success(true))
 						}
 					}
 				}

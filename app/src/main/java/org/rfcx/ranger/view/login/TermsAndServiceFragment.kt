@@ -39,14 +39,14 @@ class TermsAndServiceFragment : BaseFragment() {
 					if (state) {
 						context?.let { it1 -> MainActivityNew.startActivity(it1, null) }
 					}
-					termsProgressBar.visibility = View.GONE
 				}, {
 					termsProgressBar.visibility = View.GONE
+					submitButton.visibility = View.VISIBLE
+					
 				}, {
 					termsProgressBar.visibility = View.VISIBLE
+					submitButton.visibility = View.INVISIBLE
 				})
-				
-				
 			})
 		}
 	}
