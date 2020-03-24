@@ -18,6 +18,7 @@ import org.rfcx.ranger.data.remote.setusername.SetNameEndpoint
 import org.rfcx.ranger.data.remote.shortlink.ShortLinkEndpoint
 import org.rfcx.ranger.data.remote.site.SiteEndpoint
 import org.rfcx.ranger.data.remote.subscribe.SubscribeEndpoint
+import org.rfcx.ranger.data.remote.terms.TermsEndpoint
 import org.rfcx.ranger.data.remote.usertouch.UserTouchEndPoint
 import org.rfcx.ranger.util.GsonProvider
 import org.rfcx.ranger.util.ImprovedDateTypeAdapter
@@ -99,6 +100,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SubscribeEndpoint::class.java)
+	}
+	
+	fun makeTermsService(isDebug: Boolean, context: Context): TermsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(TermsEndpoint::class.java)
 	}
 	
 	private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

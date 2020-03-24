@@ -38,6 +38,9 @@
 	<string name="please_tell_name">Vertel ons uw naam</string>
 	<string name="hint_name">Naam</string>
 	
+	<string name="terms_and_service">Ik heb gelezen en ga akkoord met deze voorwaarden en service</string>
+	<string name="continue_text">Doorgaan met</string>
+	
 	<!-- common error -->
 	<string name="error_common">Er is een fout opgetreden. Probeer het opnieuw.</string>
 	<string name="location_permission_msg">Ranger App wilt uw locatie te gebruiken</string>

@@ -46,6 +46,9 @@
     <string name="please_tell_name">Por favor, diga-nos o seu nome</string>
     <string name="hint_name">Nome</string>
     
+    <string name="terms_and_service">Eu li e concordo com os Termos e Serviço</string>
+    <string name="continue_text">Continuar</string>
+    
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
     <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>

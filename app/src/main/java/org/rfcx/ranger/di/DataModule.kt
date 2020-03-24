@@ -50,6 +50,9 @@ import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeRepository
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeRepositoryImp
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
+import org.rfcx.ranger.data.remote.terms.TermsRepository
+import org.rfcx.ranger.data.remote.terms.TermsRepositoryImp
+import org.rfcx.ranger.data.remote.terms.TermsUseCase
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
@@ -110,6 +113,9 @@ object DataModule {
 		single { UnsubscribeRepositoryImp(get()) } bind UnsubscribeRepository::class
 		single { UnsubscribeUseCase(get(), get(), get()) }
 		
+		single { TermsRepositoryImp(get()) } bind TermsRepository::class
+		single { TermsUseCase(get(), get(), get()) }
+		
 	}
 	
 	val remoteModule = module {
@@ -125,6 +131,7 @@ object DataModule {
 		factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeTermsService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {

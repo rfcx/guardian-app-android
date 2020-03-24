@@ -31,6 +31,9 @@ class CredentialKeeper(val context: Context) {
         if (user.picture != null) {
             preferences.putString(Preferences.IMAGE_PROFILE, user.picture)
         }
+        if (user.consentGivenRangerApp != null) {
+            preferences.putBoolean(Preferences.CONSENT_GIVEN, true)
+        }
         preferences.putStringSet(Preferences.ROLES, user.roles)
         preferences.putStringSet(Preferences.ACCESSIBLE_SITES, user.accessibleSites)
         if (user.defaultSite != null) {
