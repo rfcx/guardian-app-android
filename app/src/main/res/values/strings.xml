@@ -238,6 +238,7 @@
 	<string name="profile_feedback_label">Feedback</string>
 	<string name="profile_rate_app_label">Rate the app</string>
 	<string name="save_changed">Save Changes</string>
+	<string name="please_try_again_later">Please try again later</string>
 	
 	<string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
 	<string name="feedback_submission_failed">Feedback submission failed! Please try again.</string>

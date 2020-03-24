@@ -248,6 +248,7 @@
     <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
     <string name="account">Conta</string>
+    <string name="please_try_again_later">tente novamente mais tarde.</string>
     
     <string name="change_profile_photo">Alterar foto do perfil</string>
     <string name="edit_profile">Editar Perfil</string>

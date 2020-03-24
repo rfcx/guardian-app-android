@@ -238,6 +238,7 @@
 	<string name="profile_feedback_label">Terugkoppeling</string>
 	<string name="profile_rate_app_label">Beoordeel de app</string>
 	<string name="save_changed">Wijzigingen opslaan</string>
+	<string name="please_try_again_later">Probeer het later opnieuw.</string>
 	
 	<string name="feedback_submitted">Terugkoppeling ingediend. Bedankt voor je tijd :)</string>
 	<string name="feedback_submission_failed">Indienen van gebruikersfeedback mislukt! Probeer het opnieuw.</string>

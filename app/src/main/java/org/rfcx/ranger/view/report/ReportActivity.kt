@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +45,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import org.rfcx.ranger.databinding.ActivityReportBinding
+import kotlin.concurrent.timerTask
 
 
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
@@ -58,6 +60,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
 	private val analytics by lazy { Analytics(this) }
+	
+	private val waitingForLocationTimer: Timer = Timer()
 	
 	private lateinit var binding: ActivityReportBinding
 	
@@ -127,6 +131,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
 		}
 		stopPlaying()
+		waitingForLocationTimer.cancel()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -215,14 +220,31 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		if (isDestroyed) return
 		locationManager?.removeUpdates(locationListener)
 		locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		waitingForLocationTimer.schedule(timerTask {
+			if (lastLocation == null) {
+				runOnUiThread {
+					showLocationMessageError(getString(R.string.in_air_plane_mode))
+					AlertDialog.Builder(this@ReportActivity)
+							.setTitle(null)
+							.setMessage("${getString(R.string.in_air_plane_mode)}. ${getString(R.string.please_try_again_later)}")
+							.setCancelable(true)
+							.setPositiveButton(R.string.button_ok) { dialog, _ ->
+								dialog.dismiss()
+								finish()
+							}.show()
+				}
+			}
+		}, 30 * 1000) // waiting for 30 sec if cannot get location show error
 		try {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
 			lastLocation?.let { markRangerLocation(it) }
 		} catch (ex: SecurityException) {
+			showLocationMessageError(getString(R.string.in_air_plane_mode))
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
+			showLocationMessageError(getString(R.string.in_air_plane_mode))
 			ex.printStackTrace()
 		}
 		
