@@ -62,7 +62,7 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 			override fun onError(e: Throwable) {
 				callback(false)
 			}
-		}, InvitationCodeRequest(code, "true", "RangerApp"))
+		}, InvitationCodeRequest(code, USER_ACCEPTED, APP_NAME))
 	}
 	
 	private fun refreshToken(callback: (Boolean) -> Unit) {
@@ -93,6 +93,11 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 				callback(false)
 			}
 		})
+	}
+	
+	companion object {
+		const val USER_ACCEPTED = "true"
+		const val APP_NAME = "RangerApp"
 	}
 }
 
