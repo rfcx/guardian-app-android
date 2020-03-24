@@ -28,7 +28,15 @@
     <string name="create_new_reports">สร้างรายงานใหม่</string>
     <string name="view_reports">ดูรายงานตามพื้นที่</string>
     <string name="app_intro">คู่มือการใช้งานแอป</string>
+    <string name="coordinates">รูปแบบพิกัด GPS</string>
     
+    <string name="dd_coordinates">DD</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+    
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
     <string name="invitation_submit_button_label">บันทึก</string>
@@ -36,6 +44,9 @@
     <string name="what_we_call_you">ให้เราเรียกคุณว่าอะไรดี</string>
     <string name="please_tell_name">กรุณาบอกชื่อคุณกับเรา</string>
     <string name="hint_name">ชื่อ</string>
+    
+    <string name="terms_and_service">ข้าพเจ้าได้อ่านและยอมรับข้อกำหนดและบริการดังกล่าว</string>
+    <string name="continue_text">ถัดไป</string>
     
     <!-- common error -->
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
@@ -235,6 +246,7 @@
     <string name="password_changed_successfully">การเปลี่ยนรหัสผ่านสำเร็จ</string>
     <string name="something_is_wrong">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     <string name="account">บัญชีผู้ใช้</string>
+    <string name="please_try_again_later">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     
     <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
     <string name="edit_profile">แก้ไขโปรไฟล์</string>

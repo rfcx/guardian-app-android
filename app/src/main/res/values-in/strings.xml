@@ -28,6 +28,15 @@
     <string name="create_new_reports">Membuat laporan baru</string>
     <string name="view_reports">Lihat laporan berdasarkan lokasi</string>
     <string name="app_intro">App Intro</string>
+    <string name="coordinates">Koordinat</string>
+    
+    <string name="dd_coordinates">DD</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+    
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
@@ -36,6 +45,9 @@
     <string name="what_we_call_you">Apa yang harus kita sebut Anda?</string>
     <string name="please_tell_name">Silakan beritahu kami nama Anda</string>
     <string name="hint_name">Nama</string>
+    
+    <string name="terms_and_service">Saya telah membaca dan menyetujui Syarat dan Layanan</string>
+    <string name="continue_text">Terus</string>
     
     <!-- common error -->
     <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
@@ -236,6 +248,7 @@
     <string name="password_changed_successfully">Password telah berhasil diubah.</string>
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
     <string name="account">Akun</string>
+    <string name="please_try_again_later">Silakan coba lagi nanti</string>
     
     <string name="change_profile_photo">Ganti foto profil</string>
     <string name="edit_profile">Sunting profil</string>

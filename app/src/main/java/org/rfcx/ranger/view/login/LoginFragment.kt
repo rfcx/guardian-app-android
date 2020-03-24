@@ -90,8 +90,8 @@ class LoginFragment : BaseFragment() {
 		loginViewModel.redirectPage.observe(this, Observer { loginRedirect ->
 			when (loginRedirect) {
 				LoginRedirect.MAIN_PAGE -> listener.openMain()
-				LoginRedirect.INVITE_CODE_PAGE -> listener.openInvitationCodeFragment()
 				LoginRedirect.SET_USER_NAME -> listener.openSetUserNameFragmentFragment()
+				LoginRedirect.TERMS_AND_SERVICE -> listener.openTermsAndServiceFragment()
 				else -> loading(false)
 			}
 		})

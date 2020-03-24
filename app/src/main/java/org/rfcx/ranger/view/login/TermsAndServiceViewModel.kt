@@ -11,16 +11,18 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.remote.invitecode.SendInviteCodeUseCase
+import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.terms.TermsUseCase
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
-import org.rfcx.ranger.entity.user.InvitationCodeRequest
-import org.rfcx.ranger.entity.user.InvitationCodeResponse
+import org.rfcx.ranger.entity.terms.TermsRequest
+import org.rfcx.ranger.entity.terms.TermsResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.getResultError
 
-class InvitationCodeViewModel(private val context: Context, private val sendInviteCodeUseCase: SendInviteCodeUseCase) : ViewModel() {
+class TermsAndServiceViewModel(private val context: Context, private val termsUseCase: TermsUseCase) : ViewModel() {
 	
 	private val auth0 by lazy {
 		val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
@@ -33,36 +35,27 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 		AuthenticationAPIClient(auth0)
 	}
 	
-	private var _submitCodeState: MutableLiveData<SubmitState> = MutableLiveData()
-	val submitCodeState: LiveData<SubmitState>
-		get() = _submitCodeState
+	private val _consentGivenState = MutableLiveData<Result<Boolean>>()
+	val consentGivenState: LiveData<Result<Boolean>> get() = _consentGivenState
 	
-	fun doSubmit(code: String) {
-		submit(code) { success ->
-			if (success) {
-				_submitCodeState.postValue(SubmitState.SUCCESS)
-			} else {
-				_submitCodeState.postValue(SubmitState.FAILED)
-			}
-		}
-	}
-	
-	fun setSubmitState() {
-		_submitCodeState.value = SubmitState.NONE
-	}
-	
-	private fun submit(code: String, callback: (Boolean) -> Unit) {
-		sendInviteCodeUseCase.execute(object : DisposableSingleObserver<InvitationCodeResponse>() {
-			override fun onSuccess(t: InvitationCodeResponse) {
-				refreshToken { success ->
-					callback(success)
+	fun acceptTerms() {
+		_consentGivenState.value = Result.Loading
+		
+		termsUseCase.execute(object : DisposableSingleObserver<TermsResponse>() {
+			override fun onSuccess(t: TermsResponse) {
+				if (t.success) {
+					refreshToken {
+						if (it) {
+							_consentGivenState.postValue(Result.Success(true))
+						}
+					}
 				}
 			}
 			
 			override fun onError(e: Throwable) {
-				callback(false)
+				_consentGivenState.value = e.getResultError()
 			}
-		}, InvitationCodeRequest(code, USER_ACCEPTED, APP_NAME))
+		}, TermsRequest("RangerApp"))
 	}
 	
 	private fun refreshToken(callback: (Boolean) -> Unit) {
@@ -74,8 +67,7 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 		
 		authentication.renewAuth(refreshToken).start(object : BaseCallback<Credentials, AuthenticationException> {
 			override fun onSuccess(credentials: Credentials) {
-				val result = CredentialVerifier(context).verify(credentials)
-				when (result) {
+				when (val result = CredentialVerifier(context).verify(credentials)) {
 					is Err -> {
 						callback(false)
 					}
@@ -94,13 +86,4 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 			}
 		})
 	}
-	
-	companion object {
-		const val USER_ACCEPTED = "true"
-		const val APP_NAME = "RangerApp"
-	}
-}
-
-enum class SubmitState {
-	NONE, FAILED, SUCCESS
 }

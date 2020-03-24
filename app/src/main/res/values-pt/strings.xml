@@ -28,6 +28,15 @@
     <string name="create_new_reports">Criar novos relatórios</string>
     <string name="view_reports">Visualizar relatórios por localização</string>
     <string name="app_intro">App Intro</string>
+    <string name="coordinates">Coordenadas</string>
+    
+    <string name="dd_coordinates">DD</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+    
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Assinar em </string>
@@ -36,6 +45,9 @@
     <string name="what_we_call_you">O que devemos chamá-lo?</string>
     <string name="please_tell_name">Por favor, diga-nos o seu nome</string>
     <string name="hint_name">Nome</string>
+    
+    <string name="terms_and_service">Eu li e concordo com os Termos e Serviço</string>
+    <string name="continue_text">Continuar</string>
     
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
@@ -236,6 +248,7 @@
     <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
     <string name="account">Conta</string>
+    <string name="please_try_again_later">tente novamente mais tarde.</string>
     
     <string name="change_profile_photo">Alterar foto do perfil</string>
     <string name="edit_profile">Editar Perfil</string>

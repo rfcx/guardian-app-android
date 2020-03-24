@@ -33,7 +33,15 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
 		val eventGuId = getEventFromIntentIfHave(intent)
-		if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty() && getUserNickname().substring(0, 1) != "+") {
+		
+		val preferenceHelper = Preferences.getInstance(this)
+		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN,false)
+		
+		if(CredentialKeeper(this).hasValidCredentials() && !isConsentGiven) {
+			supportFragmentManager.beginTransaction()
+					.add(loginContainer.id, TermsAndServiceFragment(),
+							"TermsAndServiceFragment").commit()
+		} else if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty() && getUserNickname().substring(0, 1) != "+") {
 			MainActivityNew.startActivity(this@LoginActivityNew, eventGuId)
 			finish()
 		} else {
@@ -77,6 +85,13 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 	}
 	
+	override fun openTermsAndServiceFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, TermsAndServiceFragment(),
+						"TermsAndServiceFragment").commit()
+		
+	}
+	
 	private fun getEventFromIntentIfHave(intent: Intent?) :String? {
 		if (intent?.hasExtra("event_guid") == true) {
 			return intent.getStringExtra("event_guid")
@@ -89,4 +104,5 @@ interface LoginListener {
 	fun openMain()
 	fun openInvitationCodeFragment()
 	fun openSetUserNameFragmentFragment()
+	fun openTermsAndServiceFragment()
 }

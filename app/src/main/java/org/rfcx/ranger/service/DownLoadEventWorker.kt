@@ -13,6 +13,7 @@ import okio.sink
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.service.CleanupAudioCacheWorker.Companion.TWO_WEEKS
 import org.rfcx.ranger.util.RealmHelper
 import retrofit2.Call
 import retrofit2.Response
@@ -21,25 +22,32 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 import java.io.File
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
-	
+	private val audioDirectory = File(context.cacheDir, AUDIOS_SUB_DIRECTORY)
 	private val needTobeDownloadEvent = arrayListOf<Event>()
 	override fun doWork(): Result {
 		Log.d(TAG, "doWork")
+		
+		if (!audioDirectory.exists()) {
+			audioDirectory.mkdir()
+		}
+		val nowDate = Date(System.currentTimeMillis())
 		val eventDb = EventDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val events = eventDb.getEventsSync()
 		needTobeDownloadEvent.clear()
 		for (event in events) {
-			val file = File(applicationContext.cacheDir, "${event.audioId}.opus")
-			if (!file.exists()) {
-				needTobeDownloadEvent.add(event)
+			if ((nowDate.time - event.beginsAt.time) <= TWO_WEEKS) {
+				val file = File(audioDirectory, "${event.audioId}.opus")
+				if (!file.exists())
+					needTobeDownloadEvent.add(event)
+			} else {
+				break
 			}
 		}
-		
 		startDownload()
-		
 		return if (needTobeDownloadEvent.isNotEmpty()) Result.retry() else Result.success()
 	}
 	
@@ -69,8 +77,8 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 	
 	private fun saveFile(context: Context, response: Response<ResponseBody>, fileName: String,
 	                     callback: (Boolean) -> Unit) {
-		val temp = File(context.cacheDir, "$fileName _temp")
-		val file = File(context.cacheDir, fileName)
+		val temp = File(audioDirectory, "$fileName _temp")
+		val file = File(audioDirectory, fileName)
 		
 		if (file.exists()) {
 			callback.invoke(true)
@@ -106,7 +114,7 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 	companion object {
 		private const val TAG = "DownLoadEventWorker"
 		private const val UNIQUE_WORK_KEY = "DownLoadEventWorkerUniqueKey"
-		
+		const val AUDIOS_SUB_DIRECTORY = "audios"
 		fun enqueue() {
 			val constraints = Constraints.Builder()
 					.setRequiredNetworkType(NetworkType.CONNECTED)
