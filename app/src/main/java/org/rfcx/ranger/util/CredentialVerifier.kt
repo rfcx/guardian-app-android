@@ -74,7 +74,7 @@ class CredentialVerifier(val context: Context) {
 			
 			val userMetadata = userUntrusted.body[userMetaDataKey]
 			if (userMetadata != null) {
-				if((userMetadata is HashMap<*, *>)) {
+				if ((userMetadata is HashMap<*, *>)) {
 					consentGivenRangerApp = userMetadata["consentGivenRangerApp"] as String?
 				}
 			}
@@ -85,7 +85,7 @@ class CredentialVerifier(val context: Context) {
 				}
 				else -> {
 					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture, consentGivenRangerApp))
-			}
+				}
 			}
 		} catch (e: Exception) {
 			e.printStackTrace()

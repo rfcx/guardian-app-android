@@ -5,7 +5,5 @@ import org.rfcx.ranger.entity.terms.TermsRequest
 import org.rfcx.ranger.entity.terms.TermsResponse
 
 interface TermsRepository {
-	
 	fun sendBodyPayload(sendBody: TermsRequest): Single<TermsResponse>
-	
 }

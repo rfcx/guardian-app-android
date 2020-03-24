@@ -7,8 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface TermsEndpoint {
-	
 	@POST("v1/users/accept-terms")
 	fun sendPayload(@Body body: TermsRequest): Single<TermsResponse>
-	
 }
