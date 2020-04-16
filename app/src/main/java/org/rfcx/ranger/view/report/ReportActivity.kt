@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -29,10 +28,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.Style
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.databinding.ActivityReportBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
@@ -44,7 +47,6 @@ import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
 import java.util.*
-import org.rfcx.ranger.databinding.ActivityReportBinding
 import kotlin.concurrent.timerTask
 
 
@@ -64,6 +66,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val waitingForLocationTimer: Timer = Timer()
 	
 	private lateinit var binding: ActivityReportBinding
+	private lateinit var mapView: MapView
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -77,7 +80,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
-				markRangerLocation(it)
+//				markRangerLocation(it)
 			}
 		}
 		
@@ -103,10 +106,23 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		Mapbox.getInstance(
+				this,
+				"pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
+		)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
+		mapView = findViewById(R.id.mapBoxView)
+		mapView.onCreate(savedInstanceState)
+		mapView.getMapAsync { mapboxMap ->
+			
+			mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+				
+				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
+			}
+		}
 		
 		bindActionbar()
-		setupMap()
+//		setupMap()
 		setupRecordSoundProgressView()
 		setupImageRecycler()
 		setupOnClick()
@@ -126,10 +142,10 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	override fun onDestroy() {
 		super.onDestroy()
 		locationManager?.removeUpdates(locationListener)
-		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.let {
-			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-		}
+//		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
+//		map?.let {
+//			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+//		}
 		stopPlaying()
 		waitingForLocationTimer.cancel()
 	}
@@ -195,9 +211,9 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	}
 	
 	override fun onMapReady(map: GoogleMap?) {
-		googleMap = map
-		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-		checkThenAccquireLocation()
+//		googleMap = map
+//		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+//		checkThenAccquireLocation()
 	}
 	
 	private fun checkThenAccquireLocation() {
@@ -239,7 +255,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
-			lastLocation?.let { markRangerLocation(it) }
+//			lastLocation?.let { markRangerLocation(it) }
 		} catch (ex: SecurityException) {
 			showLocationMessageError(getString(R.string.in_air_plane_mode))
 			ex.printStackTrace()
