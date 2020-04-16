@@ -20,6 +20,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.Style
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -35,11 +38,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInPolyline: Polyline? = null
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
-	private var googleMap: GoogleMap? = null
+//	private var googleMap: GoogleMap? = null
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
 	private val analytics by lazy { context?.let { Analytics(it) } }
+	
+	private var mapView: MapView? = null
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -51,6 +56,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
 		override fun onProviderEnabled(p0: String?) {}
 		override fun onProviderDisabled(p0: String?) {}
+	}
+	
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		context?.let {
+			Mapbox.getInstance(
+					it,
+					"pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
+			)
+		}
 	}
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -78,7 +93,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		setupMap()
+		
+		mapView = view.findViewById(R.id.mapView)
+		
+		mapView?.onCreate(savedInstanceState)
+		mapView?.getMapAsync { mapboxMap ->
+			mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
+			}
+		}
+//		setupMap()
 	}
 	
 	override fun onDestroyView() {
@@ -123,12 +147,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	override fun onMapReady(map: GoogleMap?) {
-		googleMap = map
-		map?.let {
-			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-			setDisplay()
-			checkThenAccquireLocation()
-		}
+//		googleMap = map
+//		map?.let {
+//			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
+//			setDisplay()
+//			checkThenAccquireLocation()
+//		}
 	}
 	
 	private fun checkThenAccquireLocation() {
@@ -137,8 +161,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		} else {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
-					googleMap?.isMyLocationEnabled = isAllowed
-					googleMap?.uiSettings?.isMyLocationButtonEnabled = true
+//					googleMap?.isMyLocationEnabled = isAllowed
+//					googleMap?.uiSettings?.isMyLocationButtonEnabled = true
 					getLocation()
 				} else {
 					setDisplay()
@@ -166,19 +190,19 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setDisplay() {
-		googleMap?.let { displayReport(it) }
-		googleMap?.let { displayCheckIn(it) }
-		googleMap?.setOnMapClickListener {
-			(activity as MainActivityEventListener).hideBottomSheet()
-		}
+//		googleMap?.let { displayReport(it) }
+//		googleMap?.let { displayCheckIn(it) }
+//		googleMap?.setOnMapClickListener {
+//			(activity as MainActivityEventListener).hideBottomSheet()
+//		}
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
 		lastLocation = location
-		googleMap?.clear()
-		val latLng = LatLng(location.latitude, location.longitude)
-		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				latLng, 15f))
+//		googleMap?.clear()
+//		val latLng = LatLng(location.latitude, location.longitude)
+//		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//				latLng, 15f))
 	}
 	
 	private fun displayReport(map: GoogleMap) {
@@ -273,9 +297,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	fun moveToReportMarker(report: Report) {
-		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-				LatLng(report.latitude, report.longitude), googleMap?.cameraPosition?.zoom ?: 18f)
-		googleMap?.animateCamera(cameraUpdate)
+//		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+//				LatLng(report.latitude, report.longitude), googleMap?.cameraPosition?.zoom ?: 18f)
+//		googleMap?.animateCamera(cameraUpdate)
 		
 	}
 	
