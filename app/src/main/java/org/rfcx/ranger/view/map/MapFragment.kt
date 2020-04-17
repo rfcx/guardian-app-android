@@ -20,6 +20,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -39,7 +43,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInPolyline: Polyline? = null
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
-	//	private var googleMap: GoogleMap? = null
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
@@ -150,15 +153,47 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapboxMap.setStyle(Style.OUTDOORS) {
-			switchButton.setOnClickListener {
-				currentStyle = if (currentStyle == Style.OUTDOORS) {
-					mapboxMap.setStyle(Style.SATELLITE)
-					Style.SATELLITE
-				} else {
-					mapboxMap.setStyle(Style.OUTDOORS)
-					Style.OUTDOORS
-				}
+			mapboxMap.setMinZoomPreference(10.0)
+			getCurrentLocation(mapboxMap)
+			switchMap(mapboxMap)
+		}
+	}
+	
+	private fun switchMap(mapboxMap: MapboxMap) {
+		switchButton.setOnClickListener {
+			currentStyle = if (currentStyle == Style.OUTDOORS) {
+				mapboxMap.setStyle(Style.SATELLITE)
+				Style.SATELLITE
+			} else {
+				mapboxMap.setStyle(Style.OUTDOORS)
+				Style.OUTDOORS
 			}
+		}
+	}
+	
+	private fun getCurrentLocation(mapboxMap: MapboxMap) {
+		context?.let {
+			val customLocationComponentOptions = LocationComponentOptions.builder(it)
+					.trackingGesturesManagement(true)
+					.accuracyColor(ContextCompat.getColor(it, R.color.colorPrimary))
+					.build()
+			
+			val locationComponentActivationOptions = mapboxMap.style?.let { style ->
+				LocationComponentActivationOptions.builder(it, style)
+						.locationComponentOptions(customLocationComponentOptions)
+						.build()
+			}
+			
+			mapboxMap.locationComponent.apply {
+				if (locationComponentActivationOptions != null) {
+					activateLocationComponent(locationComponentActivationOptions)
+				}
+				
+				isLocationComponentEnabled = true
+				cameraMode = CameraMode.TRACKING
+				renderMode = RenderMode.COMPASS
+			}
+			
 		}
 	}
 
