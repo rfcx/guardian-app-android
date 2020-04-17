@@ -150,25 +150,14 @@
 					app:layout_constraintStart_toStartOf="@id/leftGutter"
 					app:layout_constraintTop_toBottomOf="@id/headerBottom" />
 				
-				<!--				<fragment-->
-				<!--					android:id="@+id/mapView"-->
-				<!--					android:name="com.google.android.gms.maps.SupportMapFragment"-->
-				<!--					android:layout_width="match_parent"-->
-				<!--					android:layout_height="0dp"-->
-				<!--					android:layout_marginTop="@dimen/margin_padding_normal"-->
-				<!--					app:layout_constraintBottom_toTopOf="@+id/photosTitle"-->
-				<!--					app:layout_constraintDimensionRatio="11:4"-->
-				<!--					app:layout_constraintTop_toBottomOf="@id/locationTitle" />-->
-				
 				<com.mapbox.mapboxsdk.maps.MapView
 					android:id="@+id/mapBoxView"
 					android:layout_width="match_parent"
 					android:layout_height="0dp"
 					android:layout_marginTop="@dimen/margin_padding_normal"
 					app:layout_constraintBottom_toTopOf="@+id/photosTitle"
-					app:layout_constraintDimensionRatio="11:4"
+					app:layout_constraintDimensionRatio="11:5"
 					app:layout_constraintTop_toBottomOf="@id/locationTitle" />
-				
 				
 				<TextView
 					android:id="@+id/photosTitle"
