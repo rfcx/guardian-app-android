@@ -17,11 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private var mapView: MapView? = null
+	private var currentStyle: String = Style.OUTDOORS
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -92,12 +94,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapView = view.findViewById(R.id.mapView)
 		
 		mapView?.onCreate(savedInstanceState)
-		mapView?.getMapAsync { mapboxMap ->
-			mapboxMap.setStyle(Style.OUTDOORS) {
-				mapboxMap.moveCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngZoom(com.mapbox.mapboxsdk.geometry.LatLng(-2.88474615, -47.01410294), 12.0))
-				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
-			}
-		}
+		mapView?.getMapAsync(this)
+//		mapView?.getMapAsync { mapboxMap ->
+//			mapboxMap.setStyle(Style.OUTDOORS) {
+//				mapboxMap.moveCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngZoom(com.mapbox.mapboxsdk.geometry.LatLng(-2.88474615, -47.01410294), 12.0))
+//				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
+//			}
+//		}
+
 //		setupMap()
 	}
 	
@@ -138,18 +142,32 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setupMap() {
-		val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.getMapAsync(this)
+//		val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
+//		map?.getMapAsync(this)
 	}
 	
-	override fun onMapReady(map: GoogleMap?) {
+	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapboxMap.setStyle(Style.OUTDOORS) {
+			switchButton.setOnClickListener {
+				currentStyle = if (currentStyle == Style.OUTDOORS) {
+					mapboxMap.setStyle(Style.SATELLITE)
+					Style.SATELLITE
+				} else {
+					mapboxMap.setStyle(Style.OUTDOORS)
+					Style.OUTDOORS
+				}
+			}
+		}
+	}
+
+//	override fun onMapReady(map: GoogleMap?) {
 //		googleMap = map
 //		map?.let {
 //			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
 //			setDisplay()
 //			checkThenAccquireLocation()
 //		}
-	}
+//	}
 	
 	private fun checkThenAccquireLocation() {
 		if (context?.isOnAirplaneMode()!!) {
