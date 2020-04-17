@@ -60,12 +60,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		context?.let {
-			Mapbox.getInstance(
-					it,
-					"pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
-			)
-		}
+		context?.let { Mapbox.getInstance(it, MAPBOX_ACCESS_TOKEN) }
 	}
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -314,6 +309,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			return MapFragment()
 		}
 		
+		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
 		const val tag = "MapFragment"
 	}
 }

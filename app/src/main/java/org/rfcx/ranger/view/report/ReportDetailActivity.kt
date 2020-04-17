@@ -32,6 +32,8 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.toIsoNotZString
+import org.rfcx.ranger.view.map.MapFragment
+import org.rfcx.ranger.view.map.MapFragment.Companion.MAPBOX_ACCESS_TOKEN
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
@@ -61,7 +63,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		Mapbox.getInstance(this, "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q")
+		Mapbox.getInstance(this, MAPBOX_ACCESS_TOKEN)
 		val binding: ActivityReportDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_report_detail)
 		binding.context = this
 		setupToolbar()

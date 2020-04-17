@@ -41,6 +41,7 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.map.MapFragment.Companion.MAPBOX_ACCESS_TOKEN
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhatView
 import org.rfcx.ranger.widget.WhenView
@@ -105,7 +106,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		Mapbox.getInstance(this, "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q")
+		Mapbox.getInstance(this, MAPBOX_ACCESS_TOKEN)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
 		
 		bindActionbar()
@@ -196,12 +197,6 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		mapView = findViewById(R.id.mapBoxView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
-//		{ mapboxMap ->
-//			mapboxMap.setStyle(Style.OUTDOORS) {
-//
-//				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
-//			}
-//		}
 	}
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
