@@ -45,7 +45,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var lastLocation: Location? = null
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
-	private var mapView: MapView? = null
+	private lateinit var mapView: MapView
 	private var currentStyle: String = Style.OUTDOORS
 	
 	private val locationListener = object : android.location.LocationListener {
@@ -90,19 +90,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		
 		mapView = view.findViewById(R.id.mapView)
-		
-		mapView?.onCreate(savedInstanceState)
-		mapView?.getMapAsync(this)
-//		mapView?.getMapAsync { mapboxMap ->
-//			mapboxMap.setStyle(Style.OUTDOORS) {
-//				mapboxMap.moveCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngZoom(com.mapbox.mapboxsdk.geometry.LatLng(-2.88474615, -47.01410294), 12.0))
-//				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
-//			}
-//		}
-
-//		setupMap()
+		mapView.onCreate(savedInstanceState)
+		mapView.getMapAsync(this)
 	}
 	
 	override fun onDestroyView() {
@@ -116,6 +106,22 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onResume() {
 		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
+		mapView.onResume()
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		mapView.onStart()
+	}
+	
+	override fun onStop() {
+		super.onStop()
+		mapView.onStop()
+	}
+	
+	override fun onLowMemory() {
+		super.onLowMemory()
+		mapView.onLowMemory()
 	}
 	
 	override fun onHiddenChanged(hidden: Boolean) {
@@ -129,6 +135,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onPause() {
 		activity?.unregisterReceiver(airplaneModeReceiver)
 		super.onPause()
+		mapView.onPause()
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -139,11 +146,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions?.handleRequestResult(requestCode, grantResults)
-	}
-	
-	private fun setupMap() {
-//		val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-//		map?.getMapAsync(this)
 	}
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
