@@ -80,7 +80,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
-//				markRangerLocation(it)
+				//				markRangerLocation(it)
 			}
 		}
 		
@@ -115,7 +115,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync { mapboxMap ->
 			
-			mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+			mapboxMap.setStyle(Style.OUTDOORS) {
 				
 				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
 			}

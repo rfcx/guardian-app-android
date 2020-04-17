@@ -16,10 +16,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,7 +44,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	private lateinit var mapView: MapView
 	//	private var mapView: GoogleMap? = null
 	
-	private var location: LatLng? = null
+//	private var location: LatLng? = null
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
 	private val analytics by lazy { Analytics(this) }
@@ -77,7 +79,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 				reportTypeImageView.setImageResource(R.drawable.ic_pin_huge)
 			} else {
 				binding.report = DetailReport(report, this)
-				this.location = LatLng(report.latitude, report.longitude)
+//				this.location = LatLng(report.latitude, report.longitude)
 				setMapPin()
 				
 				setAudio(report.audioLocation, binding)
@@ -91,7 +93,8 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		mapView = findViewById(R.id.mapBoxView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync { mapboxMap ->
-			mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+			mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.7749, -122.4194), 12.0))
+			mapboxMap.setStyle(Style.OUTDOORS) {
 				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
 			}
 		}

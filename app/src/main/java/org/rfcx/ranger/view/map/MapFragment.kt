@@ -38,7 +38,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInPolyline: Polyline? = null
 	private var checkInMarkers = arrayListOf<Marker>()
 	private var retortMarkers = arrayListOf<Marker>()
-//	private var googleMap: GoogleMap? = null
+	//	private var googleMap: GoogleMap? = null
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
@@ -98,7 +98,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		mapView?.onCreate(savedInstanceState)
 		mapView?.getMapAsync { mapboxMap ->
-			mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+			mapboxMap.setStyle(Style.OUTDOORS) {
+				mapboxMap.moveCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory.newLatLngZoom(com.mapbox.mapboxsdk.geometry.LatLng(-2.88474615, -47.01410294), 12.0))
 				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
 			}
 		}
