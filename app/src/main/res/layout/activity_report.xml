@@ -75,18 +75,6 @@
 					android:orientation="horizontal"
 					app:layout_constraintGuide_percent="0.25" />
 				
-				<!--				<fragment-->
-				<!--					android:id="@+id/mapView"-->
-				<!--					android:name="com.google.android.gms.maps.SupportMapFragment"-->
-				<!--					android:layout_width="match_parent"-->
-				<!--					android:layout_height="0dp"-->
-				<!--					app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"-->
-				<!--					app:layout_constraintEnd_toEndOf="parent"-->
-				<!--					app:layout_constraintStart_toStartOf="parent"-->
-				<!--					app:layout_constraintTop_toTopOf="parent"-->
-				<!--					tools:layout_editor_absoluteX="0dp"-->
-				<!--					tools:layout_editor_absoluteY="0dp" />-->
-				
 				<com.mapbox.mapboxsdk.maps.MapView
 					android:id="@+id/mapBoxView"
 					android:layout_width="match_parent"
@@ -94,10 +82,7 @@
 					app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal25"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					mapbox:mapbox_cameraTargetLat="-2.88474615"
-					mapbox:mapbox_cameraTargetLng="-47.01410294"
-					mapbox:mapbox_cameraZoom="5" />
+					app:layout_constraintTop_toTopOf="parent" />
 				
 				<TextView
 					android:id="@+id/reportTypeTextView"

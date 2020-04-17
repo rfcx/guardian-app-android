@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -16,21 +14,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.CameraMode
-import com.mapbox.mapboxsdk.location.modes.RenderMode
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
@@ -68,19 +65,10 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private lateinit var mapView: MapView
 	private lateinit var mapBoxMap: MapboxMap
 	
-	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-		return ContextCompat.getDrawable(context, vectorResId)?.run {
-			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-			draw(Canvas(bitmap))
-			BitmapDescriptorFactory.fromBitmap(bitmap)
-		}
-	}
-	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
-				//				markRangerLocation(it)
+				markRangerLocation(it)
 			}
 		}
 		
@@ -119,21 +107,20 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	override fun onResume() {
 		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
+		mapView.onResume()
 		analytics.trackScreen(Screen.ADDREPORT)
 	}
 	
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
 		super.onPause()
+		mapView.onPause()
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
 		locationManager?.removeUpdates(locationListener)
-//		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-//		map?.let {
-//			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-//		}
+		mapView.onDestroy()
 		stopPlaying()
 		waitingForLocationTimer.cancel()
 	}
@@ -213,27 +200,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		} else {
 			locationPermissions.check { isAllowed: Boolean ->
 				if (isAllowed) {
-//					getLocation()
-					val customLocationComponentOptions = LocationComponentOptions.builder(this)
-							.trackingGesturesManagement(true)
-							.accuracyColor(ContextCompat.getColor(this, R.color.colorPrimary))
-							.build()
-					
-					val locationComponentActivationOptions = mapBoxMap.style?.let {
-						LocationComponentActivationOptions.builder(this, it)
-								.locationComponentOptions(customLocationComponentOptions)
-								.build()
-					}
-
-					mapBoxMap.locationComponent.apply {
-						if (locationComponentActivationOptions != null) {
-							activateLocationComponent(locationComponentActivationOptions)
-						}
-
-						isLocationComponentEnabled = true
-						cameraMode = CameraMode.TRACKING
-						renderMode = RenderMode.COMPASS
-					}
+					getLocation()
 				} else {
 					showLocationMessageError(getString(R.string.notification_location_not_availability))
 				}
@@ -277,18 +244,26 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	}
 	
 	private fun markRangerLocation(location: Location) {
-//		lastLocation = location
-//		googleMap?.clear()
-//		val latLng = LatLng(location.latitude, location.longitude)
-//		googleMap?.addMarker(MarkerOptions()
-//				.position(latLng)
-//				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
-//
-//		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//				latLng, 15f))
-//		googleMap?.uiSettings?.isScrollGesturesEnabled = false
-//		locationStatusTextView.visibility = View.GONE
-//		validateForm()
+		lastLocation = location
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 10.0))
+		
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			mapBoxMap.style?.addImage("pin-map", mBitmap)
+		}
+		
+		symbolManager?.create(SymbolOptions()
+				.withLatLng(LatLng(location.latitude, location.longitude))
+				.withIconImage("pin-map")
+				.withIconSize(1.0f))
+		
+		locationStatusTextView.visibility = View.GONE
+		validateForm()
 	}
 	
 	private fun setupRecordSoundProgressView() {
@@ -455,6 +430,21 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			setHasFixedSize(true)
 		}
 		reportImageAdapter.setImages(arrayListOf())
+	}
+	
+	override fun onStop() {
+		super.onStop()
+		mapView.onStop()
+	}
+	
+	override fun onLowMemory() {
+		super.onLowMemory()
+		mapView.onLowMemory()
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		mapView.onStart()
 	}
 	
 	override fun didAddImages(imagePaths: List<String>) {}
