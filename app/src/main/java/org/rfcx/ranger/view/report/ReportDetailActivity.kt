@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -149,9 +150,36 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		}
 	}
 	
+	override fun onStart() {
+		super.onStart()
+		mapView.onStart()
+	}
+	
 	override fun onResume() {
 		super.onResume()
+		mapView.onResume()
 		analytics.trackScreen(Screen.REPORTDETAIL)
+	}
+	
+	override fun onPause() {
+		super.onPause()
+		mapView.onPause()
+	}
+	
+	override fun onStop() {
+		super.onStop()
+		mapView.onStop()
+	}
+	
+	override fun onLowMemory() {
+		super.onLowMemory()
+		mapView.onLowMemory()
+	}
+	
+	override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+		super.onSaveInstanceState(outState, outPersistentState)
+		mapView.onSaveInstanceState(outState)
+		
 	}
 	
 	private fun setupToolbar() {
