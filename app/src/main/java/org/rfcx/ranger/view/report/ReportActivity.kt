@@ -19,17 +19,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
@@ -52,8 +52,6 @@ import kotlin.concurrent.timerTask
 
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
-	private var googleMap: GoogleMap? = null
-	
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
 	private var player: MediaPlayer? = null
@@ -67,6 +65,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	private lateinit var binding: ActivityReportBinding
 	private lateinit var mapView: MapView
+	private lateinit var mapBoxMap: MapboxMap
 	
 	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
 		return ContextCompat.getDrawable(context, vectorResId)?.run {
@@ -106,23 +105,11 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		Mapbox.getInstance(
-				this,
-				"pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
-		)
+		Mapbox.getInstance(this, "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q")
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
-		mapView = findViewById(R.id.mapBoxView)
-		mapView.onCreate(savedInstanceState)
-		mapView.getMapAsync { mapboxMap ->
-			
-			mapboxMap.setStyle(Style.OUTDOORS) {
-				
-				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
-			}
-		}
 		
 		bindActionbar()
-//		setupMap()
+		setupMap(savedInstanceState)
 		setupRecordSoundProgressView()
 		setupImageRecycler()
 		setupOnClick()
@@ -205,15 +192,23 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		binding.canSubmitReport = false // default
 	}
 	
-	private fun setupMap() {
-		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.getMapAsync(this@ReportActivity)
+	private fun setupMap(savedInstanceState: Bundle?) {
+		mapView = findViewById(R.id.mapBoxView)
+		mapView.onCreate(savedInstanceState)
+		mapView.getMapAsync(this)
+//		{ mapboxMap ->
+//			mapboxMap.setStyle(Style.OUTDOORS) {
+//
+//				// Map is set up and the style has loaded. Now you can add data or make other map adjustments
+//			}
+//		}
 	}
 	
-	override fun onMapReady(map: GoogleMap?) {
-//		googleMap = map
-//		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-//		checkThenAccquireLocation()
+	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapBoxMap = mapboxMap
+		mapboxMap.setStyle(Style.OUTDOORS) {
+			checkThenAccquireLocation()
+		}
 	}
 	
 	private fun checkThenAccquireLocation() {
@@ -223,7 +218,27 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		} else {
 			locationPermissions.check { isAllowed: Boolean ->
 				if (isAllowed) {
-					getLocation()
+//					getLocation()
+					val customLocationComponentOptions = LocationComponentOptions.builder(this)
+							.trackingGesturesManagement(true)
+							.accuracyColor(ContextCompat.getColor(this, R.color.colorPrimary))
+							.build()
+					
+					val locationComponentActivationOptions = mapBoxMap.style?.let {
+						LocationComponentActivationOptions.builder(this, it)
+								.locationComponentOptions(customLocationComponentOptions)
+								.build()
+					}
+
+					mapBoxMap.locationComponent.apply {
+						if (locationComponentActivationOptions != null) {
+							activateLocationComponent(locationComponentActivationOptions)
+						}
+
+						isLocationComponentEnabled = true
+						cameraMode = CameraMode.TRACKING
+						renderMode = RenderMode.COMPASS
+					}
 				} else {
 					showLocationMessageError(getString(R.string.notification_location_not_availability))
 				}
@@ -255,7 +270,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
-//			lastLocation?.let { markRangerLocation(it) }
+			lastLocation?.let { markRangerLocation(it) }
 		} catch (ex: SecurityException) {
 			showLocationMessageError(getString(R.string.in_air_plane_mode))
 			ex.printStackTrace()
@@ -267,18 +282,18 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	}
 	
 	private fun markRangerLocation(location: Location) {
-		lastLocation = location
-		googleMap?.clear()
-		val latLng = LatLng(location.latitude, location.longitude)
-		googleMap?.addMarker(MarkerOptions()
-				.position(latLng)
-				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
-		
-		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				latLng, 15f))
-		googleMap?.uiSettings?.isScrollGesturesEnabled = false
-		locationStatusTextView.visibility = View.GONE
-		validateForm()
+//		lastLocation = location
+//		googleMap?.clear()
+//		val latLng = LatLng(location.latitude, location.longitude)
+//		googleMap?.addMarker(MarkerOptions()
+//				.position(latLng)
+//				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
+//
+//		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//				latLng, 15f))
+//		googleMap?.uiSettings?.isScrollGesturesEnabled = false
+//		locationStatusTextView.visibility = View.GONE
+//		validateForm()
 	}
 	
 	private fun setupRecordSoundProgressView() {
