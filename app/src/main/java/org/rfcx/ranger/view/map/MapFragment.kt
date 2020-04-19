@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.gson.JsonPrimitive
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -171,15 +172,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	//	override fun onMapReady(map: GoogleMap?) {
-//		googleMap = map
-//		map?.let {
-//			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-//			setDisplay()
-//			checkThenAccquireLocation()
-//		}
-//	}
-	
 	private fun switchMap(mapboxMap: MapboxMap) {
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
@@ -252,8 +244,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private fun setDisplay() {
 		displayReport()
-
-//		googleMap?.let { displayReport(it) }
 //		googleMap?.let { displayCheckIn(it) }
 //		googleMap?.setOnMapClickListener {
 //			(activity as MainActivityEventListener).hideBottomSheet()
@@ -261,43 +251,40 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun displayReport() {
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			mapBoxMap.style?.addImage("pin-map", mBitmap)
+		}
+		
 		mapViewModel.getReports().observe(this, Observer { reports ->
 			if (!isAdded || isDetached) return@Observer
-			
-			val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-			symbolManager?.iconAllowOverlap = true
-			symbolManager?.iconIgnorePlacement = true
-			
-			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
-			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-			if (mBitmap != null) {
-				mapBoxMap.style?.addImage("pin-map", mBitmap)
-			}
-			
 			for (report in reports) {
 				symbolManager?.create(SymbolOptions()
 						.withLatLng(LatLng(report.latitude, report.longitude))
 						.withIconImage("pin-map")
-						.withIconSize(1.0f))
+						.withIconSize(1.0f)
+						.withData(JsonPrimitive(report.id)))
 			}
-			
-//			retortMarkers.forEach {
-//				it.remove()
-//			}
-//			retortMarkers.clear()
-			
 			if (reports.isNotEmpty()) {
 				val lastCheckIn = reports.last()
 				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
+		
+		symbolManager?.addClickListener { symbol ->
+			(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
+		}
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
 		lastLocation = location
 		val latLng = LatLng(location.latitude, location.longitude)
 		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0))
-//		googleMap?.clear()
 	}
 	
 //	private fun displayReport(map: GoogleMap) {
