@@ -14,12 +14,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -28,12 +30,18 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.LocationPermissions
+import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.isOnAirplaneMode
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -49,6 +57,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	private lateinit var mapView: MapView
+	private lateinit var mapBoxMap: MapboxMap
 	private var currentStyle: String = Style.OUTDOORS
 	
 	private val locationListener = object : android.location.LocationListener {
@@ -152,12 +161,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(Style.OUTDOORS) {
 			mapboxMap.setMinZoomPreference(10.0)
 			getCurrentLocation(mapboxMap)
 			switchMap(mapboxMap)
+			setDisplay()
+			checkThenAccquireLocation()
 		}
 	}
+	
+	//	override fun onMapReady(map: GoogleMap?) {
+//		googleMap = map
+//		map?.let {
+//			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
+//			setDisplay()
+//			checkThenAccquireLocation()
+//		}
+//	}
 	
 	private fun switchMap(mapboxMap: MapboxMap) {
 		switchButton.setOnClickListener {
@@ -196,15 +217,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			
 		}
 	}
-
-//	override fun onMapReady(map: GoogleMap?) {
-//		googleMap = map
-//		map?.let {
-//			it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-//			setDisplay()
-//			checkThenAccquireLocation()
-//		}
-//	}
 	
 	private fun checkThenAccquireLocation() {
 		if (context?.isOnAirplaneMode()!!) {
@@ -212,8 +224,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		} else {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
-//					googleMap?.isMyLocationEnabled = isAllowed
-//					googleMap?.uiSettings?.isMyLocationButtonEnabled = true
 					getLocation()
 				} else {
 					setDisplay()
@@ -241,6 +251,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setDisplay() {
+		displayReport()
+
 //		googleMap?.let { displayReport(it) }
 //		googleMap?.let { displayCheckIn(it) }
 //		googleMap?.setOnMapClickListener {
@@ -248,58 +260,60 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 //		}
 	}
 	
-	private fun moveCameraToCurrentLocation(location: Location) {
-		lastLocation = location
-//		googleMap?.clear()
-//		val latLng = LatLng(location.latitude, location.longitude)
-//		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//				latLng, 15f))
-	}
-	
-	private fun displayReport(map: GoogleMap) {
-		
-		map.setOnMarkerClickListener { marker ->
-			
-			Log.d(tag, "Map click $marker")
-			if (marker.tag is Report) {
-				val report = marker.tag as Report
-				(activity as MainActivityEventListener)
-						.showBottomSheet(ReportViewPagerFragment.newInstance(report.id))
-				return@setOnMarkerClickListener true
-			} else {
-				(activity as MainActivityEventListener).hideBottomSheet()
-			}
-			false
-		}
-		
+	private fun displayReport() {
 		mapViewModel.getReports().observe(this, Observer { reports ->
-			
 			if (!isAdded || isDetached) return@Observer
 			
+			val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+			symbolManager?.iconAllowOverlap = true
+			symbolManager?.iconIgnorePlacement = true
 			
-			Log.d(tag, "${reports.count()}")
-			
-			retortMarkers.forEach {
-				it.remove()
+			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+			if (mBitmap != null) {
+				mapBoxMap.style?.addImage("pin-map", mBitmap)
 			}
-			retortMarkers.clear()
 			
 			for (report in reports) {
-				val latLng = LatLng(report.latitude, report.longitude)
-				val marker = map.addMarker(MarkerOptions()
-						.position(latLng)
-						.icon(context?.let { bitmapDescriptorFromVector(it, R.drawable.ic_pin_map) }))
-				marker.tag = report
-				marker.zIndex = 1f
-				retortMarkers.add(marker)
+				symbolManager?.create(SymbolOptions()
+						.withLatLng(LatLng(report.latitude, report.longitude))
+						.withIconImage("pin-map")
+						.withIconSize(1.0f))
 			}
+			
+//			retortMarkers.forEach {
+//				it.remove()
+//			}
+//			retortMarkers.clear()
 			
 			if (reports.isNotEmpty()) {
 				val lastCheckIn = reports.last()
-				moveMapTo(map, LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
 	}
+	
+	private fun moveCameraToCurrentLocation(location: Location) {
+		lastLocation = location
+		val latLng = LatLng(location.latitude, location.longitude)
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0))
+//		googleMap?.clear()
+	}
+	
+//	private fun displayReport(map: GoogleMap) {
+//		map.setOnMarkerClickListener { marker ->
+//			Log.d(tag, "Map click $marker")
+//			if (marker.tag is Report) {
+//				val report = marker.tag as Report
+//				(activity as MainActivityEventListener)
+//						.showBottomSheet(ReportViewPagerFragment.newInstance(report.id))
+//				return@setOnMarkerClickListener true
+//			} else {
+//				(activity as MainActivityEventListener).hideBottomSheet()
+//			}
+//			false
+//		}
+//	}
 	
 	private fun displayCheckIn(map: GoogleMap) {
 		// clear old markers
@@ -320,31 +334,29 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				val color = ContextCompat.getColor(it, R.color.check_in_polyline)
 				polylineOptions.color(color)
 			}
-			
-			for (checkIn in checkIns) {
-				val latLng = LatLng(checkIn.latitude, checkIn.longitude)
-				polylineOptions.add(latLng)
-				checkInMarkers.add(map.addMarker(MarkerOptions()
-						.position(latLng)
-						.anchor(0.5f, 0.5f)
-						.title(checkIn.time.toFullDateTimeString())
-						.snippet("${checkIn.latitude},${checkIn.latitude}")
-						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
-				checkInPolyline = map.addPolyline(polylineOptions)
-			}
+
+//			for (checkIn in checkIns) {
+//				val latLng = LatLng(checkIn.latitude, checkIn.longitude)
+//				polylineOptions.add(latLng)
+//				checkInMarkers.add(map.addMarker(MarkerOptions()
+//						.position(latLng)
+//						.anchor(0.5f, 0.5f)
+//						.title(checkIn.time.toFullDateTimeString())
+//						.snippet("${checkIn.latitude},${checkIn.latitude}")
+//						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
+//				checkInPolyline = map.addPolyline(polylineOptions)
+//			}
 			
 			if (checkIns.isNotEmpty()) {
 				val lastCheckIn = checkIns.last()
-				moveMapTo(map, LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
 	}
 	
-	private fun moveMapTo(googleMap: GoogleMap, latLng: LatLng) {
-		Log.d(tag, "moveMapTo $latLng")
+	private fun moveMapTo(latLng: LatLng) {
 		if (!isAdded || isDetached) return
-		googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				LatLng(latLng.latitude, latLng.longitude), 18f))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), 10.0))
 	}
 	
 	fun moveToReportMarker(report: Report) {
