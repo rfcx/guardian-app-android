@@ -41,6 +41,7 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.LocationPermissions
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.isOnAirplaneMode
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
@@ -249,6 +250,10 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
+		
+		symbolManager?.addClickListener { symbol ->
+			(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
+		}
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
