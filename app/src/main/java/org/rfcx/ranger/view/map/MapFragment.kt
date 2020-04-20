@@ -4,22 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
 import com.google.gson.JsonPrimitive
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -31,6 +27,8 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.LineManager
+import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.utils.BitmapUtils
@@ -43,20 +41,16 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.LocationPermissions
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.isOnAirplaneMode
-import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private val mapViewModel: MapViewModel by viewModel()
-	private var checkInPolyline: Polyline? = null
-	private var checkInMarkers = arrayListOf<Marker>()
-	private var retortMarkers = arrayListOf<Marker>()
+	private var routeLocations: MutableList<Location> = mutableListOf()
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
 	private val analytics by lazy { context?.let { Analytics(it) } }
-	
 	private lateinit var mapView: MapView
 	private lateinit var mapBoxMap: MapboxMap
 	private var currentStyle: String = Style.OUTDOORS
@@ -86,15 +80,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-		return ContextCompat.getDrawable(context, vectorResId)?.run {
-			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-			draw(Canvas(bitmap))
-			BitmapDescriptorFactory.fromBitmap(bitmap)
-		}
-	}
-	
 	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -106,14 +91,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
-	}
-	
-	override fun onDestroyView() {
-		val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.let {
-			childFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-		}
-		super.onDestroyView()
 	}
 	
 	override fun onResume() {
@@ -244,10 +221,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private fun setDisplay() {
 		displayReport()
-//		googleMap?.let { displayCheckIn(it) }
-//		googleMap?.setOnMapClickListener {
-//			(activity as MainActivityEventListener).hideBottomSheet()
-//		}
+		displayCheckIn()
 	}
 	
 	private fun displayReport() {
@@ -275,64 +249,50 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 		})
-		
-		symbolManager?.addClickListener { symbol ->
-			(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
-		}
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
 		lastLocation = location
 		val latLng = LatLng(location.latitude, location.longitude)
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
-//	private fun displayReport(map: GoogleMap) {
-//		map.setOnMarkerClickListener { marker ->
-//			Log.d(tag, "Map click $marker")
-//			if (marker.tag is Report) {
-//				val report = marker.tag as Report
-//				(activity as MainActivityEventListener)
-//						.showBottomSheet(ReportViewPagerFragment.newInstance(report.id))
-//				return@setOnMarkerClickListener true
-//			} else {
-//				(activity as MainActivityEventListener).hideBottomSheet()
-//			}
-//			false
-//		}
-//	}
-	
-	private fun displayCheckIn(map: GoogleMap) {
-		// clear old markers
-		checkInMarkers.forEach {
-			it.remove()
-		}
-		checkInPolyline?.remove()
-		checkInMarkers.clear()
-		
+	private fun displayCheckIn() {
 		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
-			
 			if (!isAdded || isDetached) return@Observer
-			
-			Log.d(tag, "${checkIns.count()}")
-			
-			val polylineOptions = PolylineOptions()
-			context?.let {
-				val color = ContextCompat.getColor(it, R.color.check_in_polyline)
-				polylineOptions.color(color)
+			for (checkIn in checkIns) {
+				val location = Location(LocationManager.GPS_PROVIDER)
+				location.latitude = checkIn.latitude
+				location.longitude = checkIn.longitude
+				routeLocations.add(location)
+				
+				val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+				symbolManager?.iconAllowOverlap = true
+				symbolManager?.iconIgnorePlacement = true
+				
+				val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+				val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+				if (mBitmap != null) {
+					mapBoxMap.style?.addImage("check_in_pin", mBitmap)
+				}
+				symbolManager?.create(SymbolOptions()
+						.withLatLng(LatLng(checkIn.latitude, checkIn.longitude))
+						.withIconImage("check_in_pin")
+						.withIconSize(1.0f))
+				
+				val lineManager = mapBoxMap.style?.let { LineManager(mapView, mapBoxMap, it) }
+				lineManager?.let { line ->
+					line.deleteAll()
+					val sortedLocations = routeLocations
+							.sortedBy { location -> location.time }
+							.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
+					line.create(LineOptions()
+							.withLineColor("#969faa")
+							.withLineWidth(5.0f)
+							.withGeometry(LineString.fromLngLats(sortedLocations))
+					)
+				}
 			}
-
-//			for (checkIn in checkIns) {
-//				val latLng = LatLng(checkIn.latitude, checkIn.longitude)
-//				polylineOptions.add(latLng)
-//				checkInMarkers.add(map.addMarker(MarkerOptions()
-//						.position(latLng)
-//						.anchor(0.5f, 0.5f)
-//						.title(checkIn.time.toFullDateTimeString())
-//						.snippet("${checkIn.latitude},${checkIn.latitude}")
-//						.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_chek_in_pin_on_map))))
-//				checkInPolyline = map.addPolyline(polylineOptions)
-//			}
 			
 			if (checkIns.isNotEmpty()) {
 				val lastCheckIn = checkIns.last()
@@ -341,16 +301,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		})
 	}
 	
+	
 	private fun moveMapTo(latLng: LatLng) {
 		if (!isAdded || isDetached) return
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), 10.0))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), 15.0))
 	}
 	
 	fun moveToReportMarker(report: Report) {
 //		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
 //				LatLng(report.latitude, report.longitude), googleMap?.cameraPosition?.zoom ?: 18f)
 //		googleMap?.animateCamera(cameraUpdate)
-		
 	}
 	
 	private fun showLocationMessageError(msg: String) {
