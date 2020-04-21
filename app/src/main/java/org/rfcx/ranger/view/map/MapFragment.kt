@@ -19,6 +19,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -27,10 +28,15 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions
+import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
+import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,6 +48,7 @@ import org.rfcx.ranger.util.LocationPermissions
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.isOnAirplaneMode
 import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
@@ -146,6 +153,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			getCurrentLocation(mapboxMap)
 			switchMap(mapboxMap)
 			setDisplay()
+			offlineOnClick()
 			checkThenAccquireLocation()
 		}
 	}
@@ -159,6 +167,38 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
+		}
+	}
+	
+	private fun offlineOnClick() {
+		offlineButton.setOnClickListener {
+			offlineMap()
+		}
+	}
+	
+	fun offlineMap() {
+		val definition = OfflineTilePyramidRegionDefinition(
+				mapBoxMap.style?.uri, LatLngBounds.Builder()
+				.include(LatLng(16.1999909, 100.55186))
+				.include(LatLng(16.2000000, 100.57186))
+				.build(),
+				9.0,
+				10.0,
+				resources.displayMetrics.density)
+		
+		val notificationOptions = NotificationOptions.builder(context)
+				.smallIconRes(R.drawable.mapbox_logo_icon)
+				.returnActivity(MainActivityNew::class.java.name)
+				.build()
+		
+		context?.let {
+			OfflinePlugin.getInstance(it).startDownload(
+					OfflineDownloadOptions.builder()
+							.definition(definition)
+							.metadata(OfflineUtils.convertRegionName("Tembe"))
+							.notificationOptions(notificationOptions)
+							.build()
+			)
 		}
 	}
 	
