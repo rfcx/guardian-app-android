@@ -43,6 +43,10 @@
 		<variable
 			name="onClickCoordinates"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickOfflineMap"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -335,6 +339,37 @@
 					android:layout_marginEnd="@dimen/margin_padding_small"
 					android:text="@{viewModel.formatCoordinates}"
 					tools:text="DD" />
+			
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/offlineMapLinearLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickOfflineMap}"
+				android:orientation="vertical"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small">
+				
+				<TextView
+					android:id="@+id/offlineMapTextViewTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/offline_map" />
+				
+				<TextView
+					android:id="@+id/offlineMapTextView"
+					style="@style/RangerText.SubTitle.Secondary"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@{viewModel.userSite}"
+					tools:text="Tembe" />
 			
 			</LinearLayout>
 			

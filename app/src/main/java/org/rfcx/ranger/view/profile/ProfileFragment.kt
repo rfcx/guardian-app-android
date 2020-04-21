@@ -6,12 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,12 +23,9 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
-import android.app.ProgressDialog
-import android.os.Handler
-import dmax.dialog.SpotsDialog
-import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -157,6 +156,10 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickCoordinates = View.OnClickListener {
 			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
+		}
+		
+		viewDataBinding.onClickOfflineMap = View.OnClickListener {
+			Log.d("onClickOfflineMap", "onClickOfflineMap")
 		}
 	}
 	

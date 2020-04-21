@@ -251,6 +251,7 @@
 	
 	<string name="change_profile_photo">Change profile photo</string>
 	<string name="edit_profile">Edit Profile</string>
+	<string name="offline_map">Offline Map</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>
