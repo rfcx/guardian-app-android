@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -15,42 +13,42 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
+import org.rfcx.ranger.databinding.ActivityReportBinding
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.map.MapFragment.Companion.MAPBOX_ACCESS_TOKEN
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhatView
 import org.rfcx.ranger.widget.WhenView
 import java.io.File
 import java.io.IOException
 import java.util.*
-import org.rfcx.ranger.databinding.ActivityReportBinding
 import kotlin.concurrent.timerTask
 
 
 class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
-	
-	private var googleMap: GoogleMap? = null
 	
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
@@ -64,15 +62,8 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val waitingForLocationTimer: Timer = Timer()
 	
 	private lateinit var binding: ActivityReportBinding
-	
-	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-		return ContextCompat.getDrawable(context, vectorResId)?.run {
-			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-			draw(Canvas(bitmap))
-			BitmapDescriptorFactory.fromBitmap(bitmap)
-		}
-	}
+	private lateinit var mapView: MapView
+	private lateinit var mapBoxMap: MapboxMap
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -103,10 +94,11 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		Mapbox.getInstance(this, MAPBOX_ACCESS_TOKEN)
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
 		
 		bindActionbar()
-		setupMap()
+		setupMap(savedInstanceState)
 		setupRecordSoundProgressView()
 		setupImageRecycler()
 		setupOnClick()
@@ -115,21 +107,20 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	override fun onResume() {
 		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
+		mapView.onResume()
 		analytics.trackScreen(Screen.ADDREPORT)
 	}
 	
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
 		super.onPause()
+		mapView.onPause()
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
 		locationManager?.removeUpdates(locationListener)
-		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.let {
-			supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-		}
+		mapView.onDestroy()
 		stopPlaying()
 		waitingForLocationTimer.cancel()
 	}
@@ -189,15 +180,17 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		binding.canSubmitReport = false // default
 	}
 	
-	private fun setupMap() {
-		val map = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		map?.getMapAsync(this@ReportActivity)
+	private fun setupMap(savedInstanceState: Bundle?) {
+		mapView = findViewById(R.id.mapBoxView)
+		mapView.onCreate(savedInstanceState)
+		mapView.getMapAsync(this)
 	}
 	
-	override fun onMapReady(map: GoogleMap?) {
-		googleMap = map
-		googleMap?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-		checkThenAccquireLocation()
+	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapBoxMap = mapboxMap
+		mapboxMap.setStyle(Style.OUTDOORS) {
+			checkThenAccquireLocation()
+		}
 	}
 	
 	private fun checkThenAccquireLocation() {
@@ -252,15 +245,23 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	private fun markRangerLocation(location: Location) {
 		lastLocation = location
-		googleMap?.clear()
-		val latLng = LatLng(location.latitude, location.longitude)
-		googleMap?.addMarker(MarkerOptions()
-				.position(latLng)
-				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 10.0))
 		
-		googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				latLng, 15f))
-		googleMap?.uiSettings?.isScrollGesturesEnabled = false
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			mapBoxMap.style?.addImage("pin-map", mBitmap)
+		}
+		
+		symbolManager?.create(SymbolOptions()
+				.withLatLng(LatLng(location.latitude, location.longitude))
+				.withIconImage("pin-map")
+				.withIconSize(1.0f))
+		
 		locationStatusTextView.visibility = View.GONE
 		validateForm()
 	}
@@ -429,6 +430,21 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			setHasFixedSize(true)
 		}
 		reportImageAdapter.setImages(arrayListOf())
+	}
+	
+	override fun onStop() {
+		super.onStop()
+		mapView.onStop()
+	}
+	
+	override fun onLowMemory() {
+		super.onLowMemory()
+		mapView.onLowMemory()
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		mapView.onStart()
 	}
 	
 	override fun didAddImages(imagePaths: List<String>) {}
