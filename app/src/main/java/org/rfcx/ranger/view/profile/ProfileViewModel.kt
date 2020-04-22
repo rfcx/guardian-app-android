@@ -28,6 +28,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val userSite = MutableLiveData<String>()
 	val appVersion = MutableLiveData<String>()
 	val userName = MutableLiveData<String>()
+	val downloaded = MutableLiveData<String>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
@@ -153,11 +154,8 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		// todo onCleared() ->  viewModelJob.cancel()
 		offlineManager.setOfflineMapboxTileCountLimit(10000) // what?
 		val style = Style.OUTDOORS
-		val latLngBounds: LatLngBounds = LatLngBounds.from(16.2000000, 100.56000, 16.1999909, 100.551860)
-		definition = OfflineTilePyramidRegionDefinition(
-				style, latLngBounds, 10.0, 20.0,
-				context.resources.displayMetrics.density
-		)
+		val latLngBounds: LatLngBounds = LatLngBounds.from(-1.98209984, -46.41792297, -2.00474615, -46.42010294)
+		definition = OfflineTilePyramidRegionDefinition(style, latLngBounds, 10.0, 25.0, context.resources.displayMetrics.density)
 		offlineManager.createOfflineRegion(definition, METADATA.toByteArray(),
 				object : OfflineManager.CreateOfflineRegionCallback {
 					override fun onCreate(offlineRegion: OfflineRegion) {
@@ -191,12 +189,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					}
 					this.percentage = percentage
 					if (percentage > oldPercentage)
-					// Todo show % download
-						Log.d(
-								TAG, if (percentage >= 100)
-							"Region downloaded successfully."
-						else "$percentage% of region downloaded"
-						)
+						if (percentage >= 100) {
+							downloaded.value = context.getString(R.string.downloaded_successfully)
+						} else {
+							downloaded.value = "$percentage" + context.getString(R.string.region_downloaded)
+						}
+					Log.d(TAG, if (percentage >= 100) "Region downloaded successfully." else "$percentage% of region downloaded")
 				}
 				
 				override fun onError(error: OfflineRegionError) {
@@ -207,7 +205,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				override fun mapboxTileCountLimitExceeded(limit: Long) {
 					Log.e(TAG, "Mapbox tile count limit exceeded: $limit")
 				}
-				
 			})
 		}
 	}

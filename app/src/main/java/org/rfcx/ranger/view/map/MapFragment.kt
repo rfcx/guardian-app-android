@@ -17,6 +17,7 @@ import com.google.gson.JsonPrimitive
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
@@ -27,6 +28,9 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.offline.OfflineManager
+import com.mapbox.mapboxsdk.offline.OfflineRegion
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
@@ -120,6 +124,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		if (!hidden) {
 			analytics?.trackScreen(Screen.MAP)
 			checkThenAccquireLocation()
+			listAllOfflineMapRegion()
 		}
 	}
 	
@@ -306,6 +311,29 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		})
 	}
 	
+	private fun listAllOfflineMapRegion() {
+		val offlineManager = context?.let { OfflineManager.getInstance(it) }
+		offlineManager?.listOfflineRegions(object : OfflineManager.ListOfflineRegionsCallback {
+			override fun onList(offlineRegions: Array<out OfflineRegion>?) {
+				if (offlineRegions?.size != null) {
+					if (offlineRegions.isNotEmpty()) {
+						val bounds = (offlineRegions[offlineRegions.size - 1].definition as OfflineTilePyramidRegionDefinition).bounds
+						val regionZoom = (offlineRegions[offlineRegions.size - 1].definition as OfflineTilePyramidRegionDefinition).minZoom
+						
+						val cameraPosition = CameraPosition.Builder()
+								.target(bounds.center)
+								.zoom(regionZoom)
+								.build()
+						mapBoxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+					}
+				}
+			}
+			
+			override fun onError(error: String?) {
+			
+			}
+		})
+	}
 	
 	private fun moveMapTo(latLng: LatLng) {
 		if (!isAdded || isDetached) return
