@@ -29,6 +29,9 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val appVersion = MutableLiveData<String>()
 	val userName = MutableLiveData<String>()
 	val downloaded = MutableLiveData<String>()
+	val isDownloaded = MutableLiveData<Boolean>()
+	val isDownloading = MutableLiveData<Boolean>()
+	val isDelete = MutableLiveData<Boolean>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
@@ -43,7 +46,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	init {
 		getSiteName()
-		isDownloadedMap()
 		locationTracking.value = profileData.getTracking()
 		notificationReceiving.value = profileData.getReceiveNotification()
 		notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
@@ -51,6 +53,9 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		userName.value = profileData.getUserNickname()
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
+		isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		isDownloading.value = false
 	}
 	
 	fun resumed() {
@@ -64,13 +69,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 			userSite.value = profileData.getSiteName()
 		} else {
 			userSite.value = site
-		}
-	}
-	
-	private fun isDownloadedMap(){
-		val isDownloaded = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
-		if(isDownloaded){
-			downloaded.value = context.getString(R.string.downloaded_successfully)
 		}
 	}
 	
@@ -207,14 +205,22 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					if (percentage > oldPercentage)
 						if (percentage >= 100) {
 							downloaded.value = context.getString(R.string.downloaded_successfully)
+							isDownloaded.value = true
+							isDownloading.value = false
+							isDelete.value = true
 							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
 						} else {
-							downloaded.value = "$percentage" + context.getString(R.string.region_downloaded)
+							isDownloaded.value = true
+							isDelete.value = false
+							downloaded.value = "$percentage %"
+							isDownloading.value = true
 						}
 					Log.d(TAG, if (percentage >= 100) "Region downloaded successfully." else "$percentage% of region downloaded")
 				}
 				
 				override fun onError(error: OfflineRegionError) {
+					isDownloaded.value = false
+					isDelete.value = false
 					Log.e(TAG, "onError reason: ${error.reason}")
 					Log.e(TAG, "onError message: ${error.message}")
 				}
