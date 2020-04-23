@@ -49,6 +49,7 @@ class Preferences(context: Context) {
 		const val MAX_LATITUDE  = "${PREFIX}MAX_LATITUDE"
 		const val MIN_LONGITUDE  = "${PREFIX}MIN_LONGITUDE"
 		const val MAX_LONGITUDE   = "${PREFIX}MAX_LONGITUDE"
+		const val DOWNLOADED_OFFLINE_MAP  = "${PREFIX}DOWNLOADED_OFFLINE_MAP"
 	}
 	
 	init {

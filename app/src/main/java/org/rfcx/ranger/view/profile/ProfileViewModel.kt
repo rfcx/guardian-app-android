@@ -36,12 +36,14 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	lateinit var definition: OfflineTilePyramidRegionDefinition
 	private val viewModelJob = Job()
 	private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+	val preferences = Preferences.getInstance(context)
 	
 	private val _logoutState = MutableLiveData<Boolean>()
 	val logoutState: LiveData<Boolean> = _logoutState
 	
 	init {
 		getSiteName()
+		isDownloadedMap()
 		locationTracking.value = profileData.getTracking()
 		notificationReceiving.value = profileData.getReceiveNotification()
 		notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
@@ -62,6 +64,13 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 			userSite.value = profileData.getSiteName()
 		} else {
 			userSite.value = site
+		}
+	}
+	
+	private fun isDownloadedMap(){
+		val isDownloaded = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		if(isDownloaded){
+			downloaded.value = context.getString(R.string.downloaded_successfully)
 		}
 	}
 	
@@ -198,6 +207,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					if (percentage > oldPercentage)
 						if (percentage >= 100) {
 							downloaded.value = context.getString(R.string.downloaded_successfully)
+							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
 						} else {
 							downloaded.value = "$percentage" + context.getString(R.string.region_downloaded)
 						}
