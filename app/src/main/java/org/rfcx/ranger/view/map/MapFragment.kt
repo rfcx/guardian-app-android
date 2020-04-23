@@ -39,12 +39,10 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.LocationPermissions
-import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.isOnAirplaneMode
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
@@ -59,6 +57,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private lateinit var mapView: MapView
 	private lateinit var mapBoxMap: MapboxMap
 	private var currentStyle: String = Style.OUTDOORS
+	private var reportList: ArrayList<Report> = arrayListOf()
+	private var checkInList: ArrayList<CheckIn> = arrayListOf()
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -148,14 +148,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(Style.OUTDOORS) {
 			mapboxMap.setMinZoomPreference(10.0)
-			getCurrentLocation(mapboxMap)
 			switchMap(mapboxMap)
-			setDisplay()
 			checkThenAccquireLocation()
+			setDisplay()
 		}
 	}
 	
 	private fun switchMap(mapboxMap: MapboxMap) {
+		switchButton.visibility = View.VISIBLE
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
 				mapboxMap.setStyle(Style.SATELLITE)
@@ -189,7 +189,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				cameraMode = CameraMode.TRACKING
 				renderMode = RenderMode.COMPASS
 			}
-			
 		}
 	}
 	
@@ -226,8 +225,30 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setDisplay() {
-		displayReport()
+		getReportAndCheckIn()
 		displayCheckIn()
+		displayReport()
+		
+		if (reportList.isEmpty() && checkInList.isEmpty()) {
+			getCurrentLocation(mapBoxMap)
+		}
+		
+		if (!context.isNetworkAvailable()) {
+			listAllOfflineMapRegion()
+			switchButton.visibility = View.GONE
+		}
+	}
+	
+	private fun getReportAndCheckIn() {
+		mapViewModel.getReports().observe(this, Observer { reports ->
+			if (!isAdded || isDetached) return@Observer
+			reports.map { reportList.add(it) }
+		})
+		
+		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
+			if (!isAdded || isDetached) return@Observer
+			checkIns.map { checkInList.add(it) }
+		})
 	}
 	
 	private fun displayReport() {
@@ -241,74 +262,63 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			mapBoxMap.style?.addImage("pin-map", mBitmap)
 		}
 		
-		mapViewModel.getReports().observe(this, Observer { reports ->
-			if (!isAdded || isDetached) return@Observer
-			for (report in reports) {
-				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(report.latitude, report.longitude))
-						.withIconImage("pin-map")
-						.withIconSize(1.0f)
-						.withData(JsonPrimitive(report.id)))
-			}
-			if (reports.isNotEmpty()) {
-				val lastCheckIn = reports.last()
-				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-			}
-		})
+		for (report in reportList) {
+			symbolManager?.create(SymbolOptions()
+					.withLatLng(LatLng(report.latitude, report.longitude))
+					.withIconImage("pin-map")
+					.withIconSize(1.0f)
+					.withData(JsonPrimitive(report.id)))
+		}
+		
+		if (reportList.isNotEmpty()) {
+			val lastCheckIn = reportList.last()
+			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+		}
 		
 		symbolManager?.addClickListener { symbol ->
 			(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
 		}
 	}
 	
-	private fun moveCameraToCurrentLocation(location: Location) {
-		lastLocation = location
-		val latLng = LatLng(location.latitude, location.longitude)
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
-	}
-	
 	private fun displayCheckIn() {
-		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
-			if (!isAdded || isDetached) return@Observer
-			for (checkIn in checkIns) {
-				val location = Location(LocationManager.GPS_PROVIDER)
-				location.latitude = checkIn.latitude
-				location.longitude = checkIn.longitude
-				routeLocations.add(location)
-				
-				val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-				symbolManager?.iconAllowOverlap = true
-				symbolManager?.iconIgnorePlacement = true
-				
-				val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-				val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-				if (mBitmap != null) {
-					mapBoxMap.style?.addImage("check_in_pin", mBitmap)
-				}
-				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(checkIn.latitude, checkIn.longitude))
-						.withIconImage("check_in_pin")
-						.withIconSize(1.0f))
-				
-				val lineManager = mapBoxMap.style?.let { LineManager(mapView, mapBoxMap, it) }
-				lineManager?.let { line ->
-					line.deleteAll()
-					val sortedLocations = routeLocations
-							.sortedBy { location -> location.time }
-							.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
-					line.create(LineOptions()
-							.withLineColor("#969faa")
-							.withLineWidth(5.0f)
-							.withGeometry(LineString.fromLngLats(sortedLocations))
-					)
-				}
-			}
+		for (checkIn in checkInList) {
+			val location = Location(LocationManager.GPS_PROVIDER)
+			location.latitude = checkIn.latitude
+			location.longitude = checkIn.longitude
+			routeLocations.add(location)
 			
-			if (checkIns.isNotEmpty()) {
-				val lastCheckIn = checkIns.last()
-				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+			val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+			symbolManager?.iconAllowOverlap = true
+			symbolManager?.iconIgnorePlacement = true
+			
+			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+			if (mBitmap != null) {
+				mapBoxMap.style?.addImage("check_in_pin", mBitmap)
 			}
-		})
+			symbolManager?.create(SymbolOptions()
+					.withLatLng(LatLng(checkIn.latitude, checkIn.longitude))
+					.withIconImage("check_in_pin")
+					.withIconSize(1.0f))
+			
+			val lineManager = mapBoxMap.style?.let { LineManager(mapView, mapBoxMap, it) }
+			lineManager?.let { line ->
+				line.deleteAll()
+				val sortedLocations = routeLocations
+						.sortedBy { location -> location.time }
+						.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
+				line.create(LineOptions()
+						.withLineColor("#969faa")
+						.withLineWidth(5.0f)
+						.withGeometry(LineString.fromLngLats(sortedLocations))
+				)
+			}
+		}
+		
+		if (checkInList.isNotEmpty()) {
+			val lastCheckIn = checkInList.last()
+			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+		}
 	}
 	
 	private fun listAllOfflineMapRegion() {
@@ -333,6 +343,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			
 			}
 		})
+	}
+	
+	private fun moveCameraToCurrentLocation(location: Location) {
+		lastLocation = location
+		val latLng = LatLng(location.latitude, location.longitude)
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
 	private fun moveMapTo(latLng: LatLng) {
