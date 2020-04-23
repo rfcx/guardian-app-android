@@ -130,8 +130,13 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 	}
 	
 	private fun updateProfile() {
+		var minLat = 180.0
+		var maxLat = -180.0
+		var minLng = 180.0
+		var maxLng = -180.0
 		
-		val site = Preferences.getInstance(context).getString(Preferences.SITE_FULLNAME)
+		val preferences = Preferences.getInstance(context)
+		val site = preferences.getString(Preferences.SITE_FULLNAME)
 		
 		if (site.isNullOrEmpty()) {
 			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
@@ -139,11 +144,33 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			
 			getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 				override fun onSuccess(t: List<SiteResponse>) {
-					val preferences = Preferences.getInstance(context)
 					preferences.putString(Preferences.SITE_FULLNAME, t[0].name)
 					
 					_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 							t[0].name, profileData.getTracking())
+					
+					for ((index, value) in t[0].bounds.coordinates.withIndex()) {
+						for ((index, value1) in value.withIndex()) {
+							value1.map {
+								if (minLat > it[1]){
+									minLat = it[1]
+								}
+								if (maxLat < it[1]){
+									maxLat = it[1]
+								}
+								if (minLng > it[0]){
+									minLng = it[0]
+								}
+								if (maxLng < it[0]){
+									maxLng = it[0]
+								}
+							}
+						}
+					}
+					preferences.putString(Preferences.MIN_LATITUDE, minLat.toString())
+					preferences.putString(Preferences.MAX_LATITUDE, maxLat.toString())
+					preferences.putString(Preferences.MIN_LONGITUDE, minLng.toString())
+					preferences.putString(Preferences.MAX_LONGITUDE, maxLng.toString())
 				}
 				
 				override fun onError(e: Throwable) {

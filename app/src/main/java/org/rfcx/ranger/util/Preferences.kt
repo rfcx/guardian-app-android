@@ -45,6 +45,10 @@ class Preferences(context: Context) {
 		const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
 		const val CONSENT_GIVEN = "${PREFIX}CONSENT_GIVEN"
 		const val IS_RANGER = "${PREFIX}IS_RANGER"
+		const val MIN_LATITUDE  = "${PREFIX}MIN_LATITUDE"
+		const val MAX_LATITUDE  = "${PREFIX}MAX_LATITUDE"
+		const val MIN_LONGITUDE  = "${PREFIX}MIN_LONGITUDE"
+		const val MAX_LONGITUDE   = "${PREFIX}MAX_LONGITUDE"
 	}
 	
 	init {

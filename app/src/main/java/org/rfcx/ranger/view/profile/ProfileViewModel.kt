@@ -151,21 +151,28 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun offlineMapBox() {
-		// todo onCleared() ->  viewModelJob.cancel()
+		val preferences = Preferences.getInstance(context)
+		val minLat = preferences.getString(Preferences.MIN_LATITUDE)
+		val maxLat = preferences.getString(Preferences.MAX_LATITUDE)
+		val minLng = preferences.getString(Preferences.MIN_LONGITUDE)
+		val maxLng = preferences.getString(Preferences.MAX_LONGITUDE)
+		
 		offlineManager.setOfflineMapboxTileCountLimit(10000) // what?
 		val style = Style.OUTDOORS
-		val latLngBounds: LatLngBounds = LatLngBounds.from(-1.98209984, -46.41792297, -2.00474615, -46.42010294)
-		definition = OfflineTilePyramidRegionDefinition(style, latLngBounds, 10.0, 25.0, context.resources.displayMetrics.density)
-		offlineManager.createOfflineRegion(definition, METADATA.toByteArray(),
-				object : OfflineManager.CreateOfflineRegionCallback {
-					override fun onCreate(offlineRegion: OfflineRegion) {
-						uiScope.launch { createOfflineRegion(offlineRegion) }
-					}
-					
-					override fun onError(error: String) {
-						Log.e(TAG, "Error: $error")
-					}
-				})
+		if (minLat !== null && maxLat !== null && minLng !== null && maxLng !== null) {
+			val latLngBounds: LatLngBounds = LatLngBounds.from(maxLat.toDouble(), maxLng.toDouble(), minLat.toDouble(), minLng.toDouble())
+			definition = OfflineTilePyramidRegionDefinition(style, latLngBounds, 10.0, 15.0, context.resources.displayMetrics.density)
+			offlineManager.createOfflineRegion(definition, METADATA.toByteArray(),
+					object : OfflineManager.CreateOfflineRegionCallback {
+						override fun onCreate(offlineRegion: OfflineRegion) {
+							uiScope.launch { createOfflineRegion(offlineRegion) }
+						}
+						
+						override fun onError(error: String) {
+							Log.e(TAG, "Error: $error")
+						}
+					})
+		}
 	}
 	
 	private suspend fun createOfflineRegion(offlineRegion: OfflineRegion) {
