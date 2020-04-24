@@ -146,8 +146,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
-		mapboxMap.setStyle(Style.OUTDOORS) {
-			mapboxMap.setMinZoomPreference(10.0)
+		mapboxMap.setStyle(currentStyle) {
 			switchMap(mapboxMap)
 			checkThenAccquireLocation()
 			setDisplay()
@@ -155,7 +154,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun switchMap(mapboxMap: MapboxMap) {
-		switchButton.visibility = View.VISIBLE
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
 				mapboxMap.setStyle(Style.SATELLITE)
@@ -164,6 +162,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
+			onMapReady(mapboxMap)
 		}
 	}
 	
@@ -227,7 +226,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun setDisplay() {
 		getReportAndCheckIn()
 		displayCheckIn()
-		displayReport()
+		displayReport(mapBoxMap)
 		
 		if (reportList.isEmpty() && checkInList.isEmpty()) {
 			getCurrentLocation(mapBoxMap)
@@ -236,6 +235,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		if (!context.isNetworkAvailable()) {
 			listAllOfflineMapRegion()
 			switchButton.visibility = View.GONE
+		} else {
+			switchButton.visibility = View.VISIBLE
 		}
 	}
 	
@@ -251,8 +252,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		})
 	}
 	
-	private fun displayReport() {
-		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+	private fun displayReport(mapboxMap: MapboxMap) {
+		val symbolManager = mapboxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
 		symbolManager?.iconAllowOverlap = true
 		symbolManager?.iconIgnorePlacement = true
 		
