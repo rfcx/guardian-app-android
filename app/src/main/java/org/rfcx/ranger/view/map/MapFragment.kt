@@ -357,9 +357,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	fun moveToReportMarker(report: Report) {
-//		val cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-//				LatLng(report.latitude, report.longitude), googleMap?.cameraPosition?.zoom ?: 18f)
-//		googleMap?.animateCamera(cameraUpdate)
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(report.latitude, report.longitude), mapBoxMap.cameraPosition.zoom))
 	}
 	
 	private fun showLocationMessageError(msg: String) {
