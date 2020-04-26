@@ -241,11 +241,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun getReportAndCheckIn() {
-		mapViewModel.getReports().observe(this, Observer { reports ->
-			if (!isAdded || isDetached) return@Observer
-			reports.map { reportList.add(it) }
-		})
-		
 		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
 			if (!isAdded || isDetached) return@Observer
 			checkIns.map { checkInList.add(it) }
@@ -257,28 +252,38 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		symbolManager?.iconAllowOverlap = true
 		symbolManager?.iconIgnorePlacement = true
 		
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
-		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-		if (mBitmap != null) {
-			mapBoxMap.style?.addImage("pin-map", mBitmap)
-		}
+		mapViewModel.getReports().observe(this, Observer { reports ->
+			reportList = arrayListOf()
+			
+			for (report in reports) {
+				if (!isAdded || isDetached) return@Observer
+				reports.map { reportList.add(it) }
+				
+				val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+				val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+				if (mBitmap != null) {
+					mapBoxMap.style?.addImage("pin-map", mBitmap)
+				}
+				
+				
+				symbolManager?.create(SymbolOptions()
+						.withLatLng(LatLng(report.latitude, report.longitude))
+						.withIconImage("pin-map")
+						.withIconSize(1.0f)
+						.withData(JsonPrimitive(report.id)))
+			}
+			
+			if (reports.isNotEmpty()) {
+				val lastCheckIn = reportList.last()
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+			}
+			
+			symbolManager?.addClickListener { symbol ->
+				(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
+			}
+			
+		})
 		
-		for (report in reportList) {
-			symbolManager?.create(SymbolOptions()
-					.withLatLng(LatLng(report.latitude, report.longitude))
-					.withIconImage("pin-map")
-					.withIconSize(1.0f)
-					.withData(JsonPrimitive(report.id)))
-		}
-		
-		if (reportList.isNotEmpty()) {
-			val lastCheckIn = reportList.last()
-			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-		}
-		
-		symbolManager?.addClickListener { symbol ->
-			(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
-		}
 	}
 	
 	private fun displayCheckIn() {
