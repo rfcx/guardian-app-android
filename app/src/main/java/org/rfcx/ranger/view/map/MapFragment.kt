@@ -224,7 +224,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setDisplay() {
-		getReportAndCheckIn()
 		displayCheckIn()
 		displayReport(mapBoxMap)
 		
@@ -238,10 +237,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		} else {
 			switchButton.visibility = View.VISIBLE
 		}
-	}
-	
-	private fun getReportAndCheckIn() {
-	
 	}
 	
 	private fun displayReport(mapboxMap: MapboxMap) {
