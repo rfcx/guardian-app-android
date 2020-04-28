@@ -6,7 +6,11 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.offline.*
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.ProfileData
@@ -15,7 +19,6 @@ import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity.Companion.DD_FORMAT
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
 	
@@ -25,9 +28,18 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val userSite = MutableLiveData<String>()
 	val appVersion = MutableLiveData<String>()
 	val userName = MutableLiveData<String>()
+	val downloaded = MutableLiveData<String>()
+	val isDownloaded = MutableLiveData<Boolean>()
+	val isDownloading = MutableLiveData<Boolean>()
+	val isDelete = MutableLiveData<Boolean>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
+	private val offlineManager: OfflineManager = OfflineManager.getInstance(context)
+	lateinit var definition: OfflineTilePyramidRegionDefinition
+	private val viewModelJob = Job()
+	private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+	val preferences = Preferences.getInstance(context)
 	
 	private val _logoutState = MutableLiveData<Boolean>()
 	val logoutState: LiveData<Boolean> = _logoutState
@@ -41,9 +53,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		userName.value = profileData.getUserNickname()
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
+		isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		isDownloading.value = false
 	}
 	
-	fun resumed(){
+	fun resumed() {
 		getSiteName()
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 	}
@@ -72,7 +87,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		if (profileData.hasGuardianGroup()) {
 			// call api
 			if (enable) {
-				if(!profileData.getReceiveNotificationByEmail()){
+				if (!profileData.getReceiveNotificationByEmail()) {
 					onSubscribe()
 					
 					profileData.updateReceivingNotificationByEmail(enable)
@@ -91,7 +106,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun onLogout() {
 		_logoutState.value = true
-		if(profileData.getReceiveNotificationByEmail()){
+		if (profileData.getReceiveNotificationByEmail()) {
 			unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
 				override fun onSuccess(t: SubscribeResponse) {
 					_logoutState.value = false
@@ -140,5 +155,85 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun updateSiteName() {
 		guardianGroup.value = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+	}
+	
+	fun offlineMapBox() {
+		val preferences = Preferences.getInstance(context)
+		val minLat = preferences.getString(Preferences.MIN_LATITUDE)
+		val maxLat = preferences.getString(Preferences.MAX_LATITUDE)
+		val minLng = preferences.getString(Preferences.MIN_LONGITUDE)
+		val maxLng = preferences.getString(Preferences.MAX_LONGITUDE)
+		
+		offlineManager.setOfflineMapboxTileCountLimit(10000) // what?
+		val style = Style.OUTDOORS
+		if (minLat !== null && maxLat !== null && minLng !== null && maxLng !== null) {
+			val latLngBounds: LatLngBounds = LatLngBounds.from(maxLat.toDouble(), maxLng.toDouble(), minLat.toDouble(), minLng.toDouble())
+			definition = OfflineTilePyramidRegionDefinition(style, latLngBounds, 10.0, 15.0, context.resources.displayMetrics.density)
+			offlineManager.createOfflineRegion(definition, METADATA.toByteArray(),
+					object : OfflineManager.CreateOfflineRegionCallback {
+						override fun onCreate(offlineRegion: OfflineRegion) {
+							uiScope.launch { createOfflineRegion(offlineRegion) }
+						}
+						
+						override fun onError(error: String) {
+							Log.e(TAG, "Error: $error")
+						}
+					})
+		}
+	}
+	
+	private suspend fun createOfflineRegion(offlineRegion: OfflineRegion) {
+		Log.d(TAG, "createOfflineRegion")
+		withContext(Dispatchers.IO) {
+			offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE)
+			offlineRegion.setObserver(object : OfflineRegion.OfflineRegionObserver {
+				
+				private var percentage: Int = -1
+				
+				override fun onStatusChanged(status: OfflineRegionStatus) {
+					val required = status.requiredResourceCount
+					val oldPercentage = this.percentage
+					val percentage: Int = when {
+						status.isComplete -> {
+							101
+						}
+						required > 0L ->
+							(100 * status.completedResourceCount / required).toInt()
+						else -> 0
+					}
+					this.percentage = percentage
+					if (percentage > oldPercentage)
+						if (percentage >= 100) {
+							downloaded.value = context.getString(R.string.downloaded_successfully)
+							isDownloaded.value = true
+							isDownloading.value = false
+							isDelete.value = true
+							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
+						} else {
+							isDownloaded.value = true
+							isDelete.value = false
+							downloaded.value = "$percentage %"
+							isDownloading.value = true
+						}
+					Log.d(TAG, if (percentage >= 100) "Region downloaded successfully." else "$percentage% of region downloaded")
+				}
+				
+				override fun onError(error: OfflineRegionError) {
+					isDownloaded.value = false
+					isDelete.value = false
+					Log.e(TAG, "onError reason: ${error.reason}")
+					Log.e(TAG, "onError message: ${error.message}")
+				}
+				
+				override fun mapboxTileCountLimitExceeded(limit: Long) {
+					Log.e(TAG, "Mapbox tile count limit exceeded: $limit")
+				}
+			})
+		}
+	}
+	
+	companion object {
+		private const val METADATA = "{\"regionName\":\"Tembe\"}"
+		private const val TAG = "1234"
 	}
 }

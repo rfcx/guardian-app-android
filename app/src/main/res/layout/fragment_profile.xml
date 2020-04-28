@@ -43,6 +43,10 @@
 		<variable
 			name="onClickCoordinates"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickOfflineMap"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -335,6 +339,82 @@
 					android:layout_marginEnd="@dimen/margin_padding_small"
 					android:text="@{viewModel.formatCoordinates}"
 					tools:text="DD" />
+			
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/offlineMapLinearLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small">
+				
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="vertical">
+					
+					<TextView
+						android:id="@+id/offlineMapTextViewTextView"
+						style="@style/RangerText.SubTitle"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="@dimen/margin_padding_normal"
+						android:layout_marginEnd="@dimen/margin_padding_small"
+						android:text="@string/offline_map" />
+					
+					<TextView
+						android:id="@+id/offlineMapTextView"
+						style="@style/RangerText.SubTitle.Secondary"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="@dimen/margin_padding_normal"
+						android:layout_marginEnd="@dimen/margin_padding_small"
+						android:text="@{viewModel.userSite}"
+						tools:text="Tembe" />
+				</LinearLayout>
+				
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/downloadButton"
+					style="@style/RangerButton.GreenButton.TextSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="30dp"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:onClick="@{onClickOfflineMap}"
+					android:text="@string/download"
+					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}" />
+				
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/deleteButton"
+					style="@style/RangerButton.RedButton.TextSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="30dp"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:text="@string/delete"
+					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
+				
+				<TextView
+					android:id="@+id/downloadedTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:text="@{viewModel.downloaded}"
+					android:visibility="@{viewModel.isDownloading ? view.VISIBLE : view.GONE}"
+					tools:text="50%" />
+				
+				<ProgressBar
+					android:id="@+id/offlineMapProgress"
+					android:layout_width="@dimen/mini_progress_loading"
+					android:layout_height="@dimen/mini_progress_loading"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:visibility="@{viewModel.isDownloading ? view.VISIBLE : view.GONE}" />
 			
 			</LinearLayout>
 			

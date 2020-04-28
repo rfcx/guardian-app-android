@@ -251,6 +251,11 @@
 	
 	<string name="change_profile_photo">Change profile photo</string>
 	<string name="edit_profile">Edit Profile</string>
+	<string name="offline_map">Offline Map</string>
+	<string name="region_downloaded">% of region downloaded</string>
+	<string name="downloaded_successfully">Region downloaded successfully</string>
+	<string name="download">download</string>
+	<string name="delete">delete</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>
