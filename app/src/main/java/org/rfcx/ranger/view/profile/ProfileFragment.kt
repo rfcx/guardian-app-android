@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -159,6 +160,10 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickOfflineMap = View.OnClickListener {
 			profileViewModel.offlineMapBox()
+		}
+		
+		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
+			Log.d("onClickOfflineMap", "onClickOfflineMap")
 		}
 	}
 	

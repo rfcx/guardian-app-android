@@ -47,6 +47,10 @@
 		<variable
 			name="onClickOfflineMap"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickDeleteOffline"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -394,6 +398,7 @@
 					android:layout_height="30dp"
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:onClick="@{onClickDeleteOffline}"
 					android:text="@string/delete"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
 				
