@@ -163,7 +163,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
-			Log.d("onClickOfflineMap", "onClickOfflineMap")
+			profileViewModel.deleteOfflineRegion()
 		}
 	}
 	
