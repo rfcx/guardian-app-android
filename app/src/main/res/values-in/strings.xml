@@ -252,6 +252,9 @@
     
     <string name="change_profile_photo">Ganti foto profil</string>
     <string name="edit_profile">Sunting profil</string>
+    <string name="offline_map">Offline Peta</string>
+    <string name="download">download</string>
+    <string name="delete">menghapus</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
