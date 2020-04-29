@@ -14,8 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.google.gson.JsonPrimitive
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -59,6 +57,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var currentStyle: String = Style.OUTDOORS
 	private var reportList: ArrayList<Report> = arrayListOf()
 	private var checkInList: ArrayList<CheckIn> = arrayListOf()
+	private var lineManager: LineManager? = null
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -147,6 +146,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(currentStyle) {
+			lineManager = LineManager(mapView, mapboxMap, it)
 			switchMap(mapboxMap)
 			checkThenAccquireLocation()
 			setDisplay()
@@ -279,58 +279,43 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun displayCheckIn() {
+		checkInList = arrayListOf()
+		lineManager?.deleteAll()
+		
 		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
 		if (mBitmap != null) {
 			mapBoxMap.style?.addImage("check_in_pin", mBitmap)
 		}
 		
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
 		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
-			val location = Location(LocationManager.GPS_PROVIDER)
-			
 			if (!isAdded || isDetached) return@Observer
-			checkInList = arrayListOf()
-			checkIns.map { checkInList.add(it) }
 			
-			for (checkIn in checkIns) {
-				location.latitude = checkIn.latitude
-				location.longitude = checkIn.longitude
-				routeLocations.add(location)
-				
-				val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-				symbolManager?.iconAllowOverlap = true
-				symbolManager?.iconIgnorePlacement = true
-				
+			val lineVertices = arrayListOf<LatLng>()
+			checkIns.map {
+				checkInList.add(it)
+				lineVertices.add(LatLng(it.latitude, it.longitude))
 				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(checkIn.latitude, checkIn.longitude))
+						.withLatLng(LatLng(it.latitude, it.longitude))
 						.withIconImage("check_in_pin")
 						.withIconSize(1.0f))
 				
 			}
-			addCheckIn()
-		})
-	}
-	
-	private fun addCheckIn() {
-		val lineManager = mapBoxMap.style?.let { LineManager(mapView, mapBoxMap, it) }
-		lineManager?.let { line ->
-			line.deleteAll()
 			
-			val sortedLocations = routeLocations
-					.sortedBy { location -> location.time }
-					.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
-			
-			line.create(LineOptions()
+			val lineOptions = LineOptions().withLatLngs(lineVertices)
 					.withLineColor("#969faa")
 					.withLineWidth(5.0f)
-					.withGeometry(LineString.fromLngLats(sortedLocations))
-			)
-		}
-		
-		if (checkInList.isNotEmpty()) {
-			val lastCheckIn = checkInList.last()
-			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-		}
+			lineManager?.create(lineOptions)
+			
+			if (lineVertices.isNotEmpty()) {
+				val lastCheckIn = lineVertices.last()
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+			}
+		})
 	}
 	
 	private fun listAllOfflineMapRegion() {
