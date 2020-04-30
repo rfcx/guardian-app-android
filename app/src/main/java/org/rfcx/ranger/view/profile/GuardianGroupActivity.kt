@@ -30,10 +30,10 @@ class GuardianGroupActivity : BaseActivity() {
 		
 		setupToolbar()
 		
-		val dialog: AlertDialog = SpotsDialog.Builder()
-				.setContext(this)
-				.setTheme(R.style.Dialog_Loading)
-				.build()
+		val dialog: AlertDialog = AlertDialog.Builder(this)
+				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
+				.setCancelable(false)
+				.create()
 		
 		// setup list
 		guardianGroupRecycler.apply {

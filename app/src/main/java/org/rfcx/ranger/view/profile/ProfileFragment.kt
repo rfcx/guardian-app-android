@@ -35,10 +35,10 @@ class ProfileFragment : BaseFragment() {
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
 	private val dialog: AlertDialog by lazy {
-		SpotsDialog.Builder()
-			.setContext(context)
-			.setTheme(R.style.Dialog_Loading)
-			.build()
+		AlertDialog.Builder(context)
+				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
+				.setCancelable(false)
+				.create()
 	}
 	
 	override fun onAttach(context: Context) {
