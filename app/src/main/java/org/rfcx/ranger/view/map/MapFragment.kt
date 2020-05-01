@@ -105,30 +105,38 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
-//		mapBoxMap = mapboxMap
-//		mapboxMap.setStyle(currentStyle) {
+		mapBoxMap = mapboxMap
+		
+		mapboxMap.setStyle(currentStyle) {
+			val symbolLayerIconFeatureList = mutableListOf<Feature>(
+					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
+					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
+					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
+			)
+			
+			val geoJsonSource = GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))
+			
+			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+			
+			it.addSource(geoJsonSource)
+			if (mBitmap != null) {
+				it.addImage("ic-check-in", mBitmap)
+			}
+			
+			val symbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
+					.withProperties(PropertyFactory.iconImage("ic-check-in"),
+							PropertyFactory.iconAllowOverlap(true),
+							PropertyFactory.iconOffset(arrayOf(0f, 0.9f)))
+			
+			it.addLayer(symbolLayer)
+			
 //			switchMap(mapboxMap)
 //			checkThenAccquireLocation()
 //			setDisplay()
-//		}
-		
-		val symbolLayerIconFeatureList = mutableListOf<Feature>(
-				Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
-				Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
-				Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
-		)
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-		if (mBitmap != null) {
-			mapboxMap.setStyle(
-					Style.Builder().fromUri(currentStyle)
-							.withImage(ICON_ID, mBitmap)
-							.withSource(GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))).withLayer(SymbolLayer(LAYER_ID, SOURCE_ID)
-									.withProperties(PropertyFactory.iconImage(ICON_ID), PropertyFactory.iconAllowOverlap(true), PropertyFactory.iconOffset(arrayOf(0f, 0.9f))))
-			) {
-			}
-			moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
 		}
+		moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
+		
 	}
 	
 	override fun onResume() {
