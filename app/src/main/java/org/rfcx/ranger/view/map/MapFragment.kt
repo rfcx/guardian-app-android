@@ -28,6 +28,7 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
@@ -50,7 +51,7 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
-class MapFragment : BaseFragment() {
+class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private val mapViewModel: MapViewModel by viewModel()
 	private var routeLocations: MutableList<Location> = mutableListOf()
@@ -99,42 +100,35 @@ class MapFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
-		mapView.getMapAsync { mapboxMap ->
-			val symbolLayerIconFeatureList = mutableListOf<Feature>(
-					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
-					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
-					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
-			)
-			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-			if (mBitmap != null) {
-				mapboxMap.setStyle(
-						Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-								.withImage(
-										ICON_ID, mBitmap
-								)
-								.withSource(
-										GeoJsonSource(
-												SOURCE_ID,
-												FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
-										)
-								)
-								.withLayer(
-										SymbolLayer(LAYER_ID, SOURCE_ID)
-												.withProperties(
-														PropertyFactory.iconImage(ICON_ID),
-														PropertyFactory.iconAllowOverlap(true),
-														PropertyFactory.iconOffset(arrayOf(0f, 0.9f))
-												)
-								)
-				) {
-				}
-				
-				moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
-				
-			}
-		}
+		mapView.getMapAsync(this)
 		
+	}
+	
+	override fun onMapReady(mapboxMap: MapboxMap) {
+//		mapBoxMap = mapboxMap
+//		mapboxMap.setStyle(currentStyle) {
+//			switchMap(mapboxMap)
+//			checkThenAccquireLocation()
+//			setDisplay()
+//		}
+		
+		val symbolLayerIconFeatureList = mutableListOf<Feature>(
+				Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
+				Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
+				Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
+		)
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			mapboxMap.setStyle(
+					Style.Builder().fromUri(currentStyle)
+							.withImage(ICON_ID, mBitmap)
+							.withSource(GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))).withLayer(SymbolLayer(LAYER_ID, SOURCE_ID)
+									.withProperties(PropertyFactory.iconImage(ICON_ID), PropertyFactory.iconAllowOverlap(true), PropertyFactory.iconOffset(arrayOf(0f, 0.9f))))
+			) {
+			}
+			moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
+		}
 	}
 	
 	override fun onResume() {
