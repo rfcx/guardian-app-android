@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.google.gson.JsonPrimitive
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
@@ -26,7 +28,6 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
@@ -35,6 +36,9 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,7 +50,7 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 
-class MapFragment : BaseFragment(), OnMapReadyCallback {
+class MapFragment : BaseFragment() {
 	
 	private val mapViewModel: MapViewModel by viewModel()
 	private var routeLocations: MutableList<Location> = mutableListOf()
@@ -95,7 +99,42 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		super.onViewCreated(view, savedInstanceState)
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
-		mapView.getMapAsync(this)
+		mapView.getMapAsync { mapboxMap ->
+			val symbolLayerIconFeatureList = mutableListOf<Feature>(
+					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
+					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
+					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
+			)
+			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+			if (mBitmap != null) {
+				mapboxMap.setStyle(
+						Style.Builder()
+								.withImage(
+										ICON_ID, mBitmap
+								)
+								.withSource(
+										GeoJsonSource(
+												SOURCE_ID,
+												FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
+										)
+								)
+								.withLayer(
+										SymbolLayer(LAYER_ID, SOURCE_ID)
+												.withProperties(
+														PropertyFactory.iconImage(ICON_ID),
+														PropertyFactory.iconAllowOverlap(true),
+														PropertyFactory.iconOffset(arrayOf(0f, 0.9f))
+												)
+								)
+				) {
+				}
+				
+				moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
+				
+			}
+		}
+		
 	}
 	
 	override fun onResume() {
@@ -143,15 +182,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions?.handleRequestResult(requestCode, grantResults)
 	}
-	
-	override fun onMapReady(mapboxMap: MapboxMap) {
-		mapBoxMap = mapboxMap
-		mapboxMap.setStyle(currentStyle) {
-			switchMap(mapboxMap)
-			checkThenAccquireLocation()
-			setDisplay()
-		}
-	}
+
+//	override fun onMapReady(mapboxMap: MapboxMap) {
+//		mapBoxMap = mapboxMap
+//		mapboxMap.setStyle(currentStyle) {
+//			switchMap(mapboxMap)
+//			checkThenAccquireLocation()
+//			setDisplay()
+//		}
+//	}
 	
 	private fun switchMap(mapboxMap: MapboxMap) {
 		switchButton.setOnClickListener {
@@ -162,7 +201,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
-			onMapReady(mapboxMap)
+//			onMapReady(mapboxMap)
 		}
 	}
 	
@@ -267,7 +306,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			
 			if (reports.isNotEmpty()) {
 				val lastCheckIn = reportList.last()
-				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+//				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 			
 			symbolManager?.addClickListener { symbol ->
@@ -329,7 +368,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		if (checkInList.isNotEmpty()) {
 			val lastCheckIn = checkInList.last()
-			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+//			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 		}
 	}
 	
@@ -363,9 +402,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
-	private fun moveMapTo(latLng: LatLng) {
+	private fun moveMapTo(latLng: LatLng, mapBoxMap: MapboxMap) {
 		if (!isAdded || isDetached) return
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), mapBoxMap.cameraPosition.zoom))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), 5.0))
 	}
 	
 	fun moveToReportMarker(report: Report) {
@@ -384,5 +423,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
 		const val tag = "MapFragment"
+		
+		private const val SOURCE_ID = "SOURCE_ID"
+		private const val ICON_ID = "ICON_ID"
+		private const val LAYER_ID = "LAYER_ID"
 	}
 }
