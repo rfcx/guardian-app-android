@@ -109,7 +109,7 @@ class MapFragment : BaseFragment() {
 			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
 			if (mBitmap != null) {
 				mapboxMap.setStyle(
-						Style.Builder()
+						Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
 								.withImage(
 										ICON_ID, mBitmap
 								)
