@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,10 +34,10 @@ class ProfileFragment : BaseFragment() {
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
 	private val dialog: AlertDialog by lazy {
-		SpotsDialog.Builder()
-			.setContext(context)
-			.setTheme(R.style.Dialog_Loading)
-			.build()
+		AlertDialog.Builder(context)
+				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
+				.setCancelable(false)
+				.create()
 	}
 	
 	override fun onAttach(context: Context) {

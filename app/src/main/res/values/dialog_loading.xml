@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<style name="Dialog_Loading" parent="android:Theme.DeviceDefault.Dialog">
-		<item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-		<item name="DialogTitleText">@string/dialog_loading</item>
-		<item name="DialogSpotColor">@color/colorPrimary</item>
-		<item name="DialogSpotCount">4</item>
-	</style>
-</resources>
