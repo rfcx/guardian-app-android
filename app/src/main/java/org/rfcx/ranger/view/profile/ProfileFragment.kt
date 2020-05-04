@@ -160,6 +160,10 @@ class ProfileFragment : BaseFragment() {
 		viewDataBinding.onClickOfflineMap = View.OnClickListener {
 			profileViewModel.offlineMapBox()
 		}
+		
+		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
+			profileViewModel.deleteOfflineRegion()
+		}
 	}
 	
 	override fun onStart() {

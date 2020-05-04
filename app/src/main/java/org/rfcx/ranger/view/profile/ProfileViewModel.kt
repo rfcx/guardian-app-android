@@ -181,7 +181,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		val minLng = preferences.getString(Preferences.MIN_LONGITUDE)
 		val maxLng = preferences.getString(Preferences.MAX_LONGITUDE)
 		
-		offlineManager.setOfflineMapboxTileCountLimit(10000) // what?
+		offlineManager.setOfflineMapboxTileCountLimit(10000)
 		val style = Style.OUTDOORS
 		if (minLat !== null && maxLat !== null && minLng !== null && maxLng !== null) {
 			val latLngBounds: LatLngBounds = LatLngBounds.from(maxLat.toDouble(), maxLng.toDouble(), minLat.toDouble(), minLng.toDouble())
@@ -197,6 +197,50 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 						}
 					})
 		}
+	}
+	
+	fun deleteOfflineRegion() {
+		isDownloading.value = true
+		isDelete.value = false
+		
+		val offlineManager = OfflineManager.getInstance(context)
+		offlineManager?.listOfflineRegions(object : OfflineManager.ListOfflineRegionsCallback {
+			override fun onList(offlineRegions: Array<out OfflineRegion>?) {
+				if (offlineRegions?.size != null) {
+					if (offlineRegions.isNotEmpty()) {
+						onDeleteOfflineRegion(offlineRegions[0])
+						
+					} else {
+						isDownloaded.value = true
+						isDelete.value = true
+						isDownloading.value = false
+					}
+				}
+			}
+			
+			override fun onError(error: String?) {
+				isDownloaded.value = true
+				isDelete.value = true
+				isDownloading.value = false
+			}
+		})
+	}
+	
+	fun onDeleteOfflineRegion(offRegion: OfflineRegion) {
+		offRegion.delete(object : OfflineRegion.OfflineRegionDeleteCallback {
+			override fun onDelete() {
+				isDownloaded.value = false
+				isDelete.value = false
+				isDownloading.value = false
+				preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
+			}
+			
+			override fun onError(error: String) {
+				isDownloaded.value = true
+				isDelete.value = true
+				isDownloading.value = false
+			}
+		})
 	}
 	
 	private suspend fun createOfflineRegion(offlineRegion: OfflineRegion) {
@@ -221,7 +265,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					this.percentage = percentage
 					if (percentage > oldPercentage)
 						if (percentage >= 100) {
-							downloaded.value = context.getString(R.string.downloaded_successfully)
 							isDownloaded.value = true
 							isDownloading.value = false
 							isDelete.value = true
