@@ -14,13 +14,15 @@ import kotlinx.coroutines.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.ProfileData
+import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
+import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.util.*
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
 	
 	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
@@ -30,6 +32,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val userName = MutableLiveData<String>()
 	val downloaded = MutableLiveData<String>()
 	val isDownloaded = MutableLiveData<Boolean>()
+	val haveSiteBounds = MutableLiveData<Boolean>()
 	val isDownloading = MutableLiveData<Boolean>()
 	val isDelete = MutableLiveData<Boolean>()
 	val sendToEmail = MutableLiveData<String>()
@@ -46,6 +49,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	init {
 		getSiteName()
+		getSiteBounds()
 		locationTracking.value = profileData.getTracking()
 		notificationReceiving.value = profileData.getReceiveNotification()
 		notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
@@ -56,6 +60,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 		isDownloading.value = false
+		haveSiteBounds.value = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, false)
 	}
 	
 	fun resumed() {
@@ -70,6 +75,18 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		} else {
 			userSite.value = site
 		}
+	}
+	
+	private fun getSiteBounds() {
+		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
+			override fun onSuccess(t: List<SiteResponse>) {
+				haveSiteBounds.value = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, t[0].bounds != null)
+			}
+			
+			override fun onError(e: Throwable) {
+				Log.d("getSiteName", "error $e")
+			}
+		}, profileData.getSiteId())
 	}
 	
 	fun onReceiving(enable: Boolean) {
