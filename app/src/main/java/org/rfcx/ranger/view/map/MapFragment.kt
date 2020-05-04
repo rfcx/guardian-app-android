@@ -300,7 +300,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			
 			if (reports.isNotEmpty()) {
 				val lastCheckIn = reportList.last()
-//				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
 			}
 			
 			symbolManager?.addClickListener { symbol ->
@@ -314,7 +314,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun displayCheckIn() {
 		checkInList = arrayListOf()
 		lineManager?.deleteAll()
-//		val location = Location(LocationManager.GPS_PROVIDER)
 		
 		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
@@ -331,9 +330,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			
 			val lineVertices = arrayListOf<LatLng>()
 			checkIns.map {
-				//				location.latitude = it.latitude
-//				location.longitude = it.longitude
-//				routeLocations.add(location)
 				
 				checkInList.add(it)
 				lineVertices.add(LatLng(it.latitude, it.longitude))
@@ -343,15 +339,10 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 						.withIconSize(1.0f))
 				
 			}
-//
-//			val sortedLocations = routeLocations
-//					.sortedBy { location -> location.time }
-//					.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
 			
 			val lineOptions = LineOptions().withLatLngs(lineVertices)
 					.withLineColor("#969faa")
 					.withLineWidth(5.0f)
-//					.withGeometry(LineString.fromLngLats(sortedLocations))
 			
 			lineManager?.create(lineOptions)
 			
