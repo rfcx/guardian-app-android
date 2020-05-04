@@ -14,10 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.google.gson.JsonPrimitive
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -37,9 +33,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -64,6 +57,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var currentStyle: String = Style.OUTDOORS
 	private var reportList: ArrayList<Report> = arrayListOf()
 	private var checkInList: ArrayList<CheckIn> = arrayListOf()
+	private var lineManager: LineManager? = null
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -103,41 +97,38 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapView.getMapAsync(this)
 		
 	}
-	
-	override fun onMapReady(mapboxMap: MapboxMap) {
-		mapBoxMap = mapboxMap
-		
-		mapboxMap.setStyle(currentStyle) {
-			val symbolLayerIconFeatureList = mutableListOf<Feature>(
-					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
-					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
-					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
-			)
-			
-			val geoJsonSource = GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))
-			
-			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-			
-			it.addSource(geoJsonSource)
-			if (mBitmap != null) {
-				it.addImage("ic-check-in", mBitmap)
-			}
-			
-			val symbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
-					.withProperties(PropertyFactory.iconImage("ic-check-in"),
-							PropertyFactory.iconAllowOverlap(true),
-							PropertyFactory.iconOffset(arrayOf(0f, 0.9f)))
-			
-			it.addLayer(symbolLayer)
-			
-//			switchMap(mapboxMap)
-//			checkThenAccquireLocation()
-//			setDisplay()
-		}
-		moveMapTo(LatLng(-33.213144, -57.225365), mapboxMap)
-		
-	}
+
+//	override fun onMapReady(mapboxMap: MapboxMap) {
+//		mapBoxMap = mapboxMap
+//
+//		mapboxMap.setStyle(currentStyle) {
+//			val symbolLayerIconFeatureList = mutableListOf<Feature>(
+//					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
+//					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
+//					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
+//			)
+//
+//			val geoJsonSource = GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))
+//
+//			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+//			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+//
+//			it.addSource(geoJsonSource)
+//			if (mBitmap != null) {
+//				it.addImage("ic-check-in", mBitmap)
+//			}
+//
+//			val symbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
+//					.withProperties(PropertyFactory.iconImage("ic-check-in"),
+//							PropertyFactory.iconAllowOverlap(true),
+//							PropertyFactory.iconOffset(arrayOf(0f, 0.9f)))
+//
+//			it.addLayer(symbolLayer)
+//		}
+//
+//		moveMapTo(LatLng(-33.213144, -57.225365))
+//
+//	}
 	
 	override fun onResume() {
 		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
@@ -184,15 +175,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		locationPermissions?.handleRequestResult(requestCode, grantResults)
 	}
-
-//	override fun onMapReady(mapboxMap: MapboxMap) {
-//		mapBoxMap = mapboxMap
-//		mapboxMap.setStyle(currentStyle) {
-//			switchMap(mapboxMap)
-//			checkThenAccquireLocation()
-//			setDisplay()
-//		}
-//	}
+	
+	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapBoxMap = mapboxMap
+		mapboxMap.setStyle(currentStyle) {
+			lineManager = LineManager(mapView, mapboxMap, it)
+			switchMap(mapboxMap)
+			checkThenAccquireLocation()
+			setDisplay()
+		}
+	}
 	
 	private fun switchMap(mapboxMap: MapboxMap) {
 		switchButton.setOnClickListener {
@@ -203,7 +195,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
-//			onMapReady(mapboxMap)
+			onMapReady(mapboxMap)
 		}
 	}
 	
@@ -320,58 +312,54 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun displayCheckIn() {
+		checkInList = arrayListOf()
+		lineManager?.deleteAll()
+//		val location = Location(LocationManager.GPS_PROVIDER)
+		
 		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
 		if (mBitmap != null) {
 			mapBoxMap.style?.addImage("check_in_pin", mBitmap)
 		}
 		
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
 		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
-			val location = Location(LocationManager.GPS_PROVIDER)
-			
 			if (!isAdded || isDetached) return@Observer
-			checkInList = arrayListOf()
-			checkIns.map { checkInList.add(it) }
 			
-			for (checkIn in checkIns) {
-				location.latitude = checkIn.latitude
-				location.longitude = checkIn.longitude
-				routeLocations.add(location)
+			val lineVertices = arrayListOf<LatLng>()
+			checkIns.map {
+				//				location.latitude = it.latitude
+//				location.longitude = it.longitude
+//				routeLocations.add(location)
 				
-				val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-				symbolManager?.iconAllowOverlap = true
-				symbolManager?.iconIgnorePlacement = true
-				
+				checkInList.add(it)
+				lineVertices.add(LatLng(it.latitude, it.longitude))
 				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(checkIn.latitude, checkIn.longitude))
+						.withLatLng(LatLng(it.latitude, it.longitude))
 						.withIconImage("check_in_pin")
 						.withIconSize(1.0f))
 				
 			}
-			addCheckIn()
-		})
-	}
-	
-	private fun addCheckIn() {
-		val lineManager = mapBoxMap.style?.let { LineManager(mapView, mapBoxMap, it) }
-		lineManager?.let { line ->
-			line.deleteAll()
+//
+//			val sortedLocations = routeLocations
+//					.sortedBy { location -> location.time }
+//					.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
 			
-			val sortedLocations = routeLocations
-					.sortedBy { location -> location.time }
-					.map { location -> Point.fromLngLat(location.longitude, location.latitude) }
-			
-			line.create(LineOptions()
+			val lineOptions = LineOptions().withLatLngs(lineVertices)
 					.withLineColor("#969faa")
 					.withLineWidth(5.0f)
-					.withGeometry(LineString.fromLngLats(sortedLocations))
-			)
-		}
-		
-		if (checkInList.isNotEmpty()) {
-			val lastCheckIn = checkInList.last()
-//			moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-		}
+//					.withGeometry(LineString.fromLngLats(sortedLocations))
+			
+			lineManager?.create(lineOptions)
+			
+			if (lineVertices.isNotEmpty()) {
+				val lastCheckIn = lineVertices.last()
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+			}
+		})
 	}
 	
 	private fun listAllOfflineMapRegion() {
@@ -404,9 +392,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
-	private fun moveMapTo(latLng: LatLng, mapBoxMap: MapboxMap) {
+	private fun moveMapTo(latLng: LatLng) {
 		if (!isAdded || isDetached) return
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), 5.0))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), mapBoxMap.cameraPosition.zoom))
 	}
 	
 	fun moveToReportMarker(report: Report) {

@@ -47,6 +47,10 @@
 		<variable
 			name="onClickOfflineMap"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickDeleteOffline"
+			type="android.view.View.OnClickListener" />
 	</data>
 	
 	<ScrollView
@@ -348,10 +352,11 @@
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small">
+				android:paddingBottom="@dimen/margin_padding_small"
+				android:visibility="@{viewModel.haveSiteBounds ? view.VISIBLE : view.GONE}">
 				
 				<LinearLayout
-					android:layout_width="match_parent"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:orientation="vertical">
@@ -394,6 +399,7 @@
 					android:layout_height="30dp"
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:onClick="@{onClickDeleteOffline}"
 					android:text="@string/delete"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
 				
