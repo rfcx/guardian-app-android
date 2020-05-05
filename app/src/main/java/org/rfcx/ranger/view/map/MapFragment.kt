@@ -260,7 +260,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 					mapBoxMap.style?.addImage("pin-map", mBitmap)
 				}
 				
-				
 				symbolManager?.create(SymbolOptions()
 						.withLatLng(LatLng(report.latitude, report.longitude))
 						.withIconImage("pin-map")
@@ -315,13 +314,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 						.withIconImage("check_in_pin")
 						.withIconSize(1.0f))
 				
+				val lineOptions = LineOptions().withLatLngs(lineVertices)
+						.withLineColor("#969faa")
+						.withLineWidth(5.0f)
+				lineManager?.create(lineOptions)
+				
 			}
-			
-			val lineOptions = LineOptions().withLatLngs(lineVertices)
-					.withLineColor("#969faa")
-					.withLineWidth(5.0f)
-			
-			lineManager?.create(lineOptions)
 			
 			if (lineVertices.isNotEmpty()) {
 				val lastCheckIn = lineVertices.last()
