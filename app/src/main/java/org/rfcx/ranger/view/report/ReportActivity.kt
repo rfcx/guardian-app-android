@@ -245,7 +245,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	private fun markRangerLocation(location: Location) {
 		lastLocation = location
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 10.0))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0))
 		
 		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
 		symbolManager?.iconAllowOverlap = true

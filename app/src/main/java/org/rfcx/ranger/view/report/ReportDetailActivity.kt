@@ -198,7 +198,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	private fun setMapPin() {
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 10.0))
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0))
 		
 		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
 		symbolManager?.iconAllowOverlap = true
