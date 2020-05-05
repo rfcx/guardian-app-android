@@ -13,7 +13,10 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -47,7 +50,6 @@ import org.rfcx.ranger.view.base.BaseFragment
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private val mapViewModel: MapViewModel by viewModel()
-	private var routeLocations: MutableList<Location> = mutableListOf()
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
@@ -97,38 +99,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapView.getMapAsync(this)
 		
 	}
-
-//	override fun onMapReady(mapboxMap: MapboxMap) {
-//		mapBoxMap = mapboxMap
-//
-//		mapboxMap.setStyle(currentStyle) {
-//			val symbolLayerIconFeatureList = mutableListOf<Feature>(
-//					Feature.fromGeometry(Point.fromLngLat(-57.225365, -33.213144)),
-//					Feature.fromGeometry(Point.fromLngLat(-54.14164, -33.981818)),
-//					Feature.fromGeometry(Point.fromLngLat(-56.990533, -30.583266))
-//			)
-//
-//			val geoJsonSource = GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList))
-//
-//			val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-//			val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-//
-//			it.addSource(geoJsonSource)
-//			if (mBitmap != null) {
-//				it.addImage("ic-check-in", mBitmap)
-//			}
-//
-//			val symbolLayer = SymbolLayer(LAYER_ID, SOURCE_ID)
-//					.withProperties(PropertyFactory.iconImage("ic-check-in"),
-//							PropertyFactory.iconAllowOverlap(true),
-//							PropertyFactory.iconOffset(arrayOf(0f, 0.9f)))
-//
-//			it.addLayer(symbolLayer)
-//		}
-//
-//		moveMapTo(LatLng(-33.213144, -57.225365))
-//
-//	}
 	
 	override fun onResume() {
 		activity?.registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
@@ -326,12 +296,19 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		symbolManager?.iconIgnorePlacement = true
 		
 		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
+			val symbolLayerIconFeatureList = mutableListOf<Feature>()
 			if (!isAdded || isDetached) return@Observer
 			
 			val lineVertices = arrayListOf<LatLng>()
 			checkIns.map {
-				
 				checkInList.add(it)
+				
+				val json = JsonObject()
+				json.addProperty("time", it.time.toFullDateTimeString())
+				
+				// TODO: Add this source in mapBoxMap style
+				symbolLayerIconFeatureList.add(Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), json))
+				
 				lineVertices.add(LatLng(it.latitude, it.longitude))
 				symbolManager?.create(SymbolOptions()
 						.withLatLng(LatLng(it.latitude, it.longitude))
