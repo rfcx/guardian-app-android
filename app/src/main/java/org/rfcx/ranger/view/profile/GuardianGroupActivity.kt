@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_guardian_group.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
