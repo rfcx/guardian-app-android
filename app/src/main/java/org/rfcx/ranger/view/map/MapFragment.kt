@@ -47,7 +47,6 @@ import org.rfcx.ranger.view.base.BaseFragment
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private val mapViewModel: MapViewModel by viewModel()
-	private var routeLocations: MutableList<Location> = mutableListOf()
 	private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
 	private var locationManager: LocationManager? = null
 	private var lastLocation: Location? = null
@@ -257,7 +256,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 					mapBoxMap.style?.addImage("pin-map", mBitmap)
 				}
 				
-				
 				symbolManager?.create(SymbolOptions()
 						.withLatLng(LatLng(report.latitude, report.longitude))
 						.withIconImage("pin-map")
@@ -304,12 +302,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 						.withIconImage("check_in_pin")
 						.withIconSize(1.0f))
 				
+				val lineOptions = LineOptions().withLatLngs(lineVertices)
+						.withLineColor("#969faa")
+						.withLineWidth(5.0f)
+				lineManager?.create(lineOptions)
+				
 			}
-			
-			val lineOptions = LineOptions().withLatLngs(lineVertices)
-					.withLineColor("#969faa")
-					.withLineWidth(5.0f)
-			lineManager?.create(lineOptions)
 			
 			if (lineVertices.isNotEmpty()) {
 				val lastCheckIn = lineVertices.last()
