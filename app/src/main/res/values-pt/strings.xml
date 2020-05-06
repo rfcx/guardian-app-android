@@ -254,7 +254,7 @@
     <string name="edit_profile">Editar Perfil</string>
     <string name="offline_map">Offline Map</string>
     <string name="download">baixar</string>
-    <string name="delete">excluir</string>
+    <string name="delete">excluir (%sMB)</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Lista Grupo Guardião</string>
