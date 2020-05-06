@@ -63,6 +63,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		showPercent.value = false
 		isDownloaded.value = true
 		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+		deleteText.value = preferences.getString(Preferences.DELETE_TEXT, "DELETE")
 	}
 	
 	fun resumed() {
@@ -293,6 +294,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 							isDelete.value = true
 							deleteText.value = context.getString(R.string.delete, megabybtes.toString())
 							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
+							preferences.putString(Preferences.DELETE_TEXT, context.getString(R.string.delete, megabybtes.toString()))
 						} else {
 							isDownloaded.value = true
 							isDelete.value = false
