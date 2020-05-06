@@ -352,8 +352,7 @@
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small"
-				android:visibility="@{viewModel.haveSiteBounds ? view.VISIBLE : view.GONE}">
+				android:paddingBottom="@dimen/margin_padding_small">
 				
 				<LinearLayout
 					android:layout_width="0dp"
@@ -402,6 +401,17 @@
 					android:onClick="@{onClickDeleteOffline}"
 					android:text="@{viewModel.deleteText}"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
+				
+				<TextView
+					android:id="@+id/unavailableTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:text="@string/unavailable"
+					android:visibility="@{viewModel.haveSiteBounds ? view.GONE: view.VISIBLE}"
+					tools:visibility="gone" />
 				
 				<TextView
 					android:id="@+id/downloadedTextView"

@@ -59,11 +59,9 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		userName.value = profileData.getUserNickname()
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
-		isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
-		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 		isDownloading.value = false
 		showPercent.value = false
-		haveSiteBounds.value = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, false)
+		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 	}
 	
 	fun resumed() {
@@ -83,7 +81,13 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	private fun getSiteBounds() {
 		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
-				haveSiteBounds.value = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, t[0].bounds != null)
+				val siteBounds = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, t[0].bounds != null)
+				haveSiteBounds.value = siteBounds
+				if (!siteBounds) {
+					isDownloaded.value = true
+				} else {
+					isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
+				}
 			}
 			
 			override fun onError(e: Throwable) {
