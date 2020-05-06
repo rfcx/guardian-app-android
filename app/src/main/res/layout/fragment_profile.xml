@@ -400,7 +400,7 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickDeleteOffline}"
-					android:text="@string/delete"
+					android:text="@{viewModel.deleteText}"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
 				
 				<TextView

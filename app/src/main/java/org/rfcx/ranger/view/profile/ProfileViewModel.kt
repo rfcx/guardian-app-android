@@ -31,6 +31,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val appVersion = MutableLiveData<String>()
 	val userName = MutableLiveData<String>()
 	val downloaded = MutableLiveData<String>()
+	val deleteText = MutableLiveData<String>()
 	val isDownloaded = MutableLiveData<Boolean>()
 	val haveSiteBounds = MutableLiveData<Boolean>()
 	val isDownloading = MutableLiveData<Boolean>()
@@ -259,6 +260,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				override fun onStatusChanged(status: OfflineRegionStatus) {
 					val required = status.requiredResourceCount
 					val oldPercentage = this.percentage
+					val megabybtes = status.completedResourceSize/1048576
 					val percentage: Int = when {
 						status.isComplete -> {
 							101
@@ -274,6 +276,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 							isDownloading.value = false
 							showPercent.value = false
 							isDelete.value = true
+							deleteText.value = context.getString(R.string.delete, megabybtes.toString())
 							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
 						} else {
 							isDownloaded.value = true
