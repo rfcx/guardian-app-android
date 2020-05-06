@@ -86,7 +86,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 			override fun onError(e: Throwable) {
 				Log.d("getSiteName", "error $e")
 			}
-		}, profileData.getSiteId())
+		}, profileData.getDefaultSiteId())
 	}
 	
 	fun onReceiving(enable: Boolean) {
