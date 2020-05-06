@@ -31,10 +31,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val appVersion = MutableLiveData<String>()
 	val userName = MutableLiveData<String>()
 	val downloaded = MutableLiveData<String>()
+	val deleteText = MutableLiveData<String>()
 	val isDownloaded = MutableLiveData<Boolean>()
 	val haveSiteBounds = MutableLiveData<Boolean>()
 	val isDownloading = MutableLiveData<Boolean>()
 	val isDelete = MutableLiveData<Boolean>()
+	val showPercent = MutableLiveData<Boolean>()
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
@@ -60,6 +62,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		isDownloaded.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 		isDownloading.value = false
+		showPercent.value = false
 		haveSiteBounds.value = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS, false)
 	}
 	
@@ -149,7 +152,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				profileData.updateReceivingNotificationByEmail(false)
 				notificationReceivingByEmail.value = false
 				Toast.makeText(context, context.getString(R.string.error_common), Toast.LENGTH_SHORT).show()
-			
 			}
 		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
 	}
@@ -201,9 +203,10 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun deleteOfflineRegion(isLogout: Boolean) {
-		if (!isLogout){
+		if (!isLogout) {
 			isDownloading.value = true
 			isDelete.value = false
+			showPercent.value = false
 		}
 		
 		val offlineManager = OfflineManager.getInstance(context)
@@ -218,6 +221,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 							isDownloaded.value = true
 							isDelete.value = true
 							isDownloading.value = false
+							showPercent.value = false
 						}
 					}
 				}
@@ -240,8 +244,9 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					isDownloaded.value = false
 					isDelete.value = false
 					isDownloading.value = false
-					preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
+					showPercent.value = false
 				}
+				preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 			}
 			
 			override fun onError(error: String) {
@@ -249,6 +254,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 					isDownloaded.value = true
 					isDelete.value = true
 					isDownloading.value = false
+					showPercent.value = false
 				}
 			}
 		})
@@ -264,6 +270,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				override fun onStatusChanged(status: OfflineRegionStatus) {
 					val required = status.requiredResourceCount
 					val oldPercentage = this.percentage
+					val megabybtes = status.completedResourceSize / 1048576
 					val percentage: Int = when {
 						status.isComplete -> {
 							101
@@ -277,12 +284,15 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 						if (percentage >= 100) {
 							isDownloaded.value = true
 							isDownloading.value = false
+							showPercent.value = false
 							isDelete.value = true
+							deleteText.value = context.getString(R.string.delete, megabybtes.toString())
 							preferences.putBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, true)
 						} else {
 							isDownloaded.value = true
 							isDelete.value = false
 							downloaded.value = "$percentage %"
+							showPercent.value = true
 							isDownloading.value = true
 						}
 					Log.d(TAG, if (percentage >= 100) "Region downloaded successfully." else "$percentage% of region downloaded")

@@ -400,7 +400,7 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickDeleteOffline}"
-					android:text="@string/delete"
+					android:text="@{viewModel.deleteText}"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
 				
 				<TextView
@@ -411,7 +411,7 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:text="@{viewModel.downloaded}"
-					android:visibility="@{viewModel.isDownloading ? view.VISIBLE : view.GONE}"
+					android:visibility="@{viewModel.showPercent ? view.VISIBLE : view.GONE}"
 					tools:text="50%" />
 				
 				<ProgressBar
