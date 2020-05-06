@@ -61,6 +61,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 		isDownloading.value = false
 		showPercent.value = false
+		isDownloaded.value = true
 		isDelete.value = preferences.getBoolean(Preferences.DOWNLOADED_OFFLINE_MAP, false)
 	}
 	

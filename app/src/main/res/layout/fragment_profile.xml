@@ -389,7 +389,8 @@
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickOfflineMap}"
 					android:text="@string/download"
-					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}" />
+					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}"
+					tools:visibility="gone" />
 				
 				<androidx.appcompat.widget.AppCompatButton
 					android:id="@+id/deleteButton"
@@ -404,7 +405,7 @@
 				
 				<TextView
 					android:id="@+id/unavailableTextView"
-					style="@style/RangerText.SubTitle"
+					style="@style/RangerText.Caption"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
