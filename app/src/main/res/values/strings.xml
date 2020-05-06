@@ -254,6 +254,7 @@
 	<string name="offline_map">Offline Map</string>
 	<string name="download">download</string>
 	<string name="delete">delete (%sMB)</string>
+	<string name="unavailable">UNAVAILABLE</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>
