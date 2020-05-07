@@ -46,7 +46,7 @@
 	<string name="please_tell_name">Por favor, díganos su nombre</string>
 	<string name="hint_name">Nombre</string>
 	
-	<string name="terms_and_service">He leído y estoy de acuerdo con estos Términos y Servicio</string>
+	<string name="terms_and_service">He leído y estoy de acuerdo con estos Términos de Servicio</string>
 	<string name="continue_text">Seguir</string>
 	
 	<!-- common error -->

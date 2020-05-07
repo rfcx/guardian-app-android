@@ -38,7 +38,7 @@
 	<string name="please_tell_name">Vertel ons uw naam</string>
 	<string name="hint_name">Naam</string>
 	
-	<string name="terms_and_service">Ik heb gelezen en ga akkoord met deze voorwaarden en service</string>
+	<string name="terms_and_service">Ik heb deze Service Voorwaarden gelezen en ga ermee akkoord</string>
 	<string name="continue_text">Doorgaan met</string>
 	
 	<!-- common error -->
