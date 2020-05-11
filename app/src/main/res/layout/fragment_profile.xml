@@ -352,8 +352,7 @@
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small"
-				android:visibility="@{viewModel.haveSiteBounds ? view.VISIBLE : view.GONE}">
+				android:paddingBottom="@dimen/margin_padding_small">
 				
 				<LinearLayout
 					android:layout_width="0dp"
@@ -390,7 +389,8 @@
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickOfflineMap}"
 					android:text="@string/download"
-					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}" />
+					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}"
+					tools:visibility="gone" />
 				
 				<androidx.appcompat.widget.AppCompatButton
 					android:id="@+id/deleteButton"
@@ -400,8 +400,19 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickDeleteOffline}"
-					android:text="@string/delete"
+					android:text="@{viewModel.deleteText}"
 					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
+				
+				<TextView
+					android:id="@+id/unavailableTextView"
+					style="@style/RangerText.Caption"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:layout_marginEnd="@dimen/margin_padding_normal"
+					android:text="@string/unavailable"
+					android:visibility="@{viewModel.haveSiteBounds ? view.GONE: view.VISIBLE}"
+					tools:visibility="gone" />
 				
 				<TextView
 					android:id="@+id/downloadedTextView"
@@ -411,7 +422,7 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:text="@{viewModel.downloaded}"
-					android:visibility="@{viewModel.isDownloading ? view.VISIBLE : view.GONE}"
+					android:visibility="@{viewModel.showPercent ? view.VISIBLE : view.GONE}"
 					tools:text="50%" />
 				
 				<ProgressBar

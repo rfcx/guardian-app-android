@@ -252,7 +252,8 @@
     <string name="edit_profile">แก้ไขโปรไฟล์</string>
     <string name="offline_map">แผนที่ออฟไลน์</string>
     <string name="download">ดาวน์โหลด</string>
-    <string name="delete">ลบแผนที่</string>
+    <string name="delete">ลบแผนที่ (%sMB)</string>
+    <string name="unavailable">ไม่พร้อมใช้งาน</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">กลุ่ม Guardian</string>

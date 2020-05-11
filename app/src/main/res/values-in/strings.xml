@@ -254,7 +254,8 @@
     <string name="edit_profile">Sunting profil</string>
     <string name="offline_map">Offline Peta</string>
     <string name="download">download</string>
-    <string name="delete">menghapus</string>
+    <string name="delete">menghapus (%sMB)</string>
+    <string name="unavailable">TIDAK TERSEDIA</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>
