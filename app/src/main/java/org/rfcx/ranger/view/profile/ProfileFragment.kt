@@ -161,7 +161,7 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
-			profileViewModel.deleteOfflineRegion()
+			profileViewModel.deleteOfflineRegion(false)
 		}
 	}
 	
