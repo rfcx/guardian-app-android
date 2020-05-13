@@ -1,5 +1,6 @@
 package org.rfcx.ranger.util
 
+import com.google.gson.JsonObject
 import java.util.*
 
 fun Date.isToday(): Boolean {
@@ -19,4 +20,12 @@ fun Double.limitDecimalPlace(maxDecimalPlaceDigit: Int): String {
 	} else {
 		this.toString()
 	}
+}
+
+fun Map<String, String>.toJsonObject(): JsonObject {
+	val jsonObject = JsonObject()
+	this.forEach {
+		jsonObject.addProperty(it.key, it.value)
+	}
+	return jsonObject
 }

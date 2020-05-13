@@ -128,7 +128,8 @@ dependencies {
     //Joda-datetime
     implementation 'net.danlew:android.joda:2.10.3'
 
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
+    // MapBox
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline-v9:0.7.0'
 
