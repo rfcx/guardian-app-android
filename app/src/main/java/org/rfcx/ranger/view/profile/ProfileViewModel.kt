@@ -135,7 +135,11 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	fun setUnavailable(haveSiteBounds: Boolean) {
 		if (haveSiteBounds) {
 			val state = preferences.getString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_STATE)
-			setViewMapOffline(state)
+			if (state == DOWNLOAD_CANCEL_STATE) {
+				offlineMapBox()
+			} else {
+				setViewMapOffline(state)
+			}
 		} else {
 			setViewMapOffline(UNAVAILABLE)
 		}
@@ -354,7 +358,8 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		private const val DELETING_STATE = "DELETING_STATE"
 		private const val DOWNLOAD_STATE = "DOWNLOAD_STATE"
 		private const val DOWNLOADED_STATE = "DOWNLOADED_STATE"
-		private const val DOWNLOADING_STATE = "DOWNLOADING_STATE"
 		private const val UNAVAILABLE = "UNAVAILABLE"
+		const val DOWNLOAD_CANCEL_STATE = "DOWNLOAD_CANCEL_STATE"
+		const val DOWNLOADING_STATE = "DOWNLOADING_STATE"
 	}
 }

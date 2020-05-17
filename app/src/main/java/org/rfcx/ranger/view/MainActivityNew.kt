@@ -23,6 +23,8 @@ import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
+import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
+import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.status.StatusFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
@@ -52,6 +54,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main_new)
+		
+		val preferences = Preferences.getInstance(this)
+		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
+		if (state == DOWNLOADING_STATE) {
+			preferences.putString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_CANCEL_STATE)
+		}
 		
 		setupBottomMenu()
 		if (savedInstanceState == null) {
