@@ -46,7 +46,7 @@
 	<string name="please_tell_name">Por favor, díganos su nombre</string>
 	<string name="hint_name">Nombre</string>
 	
-	<string name="terms_and_service">He leído y estoy de acuerdo con estos Términos y Servicio</string>
+	<string name="terms_and_service">He leído y estoy de acuerdo con estos Términos de Servicio</string>
 	<string name="continue_text">Seguir</string>
 	
 	<!-- common error -->
@@ -252,6 +252,10 @@
 	
 	<string name="change_profile_photo">Cambio de perfil de fotos</string>
 	<string name="edit_profile">Editar perfil</string>
+	<string name="offline_map">Offline Mapa</string>
+	<string name="download">descargar</string>
+	<string name="delete">Eliminar (%sMB)</string>
+	<string name="unavailable">INDISPONIBLE</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de grupos de la guarda</string>

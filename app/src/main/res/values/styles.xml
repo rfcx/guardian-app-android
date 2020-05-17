@@ -142,6 +142,17 @@
 		<item name="android:textColor">@android:color/white</item>
 	</style>
 	
+	<style name="RangerButton.GreenButton.TextSmall" parent="RangerButton.GreenButton">
+		<item name="android:textSize">@dimen/text_xxsmall</item>
+	</style>
+	
+	<style name="RangerButton.RedButton.TextSmall" parent="RangerButton">
+		<item name="android:background">@drawable/button_positive</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textSize">@dimen/text_xxsmall</item>
+	</style>
+	
 	<style name="RangerButton.FacebookButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_facebook_login_button</item>
 		<item name="android:textStyle">bold</item>

@@ -2,27 +2,26 @@ package org.rfcx.ranger.view.report
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -32,6 +31,7 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.Screen
 import org.rfcx.ranger.util.toIsoNotZString
+import org.rfcx.ranger.view.map.MapFragment.Companion.MAPBOX_ACCESS_TOKEN
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
@@ -41,30 +41,25 @@ import java.util.*
 class ReportDetailActivity : BaseReportImageActivity() {
 	
 	private val viewModel: ReportDetailViewModel by viewModel()
-	
-	private var mapView: GoogleMap? = null
-	private var location: LatLng? = null
+	private lateinit var mapView: MapView
+	private lateinit var mapBoxMap: MapboxMap
+	private lateinit var location: LatLng
 	private var audioFile: File? = null
 	private var player: MediaPlayer? = null
 	private val analytics by lazy { Analytics(this) }
 	private var urlBeforeGetShortLink: String? = null
 	
-	private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-		return ContextCompat.getDrawable(context, vectorResId)?.run {
-			setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-			val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-			draw(Canvas(bitmap))
-			BitmapDescriptorFactory.fromBitmap(bitmap)
-		}
-	}
-	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		Mapbox.getInstance(this, MAPBOX_ACCESS_TOKEN)
 		val binding: ActivityReportDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_report_detail)
 		binding.context = this
 		setupToolbar()
 		setupAudioPlaying()
 		setupImageRecycler()
+		
+		mapView = findViewById(R.id.mapBoxView)
+		mapView.onCreate(savedInstanceState)
 		
 		val reportId = intent.getIntExtra(EXTRA_REPORT_ID, -1)
 		viewModel.setReport(reportId)
@@ -78,8 +73,6 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			} else {
 				binding.report = DetailReport(report, this)
 				this.location = LatLng(report.latitude, report.longitude)
-				setMapPin()
-				
 				setAudio(report.audioLocation, binding)
 			}
 		})
@@ -88,15 +81,13 @@ class ReportDetailActivity : BaseReportImageActivity() {
 			reportImageAdapter.setImages(images)
 		})
 		
-		val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
-		mapFragment?.getMapAsync {
-			mapView = it
-			mapView?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-			mapView?.uiSettings?.isScrollGesturesEnabled = false
-			val horizontalPadding = 16.px
-			mapView?.setPadding(horizontalPadding, 0, horizontalPadding, 0)
-			runOnUiThread { setMapPin() }
+		mapView.getMapAsync { mapboxMap ->
+			mapBoxMap = mapboxMap
+			mapboxMap.setStyle(Style.OUTDOORS) {
+				setMapPin()
+			}
 		}
+		
 	}
 	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,7 +122,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	private fun shareReports(shortLink: String) {
-		val s :String = if (shortLink == "") {
+		val s: String = if (shortLink == "") {
 			urlBeforeGetShortLink.toString()
 		} else {
 			"$shortLink (${this.getString(R.string.expires_in_24h)})"
@@ -159,9 +150,36 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		}
 	}
 	
+	override fun onStart() {
+		super.onStart()
+		mapView.onStart()
+	}
+	
 	override fun onResume() {
 		super.onResume()
+		mapView.onResume()
 		analytics.trackScreen(Screen.REPORTDETAIL)
+	}
+	
+	override fun onPause() {
+		super.onPause()
+		mapView.onPause()
+	}
+	
+	override fun onStop() {
+		super.onStop()
+		mapView.onStop()
+	}
+	
+	override fun onLowMemory() {
+		super.onLowMemory()
+		mapView.onLowMemory()
+	}
+	
+	override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+		super.onSaveInstanceState(outState, outPersistentState)
+		mapView.onSaveInstanceState(outState)
+		
 	}
 	
 	private fun setupToolbar() {
@@ -180,16 +198,22 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	private fun setMapPin() {
-		val mapView = mapView
-		val location = location
-		if (mapView == null || location == null) {
-			return
+		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0))
+		
+		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
+		symbolManager?.iconAllowOverlap = true
+		symbolManager?.iconIgnorePlacement = true
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			mapBoxMap.style?.addImage("pin-map", mBitmap)
 		}
-		mapView.clear()
-		mapView.addMarker(MarkerOptions().position(location)
-				.icon(bitmapDescriptorFromVector(this, R.drawable.ic_pin_map)))
-		mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(
-				location, 15f))
+		
+		symbolManager?.create(SymbolOptions()
+				.withLatLng(LatLng(location.latitude, location.longitude))
+				.withIconImage("pin-map")
+				.withIconSize(1.0f))
 	}
 	
 	private fun setAudio(path: String?, binding: ActivityReportDetailBinding) {
@@ -300,5 +324,3 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 }
 
-val Int.px: Int
-	get() = (this * Resources.getSystem().displayMetrics.density).toInt()

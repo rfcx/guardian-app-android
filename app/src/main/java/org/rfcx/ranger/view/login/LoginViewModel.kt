@@ -125,6 +125,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	
 	fun loginMagicLink(activity: Activity) {
 		webAuthentication
+				.withConnection("") // Don't need send anything in withConnection
 				.withScope(context.getString(R.string.auth0_scopes))
 				.withScheme(context.getString(R.string.auth0_scheme))
 				.withAudience(context.getString(R.string.auth0_audience))

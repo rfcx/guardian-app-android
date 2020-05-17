@@ -46,7 +46,7 @@
     <string name="please_tell_name">Silakan beritahu kami nama Anda</string>
     <string name="hint_name">Nama</string>
     
-    <string name="terms_and_service">Saya telah membaca dan menyetujui Syarat dan Layanan</string>
+    <string name="terms_and_service">Saya telah membaca dan menyetujui Ketentuan Layanan ini</string>
     <string name="continue_text">Terus</string>
     
     <!-- common error -->
@@ -252,6 +252,10 @@
     
     <string name="change_profile_photo">Ganti foto profil</string>
     <string name="edit_profile">Sunting profil</string>
+    <string name="offline_map">Offline Peta</string>
+    <string name="download">download</string>
+    <string name="delete">menghapus (%sMB)</string>
+    <string name="unavailable">TIDAK TERSEDIA</string>
     
     <!--Guardian Group List-->
     <string name="guardian_group_list">Daftar wali Grup</string>

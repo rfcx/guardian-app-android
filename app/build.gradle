@@ -15,8 +15,8 @@ android {
     defaultConfig {
         applicationId "org.rfcx.ranger"
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 87
-        versionName "1.2.6"
+        versionCode 88
+        versionName "1.2.7"
         minSdkVersion 19
         targetSdkVersion 29
         multiDexEnabled true
@@ -73,9 +73,6 @@ dependencies {
     /* viewpager2 */
     implementation "androidx.viewpager2:viewpager2:1.0.0-alpha01"
 
-    /* dialog loading */
-    implementation 'com.github.d-max:spots-dialog:1.1@aar'
-
     /* firebase */
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-core:17.2.0'
@@ -130,6 +127,11 @@ dependencies {
 
     //Joda-datetime
     implementation 'net.danlew:android.joda:2.10.3'
+
+    // MapBox
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline-v9:0.7.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "android.arch.core:core-testing:1.1.1"

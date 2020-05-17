@@ -38,7 +38,7 @@
 	<string name="please_tell_name">Please tell us your name</string>
 	<string name="hint_name">Name</string>
 	
-	<string name="terms_and_service">I have read and agree to these Terms and Service</string>
+	<string name="terms_and_service">I have read and agree to these Terms of Service</string>
 	<string name="continue_text">Continue</string>
 	
 	<!-- common error -->
@@ -251,6 +251,10 @@
 	
 	<string name="change_profile_photo">Change profile photo</string>
 	<string name="edit_profile">Edit Profile</string>
+	<string name="offline_map">Offline Map</string>
+	<string name="download">download</string>
+	<string name="delete">delete (%sMB)</string>
+	<string name="unavailable">UNAVAILABLE</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>

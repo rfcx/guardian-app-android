@@ -38,7 +38,7 @@
 	<string name="please_tell_name">Vertel ons uw naam</string>
 	<string name="hint_name">Naam</string>
 	
-	<string name="terms_and_service">Ik heb gelezen en ga akkoord met deze voorwaarden en service</string>
+	<string name="terms_and_service">Ik heb deze Service Voorwaarden gelezen en ga ermee akkoord</string>
 	<string name="continue_text">Doorgaan met</string>
 	
 	<!-- common error -->
@@ -251,6 +251,10 @@
 	
 	<string name="change_profile_photo">Profiel wijzigen Photo</string>
 	<string name="edit_profile">Bewerk profiel</string>
+	<string name="offline_map">Offline Map</string>
+	<string name="download">downloaden</string>
+	<string name="delete">verwijderen (%sMB)</string>
+	<string name="unavailable">NIET BESCHIKBAAR</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Guardian Group List</string>

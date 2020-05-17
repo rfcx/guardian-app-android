@@ -21,12 +21,9 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
 import org.rfcx.ranger.view.tutorial.TutorialActivity
-import android.app.ProgressDialog
-import android.os.Handler
-import dmax.dialog.SpotsDialog
-import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -37,10 +34,10 @@ class ProfileFragment : BaseFragment() {
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
 	private val dialog: AlertDialog by lazy {
-		SpotsDialog.Builder()
-			.setContext(context)
-			.setTheme(R.style.Dialog_Loading)
-			.build()
+		AlertDialog.Builder(context)
+				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
+				.setCancelable(false)
+				.create()
 	}
 	
 	override fun onAttach(context: Context) {
@@ -157,6 +154,14 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickCoordinates = View.OnClickListener {
 			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
+		}
+		
+		viewDataBinding.onClickOfflineMap = View.OnClickListener {
+			profileViewModel.offlineMapBox()
+		}
+		
+		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
+			profileViewModel.deleteOfflineRegion(false)
 		}
 	}
 	

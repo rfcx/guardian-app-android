@@ -45,6 +45,13 @@ class Preferences(context: Context) {
 		const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
 		const val CONSENT_GIVEN = "${PREFIX}CONSENT_GIVEN"
 		const val IS_RANGER = "${PREFIX}IS_RANGER"
+		const val MIN_LATITUDE  = "${PREFIX}MIN_LATITUDE"
+		const val MAX_LATITUDE  = "${PREFIX}MAX_LATITUDE"
+		const val MIN_LONGITUDE  = "${PREFIX}MIN_LONGITUDE"
+		const val MAX_LONGITUDE   = "${PREFIX}MAX_LONGITUDE"
+		const val HAVE_SITE_BOUNDS   = "${PREFIX}HAVE_SITE_BOUNDS"
+		const val OFFLINE_MAP_STATE  = "${PREFIX}OFFLINE_MAP_STATE"
+		const val DELETE_TEXT  = "${PREFIX}DELETE_TEXT"
 	}
 	
 	init {
