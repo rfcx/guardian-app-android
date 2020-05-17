@@ -63,7 +63,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var lastLocation: Location? = null
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private lateinit var mapView: MapView
-	private lateinit var mapBoxMap: MapboxMap
+	private var mapBoxMap: MapboxMap? = null
 	private var currentStyle: String = Style.OUTDOORS
 	private var reports: List<Report> = listOf()
 	private var checkins: List<CheckIn> = listOf()
@@ -176,9 +176,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
-		val reportFeatures = mapBoxMap.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
-		val checkInFeatures = mapBoxMap.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
-		if (reportFeatures.isNotEmpty()) {
+		val reportFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
+		val checkInFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
+		if (reportFeatures != null && reportFeatures.isNotEmpty()) {
 			clearCheckInFeatureSelected()
 			val selectedFeature = reportFeatures[0]
 			val features = this.reportFeatures!!.features()!!
@@ -196,7 +196,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		(activity as MainActivityEventListener).hideBottomSheet()
 		
-		if (checkInFeatures.isNotEmpty()) {
+		if (checkInFeatures != null && checkInFeatures.isNotEmpty()) {
 			val selectedFeature = checkInFeatures[0]
 			val features = this.checkInFeatures!!.features()!!
 			features.forEachIndexed { index, feature ->
@@ -391,7 +391,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun setWindowInfoImageGenResults(windowInfoImages: HashMap<String, Bitmap>) {
-		mapBoxMap.style?.addImages(windowInfoImages)
+		mapBoxMap?.style?.addImages(windowInfoImages)
 	}
 	
 	private fun setupSwitchMapMode(mapboxMap: MapboxMap) {
@@ -407,27 +407,29 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	private fun getCurrentLocation(mapboxMap: MapboxMap) {
+	private fun getCurrentLocation(mapboxMap: MapboxMap?) {
 		context?.let {
 			val customLocationComponentOptions = LocationComponentOptions.builder(it)
 					.trackingGesturesManagement(true)
 					.accuracyColor(ContextCompat.getColor(it, R.color.colorPrimary))
 					.build()
 			
-			val locationComponentActivationOptions = mapboxMap.style?.let { style ->
+			val locationComponentActivationOptions = mapboxMap?.style?.let { style ->
 				LocationComponentActivationOptions.builder(it, style)
 						.locationComponentOptions(customLocationComponentOptions)
 						.build()
 			}
 			
-			mapboxMap.locationComponent.apply {
-				if (locationComponentActivationOptions != null) {
-					activateLocationComponent(locationComponentActivationOptions)
+			mapboxMap?.let { mapboxMap ->
+				mapboxMap.locationComponent.apply {
+					if (locationComponentActivationOptions != null) {
+						activateLocationComponent(locationComponentActivationOptions)
+					}
+					
+					isLocationComponentEnabled = true
+					cameraMode = CameraMode.TRACKING
+					renderMode = RenderMode.COMPASS
 				}
-				
-				isLocationComponentEnabled = true
-				cameraMode = CameraMode.TRACKING
-				renderMode = RenderMode.COMPASS
 			}
 		}
 	}
@@ -439,6 +441,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
 					getLocation()
+				} else {
+					setDisplayTools()
 				}
 			}
 		}
@@ -486,7 +490,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 								.target(bounds.center)
 								.zoom(regionZoom)
 								.build()
-						mapBoxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+						mapBoxMap?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 					}
 				}
 			}
@@ -500,15 +504,21 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun moveCameraToCurrentLocation(location: Location) {
 		lastLocation = location
 		val latLng = LatLng(location.latitude, location.longitude)
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
+		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
 	private fun moveMapTo(latLng: LatLng) {
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), mapBoxMap.cameraPosition.zoom))
+		mapBoxMap?.let {
+			it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude,
+					latLng.longitude), it.cameraPosition.zoom))
+		}
 	}
 	
 	fun moveToReportMarker(report: Report) {
-		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(report.latitude, report.longitude), mapBoxMap.cameraPosition.zoom))
+		mapBoxMap?.let {
+			it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(report.latitude,
+					report.longitude), it.cameraPosition.zoom))
+		}
 	}
 	
 	private fun showLocationMessageError(msg: String) {
