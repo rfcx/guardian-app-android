@@ -50,7 +50,7 @@ class Preferences(context: Context) {
 		const val MIN_LONGITUDE  = "${PREFIX}MIN_LONGITUDE"
 		const val MAX_LONGITUDE   = "${PREFIX}MAX_LONGITUDE"
 		const val HAVE_SITE_BOUNDS   = "${PREFIX}HAVE_SITE_BOUNDS"
-		const val DOWNLOADED_OFFLINE_MAP  = "${PREFIX}DOWNLOADED_OFFLINE_MAP"
+		const val OFFLINE_MAP_STATE  = "${PREFIX}OFFLINE_MAP_STATE"
 		const val DELETE_TEXT  = "${PREFIX}DELETE_TEXT"
 	}
 	

@@ -138,7 +138,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		if (!hidden) {
 			analytics?.trackScreen(Screen.MAP)
 			checkThenAccquireLocation()
-			listAllOfflineMapRegion()
 		}
 	}
 	
@@ -440,8 +439,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			locationPermissions?.check { isAllowed: Boolean ->
 				if (isAllowed) {
 					getLocation()
-				} else {
-					setDisplayTools()
 				}
 			}
 		}

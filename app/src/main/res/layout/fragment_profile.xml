@@ -376,6 +376,8 @@
 						android:layout_height="wrap_content"
 						android:layout_marginStart="@dimen/margin_padding_normal"
 						android:layout_marginEnd="@dimen/margin_padding_small"
+						android:ellipsize="end"
+						android:maxLines="1"
 						android:text="@{viewModel.userSite}"
 						tools:text="Tembe" />
 				</LinearLayout>
@@ -389,7 +391,7 @@
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickOfflineMap}"
 					android:text="@string/download"
-					android:visibility="@{viewModel.isDownloaded ? view.GONE : view.VISIBLE}"
+					android:visibility="@{viewModel.getShowDownload ? view.VISIBLE : view.GONE}"
 					tools:visibility="gone" />
 				
 				<androidx.appcompat.widget.AppCompatButton
@@ -401,7 +403,7 @@
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:onClick="@{onClickDeleteOffline}"
 					android:text="@{viewModel.deleteText}"
-					android:visibility="@{viewModel.isDelete ? view.VISIBLE : view.GONE}" />
+					android:visibility="@{viewModel.getShowDelete ? view.VISIBLE : view.GONE}" />
 				
 				<TextView
 					android:id="@+id/unavailableTextView"
@@ -411,7 +413,7 @@
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
 					android:text="@string/unavailable"
-					android:visibility="@{viewModel.haveSiteBounds ? view.GONE: view.VISIBLE}"
+					android:visibility="@{viewModel.showUnavailable ? view.VISIBLE: view.GONE}"
 					tools:visibility="gone" />
 				
 				<TextView
@@ -431,7 +433,7 @@
 					android:layout_height="@dimen/mini_progress_loading"
 					android:layout_gravity="center"
 					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:visibility="@{viewModel.isDownloading ? view.VISIBLE : view.GONE}" />
+					android:visibility="@{viewModel.getShowLoading ? view.VISIBLE : view.GONE}" />
 			
 			</LinearLayout>
 			
