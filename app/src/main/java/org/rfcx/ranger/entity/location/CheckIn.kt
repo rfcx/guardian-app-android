@@ -3,6 +3,7 @@ package org.rfcx.ranger.entity.location
 import com.google.gson.annotations.Expose
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.text.DecimalFormat
 import java.util.*
 
 open class CheckIn(
@@ -16,4 +17,13 @@ open class CheckIn(
 		var timestamp: Long = System.currentTimeMillis(),
 		@Expose(serialize = false)
 		var synced: Boolean = false
-) : RealmObject()
+) : RealmObject() {
+	fun getLatLng(): String {
+		val decimalFormat = DecimalFormat("##.######")
+		
+		val lat = decimalFormat.format(latitude)
+		val lng = decimalFormat.format(longitude)
+		
+		return "$lat, $lng"
+	}
+}

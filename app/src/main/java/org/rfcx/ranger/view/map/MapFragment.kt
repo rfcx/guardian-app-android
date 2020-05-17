@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.PointF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -13,8 +15,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import com.google.gson.JsonPrimitive
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -30,11 +36,16 @@ import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager
-import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.style.expressions.Expression.*
+import com.mapbox.mapboxsdk.style.layers.LineLayer
+import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.layout_map_window_info.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.location.CheckIn
@@ -54,9 +65,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private lateinit var mapView: MapView
 	private lateinit var mapBoxMap: MapboxMap
 	private var currentStyle: String = Style.OUTDOORS
-	private var reportList: ArrayList<Report> = arrayListOf()
-	private var checkInList: ArrayList<CheckIn> = arrayListOf()
+	private var reports: List<Report> = listOf()
+	private var checkins: List<CheckIn> = listOf()
 	private var lineManager: LineManager? = null
+	private var reportSource: GeoJsonSource? = null
+	private var checkInSource: GeoJsonSource? = null
+	private var reportFeatures: FeatureCollection? = null
+	private var checkInFeatures: FeatureCollection? = null
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -94,6 +109,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
+		
 	}
 	
 	override fun onResume() {
@@ -146,13 +162,240 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(currentStyle) {
 			lineManager = LineManager(mapView, mapboxMap, it)
-			switchMap(mapboxMap)
+			setupSources(it)
+			setupImages(it)
+			setupMarkerLayers(it)
+			setupLineLayer(it)
+			setupWindowInfo(it)
+			observeData()
 			checkThenAccquireLocation()
-			setDisplay()
+			setupSwitchMapMode(mapboxMap)
+			mapboxMap.addOnMapClickListener { latLng ->
+				handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
+			}
 		}
 	}
 	
-	private fun switchMap(mapboxMap: MapboxMap) {
+	private fun handleClickIcon(screenPoint: PointF): Boolean {
+		val reportFeatures = mapBoxMap.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
+		val checkInFeatures = mapBoxMap.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
+		if (reportFeatures.isNotEmpty()) {
+			clearCheckInFeatureSelected()
+			val selectedFeature = reportFeatures[0]
+			val features = this.reportFeatures!!.features()!!
+			features.forEachIndexed { index, feature ->
+				if (selectedFeature.getProperty(PROPERTY_MARKER_REPORT_ID) == feature.getProperty(PROPERTY_MARKER_REPORT_ID)) {
+					features[index]?.let { setFeatureSelectState(it, true) }
+					val reportId = selectedFeature.getStringProperty(PROPERTY_MARKER_REPORT_ID)
+					(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(reportId.toInt()))
+				} else {
+					features[index]?.let { setFeatureSelectState(it, false) }
+				}
+			}
+			return true
+		}
+		
+		(activity as MainActivityEventListener).hideBottomSheet()
+		
+		if (checkInFeatures.isNotEmpty()) {
+			val selectedFeature = checkInFeatures[0]
+			val features = this.checkInFeatures!!.features()!!
+			features.forEachIndexed { index, feature ->
+				if (selectedFeature.getProperty(PROPERTY_MARKER_CHECKIN_ID) == feature.getProperty(PROPERTY_MARKER_CHECKIN_ID)) {
+					features[index]?.let { setFeatureSelectState(it, true) }
+				} else {
+					features[index]?.let { setFeatureSelectState(it, false) }
+				}
+			}
+			return true
+		}
+		
+		clearFeatureSelected()
+		return false
+	}
+	
+	private fun clearFeatureSelected() {
+		if (this.checkInFeatures?.features() != null && this.reportFeatures?.features() != null) {
+			val features = this.checkInFeatures!!.features()!! + this.reportFeatures!!.features()!!
+			features.forEach { setFeatureSelectState(it, false) }
+		}
+	}
+	
+	private fun clearCheckInFeatureSelected() {
+		if (this.checkInFeatures?.features() != null) {
+			val features = this.checkInFeatures!!.features()!!
+			features.forEach { setFeatureSelectState(it, false) }
+		}
+	}
+	
+	private fun setFeatureSelectState(feature: Feature, selectedState: Boolean) {
+		feature.properties()?.let {
+			it.addProperty(PROPERTY_SELECTED, selectedState)
+			refreshSource()
+		}
+	}
+	
+	private fun setupSources(it: Style) {
+		reportSource = GeoJsonSource(SOURCE_REPORT, FeatureCollection.fromFeatures(listOf()))
+		it.addSource(reportSource!!)
+		
+		checkInSource = GeoJsonSource(SOURCE_CHECK_IN, FeatureCollection.fromFeatures(listOf()))
+		it.addSource(checkInSource!!)
+	}
+	
+	private fun setupImages(it: Style) {
+		// Setup report image pin
+		val reportDrawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
+		val reportBitmap = BitmapUtils.getBitmapFromDrawable(reportDrawable)
+		if (reportBitmap != null) {
+			it.addImage(MARKER_REPORT_IMAGE, reportBitmap)
+		}
+		
+		// Setup checkin image pin
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			it.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
+		}
+	}
+	
+	private fun refreshSource() {
+		if (reportSource != null && reportFeatures != null) {
+			reportSource!!.setGeoJson(reportFeatures)
+		}
+		
+		if (checkInSource != null && checkInFeatures != null) {
+			checkInSource!!.setGeoJson(checkInFeatures)
+		}
+	}
+	
+	private fun setupMarkerLayers(it: Style) {
+		val reportLayer = SymbolLayer(MARKER_REPORT_ID, SOURCE_REPORT).apply {
+			withProperties(
+					PropertyFactory.iconImage(MARKER_REPORT_IMAGE),
+					PropertyFactory.iconAllowOverlap(true),
+					PropertyFactory.iconIgnorePlacement(true),
+					PropertyFactory.iconOffset(arrayOf(0f, -9f)),
+					PropertyFactory.iconSize(1f)
+			)
+		}
+		
+		val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
+			withProperties(
+					PropertyFactory.iconImage(MARKER_CHECK_IN_IMAGE),
+					PropertyFactory.iconAllowOverlap(true),
+					PropertyFactory.iconIgnorePlacement(true),
+					PropertyFactory.iconSize(1f)
+			)
+		}
+		it.addLayer(reportLayer)
+		it.addLayer(checkInLayer)
+	}
+	
+	private fun setupLineLayer(it: Style) {
+		it.addLayer(LineLayer(LINE_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
+			withProperties(
+					PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
+					PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+					PropertyFactory.lineWidth(4f),
+					context?.let { it1 ->
+						PropertyFactory.lineColor(ContextCompat.getColor(it1, R.color.grey_default))
+					}
+			)
+		})
+	}
+	
+	private fun setupWindowInfo(it: Style) {
+		it.addLayer(SymbolLayer(WINDOW_INFO_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
+			withProperties(
+					PropertyFactory.iconImage("{$PROPERTY_MARKER_CHECKIN_ID}"),
+					PropertyFactory.iconAnchor(ICON_ANCHOR_BOTTOM),
+					PropertyFactory.iconAllowOverlap(true)
+			)
+			withFilter(eq(get(PROPERTY_SELECTED), literal(true)))
+		})
+	}
+	
+	private fun observeData() {
+		// observe reports
+		mapViewModel.getReports().observe(this, Observer { reports ->
+			this.reports = reports
+			val features = reports.map {
+				// example: https://raw.githubusercontent.com/mapbox/mapbox-android-demo/master/MapboxAndroidDemo/src/main/assets/us_west_coast.geojson
+				val properties = mapOf(Pair(PROPERTY_MARKER_REPORT_ID, it.id.toString()))
+				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
+			}
+			reportFeatures = FeatureCollection.fromFeatures(features)
+			
+			refreshSource()
+			
+			// Set zoom to last lastReport
+			if (reports.isNotEmpty()) {
+				val lastReport = this.reports.last()
+				moveMapTo(LatLng(lastReport.latitude, lastReport.longitude))
+			}
+		})
+		
+		// observe check-ins
+		mapViewModel.getCheckIns().observe(this, Observer { checkins ->
+			this.checkins = checkins
+			
+			// Create point
+			val pointFeatures = checkins.map {
+				val properties = mapOf(
+						Pair(PROPERTY_MARKER_CHECKIN_ID, "$PROPERTY_MARKER_CHECKIN_ID.${it.id}"),
+						Pair(PROPERTY_MARKER_TITLE, it.time.toFullDateTimeString()),
+						Pair(PROPERTY_MARKER_CAPTION, it.getLatLng())
+				)
+				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
+			}
+			
+			// Create line
+			val pointLine = checkins.map {
+				Point.fromLngLat(it.longitude, it.latitude)
+			}
+			val lineFeature = Feature.fromGeometry(LineString.fromLngLats(pointLine))
+			
+			// Set zoom to last lastCheckIn
+			if (checkins.isNotEmpty()) {
+				val lastCheckIn = checkins.last()
+				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
+			}
+			
+			// Create window info
+			val windowInfoImages = hashMapOf<String, Bitmap>()
+			val inflater = LayoutInflater.from(activity)
+			pointFeatures.forEach {
+				val bubbleLayout = inflater.inflate(R.layout.layout_map_window_info, null) as BubbleLayout
+				
+				val id = it.getStringProperty(PROPERTY_MARKER_CHECKIN_ID)
+				
+				val title = it.getStringProperty(PROPERTY_MARKER_TITLE)
+				bubbleLayout.infoWindowTitle.text = title
+				
+				val caption = it.getStringProperty(PROPERTY_MARKER_CAPTION)
+				bubbleLayout.infoWindowDescription.text = caption
+				
+				val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+				bubbleLayout.measure(measureSpec, measureSpec)
+				val measuredWidth = bubbleLayout.measuredWidth
+				bubbleLayout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
+				
+				val bitmap = SymbolGenerator.generate(bubbleLayout)
+				windowInfoImages[id] = bitmap
+			}
+			
+			setWindowInfoImageGenResults(windowInfoImages)
+			checkInFeatures = FeatureCollection.fromFeatures(pointFeatures + lineFeature)
+			refreshSource()
+		})
+	}
+	
+	private fun setWindowInfoImageGenResults(windowInfoImages: HashMap<String, Bitmap>) {
+		mapBoxMap.style?.addImages(windowInfoImages)
+	}
+	
+	private fun setupSwitchMapMode(mapboxMap: MapboxMap) {
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
 				mapboxMap.setStyle(Style.SATELLITE)
@@ -198,7 +441,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				if (isAllowed) {
 					getLocation()
 				} else {
-					setDisplay()
+					setDisplayTools()
 				}
 			}
 		}
@@ -214,7 +457,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		try {
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			lastLocation?.let { moveCameraToCurrentLocation(it) }
-			setDisplay()
+			setDisplayTools()
 		} catch (ex: SecurityException) {
 			ex.printStackTrace()
 		} catch (ex: IllegalArgumentException) {
@@ -222,13 +465,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 	}
 	
-	private fun setDisplay() {
-		displayCheckIn()
-		displayReport(mapBoxMap)
-		
-		if (reportList.isEmpty() && checkInList.isEmpty()) {
-			getCurrentLocation(mapBoxMap)
-		}
+	private fun setDisplayTools() {
+		getCurrentLocation(mapBoxMap)
 		
 		if (!context.isNetworkAvailable()) {
 			listAllOfflineMapRegion()
@@ -236,84 +474,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		} else {
 			switchButton.visibility = View.VISIBLE
 		}
-	}
-	
-	private fun displayReport(mapboxMap: MapboxMap) {
-		val symbolManager = mapboxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-		symbolManager?.iconAllowOverlap = true
-		symbolManager?.iconIgnorePlacement = true
-		
-		mapViewModel.getReports().observe(this, Observer { reports ->
-			reportList = arrayListOf()
-			
-			for (report in reports) {
-				if (!isAdded || isDetached) return@Observer
-				reports.map { reportList.add(it) }
-				
-				val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
-				val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-				if (mBitmap != null) {
-					mapBoxMap.style?.addImage("pin-map", mBitmap)
-				}
-				
-				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(report.latitude, report.longitude))
-						.withIconImage("pin-map")
-						.withIconSize(1.0f)
-						.withData(JsonPrimitive(report.id)))
-			}
-			
-			if (reports.isNotEmpty()) {
-				val lastCheckIn = reportList.last()
-				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-			}
-			
-			symbolManager?.addClickListener { symbol ->
-				(activity as MainActivityEventListener).showBottomSheet(ReportViewPagerFragment.newInstance(symbol.data.toString().toInt()))
-			}
-			
-		})
-		
-	}
-	
-	private fun displayCheckIn() {
-		checkInList = arrayListOf()
-		lineManager?.deleteAll()
-		
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
-		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-		if (mBitmap != null) {
-			mapBoxMap.style?.addImage("check_in_pin", mBitmap)
-		}
-		
-		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-		symbolManager?.iconAllowOverlap = true
-		symbolManager?.iconIgnorePlacement = true
-		
-		mapViewModel.getCheckIns().observe(this, Observer { checkIns ->
-			if (!isAdded || isDetached) return@Observer
-			
-			val lineVertices = arrayListOf<LatLng>()
-			checkIns.map {
-				checkInList.add(it)
-				lineVertices.add(LatLng(it.latitude, it.longitude))
-				symbolManager?.create(SymbolOptions()
-						.withLatLng(LatLng(it.latitude, it.longitude))
-						.withIconImage("check_in_pin")
-						.withIconSize(1.0f))
-				
-				val lineOptions = LineOptions().withLatLngs(lineVertices)
-						.withLineColor("#969faa")
-						.withLineWidth(5.0f)
-				lineManager?.create(lineOptions)
-				
-			}
-			
-			if (lineVertices.isNotEmpty()) {
-				val lastCheckIn = lineVertices.last()
-				moveMapTo(LatLng(lastCheckIn.latitude, lastCheckIn.longitude))
-			}
-		})
 	}
 	
 	private fun listAllOfflineMapRegion() {
@@ -347,7 +507,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun moveMapTo(latLng: LatLng) {
-		if (!isAdded || isDetached) return
 		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latLng.latitude, latLng.longitude), mapBoxMap.cameraPosition.zoom))
 	}
 	
@@ -367,5 +526,21 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
 		const val tag = "MapFragment"
+		
+		private const val SOURCE_CHECK_IN = "source.checkin"
+		private const val MARKER_CHECK_IN_ID = "marker.checkin"
+		private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
+		private const val LINE_CHECK_IN_ID = "line.checkin"
+		private const val SOURCE_REPORT = "source.report"
+		private const val MARKER_REPORT_ID = "marker.report"
+		private const val MARKER_REPORT_IMAGE = "marker.report.pin"
+		private const val WINDOW_INFO_CHECK_IN_ID = "windowinfo.checkin"
+		
+		private const val PROPERTY_SELECTED = "selected"
+		private const val PROPERTY_MARKER_TITLE = "title"
+		private const val PROPERTY_MARKER_CAPTION = "caption"
+		private const val PROPERTY_MARKER_REPORT_ID = "report.id"
+		private const val PROPERTY_MARKER_CHECKIN_ID = "checkin.id"
+		
 	}
 }
