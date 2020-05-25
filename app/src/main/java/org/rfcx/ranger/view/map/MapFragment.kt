@@ -35,7 +35,6 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
-import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.style.expressions.Expression.*
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
@@ -67,7 +66,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var currentStyle: String = Style.OUTDOORS
 	private var reports: List<Report> = listOf()
 	private var checkins: List<CheckIn> = listOf()
-	private var lineManager: LineManager? = null
 	private var reportSource: GeoJsonSource? = null
 	private var checkInSource: GeoJsonSource? = null
 	private var reportFeatures: FeatureCollection? = null
@@ -160,7 +158,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(currentStyle) {
-			lineManager = LineManager(mapView, mapboxMap, it)
 			setupSources(it)
 			setupImages(it)
 			setupMarkerLayers(it)
@@ -168,7 +165,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			setupWindowInfo(it)
 			observeData()
 			checkThenAccquireLocation()
-			setupSwitchMapMode(mapboxMap)
+			setupSwitchMapMode()
 			mapboxMap.addOnMapClickListener { latLng ->
 				handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
 			}
@@ -394,17 +391,19 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap?.style?.addImages(windowInfoImages)
 	}
 	
-	private fun setupSwitchMapMode(mapboxMap: MapboxMap) {
+	private fun setupSwitchMapMode() {
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
-				mapboxMap.setStyle(Style.SATELLITE)
 				Style.SATELLITE
 			} else {
-				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
-			onMapReady(mapboxMap)
+			updateMapStyle(currentStyle)
 		}
+	}
+	
+	private fun updateMapStyle(currentStyle: String) {
+		mapBoxMap?.setStyle(currentStyle)
 	}
 	
 	private fun getCurrentLocation(mapboxMap: MapboxMap?) {
