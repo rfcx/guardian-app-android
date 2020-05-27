@@ -2,11 +2,15 @@ package org.rfcx.ranger.view.login
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -66,6 +70,48 @@ class LoginFragment : BaseFragment() {
 			analytics?.trackLoginEvent("sms")
 			activity?.let { loginViewModel.loginMagicLink(it) }
 		}
+		
+		forgotYourPasswordTextView.setOnClickListener {
+			alertDialogResetPassword()
+		}
+	}
+	
+	private fun alertDialogResetPassword() {
+		
+		val builder = context?.let { AlertDialog.Builder(it) }
+		val inflater = LayoutInflater.from(activity)
+		val view = inflater.inflate(R.layout.reset_password_dialog, null)
+		val editText = view.findViewById(R.id.emailResetPasswordEditText) as EditText
+		
+		if (builder != null) {
+			builder.setTitle(getString(R.string.reset_password))
+			builder.setMessage(R.string.enter_email)
+			builder.setView(view)
+			builder.setCancelable(false)
+			
+			builder.setPositiveButton(getString(R.string.reset)) { _, _ ->
+				loading()
+				val email = editText.text.toString()
+				loginViewModel.resetPassword(email)
+			}
+			
+			builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
+				view.hideKeyboard()
+			}
+			
+			val alertDialog = builder.create()
+			alertDialog.show()
+			
+			alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+			editText.addTextChangedListener(object : TextWatcher {
+				override fun afterTextChanged(s: Editable?) {
+					alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = s?.length != 0
+				}
+				
+				override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+				override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+			})
+		}
 	}
 	
 	private fun loading(start: Boolean = true) {
@@ -95,6 +141,16 @@ class LoginFragment : BaseFragment() {
 				else -> loading(false)
 			}
 		})
+		
+		loginViewModel.resetPassword.observe(this, Observer { str ->
+			if (str == SUCCESS) {
+				loading(false)
+				Toast.makeText(context, getString(R.string.reset_link_send), Toast.LENGTH_LONG).show()
+			} else {
+				loading(false)
+				Toast.makeText(context, str, Toast.LENGTH_LONG).show()
+			}
+		})
 	}
 	
 	private fun validateInput(email: String?, password: String?): Boolean {
@@ -111,5 +167,9 @@ class LoginFragment : BaseFragment() {
 	private fun View.hideKeyboard() = this.let {
 		val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 		inputManager.hideSoftInputFromWindow(windowToken, 0)
+	}
+	
+	companion object {
+		const val SUCCESS = "SUCCESS"
 	}
 }
