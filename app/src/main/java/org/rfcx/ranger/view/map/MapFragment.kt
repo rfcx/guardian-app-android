@@ -530,7 +530,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			return MapFragment()
 		}
 		
-		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
+		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlLW9jaG4iLCJhIjoiY2s5Mjk5MDQ3MDYzcDNmbzVnZHd1aXNqaSJ9.UCrMjgGw8zROm_sRlebSGQ"
 		const val tag = "MapFragment"
 		
 		private const val SOURCE_CHECK_IN = "source.checkin"
