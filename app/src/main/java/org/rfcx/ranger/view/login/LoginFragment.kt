@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.isValidEmail
 import org.rfcx.ranger.view.base.BaseFragment
 
 class LoginFragment : BaseFragment() {
@@ -82,6 +84,7 @@ class LoginFragment : BaseFragment() {
 		val inflater = LayoutInflater.from(activity)
 		val view = inflater.inflate(R.layout.reset_password_dialog, null)
 		val editText = view.findViewById(R.id.emailResetPasswordEditText) as EditText
+		val errorEmailFormat = view.findViewById(R.id.errorEmailFormatTextView) as TextView
 		
 		if (builder != null) {
 			builder.setTitle(getString(R.string.reset_password))
@@ -101,11 +104,21 @@ class LoginFragment : BaseFragment() {
 			
 			val alertDialog = builder.create()
 			alertDialog.show()
+			alertDialog.dismiss()
 			
 			alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
 			editText.addTextChangedListener(object : TextWatcher {
 				override fun afterTextChanged(s: Editable?) {
 					alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = s?.length != 0
+					if (s?.length != 0) {
+						if (s.toString().isValidEmail()) {
+							errorEmailFormat.visibility = View.INVISIBLE
+						} else {
+							errorEmailFormat.visibility = View.VISIBLE
+						}
+					} else {
+						errorEmailFormat.visibility = View.INVISIBLE
+					}
 				}
 				
 				override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
