@@ -85,7 +85,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		context?.let { Mapbox.getInstance(it, MAPBOX_ACCESS_TOKEN) }
+		context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
 	}
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -530,7 +530,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			return MapFragment()
 		}
 		
-		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlLW9jaG4iLCJhIjoiY2s5Mjk5MDQ3MDYzcDNmbzVnZHd1aXNqaSJ9.UCrMjgGw8zROm_sRlebSGQ"
 		const val tag = "MapFragment"
 		
 		private const val SOURCE_CHECK_IN = "source.checkin"

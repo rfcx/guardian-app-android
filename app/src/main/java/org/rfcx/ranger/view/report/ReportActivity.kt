@@ -38,7 +38,6 @@ import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.ReportSyncWorker
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.map.MapFragment.Companion.MAPBOX_ACCESS_TOKEN
 import org.rfcx.ranger.widget.SoundRecordState
 import org.rfcx.ranger.widget.WhatView
 import org.rfcx.ranger.widget.WhenView
@@ -94,7 +93,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		Mapbox.getInstance(this, MAPBOX_ACCESS_TOKEN)
+		Mapbox.getInstance(this, getString(R.string.mapbox_token))
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
 		
 		bindActionbar()
