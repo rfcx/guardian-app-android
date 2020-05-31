@@ -70,6 +70,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInSource: GeoJsonSource? = null
 	private var reportFeatures: FeatureCollection? = null
 	private var checkInFeatures: FeatureCollection? = null
+	private val windowInfoImages = hashMapOf<String, Bitmap>()
+	
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -158,16 +160,22 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(currentStyle) {
-			setupSources(it)
-			setupImages(it)
-			setupMarkerLayers(it)
-			setupLineLayer(it)
-			setupWindowInfo(it)
+			setMapLayer(it)
 			observeData()
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
-			mapboxMap.addOnMapClickListener { latLng ->
-				handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
+		}
+	}
+	
+	private fun setMapLayer(style: Style) {
+		setupSources(style)
+		setupImages(style)
+		setupMarkerLayers(style)
+		setupLineLayer(style)
+		setupWindowInfo(style)
+		mapBoxMap?.let {
+			it.addOnMapClickListener { latLng ->
+				handleClickIcon(it.projection.toScreenLocation(latLng))
 			}
 		}
 	}
@@ -359,7 +367,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			}
 			
 			// Create window info
-			val windowInfoImages = hashMapOf<String, Bitmap>()
 			val inflater = LayoutInflater.from(activity)
 			pointFeatures.forEach {
 				val bubbleLayout = inflater.inflate(R.layout.layout_map_window_info, null) as BubbleLayout
@@ -403,7 +410,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun updateMapStyle(currentStyle: String) {
-		mapBoxMap?.setStyle(currentStyle)
+		mapBoxMap?.setStyle(currentStyle) {
+			setMapLayer(it)
+			setWindowInfoImageGenResults(windowInfoImages) // re-setup
+			refreshSource()
+		}
 	}
 	
 	private fun getCurrentLocation(mapboxMap: MapboxMap?) {
