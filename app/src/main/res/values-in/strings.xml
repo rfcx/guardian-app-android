@@ -41,6 +41,12 @@
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
     <string name="invitation_submit_button_label">menyerahkan</string>
+    <string name="forgot_your_password">Lupa kata sandi Anda</string>
+    <string name="reset_password">Mereset password Anda</string>
+    <string name="enter_email">Masukkan email Anda untuk menerima link yang ulang</string>
+    <string name="cancel">Membatalkan</string>
+    <string name="reset_link_send">Tautan penyetelan ulang kirim ke email Anda.</string>
+    <string name="reset">Ulang</string>
     
     <string name="what_we_call_you">Apa yang harus kita sebut Anda?</string>
     <string name="please_tell_name">Silakan beritahu kami nama Anda</string>
