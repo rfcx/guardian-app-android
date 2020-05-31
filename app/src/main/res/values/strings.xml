@@ -33,6 +33,12 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Sign in</string>
 	<string name="invitation_submit_button_label">Submit</string>
+	<string name="forgot_your_password">Forgot your password?</string>
+	<string name="reset_password">Reset your password</string>
+	<string name="enter_email">Enter your email to receive reset link</string>
+	<string name="cancel">Cancel</string>
+	<string name="reset_link_send">Reset link send to your email.</string>
+	<string name="reset">Reset</string>
 	
 	<string name="what_we_call_you">What should we call you?</string>
 	<string name="please_tell_name">Please tell us your name</string>

@@ -33,6 +33,12 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Inloggen</string>
 	<string name="invitation_submit_button_label">voorleggen</string>
+	<string name="forgot_your_password">Je wachtwoord vergeten</string>
+	<string name="reset_password">Stel je wachtwoord opnieuw in</string>
+	<string name="enter_email">Vul uw e-mail naar link voor herstel te ontvangen</string>
+	<string name="cancel">Annuleren</string>
+	<string name="reset_link_send">Reset link naar uw e-mail.</string>
+	<string name="reset">Reset</string>
 	
 	<string name="what_we_call_you">Wat moeten we je bellen?</string>
 	<string name="please_tell_name">Vertel ons uw naam</string>
