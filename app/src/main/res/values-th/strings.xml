@@ -40,6 +40,12 @@
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
     <string name="invitation_submit_button_label">บันทึก</string>
+    <string name="forgot_your_password">ลืมรหัสผ่าน</string>
+    <string name="reset_password"> รีเซ็ตรหัสผ่านของคุณ</string>
+    <string name="enter_email">ป้อนอีเมลของคุณเพื่อรับลิงค์ในการรีเซ็ตรหัสผ่าน</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="reset_link_send">รีเซ็ตลิงค์ส่งไปยังอีเมลของคุณแล้ว</string>
+    <string name="reset">รีเซ็ต</string>
     
     <string name="what_we_call_you">ให้เราเรียกคุณว่าอะไรดี</string>
     <string name="please_tell_name">กรุณาบอกชื่อคุณกับเรา</string>

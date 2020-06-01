@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.callback.AuthenticationCallback
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
@@ -26,6 +27,7 @@ import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserNickname
+import org.rfcx.ranger.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) : ViewModel() {
 	
@@ -51,6 +53,10 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	private var _loginFailure: MutableLiveData<String?> = MutableLiveData()
 	val loginFailure: LiveData<String?>
 		get() = _loginFailure
+		
+	private var _resetPassword: MutableLiveData<String?> = MutableLiveData()
+	val resetPassword: LiveData<String?>
+		get() = _resetPassword
 	
 	private var _redirectPage: MutableLiveData<LoginRedirect?> = MutableLiveData()
 	val redirectPage: LiveData<LoginRedirect?>
@@ -60,6 +66,20 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 		_userAuth.postValue(null)
 		_loginFailure.postValue(null)
 		_redirectPage.postValue(null)
+	}
+	
+	fun resetPassword(email: String) {
+		authentication
+				.resetPassword(email, "Username-Password-Authentication")
+				.start(object : AuthenticationCallback<Void> {
+					override fun onSuccess(payload: Void?) {
+						_resetPassword.postValue(SUCCESS)
+					}
+					
+					override fun onFailure(error: AuthenticationException?) {
+						_resetPassword.postValue(error?.message)
+					}
+				})
 	}
 	
 	fun login(email: String, password: String) {

@@ -40,5 +40,6 @@
 	​<dimen name="viewpager_padding">48dp</dimen>
 	<dimen name="mini_progress_loading">24dp</dimen>
 	<dimen name="mapbox_bubble_size">180</dimen>
+	<dimen name="icon_app_size">110dp</dimen>
 
 </resources>

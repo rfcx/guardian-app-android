@@ -35,7 +35,6 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
-import com.mapbox.mapboxsdk.plugins.annotation.LineManager
 import com.mapbox.mapboxsdk.style.expressions.Expression.*
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
@@ -67,11 +66,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var currentStyle: String = Style.OUTDOORS
 	private var reports: List<Report> = listOf()
 	private var checkins: List<CheckIn> = listOf()
-	private var lineManager: LineManager? = null
 	private var reportSource: GeoJsonSource? = null
 	private var checkInSource: GeoJsonSource? = null
 	private var reportFeatures: FeatureCollection? = null
 	private var checkInFeatures: FeatureCollection? = null
+	private val windowInfoImages = hashMapOf<String, Bitmap>()
+	
 	
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
@@ -87,7 +87,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		context?.let { Mapbox.getInstance(it, MAPBOX_ACCESS_TOKEN) }
+		context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
 	}
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -160,17 +160,22 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
 		mapboxMap.setStyle(currentStyle) {
-			lineManager = LineManager(mapView, mapboxMap, it)
-			setupSources(it)
-			setupImages(it)
-			setupMarkerLayers(it)
-			setupLineLayer(it)
-			setupWindowInfo(it)
+			setMapLayer(it)
 			observeData()
 			checkThenAccquireLocation()
-			setupSwitchMapMode(mapboxMap)
-			mapboxMap.addOnMapClickListener { latLng ->
-				handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
+			setupSwitchMapMode()
+		}
+	}
+	
+	private fun setMapLayer(style: Style) {
+		setupSources(style)
+		setupImages(style)
+		setupMarkerLayers(style)
+		setupLineLayer(style)
+		setupWindowInfo(style)
+		mapBoxMap?.let {
+			it.addOnMapClickListener { latLng ->
+				handleClickIcon(it.projection.toScreenLocation(latLng))
 			}
 		}
 	}
@@ -362,7 +367,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			}
 			
 			// Create window info
-			val windowInfoImages = hashMapOf<String, Bitmap>()
 			val inflater = LayoutInflater.from(activity)
 			pointFeatures.forEach {
 				val bubbleLayout = inflater.inflate(R.layout.layout_map_window_info, null) as BubbleLayout
@@ -394,16 +398,22 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapBoxMap?.style?.addImages(windowInfoImages)
 	}
 	
-	private fun setupSwitchMapMode(mapboxMap: MapboxMap) {
+	private fun setupSwitchMapMode() {
 		switchButton.setOnClickListener {
 			currentStyle = if (currentStyle == Style.OUTDOORS) {
-				mapboxMap.setStyle(Style.SATELLITE)
 				Style.SATELLITE
 			} else {
-				mapboxMap.setStyle(Style.OUTDOORS)
 				Style.OUTDOORS
 			}
-			onMapReady(mapboxMap)
+			updateMapStyle(currentStyle)
+		}
+	}
+	
+	private fun updateMapStyle(currentStyle: String) {
+		mapBoxMap?.setStyle(currentStyle) {
+			setMapLayer(it)
+			setWindowInfoImageGenResults(windowInfoImages) // re-setup
+			refreshSource()
 		}
 	}
 	
@@ -531,7 +541,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			return MapFragment()
 		}
 		
-		const val MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicmF0cmVlMDEiLCJhIjoiY2s4dThnNnNhMDhmcjNtbXpucnhicjQ0aSJ9.eDupWJNzrohc0-rmPPoC6Q"
 		const val tag = "MapFragment"
 		
 		private const val SOURCE_CHECK_IN = "source.checkin"

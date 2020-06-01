@@ -41,6 +41,12 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Entrar</string>
 	<string name="invitation_submit_button_label">Enviar</string>
+	<string name="forgot_your_password">Olvidaste tu contraseña</string>
+	<string name="reset_password">Restablecer su contraseña</string>
+	<string name="enter_email">Introduzca su email para recibir enlace de restablecimiento</string>
+	<string name="cancel">Cancelar</string>
+	<string name="reset_link_send">Restablecer enlace de enviar a su correo electrónico.</string>
+	<string name="reset">Reiniciar</string>
 	
 	<string name="what_we_call_you">¿Como deberíamos llamarte?</string>
 	<string name="please_tell_name">Por favor, díganos su nombre</string>

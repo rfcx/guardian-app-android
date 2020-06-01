@@ -87,3 +87,6 @@ fun Context.getImage(res: Int): Drawable? {
 fun Context.getBackgroundColor(res: Int): Int {
 	return ContextCompat.getColor(this, res)
 }
+
+fun String.isValidEmail() =
+		this.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
