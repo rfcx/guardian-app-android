@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
+import org.rfcx.ranger.data.remote.assets.AssetsEndpoint
 import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
@@ -106,6 +107,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(TermsEndpoint::class.java)
+	}
+	
+	fun makeAssetsService(isDebug: Boolean, context: Context): AssetsEndpoint {
+		return createRetrofit("https://media-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(AssetsEndpoint::class.java)
 	}
 	
 	private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

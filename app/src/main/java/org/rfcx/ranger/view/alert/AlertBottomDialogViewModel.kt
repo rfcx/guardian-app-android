@@ -15,9 +15,11 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
+import okhttp3.ResponseBody
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
+import org.rfcx.ranger.data.remote.assets.AssetsUseCase
 import org.rfcx.ranger.data.remote.domain.alert.GetEventUseCase
 import org.rfcx.ranger.data.remote.domain.alert.ReviewEventUseCase
 import org.rfcx.ranger.entity.event.Confidence
@@ -34,7 +36,9 @@ import java.io.File
 class AlertBottomDialogViewModel(private val context: Context,
                                  private val reviewEventUseCase: ReviewEventUseCase,
                                  private val eventDb: EventDb,
-                                 private val getEventUseCase: GetEventUseCase) : ViewModel() {
+                                 private val getEventUseCase: GetEventUseCase,
+                                 private val assetsUseCase: AssetsUseCase
+) : ViewModel() {
 	var eventResult: Event? = null
 		private set
 	private var _event: MutableLiveData<Result<Event>> = MutableLiveData()
@@ -82,6 +86,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 		_event.value = Result.Loading
 		if (context.isNetworkAvailable()) {
 			getRemoteDetail(eventGuID)
+			getAssets()
 		} else {
 			val eventCache = eventDb.getEvent(eventGuID)
 			if (eventCache != null)
@@ -104,6 +109,19 @@ class AlertBottomDialogViewModel(private val context: Context,
 					_event.value = Result.Error(e)
 			}
 		}, eventGuID)
+	}
+	
+	private fun getAssets() {
+		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
+			override fun onSuccess(t: ResponseBody) {
+				// TODO: onSuccess
+			}
+			
+			override fun onError(e: Throwable) {
+				e.printStackTrace()
+			}
+			
+		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
 	}
 	
 	private fun setEvent(event: Event) {

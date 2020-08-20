@@ -8,6 +8,9 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
 import org.rfcx.ranger.data.local.*
+import org.rfcx.ranger.data.remote.assets.AssetsRepository
+import org.rfcx.ranger.data.remote.assets.AssetsRepositoryImp
+import org.rfcx.ranger.data.remote.assets.AssetsUseCase
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
 import org.rfcx.ranger.data.remote.domain.alert.EventRepositoryImp
@@ -116,6 +119,8 @@ object DataModule {
 		single { TermsRepositoryImp(get()) } bind TermsRepository::class
 		single { TermsUseCase(get(), get(), get()) }
 		
+		single { AssetsRepositoryImp(get()) } bind AssetsRepository::class
+		single { AssetsUseCase(get(), get(), get()) }
 	}
 	
 	val remoteModule = module {
@@ -132,6 +137,7 @@ object DataModule {
 		factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeTermsService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
 	}
 	
 	val localModule = module {
