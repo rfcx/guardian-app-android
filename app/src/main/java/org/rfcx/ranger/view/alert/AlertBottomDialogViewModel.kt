@@ -16,6 +16,9 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import io.reactivex.observers.DisposableSingleObserver
 import okhttp3.ResponseBody
+import okio.BufferedSink
+import okio.buffer
+import okio.sink
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.Result
@@ -26,12 +29,13 @@ import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.event.ReviewEventFactory
-import org.rfcx.ranger.service.CleanupAudioCacheWorker.Companion.AUDIOS_SUB_DIRECTORY
+import org.rfcx.ranger.service.DownLoadEventWorker
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
 import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.util.isNetworkAvailable
 import java.io.File
+import java.io.IOException
 
 class AlertBottomDialogViewModel(private val context: Context,
                                  private val reviewEventUseCase: ReviewEventUseCase,
@@ -74,6 +78,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 	val reviewEvent: LiveData<Result<Pair<Event, ReviewEventFactory>>>
 		get() = _reviewEvent
 	
+	private val audioDirectory = File(context.cacheDir, DownLoadEventWorker.AUDIOS_SUB_DIRECTORY)
+	
 	init {
 		_playerState.value = Player.STATE_BUFFERING
 	}
@@ -114,7 +120,12 @@ class AlertBottomDialogViewModel(private val context: Context,
 	private fun getAssets() {
 		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onSuccess(t: ResponseBody) {
-				// TODO: onSuccess
+				// TODO: Change file name
+				saveFile(t, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3") {
+					if (it) {
+						initPlayer("0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
+					}
+				}
 			}
 			
 			override fun onError(e: Throwable) {
@@ -124,12 +135,33 @@ class AlertBottomDialogViewModel(private val context: Context,
 		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
 	}
 	
+	private fun saveFile(response: ResponseBody, fileName: String,
+	                     callback: (Boolean) -> Unit) {
+		val temp = File(audioDirectory, "$fileName _temp")
+		val file = File(audioDirectory, fileName)
+		
+		if (file.exists()) {
+			callback.invoke(true)
+			return
+		}
+		
+		try {
+			val sink: BufferedSink = temp.sink().buffer()
+			sink.writeAll(response.source())
+			sink.close()
+			temp.renameTo(file)
+			callback.invoke(true)
+		} catch (e: IOException) {
+			e.printStackTrace()
+			callback.invoke(false)
+		}
+	}
+	
 	private fun setEvent(event: Event) {
 		this.eventResult = event
 		this._event.value = Result.Success(event)
 		setSpectrogramImage()
 		this._eventState.value = EventState.NONE
-		initPlayer(event.audioOpusUrl)
 		getClassifiedCation()
 	}
 	
@@ -144,7 +176,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 			exoPlayer.seekTo(0)
 			exoPlayer.playWhenReady = true
 		} else {
-			eventResult?.audioOpusUrl?.let { initPlayer(it) }
+			// TODO: Change file name
+			initPlayer("0609007318c7_t20200602T162150007Z.20200602T162240007Z_rfull_g1_fmp3.mp3")
 		}
 	}
 	
@@ -165,8 +198,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 		} else {
 			audioUrl
 		}
-		val audiosDirectory = File(context.cacheDir, AUDIOS_SUB_DIRECTORY)
-		val audioFile = File(audiosDirectory, "${eventResult?.audioId}.opus")
+		val audioFile = File(audioDirectory, audioUrl)
 		val mediaSource = if (audioFile.exists()) {
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
