@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -25,9 +24,6 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
-import com.mapbox.mapboxsdk.utils.BitmapUtils
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_report.*
 import org.rfcx.ranger.R
@@ -67,7 +63,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
-				markRangerLocation(it)
+				moveCameraTo(it)
 			}
 		}
 		
@@ -231,7 +227,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5 * 1000L, 0f, locationListener)
 			lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 			showLocationFinding()
-			lastLocation?.let { markRangerLocation(it) }
+			lastLocation?.let { moveCameraTo(it) }
 		} catch (ex: SecurityException) {
 			showLocationMessageError(getString(R.string.in_air_plane_mode))
 			ex.printStackTrace()
@@ -242,26 +238,12 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		
 	}
 	
-	private fun markRangerLocation(location: Location) {
+	private fun moveCameraTo(location: Location) {
 		lastLocation = location
 		mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0))
 		
-		val symbolManager = mapBoxMap.style?.let { SymbolManager(mapView, mapBoxMap, it) }
-		symbolManager?.iconAllowOverlap = true
-		symbolManager?.iconIgnorePlacement = true
-		
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_pin_map, null)
-		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-		if (mBitmap != null) {
-			mapBoxMap.style?.addImage("pin-map", mBitmap)
-		}
-		
-		symbolManager?.create(SymbolOptions()
-				.withLatLng(LatLng(location.latitude, location.longitude))
-				.withIconImage("pin-map")
-				.withIconSize(1.0f))
-		
 		locationStatusTextView.visibility = View.GONE
+		pinImageView.visibility = View.VISIBLE
 		validateForm()
 	}
 	
@@ -462,12 +444,14 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		locationStatusTextView.text = message
 		locationStatusTextView.setBackgroundResource(R.color.location_status_failed_bg)
 		locationStatusTextView.visibility = View.VISIBLE
+		pinImageView.visibility = View.GONE
 	}
 	
 	private fun showLocationFinding() {
 		locationStatusTextView.text = getString(R.string.notification_location_loading)
 		locationStatusTextView.setBackgroundResource(R.color.location_status_loading_bg)
 		locationStatusTextView.visibility = View.VISIBLE
+		pinImageView.visibility = View.GONE
 	}
 	
 }
