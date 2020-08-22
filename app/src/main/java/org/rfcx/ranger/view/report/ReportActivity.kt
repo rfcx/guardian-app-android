@@ -183,6 +183,10 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	
 	override fun onMapReady(mapboxMap: MapboxMap) {
 		mapBoxMap = mapboxMap
+		mapboxMap.uiSettings.setAllGesturesEnabled(false)
+		mapboxMap.uiSettings.isAttributionEnabled = false
+		mapboxMap.uiSettings.isLogoEnabled = false
+		
 		mapboxMap.setStyle(Style.OUTDOORS) {
 			checkThenAccquireLocation()
 		}
