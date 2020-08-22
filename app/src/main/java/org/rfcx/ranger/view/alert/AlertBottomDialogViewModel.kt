@@ -34,8 +34,10 @@ import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
 import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.toCustomString
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 class AlertBottomDialogViewModel(private val context: Context,
                                  private val reviewEventUseCase: ReviewEventUseCase,
@@ -92,7 +94,6 @@ class AlertBottomDialogViewModel(private val context: Context,
 		_event.value = Result.Loading
 		if (context.isNetworkAvailable()) {
 			getRemoteDetail(eventGuID)
-			getAssets()
 		} else {
 			val eventCache = eventDb.getEvent(eventGuID)
 			if (eventCache != null)
@@ -105,23 +106,28 @@ class AlertBottomDialogViewModel(private val context: Context,
 		getEventUseCase.execute(object : DisposableSingleObserver<Event>() {
 			override fun onSuccess(t: Event) {
 				setEvent(t)
+				getAssets(t)
 			}
 			
 			override fun onError(e: Throwable) {
 				val eventCache = eventDb.getEvent(eventGuID)
-				if (eventCache != null)
+				if (eventCache != null) {
 					setEvent(eventCache)
-				else
+					getAssets(eventCache)
+					
+				} else {
 					_event.value = Result.Error(e)
+				}
 			}
 		}, eventGuID)
 	}
 	
-	private fun getAssets() {
+	private fun getAssets(event: Event) {
+		val fileName = event.audioId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fmp3.mp3"
 		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onSuccess(t: ResponseBody) {
-				// TODO: Change file name
-				saveFile(t, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3") {
+				// TODO: Change file name and change stream id
+				saveFile(t, fileName) {
 					if (it) {
 						initPlayer("0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
 					}
