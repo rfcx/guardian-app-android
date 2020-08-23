@@ -1,6 +1,9 @@
 package org.rfcx.ranger.view.alert
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -36,7 +39,9 @@ import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.toCustomString
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.util.*
 
 class AlertBottomDialogViewModel(private val context: Context,
@@ -107,6 +112,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 			override fun onSuccess(t: Event) {
 				setEvent(t)
 				getAssets(t)
+				getSpectrogram(t)
 			}
 			
 			override fun onError(e: Throwable) {
@@ -114,7 +120,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 				if (eventCache != null) {
 					setEvent(eventCache)
 					getAssets(eventCache)
-					
+					getSpectrogram(eventCache)
 				} else {
 					_event.value = Result.Error(e)
 				}
@@ -123,7 +129,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 	}
 	
 	private fun getAssets(event: Event) {
-		val fileName = event.audioId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fmp3.mp3"
+		val fileName = event.guardianId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fmp3.mp3"
 		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onSuccess(t: ResponseBody) {
 				// TODO: Change file name and change stream id
@@ -139,6 +145,21 @@ class AlertBottomDialogViewModel(private val context: Context,
 			}
 			
 		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
+	}
+	
+	private fun getSpectrogram(event: Event) {
+		val fileName = event.guardianId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fspec_d600.512_wdolph_z120.png"
+		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
+			override fun onSuccess(t: ResponseBody) {
+				// TODO: Change file name and change stream id
+				_spectrogramImage.value = bitmapToFile(t, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fspec_d600.512_wdolph_z120.png").path
+			}
+			
+			override fun onError(e: Throwable) {
+				e.printStackTrace()
+			}
+			
+		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fspec_d600.512_wdolph_z120.png")
 	}
 	
 	private fun saveFile(response: ResponseBody, fileName: String,
@@ -161,6 +182,27 @@ class AlertBottomDialogViewModel(private val context: Context,
 			e.printStackTrace()
 			callback.invoke(false)
 		}
+	}
+	
+	private fun bitmapToFile(response: ResponseBody, fileName: String): File {
+		val bitmap = BitmapFactory.decodeStream(response.byteStream())
+		val wrapper = ContextWrapper(context)
+		
+		// Initialize a new file instance to save bitmap object
+		var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+		file = File(file, "$fileName.jpg")
+		
+		try {
+			// Compress the bitmap and save in jpg format
+			val stream: OutputStream = FileOutputStream(file)
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream)
+			stream.flush()
+			stream.close()
+		} catch (e: IOException) {
+			e.printStackTrace()
+		}
+		
+		return file
 	}
 	
 	private fun setEvent(event: Event) {
