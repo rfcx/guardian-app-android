@@ -86,6 +86,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 		get() = _reviewEvent
 	
 	private val audioDirectory = File(context.cacheDir, DownLoadEventWorker.AUDIOS_SUB_DIRECTORY)
+	private var audioFileName: String? = null
 	
 	init {
 		_playerState.value = Player.STATE_BUFFERING
@@ -111,16 +112,14 @@ class AlertBottomDialogViewModel(private val context: Context,
 		getEventUseCase.execute(object : DisposableSingleObserver<Event>() {
 			override fun onSuccess(t: Event) {
 				setEvent(t)
-				getAssets(t)
-				getSpectrogram(t)
+				getAudio(t)
 			}
 			
 			override fun onError(e: Throwable) {
 				val eventCache = eventDb.getEvent(eventGuID)
 				if (eventCache != null) {
 					setEvent(eventCache)
-					getAssets(eventCache)
-					getSpectrogram(eventCache)
+					getAudio(eventCache)
 				} else {
 					_event.value = Result.Error(e)
 				}
@@ -128,38 +127,40 @@ class AlertBottomDialogViewModel(private val context: Context,
 		}, eventGuID)
 	}
 	
-	private fun getAssets(event: Event) {
+	private fun getAudio(event: Event) {
 		val fileName = event.guardianId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fmp3.mp3"
 		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onSuccess(t: ResponseBody) {
-				// TODO: Change file name and change stream id
 				saveFile(t, fileName) {
 					if (it) {
-						initPlayer("0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
+						audioFileName = fileName
+						getSpectrogram(event)
+						initPlayer(fileName)
 					}
 				}
 			}
 			
 			override fun onError(e: Throwable) {
 				e.printStackTrace()
+				audioFileName = event.audioOpusUrl
+				initPlayer(event.audioOpusUrl)
+				getSpectrogram(event)
 			}
-			
-		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fmp3.mp3")
+		}, fileName)
 	}
 	
 	private fun getSpectrogram(event: Event) {
 		val fileName = event.guardianId + "_t" + event.beginsAt.toCustomString() + "." + Date(event.beginsAt.time + event.audioDuration).toCustomString() + "_rfull_g1_fspec_d600.512_wdolph_z120.png"
 		assetsUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
 			override fun onSuccess(t: ResponseBody) {
-				// TODO: Change file name and change stream id
-				_spectrogramImage.value = bitmapToFile(t, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fspec_d600.512_wdolph_z120.png").path
+				_spectrogramImage.value = bitmapToFile(t, fileName).path
 			}
 			
 			override fun onError(e: Throwable) {
 				e.printStackTrace()
+				setSpectrogramImage()
 			}
-			
-		}, "0609007318c7_t20200602T162150007Z.20200602T162220007Z_rfull_g1_fspec_d600.512_wdolph_z120.png")
+		}, fileName)
 	}
 	
 	private fun saveFile(response: ResponseBody, fileName: String,
@@ -208,7 +209,6 @@ class AlertBottomDialogViewModel(private val context: Context,
 	private fun setEvent(event: Event) {
 		this.eventResult = event
 		this._event.value = Result.Success(event)
-		setSpectrogramImage()
 		this._eventState.value = EventState.NONE
 		getClassifiedCation()
 	}
@@ -218,14 +218,12 @@ class AlertBottomDialogViewModel(private val context: Context,
 				"&inline=1"
 	}
 	
-	
 	fun replaySound() {
 		if (exoPlayer.playbackState == Player.STATE_ENDED) {
 			exoPlayer.seekTo(0)
 			exoPlayer.playWhenReady = true
 		} else {
-			// TODO: Change file name
-			initPlayer("0609007318c7_t20200602T162150007Z.20200602T162240007Z_rfull_g1_fmp3.mp3")
+			audioFileName?.let { initPlayer(it) }
 		}
 	}
 	
