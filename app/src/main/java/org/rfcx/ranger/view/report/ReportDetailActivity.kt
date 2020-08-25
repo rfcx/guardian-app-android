@@ -82,6 +82,12 @@ class ReportDetailActivity : BaseReportImageActivity() {
 		
 		mapView.getMapAsync { mapboxMap ->
 			mapBoxMap = mapboxMap
+			mapboxMap.uiSettings.apply {
+				setAllGesturesEnabled(false)
+				isAttributionEnabled = false
+				isLogoEnabled = false
+			}
+			
 			mapboxMap.setStyle(Style.OUTDOORS) {
 				setMapPin()
 			}
