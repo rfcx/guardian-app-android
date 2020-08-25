@@ -64,10 +64,6 @@ class LocationTrackerService : Service() {
 	private val analytics by lazy { Analytics(this) }
 	private var satelliteCount = 0
 	
-	// Logs location service
-	private val logDb = FirebaseFirestore.getInstance()
-	private var logDocumentId: String? = null
-	
 	fun calculateTime(newTime: Date, lastTime: Date): Long {
 		val differenceTime1 = newTime.time - lastTime.time
 		lastUpdated = newTime
@@ -186,13 +182,6 @@ class LocationTrackerService : Service() {
 			
 			// Tracking last know location timer
 			trackingWorkTimer?.cancel()
-			logDocumentId = null // clear
-			LocationServiceLogs.start(logDb, this.getUserEmail()) { successful, documentId ->
-				if (successful) {
-					this.logDocumentId = documentId
-					documentId?.let { startLogLastLocation(it) }
-				}
-			}
 			
 			// Tracking satellite
 			trackingSatelliteTimer?.cancel()
@@ -207,14 +196,6 @@ class LocationTrackerService : Service() {
 			Log.w(TAG, "gps provider does not exist " + ex.message)
 		}
 		
-	}
-	
-	@SuppressLint("MissingPermission")
-	private fun startLogLastLocation(documentId: String) {
-		trackingWorkTimer = fixedRateTimer("last_location_timer", false, 0, 20 * 1000) {
-			val lastLocation = mLocationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-			LocationServiceLogs.addLastKnowLocation(logDb, documentId, lastLocation)
-		}
 	}
 	
 	override fun onDestroy() {
@@ -233,7 +214,6 @@ class LocationTrackerService : Service() {
 		}
 		
 		// set end time of tracking service
-		logDocumentId?.let { LocationServiceLogs.setEndTime(logDb, it) }
 		clearTimer()
 	}
 	
