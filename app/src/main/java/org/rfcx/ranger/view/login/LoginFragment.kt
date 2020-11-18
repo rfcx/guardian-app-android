@@ -104,7 +104,6 @@ class LoginFragment : BaseFragment() {
 			
 			val alertDialog = builder.create()
 			alertDialog.show()
-			alertDialog.dismiss()
 			
 			alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
 			editText.addTextChangedListener(object : TextWatcher {
