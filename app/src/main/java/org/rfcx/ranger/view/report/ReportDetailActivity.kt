@@ -108,7 +108,7 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	private fun getShortLink(report: Report) {
-		val date = Date(Timestamp((report.reportedAt.time - TimeZone.getDefault().rawOffset) + TimeZone.getTimeZone("America/Belem").rawOffset).time)
+		val date = Date(Timestamp((report.reportedAt.time - TimeZone.getDefault().rawOffset) + TimeZone.getTimeZone(this.getTimeZone()).rawOffset).time)
 		
 		val timeStart = Date((date.time.minus((10000)).let { Timestamp(it) }).time)
 		val timeEnd = Date((date.time.plus((10000)).let { Timestamp(it) }).time)

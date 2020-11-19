@@ -121,6 +121,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		
 		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
+				preferences.putString(Preferences.SITE_TIMEZONE, t[0].timezone)
 				setUnavailable(t[0].bounds != null)
 			}
 			

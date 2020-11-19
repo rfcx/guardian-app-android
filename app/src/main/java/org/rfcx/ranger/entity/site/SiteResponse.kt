@@ -6,7 +6,8 @@ open class SiteResponse(
 		@SerializedName("guid")
 		val id: String,
 		val name: String,
-		val bounds: Bounds
+		val bounds: Bounds,
+		val timezone: String
 )
 
 open class Bounds(
