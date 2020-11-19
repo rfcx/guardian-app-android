@@ -27,10 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.ActivityReportDetailBinding
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.util.Analytics
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.toIsoNotZString
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
@@ -111,11 +108,13 @@ class ReportDetailActivity : BaseReportImageActivity() {
 	}
 	
 	private fun getShortLink(report: Report) {
-		val timeStart = Date((report.reportedAt.time.minus((28805 * 1000L)).let { Timestamp(it) }).time)
-		val timeEnd = Date((report.reportedAt.time.minus((28795 * 1000L)).let { Timestamp(it) }).time)
+		val date = Date(Timestamp((report.reportedAt.time - TimeZone.getDefault().rawOffset) + TimeZone.getTimeZone("America/Belem").rawOffset).time)
+		
+		val timeStart = Date((date.time.minus((10000)).let { Timestamp(it) }).time)
+		val timeEnd = Date((date.time.plus((10000)).let { Timestamp(it) }).time)
 		
 		val site = Preferences.getInstance(this).getString(Preferences.DEFAULT_SITE)
-		val url = "https://dashboard.rfcx.org/rangers?site=$site&live-view=false&rangers-tab=reports&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart.toIsoNotZString()}&end-bef=${timeEnd.toIsoNotZString()}&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
+		val url = "https://dashboard.rfcx.org/rangers?site=$site&live-view=false&rangers-tab=reports&wds=%5B%220%22,%221%22,%222%22,%223%22,%224%22,%225%22,%226%22%5D&start-aft=${timeStart.dateForShortLink()}&end-bef=${timeEnd.dateForShortLink()}&range=Custom%20Range&dayt-start-aft=00:00:00&dayt-end-bef=00:00:00"
 		urlBeforeGetShortLink = url
 		viewModel.getShortLink(url)
 	}
