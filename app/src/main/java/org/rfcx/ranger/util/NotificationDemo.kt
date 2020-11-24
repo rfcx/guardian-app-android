@@ -15,7 +15,7 @@ class NotificationDemo {
 	fun startDemo(context: Context) {
 		Handler().postDelayed({
 			val intent = Intent(context, MainActivityNew::class.java)
-			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, "04ec88d8-04c6-4b88-9e9c-41d206724d0f")
+			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, "0ebcc9be-3222-4ae8-aa08-b023f215394d")
 			val stackBuilder = TaskStackBuilder.create(context)
 			stackBuilder.addParentStack(MainActivityNew::class.java)
 			stackBuilder.addNextIntent(intent)
@@ -26,7 +26,7 @@ class NotificationDemo {
 					.setSmallIcon(R.mipmap.ic_launcher)
 					.setSound(alarmSound)
 					.setContentTitle("Rainforest Connection")
-					.setContentText("Vehicle detected from Romania")
+					.setContentText("Chainsaw detected at Bear Hut #2")
 					.setAutoCancel(true)
 					.setContentIntent(pendingIntent)
 					.setSmallIcon(R.drawable.ic_notification)
