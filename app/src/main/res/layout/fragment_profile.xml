@@ -25,6 +25,10 @@
 			type="android.view.View.OnClickListener" />
 		
 		<variable
+			name="onClickStartDemo"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
 			name="onClickRatingApp"
 			type="android.view.View.OnClickListener" />
 		
@@ -167,6 +171,27 @@
 					android:text="@{viewModel.guardianGroup}"
 					tools:text="Osa Conservation" />
 			
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/startDemoLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickStartDemo}"
+				android:orientation="vertical"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal">
+				
+				<TextView
+					android:id="@+id/startDemoTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/start_demo" />
 			</LinearLayout>
 			
 			<TextView

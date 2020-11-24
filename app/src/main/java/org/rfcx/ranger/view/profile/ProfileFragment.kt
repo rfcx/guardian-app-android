@@ -163,6 +163,10 @@ class ProfileFragment : BaseFragment() {
 		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
 			profileViewModel.deleteOfflineRegion(false)
 		}
+		
+		viewDataBinding.onClickStartDemo = View.OnClickListener {
+			context?.let { it1 -> NotificationDemo().startDemo(it1) }
+		}
 	}
 	
 	override fun onStart() {

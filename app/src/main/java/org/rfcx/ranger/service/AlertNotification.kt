@@ -55,8 +55,8 @@ object AlertNotification {
 		return data["event_guid"]
 	}
 	
-	private const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"
-	private const val NOTIFICATION_CHANNEL_NAME = "Alert"
-	private const val NOTIFICATION_CHANNEL_DESCRIPTION = "Alert"
+	const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"
+	const val NOTIFICATION_CHANNEL_NAME = "Alert"
+	const val NOTIFICATION_CHANNEL_DESCRIPTION = "Alert"
 	const val ALERT_ID_NOTI_INTENT = "ALERT_ID_NOTI_INTENT"
 }
