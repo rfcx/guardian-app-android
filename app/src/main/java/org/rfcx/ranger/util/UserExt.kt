@@ -30,6 +30,10 @@ fun Context.getGuardianGroup(): String? {
 	return if (group.isEmpty()) null else group
 }
 
+fun Context.getTimeZone(): String {
+	return Preferences.getInstance(this).getString(Preferences.SITE_TIMEZONE, "")
+}
+
 fun Context.getUserGuId(): String? {
 	val guId = Preferences.getInstance(this).getString(Preferences.USER_GUID, "")
 	return if (guId.isEmpty()) null else guId
