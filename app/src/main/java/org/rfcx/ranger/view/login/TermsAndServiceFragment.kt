@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.login
 
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,9 +36,19 @@ class TermsAndServiceFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		
 		termsAndConditionsWebview.webViewClient = object : WebViewClient() {
+			override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+				super.onPageStarted(view, url, favicon)
+				loadingTermsAndCondProgressBar.visibility  = View.VISIBLE
+			}
+			
 			override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
 				view?.loadUrl(url)
 				return true
+			}
+			
+			override fun onPageFinished(view: WebView?, url: String?) {
+				super.onPageFinished(view, url)
+				loadingTermsAndCondProgressBar.visibility  = View.GONE
 			}
 		}
 		termsAndConditionsWebview.loadUrl("https://rfcx.org/terms-of-service-ranger-app-text-only")
