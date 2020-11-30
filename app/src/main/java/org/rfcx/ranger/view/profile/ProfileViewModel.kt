@@ -40,6 +40,8 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val sendToEmail = MutableLiveData<String>()
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
+	val showNotificationByEmail = MutableLiveData<Boolean>()
+	
 	private val offlineManager: OfflineManager = OfflineManager.getInstance(context)
 	lateinit var definition: OfflineTilePyramidRegionDefinition
 	private val viewModelJob = Job()
@@ -59,6 +61,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 		deleteText.value = preferences.getString(Preferences.DELETE_TEXT, "DELETE")
+		showNotificationByEmail.value = context.getUserEmail() != ""
 	}
 	
 	private fun setViewMapOffline(state: String) {
