@@ -276,5 +276,9 @@
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
     <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
+    
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">Set alert</string>
+    <string name="choose_which_projects">Pilih yang proyek untuk menerima pemberitahuan peringatan</string>
 
 </resources>
