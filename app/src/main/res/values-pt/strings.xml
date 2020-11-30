@@ -119,7 +119,7 @@
     <string name="invitation_desc">Por favor insira o seu código de convite</string>
     <string name="hint_code">Código</string>
     <string name="invalid_invite_code">convite código inválido</string>
-    
+    <string name="switch_account">mudar de conta</string>
     
     <!-- Report -->
     <string name="sync_reports_label">%d relatórios e lista</string>

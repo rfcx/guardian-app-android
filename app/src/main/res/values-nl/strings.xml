@@ -119,6 +119,7 @@
 	<string name="invitation_desc">Vul hier uw uitnodiging code</string>
 	<string name="hint_code">Code</string>
 	<string name="invalid_invite_code">Ongeldige code uit te nodigen</string>
+	<string name="switch_account">wissel account</string>
 	
 	<!-- Report -->
 	<string name="sync_reports_label">%d meldingen</string>
