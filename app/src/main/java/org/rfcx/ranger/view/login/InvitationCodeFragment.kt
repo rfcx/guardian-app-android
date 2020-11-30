@@ -89,6 +89,10 @@ class InvitationCodeFragment : BaseFragment() {
 				}
 			})
 		}
+		
+		switchAccountTextView.setOnClickListener {
+			listener.openLoginFragment()
+		}
 	}
 	
 	private fun View.hideKeyboard() = this.let {
