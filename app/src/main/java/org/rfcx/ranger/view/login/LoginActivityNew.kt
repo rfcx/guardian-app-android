@@ -89,7 +89,12 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		supportFragmentManager.beginTransaction()
 				.replace(loginContainer.id, TermsAndServiceFragment(),
 						"TermsAndServiceFragment").commit()
-		
+	}
+	
+	override fun openSetProjectsFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, SetProjectsFragment(),
+						"SetProjectsFragment").commit()
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) :String? {
@@ -105,4 +110,5 @@ interface LoginListener {
 	fun openInvitationCodeFragment()
 	fun openSetUserNameFragmentFragment()
 	fun openTermsAndServiceFragment()
+	fun openSetProjectsFragment()
 }
