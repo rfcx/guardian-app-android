@@ -18,7 +18,7 @@
 	<string name="skip">Skip</string>
 	<string name="done">Done</string>
 	<string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
-	<string name="name_of_guardian">Name of guardian</string>
+	<string name="name_of_guardian">Name of site</string>
 	<string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
 	<string name="when_the_event">When the event was detected</string>
 	<string name="number_of_reviews">Number of confirmed reviews</string>
@@ -59,8 +59,8 @@
 	<string name="profile_welcome">Hi, %s!</string>
 	<string name="profile_onduty">On duty</string>
 	<string name="profile_nottracking">Not tracking</string>
-	<string name="error_no_guardian_group_set">Set guardian group in Settings</string>
-	<string name="please_set_guardian_group">Please set guardian group</string>
+	<string name="error_no_guardian_group_set">Set projects in Settings</string>
+	<string name="please_set_guardian_group">Please set projects</string>
 	<string name="sent_to">sent to</string>
 	
 	<!-- report -->
@@ -89,7 +89,7 @@
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>
 	<string name="default_site_label">Site</string>
-	<string name="guardian_group_label">Guardian group</string>
+	<string name="guardian_group_label">Projects</string>
 	<string name="notifications">Notifications</string>
 	
 	<string name="dd_coordinates">DD</string>
@@ -182,10 +182,8 @@
 	<string name="format_images_synced">%s photos</string>
 	<string name="format_images_unsync">%s photos (%s not yet synced)</string>
 	<string name="empty_report_text">No reports in the last 7 days.\npress + to create one.</string>
-	<string name="guardian_group_not_found">Guardian group not found. You must set a group to receive alerts!</string>
-	
 	<string name="button_later">Later</string>
-	<string name="button_set_guardian_group">Set Guardian Group</string>
+	<string name="button_set_guardian_group">Set Projects</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">All Media</string>
@@ -211,11 +209,11 @@
 	<!-- Override string res from matisse Image picker library -->
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">By Guardian</string>
+	<string name="tab_group_by_guardians">By Site</string>
 	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
-	<string name="warning_set_guardian_group">Guardian group not found. You must set a group to receive alerts!</string>
+	<string name="warning_set_guardian_group">Projects not found. You must set a site to receive alerts!</string>
 	<string name="no_incident_occurred_recently">There is no incident occurred recently</string>
 	<string name="enjoy_you_day">Enjoy you day :)</string>
 	<string name="see_older">See Older</string>
@@ -264,7 +262,7 @@
 	<string name="unavailable">UNAVAILABLE</string>
 	
 	<!--Guardian Group List-->
-	<string name="guardian_group_list">Guardian Group List</string>
+	<string name="guardian_group_list">Project List</string>
 	
 	<string name="notification_tracking_title">On-duty and tracking enabled</string>
 	<string name="notification_traking_message_format">%d minutes recorded</string>
