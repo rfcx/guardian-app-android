@@ -18,7 +18,7 @@
     <string name="skip">Pular</string>
     <string name="done">Feito</string>
     <string name="available_in_settings">Você também pode encontrar este tutorial na guia Perfil</string>
-    <string name="name_of_guardian">Nome do responsável</string>
+    <string name="name_of_guardian">Nome do local</string>
     <string name="enable_tracking_when">Ativar rastreamento quando você está em patrulha para relatar sua posição</string>
     <string name="when_the_event">Quando o evento foi detectado</string>
     <string name="number_of_reviews">Número de comentários confirmados</string>
@@ -67,8 +67,8 @@
     <string name="profile_welcome">Olá, %s!</string>
     <string name="profile_onduty">Em serviço</string>
     <string name="profile_nottracking">Não rastreando</string>
-	<string name="error_no_guardian_group_set">Definir grupo de guardiões nas configurações</string>
-    <string name="please_set_guardian_group">Por favor grupo set tutor</string>
+	<string name="error_no_guardian_group_set">Set projeto em configurações</string>
+    <string name="please_set_guardian_group">Por favor projecto conjunto</string>
     <string name="sent_to">enviar para</string>
 
     <!-- report -->
@@ -97,7 +97,7 @@
     <string name="location_tracking_on_label">Ligado</string>
     <string name="location_tracking_off_label">Desligado</string>
     <string name="default_site_label">Local</string>
-    <string name="guardian_group_label">Grupo de guardiões</string>
+    <string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
 	
 	<string name="last_month">Último\nMês</string>
@@ -181,8 +181,7 @@
     <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
     <string name="empty_report_text">"Não há relatos nos últimos 7 dias.\nimprensa + para criar uma."</string>
     <string name="button_later">Mais tarde</string>
-    <string name="button_set_guardian_group">Definir Grupo Guardião</string>
-    <string name="guardian_group_not_found">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>
+    <string name="button_set_guardian_group">Projetos estabelecem</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Todos os meios</string>
@@ -208,12 +207,12 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Pela Guardian</string>
+    <string name="tab_group_by_guardians">Pelo site</string>
     <string name="tab_all_alerts">Todos os alertas</string>
     <string name="yesterday">Ontem</string>
     
     <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
-    <string name="warning_set_guardian_group">grupo Guardião não foi encontrado. Você deve definir um grupo para receber alertas!</string>
+    <string name="warning_set_guardian_group">Projetos não encontrado. Você deve definir um site para receber alertas!</string>
     <string name="no_incident_occurred_recently">Não há incidente ocorreu recentemente</string>
     <string name="enjoy_you_day">Aproveite o seu dia :)</string>
     <string name="see_older">veja mais antiga</string>
@@ -264,7 +263,7 @@
     <string name="unavailable">INDISPONÍVEL</string>
     
     <!--Guardian Group List-->
-    <string name="guardian_group_list">Lista Grupo Guardião</string>
+    <string name="guardian_group_list">Lista de projetos</string>
 	<string name="audio_notes">Notas de áudio</string>
     <string name="photos">Foto</string>
 	<string name="common_none">Nada</string>

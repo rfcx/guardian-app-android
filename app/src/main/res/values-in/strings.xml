@@ -18,7 +18,7 @@
     <string name="skip">Melewatkan</string>
     <string name="done">Selesai</string>
     <string name="available_in_settings">Anda juga dapat menemukan Tutorial ini di tab Profil</string>
-    <string name="name_of_guardian">Nama wali</string>
+    <string name="name_of_guardian">Nama situs</string>
     <string name="enable_tracking_when">Aktifkan pelacakan ketika Anda berpatroli untuk melaporkan posisi Anda</string>
     <string name="when_the_event">Ketika acara terdeteksi</string>
     <string name="number_of_reviews">Jumlah dikonfirmasi ulasan</string>
@@ -67,8 +67,8 @@
     <string name="profile_welcome">Hai, %s!</string>
     <string name="profile_onduty">Sedang mengerjakan</string>
     <string name="profile_nottracking">Tidak melacak</string>
-	<string name="error_no_guardian_group_set">Atur grup Guardian di Pengaturan</string>
-    <string name="please_set_guardian_group">Silakan kelompok set wali</string>
+	<string name="error_no_guardian_group_set">Set proyek di settings</string>
+    <string name="please_set_guardian_group">Silakan proyek set</string>
     <string name="sent_to">kirim ke</string>
 
     <!-- report -->
@@ -97,7 +97,7 @@
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>
     <string name="default_site_label">Tempat</string>
-    <string name="guardian_group_label">Kelompok Guardian</string>
+    <string name="guardian_group_label">Proyek</string>
     <string name="notifications">Pemberitahuan</string>
 	
 	<string name="last_month">Terakhir\nBulan</string>
@@ -181,8 +181,7 @@
     <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
     <string name="empty_report_text">"Tidak ada laporan dalam 7 hari terakhir.\ntekan + untuk membuat satu."</string>
     <string name="button_later">Kemudian</string>
-    <string name="button_set_guardian_group">Set Wali Grup</string>
-    <string name="guardian_group_not_found">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>
+    <string name="button_set_guardian_group">Proyek set</string>
     
     <!-- Override string res from matisse Image picker library -->
     <string name="album_name_all">Semua Media</string>
@@ -208,12 +207,12 @@
     <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Dengan Wali</string>
+    <string name="tab_group_by_guardians">Oleh Situs</string>
     <string name="tab_all_alerts">semua Alerts</string>
     <string name="yesterday">Kemarin</string>
     
     <string name="no_internet_connection">Tidak ada internet, Silakan coba lagi.</string>
-    <string name="warning_set_guardian_group">Kelompok wali tidak ditemukan. Anda harus mengatur sebuah kelompok untuk menerima pemberitahuan!</string>
+    <string name="warning_set_guardian_group">Proyek tidak ditemukan. Anda harus mengatur sebuah situs untuk menerima pemberitahuan!</string>
     <string name="no_incident_occurred_recently">Tidak ada insiden terjadi baru-baru ini</string>
     <string name="enjoy_you_day">Nikmati Anda hari :)</string>
     <string name="see_older">Lihat Lama</string>
@@ -264,7 +263,7 @@
     <string name="unavailable">TIDAK TERSEDIA</string>
     
     <!--Guardian Group List-->
-    <string name="guardian_group_list">Daftar wali Grup</string>
+    <string name="guardian_group_list">Proyek daftar</string>
 	<string name="audio_notes">Catatan audio</string>
     <string name="photos">Foto</string>
 	<string name="common_none">Tidak ada</string>
