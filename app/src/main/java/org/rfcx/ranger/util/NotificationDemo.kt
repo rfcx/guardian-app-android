@@ -8,25 +8,29 @@ import android.os.Build
 import android.os.Handler
 import androidx.core.app.NotificationCompat
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.view.MainActivityNew
 
-class NotificationDemo(private val guid: String?) {
+class NotificationDemo(private val event: Event?) {
 	fun startDemo(context: Context) {
 		Handler().postDelayed({
 			val intent = Intent(context, MainActivityNew::class.java)
-			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, guid ?: "0ebcc9be-3222-4ae8-aa08-b023f215394d")
+			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, event?.id ?: "0ebcc9be-3222-4ae8-aa08-b023f215394d")
 			val stackBuilder = TaskStackBuilder.create(context)
 			stackBuilder.addParentStack(MainActivityNew::class.java)
 			stackBuilder.addNextIntent(intent)
 			val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 			val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-			
+			var contentText = "Chainsaw ${context.getString(R.string.detected_at)} Bear Hut #2"
+			if(event?.id != null) {
+				contentText = "${event.label} ${context.getString(R.string.detected_at)} ${event.guardianName}"
+			}
 			val notification = NotificationCompat.Builder(context, AlertNotification.NOTIFICATION_CHANNEL_ID)
 					.setSmallIcon(R.mipmap.ic_launcher)
 					.setSound(alarmSound)
 					.setContentTitle("Rainforest Connection")
-					.setContentText("Chainsaw detected at Bear Hut #2")
+					.setContentText(contentText)
 					.setAutoCancel(true)
 					.setContentIntent(pendingIntent)
 					.setSmallIcon(R.drawable.ic_notification)
@@ -47,6 +51,6 @@ class NotificationDemo(private val guid: String?) {
 				notificationManager.createNotificationChannel(channel)
 			}
 			notificationManager.notify(1000, notification)
-		}, 20000)
+		}, 30000)
 	}
 }

@@ -276,5 +276,6 @@
     <string name="confirm_text">confirme</string>
     <string name="required">Requeridos!</string>
     <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
+    <string name="detected_at">detectado no</string>
 
 </resources>

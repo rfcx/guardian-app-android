@@ -276,5 +276,6 @@
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
     <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
+    <string name="detected_at">terdeteksi di</string>
 
 </resources>

@@ -272,4 +272,6 @@
 	<string name="confirm_text">bevestigen</string>
 	<string name="required">Verplicht!</string>
 	<string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
+	<string name="detected_at">gedetecteerd bij</string>
+
 </resources>

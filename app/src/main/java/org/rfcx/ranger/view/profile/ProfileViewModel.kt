@@ -20,6 +20,7 @@ import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.util.*
 import kotlin.random.Random
@@ -237,14 +238,12 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		guardianGroup.value = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 	}
 	
-	fun randomGuidOfAlert(): String? {
+	fun randomGuidOfAlert(): Event? {
 		val events = eventDb.getEvents()
 		if (events.isNullOrEmpty()) return null
+		val index = Random.nextInt(events.size)
 		
-		val guidList = events.map { it.id }
-		val index = Random.nextInt(guidList.size)
-		
-		return guidList[index]
+		return events[index]
 	}
 	
 	fun offlineMapBox() {
