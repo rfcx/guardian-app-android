@@ -62,7 +62,11 @@ fun Date.millisecondsSince(): Long {
 	return Date().time - this.time
 }
 
-
+fun Date.dateForShortLink(): String {
+	val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+	val simpleDateFormat = SimpleDateFormat(pattern)
+	return simpleDateFormat.format(this)
+}
 
 private val legacyInputFormatters by lazy { arrayListOf(
 	isoSdf,

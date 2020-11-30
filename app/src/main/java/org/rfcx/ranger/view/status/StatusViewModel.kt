@@ -145,6 +145,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 			getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 				override fun onSuccess(t: List<SiteResponse>) {
 					preferences.putString(Preferences.SITE_FULLNAME, t[0].name)
+					preferences.putString(Preferences.SITE_TIMEZONE, t[0].timezone)
 					_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 							t[0].name, profileData.getTracking())
 					

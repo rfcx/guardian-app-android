@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
@@ -91,6 +92,7 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 		super.onCreate(savedInstanceState)
 		Mapbox.getInstance(this, getString(R.string.mapbox_token))
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_report)
+		window.decorView.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		bindActionbar()
 		setupMap(savedInstanceState)
@@ -138,6 +140,20 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 			android.R.id.home -> finish()
 		}
 		return super.onOptionsItemSelected(item)
+	}
+	
+	private fun setOnFocusEditText() {
+		val screenHeight: Int = window.decorView.rootView.height ?: 0
+		val r = Rect()
+		window.decorView.rootView.getWindowVisibleDisplayFrame(r)
+		val keypadHeight: Int = screenHeight - r.bottom
+		if (keypadHeight > screenHeight * 0.15) {
+			reportButton.visibility = View.GONE
+		} else {
+			if (reportButton != null) {
+				reportButton.visibility = View.VISIBLE
+			}
+		}
 	}
 	
 	private fun bindActionbar() {

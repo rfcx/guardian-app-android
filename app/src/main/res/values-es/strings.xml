@@ -18,7 +18,7 @@
 	<string name="skip">Omitir</string>
 	<string name="done">Hecho</string>
 	<string name="available_in_settings">También se puede encontrar este tutorial en la ficha Perfil</string>
-	<string name="name_of_guardian">Nombre del tutor</string>
+	<string name="name_of_guardian">Nombre del sitio</string>
 	<string name="enable_tracking_when">Habilitar el seguimiento cuando se está en la patrulla para reportar su posición</string>
 	<string name="when_the_event">Cuando se detecta el evento</string>
 	<string name="number_of_reviews">Número de comentarios confirmados</string>
@@ -67,8 +67,8 @@
 	<string name="profile_welcome">¡Hola, %s!</string>
 	<string name="profile_onduty">En servicio</string>
 	<string name="profile_nottracking">No trastreando</string>
-	<string name="error_no_guardian_group_set">Establecer grupo guardián en configuraciones</string>
-	<string name="please_set_guardian_group">Por favor, grupo conjunto tutor</string>
+	<string name="error_no_guardian_group_set">Proyecto conjunto de ajustes</string>
+	<string name="please_set_guardian_group">Por favor, proyecto conjunto</string>
 	<string name="sent_to">enviar a</string>
 	
 	<!-- report -->
@@ -97,7 +97,7 @@
 	<string name="location_tracking_on_label">Encendido</string>
 	<string name="location_tracking_off_label">Apagando</string>
 	<string name="default_site_label">Sitio</string>
-	<string name="guardian_group_label">Grupo de Guardias</string>
+	<string name="guardian_group_label">Proyectos</string>
 	<string name="notifications">Notificaciones</string>
 	
 	<string name="last_month">Ultimo\nMes</string>
@@ -119,7 +119,7 @@
 	<string name="invitation_desc">Por favor inserte su código de invitacion</string>
 	<string name="hint_code">Código</string>
 	<string name="invalid_invite_code">código de invitación no válido</string>
-	
+	<string name="switch_account">cambiar cuenta</string>
 	
 	<!-- Report -->
 	<string name="sync_reports_label">%d reportes</string>
@@ -181,8 +181,7 @@
 	<string name="format_images_unsync">%s imágenes (%s aún no sincronizadas)</string>
 	<string name="empty_report_text">"No hay informes en los últimos 7 días.\npulse + para crear uno."</string>
 	<string name="button_later">Luego</string>
-	<string name="button_set_guardian_group">Establecer Grupo Guardián</string>
-	<string name="guardian_group_not_found">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
+	<string name="button_set_guardian_group">Proyectos set</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">Todos los archivos</string>
@@ -208,12 +207,12 @@
 	<!-- Override string res from matisse Image picker library -->
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">Por Guardian</string>
+	<string name="tab_group_by_guardians">Por sitio</string>
 	<string name="tab_all_alerts">todas las alertas</string>
 	<string name="yesterday">Ayer</string>
 	
 	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
-	<string name="warning_set_guardian_group">No se ha encontrado el grupo Guardian. Debe establecer un grupo para recibir alertas!</string>
+	<string name="warning_set_guardian_group">Los proyectos no encontrados. Debe establecer un sitio para recibir alertas!</string>
 	<string name="no_incident_occurred_recently">No hay ningún incidente ocurrió recientemente</string>
 	<string name="enjoy_you_day">Usted disfruta de día :)</string>
 	<string name="see_older">ver más viejo</string>
@@ -264,7 +263,7 @@
 	<string name="unavailable">INDISPONIBLE</string>
 	
 	<!--Guardian Group List-->
-	<string name="guardian_group_list">Lista de grupos de la guarda</string>
+	<string name="guardian_group_list">Lista de proyectos</string>
 	<string name="audio_notes">Notas de audio</string>
 	<string name="photos">Foto</string>
 	<string name="common_none">Nada</string>

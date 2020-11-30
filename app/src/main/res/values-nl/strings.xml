@@ -18,7 +18,7 @@
 	<string name="skip">Overspringen</string>
 	<string name="done">Gedaan</string>
 	<string name="available_in_settings">U vindt er ook deze les in het tabblad Profile</string>
-	<string name="name_of_guardian">Naam van de voogd</string>
+	<string name="name_of_guardian">Naam van de site</string>
 	<string name="enable_tracking_when">Schakel het volgen als je op patrouille om uw positie te melden</string>
 	<string name="when_the_event">Wanneer de gebeurtenis gedetecteerd</string>
 	<string name="number_of_reviews">Aantal bevestigde beoordelingen</string>
@@ -59,8 +59,8 @@
 	<string name="profile_welcome">Hi, %s!</string>
 	<string name="profile_onduty">In functie</string>
 	<string name="profile_nottracking">Niet volgen</string>
-	<string name="error_no_guardian_group_set">Set voogd groep in Instellingen</string>
-	<string name="please_set_guardian_group">Gelieve set voogd groep</string>
+	<string name="error_no_guardian_group_set">Set project in instellingen</string>
+	<string name="please_set_guardian_group">Gelieve set project</string>
 	<string name="sent_to">verzenden naar</string>
 	
 	<!-- report -->
@@ -89,7 +89,7 @@
 	<string name="location_tracking_on_label">Aan</string>
 	<string name="location_tracking_off_label">Uit</string>
 	<string name="default_site_label">Plaats</string>
-	<string name="guardian_group_label">Guardian groep</string>
+	<string name="guardian_group_label">Projecten</string>
 	<string name="notifications">Meldingen</string>
 	
 	<string name="dd_coordinates">DD</string>
@@ -119,6 +119,7 @@
 	<string name="invitation_desc">Vul hier uw uitnodiging code</string>
 	<string name="hint_code">Code</string>
 	<string name="invalid_invite_code">Ongeldige code uit te nodigen</string>
+	<string name="switch_account">wissel account</string>
 	
 	<!-- Report -->
 	<string name="sync_reports_label">%d meldingen</string>
@@ -181,10 +182,8 @@
 	<string name="format_images_synced">%s foto\'s</string>
 	<string name="format_images_unsync">%s foto\'s (%s nog niet gesynchroniseerd)</string>
 	<string name="empty_report_text">Geen rapporten in de afgelopen 7 dagen. \ndruk op + om er een te maken.</string>
-	<string name="guardian_group_not_found">Guardian groep niet gevonden. Je moet een groep in en ontvang meldingen te stellen!</string>
-	
 	<string name="button_later">Later</string>
-	<string name="button_set_guardian_group">Stel Guardian Group in</string>
+	<string name="button_set_guardian_group">Set projecten</string>
 	
 	<!-- Override string res from matisse Image picker library -->
 	<string name="album_name_all">Alle Media</string>
@@ -210,11 +209,11 @@
 	<!-- Override string res from matisse Image picker library -->
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">Door Guardian</string>
+	<string name="tab_group_by_guardians">Door Site</string>
 	<string name="tab_all_alerts">Alle waarschuwingen</string>
 	<string name="yesterday">Gisteren</string>
 	<string name="no_internet_connection">Geen internet, probeer het opnieuw.</string>
-	<string name="warning_set_guardian_group">Guardian groep niet gevonden. Je moet een groep in en ontvang meldingen te stellen!</string>
+	<string name="warning_set_guardian_group">Projects niet gevonden. U moet een plaats in en ontvang meldingen te stellen!</string>
 	<string name="no_incident_occurred_recently">Er is geen invallend Onlangs hebben zich</string>
 	<string name="enjoy_you_day">Geniet van je dag :)</string>
 	<string name="see_older">Zie Oudere</string>
@@ -263,7 +262,7 @@
 	<string name="unavailable">NIET BESCHIKBAAR</string>
 	
 	<!--Guardian Group List-->
-	<string name="guardian_group_list">Guardian Group List</string>
+	<string name="guardian_group_list">Projecten lijst</string>
 	
 	<string name="notification_tracking_title">On-plicht en bijhouden heeft ingeschakeld</string>
 	<string name="notification_traking_message_format">%d minuten geregistreerd</string>
@@ -273,5 +272,5 @@
 	<string name="required">Verplicht!</string>
 	<string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
 	<string name="detected_at">gedetecteerd bij</string>
-
+	
 </resources>
