@@ -119,7 +119,7 @@
     <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
     <string name="hint_code">Kode</string>
     <string name="invalid_invite_code">Kode mengundang valid</string>
-    
+    <string name="switch_account">Ganti akun</string>
     
     <!-- Report -->
     <string name="sync_reports_label">%d laporan</string>
