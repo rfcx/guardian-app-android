@@ -11,11 +11,11 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.view.MainActivityNew
 
-class NotificationDemo {
+class NotificationDemo(private val guid: String?) {
 	fun startDemo(context: Context) {
 		Handler().postDelayed({
 			val intent = Intent(context, MainActivityNew::class.java)
-			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, "0ebcc9be-3222-4ae8-aa08-b023f215394d")
+			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, guid ?: "0ebcc9be-3222-4ae8-aa08-b023f215394d")
 			val stackBuilder = TaskStackBuilder.create(context)
 			stackBuilder.addParentStack(MainActivityNew::class.java)
 			stackBuilder.addNextIntent(intent)

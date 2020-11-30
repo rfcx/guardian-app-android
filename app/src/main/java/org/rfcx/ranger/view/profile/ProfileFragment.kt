@@ -180,7 +180,7 @@ class ProfileFragment : BaseFragment() {
 				builder.setCancelable(false)
 				
 				builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
-					context?.let { it1 -> NotificationDemo().startDemo(it1) }
+					context?.let { it1 -> NotificationDemo(profileViewModel.randomGuidOfAlert()).startDemo(it1) }
 				}
 				
 				builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->

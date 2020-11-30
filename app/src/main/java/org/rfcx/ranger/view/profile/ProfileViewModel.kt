@@ -13,6 +13,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.*
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
@@ -21,8 +22,9 @@ import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
 import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.util.*
+import kotlin.random.Random
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase, private val eventDb: EventDb) : ViewModel() {
 	
 	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
@@ -233,6 +235,16 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun updateSiteName() {
 		guardianGroup.value = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+	}
+	
+	fun randomGuidOfAlert(): String? {
+		val events = eventDb.getEvents()
+		if (events.isNullOrEmpty()) return null
+		
+		val guidList = events.map { it.id }
+		val index = Random.nextInt(guidList.size)
+		
+		return guidList[index]
 	}
 	
 	fun offlineMapBox() {
