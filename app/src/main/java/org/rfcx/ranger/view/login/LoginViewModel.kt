@@ -186,6 +186,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
 			override fun onSuccess(t: Boolean) {
 				val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN)
+				val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 				
 				if (userAuthResponse.isRanger) {
 					preferenceHelper.putBoolean(Preferences.IS_RANGER, true)
@@ -193,8 +194,8 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 						_redirectPage.postValue(LoginRedirect.TERMS_AND_SERVICE)
 					} else if (context.getUserNickname().substring(0, 1) == "+") {
 						_redirectPage.postValue(LoginRedirect.SET_USER_NAME)
-					} else {
-						_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
+					} else if (guardianGroup == null){
+						_redirectPage.postValue(LoginRedirect.SET_PROJECTS)
 					}
 				} else {
 					preferenceHelper.putBoolean(Preferences.IS_RANGER, false)
@@ -211,5 +212,5 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 }
 
 enum class LoginRedirect {
-	MAIN_PAGE, SET_USER_NAME, TERMS_AND_SERVICE
+	MAIN_PAGE, SET_USER_NAME, TERMS_AND_SERVICE, SET_PROJECTS
 }

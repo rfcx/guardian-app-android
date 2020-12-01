@@ -77,7 +77,7 @@ class InvitationCodeFragment : BaseFragment() {
 						if (context?.getUserNickname()?.substring(0, 1) == "+") {
 							listener.openSetUserNameFragmentFragment()
 						} else {
-							listener.openMain()
+							listener.openSetProjectsFragment()
 						}
 					}
 					SubmitState.FAILED -> {

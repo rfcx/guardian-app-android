@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,14 @@ import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.util.handleError
 
 class SetProjectsFragment : Fragment() {
+	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
 	private val projectsAdapter by lazy { ProjectsAdapter() }
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as LoginListener)
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -42,6 +49,10 @@ class SetProjectsFragment : Fragment() {
 				projectsProgressBar.visibility = View.VISIBLE
 			})
 		})
+		
+		submitProjectsButton.setOnClickListener {
+			listener.openMain()
+		}
 	}
 	
 	companion object {

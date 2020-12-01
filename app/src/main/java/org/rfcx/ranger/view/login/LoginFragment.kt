@@ -150,6 +150,7 @@ class LoginFragment : BaseFragment() {
 				LoginRedirect.MAIN_PAGE -> listener.openMain()
 				LoginRedirect.SET_USER_NAME -> listener.openSetUserNameFragmentFragment()
 				LoginRedirect.TERMS_AND_SERVICE -> listener.openTermsAndServiceFragment()
+				LoginRedirect.SET_PROJECTS -> listener.openSetProjectsFragment()
 				else -> loading(false)
 			}
 		})
