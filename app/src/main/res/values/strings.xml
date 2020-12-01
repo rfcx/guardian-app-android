@@ -92,7 +92,7 @@
 	<string name="guardian_group_label">Projects</string>
 	<string name="notifications">Notifications</string>
 	<string name="start_demo">Send a test alert</string>
-	<string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alert</string>
+	<string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>
 	<string name="perform_test">Perform test</string>
 	
 	<string name="dd_coordinates">DD</string>
