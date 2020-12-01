@@ -66,6 +66,6 @@ object UiModule {
 		viewModel { InvitationCodeViewModel(androidContext(), get()) }
 		viewModel { SetUserNameViewModel(androidContext(), get()) }
 		viewModel { TermsAndServiceViewModel(androidContext(), get()) }
-		viewModel { SetProjectsViewModel(get()) }
+		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get()) }
 	}
 }

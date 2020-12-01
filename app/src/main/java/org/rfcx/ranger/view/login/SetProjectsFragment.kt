@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.login
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,12 +13,21 @@ import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.view.profile.OnItemClickListener
 
-class SetProjectsFragment : Fragment() {
+class SetProjectsFragment : Fragment(), OnItemClickListener {
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
-	private val projectsAdapter by lazy { ProjectsAdapter() }
+	private val projectsAdapter by lazy { ProjectsAdapter(this) }
+	
+	private val dialog: AlertDialog by lazy {
+		AlertDialog.Builder(context)
+				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
+				.setCancelable(false)
+				.create()
+	}
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -52,6 +62,15 @@ class SetProjectsFragment : Fragment() {
 		
 		submitProjectsButton.setOnClickListener {
 			listener.openMain()
+		}
+	}
+	
+	override fun onItemClick(guardianGroup: GuardianGroup) {
+		dialog.show()
+		
+		viewModel.setProjects(guardianGroup) {
+			dialog.dismiss()
+			submitProjectsButton.isEnabled = it
 		}
 	}
 	
