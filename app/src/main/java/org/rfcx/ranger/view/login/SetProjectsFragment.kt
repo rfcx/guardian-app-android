@@ -13,14 +13,16 @@ import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.util.handleError
-import org.rfcx.ranger.view.profile.OnItemClickListener
 
-class SetProjectsFragment : Fragment(), OnItemClickListener {
+class SetProjectsFragment : Fragment(), OnProjectsItemClickListener {
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
 	private val projectsAdapter by lazy { ProjectsAdapter(this) }
+	private var projectsState = ArrayList<ProjectsItem>()
+	private var projects = listOf<GuardianGroup>()
 	
 	private val dialog: AlertDialog by lazy {
 		AlertDialog.Builder(context)
@@ -49,9 +51,11 @@ class SetProjectsFragment : Fragment(), OnItemClickListener {
 		
 		viewModel.items.observe(this, Observer { it ->
 			it.success({
-				projectsProgressBar.visibility = View.INVISIBLE
-				projectsAdapter.items = it
+				projects = it
+				it.map { project -> projectsState.add(ProjectsItem(project, false)) }
 				
+				projectsProgressBar.visibility = View.INVISIBLE
+				projectsAdapter.items = projectsState
 			}, {
 				projectsProgressBar.visibility = View.INVISIBLE
 				context.handleError(it)
@@ -65,10 +69,14 @@ class SetProjectsFragment : Fragment(), OnItemClickListener {
 		}
 	}
 	
-	override fun onItemClick(guardianGroup: GuardianGroup) {
+	override fun onItemClick(item: ProjectsItem, position: Int) {
 		dialog.show()
+		projects.forEachIndexed { index, _ ->
+			projectsState[index] = ProjectsItem(projects[index], position == index)
+		}
+		projectsAdapter.items = projectsState
 		
-		viewModel.setProjects(guardianGroup) {
+		viewModel.setProjects(item.projects) {
 			dialog.dismiss()
 			submitProjectsButton.isEnabled = it
 		}
