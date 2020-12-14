@@ -116,7 +116,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 	}
 	
 	private fun setSpectrogramImage() {
-		_spectrogramImage.value = "https://assets.rfcx.org/audio/${eventResult?.audioId}.png?width=400&height=300" +
+		_spectrogramImage.value = "https://assets.rfcx.org/audio/${eventResult?.audioId}.png?width=450&height=350" +
 				"&inline=1"
 	}
 	
