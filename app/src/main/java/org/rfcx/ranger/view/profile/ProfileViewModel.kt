@@ -244,10 +244,11 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun randomGuidOfAlert(): Event? {
 		val events = eventDb.getEvents()
-		if (events.isNullOrEmpty()) return null
-		val index = Random.nextInt(events.size)
+		val confirmedEvents = events.filter { it.confirmedCount > 0 && it.rejectedCount == 0 && it.value == "chainsaw" }
+		if (confirmedEvents.isNullOrEmpty()) return null
 		
-		return events[index]
+		val index = Random.nextInt(confirmedEvents.size)
+		return confirmedEvents[index]
 	}
 	
 	fun offlineMapBox() {
