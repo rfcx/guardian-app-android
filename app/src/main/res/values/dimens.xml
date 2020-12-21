@@ -41,6 +41,6 @@
 	<dimen name="mini_progress_loading">24dp</dimen>
 	<dimen name="mapbox_bubble_size">180</dimen>
 	<dimen name="icon_app_size">110dp</dimen>
+	<dimen name="alert_size">46dp</dimen>
 	<dimen name="padding_bottom">78dp</dimen>
-
 </resources>

@@ -271,4 +271,9 @@
 	<string name="confirm_text">bevestigen</string>
 	<string name="required">Verplicht!</string>
 	<string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
+	
+	<!-- SetProjectsFragment -->
+	<string name="set_alerts">Stel waarschuwingen</string>
+	<string name="choose_which_projects">Kies welke projecten om meldingen alert ontvangen</string>
+	
 </resources>

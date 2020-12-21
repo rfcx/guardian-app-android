@@ -275,5 +275,9 @@
 	<string name="confirm_text">confirmar</string>
 	<string name="required">Necesario!</string>
 	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
+	
+	<!-- SetProjectsFragment -->
+	<string name="set_alerts">Establecer alertas</string>
+	<string name="choose_which_projects">Elegir qué proyectos para recibir las notificaciones de alerta</string>
 
 </resources>

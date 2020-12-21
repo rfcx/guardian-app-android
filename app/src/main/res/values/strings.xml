@@ -271,4 +271,8 @@
 	<string name="confirm_text">confirm</string>
 	<string name="required">Required!</string>
 	<string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
+
+	<!-- SetProjectsFragment -->
+	<string name="set_alerts">Set alerts</string>
+	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 </resources>

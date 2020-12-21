@@ -272,5 +272,9 @@
     <string name="confirm_text">ยืนยัน</string>
     <string name="required">จำเป็นต้องกรอก!</string>
     <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
+    
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">ตั้งค่าแจ้งเตือน</string>
+    <string name="choose_which_projects">เลือกโปรเจคที่จะรับการแจ้งเตือน</string>
 
 </resources>

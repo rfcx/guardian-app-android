@@ -72,7 +72,7 @@ class SetUserNameFragment : BaseFragment() {
 			setUserNameViewModel.userName.observe(this, Observer { value ->
 				if (value.substring(0, 1) !== "+") {
 					analytics?.trackSetUsernameEvent()
-					listener.openMain()
+					listener.openSetProjectsFragment()
 				}
 			})
 		}
