@@ -4,7 +4,6 @@ package org.rfcx.ranger.view.login
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,14 +57,14 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	val resetPassword: LiveData<String?>
 		get() = _resetPassword
 	
-	private var _redirectPage: MutableLiveData<LoginRedirect?> = MutableLiveData()
-	val redirectPage: LiveData<LoginRedirect?>
-		get() = _redirectPage
+	private var _statusUserTouch: MutableLiveData<Boolean> = MutableLiveData()
+	val statusUserTouch: LiveData<Boolean>
+		get() = _statusUserTouch
 	
 	init {
 		_userAuth.postValue(null)
 		_loginFailure.postValue(null)
-		_redirectPage.postValue(null)
+		_statusUserTouch.postValue(null)
 	}
 	
 	fun resetPassword(email: String) {
@@ -137,6 +136,9 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 							}
 							is Ok -> {
 								_userAuth.postValue(result.value)
+								
+								val preferences = Preferences.getInstance(context)
+								preferences.putString(Preferences.LOGIN_WITH, "facebook")
 							}
 						}
 					}
@@ -152,32 +154,27 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 				.start(activity, object : AuthCallback {
 					override fun onFailure(dialog: Dialog) {
 						_loginFailure.postValue("")
-						Log.d("MagicLink onFailure", dialog.toString())
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
-						Log.d("MagicLink onFailure", exception.toString())
 						_loginFailure.postValue(exception.localizedMessage)
 					}
 					
 					override fun onSuccess(credentials: Credentials) {
-						Log.d("MagicLink onSuccess", credentials.toString())
 						when (val result = CredentialVerifier(context).verify(credentials)) {
 							is Err -> {
 								_loginFailure.postValue(result.error)
 							}
 							is Ok -> {
 								_userAuth.postValue(result.value)
+								
+								val preferences = Preferences.getInstance(context)
+								preferences.putString(Preferences.LOGIN_WITH, "phone_number")
 							}
 						}
 					}
 				})
 	}
-
-//	fun setLoginState() {
-//		_loginState.value = LoginState.NONE
-//		_userTouchState.value = UserTouchState.NONE
-//	}
 	
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
 		val preferenceHelper = Preferences.getInstance(context)
@@ -185,24 +182,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 		
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
 			override fun onSuccess(t: Boolean) {
-				val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN)
-				val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
-				
-				if (userAuthResponse.isRanger) {
-					preferenceHelper.putBoolean(Preferences.IS_RANGER, true)
-					if (!isConsentGiven) {
-						_redirectPage.postValue(LoginRedirect.TERMS_AND_SERVICE)
-					} else if (context.getUserNickname().substring(0, 1) == "+") {
-						_redirectPage.postValue(LoginRedirect.SET_USER_NAME)
-					} else if (guardianGroup == null){
-						_redirectPage.postValue(LoginRedirect.SET_PROJECTS)
-					} else {
-						_redirectPage.postValue(LoginRedirect.MAIN_PAGE)
-					}
-				} else {
-					preferenceHelper.putBoolean(Preferences.IS_RANGER, false)
-					_redirectPage.postValue(LoginRedirect.TERMS_AND_SERVICE)
-				}
+				_statusUserTouch.postValue(true)
 			}
 			
 			override fun onError(e: Throwable) {
@@ -214,5 +194,5 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 }
 
 enum class LoginRedirect {
-	MAIN_PAGE, SET_USER_NAME, TERMS_AND_SERVICE, SET_PROJECTS
+	MAIN_PAGE, SET_USER_NAME, TERMS_AND_SERVICE, SET_PROJECTS, INVITE_CODE, LOGIN
 }

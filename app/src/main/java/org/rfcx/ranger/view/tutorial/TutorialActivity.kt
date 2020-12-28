@@ -33,7 +33,7 @@ class TutorialActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_tutorial)
 		
 		val preferenceHelper = Preferences.getInstance(this)
-		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME)
+		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME, true)
 		
 		val viewPager2 = findViewById<ViewPager2>(R.id.viewPager2)
 		viewPager2.adapter = tutorialAdapter
