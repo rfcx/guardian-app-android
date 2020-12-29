@@ -49,16 +49,22 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 		
 		if (CredentialKeeper(this).hasValidCredentials()) {
-			if (!isConsentGiven) {
-				openTermsAndServiceFragment()
-			} else if (getSiteName() == "") {
-				openInvitationCodeFragment()
-			} else if (getUserNickname().substring(0, 1) == "+") {
-				openSetUserNameFragmentFragment()
-			} else if (guardianGroup == null) {
-				openSetProjectsFragment()
-			} else {
-				openMain()
+			when {
+				!isConsentGiven -> {
+					openTermsAndServiceFragment()
+				}
+				getSiteName() == "" -> {
+					openInvitationCodeFragment()
+				}
+				getUserNickname().substring(0, 1) == "+" -> {
+					openSetUserNameFragmentFragment()
+				}
+				guardianGroup == null -> {
+					openSetProjectsFragment()
+				}
+				else -> {
+					openMain()
+				}
 			}
 		} else {
 			openLoginFragment()
