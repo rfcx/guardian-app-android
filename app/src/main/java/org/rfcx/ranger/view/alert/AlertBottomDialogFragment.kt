@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -45,6 +46,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	override fun onDetach() {
 		super.onDetach()
 		alertListener = null
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		setFullScreen()
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
