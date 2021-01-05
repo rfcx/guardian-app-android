@@ -177,7 +177,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	}
 	
 	fun checkUserDetail(userAuthResponse: UserAuthResponse) {
-		val preferenceHelper = Preferences.getInstance(context)
 		CredentialKeeper(context).save(userAuthResponse)
 		
 		checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
@@ -193,6 +192,3 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 	}
 }
 
-enum class LoginRedirect {
-	MAIN_PAGE, SET_USER_NAME, TERMS_AND_SERVICE, SET_PROJECTS, INVITE_CODE, LOGIN
-}
