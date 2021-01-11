@@ -50,7 +50,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 		if (CredentialKeeper(this).hasValidCredentials()) {
 			when {
-				!isConsentGiven -> {
+				(!isConsentGiven) -> {
 					openTermsAndServiceFragment()
 				}
 				getSiteName() == "" -> {
@@ -66,6 +66,8 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 					openMain()
 				}
 			}
+		} else if (!CredentialKeeper(this).isRanger()) {
+			openInvitationCodeFragment()
 		} else {
 			openLoginFragment()
 		}
