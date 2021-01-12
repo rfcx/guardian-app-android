@@ -35,10 +35,10 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		private val checkImageView = itemView.checkImageView
 		
 		fun bind(item: ProjectsItem) {
-			textView.text = item.projects.name
+			textView.text = item.project.name
 			checkImageView.visibility = if(item.selected) View.VISIBLE else View.GONE
 		}
 	}
 }
 
-data class ProjectsItem(val projects: GuardianGroup, val selected: Boolean)
+data class ProjectsItem(val project: GuardianGroup, val selected: Boolean)
