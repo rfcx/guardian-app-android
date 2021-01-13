@@ -96,7 +96,7 @@ class InvitationCodeViewModel(private val context: Context, private val sendInvi
 	}
 	
 	companion object {
-		const val USER_ACCEPTED = "true"
+		const val USER_ACCEPTED = "false"
 		const val APP_NAME = "RangerApp"
 	}
 }

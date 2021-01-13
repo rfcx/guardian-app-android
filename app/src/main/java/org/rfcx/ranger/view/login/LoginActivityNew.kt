@@ -50,14 +50,14 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 		if (CredentialKeeper(this).hasValidCredentials()) {
 			when {
-				(!isConsentGiven) -> {
-					openTermsAndServiceFragment()
-				}
 				getSiteName() == "" -> {
 					openInvitationCodeFragment()
 				}
 				getUserNickname().substring(0, 1) == "+" -> {
 					openSetUserNameFragmentFragment()
+				}
+				(!isConsentGiven) -> {
+					openTermsAndServiceFragment()
 				}
 				guardianGroup == null -> {
 					openSetProjectsFragment()
