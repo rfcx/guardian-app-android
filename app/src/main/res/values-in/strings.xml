@@ -279,5 +279,9 @@
     <string name="required">Yg dibutuhkan!</string>
     <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
     <string name="detected_at">terdeteksi di</string>
+    
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">Set alert</string>
+    <string name="choose_which_projects">Pilih yang proyek untuk menerima pemberitahuan peringatan</string>
 
 </resources>

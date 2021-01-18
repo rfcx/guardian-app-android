@@ -275,5 +275,8 @@
 	<string name="required">Required!</string>
 	<string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
 	<string name="detected_at">detected at</string>
-
+	
+	<!-- SetProjectsFragment -->
+	<string name="set_alerts">Set alerts</string>
+	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 </resources>

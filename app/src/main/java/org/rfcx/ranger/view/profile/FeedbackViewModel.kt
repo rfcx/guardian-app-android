@@ -19,8 +19,7 @@ import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getUserId
 import org.rfcx.ranger.util.getUserNickname
 import java.io.File
-import java.sql.Timestamp
-
+import java.util.*
 
 class FeedbackViewModel(private val context: Context) : ViewModel() {
 	
@@ -40,7 +39,8 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 				"from" to from(),
 				"inputFeedback" to input,
 				"pathImages" to pathImages,
-				"timeStamp" to Timestamp(System.currentTimeMillis()).toString()
+				"timeStamp" to Date(),
+				"name" to context.getUserNickname()
 		)
 		
 		db.collection("feedback")

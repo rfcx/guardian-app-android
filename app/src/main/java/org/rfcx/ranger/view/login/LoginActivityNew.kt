@@ -32,22 +32,44 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
-		val eventGuId = getEventFromIntentIfHave(intent)
 		
 		val preferenceHelper = Preferences.getInstance(this)
-		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN,false)
+		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		
-		if(CredentialKeeper(this).hasValidCredentials() && !isConsentGiven) {
-			supportFragmentManager.beginTransaction()
-					.add(loginContainer.id, TermsAndServiceFragment(),
-							"TermsAndServiceFragment").commit()
-		} else if (CredentialKeeper(this).hasValidCredentials() && getSiteName().isNotEmpty() && getUserNickname().substring(0, 1) != "+") {
-			MainActivityNew.startActivity(this@LoginActivityNew, eventGuId)
-			finish()
+		if(CredentialKeeper(this).hasValidCredentials() &&  isConsentGiven && getSiteName() != "" &&  getUserNickname().substring(0, 1) != "+"){
+			openMain()
 		} else {
-			supportFragmentManager.beginTransaction()
-					.add(loginContainer.id, LoginFragment(),
-							"LoginFragment").commit()
+			openLoginFragment()
+		}
+	}
+	
+	override fun handleOpenPage() {
+		val preferenceHelper = Preferences.getInstance(this)
+		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
+		val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+		
+		if (CredentialKeeper(this).hasValidCredentials()) {
+			when {
+				getSiteName() == "" -> {
+					openInvitationCodeFragment()
+				}
+				getUserNickname().substring(0, 1) == "+" -> {
+					openSetUserNameFragmentFragment()
+				}
+				(!isConsentGiven) -> {
+					openTermsAndServiceFragment()
+				}
+				guardianGroup == null -> {
+					openSetProjectsFragment()
+				}
+				else -> {
+					openMain()
+				}
+			}
+		} else if (!CredentialKeeper(this).isRanger()) {
+			openInvitationCodeFragment()
+		} else {
+			openLoginFragment()
 		}
 	}
 	
@@ -58,8 +80,6 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	
 	override fun openMain() {
 		val preferenceHelper = Preferences.getInstance(this)
-		preferenceHelper.putBoolean(Preferences.IS_FIRST_TIME, true)
-		
 		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME,true)
 		
 		if (isFirstTime) {
@@ -89,7 +109,12 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		supportFragmentManager.beginTransaction()
 				.replace(loginContainer.id, TermsAndServiceFragment(),
 						"TermsAndServiceFragment").commit()
-		
+	}
+	
+	override fun openSetProjectsFragment() {
+		supportFragmentManager.beginTransaction()
+				.replace(loginContainer.id, SetProjectsFragment(),
+						"SetProjectsFragment").commit()
 	}
 	
 	override fun openLoginFragment() {
@@ -99,7 +124,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 	}
 	
-	private fun getEventFromIntentIfHave(intent: Intent?) :String? {
+	private fun getEventFromIntentIfHave(intent: Intent?): String? {
 		if (intent?.hasExtra("event_guid") == true) {
 			return intent.getStringExtra("event_guid")
 		}
@@ -112,5 +137,7 @@ interface LoginListener {
 	fun openInvitationCodeFragment()
 	fun openSetUserNameFragmentFragment()
 	fun openTermsAndServiceFragment()
+	fun openSetProjectsFragment()
 	fun openLoginFragment()
+	fun handleOpenPage()
 }

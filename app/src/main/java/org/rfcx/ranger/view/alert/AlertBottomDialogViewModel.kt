@@ -27,6 +27,7 @@ import org.rfcx.ranger.entity.event.ReviewEventFactory
 import org.rfcx.ranger.service.CleanupAudioCacheWorker.Companion.AUDIOS_SUB_DIRECTORY
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.NetworkNotConnection
+import org.rfcx.ranger.util.SpectrogramImage
 import org.rfcx.ranger.util.getNameEmail
 import org.rfcx.ranger.util.isNetworkAvailable
 import java.io.File
@@ -116,8 +117,7 @@ class AlertBottomDialogViewModel(private val context: Context,
 	}
 	
 	private fun setSpectrogramImage() {
-		_spectrogramImage.value = "https://assets.rfcx.org/audio/${eventResult?.audioId}.png?width=400&height=300" +
-				"&inline=1"
+		_spectrogramImage.value = SpectrogramImage().setImage(eventResult)
 	}
 	
 	

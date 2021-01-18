@@ -2,6 +2,7 @@ package org.rfcx.ranger.view.alerts
 
 import android.content.Context
 import androidx.lifecycle.*
+import com.bumptech.glide.Glide
 import io.realm.RealmResults
 import org.rfcx.ranger.adapter.entity.BaseItem
 import org.rfcx.ranger.data.local.EventDb
@@ -116,6 +117,12 @@ class AllAlertsViewModel(private val context: Context,
 				items.add(EventItem(event, result))
 			} ?: run {
 				items.add(EventItem(event, EventItem.State.NONE))
+			}
+			
+			if (events.indexOf(event) < 10) {
+				Glide.with(context)
+						.load(SpectrogramImage().setImage(event))
+						.submit()
 			}
 		}
 		_alertsList = items

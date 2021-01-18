@@ -276,4 +276,8 @@
 	<string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
 	<string name="detected_at">gedetecteerd bij</string>
 	
+	<!-- SetProjectsFragment -->
+	<string name="set_alerts">Stel waarschuwingen</string>
+	<string name="choose_which_projects">Kies welke projecten om meldingen alert ontvangen</string>
+	
 </resources>

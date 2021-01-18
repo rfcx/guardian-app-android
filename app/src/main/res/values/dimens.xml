@@ -29,7 +29,7 @@
 	<dimen name="profile_photo_size">60dp</dimen>
 	<dimen name="edit_profile_photo_size">150dp</dimen>
 	
-	<dimen name="spectrogram_height">224dp</dimen>
+	<dimen name="spectrogram_height">400dp</dimen>
 	<dimen name="event_icon_width">96dp</dimen>
 	<dimen name="event_map_height">160dp</dimen>
 	<dimen name="event_confirm_icon">16dp</dimen>
@@ -41,6 +41,6 @@
 	<dimen name="mini_progress_loading">24dp</dimen>
 	<dimen name="mapbox_bubble_size">180</dimen>
 	<dimen name="icon_app_size">110dp</dimen>
+	<dimen name="alert_size">46dp</dimen>
 	<dimen name="padding_bottom">78dp</dimen>
-
 </resources>
