@@ -97,7 +97,10 @@
     <string name="default_site_label">พื้นที่</string>
     <string name="guardian_group_label">โปรเจค</string>
     <string name="notifications">การแจ้งเตือน</string>
-	
+    <string name="start_demo">ทดสอบส่งการแจ้งเตือน</string>
+    <string name="notification_will_sent">การแจ้งเตือนจะถูกส่งภายใน 30 วินาทีเพื่อยืนยันว่าคุณสามารถรับการแจ้งเตือนได้</string>
+    <string name="perform_test">ทำการทดสอบ</string>
+    
 	<string name="last_month">เดือนที่แล้ว</string>
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>
@@ -272,6 +275,7 @@
     <string name="confirm_text">ยืนยัน</string>
     <string name="required">จำเป็นต้องกรอก!</string>
     <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
+    <string name="detected_at">ตรวจพบที่</string>
     
     <!-- SetProjectsFragment -->
     <string name="set_alerts">ตั้งค่าแจ้งเตือน</string>

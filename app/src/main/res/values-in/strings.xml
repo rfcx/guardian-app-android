@@ -99,7 +99,10 @@
     <string name="default_site_label">Tempat</string>
     <string name="guardian_group_label">Proyek</string>
     <string name="notifications">Pemberitahuan</string>
-	
+    <string name="start_demo">Kirim peringatan uji</string>
+    <string name="notification_will_sent">Pemberitahuan akan dikirim dalam waktu 30 detik untuk memverifikasi bahwa Anda dapat menerima pemberitahuan</string>
+    <string name="perform_test">Lakukan tes</string>
+    
 	<string name="last_month">Terakhir\nBulan</string>
     <string name="last_week">Terakhir\nMinggu</string>
     <string name="last_24_hours">Terakhir\n24 jam</string>
@@ -275,6 +278,7 @@
     <string name="confirm_text">Konfirmasi</string>
     <string name="required">Yg dibutuhkan!</string>
     <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
+    <string name="detected_at">terdeteksi di</string>
     
     <!-- SetProjectsFragment -->
     <string name="set_alerts">Set alert</string>

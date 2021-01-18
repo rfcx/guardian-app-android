@@ -99,6 +99,9 @@
 	<string name="default_site_label">Sitio</string>
 	<string name="guardian_group_label">Proyectos</string>
 	<string name="notifications">Notificaciones</string>
+	<string name="start_demo">Enviar una alerta de prueba</string>
+	<string name="notification_will_sent">Una notificación será enviada dentro de los 30 segundos para comprobar que puede recibir alertas</string>
+	<string name="perform_test">Realizar la prueba</string>
 	
 	<string name="last_month">Ultimo\nMes</string>
 	<string name="last_week">Ultima\nSemana</string>
@@ -275,6 +278,7 @@
 	<string name="confirm_text">confirmar</string>
 	<string name="required">Necesario!</string>
 	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
+	<string name="detected_at">detectado en</string>
 	
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Establecer alertas</string>
