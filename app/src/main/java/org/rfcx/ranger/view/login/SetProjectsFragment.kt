@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.guardian.GuardianGroup
-import org.rfcx.ranger.util.handleError
 
 class SetProjectsFragment : Fragment(), OnProjectsItemClickListener {
 	lateinit var listener: LoginListener
@@ -23,6 +23,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener {
 	private val projectsAdapter by lazy { ProjectsAdapter(this) }
 	private var projectsState = ArrayList<ProjectsItem>()
 	private var projects = listOf<GuardianGroup>()
+	private var project: GuardianGroup? = null
 	
 	private val dialog: AlertDialog by lazy {
 		AlertDialog.Builder(context)
@@ -58,28 +59,32 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener {
 				projectsAdapter.items = projectsState
 			}, {
 				projectsProgressBar.visibility = View.INVISIBLE
-				context.handleError(it)
+				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
 			}, {
 				projectsProgressBar.visibility = View.VISIBLE
 			})
 		})
 		
 		submitProjectsButton.setOnClickListener {
-			listener.openMain()
+			dialog.show()
+			
+			project?.let { it1 ->
+				viewModel.setProjects(it1) {
+					dialog.dismiss()
+					listener.handleOpenPage()
+				}
+			}
 		}
 	}
 	
 	override fun onItemClick(item: ProjectsItem, position: Int) {
-		dialog.show()
+		submitProjectsButton.isEnabled = true
 		projects.forEachIndexed { index, _ ->
 			projectsState[index] = ProjectsItem(projects[index], position == index)
 		}
 		projectsAdapter.items = projectsState
 		
-		viewModel.setProjects(item.projects) {
-			dialog.dismiss()
-			submitProjectsButton.isEnabled = it
-		}
+		this.project = item.project
 	}
 	
 	companion object {

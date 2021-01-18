@@ -145,13 +145,11 @@ class LoginFragment : BaseFragment() {
 			loading(false)
 		})
 		
-		loginViewModel.redirectPage.observe(this, Observer { loginRedirect ->
-			when (loginRedirect) {
-				LoginRedirect.MAIN_PAGE -> listener.openMain()
-				LoginRedirect.SET_USER_NAME -> listener.openSetUserNameFragmentFragment()
-				LoginRedirect.TERMS_AND_SERVICE -> listener.openTermsAndServiceFragment()
-				LoginRedirect.SET_PROJECTS -> listener.openSetProjectsFragment()
-				else -> loading(false)
+		loginViewModel.statusUserTouch.observe(this, Observer { status ->
+			if (status !== null && status) {
+				listener.handleOpenPage()
+			} else {
+				loading(false)
 			}
 		})
 		

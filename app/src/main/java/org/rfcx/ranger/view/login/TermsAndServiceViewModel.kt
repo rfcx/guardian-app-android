@@ -17,10 +17,7 @@ import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.terms.TermsRequest
 import org.rfcx.ranger.entity.terms.TermsResponse
-import org.rfcx.ranger.util.CredentialKeeper
-import org.rfcx.ranger.util.CredentialVerifier
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.getResultError
+import org.rfcx.ranger.util.*
 
 class TermsAndServiceViewModel(private val context: Context, private val termsUseCase: TermsUseCase) : ViewModel() {
 	
@@ -47,13 +44,17 @@ class TermsAndServiceViewModel(private val context: Context, private val termsUs
 					refreshToken {
 						if (it) {
 							_consentGivenState.postValue(Result.Success(true))
+						} else {
+							Result.Error(Throwable(context.getString(R.string.something_is_wrong)))
 						}
 					}
+				} else {
+					Result.Error(Throwable(context.getString(R.string.something_is_wrong)))
 				}
 			}
 			
 			override fun onError(e: Throwable) {
-				_consentGivenState.value = e.getResultError()
+				_consentGivenState.value = Result.Error(e)
 			}
 		}, TermsRequest("RangerApp"))
 	}
@@ -73,10 +74,10 @@ class TermsAndServiceViewModel(private val context: Context, private val termsUs
 					}
 					is Ok -> {
 						val userAuthResponse = result.value
-						if (userAuthResponse.isRanger) {
+						if (userAuthResponse.roles.contains("rfcxUser")) {
 							CredentialKeeper(context).save(userAuthResponse)
 						}
-						callback(userAuthResponse.isRanger)
+						callback(userAuthResponse.roles.contains("rfcxUser"))
 					}
 				}
 			}

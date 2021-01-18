@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_invitation_code.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -52,9 +52,7 @@ class InvitationCodeFragment : BaseFragment() {
 				}
 			}
 			
-			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-				Log.d("", "beforeTextChanged")
-			}
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 			
 			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 				submitButton.isEnabled = true
@@ -71,20 +69,15 @@ class InvitationCodeFragment : BaseFragment() {
 			
 			invitationCodeViewModel.setSubmitState()
 			invitationCodeViewModel.doSubmit(code)
-			invitationCodeViewModel.submitCodeState.observe(this, Observer {
-				when (it) {
+			invitationCodeViewModel.submitCodeState.observe(this, Observer { state ->
+				when (state) {
 					SubmitState.SUCCESS -> {
-						if (context?.getUserNickname()?.substring(0, 1) == "+") {
-							listener.openSetUserNameFragmentFragment()
-						} else {
-							listener.openSetProjectsFragment()
-						}
+						listener.handleOpenPage()
 					}
 					SubmitState.FAILED -> {
 						invitationProgressBar.visibility = View.GONE
 						submitButton.isEnabled = true
-						// TODO Submit failed @tree
-//						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show() // TODO: handle error
+						Toast.makeText(context, R.string.invalid_invite_code, Toast.LENGTH_LONG).show()
 					}
 				}
 			})

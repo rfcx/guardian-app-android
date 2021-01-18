@@ -38,7 +38,7 @@ class SetProjectsViewModel(private val context: Context, private val getProjects
 			}
 			
 			override fun onError(e: Throwable) {
-				_items.value = e.getResultError()
+				_items.value = Result.Error(e)
 			}
 			
 		}, GuardianGroupFactory())
