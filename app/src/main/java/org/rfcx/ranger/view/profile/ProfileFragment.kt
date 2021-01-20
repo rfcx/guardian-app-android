@@ -3,12 +3,19 @@ package org.rfcx.ranger.view.profile
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -162,6 +169,32 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
 			profileViewModel.deleteOfflineRegion(false)
+		}
+		
+		viewDataBinding.onClickStartDemo = View.OnClickListener {
+			val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
+			
+			if (builder != null) {
+				builder.setTitle(null)
+				builder.setMessage(R.string.notification_will_sent)
+				builder.setCancelable(false)
+				
+				builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
+					context?.let { it1 -> NotificationDemo(profileViewModel.randomGuidOfAlert()).startDemo(it1) }
+				}
+				
+				builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+					dialog.dismiss()
+				}
+				
+				val alertDialog = builder.create()
+				alertDialog.setOnShowListener {
+					alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.text_secondary))
+					alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+					alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+				}
+				alertDialog.show()
+			}
 		}
 	}
 	

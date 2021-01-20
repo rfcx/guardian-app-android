@@ -99,7 +99,10 @@
     <string name="default_site_label">Local</string>
     <string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
-	
+    <string name="start_demo">Enviar um alerta de teste</string>
+    <string name="notification_will_sent">A notificação será enviada no prazo de 30 segundos para verificar se você pode receber alertas</string>
+    <string name="perform_test">Realizar teste</string>
+    
 	<string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
@@ -275,5 +278,10 @@
     <string name="confirm_text">confirme</string>
     <string name="required">Requeridos!</string>
     <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
+    <string name="detected_at">detectado no</string>
+    
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">Alertas definidos</string>
+    <string name="choose_which_projects">Escolha quais os projetos para receber notificações de alerta</string>
 
 </resources>

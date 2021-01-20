@@ -11,10 +11,7 @@ import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 import org.rfcx.ranger.view.alerts.GroupAlertsViewModel
 import org.rfcx.ranger.view.alerts.guardian.GuardianViewModel
 import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueViewModel
-import org.rfcx.ranger.view.login.InvitationCodeViewModel
-import org.rfcx.ranger.view.login.LoginViewModel
-import org.rfcx.ranger.view.login.SetUserNameViewModel
-import org.rfcx.ranger.view.login.TermsAndServiceViewModel
+import org.rfcx.ranger.view.login.*
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
@@ -57,7 +54,7 @@ object UiModule {
 	}
 	
 	val profileModule = module {
-		viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get()) }
+		viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get(), get()) }
 		viewModel { GuardianGroupViewModel(androidContext(), get(), get(), get(), get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 		viewModel { PasswordChangeViewModel(get()) }
@@ -69,5 +66,6 @@ object UiModule {
 		viewModel { InvitationCodeViewModel(androidContext(), get()) }
 		viewModel { SetUserNameViewModel(androidContext(), get()) }
 		viewModel { TermsAndServiceViewModel(androidContext(), get()) }
+		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get()) }
 	}
 }

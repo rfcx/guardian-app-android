@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,6 +46,11 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 	override fun onDetach() {
 		super.onDetach()
 		alertListener = null
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		setFullScreen()
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,6 +177,7 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		alertViewModel.spectrogramImage.observe(this, Observer {
 			GlideApp.with(spectrogramImageView)
 					.load(it)
+					.diskCacheStrategy(DiskCacheStrategy.ALL)
 					.placeholder(R.drawable.spectrogram_place_holder)
 					.error(R.drawable.spectrogram_place_holder)
 					.into(spectrogramImageView)

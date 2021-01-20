@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.login
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,9 +37,9 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
 		AuthenticationAPIClient(auth0)
 	}
 	
-	private var _userName: MutableLiveData<String> = MutableLiveData()
-	val userName: LiveData<String>
-		get() = _userName
+	private var _status: MutableLiveData<Boolean> = MutableLiveData()
+	val status: LiveData<Boolean>
+		get() = _status
 	
 	fun sendName(name: String) {
 		idUser = context.getUserId()
@@ -46,13 +47,15 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
 			override fun onSuccess(t: SetNameResponse) {
 				refreshToken { success ->
 					if (success) {
-						_userName.postValue(t.givenName)
+						_status.postValue(true)
+					} else {
+						_status.postValue(false)
 					}
 				}
 			}
 			
 			override fun onError(e: Throwable) {
-				// TODO onError
+				_status.postValue(false)
 			}
 		}, SetNameRequest(idUser, name, name, name))
 	}

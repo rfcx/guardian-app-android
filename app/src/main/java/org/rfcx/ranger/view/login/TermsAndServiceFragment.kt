@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_terms_and_service.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,7 +39,7 @@ class TermsAndServiceFragment : BaseFragment() {
 		termsAndConditionsWebview.webViewClient = object : WebViewClient() {
 			override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 				super.onPageStarted(view, url, favicon)
-				loadingTermsAndCondProgressBar.visibility  = View.VISIBLE
+				loadingTermsAndCondProgressBar.visibility = View.VISIBLE
 			}
 			
 			override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
@@ -48,7 +49,7 @@ class TermsAndServiceFragment : BaseFragment() {
 			
 			override fun onPageFinished(view: WebView?, url: String?) {
 				super.onPageFinished(view, url)
-				loadingTermsAndCondProgressBar.visibility  = View.GONE
+				loadingTermsAndCondProgressBar.visibility = View.GONE
 			}
 		}
 		termsAndConditionsWebview.loadUrl("https://rfcx.org/terms-of-service-ranger-app-text-only")
@@ -58,31 +59,22 @@ class TermsAndServiceFragment : BaseFragment() {
 		}
 		
 		submitButton.setOnClickListener {
-			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
-			val isRanger = preferenceHelper?.getBoolean(Preferences.IS_RANGER, false)
-	
-			if (isRanger != null) {
-				if(isRanger){
-					termsAndServiceViewModel.acceptTerms()
-				} else {
-					listener.openInvitationCodeFragment()
-				}
-			}
-			
-			termsAndServiceViewModel.consentGivenState.observe(this, Observer {
-				it.success({ state ->
-					if (state) {
-						context?.let { it1 -> MainActivityNew.startActivity(it1, null) }
-					}
-				}, {
-					termsProgressBar.visibility = View.GONE
-					submitButton.visibility = View.VISIBLE
-					
-				}, {
-					termsProgressBar.visibility = View.VISIBLE
-					submitButton.visibility = View.INVISIBLE
-				})
-			})
+			termsAndServiceViewModel.acceptTerms()
 		}
+		
+		termsAndServiceViewModel.consentGivenState.observe(this, Observer {
+			it.success({ state ->
+				if (state) {
+					listener.handleOpenPage()
+				}
+			}, {
+				termsProgressBar.visibility = View.GONE
+				submitButton.visibility = View.VISIBLE
+				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
+			}, {
+				termsProgressBar.visibility = View.VISIBLE
+				submitButton.visibility = View.INVISIBLE
+			})
+		})
 	}
 }
