@@ -24,7 +24,8 @@
 		android:roundIcon="${roundIcon}"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
-		tools:ignore="GoogleAppIndexingWarning">
+		tools:ignore="GoogleAppIndexingWarning"
+		tools:replace="android:allowBackup">
 		
 		<provider
 			android:name="androidx.core.content.FileProvider"

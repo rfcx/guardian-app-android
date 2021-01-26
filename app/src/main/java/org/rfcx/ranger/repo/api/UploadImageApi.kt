@@ -2,7 +2,7 @@ package org.rfcx.ranger.repo.api
 
 import android.content.Context
 import android.util.Log
-import id.zelory.compressor.Compressor
+import me.echodev.resizer.Resizer
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -38,7 +38,11 @@ class UploadImageApi {
 		
 		val compressedFile = compressFile(context, imageFile)
 		
-		attachments.add(createLocalFilePart(compressedFile, "image/*"))
+		if(imageFile.length() < compressedFile.length()) {
+			attachments.add(createLocalFilePart(imageFile, "image/*"))
+		} else {
+			attachments.add(createLocalFilePart(compressedFile, "image/*"))
+		}
 		
 		val response: Response<List<UploadImageResponse>>?
 		try {
@@ -64,20 +68,14 @@ class UploadImageApi {
 		return MultipartBody.Part.createFormData("attachments", file.name, requestFile)
 	}
 	
-	/**
-	 * compress imagePath to less than 1 MB
-	 */
 	private fun compressFile(context: Context?, file: File): File {
-		
 		if (file.length() <= 0) {
 			return file
 		}
-		val compressed = Compressor(context)
-				.setQuality(75)
-				.compressToFile(file)
-		if (compressed.length() > 1_000_000) {
-			return compressFile(context, compressed)
-		}
-		return compressed
+		return Resizer(context)
+				.setTargetLength(1920)
+				.setQuality(80)
+				.setSourceImage(file)
+				.resizedFile
 	}
 }

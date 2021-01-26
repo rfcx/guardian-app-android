@@ -42,8 +42,8 @@ class ApiManager {
 		
 		return OkHttpClient.Builder()
 				.apply {
-					readTimeout(30, TimeUnit.SECONDS)
-					writeTimeout(30, TimeUnit.SECONDS)
+					readTimeout(180, TimeUnit.SECONDS)
+					writeTimeout(180, TimeUnit.SECONDS)
 					if (BuildConfig.DEBUG) {
 						addNetworkInterceptor(StethoInterceptor())
 					}
