@@ -1,7 +1,7 @@
 package org.rfcx.ranger.repo
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.ErrorResponse
@@ -49,11 +49,11 @@ fun <T> responseParser(response: Response<T>?): Result<T, Exception> {
 fun responseErrorHandler(error: Exception, callback: ApiCallback, context: Context, exceptionMessagePrefix: String = "") {
     when (error) {
         is ResponseUnauthenticatedException -> {
-            Crashlytics.logException(error)
+            FirebaseCrashlytics.getInstance().log(error.message.toString())
             callback.onFailed(TokenExpireException(context), null)
         }
         else -> {
-            Crashlytics.logException(Exception("$exceptionMessagePrefix ${error.message}"))
+            FirebaseCrashlytics.getInstance().log("$exceptionMessagePrefix ${error.message}")
             callback.onFailed(null, context.getString(R.string.error_common))
         }
     }

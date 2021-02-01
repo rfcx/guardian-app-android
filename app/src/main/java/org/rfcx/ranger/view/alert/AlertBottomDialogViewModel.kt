@@ -7,13 +7,13 @@ import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.EventDb
@@ -177,8 +177,8 @@ class AlertBottomDialogViewModel(private val context: Context,
 		}
 		
 		override fun onPlayerError(error: ExoPlaybackException?) {
+			FirebaseCrashlytics.getInstance().log(error?.message.toString())
 			_playerError.value = error
-			Crashlytics.logException(error)
 		}
 	}
 	

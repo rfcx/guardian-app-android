@@ -1,7 +1,7 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.EventsResponse
@@ -52,7 +52,7 @@ class EventsApi {
 		ApiManager.getInstance().apiRest.getEvents("Bearer $token", group, "begins_at", "DESC", limit, offset)
 				.enqueue(object : Callback<EventsResponse> {
 					override fun onFailure(call: Call<EventsResponse>?, t: Throwable?) {
-						Crashlytics.logException(t)
+						FirebaseCrashlytics.getInstance().log(t?.message.toString())
 						onEventsCallBack.onFailed(t, null)
 					}
 					

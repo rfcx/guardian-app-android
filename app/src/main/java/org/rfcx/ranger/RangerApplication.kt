@@ -3,10 +3,7 @@ package org.rfcx.ranger
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.facebook.stetho.Stetho
-import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import io.realm.exceptions.RealmMigrationNeededException
 import net.danlew.android.joda.JodaTimeAndroid
@@ -30,9 +27,6 @@ class RangerApplication : MultiDexApplication() {
 		Realm.init(this)
 		JodaTimeAndroid.init(this)
 		
-		val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
-		val kit = Crashlytics.Builder().core(core).build()
-		Fabric.with(this, kit)
 		setUpRealm()
 		setupKoin()
 		ReportCleanupWorker.enqueuePeriodically()
@@ -57,7 +51,6 @@ class RangerApplication : MultiDexApplication() {
 			Realm.setDefaultConfiguration(RealmHelper.migrationConfig())
 		} catch (e: RealmMigrationNeededException) {
 			Log.e("RealmMigration", "${e.message}")
-			CrashlyticsCore.getInstance().logException(e)
 			realmNeedsMigration = true
 		}
 		

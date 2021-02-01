@@ -15,7 +15,7 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
@@ -25,7 +25,6 @@ import org.rfcx.ranger.entity.user.UserAuthResponse
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.CredentialVerifier
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) : ViewModel() {
@@ -103,7 +102,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 					
 					override fun onFailure(exception: AuthenticationException) {
 						exception.printStackTrace()
-						Crashlytics.logException(exception)
+						FirebaseCrashlytics.getInstance().log(exception.message.toString())
 						if (exception.code == "invalid_grant") {
 							_loginFailure.postValue(context.getString(R.string.incorrect_username_password))
 						} else {
@@ -125,7 +124,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 					}
 					
 					override fun onFailure(exception: AuthenticationException) {
-						Crashlytics.logException(exception)
+						FirebaseCrashlytics.getInstance().log(exception.message.toString())
 						_loginFailure.postValue(exception.localizedMessage)
 					}
 					
@@ -158,6 +157,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 					
 					override fun onFailure(exception: AuthenticationException) {
 						_loginFailure.postValue(exception.localizedMessage)
+						FirebaseCrashlytics.getInstance().log(exception.message.toString())
 					}
 					
 					override fun onSuccess(credentials: Credentials) {
@@ -185,7 +185,7 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
 			}
 			
 			override fun onError(e: Throwable) {
-				Crashlytics.logException(e)
+				FirebaseCrashlytics.getInstance().log(e.message.toString())
 				_loginFailure.postValue(e.localizedMessage)
 			}
 		}, null)

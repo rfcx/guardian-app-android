@@ -1,7 +1,7 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.message.Message
@@ -28,7 +28,7 @@ class MessageApi {
 		ApiManager.getInstance().apiRest.getMessage(authUser, email,
 				"ranger-warning").enqueue(object : Callback<List<Message>> {
 			override fun onFailure(call: Call<List<Message>>?, t: Throwable?) {
-				Crashlytics.logException(t)
+				FirebaseCrashlytics.getInstance().log(t?.message.toString())
 				onMessageCallBack.onFailed(t, null)
 			}
 			

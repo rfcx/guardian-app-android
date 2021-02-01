@@ -2,7 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import com.auth0.android.result.Credentials
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.Err
@@ -89,7 +89,7 @@ class CredentialVerifier(val context: Context) {
 			}
 		} catch (e: Exception) {
 			e.printStackTrace()
-			Crashlytics.logException(e)
+			FirebaseCrashlytics.getInstance().log(e.message.toString())
 		}
 		return Err(getString(R.string.an_error_occurred))
 	}
