@@ -3,13 +3,23 @@ package org.rfcx.ranger.view.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.asLiveData
 
-class MapViewModel(private val reportDb: ReportDb, private val locationDb: LocationDb) : ViewModel() {
+class MapViewModel(private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb) : ViewModel() {
+	
+	fun getAlerts(): LiveData<List<Event>> {
+		return Transformations.map(
+				eventDb.getAllResultsAsync().asLiveData()
+		) {
+			it
+		}
+	}
 	
 	fun getReports(): LiveData<List<Report>> {
 		return Transformations.map(

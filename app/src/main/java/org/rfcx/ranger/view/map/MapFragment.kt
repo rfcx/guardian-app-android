@@ -47,14 +47,13 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.layout_map_window_info.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
-import java.net.URI
-import java.net.URISyntaxException
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
@@ -67,10 +66,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var mapBoxMap: MapboxMap? = null
 	private var currentStyle: String = Style.OUTDOORS
 	private var reports: List<Report> = listOf()
+	private var alerts: List<Event> = listOf()
 	private var checkins: List<CheckIn> = listOf()
 	private var reportSource: GeoJsonSource? = null
 	private var checkInSource: GeoJsonSource? = null
+	private var alertSource: GeoJsonSource? = null
 	private var reportFeatures: FeatureCollection? = null
+	private var alertFeatures: FeatureCollection? = null
 	private var checkInFeatures: FeatureCollection? = null
 	private val windowInfoImages = hashMapOf<String, Bitmap>()
 	
@@ -171,18 +173,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun addClusteredGeoJsonSource(style: Style) {
-		try {
-			style.addSource(GeoJsonSource(GEOJSON_SOURCE_ID,
-					URI("https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"),
-					GeoJsonOptions()
-							.withCluster(true)
-							.withClusterMaxZoom(15)
-							.withClusterRadius(20)
-			))
-		} catch (e: URISyntaxException) {
-			e.printStackTrace()
-		}
-		
 		val layers = Array(4) { IntArray(2) }
 		layers[0] = intArrayOf(150, Color.parseColor("#FF0000"))
 		layers[1] = intArrayOf(20, Color.parseColor("#0000FF"))
@@ -190,7 +180,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		layers[3] = intArrayOf(0, Color.parseColor("#FF00FF"))
 		
 		layers.forEachIndexed { index, layer ->
-			val circles = CircleLayer("cluster-$index", GEOJSON_SOURCE_ID)
+			val circles = CircleLayer("cluster-$index", SOURCE_ALERT)
 			circles.setProperties(circleColor(layer[1]), circleRadius(10f))
 			val pointCount = toNumber(get(POINT_COUNT))
 			circles.setFilter(
@@ -204,7 +194,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			style.addLayerBelow(circles, BUILDING)
 		}
 		
-		val count = SymbolLayer(COUNT, GEOJSON_SOURCE_ID)
+		val count = SymbolLayer(COUNT, SOURCE_ALERT)
 		count.setProperties(
 				textField(toString(get(POINT_COUNT))),
 				textSize(12f),
@@ -214,7 +204,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		)
 		style.addLayer(count)
 		
-		val unClustered = CircleLayer(UNCLUSTERED_POINTS, GEOJSON_SOURCE_ID)
+		val unClustered = CircleLayer(UNCLUSTERED_POINTS, SOURCE_ALERT)
 		unClustered.setProperties(circleColor(Color.parseColor("#870f1b")), circleRadius(10f), circleBlur(1f))
 		unClustered.setFilter(neq(get(CLUSTER), literal(true)))
 		style.addLayerBelow(unClustered, BUILDING)
@@ -298,6 +288,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		checkInSource = GeoJsonSource(SOURCE_CHECK_IN, FeatureCollection.fromFeatures(listOf()))
 		it.addSource(checkInSource!!)
+		
+		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
+				.withCluster(true)
+				.withClusterMaxZoom(15)
+				.withClusterRadius(20))
+		it.addSource(alertSource!!)
 	}
 	
 	private fun setupImages(it: Style) {
@@ -323,6 +319,10 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		if (checkInSource != null && checkInFeatures != null) {
 			checkInSource!!.setGeoJson(checkInFeatures)
+		}
+		
+		if (alertSource != null && alertFeatures != null) {
+			alertSource!!.setGeoJson(alertFeatures)
 		}
 	}
 	
@@ -391,6 +391,19 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				val lastReport = this.reports.last()
 				moveMapTo(LatLng(lastReport.latitude, lastReport.longitude))
 			}
+		})
+		
+		// observe alerts
+		mapViewModel.getAlerts().observe(this, Observer { alerts ->
+			this.alerts = alerts
+			val features = alerts.map {
+				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_ID, it.id))
+				Feature.fromGeometry(Point.fromLngLat(it.longitude ?: 0.0, it.latitude
+						?: 0.0), properties.toJsonObject())
+			}
+			alertFeatures = FeatureCollection.fromFeatures(features)
+			
+			refreshSource()
 		})
 		
 		// observe check-ins
@@ -597,6 +610,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		const val tag = "MapFragment"
 		
 		private const val SOURCE_CHECK_IN = "source.checkin"
+		private const val SOURCE_ALERT = "source.alert"
 		private const val MARKER_CHECK_IN_ID = "marker.checkin"
 		private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
 		private const val LINE_CHECK_IN_ID = "line.checkin"
@@ -610,6 +624,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		private const val PROPERTY_MARKER_CAPTION = "caption"
 		private const val PROPERTY_MARKER_REPORT_ID = "report.id"
 		private const val PROPERTY_MARKER_CHECKIN_ID = "checkin.id"
+		private const val PROPERTY_MARKER_ALERT_ID = "alert.id"
 		
 		private const val GEOJSON_SOURCE_ID = "alerts"
 		private const val UNCLUSTERED_POINTS = "unclustered-points"

@@ -7,7 +7,6 @@ import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
@@ -178,7 +177,6 @@ class AlertBottomDialogViewModel(private val context: Context,
 		
 		override fun onPlayerError(error: ExoPlaybackException?) {
 			_playerError.value = error
-			Crashlytics.logException(error)
 		}
 	}
 	
