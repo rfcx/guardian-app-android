@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
 import android.location.LocationManager
@@ -36,11 +37,10 @@ import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.*
 import com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
@@ -53,6 +53,8 @@ import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
+import java.net.URI
+import java.net.URISyntaxException
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
@@ -164,7 +166,58 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			observeData()
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
+			addClusteredGeoJsonSource(it)
 		}
+	}
+	
+	private fun addClusteredGeoJsonSource(style: Style) {
+		try {
+			style.addSource(GeoJsonSource(GEOJSON_SOURCE_ID,
+					URI("https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"),
+					GeoJsonOptions()
+							.withCluster(true)
+							.withClusterMaxZoom(15)
+							.withClusterRadius(20)
+			))
+		} catch (e: URISyntaxException) {
+			e.printStackTrace()
+		}
+		
+		val layers = Array(4) { IntArray(2) }
+		layers[0] = intArrayOf(150, Color.parseColor("#FF0000"))
+		layers[1] = intArrayOf(20, Color.parseColor("#0000FF"))
+		layers[2] = intArrayOf(1, Color.parseColor("#00FF00"))
+		layers[3] = intArrayOf(0, Color.parseColor("#FF00FF"))
+		
+		layers.forEachIndexed { index, layer ->
+			val circles = CircleLayer("cluster-$index", GEOJSON_SOURCE_ID)
+			circles.setProperties(circleColor(layer[1]), circleRadius(10f))
+			val pointCount = toNumber(get(POINT_COUNT))
+			circles.setFilter(
+					if (index == 0)
+						gte(pointCount, literal(layer[0])) else
+						all(
+								gte(pointCount, literal(layer[0])),
+								lt(pointCount, literal(layers[index - 1][0]))
+						)
+			)
+			style.addLayerBelow(circles, BUILDING)
+		}
+		
+		val count = SymbolLayer(COUNT, GEOJSON_SOURCE_ID)
+		count.setProperties(
+				textField(toString(get(POINT_COUNT))),
+				textSize(12f),
+				textColor(Color.WHITE),
+				textIgnorePlacement(true),
+				textAllowOverlap(true)
+		)
+		style.addLayer(count)
+		
+		val unClustered = CircleLayer(UNCLUSTERED_POINTS, GEOJSON_SOURCE_ID)
+		unClustered.setProperties(circleColor(Color.parseColor("#870f1b")), circleRadius(10f), circleBlur(1f))
+		unClustered.setFilter(neq(get(CLUSTER), literal(true)))
+		style.addLayerBelow(unClustered, BUILDING)
 	}
 	
 	private fun setMapLayer(style: Style) {
@@ -558,5 +611,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		private const val PROPERTY_MARKER_REPORT_ID = "report.id"
 		private const val PROPERTY_MARKER_CHECKIN_ID = "checkin.id"
 		
+		private const val GEOJSON_SOURCE_ID = "alerts"
+		private const val UNCLUSTERED_POINTS = "unclustered-points"
+		private const val COUNT = "count"
+		private const val CLUSTER = "cluster"
+		private const val BUILDING = "building"
+		private const val POINT_COUNT = "point_count"
 	}
 }
