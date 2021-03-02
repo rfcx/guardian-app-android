@@ -3,19 +3,13 @@ package org.rfcx.ranger.view.profile
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -85,6 +79,12 @@ class ProfileFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		viewDataBinding.viewModel = profileViewModel
 		setOnClickButton()
+		
+		val preferences = Preferences.getInstance(view.context)
+		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
+		if (state == null || state != ProfileViewModel.DOWNLOADED_STATE) {
+			profileViewModel.offlineMapBox()
+		}
 		
 		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
 		if (loginWith == LOGIN_WITH_EMAIL) {

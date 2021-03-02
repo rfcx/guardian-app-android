@@ -373,7 +373,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		private const val TAG = "ProfileViewModel"
 		private const val DELETING_STATE = "DELETING_STATE"
 		private const val DOWNLOAD_STATE = "DOWNLOAD_STATE"
-		private const val DOWNLOADED_STATE = "DOWNLOADED_STATE"
+		const val DOWNLOADED_STATE = "DOWNLOADED_STATE"
 		private const val UNAVAILABLE = "UNAVAILABLE"
 		const val DOWNLOAD_CANCEL_STATE = "DOWNLOAD_CANCEL_STATE"
 		const val DOWNLOADING_STATE = "DOWNLOADING_STATE"

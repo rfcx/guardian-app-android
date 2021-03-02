@@ -180,7 +180,7 @@ class StatusViewModel(private val context: Context, private val reportDb: Report
 				override fun onError(e: Throwable) {
 					Log.d("getSiteName", "error $e")
 				}
-			}, profileData.getSiteId())
+			}, "tembe")
 		} else {
 			_profile.value = StatusAdapter.ProfileItem(profileData.getUserNickname(),
 					site, profileData.getTracking())
