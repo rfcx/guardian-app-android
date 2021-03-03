@@ -55,6 +55,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueActivity
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
@@ -240,11 +241,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 		
 		if (alertFeatures.isNotEmpty()) {
-			val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0);
-			if (clusterLeavesFeatureCollection != null) {
-				moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+			val pinCount = if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
+			if (pinCount > 1) {
+				val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0);
+				if (clusterLeavesFeatureCollection != null) {
+					moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+				}
+			} else {
+				context?.let { AlertValueActivity.startActivity(it, "chainsaw", "", "Fruit Garden") }
 			}
-			
 			return true
 		}
 		
