@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
+import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -75,8 +77,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var alertFeatures: FeatureCollection? = null
 	private var checkInFeatures: FeatureCollection? = null
 	private val windowInfoImages = hashMapOf<String, Bitmap>()
-	
-	
+	private var queryLayerIds: Array<String> = arrayOf()
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
@@ -179,8 +180,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		layers[2] = intArrayOf(1, Color.parseColor("#00FF00"))
 		layers[3] = intArrayOf(0, Color.parseColor("#FF00FF"))
 		
+		queryLayerIds = Array(layers.size) { _ -> "" }
+		
 		layers.forEachIndexed { index, layer ->
-			val circles = CircleLayer("cluster-$index", SOURCE_ALERT)
+			queryLayerIds[index] = "cluster-$index"
+			val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
 			circles.setProperties(circleColor(layer[1]), circleRadius(10f))
 			val pointCount = toNumber(get(POINT_COUNT))
 			circles.setFilter(
@@ -226,6 +230,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
 		val reportFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
 		val checkInFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
+		val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
+		var alertFeatures = listOf<Feature>()
+		queryLayerIds.forEach {
+			val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
+			if (features.isNotEmpty()) {
+				alertFeatures = features
+			}
+		}
+		
+		if (alertFeatures.isNotEmpty()) {
+			val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0);
+			if (clusterLeavesFeatureCollection != null) {
+				moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+			}
+			
+			return true
+		}
+		
 		if (reportFeatures != null && reportFeatures.isNotEmpty()) {
 			clearCheckInFeatureSelected()
 			val selectedFeature = reportFeatures[0]
@@ -259,6 +281,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		clearFeatureSelected()
 		return false
+	}
+	
+	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
+		val latLngList: ArrayList<LatLng> = ArrayList()
+		if (featureCollectionToInspect.features() != null) {
+			for (singleClusterFeature in featureCollectionToInspect.features()!!) {
+				val clusterPoint = singleClusterFeature.geometry() as Point?
+				if (clusterPoint != null) {
+					latLngList.add(LatLng(clusterPoint.latitude(), clusterPoint.longitude()))
+				}
+			}
+			if (latLngList.size > 1) {
+				val latLngBounds = LatLngBounds.Builder()
+						.includes(latLngList)
+						.build()
+				mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
+			}
+		}
 	}
 	
 	private fun clearFeatureSelected() {
@@ -404,6 +444,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			alertFeatures = FeatureCollection.fromFeatures(features)
 			
 			refreshSource()
+			
+			if (alerts.isNotEmpty()) {
+				val lastCheckIn = alerts.last()
+				moveMapTo(LatLng(lastCheckIn.latitude ?: 0.0, lastCheckIn.longitude ?: 0.0))
+			}
 		})
 		
 		// observe check-ins
