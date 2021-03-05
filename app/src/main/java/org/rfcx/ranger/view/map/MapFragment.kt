@@ -248,7 +248,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 					moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
 				}
 			} else {
-				context?.let { AlertValueActivity.startActivity(it, "chainsaw", "", "Fruit Garden") }
+				val selectedFeature = alertFeatures[0]
+				context?.let { AlertValueActivity.startActivity(it, "chainsaw", "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
 			}
 			return true
 		}
@@ -442,7 +443,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		mapViewModel.getAlerts().observe(this, Observer { alerts ->
 			this.alerts = alerts
 			val features = alerts.map {
-				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_ID, it.id))
+				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.guardianName))
 				Feature.fromGeometry(Point.fromLngLat(it.longitude ?: 0.0, it.latitude
 						?: 0.0), properties.toJsonObject())
 			}
@@ -674,7 +675,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		private const val PROPERTY_MARKER_CAPTION = "caption"
 		private const val PROPERTY_MARKER_REPORT_ID = "report.id"
 		private const val PROPERTY_MARKER_CHECKIN_ID = "checkin.id"
-		private const val PROPERTY_MARKER_ALERT_ID = "alert.id"
+		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		
 		private const val GEOJSON_SOURCE_ID = "alerts"
 		private const val UNCLUSTERED_POINTS = "unclustered-points"
