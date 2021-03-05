@@ -249,7 +249,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				}
 			} else {
 				val selectedFeature = alertFeatures[0]
-				context?.let { AlertValueActivity.startActivity(it, "chainsaw", "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
+				context?.let { AlertValueActivity.startActivity(it, null, "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
 			}
 			return true
 		}

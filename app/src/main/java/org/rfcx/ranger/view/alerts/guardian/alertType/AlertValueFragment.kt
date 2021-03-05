@@ -40,7 +40,7 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 		
 		val value = arguments?.getString(EXTRA_ALERT_VALUE)
 		val guardianName = arguments?.getString(EXTRA_GUARDIAN_NAME)
-		if (value != null && guardianName != null) {
+		if (guardianName != null) {
 			viewModel.getEvents(value, guardianName)
 		}
 		
@@ -107,7 +107,7 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
 	companion object {
 		const val tag = "AlertDetailByTypeFragment"
-		fun newInstance(value: String, guardianName: String): AlertValueFragment {
+		fun newInstance(value: String?, guardianName: String): AlertValueFragment {
 			return AlertValueFragment().apply {
 				arguments = Bundle().apply {
 					putString(EXTRA_ALERT_VALUE, value)

@@ -28,15 +28,22 @@ class AlertValueViewModel(private val context: Context,
 	private var _alertsList= arrayListOf<EventItem>()
 	var isLoadMore = false
 	
-	fun getEvents(value: String, guardianName: String) {
+	fun getEvents(value: String?, guardianName: String) {
 		_alertsList.clear()
 		val eventsFirstTime = eventDb.getEvents().filter { it.guardianName == guardianName }
-		val events = eventsFirstTime.filter { it.value == value }
-		
-		events.forEach { event ->
-			val state = eventDb.getEventState(event.id)
-			_alertsList.add(event.toEventItem(state))
+		if(value != null) {
+			val events = eventsFirstTime.filter { it.value == value }
+			events.forEach { event ->
+				val state = eventDb.getEventState(event.id)
+				_alertsList.add(event.toEventItem(state))
+			}
+		} else {
+			eventsFirstTime.forEach { event ->
+				val state = eventDb.getEventState(event.id)
+				_alertsList.add(event.toEventItem(state))
+			}
 		}
+
 		_baseItems.value = Result.Success(buildBaseItems(_alertsList, LoadMoreItem.DEFAULT))
 	}
 	
