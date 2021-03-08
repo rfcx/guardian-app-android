@@ -176,10 +176,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	
 	private fun addClusteredGeoJsonSource(style: Style) {
 		val layers = Array(4) { IntArray(2) }
-		layers[0] = intArrayOf(150, Color.parseColor("#FF0000"))
-		layers[1] = intArrayOf(20, Color.parseColor("#0000FF"))
-		layers[2] = intArrayOf(1, Color.parseColor("#00FF00"))
-		layers[3] = intArrayOf(0, Color.parseColor("#FF00FF"))
+		layers[0] = intArrayOf(0, Color.parseColor("#e41a1a"))
 		
 		queryLayerIds = Array(layers.size) { _ -> "" }
 		
@@ -210,7 +207,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		style.addLayer(count)
 		
 		val unClustered = CircleLayer(UNCLUSTERED_POINTS, SOURCE_ALERT)
-		unClustered.setProperties(circleColor(Color.parseColor("#870f1b")), circleRadius(10f), circleBlur(1f))
+		unClustered.setProperties(circleColor(Color.parseColor("#e41a1a")), circleRadius(10f), circleBlur(1f))
 		unClustered.setFilter(neq(get(CLUSTER), literal(true)))
 		style.addLayerBelow(unClustered, BUILDING)
 	}
