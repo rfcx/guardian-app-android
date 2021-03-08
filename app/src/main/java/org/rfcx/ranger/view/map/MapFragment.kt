@@ -175,7 +175,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	}
 	
 	private fun addClusteredGeoJsonSource(style: Style) {
-		val layers = Array(4) { IntArray(2) }
+		val layers = Array(1) { IntArray(2) }
 		layers[0] = intArrayOf(0, Color.parseColor("#e41a1a"))
 		
 		queryLayerIds = Array(layers.size) { _ -> "" }
@@ -238,15 +238,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		}
 		
 		if (alertFeatures.isNotEmpty()) {
-			val pinCount = if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
-			if (pinCount > 1) {
-				val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0);
-				if (clusterLeavesFeatureCollection != null) {
+			val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0)
+			val features = clusterLeavesFeatureCollection?.features()
+			if (clusterLeavesFeatureCollection != null) {
+				if (features?.groupBy { it }?.size == 1) {
+					context?.let { AlertValueActivity.startActivity(it, null, "", features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
+				} else {
 					moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
 				}
-			} else {
-				val selectedFeature = alertFeatures[0]
-				context?.let { AlertValueActivity.startActivity(it, null, "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
 			}
 			return true
 		}
