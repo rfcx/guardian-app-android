@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,9 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	}
 	
 	override fun onClickedAlert(event: Event, state: EventItem.State) {
-		showDetail(event.id, state)
+		if (!event.audioId.isBlank()) {
+			showDetail(event.id, state)
+		}
 	}
 	
 	override fun showDetail(eventGuID: String, state: EventItem.State) {
