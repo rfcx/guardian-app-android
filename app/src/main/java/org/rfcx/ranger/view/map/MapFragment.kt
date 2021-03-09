@@ -171,6 +171,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
 			addClusteredGeoJsonSource(it)
+			mapViewModel.getSiteBounds()
 		}
 	}
 	

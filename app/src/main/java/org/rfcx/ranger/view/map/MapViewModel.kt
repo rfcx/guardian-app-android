@@ -1,17 +1,23 @@
 package org.rfcx.ranger.view.map
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 
-class MapViewModel(private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb) : ViewModel() {
+class MapViewModel(private val context: Context, private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb, private val getBounds: GetSiteNameUseCase) : ViewModel() {
 	
 	fun getAlerts(): LiveData<List<Event>> {
 		return Transformations.map(
@@ -49,6 +55,18 @@ class MapViewModel(private val reportDb: ReportDb, private val locationDb: Locat
 				displayPoints
 			}
 		}
+	}
+	
+	fun getSiteBounds() {
+		getBounds.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
+			override fun onSuccess(t: List<SiteResponse>) {
+				Log.d("getSiteName", "$t")
+			}
+			
+			override fun onError(e: Throwable) {
+				Log.d("getSiteName", "error $e")
+			}
+		}, "warsi")
 	}
 	
 	companion object {
