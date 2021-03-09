@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.mapbox.geojson.Point
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.data.local.EventDb
+import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.location.CheckIn
@@ -18,8 +19,9 @@ import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
+import org.rfcx.ranger.util.getGuardianGroup
 
-class MapViewModel(private val context: Context, private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb, private val getBounds: GetSiteNameUseCase) : ViewModel() {
+class MapViewModel(private val profileData: ProfileData, private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb, private val getBounds: GetSiteNameUseCase) : ViewModel() {
 	
 	private val _routeCoordinates = MutableLiveData<ArrayList<ArrayList<Point>>>()
 	val routeCoordinates: LiveData<ArrayList<ArrayList<Point>>> = _routeCoordinates
@@ -67,22 +69,24 @@ class MapViewModel(private val context: Context, private val reportDb: ReportDb,
 		val coordinates: ArrayList<ArrayList<Point>> = arrayListOf()
 		getBounds.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
-				for ((index, value) in t[0].bounds.coordinates.withIndex()) {
-					for ((index, value1) in value.withIndex()) {
-						routeCoordinates = arrayListOf()
-						value1.map {
-							routeCoordinates.add(Point.fromLngLat(it[0], it[1]))
+				if (t[0].bounds != null) {
+					for ((index, value) in t[0].bounds.coordinates.withIndex()) {
+						for ((index, value1) in value.withIndex()) {
+							routeCoordinates = arrayListOf()
+							value1.map {
+								routeCoordinates.add(Point.fromLngLat(it[0], it[1]))
+							}
+							coordinates.add(routeCoordinates)
 						}
-						coordinates.add(routeCoordinates)
 					}
+					_routeCoordinates.value = coordinates
 				}
-				_routeCoordinates.value = coordinates
 			}
 			
 			override fun onError(e: Throwable) {
 				Log.d("getSiteName", "error $e")
 			}
-		}, "warsi")
+		}, profileData.getSiteId())
 	}
 	
 	companion object {

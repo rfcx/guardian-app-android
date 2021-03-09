@@ -31,7 +31,7 @@ object UiModule {
 	}
 	
 	val mapModule = module {
-		viewModel { MapViewModel(androidContext(), get(), get(), get(), get()) }
+		viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 		viewModel { MapDetailViewModel(get(), get()) }
 		viewModel { ReportViewPagerFragmentViewModel(get()) }
 	}
