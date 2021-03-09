@@ -96,6 +96,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
 	}
 	
+	private var routeCoordinates: ArrayList<Point>? = null
+	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
 		if (isOnAirplaneMode) {
 			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")
@@ -170,8 +172,20 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			observeData()
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
-			addClusteredGeoJsonSource(it)
 			mapViewModel.getSiteBounds()
+			mapViewModel.routeCoordinates.observe(this, Observer { points ->
+				points.forEachIndexed { index, layer ->
+					it.addSource(GeoJsonSource("line-source-$index",
+							FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(
+									LineString.fromLngLats(layer)
+							)))))
+					it.addLayerBelow(LineLayer("linelayer-$index", "line-source-$index").withProperties(
+							lineWidth(5f),
+							lineColor(Color.parseColor("#D4A5E9"))
+					), BUILDING)
+				}
+				addClusteredGeoJsonSource(it)
+			})
 		}
 	}
 	
@@ -247,6 +261,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 				} else {
 					moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
 				}
+			} else {
+				val selectedFeature = alertFeatures[0]
+				context?.let { AlertValueActivity.startActivity(it, null, "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
 			}
 			return true
 		}

@@ -3,8 +3,10 @@ package org.rfcx.ranger.view.map
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.mapbox.geojson.Point
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.site.GetSiteNameUseCase
@@ -18,6 +20,9 @@ import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 
 class MapViewModel(private val context: Context, private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb, private val getBounds: GetSiteNameUseCase) : ViewModel() {
+	
+	private val _routeCoordinates = MutableLiveData<ArrayList<ArrayList<Point>>>()
+	val routeCoordinates: LiveData<ArrayList<ArrayList<Point>>> = _routeCoordinates
 	
 	fun getAlerts(): LiveData<List<Event>> {
 		return Transformations.map(
@@ -58,9 +63,20 @@ class MapViewModel(private val context: Context, private val reportDb: ReportDb,
 	}
 	
 	fun getSiteBounds() {
+		var routeCoordinates: ArrayList<Point>
+		val coordinates: ArrayList<ArrayList<Point>> = arrayListOf()
 		getBounds.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
-				Log.d("getSiteName", "$t")
+				for ((index, value) in t[0].bounds.coordinates.withIndex()) {
+					for ((index, value1) in value.withIndex()) {
+						routeCoordinates = arrayListOf()
+						value1.map {
+							routeCoordinates.add(Point.fromLngLat(it[0], it[1]))
+						}
+						coordinates.add(routeCoordinates)
+					}
+				}
+				_routeCoordinates.value = coordinates
 			}
 			
 			override fun onError(e: Throwable) {
