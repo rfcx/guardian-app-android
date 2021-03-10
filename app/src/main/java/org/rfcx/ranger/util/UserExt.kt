@@ -2,7 +2,7 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
 import org.rfcx.ranger.localdb.SiteGuardianDb
@@ -77,7 +77,7 @@ fun Context?.getUserId(): String {
 		userID = untrusted.body["sub"] as String
 	} catch (e: Exception) {
 		e.printStackTrace()
-		Crashlytics.logException(e)
+		FirebaseCrashlytics.getInstance().log(e.message.toString())
 	}
 	return userID
 }
@@ -92,7 +92,7 @@ fun Context?.getUserEmail(): String {
 		userID = untrusted.body["email"] as String
 	} catch (e: Exception) {
 		e.printStackTrace()
-		Crashlytics.logException(e)
+		FirebaseCrashlytics.getInstance().log(e.message.toString())
 	}
 	return userID
 }
@@ -107,7 +107,7 @@ fun Context?.saveUserLoginWith(): String {
 		loginWith = loginWith.split("|")[0]
 	} catch (e: Exception) {
 		e.printStackTrace()
-		Crashlytics.logException(e)
+		FirebaseCrashlytics.getInstance().log(e.message.toString())
 	}
 	
 	val preferences = this?.let { Preferences.getInstance(it) }

@@ -1,7 +1,7 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.ranger.entity.Err
 import org.rfcx.ranger.entity.Ok
 import org.rfcx.ranger.entity.Result
@@ -20,7 +20,7 @@ class SendLocationApi {
 		
 		request(context, locations).enqueue(object : Callback<List<CheckInResult>> {
 			override fun onFailure(call: Call<List<CheckInResult>>?, t: Throwable?) {
-				Crashlytics.logException(t)
+				FirebaseCrashlytics.getInstance().log(t?.message.toString())
 				callback.onFailed(t, t?.message)
 			}
 

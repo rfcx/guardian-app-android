@@ -2,12 +2,11 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.widget.Toast
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.ErrorResponse
 import org.rfcx.ranger.entity.ErrorResponse2
-import org.rfcx.ranger.view.login.LoginActivityNew
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -28,8 +27,7 @@ fun HttpException?.getErrorFormApi(): Exception {
 		val url = this.response().raw().request().url().toString()
 		val errString = this.response().errorBody()?.string()
 		
-		Crashlytics.logException(Exception("API failed from $url,code ${this.code()} " +
-				"===> response $errString"))
+		FirebaseCrashlytics.getInstance().log("API failed from $url,code ${this.code()} ===> response $errString")
 		
 		return try {
 			val error: ErrorResponse = GsonProvider.getInstance().gson.fromJson(

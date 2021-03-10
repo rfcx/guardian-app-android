@@ -9,10 +9,8 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.crashlytics.android.core.CrashlyticsCore
 import com.google.firebase.messaging.RemoteMessage
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.view.MainActivityNew
 
 object AlertNotification {
