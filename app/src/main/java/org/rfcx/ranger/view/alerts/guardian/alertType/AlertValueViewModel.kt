@@ -20,32 +20,20 @@ import org.rfcx.ranger.util.replace
 import org.rfcx.ranger.util.toEventItem
 
 class AlertValueViewModel(private val context: Context,
-                                 private val eventDb: EventDb,
-                                 private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
+                          private val eventDb: EventDb,
+                          private val getMoreEvent: GetMoreEventInGuardian) : ViewModel() {
 	private val _baseItems = MutableLiveData<Result<List<BaseItem>>>()
 	val baseItems: LiveData<Result<List<BaseItem>>> get() = _baseItems
 	
-	private var _alertsList= arrayListOf<EventItem>()
+	private var _alertsList = arrayListOf<EventItem>()
 	var isLoadMore = false
 	
 	fun getEvents(value: String?, guardianName: String) {
+		val events = eventDb.getEvents().filter { it.guardianName == guardianName && (it.value == value || value == null) }
+		val eventItems = events.map { event -> event.toEventItem(eventDb.getEventState(event.id)) }
 		_alertsList.clear()
-		val eventsFirstTime = eventDb.getEvents().filter { it.guardianName == guardianName }
-		if(value != null) {
-			val events = eventsFirstTime.filter { it.value == value }
-			addEvents(events)
-		} else {
-			addEvents(eventsFirstTime)
-		}
-
+		_alertsList.addAll(eventItems)
 		_baseItems.value = Result.Success(buildBaseItems(_alertsList, LoadMoreItem.DEFAULT))
-	}
-	
-	private fun addEvents(events: List<Event>) {
-		events.forEach { event ->
-			val state = eventDb.getEventState(event.id)
-			_alertsList.add(event.toEventItem(state))
-		}
 	}
 	
 	fun onEventReviewed(newEvent: Event, reviewValue: String) {
@@ -58,7 +46,7 @@ class AlertValueViewModel(private val context: Context,
 				ReviewEventFactory.rejectEvent -> EventItem.State.REJECT
 				else -> EventItem.State.NONE
 			}
-			_alertsList.replace(eventItem) {it2 -> it2.event.id == newEvent.id }
+			_alertsList.replace(eventItem) { it2 -> it2.event.id == newEvent.id }
 		}
 		
 		_baseItems.value = Result.Success(buildBaseItems(_alertsList, LoadMoreItem.DEFAULT))

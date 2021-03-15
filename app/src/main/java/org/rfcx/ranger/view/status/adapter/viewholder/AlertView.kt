@@ -55,10 +55,10 @@ class AlertView(private val binding: ItemStatusAlertBinding, private val listene
 		
 		binding.onClickedAlertItem = View.OnClickListener {
 			if (!item.event.audioId.isBlank()) {
-				var state = EventItem.State.NONE
-				when (item.state) {
-					StatusAdapter.AlertItem.State.REJECT -> state = EventItem.State.REJECT
-					StatusAdapter.AlertItem.State.CONFIRM -> state = EventItem.State.CONFIRM
+				val state = when (item.state) {
+					StatusAdapter.AlertItem.State.REJECT -> EventItem.State.REJECT
+					StatusAdapter.AlertItem.State.CONFIRM -> EventItem.State.CONFIRM
+					else -> EventItem.State.NONE
 				}
 				listener?.onClickedAlertItem(item.event, state)
 			}
