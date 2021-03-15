@@ -33,18 +33,19 @@ class AlertValueViewModel(private val context: Context,
 		val eventsFirstTime = eventDb.getEvents().filter { it.guardianName == guardianName }
 		if(value != null) {
 			val events = eventsFirstTime.filter { it.value == value }
-			events.forEach { event ->
-				val state = eventDb.getEventState(event.id)
-				_alertsList.add(event.toEventItem(state))
-			}
+			addEvents(events)
 		} else {
-			eventsFirstTime.forEach { event ->
-				val state = eventDb.getEventState(event.id)
-				_alertsList.add(event.toEventItem(state))
-			}
+			addEvents(eventsFirstTime)
 		}
 
 		_baseItems.value = Result.Success(buildBaseItems(_alertsList, LoadMoreItem.DEFAULT))
+	}
+	
+	private fun addEvents(events: List<Event>) {
+		events.forEach { event ->
+			val state = eventDb.getEventState(event.id)
+			_alertsList.add(event.toEventItem(state))
+		}
 	}
 	
 	fun onEventReviewed(newEvent: Event, reviewValue: String) {
