@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.alerts.guardian.alertType
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +39,7 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 		
 		val value = arguments?.getString(EXTRA_ALERT_VALUE)
 		val guardianName = arguments?.getString(EXTRA_GUARDIAN_NAME)
-		if (value != null && guardianName != null) {
+		if (guardianName != null) {
 			viewModel.getEvents(value, guardianName)
 		}
 		
@@ -62,7 +61,9 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	}
 	
 	override fun onClickedAlert(event: Event, state: EventItem.State) {
-		showDetail(event.id, state)
+		if (!event.audioId.isBlank()) {
+			showDetail(event.id, state)
+		}
 	}
 	
 	override fun showDetail(eventGuID: String, state: EventItem.State) {
@@ -107,7 +108,7 @@ class AlertValueFragment : BaseFragment(), AlertClickListener, AlertListener {
 	
 	companion object {
 		const val tag = "AlertDetailByTypeFragment"
-		fun newInstance(value: String, guardianName: String): AlertValueFragment {
+		fun newInstance(value: String?, guardianName: String): AlertValueFragment {
 			return AlertValueFragment().apply {
 				arguments = Bundle().apply {
 					putString(EXTRA_ALERT_VALUE, value)

@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.PointF
+import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -24,6 +26,7 @@ import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -36,22 +39,23 @@ import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.LineLayer
-import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.*
 import com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.layout_map_window_info.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueActivity
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
@@ -65,14 +69,16 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var mapBoxMap: MapboxMap? = null
 	private var currentStyle: String = Style.OUTDOORS
 	private var reports: List<Report> = listOf()
+	private var alerts: List<Event> = listOf()
 	private var checkins: List<CheckIn> = listOf()
 	private var reportSource: GeoJsonSource? = null
 	private var checkInSource: GeoJsonSource? = null
+	private var alertSource: GeoJsonSource? = null
 	private var reportFeatures: FeatureCollection? = null
+	private var alertFeatures: FeatureCollection? = null
 	private var checkInFeatures: FeatureCollection? = null
 	private val windowInfoImages = hashMapOf<String, Bitmap>()
-	
-	
+	private var queryLayerIds: Array<String> = arrayOf()
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
@@ -164,7 +170,59 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			observeData()
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
+			mapViewModel.getSiteBounds()
+			mapViewModel.routeCoordinates.observe(this, Observer { points ->
+				points.forEachIndexed { index, layer ->
+					it.addSource(GeoJsonSource("line-source-$index",
+							FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(
+									LineString.fromLngLats(layer)
+							)))))
+					it.addLayerBelow(LineLayer("linelayer-$index", "line-source-$index").withProperties(
+							lineWidth(5f),
+							lineColor(Color.parseColor("#D4A5E9"))
+					), BUILDING)
+				}
+				addClusteredGeoJsonSource(it)
+			})
 		}
+	}
+	
+	private fun addClusteredGeoJsonSource(style: Style) {
+		val layers = Array(1) { IntArray(2) }
+		layers[0] = intArrayOf(0, Color.parseColor("#e41a1a"))
+		
+		queryLayerIds = Array(layers.size) { _ -> "" }
+		
+		layers.forEachIndexed { index, layer ->
+			queryLayerIds[index] = "cluster-$index"
+			val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
+			circles.setProperties(circleColor(layer[1]), circleRadius(10f))
+			val pointCount = toNumber(get(POINT_COUNT))
+			circles.setFilter(
+					if (index == 0)
+						gte(pointCount, literal(layer[0])) else
+						all(
+								gte(pointCount, literal(layer[0])),
+								lt(pointCount, literal(layers[index - 1][0]))
+						)
+			)
+			style.addLayerBelow(circles, BUILDING)
+		}
+		
+		val count = SymbolLayer(COUNT, SOURCE_ALERT)
+		count.setProperties(
+				textField(toString(get(POINT_COUNT))),
+				textSize(12f),
+				textColor(Color.WHITE),
+				textIgnorePlacement(true),
+				textAllowOverlap(true)
+		)
+		style.addLayer(count)
+		
+		val unClustered = CircleLayer(UNCLUSTERED_POINTS, SOURCE_ALERT)
+		unClustered.setProperties(circleColor(Color.parseColor("#e41a1a")), circleRadius(10f), circleBlur(1f))
+		unClustered.setFilter(neq(get(CLUSTER), literal(true)))
+		style.addLayerBelow(unClustered, BUILDING)
 	}
 	
 	private fun setMapLayer(style: Style) {
@@ -183,6 +241,34 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
 		val reportFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
 		val checkInFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
+		val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
+		var alertFeatures = listOf<Feature>()
+		queryLayerIds.forEach {
+			val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
+			if (features.isNotEmpty()) {
+				alertFeatures = features
+			}
+		}
+		
+		if (alertFeatures.isNotEmpty()) {
+			val pinCount = if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
+			if (pinCount > 1) {
+				val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0)
+				val features = clusterLeavesFeatureCollection?.features()
+				if (clusterLeavesFeatureCollection != null) {
+					if (features?.groupBy { it }?.size == 1) {
+						context?.let { AlertValueActivity.startActivity(it, null, "", features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
+					} else {
+						moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+					}
+				}
+			} else {
+				val selectedFeature = alertFeatures[0]
+				context?.let { AlertValueActivity.startActivity(it, null, "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
+			}
+			return true
+		}
+		
 		if (reportFeatures != null && reportFeatures.isNotEmpty()) {
 			clearCheckInFeatureSelected()
 			val selectedFeature = reportFeatures[0]
@@ -218,6 +304,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		return false
 	}
 	
+	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
+		val latLngList: ArrayList<LatLng> = ArrayList()
+		if (featureCollectionToInspect.features() != null) {
+			for (singleClusterFeature in featureCollectionToInspect.features()!!) {
+				val clusterPoint = singleClusterFeature.geometry() as Point?
+				if (clusterPoint != null) {
+					latLngList.add(LatLng(clusterPoint.latitude(), clusterPoint.longitude()))
+				}
+			}
+			if (latLngList.size > 1) {
+				val latLngBounds = LatLngBounds.Builder()
+						.includes(latLngList)
+						.build()
+				mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
+			}
+		}
+	}
+	
 	private fun clearFeatureSelected() {
 		if (this.checkInFeatures?.features() != null && this.reportFeatures?.features() != null) {
 			val features = this.checkInFeatures!!.features()!! + this.reportFeatures!!.features()!!
@@ -245,6 +349,12 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		checkInSource = GeoJsonSource(SOURCE_CHECK_IN, FeatureCollection.fromFeatures(listOf()))
 		it.addSource(checkInSource!!)
+		
+		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
+				.withCluster(true)
+				.withClusterMaxZoom(15)
+				.withClusterRadius(20))
+		it.addSource(alertSource!!)
 	}
 	
 	private fun setupImages(it: Style) {
@@ -270,6 +380,10 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		
 		if (checkInSource != null && checkInFeatures != null) {
 			checkInSource!!.setGeoJson(checkInFeatures)
+		}
+		
+		if (alertSource != null && alertFeatures != null) {
+			alertSource!!.setGeoJson(alertFeatures)
 		}
 	}
 	
@@ -337,6 +451,24 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			if (reports.isNotEmpty()) {
 				val lastReport = this.reports.last()
 				moveMapTo(LatLng(lastReport.latitude, lastReport.longitude))
+			}
+		})
+		
+		// observe alerts
+		mapViewModel.getAlerts().observe(this, Observer { alerts ->
+			this.alerts = alerts
+			val features = alerts.map {
+				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.guardianName))
+				Feature.fromGeometry(Point.fromLngLat(it.longitude ?: 0.0, it.latitude
+						?: 0.0), properties.toJsonObject())
+			}
+			alertFeatures = FeatureCollection.fromFeatures(features)
+			
+			refreshSource()
+			
+			if (alerts.isNotEmpty()) {
+				val lastCheckIn = alerts.last()
+				moveMapTo(LatLng(lastCheckIn.latitude ?: 0.0, lastCheckIn.longitude ?: 0.0))
 			}
 		})
 		
@@ -544,6 +676,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		const val tag = "MapFragment"
 		
 		private const val SOURCE_CHECK_IN = "source.checkin"
+		private const val SOURCE_ALERT = "source.alert"
 		private const val MARKER_CHECK_IN_ID = "marker.checkin"
 		private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
 		private const val LINE_CHECK_IN_ID = "line.checkin"
@@ -557,6 +690,13 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		private const val PROPERTY_MARKER_CAPTION = "caption"
 		private const val PROPERTY_MARKER_REPORT_ID = "report.id"
 		private const val PROPERTY_MARKER_CHECKIN_ID = "checkin.id"
+		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		
+		private const val GEOJSON_SOURCE_ID = "alerts"
+		private const val UNCLUSTERED_POINTS = "unclustered-points"
+		private const val COUNT = "count"
+		private const val CLUSTER = "cluster"
+		private const val BUILDING = "building"
+		private const val POINT_COUNT = "point_count"
 	}
 }
