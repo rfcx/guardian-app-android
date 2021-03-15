@@ -96,8 +96,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 		context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
 	}
 	
-	private var routeCoordinates: ArrayList<Point>? = null
-	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
 		if (isOnAirplaneMode) {
 			showLocationMessageError("${getString(R.string.in_air_plane_mode)} \n ${getString(R.string.pls_off_air_plane_mode)}")

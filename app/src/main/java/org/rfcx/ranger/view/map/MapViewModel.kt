@@ -65,21 +65,10 @@ class MapViewModel(private val profileData: ProfileData, private val reportDb: R
 	}
 	
 	fun getSiteBounds() {
-		var routeCoordinates: ArrayList<Point>
-		val coordinates: ArrayList<ArrayList<Point>> = arrayListOf()
 		getBounds.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
 				if (t[0].bounds != null) {
-					for ((index, value) in t[0].bounds.coordinates.withIndex()) {
-						for ((index, value1) in value.withIndex()) {
-							routeCoordinates = arrayListOf()
-							value1.map {
-								routeCoordinates.add(Point.fromLngLat(it[0], it[1]))
-							}
-							coordinates.add(routeCoordinates)
-						}
-					}
-					_routeCoordinates.value = coordinates
+					_routeCoordinates.value = t[0].toPointArray()
 				}
 			}
 			
@@ -87,6 +76,16 @@ class MapViewModel(private val profileData: ProfileData, private val reportDb: R
 				Log.d("getSiteName", "error $e")
 			}
 		}, profileData.getSiteId())
+	}
+	
+	fun SiteResponse.toPointArray(): ArrayList<ArrayList<Point>> {
+		val coordinates: ArrayList<ArrayList<Point>> = arrayListOf()
+		for ((index, value) in this.bounds.coordinates.withIndex()) {
+			for ((index, value1) in value.withIndex()) {
+				coordinates.add(ArrayList(value1.map { Point.fromLngLat(it[0], it[1]) }))
+			}
+		}
+		return coordinates
 	}
 	
 	companion object {
