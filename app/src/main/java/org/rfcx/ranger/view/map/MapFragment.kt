@@ -79,6 +79,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var checkInFeatures: FeatureCollection? = null
 	private val windowInfoImages = hashMapOf<String, Bitmap>()
 	private var queryLayerIds: Array<String> = arrayOf()
+	private var coordinates: ArrayList<ArrayList<Point>>? = null
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location?) {
 			p0?.let {
@@ -172,18 +173,23 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			setupSwitchMapMode()
 			mapViewModel.getSiteBounds()
 			mapViewModel.routeCoordinates.observe(this, Observer { points ->
-				points.forEachIndexed { index, layer ->
-					it.addSource(GeoJsonSource("line-source-$index",
-							FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(
-									LineString.fromLngLats(layer)
-							)))))
-					it.addLayerBelow(LineLayer("linelayer-$index", "line-source-$index").withProperties(
-							lineWidth(5f),
-							lineColor(Color.parseColor("#D4A5E9"))
-					), BUILDING)
-				}
+				coordinates = points
+				addCoordinatesSource(points, it)
 				addClusteredGeoJsonSource(it)
 			})
+		}
+	}
+	
+	private fun addCoordinatesSource(points: ArrayList<ArrayList<Point>>, style: Style) {
+		points.forEachIndexed { index, layer ->
+			style.addSource(GeoJsonSource("line-source-$index",
+					FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(
+							LineString.fromLngLats(layer)
+					)))))
+			style.addLayerBelow(LineLayer("linelayer-$index", "line-source-$index").withProperties(
+					lineWidth(5f),
+					lineColor(Color.parseColor("#D4A5E9"))
+			), BUILDING)
 		}
 	}
 	
@@ -546,6 +552,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			setMapLayer(it)
 			setWindowInfoImageGenResults(windowInfoImages) // re-setup
 			refreshSource()
+			coordinates?.let { points -> addCoordinatesSource(points, it) }
+			addClusteredGeoJsonSource(it)
 		}
 	}
 	
