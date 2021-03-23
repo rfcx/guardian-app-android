@@ -172,7 +172,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 			checkThenAccquireLocation()
 			setupSwitchMapMode()
 			mapViewModel.getSiteBounds()
-			mapViewModel.routeCoordinates.observe(this, Observer { points ->
+			mapViewModel.boundaryCoordinates.observe(this, Observer { points ->
 				coordinates = points
 				addCoordinatesSource(points, it)
 				addClusteredGeoJsonSource(it)
