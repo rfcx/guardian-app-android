@@ -1,6 +1,5 @@
 package org.rfcx.ranger.view.map
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,14 +16,12 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.site.SiteResponse
 import org.rfcx.ranger.localdb.LocationDb
 import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
-import org.rfcx.ranger.util.getGuardianGroup
 
 class MapViewModel(private val profileData: ProfileData, private val reportDb: ReportDb, private val locationDb: LocationDb, private val eventDb: EventDb, private val getBounds: GetSiteNameUseCase) : ViewModel() {
 	
-	private val _routeCoordinates = MutableLiveData<ArrayList<ArrayList<Point>>>()
-	val routeCoordinates: LiveData<ArrayList<ArrayList<Point>>> = _routeCoordinates
+	private val _boundaryCoordinates = MutableLiveData<ArrayList<ArrayList<Point>>>()
+	val boundaryCoordinates: LiveData<ArrayList<ArrayList<Point>>> = _boundaryCoordinates
 	
 	fun getAlerts(): LiveData<List<Event>> {
 		return Transformations.map(
@@ -68,7 +65,7 @@ class MapViewModel(private val profileData: ProfileData, private val reportDb: R
 		getBounds.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
 			override fun onSuccess(t: List<SiteResponse>) {
 				if (t[0].bounds != null) {
-					_routeCoordinates.value = t[0].toPointArray()
+					_boundaryCoordinates.value = t[0].toPointArray()
 				}
 			}
 			
