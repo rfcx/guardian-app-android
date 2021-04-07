@@ -18,14 +18,15 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
-import com.google.firebase.firestore.FirebaseFirestore
 import io.realm.Realm
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.local.WeeklySummaryData
 import org.rfcx.ranger.entity.location.CheckIn
 import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.util.*
+import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.MainActivityNew
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -107,13 +108,16 @@ class LocationTrackerService : Service() {
 		
 	}
 	
-	private val gnssStatusCallback = @RequiresApi(Build.VERSION_CODES.N)
-	object : GnssStatus.Callback() {
-		override fun onSatelliteStatusChanged(status: GnssStatus?) {
-			super.onSatelliteStatusChanged(status)
-			val satCount = status?.satelliteCount ?: 0
-			satelliteCount = satCount
+	private val gnssStatusCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+		object : GnssStatus.Callback() {
+			override fun onSatelliteStatusChanged(status: GnssStatus?) {
+				super.onSatelliteStatusChanged(status)
+				val satCount = status?.satelliteCount ?: 0
+				satelliteCount = satCount
+			}
 		}
+	} else {
+		null
 	}
 	
 	@Deprecated("For old version")
