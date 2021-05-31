@@ -2,18 +2,25 @@ package org.rfcx.ranger.view.alert
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -175,8 +182,32 @@ class AlertBottomDialogFragment : BaseBottomSheetDialogFragment() {
 		})
 		
 		alertViewModel.spectrogramImage.observe(this, Observer {
+			loadingImageProgressBar.visibility = View.VISIBLE
 			GlideApp.with(spectrogramImageView)
 					.load(it)
+					.override(420, 460)
+					.listener(object : RequestListener<Drawable> {
+						override fun onLoadFailed(
+							e: GlideException?,
+							model: Any?,
+							target: Target<Drawable>?,
+							isFirstResource: Boolean
+						): Boolean {
+							loadingImageProgressBar.visibility = View.GONE
+							return false
+						}
+						
+						override fun onResourceReady(
+							resource: Drawable?,
+							model: Any?,
+							target: Target<Drawable>?,
+							dataSource: DataSource?,
+							isFirstResource: Boolean
+						): Boolean {
+							loadingImageProgressBar.visibility = View.GONE
+							return false
+						}
+					})
 					.diskCacheStrategy(DiskCacheStrategy.ALL)
 					.placeholder(R.drawable.spectrogram_place_holder)
 					.error(R.drawable.spectrogram_place_holder)
