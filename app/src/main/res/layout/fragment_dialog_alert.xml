@@ -41,6 +41,12 @@
 			android:layout_height="60dp"
 			android:layout_gravity="center" />
 		
+		<ProgressBar
+			android:id="@+id/loadingImageProgressBar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center" />
+		
 		<ImageView
 			android:id="@+id/replayButton"
 			android:layout_width="60dp"
