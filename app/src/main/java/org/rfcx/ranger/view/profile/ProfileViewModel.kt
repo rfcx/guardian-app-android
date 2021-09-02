@@ -45,10 +45,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val formatCoordinates = MutableLiveData<String>()
 	val showNotificationByEmail = MutableLiveData<Boolean>()
 	
-	private val offlineManager: OfflineManager = OfflineManager.getInstance(context)
-	lateinit var definition: OfflineTilePyramidRegionDefinition
-	private val viewModelJob = Job()
-	private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 	val preferences = Preferences.getInstance(context)
 	
 	private val _logoutState = MutableLiveData<Boolean>()
@@ -67,49 +63,8 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		showNotificationByEmail.value = context.getUserEmail() != ""
 	}
 	
-	private fun setViewMapOffline(state: String) {
-		when (state) {
-			UNAVAILABLE -> {
-				showLoading.value = false
-				showPercent.value = false
-				showDownload.value = false
-				showDelete.value = false
-				showUnavailable.value = true
-			}
-			DOWNLOAD_STATE -> {
-				showLoading.value = false
-				showPercent.value = false
-				showDownload.value = true
-				showDelete.value = false
-				showUnavailable.value = false
-			}
-			DOWNLOADING_STATE -> {
-				showLoading.value = true
-				showPercent.value = true
-				showDownload.value = false
-				showDelete.value = false
-				showUnavailable.value = false
-			}
-			DOWNLOADED_STATE -> {
-				showLoading.value = false
-				showPercent.value = false
-				showDownload.value = false
-				showDelete.value = true
-				showUnavailable.value = false
-			}
-			DELETING_STATE -> {
-				showLoading.value = true
-				showPercent.value = false
-				showDownload.value = false
-				showDelete.value = false
-				showUnavailable.value = false
-			}
-		}
-	}
-	
 	fun resumed() {
 		getSiteName()
-		getSiteBounds()
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 	}
 	
@@ -120,41 +75,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		} else {
 			userSite.value = site
 		}
-	}
-	
-	private fun getSiteBounds() {
-		val siteBounds = preferences.getBoolean(Preferences.HAVE_SITE_BOUNDS)
-		
-		getSiteName.execute(object : DisposableSingleObserver<List<SiteResponse>>() {
-			override fun onSuccess(t: List<SiteResponse>) {
-				preferences.putString(Preferences.SITE_TIMEZONE, t[0].timezone)
-				setUnavailable(t[0].bounds != null)
-			}
-			
-			override fun onError(e: Throwable) {
-				Log.d("getSiteName", "error $e")
-			}
-		}, profileData.getDefaultSiteId())
-		
-		setUnavailable(siteBounds)
-	}
-	
-	fun setUnavailable(haveSiteBounds: Boolean) {
-		if (haveSiteBounds) {
-			val state = preferences.getString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_STATE)
-			if (state == DOWNLOAD_CANCEL_STATE) {
-				offlineMapBox()
-			} else {
-				setViewMapOffline(state)
-			}
-		} else {
-			setViewMapOffline(UNAVAILABLE)
-		}
-	}
-	
-	fun setStateOfflineMap(state: String) {
-		preferences.putString(Preferences.OFFLINE_MAP_STATE, state)
-		setViewMapOffline(state)
 	}
 	
 	fun onReceiving(enable: Boolean) {
@@ -190,7 +110,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	fun onLogout() {
-		deleteOfflineRegion(true)
 		_logoutState.value = true
 		if (profileData.getReceiveNotificationByEmail()) {
 			unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
@@ -249,123 +168,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		
 		val index = Random.nextInt(confirmedEvents.size)
 		return confirmedEvents[index]
-	}
-	
-	fun offlineMapBox() {
-		if (context.isNetworkAvailable()) {
-			val preferences = Preferences.getInstance(context)
-			val minLat = preferences.getString(Preferences.MIN_LATITUDE)
-			val maxLat = preferences.getString(Preferences.MAX_LATITUDE)
-			val minLng = preferences.getString(Preferences.MIN_LONGITUDE)
-			val maxLng = preferences.getString(Preferences.MAX_LONGITUDE)
-			
-			setStateOfflineMap(DOWNLOADING_STATE)
-			
-			offlineManager.setOfflineMapboxTileCountLimit(10000)
-			val style = Style.OUTDOORS
-			if (minLat !== null && maxLat !== null && minLng !== null && maxLng !== null) {
-				val latLngBounds: LatLngBounds = LatLngBounds.from(maxLat.toDouble(), maxLng.toDouble(), minLat.toDouble(), minLng.toDouble())
-				definition = OfflineTilePyramidRegionDefinition(style, latLngBounds, 10.0, 15.0, context.resources.displayMetrics.density)
-				offlineManager.createOfflineRegion(definition, METADATA.toByteArray(),
-						object : OfflineManager.CreateOfflineRegionCallback {
-							override fun onCreate(offlineRegion: OfflineRegion) {
-								uiScope.launch { createOfflineRegion(offlineRegion) }
-							}
-							
-							override fun onError(error: String) {
-								setViewMapOffline(DOWNLOAD_STATE)
-								Log.e(TAG, "Error: $error")
-							}
-						})
-			}
-		} else {
-			Toast.makeText(context, context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
-		}
-	}
-	
-	fun deleteOfflineRegion(isLogout: Boolean) {
-		if (context.isNetworkAvailable()) {
-			if (!isLogout) {
-				setStateOfflineMap(DELETING_STATE)
-			}
-			
-			val offlineManager = OfflineManager.getInstance(context)
-			offlineManager?.listOfflineRegions(object : OfflineManager.ListOfflineRegionsCallback {
-				override fun onList(offlineRegions: Array<out OfflineRegion>?) {
-					if (offlineRegions?.size != null) {
-						if (offlineRegions.isNotEmpty()) {
-							onDeleteOfflineRegion(offlineRegions[0], isLogout)
-						}
-					}
-				}
-				
-				override fun onError(error: String?) {
-					if (!isLogout) {
-						setStateOfflineMap(DOWNLOADED_STATE)
-					}
-				}
-			})
-		} else {
-			Toast.makeText(context, context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
-		}
-	}
-	
-	fun onDeleteOfflineRegion(offRegion: OfflineRegion, isLogout: Boolean) {
-		offRegion.delete(object : OfflineRegion.OfflineRegionDeleteCallback {
-			override fun onDelete() {
-				if (!isLogout) {
-					setStateOfflineMap(DOWNLOAD_STATE)
-				}
-			}
-			
-			override fun onError(error: String) {
-				if (!isLogout) {
-					setStateOfflineMap(DOWNLOADED_STATE)
-				}
-			}
-		})
-	}
-	
-	private suspend fun createOfflineRegion(offlineRegion: OfflineRegion) {
-		withContext(Dispatchers.IO) {
-			offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE)
-			offlineRegion.setObserver(object : OfflineRegion.OfflineRegionObserver {
-				
-				private var percentage: Int = -1
-				
-				override fun onStatusChanged(status: OfflineRegionStatus) {
-					val required = status.requiredResourceCount
-					val oldPercentage = this.percentage
-					val megabybtes = status.completedResourceSize / 1048576
-					val percentage: Int = when {
-						status.isComplete -> {
-							101
-						}
-						required > 0L ->
-							(100 * status.completedResourceCount / required).toInt()
-						else -> 0
-					}
-					this.percentage = percentage
-					if (percentage > oldPercentage)
-						if (percentage >= 100) {
-							deleteText.value = context.getString(R.string.delete, megabybtes.toString())
-							preferences.putString(Preferences.DELETE_TEXT, context.getString(R.string.delete, megabybtes.toString()))
-							setStateOfflineMap(DOWNLOADED_STATE)
-						} else {
-							setStateOfflineMap(DOWNLOADING_STATE)
-							downloaded.value = "$percentage %"
-						}
-				}
-				
-				override fun onError(error: OfflineRegionError) {
-					setStateOfflineMap(DOWNLOAD_STATE)
-				}
-				
-				override fun mapboxTileCountLimitExceeded(limit: Long) {
-					Log.e(TAG, "Mapbox tile count limit exceeded: $limit")
-				}
-			})
-		}
 	}
 	
 	companion object {

@@ -1,54 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:mapbox="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
-	
-	<com.mapbox.mapboxsdk.maps.MapView
-		android:id="@+id/mapView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
-	
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/switchButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="top|end"
-		android:layout_marginTop="@dimen/margin_padding_xsmall"
-		android:layout_marginEnd="@dimen/margin_padding_xsmall"
-		app:backgroundTint="@color/gray_30"
-		app:fabSize="mini"
-		app:srcCompat="@drawable/ic_layers"
-		mapbox:ignore="VectorDrawableCompat" />
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/layoutAlertAirplaneMode"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@android:color/white"
-		android:visibility="gone"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_height="match_parent"
+		android:background="@android:color/white">
 		
-		<TextView
-			android:id="@+id/tvAlertTitle"
-			style="@style/RangerText.Label"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin_padding_normal"
-			android:gravity="center"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
-		
-		<View
-			android:id="@+id/line"
+		<androidx.appcompat.widget.AppCompatTextView
 			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:background="@color/gray_30"
-			app:layout_constraintBottom_toBottomOf="@+id/layoutAlertAirplaneMode" />
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:text="MapFragment" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

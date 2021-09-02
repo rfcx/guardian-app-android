@@ -12,9 +12,6 @@ import org.rfcx.ranger.view.alerts.GroupAlertsViewModel
 import org.rfcx.ranger.view.alerts.guardian.GuardianViewModel
 import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueViewModel
 import org.rfcx.ranger.view.login.*
-import org.rfcx.ranger.view.map.MapDetailViewModel
-import org.rfcx.ranger.view.map.MapViewModel
-import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.ranger.view.profile.FeedbackViewModel
 import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.PasswordChangeViewModel
@@ -27,12 +24,6 @@ object UiModule {
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
 		viewModel { MainActivityViewModel(get(), get(), get()) }
-	}
-	
-	val mapModule = module {
-		viewModel { MapViewModel(get(), get(), get(), get(), get()) }
-		viewModel { MapDetailViewModel(get(), get()) }
-		viewModel { ReportViewPagerFragmentViewModel(get()) }
 	}
 	
 	val statusModule = module {
