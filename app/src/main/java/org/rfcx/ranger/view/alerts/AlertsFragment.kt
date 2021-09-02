@@ -128,14 +128,8 @@ class AlertsFragment : BaseFragment(), AlertListener, AlertsParentListener {
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String) {
-		val startFragment = if (!alertViewModel.hasGuardianGroup) {
-			observeSettingGuardianGroup() // start observe setting guardian group
-			SetGuardianGroupFragment()
-		} else {
-			fragment
-		}
 		childFragmentManager.beginTransaction()
-				.replace(contentContainer.id, startFragment,
+				.replace(contentContainer.id, fragment,
 						tag).commit()
 	}
 	
