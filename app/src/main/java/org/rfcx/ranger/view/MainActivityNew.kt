@@ -2,7 +2,6 @@ package org.rfcx.ranger.view
 
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -16,15 +15,12 @@ import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
-import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
-import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
-import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.view.status.StatusFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
@@ -33,33 +29,15 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
 	
-	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
-	
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val analytics by lazy { Analytics(this) }
 	private var currentFragment: Fragment? = null
 	
-	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
-		if (isOnAirplaneMode) {
-			showLocationError()
-			LocationTracking.set(this, false)
-			locationTrackingViewModel.trackingStateChange()
-		}
-	}
-	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
-	
-	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main_new)
-		
-		val preferences = Preferences.getInstance(this)
-		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
-		if (state == DOWNLOADING_STATE) {
-			preferences.putString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_CANCEL_STATE)
-		}
 		
 		setupBottomMenu()
 		if (savedInstanceState == null) {
@@ -94,21 +72,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		})
 		
 		observeMain()
-		observeLocationTracking()
 		observeEventFromNotification()
 		
 		getEventFromIntentIfHave(intent)
 	}
 	
 	override fun onResume() {
-		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		super.onResume()
 		mainViewModel.updateLocationTracking()
-	}
-	
-	override fun onPause() {
-		unregisterReceiver(airplaneModeReceiver)
-		super.onPause()
 	}
 	
 	override fun onNewIntent(intent: Intent?) {
@@ -319,23 +290,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
 	}
 	
-	private fun observeLocationTracking() {
-		locationTrackingViewModel.requireLocationTrackingState.observe(this, Observer {
-			if (it) {
-				enableLocationTracking()
-			} else {
-				disableLocationTracking()
-			}
-		})
-	}
-	
 	private fun observeMain() {
 		mainViewModel.isRequireToLogin.observe(this, Observer {
 			if (it) logout()
-		})
-		
-		mainViewModel.isLocationTrackingOn.observe(this, Observer {
-			if (it) enableLocationTracking()
 		})
 		
 		mainViewModel.alertCount.observe(this, Observer {
@@ -365,32 +322,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			val eventGuId: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
 			mainViewModel.eventGuIdFromNotification.value = eventGuId
 		}
-	}
-	
-	private fun enableLocationTracking() {
-		if (isOnAirplaneMode()) {
-			showLocationError()
-			LocationTracking.set(this, false)
-			locationTrackingViewModel.trackingStateChange()
-		} else {
-			locationPermissions.check { hasPermission: Boolean ->
-				LocationTracking.set(this, hasPermission)
-				locationTrackingViewModel.trackingStateChange()
-			}
-		}
-	}
-	
-	private fun showLocationError() {
-		AlertDialog.Builder(this)
-				.setTitle(R.string.in_air_plane_mode)
-				.setMessage(R.string.pls_off_air_plane_mode)
-				.setPositiveButton(R.string.common_ok, null)
-				.show()
-	}
-	
-	private fun disableLocationTracking() {
-		LocationTracking.set(this, false)
-		locationTrackingViewModel.trackingStateChange()
 	}
 	
 	companion object {
