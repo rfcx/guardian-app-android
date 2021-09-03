@@ -18,10 +18,6 @@ import org.rfcx.ranger.data.remote.domain.classified.ClassifiedRepositoryImp
 import org.rfcx.ranger.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.ranger.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.ranger.data.remote.domain.executor.ThreadExecutor
-import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepository
-import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansRepositoryImp
-import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansUseCase
-import org.rfcx.ranger.data.remote.groupByGuardians.eventInGuardian.GetMoreEventInGuardian
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepository
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupRepositoryImp
@@ -77,7 +73,6 @@ object DataModule {
 		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
 		single { GetEventsUseCase(get(), get(), get(), get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
-		single { GetMoreEventInGuardian(get(), get(), get()) }
 		single { GetEventUseCase(get(), get(), get()) }
 		
 		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
@@ -94,9 +89,6 @@ object DataModule {
 		
 		single { SetNameRepositoryImp(get()) } bind SetNameRepository::class
 		single { SendNameUseCase(get(), get(), get()) }
-		
-		single { GroupByGuardiansRepositoryImp(get()) } bind GroupByGuardiansRepository::class
-		single { GroupByGuardiansUseCase(get(), get(), get(), get(), get()) }
 		
 		single { SiteRepositoryImp(get()) } bind SiteRepository::class
 		single { GetSiteNameUseCase(get(), get(), get()) }
@@ -125,7 +117,6 @@ object DataModule {
 		factory { ServiceFactory.makeInviteCodeService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeGroupByGuardiansService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeShortLinkService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
