@@ -5,12 +5,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityViewModel
-import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
-import org.rfcx.ranger.view.alerts.AlertViewModel
-import org.rfcx.ranger.view.alerts.AllAlertsViewModel
-import org.rfcx.ranger.view.alerts.GroupAlertsViewModel
-import org.rfcx.ranger.view.alerts.guardian.GuardianViewModel
-import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueViewModel
 import org.rfcx.ranger.view.login.*
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
@@ -37,15 +31,6 @@ object UiModule {
 	
 	val statusModule = module {
 		viewModel { ReportDetailViewModel(get(), get(), get()) }
-	}
-	
-	val alertModule = module {
-		viewModel { AllAlertsViewModel(androidContext(), get(), get(), get(), get()) }
-		viewModel { AlertBottomDialogViewModel(androidContext(), get(), get(), get()) }
-		viewModel { GroupAlertsViewModel(androidContext(), get(), get()) }
-		viewModel { GuardianViewModel(get()) }
-		viewModel { AlertViewModel(androidContext(), get(), get()) }
-		viewModel { AlertValueViewModel(androidContext(), get(), get()) }
 	}
 	
 	val profileModule = module {

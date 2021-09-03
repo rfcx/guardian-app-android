@@ -69,7 +69,6 @@ class RangerApplication : MultiDexApplication() {
 				UiModule.mainModule,
 				UiModule.mapModule,
 				UiModule.statusModule,
-				UiModule.alertModule,
 				UiModule.profileModule,
 				UiModule.loginModule,
 				DataModule.localModule,
