@@ -3,6 +3,7 @@ package org.rfcx.ranger.di
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityViewModel
 import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel
 import org.rfcx.ranger.view.alerts.AlertViewModel
@@ -21,6 +22,7 @@ import org.rfcx.ranger.view.report.ReportDetailViewModel
 object UiModule {
 	
 	val mainModule = module {
+		viewModel { LocationTrackingViewModel(get()) }
 		viewModel { MainActivityViewModel(get(), get(), get()) }
 	}
 	

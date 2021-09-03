@@ -13,6 +13,10 @@
 			type="org.rfcx.ranger.view.profile.ProfileViewModel" />
 		
 		<variable
+			name="onClickLocationTracking"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
 			name="onClickPassword"
 			type="android.view.View.OnClickListener" />
 		
@@ -42,6 +46,14 @@
 		
 		<variable
 			name="onClickCoordinates"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickOfflineMap"
+			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickDeleteOffline"
 			type="android.view.View.OnClickListener" />
 	</data>
 	
@@ -286,6 +298,48 @@
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingBottom="@dimen/margin_padding_xsmall"
 				android:text="@string/location" />
+			
+			<LinearLayout
+				android:id="@+id/locationTrackingLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:orientation="horizontal">
+				
+				<TextView
+					android:id="@+id/locationTrackingTextView"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_weight="1"
+					android:text="@string/location_tracking_label"
+					android:textSize="@dimen/text_small" />
+				
+				<FrameLayout
+					android:id="@+id/locationTrackingSwitchLayout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="true"
+					android:focusable="true"
+					android:onClick="@{onClickLocationTracking}">
+					
+					<androidx.appcompat.widget.SwitchCompat
+						android:id="@+id/locationTrackingSwitch"
+						style="@style/SwitchCompatStyle"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:checked="@{viewModel.locationTracking}"
+						android:clickable="false"
+						android:focusable="false"
+						android:textOff="@string/location_tracking_off_label"
+						android:textOn="@string/location_tracking_on_label"
+						tools:checked="false" />
+				
+				</FrameLayout>
+			
+			</LinearLayout>
 			
 			<LinearLayout
 				android:id="@+id/coordinatesLinearLayout"

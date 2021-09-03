@@ -14,10 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.databinding.FragmentProfileBinding
 import org.rfcx.ranger.util.*
+import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
@@ -28,6 +30,7 @@ class ProfileFragment : BaseFragment() {
 	
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val profileViewModel: ProfileViewModel by viewModel()
+	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
@@ -88,6 +91,10 @@ class ProfileFragment : BaseFragment() {
 			userProfileImageView.visibility = View.GONE
 		}
 		
+		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
+			profileViewModel.onTracingStatusChange()
+		})
+		
 		profileViewModel.logoutState.observe(this, Observer {
 			if (it) {
 				dialog.show()
@@ -98,6 +105,15 @@ class ProfileFragment : BaseFragment() {
 	}
 	
 	private fun setOnClickButton() {
+		viewDataBinding.onClickLocationTracking = View.OnClickListener {
+			if (locationTrackingSwitch.isChecked) {
+				// off location tracking
+				locationTrackingViewModel.requireDisableLocationTracking()
+			} else {
+				locationTrackingViewModel.requireEnableLocationTracking()
+			}
+		}
+		
 		viewDataBinding.onClickAppIntro = View.OnClickListener {
 			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
 			preferenceHelper?.putBoolean(Preferences.IS_FIRST_TIME, false)
