@@ -150,7 +150,6 @@
     <string name="location">ตำแหน่ง</string>
     <string name="audio_notes">เสียงที่บันทึก</string>
     
-    <string name="menu_status">สถานะ</string>
     <string name="menu_map">แผนที่</string>
     <string name="menu_alert">การแจ้งเตือน</string>
     <string name="menu_profile">โปรไฟล์</string>

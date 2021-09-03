@@ -152,7 +152,7 @@
 	<string name="photos">Photos</string>
 	<string name="audio_notes">Audio notes</string>
 	
-	<string name="menu_status">STATUS</string>
+	<string name="menu_new_events">New Events</string>
 	<string name="menu_map">MAP</string>
 	<string name="menu_alert">ALERT</string>
 	<string name="menu_profile">PROFILE</string>
@@ -279,4 +279,7 @@
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
+	
+	<!-- NewEventsFragment -->
+	<string name="new_events_fragment">NewEventsFragment</string>
 </resources>

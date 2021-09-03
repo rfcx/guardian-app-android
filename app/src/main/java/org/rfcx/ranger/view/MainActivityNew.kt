@@ -21,12 +21,12 @@ import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.events.NewEventsFragment
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.ReportActivity
-import org.rfcx.ranger.view.status.StatusFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
@@ -148,7 +148,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	private fun setupBottomMenu() {
-		menuStatus.setOnClickListener {
+		menuNewEvents.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
@@ -164,14 +164,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			onBottomMenuClick(it)
 		}
 		
-		menuStatus.performClick()
+		menuNewEvents.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
 		if ((menu as BottomNavigationMenuItem).menuSelected) return
 		when (menu.id) {
-			menuStatus.id -> {
-				menuStatus.menuSelected = true
+			menuNewEvents.id -> {
+				menuNewEvents.menuSelected = true
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
@@ -179,7 +179,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				showStatus()
 			}
 			menuMap.id -> {
-				menuStatus.menuSelected = false
+				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = true
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = false
@@ -187,7 +187,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				showMap()
 			}
 			menuAlert.id -> {
-				menuStatus.menuSelected = false
+				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false
@@ -196,7 +196,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			}
 			
 			menuProfile.id -> {
-				menuStatus.menuSelected = false
+				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = false
 				menuProfile.menuSelected = true
@@ -256,14 +256,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
 				.add(contentContainer.id, getMap(), MapFragment.tag)
 				.add(contentContainer.id, getAlerts(), AlertsFragment.tag)
-				.add(contentContainer.id, getStatus(), StatusFragment.tag)
+				.add(contentContainer.id, getNewEvents(), NewEventsFragment.tag)
 				.commit()
 		
-		menuStatus.performClick()
+		menuNewEvents.performClick()
 	}
 	
-	private fun getStatus(): StatusFragment = supportFragmentManager.findFragmentByTag(StatusFragment.tag)
-			as StatusFragment? ?: StatusFragment.newInstance()
+	private fun getNewEvents(): NewEventsFragment = supportFragmentManager.findFragmentByTag(NewEventsFragment.tag)
+			as NewEventsFragment? ?: NewEventsFragment.newInstance()
 	
 	private fun getMap(): MapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
 			as MapFragment? ?: MapFragment.newInstance()
@@ -276,9 +276,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	private fun showStatus() {
 		showAboveAppbar(true)
-		this.currentFragment = getStatus()
+		this.currentFragment = getNewEvents()
 		supportFragmentManager.beginTransaction()
-				.show(getStatus())
+				.show(getNewEvents())
 				.hide(getMap())
 				.hide(getAlerts())
 				.hide(getProfile())
@@ -290,7 +290,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		this.currentFragment = getAlerts()
 		supportFragmentManager.beginTransaction()
 				.show(getAlerts())
-				.hide(getStatus())
+				.hide(getNewEvents())
 				.hide(getMap())
 				.hide(getProfile())
 				.commit()
@@ -301,7 +301,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		this.currentFragment = getMap()
 		supportFragmentManager.beginTransaction()
 				.show(getMap())
-				.hide(getStatus())
+				.hide(getNewEvents())
 				.hide(getAlerts())
 				.hide(getProfile())
 				.commit()
@@ -312,7 +312,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		this.currentFragment = getProfile()
 		supportFragmentManager.beginTransaction()
 				.show(getProfile())
-				.hide(getStatus())
+				.hide(getNewEvents())
 				.hide(getAlerts())
 				.hide(getMap())
 				.commit()
@@ -356,7 +356,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			if (alertsFragment != null && alertsFragment is AlertsFragment) {
 				alertsFragment.showDetail(it, EventItem.State.NONE)
 			} else {
-				menuStatus.menuSelected = false
+				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = false
 				menuAlert.menuSelected = true
 				menuProfile.menuSelected = false

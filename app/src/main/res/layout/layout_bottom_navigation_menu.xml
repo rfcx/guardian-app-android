@@ -5,15 +5,15 @@
 	android:weightSum="5">
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem
-		android:id="@+id/menuStatus"
+		android:id="@+id/menuNewEvents"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
-		app:icon="@drawable/ic_menu_discover"
+		app:icon="@drawable/ic_menu_alert"
 		app:iconTintColor="@color/colorPrimary"
 		app:menuSelected="false"
-		app:title="@string/menu_status"
+		app:title="@string/menu_new_events"
 		app:titleColorSelected="@color/colorPrimary" />
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem
@@ -22,7 +22,7 @@
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
-		app:icon="@drawable/ic_menu_alert"
+		app:icon="@drawable/ic_menu_discover"
 		app:iconTintColor="@color/colorPrimary"
 		app:showBadge="true"
 		app:title="@string/menu_alert"
