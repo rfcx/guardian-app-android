@@ -236,7 +236,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		menuAlert.performClick()
 	}
 	
-	override fun moveMapIntoReportMarker(report: Report) {}
+	override fun moveMapIntoReportMarker(report: Report) {
+		val mapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
+		if (mapFragment is MapFragment) {
+			mapFragment.moveToReportMarker(report)
+		}
+	}
 	
 	private fun startFragment(fragment: Fragment, showAboveAppbar: Boolean) {
 		this.currentFragment = fragment

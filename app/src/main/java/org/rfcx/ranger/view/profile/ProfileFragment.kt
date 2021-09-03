@@ -3,13 +3,19 @@ package org.rfcx.ranger.view.profile
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -155,6 +161,14 @@ class ProfileFragment : BaseFragment() {
 		
 		viewDataBinding.onClickCoordinates = View.OnClickListener {
 			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
+		}
+		
+		viewDataBinding.onClickOfflineMap = View.OnClickListener {
+			profileViewModel.offlineMapBox()
+		}
+		
+		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
+			profileViewModel.deleteOfflineRegion(false)
 		}
 		
 		viewDataBinding.onClickStartDemo = View.OnClickListener {
