@@ -29,14 +29,14 @@
 		app:titleColorSelected="@color/colorPrimary" />
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem
-		android:id="@+id/menuMap"
+		android:id="@+id/menuSubmittedReports"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_map"
 		app:iconTintColor="@color/colorPrimary"
-		app:title="@string/menu_map"
+		app:title="@string/menu_submitted_reports"
 		app:titleColorSelected="@color/colorPrimary" />
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem

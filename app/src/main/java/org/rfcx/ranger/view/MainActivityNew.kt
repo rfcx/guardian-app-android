@@ -4,13 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,7 +23,7 @@ import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.DraftReportsFragment
-import org.rfcx.ranger.view.report.ReportActivity
+import org.rfcx.ranger.view.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
@@ -114,7 +111,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			onBottomMenuClick(it)
 		}
 		
-		menuMap.setOnClickListener {
+		menuSubmittedReports.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
@@ -134,15 +131,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		when (menu.id) {
 			menuNewEvents.id -> {
 				menuNewEvents.menuSelected = true
-				menuMap.menuSelected = false
+				menuSubmittedReports.menuSelected = false
 				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
 				showStatus()
 			}
-			menuMap.id -> {
+			menuSubmittedReports.id -> {
 				menuNewEvents.menuSelected = false
-				menuMap.menuSelected = true
+				menuSubmittedReports.menuSelected = true
 				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
@@ -150,7 +147,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			}
 			menuDraftReports.id -> {
 				menuNewEvents.menuSelected = false
-				menuMap.menuSelected = false
+				menuSubmittedReports.menuSelected = false
 				menuDraftReports.menuSelected = true
 				menuProfile.menuSelected = false
 				
@@ -159,7 +156,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			
 			menuProfile.id -> {
 				menuNewEvents.menuSelected = false
-				menuMap.menuSelected = false
+				menuSubmittedReports.menuSelected = false
 				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = true
 				
@@ -190,7 +187,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
-				.add(contentContainer.id, getMap(), MapFragment.tag)
+				.add(contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
 				.add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
 				.add(contentContainer.id, getNewEvents(), NewEventsFragment.tag)
 				.commit()
@@ -201,8 +198,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private fun getNewEvents(): NewEventsFragment = supportFragmentManager.findFragmentByTag(NewEventsFragment.tag)
 			as NewEventsFragment? ?: NewEventsFragment.newInstance()
 	
-	private fun getMap(): MapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
-			as MapFragment? ?: MapFragment.newInstance()
+	private fun getSubmittedReports(): SubmittedReportsFragment = supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag)
+			as SubmittedReportsFragment? ?: SubmittedReportsFragment.newInstance()
 	
 	private fun getDraftReports(): DraftReportsFragment = supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag)
 			as DraftReportsFragment? ?: DraftReportsFragment.newInstance()
@@ -215,7 +212,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		this.currentFragment = getNewEvents()
 		supportFragmentManager.beginTransaction()
 				.show(getNewEvents())
-				.hide(getMap())
+				.hide(getSubmittedReports())
 				.hide(getDraftReports())
 				.hide(getProfile())
 				.commit()
@@ -227,16 +224,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		supportFragmentManager.beginTransaction()
 				.show(getDraftReports())
 				.hide(getNewEvents())
-				.hide(getMap())
+				.hide(getSubmittedReports())
 				.hide(getProfile())
 				.commit()
 	}
 	
 	private fun showMap() {
 		showAboveAppbar(false)
-		this.currentFragment = getMap()
+		this.currentFragment = getSubmittedReports()
 		supportFragmentManager.beginTransaction()
-				.show(getMap())
+				.show(getSubmittedReports())
 				.hide(getNewEvents())
 				.hide(getDraftReports())
 				.hide(getProfile())
@@ -250,7 +247,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				.show(getProfile())
 				.hide(getNewEvents())
 				.hide(getDraftReports())
-				.hide(getMap())
+				.hide(getSubmittedReports())
 				.commit()
 	}
 	
