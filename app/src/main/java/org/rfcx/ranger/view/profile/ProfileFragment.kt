@@ -187,7 +187,7 @@ class ProfileFragment : BaseFragment() {
 		view?.let {
 			Snackbar.make(it, R.string.feedback_submitted, Snackbar.LENGTH_SHORT)
 					.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-					.setAnchorView(R.id.newReportFabButton).show()
+					.setAnchorView(R.id.bottomBar).show() // TODO :: Check it work or not?
 		}
 	}
 	

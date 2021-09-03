@@ -139,8 +139,6 @@
 	<string name="location">Τοποθεσία</string>
 	<string name="audio_notes">ήχου σημειώσεις</string>
 	<string name="photos">φωτογραφίες</string>
-	<string name="menu_map">ΧΑΡΤΗΣ</string>
-	<string name="menu_alert">ΣΥΝΑΓΕΡΜΟΣ</string>
 	<string name="menu_profile">ΠΡΟΦΙΛ</string>
 	<string name="see_report_detail">Δείτε Λεπτομέρειες</string>
 	<string name="report_time_second">Μόλις τώρα</string>

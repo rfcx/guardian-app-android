@@ -19,26 +19,23 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.NewEventsFragment
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
+import org.rfcx.ranger.view.report.DraftReportsFragment
 import org.rfcx.ranger.view.report.ReportActivity
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
-	
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
-	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
-	private val analytics by lazy { Analytics(this) }
 	private var currentFragment: Fragment? = null
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -67,36 +64,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 		
 		this.saveUserLoginWith()
-		
-		newReportFabButton.setOnClickListener {
-			analytics.trackStartToAddReportEvent()
-			ReportActivity.startIntent(this)
-		}
-		
-		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
-		bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-			override fun onSlide(bottomSheet: View, slideOffset: Float) {
-			
-			}
-			
-			override fun onStateChanged(bottomSheet: View, newState: Int) {
-				if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-					showBottomAppBar()
-					val bottomSheetFragment = supportFragmentManager.findFragmentByTag("BottomSheet")
-					if (bottomSheetFragment != null) {
-						supportFragmentManager.beginTransaction()
-								.remove(bottomSheetFragment)
-								.commit()
-					}
-				}
-			}
-			
-		})
-		
 		observeMain()
 		observeLocationTracking()
-		observeEventFromNotification()
-		
 		getEventFromIntentIfHave(intent)
 	}
 	
@@ -116,14 +85,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		getEventFromIntentIfHave(intent)
 	}
 	
-	override fun onBackPressed() {
-		
-		if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-			hideBottomSheet()
-		} else {
-			return super.onBackPressed()
-		}
-	}
+	override fun onBackPressed() {}
 	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -156,7 +118,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			onBottomMenuClick(it)
 		}
 		
-		menuAlert.setOnClickListener {
+		menuDraftReports.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
@@ -173,7 +135,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			menuNewEvents.id -> {
 				menuNewEvents.menuSelected = true
 				menuMap.menuSelected = false
-				menuAlert.menuSelected = false
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
 				showStatus()
@@ -181,15 +143,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			menuMap.id -> {
 				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = true
-				menuAlert.menuSelected = false
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
 				showMap()
 			}
-			menuAlert.id -> {
+			menuDraftReports.id -> {
 				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = false
-				menuAlert.menuSelected = true
+				menuDraftReports.menuSelected = true
 				menuProfile.menuSelected = false
 				
 				showAlerts()
@@ -198,7 +160,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			menuProfile.id -> {
 				menuNewEvents.menuSelected = false
 				menuMap.menuSelected = false
-				menuAlert.menuSelected = false
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = true
 				
 				showProfile()
@@ -206,34 +168,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 	}
 	
-	override fun showBottomSheet(fragment: Fragment) {
-		hidBottomAppBar()
-		val layoutParams: CoordinatorLayout.LayoutParams = bottomSheetContainer.layoutParams
-				as CoordinatorLayout.LayoutParams
-		layoutParams.anchorGravity = Gravity.BOTTOM
-		bottomSheetContainer.layoutParams = layoutParams
-		supportFragmentManager.beginTransaction()
-				.replace(bottomSheetContainer.id, fragment, "BottomSheet")
-				.commit()
-		bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-	}
+	override fun showBottomSheet(fragment: Fragment) {}
 	
-	override fun hideBottomSheet() {
-		bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-	}
+	override fun hideBottomSheet() {}
 	
-	override fun hidBottomAppBar() {
-		newReportFabButton.visibility = View.INVISIBLE
-		bottomBar.visibility = View.INVISIBLE
-	}
+	override fun hidBottomAppBar() {}
 	
-	override fun showBottomAppBar() {
-		bottomBar.visibility = View.VISIBLE
-		newReportFabButton.visibility = View.VISIBLE
-	}
+	override fun showBottomAppBar() {}
 	
 	override fun alertScreen() {
-		menuAlert.performClick()
+		menuDraftReports.performClick()
 	}
 	
 	override fun moveMapIntoReportMarker(report: Report) {
@@ -243,19 +187,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 	}
 	
-	private fun startFragment(fragment: Fragment, showAboveAppbar: Boolean) {
-		this.currentFragment = fragment
-		showAboveAppbar(showAboveAppbar)
-		supportFragmentManager.beginTransaction()
-				.replace(contentContainer.id, fragment)
-				.commit()
-	}
-	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
 				.add(contentContainer.id, getMap(), MapFragment.tag)
-				.add(contentContainer.id, getAlerts(), AlertsFragment.tag)
+				.add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
 				.add(contentContainer.id, getNewEvents(), NewEventsFragment.tag)
 				.commit()
 		
@@ -268,8 +204,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	private fun getMap(): MapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
 			as MapFragment? ?: MapFragment.newInstance()
 	
-	private fun getAlerts(): AlertsFragment = supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
-			as AlertsFragment? ?: AlertsFragment.newInstance(null, 0)
+	private fun getDraftReports(): DraftReportsFragment = supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag)
+			as DraftReportsFragment? ?: DraftReportsFragment.newInstance()
 	
 	private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
 			as ProfileFragment? ?: ProfileFragment.newInstance()
@@ -280,16 +216,16 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		supportFragmentManager.beginTransaction()
 				.show(getNewEvents())
 				.hide(getMap())
-				.hide(getAlerts())
+				.hide(getDraftReports())
 				.hide(getProfile())
 				.commit()
 	}
 	
 	private fun showAlerts() {
 		showAboveAppbar(true)
-		this.currentFragment = getAlerts()
+		this.currentFragment = getDraftReports()
 		supportFragmentManager.beginTransaction()
-				.show(getAlerts())
+				.show(getDraftReports())
 				.hide(getNewEvents())
 				.hide(getMap())
 				.hide(getProfile())
@@ -302,7 +238,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		supportFragmentManager.beginTransaction()
 				.show(getMap())
 				.hide(getNewEvents())
-				.hide(getAlerts())
+				.hide(getDraftReports())
 				.hide(getProfile())
 				.commit()
 	}
@@ -313,7 +249,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		supportFragmentManager.beginTransaction()
 				.show(getProfile())
 				.hide(getNewEvents())
-				.hide(getAlerts())
+				.hide(getDraftReports())
 				.hide(getMap())
 				.commit()
 	}
@@ -341,27 +277,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		
 		mainViewModel.isLocationTrackingOn.observe(this, Observer {
 			if (it) enableLocationTracking()
-		})
-		
-		mainViewModel.alertCount.observe(this, Observer {
-			menuAlert.badgeNumber = it
-		})
-	}
-	
-	private fun observeEventFromNotification() {
-		mainViewModel.eventGuIdFromNotification.observe(this, Observer {
-			
-			val alertsFragment =
-					supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
-			if (alertsFragment != null && alertsFragment is AlertsFragment) {
-				alertsFragment.showDetail(it, EventItem.State.NONE)
-			} else {
-				menuNewEvents.menuSelected = false
-				menuMap.menuSelected = false
-				menuAlert.menuSelected = true
-				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(it, 1), true)
-			}
 		})
 	}
 	

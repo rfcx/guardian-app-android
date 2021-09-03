@@ -154,7 +154,7 @@
 	
 	<string name="menu_new_events">New Events</string>
 	<string name="menu_map">MAP</string>
-	<string name="menu_alert">ALERT</string>
+	<string name="menu_draft_reports">Draft Reports</string>
 	<string name="menu_profile">PROFILE</string>
 	
 	<string name="see_report_detail">See Detail</string>
@@ -282,4 +282,7 @@
 	
 	<!-- NewEventsFragment -->
 	<string name="new_events_fragment">NewEventsFragment</string>
+	
+	<!-- DraftReportsFragment -->
+	<string name="draft_reports_fragment">DraftReportsFragment</string>
 </resources>
