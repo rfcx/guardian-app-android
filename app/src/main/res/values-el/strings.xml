@@ -58,10 +58,6 @@
 	<string name="go_to_setting">Ρυθμίσεις</string>
 	
 	<!-- message list -->
-	<string name="profile_welcome">Γεια, %s!</string>
-	<string name="profile_onduty">Στο καθήκον</string>
-	<string name="profile_nottracking">δεν παρακολούθησης</string>
-	<string name="error_no_guardian_group_set">Σετ έργα στις Ρυθμίσεις</string>
 	<string name="please_set_guardian_group">Παρακαλούμε σύνολο έργων</string>
 	<string name="sent_to">στέλνω σε</string>
 	
@@ -90,7 +86,6 @@
 	<string name="location_tracking_label">εντοπισμού θέσης</string>
 	<string name="location_tracking_on_label">Επί</string>
 	<string name="location_tracking_off_label">Μακριά από</string>
-	<string name="default_site_label">Ιστοσελίδα</string>
 	<string name="guardian_group_label">Εργα</string>
 	<string name="notifications">Ειδοποιήσεις</string>
 	<string name="dd_coordinates">DD</string>
@@ -116,15 +111,7 @@
 	<string name="switch_account">αλλαγή λογαριασμού</string>
 	
 	<!-- Report -->
-	<string name="sync_reports_label">%d αναφορές</string>
-	<string name="sync_report_label">%d έκθεση</string>
-	<string name="sync_checkins_label">%d τοποθεσίας check-ins</string>
-	<string name="sync_waiting_network">αναμονή για το δίκτυο ...</string>
-	<string name="sync_starting">ξεκινώντας μεταφόρτωσης ...</string>
-	<string name="sync_uploading">φόρτωση ...</string>
-	<string name="sync_complete">Η μεταφόρτωση ολοκληρώθηκε!</string>
 	<string name="empty_list_description">\"Δεν υπήρξαν επεισόδια πρόσφατα. Απολαύστε την ημέρα σας :)\"</string>
-	<string name="can_not_play_audio">Δεν είναι δυνατή η αναπαραγωγή ήχου, δοκιμάστε ξανά αργότερα.</string>
 	<string name="menu_camera">ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ</string>
 	<string name="menu_gallery">Εκθεσιακός χώρος</string>
 	
@@ -146,64 +133,17 @@
 	<string name="report_hr_format">%dh</string>
 	<string name="report_day_format">%dd</string>
 	<string name="report_week_format">%dw</string>
-	<string name="follow_up_later_button">Παρακολούθηση αργότερα</string>
-	<string name="open_map_button">Άνοιγμα χάρτη</string>
-	<string name="common_no">Οχι</string>
-	<string name="common_yes">Ναί</string>
 	<string name="common_ok">Εντάξει</string>
 	<string name="common_none">Κανένας</string>
 	
 	<!-- Status -->
-	<string name="status_stat_title">εβδομαδιαία κατάστασή σας</string>
-	<string name="status_report_title">Έκθεση ιστορία</string>
-	<string name="status_alert_title">Πρόσφατες ειδοποιήσεις</string>
-	<string name="status_see_more">Δείτε περισσότερα</string>
-	<string name="status_duty_count_desc">λεπτά στο καθήκον</string>
-	<string name="status_reported_desc">εκθέσεις που υποβάλλονται</string>
-	<string name="status_reviewed_desc">ειδοποίησης επανεξετάζονται</string>
-	<string name="format_location">%s, %s</string>
-	<string name="format_image_synced">%s φωτογραφία</string>
-	<string name="format_image_unsync">%s photo (%s δεν έχει ακόμα συγχρονιστεί)</string>
-	<string name="format_images_synced">%s φωτογραφίες</string>
-	<string name="format_images_unsync">%s φωτογραφίες (%s δεν έχει συγχρονιστεί)</string>
-	<string name="empty_report_text">Δεν δημοσιεύματα των τελευταίων 7 ημερών. \\ N πατήστε το + για να δημιουργήσετε ένα.</string>
-	<string name="button_later">Αργότερα</string>
-	<string name="button_set_guardian_group">Σετ έργα</string>
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="album_name_all">Όλα τα Media</string>
-	<string name="button_preview">Προεπισκόπηση</string>
-	<string name="button_apply_default">Ισχύουν</string>
-	<string name="button_apply">Απλώστε (%1$d)</string>
-	<string name="button_back">Πίσω</string>
-	<string name="photo_grid_capture">ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ</string>
-	<string name="empty_text">Δεν υπάρχουν ακόμη μέσα μαζικής ενημέρωσης</string>
 	<string name="button_ok">Εντάξει</string>
-	<string name="error_over_count_default">Έχετε φτάσει το μέγιστο επιλέξιμο</string>
-	<string name="error_over_count">Μπορείτε να επιλέξετε μόνο μέχρι% 1 $ d αρχεία πολυμέσων</string>
-	<string name="error_under_quality">Σύμφωνα με ποιότητα</string>
-	<string name="error_over_quality">πάνω από την ποιότητα</string>
-	<string name="error_file_type">Μη υποστηριζόμενος τύπος αρχείου</string>
-	<string name="error_type_conflict">Δεν μπορείτε να επιλέξετε φωτογραφίες και βίντεο ταυτόχρονα</string>
-	<string name="error_no_video_activity">Δεν App βρήκε υποστήριξη προεπισκόπηση βίντεο</string>
-	<string name="error_over_original_size">Δεν μπορείτε να επιλέξετε τις φωτογραφίες μεγαλύτερες από% 1 $ d MB</string>
-	<string name="error_over_original_count">%1$d φωτογραφίες πάνω από% 2 $ d MB. Αρχικό θα είναι ανεξέλεγκτη</string>
-	<string name="button_original">Πρωτότυπο</string>
-	<string name="button_sure_default">Εντάξει</string>
-	<string name="button_sure">Εντάξει(%1$d)</string>
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">Με ιστοσελίδας</string>
-	<string name="tab_all_alerts">Όλες οι ειδοποιήσεις</string>
 	<string name="yesterday">Εχθές</string>
 	<string name="no_internet_connection">Όχι στο διαδίκτυο, παρακαλώ προσπαθήστε ξανά.</string>
-	<string name="warning_set_guardian_group">Τα έργα δεν βρέθηκε. Θα πρέπει να ορίσετε ένα site για να λαμβάνετε ειδοποιήσεις!</string>
-	<string name="no_incident_occurred_recently">Δεν υπάρχει περιστατικό συνέβη πρόσφατα</string>
-	<string name="enjoy_you_day">μπορείτε να απολαύσετε την ημέρα :)</string>
-	<string name="see_older">Δείτε παλαιότερες</string>
-	<string name="not_have_event_more">Δεν υπάρχουν περισσότερες εκδηλώσεις</string>
-	<string name="last_reviewed_by">Τελευταία αξιολόγηση από</string>
-	<string name="not_have_review">Δεν έχει αναθεωρηθεί</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">πριονι</string>
@@ -238,16 +178,10 @@
 	<string name="account">λογαριασμός</string>
 	<string name="change_profile_photo">Αλλαγή της φωτογραφίας προφίλ</string>
 	<string name="edit_profile">Επεξεργασία προφίλ</string>
-	<string name="offline_map">Αποσυνδεδεμένος Χάρτης</string>
-	<string name="download">Κατεβάστε</string>
-	<string name="delete">διαγράφω (%sMB)</string>
-	<string name="unavailable">Μη διαθέσιμο</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Λίστα Έργων</string>
 	<string name="notification_tracking_title">On-καθήκον και την παρακολούθηση ενεργοποιημένη</string>
 	<string name="notification_traking_message_format">% D λεπτά καταγράφηκε</string>
-	<string name="reject_text">απορρίπτω</string>
-	<string name="confirm_text">επιβεβαιώνω</string>
 	<string name="error_unsubscribe_by_email">Διαγραφή από% s Fail</string>
 </resources>

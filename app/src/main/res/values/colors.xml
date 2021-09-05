@@ -9,13 +9,10 @@
 	<color name="text_secondary">#969FAA</color>
 	<color name="text_error">#e41a1a</color>
 	<color name="text_white">#ffffff</color>
-	<color name="text_almost_white">#f0f0f0</color>
 	<color name="text_black">#000000</color>
 	<color name="text_green">#2FB04A</color>
 
 	<color name="divider">#D6D6D6</color>
-	<color name="yellow">#ffdd00</color>
-	<color name="orange">#f57003</color>
 	
 	<color name="transparent">@android:color/transparent</color>
 	
@@ -28,12 +25,8 @@
 	
 	<color name="location_status_loading_bg">#ff2c9a46</color>
 	<color name="location_status_failed_bg">#FF0404</color>
-	<color name="check_in_polyline">#969faa</color>
 	
 	<color name="button_negative">#969faa</color>
 	<color name="button_facebook_login">#37509f</color>
-	
-	<color name="view_pager_indicator_selected">#ff2c9a46</color>
-	<color name="view_pager_indicator_un_selected">#ffffff</color>
 
 </resources>

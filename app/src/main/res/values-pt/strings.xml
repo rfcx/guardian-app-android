@@ -64,11 +64,7 @@
     <string name="go_to_setting">Definições</string>
 	
 	<!-- message list -->
-    <string name="profile_welcome">Olá, %s!</string>
-    <string name="profile_onduty">Em serviço</string>
-    <string name="profile_nottracking">Não rastreando</string>
-	<string name="error_no_guardian_group_set">Set projeto em configurações</string>
-    <string name="please_set_guardian_group">Por favor projecto conjunto</string>
+	<string name="please_set_guardian_group">Por favor projecto conjunto</string>
     <string name="sent_to">enviar para</string>
 
     <!-- report -->
@@ -96,8 +92,7 @@
 	<string name="location_tracking_label">Rastreamento de localização</string>
     <string name="location_tracking_on_label">Ligado</string>
     <string name="location_tracking_off_label">Desligado</string>
-    <string name="default_site_label">Local</string>
-    <string name="guardian_group_label">Projetos</string>
+	<string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
     <string name="start_demo">Enviar um alerta de teste</string>
     <string name="notification_will_sent">A notificação será enviada no prazo de 30 segundos para verificar se você pode receber alertas</string>
@@ -125,17 +120,9 @@
     <string name="switch_account">mudar de conta</string>
     
     <!-- Report -->
-    <string name="sync_reports_label">%d relatórios e lista</string>
-    <string name="sync_report_label">%d relatório</string>
-    <string name="sync_checkins_label">%d localizações mais acessadas</string>
-    <string name="sync_waiting_network">esperando pela rede…</string>
-    <string name="sync_starting">Começando o upload…</string>
-    <string name="sync_uploading">Fazendo upload…</string>
-    <string name="sync_complete">Upload completo!</string>
-    <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
-    <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
-   
-    <!-- Symbols -->
+	<string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
+	
+	<!-- Symbols -->
     <string name="menu_camera">Câmera</string>
     <string name="menu_gallery">Galeria</string>
     
@@ -160,68 +147,19 @@
     <string name="report_hr_format">%dh</string>
     <string name="report_day_format">%dd</string>
     <string name="report_week_format">%dw</string>
-    <string name="follow_up_later_button">Seguir-se mais tarde</string>
-    <string name="open_map_button">Abrir mapa</string>
-    
-    <string name="common_no">Não</string>
-    <string name="common_yes">Sim</string>
-    
-    <!-- Status -->
-    <string name="status_stat_title">Seu status semanal</string>
-    <string name="status_report_title">Histórico de relatório</string>
-    <string name="status_duty_count_desc">minutos de plantão</string>
-    <string name="status_alert_title">Alertas recentes</string>
-    <string name="status_see_more">Ver mais</string>
-    <string name="status_reported_desc">relatórios enviados</string>
-    <string name="status_reviewed_desc">alerta revisado</string>
-    <string name="format_location">%s, %s</string>
-    <string name="format_image_synced">%s imagem</string>
-    <string name="format_image_unsync">%s imagem (%s ainda não sincronizada)</string>
-    <string name="format_images_synced">%s imagens</string>
-    <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
-    <string name="empty_report_text">"Não há relatos nos últimos 7 dias.\nimprensa + para criar uma."</string>
-    <string name="button_later">Mais tarde</string>
-    <string name="button_set_guardian_group">Projetos estabelecem</string>
-    
-    <!-- Override string res from matisse Image picker library -->
-    <string name="album_name_all">Todos os meios</string>
-    <string name="button_preview">visualização</string>
-    <string name="button_apply_default">Aplique</string>
-    <string name="button_apply">Aplicar (%1$d)</string>
-    <string name="button_back">De volta</string>
-    <string name="photo_grid_capture">Câmera</string>
-    <string name="empty_text">Ainda não há meios</string>
-    <string name="button_ok">Está bem</string>
-    <string name="error_over_count_default">Você atingiu o máximo de arquivos selecionáveis</string>
-    <string name="error_over_count">Você só pode selecionar até %1$d arquivos de mídia</string>
-    <string name="error_under_quality">Sob qualidade</string>
-    <string name="error_over_quality">Sobre a qualidade</string>
-    <string name="error_file_type">Tipo de arquivo não suportado</string>
-    <string name="error_type_conflict">Não é possível selecionar imagens e vídeos ao mesmo tempo</string>
-    <string name="error_no_video_activity">Nenhum aplicativo encontrado para suportar visualização de vídeo</string>
-    <string name="error_over_original_size">Não é possível selecionar as imagens maiores que %1$d MB</string>
-    <string name="error_over_original_count">%1$d imagens acima de %2$d MB. O original será desmarcado</string>
-    <string name="button_original">Original</string>
-    <string name="button_sure_default">Está bem</string>
-    <string name="button_sure">Está bem(%1$d)</string>
-    <!-- Override string res from matisse Image picker library -->
+	
+	<!-- Status -->
+	
+	<!-- Override string res from matisse Image picker library -->
+	<string name="button_ok">Está bem</string>
+	<!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Pelo site</string>
-    <string name="tab_all_alerts">Todos os alertas</string>
-    <string name="yesterday">Ontem</string>
+	<string name="yesterday">Ontem</string>
     
     <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
-    <string name="warning_set_guardian_group">Projetos não encontrado. Você deve definir um site para receber alertas!</string>
-    <string name="no_incident_occurred_recently">Não há incidente ocorreu recentemente</string>
-    <string name="enjoy_you_day">Aproveite o seu dia :)</string>
-    <string name="see_older">veja mais antiga</string>
-    <string name="not_have_event_more">Não há mais eventos</string>
-    
-    <string name="last_reviewed_by">Última avaliação por</string>
-    <string name="not_have_review">ainda não revistos</string>
-    
-    <!--Event value-->
+	
+	<!--Event value-->
     <string name="chainsaw">motosserra</string>
     <string name="gunshot">bala</string>
     <string name="vehicle">veículo</string>
@@ -257,12 +195,8 @@
     
     <string name="change_profile_photo">Alterar foto do perfil</string>
     <string name="edit_profile">Editar Perfil</string>
-    <string name="offline_map">Offline Map</string>
-    <string name="download">baixar</string>
-    <string name="delete">excluir (%sMB)</string>
-    <string name="unavailable">INDISPONÍVEL</string>
-    
-    <!--Guardian Group List-->
+	
+	<!--Guardian Group List-->
     <string name="guardian_group_list">Lista de projetos</string>
 	<string name="audio_notes">Notas de áudio</string>
     <string name="photos">Foto</string>
@@ -270,10 +204,8 @@
     
     <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
     <string name="notification_traking_message_format">%d minutos gravado</string>
-    
-    <string name="reject_text">rejeitar</string>
-    <string name="confirm_text">confirme</string>
-    <string name="required">Requeridos!</string>
+	
+	<string name="required">Requeridos!</string>
     <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
     <string name="detected_at">detectado no</string>
     
