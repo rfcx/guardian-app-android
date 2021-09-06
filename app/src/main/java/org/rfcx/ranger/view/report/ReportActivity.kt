@@ -62,18 +62,18 @@ class ReportActivity : BaseReportImageActivity(), OnMapReadyCallback {
 	private lateinit var mapBoxMap: MapboxMap
 	
 	private val locationListener = object : android.location.LocationListener {
-		override fun onLocationChanged(p0: Location?) {
+		override fun onLocationChanged(p0: Location) {
 			p0?.let {
 				moveCameraTo(it)
 			}
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-		override fun onProviderEnabled(p0: String?) {
+		override fun onProviderEnabled(p0: String) {
 			showLocationFinding()
 		}
 		
-		override fun onProviderDisabled(p0: String?) {
+		override fun onProviderDisabled(p0: String) {
 			showLocationMessageError(getString(R.string.notification_location_not_availability))
 		}
 	}

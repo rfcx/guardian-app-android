@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.profile
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,15 +45,11 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 		db.collection("feedback")
 				.add(docData)
 				.addOnSuccessListener { documentReference ->
-					Log.d("documentReference", documentReference.toString())
-					
 					if (uris != null) uploadFile(uris, documentReference)
 					_statusToSaveData.postValue("Success")
 					
 				}
 				.addOnFailureListener { e ->
-					Log.d("error", e.message)
-					
 					Snackbar.make(contextView, R.string.feedback_submission_failed, Snackbar.LENGTH_LONG)
 							.setAction(R.string.snackbar_retry) {
 								saveDataInFirestore(uris, input, contextView)
@@ -88,7 +83,6 @@ class FeedbackViewModel(private val context: Context) : ViewModel() {
 					counter += 1
 					val downloadUri = task.result
 					pathImages.add(downloadUri.toString())
-					Log.d("downloadUri", downloadUri.toString())
 					if (counter == uris.size) {
 						val docData = hashMapOf("pathImages" to pathImages)
 						documentReference.update(docData as Map<String, Any>)

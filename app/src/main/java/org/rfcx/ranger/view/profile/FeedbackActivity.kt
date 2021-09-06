@@ -105,9 +105,9 @@ class FeedbackActivity : AppCompatActivity() {
 		return super.onCreateOptionsMenu(menu)
 	}
 	
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		R.id.attachView
-		when (item?.itemId) {
+		when (item.itemId) {
 			android.R.id.home -> finish()
 			R.id.attachView -> openGallery()
 			R.id.sendFeedbackView -> sendFeedback()

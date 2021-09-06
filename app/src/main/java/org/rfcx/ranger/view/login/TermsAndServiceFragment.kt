@@ -43,7 +43,9 @@ class TermsAndServiceFragment : BaseFragment() {
 			}
 			
 			override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-				view?.loadUrl(url)
+				if (url != null) {
+					view?.loadUrl(url)
+				}
 				return true
 			}
 			
