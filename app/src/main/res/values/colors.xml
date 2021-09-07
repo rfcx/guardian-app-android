@@ -31,5 +31,5 @@
 	
 	<color name="topBar">#FFFFFF</color>
 	<color name="separateLine">#F0F0F0</color>
-
+	<color name="bottomBar">#FFFFFF</color>
 </resources>

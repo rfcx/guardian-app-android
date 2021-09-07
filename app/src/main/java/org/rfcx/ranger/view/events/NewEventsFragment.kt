@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -66,15 +67,15 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 	}
 	
 	private fun setOnClickProjectName() {
+		listener.hideBottomAppBar()
 		projectRecyclerView.visibility = View.VISIBLE
 		projectSwipeRefreshView.visibility = View.VISIBLE
-		listener.hideBottomAppBar()
 	}
 	
 	override fun onClicked(project: Project) {
+		listener.showBottomAppBar()
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
-		listener.showBottomAppBar()
 		viewModel.setProjectSelected(project.id)
 		setProjectTitle(project.name)
 	}

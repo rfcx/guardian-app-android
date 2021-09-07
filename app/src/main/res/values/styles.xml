@@ -128,5 +128,9 @@
 		<item name="colorPrimary">@color/white</item>
 		<item name="colorPrimaryDark">@color/white</item>
 	</style>
+	
+	<style name="BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+		<item name="backgroundTint">@color/bottomBar</item>
+	</style>
 
 </resources>
