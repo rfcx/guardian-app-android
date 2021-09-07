@@ -20,3 +20,7 @@ open class Project(
 		const val PROJECT_PERMISSIONS = "permissions"
 	}
 }
+
+fun Project.isGuest(): Boolean {
+	return this.permissions == Permissions.GUEST.value
+}

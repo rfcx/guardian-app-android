@@ -1,6 +1,7 @@
 package org.rfcx.ranger.data.local
 
 import io.realm.Realm
+import io.realm.Sort
 import org.rfcx.ranger.data.api.project.ProjectResponse
 import org.rfcx.ranger.data.api.project.permissionsLabel
 import org.rfcx.ranger.data.api.project.toProject
@@ -28,5 +29,16 @@ class ProjectDb(val realm: Realm) {
 				project.permissions = response.permissionsLabel()
 			}
 		}
+	}
+	
+	fun getProjectById(id: Int): Project? {
+		return realm.where(Project::class.java)
+				.equalTo(Project.PROJECT_ID, id).findFirst()
+	}
+	
+	fun getProjects(): List<Project> {
+		return realm.where(Project::class.java)
+				.sort(Project.PROJECT_NAME, Sort.ASCENDING).findAll()
+				?: arrayListOf()
 	}
 }
