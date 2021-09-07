@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.project.ProjectAdapter
@@ -35,9 +36,10 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		viewModel.getProjects()
+		viewModel.fetchProjects()
 		setOnClickListener()
 		setRecyclerView()
+		setObserver()
 	}
 	
 	private fun setRecyclerView() {
@@ -53,6 +55,14 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 		projectTitleLayout.setOnClickListener {
 			setOnClickProjectName()
 		}
+		
+		projectSwipeRefreshView.apply {
+			setOnRefreshListener {
+				viewModel.fetchProjects()
+				isRefreshing = true
+			}
+			setColorSchemeResources(R.color.colorPrimary)
+		}
 	}
 	
 	private fun setOnClickProjectName() {
@@ -67,6 +77,22 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 		listener.showBottomAppBar()
 		viewModel.setProjectSelected(project.id)
 		setProjectTitle(project.name)
+	}
+	
+	private fun setObserver() {
+		viewModel.projects.observe(viewLifecycleOwner, { it ->
+			it.success({
+				projectSwipeRefreshView.isRefreshing = false
+				projectAdapter.items = listOf()
+				projectAdapter.items = viewModel.getProjectsFromLocal()
+				projectAdapter.notifyDataSetChanged()
+			}, {
+				projectSwipeRefreshView.isRefreshing = false
+				Toast.makeText(context, it.message
+						?: getString(R.string.something_is_wrong), Toast.LENGTH_LONG).show()
+			}, {
+			})
+		})
 	}
 	
 	private fun setProjectTitle(str: String) {

@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.events
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
@@ -9,21 +10,26 @@ import org.rfcx.ranger.data.api.project.GetProjectsUseCase
 import org.rfcx.ranger.data.api.project.ProjectResponse
 import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
 import org.rfcx.ranger.data.local.ProjectDb
+import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
 
+
 class NewEventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
+	private val _projects = MutableLiveData<Result<List<Project>>>()
+	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
-	fun getProjects() {
+	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
 			override fun onSuccess(t: List<ProjectResponse>) {
 				t.map {
 					projectDb.insertOrUpdate(it)
 				}
+				_projects.value = Result.Success(listOf())
 			}
 			
 			override fun onError(e: Throwable) {
-				TODO("Not yet implemented")
+				_projects.value = Result.Error(e)
 			}
 		}, ProjectsRequestFactory())
 	}
