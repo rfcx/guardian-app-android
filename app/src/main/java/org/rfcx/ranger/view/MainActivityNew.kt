@@ -169,7 +169,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	override fun hideBottomSheet() {}
 	
-	override fun hidBottomAppBar() {}
+	override fun hideBottomAppBar() {}
 	
 	override fun showBottomAppBar() {}
 	
@@ -323,7 +323,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 interface MainActivityEventListener {
 	fun showBottomSheet(fragment: Fragment)
 	fun hideBottomSheet()
-	fun hidBottomAppBar()
+	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun alertScreen()
 	fun moveMapIntoReportMarker(report: Report)

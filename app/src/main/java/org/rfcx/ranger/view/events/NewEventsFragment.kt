@@ -1,7 +1,7 @@
 package org.rfcx.ranger.view.events
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +13,19 @@ import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
 class NewEventsFragment : Fragment(), ProjectOnClickListener {
 	private val viewModel: NewEventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
+	lateinit var listener: MainActivityEventListener
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as MainActivityEventListener)
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -39,6 +46,7 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 			adapter = projectAdapter
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
+		setProjectTitle(viewModel.getProjectName())
 	}
 	
 	private fun setOnClickListener() {
@@ -50,14 +58,19 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 	private fun setOnClickProjectName() {
 		projectRecyclerView.visibility = View.VISIBLE
 		projectSwipeRefreshView.visibility = View.VISIBLE
-//		listener?.hideBottomAppBar()
+		listener.hideBottomAppBar()
 	}
 	
 	override fun onClicked(project: Project) {
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
-		
-		Log.d("onClicked","${project.name}")
+		listener.showBottomAppBar()
+		viewModel.setProjectSelected(project.id)
+		setProjectTitle(project.name)
+	}
+	
+	private fun setProjectTitle(str: String) {
+		projectTitleTextView.text = str
 	}
 	
 	override fun onLockImageClicked() {
