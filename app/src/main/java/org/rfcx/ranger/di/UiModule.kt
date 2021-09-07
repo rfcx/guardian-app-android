@@ -25,7 +25,7 @@ object UiModule {
 	}
 	
 	val eventsModule = module {
-		viewModel { NewEventsViewModel() }
+		viewModel { NewEventsViewModel(get()) }
 	}
 	
 	val mapModule = module {
