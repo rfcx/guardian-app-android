@@ -28,5 +28,7 @@
 	
 	<color name="button_negative">#969faa</color>
 	<color name="button_facebook_login">#37509f</color>
+	
+	<color name="topBar">#FFFFFF</color>
 
 </resources>

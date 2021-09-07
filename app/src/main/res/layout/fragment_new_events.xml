@@ -6,6 +6,10 @@
 	android:background="@color/white"
 	tools:context=".view.events.NewEventsFragment">
 	
+	<include
+		android:id="@+id/toolbarLayout"
+		layout="@layout/toolbar_project" />
+	
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
