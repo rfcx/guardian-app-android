@@ -136,6 +136,7 @@ object DataModule {
 		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
 		factory { CachedEndpointDb(get()) }
 		factory { GuardianDb(get()) }
+		factory { ProjectDb(get()) }
 		factory { GuardianGroupDb(get()) }
 		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
