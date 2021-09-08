@@ -80,15 +80,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var coordinates: ArrayList<ArrayList<Point>>? = null
 	private val locationListener = object : android.location.LocationListener {
-		override fun onLocationChanged(p0: Location?) {
+		override fun onLocationChanged(p0: Location) {
 			p0?.let {
 				moveCameraToCurrentLocation(it)
 			}
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-		override fun onProviderEnabled(p0: String?) {}
-		override fun onProviderDisabled(p0: String?) {}
+		override fun onProviderEnabled(p0: String) {}
+		override fun onProviderDisabled(p0: String) {}
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {

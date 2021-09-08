@@ -53,6 +53,10 @@ class Preferences(context: Context) {
 		const val HAVE_SITE_BOUNDS   = "${PREFIX}HAVE_SITE_BOUNDS"
 		const val OFFLINE_MAP_STATE  = "${PREFIX}OFFLINE_MAP_STATE"
 		const val DELETE_TEXT  = "${PREFIX}DELETE_TEXT"
+		
+		/*-- New design --*/
+		const val SELECTED_PROJECT = "${PREFIX}SELECTED_PROJECT"
+		
 	}
 	
 	init {
