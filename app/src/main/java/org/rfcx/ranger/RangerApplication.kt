@@ -67,9 +67,9 @@ class RangerApplication : MultiDexApplication() {
 	private val listModules: ArrayList<Module> by lazy {
 		arrayListOf(
 				UiModule.mainModule,
+				UiModule.eventsModule,
 				UiModule.mapModule,
 				UiModule.statusModule,
-				UiModule.alertModule,
 				UiModule.profileModule,
 				UiModule.loginModule,
 				DataModule.localModule,

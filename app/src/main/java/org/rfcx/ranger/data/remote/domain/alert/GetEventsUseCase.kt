@@ -15,7 +15,6 @@ import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.event.EventsResponse
 import org.rfcx.ranger.service.DownLoadEventWorker
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.view.alerts.AllAlertsViewModel
 
 class GetEventsUseCase(private val eventRepository: EventRepository,
                        private val cachedEndpointDb: CachedEndpointDb,
@@ -34,7 +33,7 @@ class GetEventsUseCase(private val eventRepository: EventRepository,
 		val endpoint = "v2/events/?guardian_groups[]=${params.guardianInGroup}" +
 				"&order=${params.order}&dir=${params.dir}" +
 				"&limit=${params.limit}&offset=${params.offset}"
-		val isStarting = params.offset == 0 && params.limit == AllAlertsViewModel.PAGE_LIMITS
+		val isStarting = params.offset == 0 && params.limit == 50
 		
 		if (!force && cachedEndpointDb.hasCachedEndpoint(endpoint, 0.05)) {
 			Log.d("GetEventsUseCase", "$endpoint -> used cached!")

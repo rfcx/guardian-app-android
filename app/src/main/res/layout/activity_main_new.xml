@@ -26,25 +26,5 @@
 		app:titleMarginStart="0dp">
 		
 		<include layout="@layout/layout_bottom_navigation_menu" />
-	
 	</com.google.android.material.bottomappbar.BottomAppBar>
-	
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/newReportFabButton"
-		android:layout_width="@dimen/fab_height"
-		android:layout_height="@dimen/fab_height"
-		android:src="@drawable/ic_add_white_18dp"
-		app:backgroundTint="@color/colorPrimary"
-		app:layout_anchor="@id/bottomBar"
-		app:tint="#ffffff" />
-	
-	<FrameLayout
-		android:id="@+id/bottomSheetContainer"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:behavior_hideable="false"
-		app:behavior_peekHeight="0dp"
-		app:layout_anchorGravity="bottom"
-		app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

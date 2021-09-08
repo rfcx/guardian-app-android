@@ -13,7 +13,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -73,19 +72,14 @@ class LocationTrackerService : Service() {
 	
 	private val locationListener = object : LocationListener {
 		
-		override fun onLocationChanged(p0: Location?) {
-			p0?.let {
-				Log.i(TAG, "${it.longitude} , ${it.longitude}")
-				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
-				analytics.trackLocationTracking(time)
-				saveLocation(it)
-				if (BuildConfig.DEBUG) playSound()
-			}
+		override fun onLocationChanged(p0: Location) {
+			val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
+			analytics.trackLocationTracking(time)
+			saveLocation(p0)
+			if (BuildConfig.DEBUG) playSound()
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-			Log.d(TAG, "onStatusChanged $p0 $p1")
-			
 			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
 				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LASTEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
 					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
@@ -96,13 +90,11 @@ class LocationTrackerService : Service() {
 			}
 		}
 		
-		override fun onProviderEnabled(p0: String?) {
-			Log.d(TAG, "onProviderEnabled $p0")
+		override fun onProviderEnabled(p0: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 		}
 		
-		override fun onProviderDisabled(p0: String?) {
-			Log.d(TAG, "onProviderDisabled $p0")
+		override fun onProviderDisabled(p0: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 		}
 		
@@ -110,7 +102,7 @@ class LocationTrackerService : Service() {
 	
 	private val gnssStatusCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 		object : GnssStatus.Callback() {
-			override fun onSatelliteStatusChanged(status: GnssStatus?) {
+			override fun onSatelliteStatusChanged(status: GnssStatus) {
 				super.onSatelliteStatusChanged(status)
 				val satCount = status?.satelliteCount ?: 0
 				satelliteCount = satCount
@@ -170,7 +162,9 @@ class LocationTrackerService : Service() {
 			
 			// Get satellite count
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-				mLocationManager?.registerGnssStatusCallback(gnssStatusCallback)
+				if (gnssStatusCallback != null) {
+					mLocationManager?.registerGnssStatusCallback(gnssStatusCallback)
+				}
 			} else {
 				mLocationManager?.addGpsStatusListener(gpsStatusListener)
 			}
@@ -194,22 +188,21 @@ class LocationTrackerService : Service() {
 			}
 		} catch (ex: SecurityException) {
 			ex.printStackTrace()
-			Log.w(TAG, "fail to request location update, ignore", ex)
 		} catch (ex: IllegalArgumentException) {
 			ex.printStackTrace()
-			Log.w(TAG, "gps provider does not exist " + ex.message)
 		}
 		
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
-		Log.e(TAG, "onDestroy")
 		mLocationManager?.removeUpdates(locationListener)
 		
 		try {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-				mLocationManager?.unregisterGnssStatusCallback(gnssStatusCallback)
+				if (gnssStatusCallback != null) {
+					mLocationManager?.unregisterGnssStatusCallback(gnssStatusCallback)
+				}
 			} else {
 				mLocationManager?.removeGpsStatusListener(gpsStatusListener)
 			}

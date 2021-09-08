@@ -7,9 +7,12 @@ import org.rfcx.ranger.data.remote.service.rest.ClassifiedService
 import org.rfcx.ranger.entity.event.ClassificationBody
 import org.rfcx.ranger.entity.event.Confidence
 import org.rfcx.ranger.util.GsonProvider
-import org.rfcx.ranger.view.alert.AlertBottomDialogViewModel.Companion.confidenceValue
 
 class ClassifiedRepositoryImp(private val classifiedService: ClassifiedService) : ClassifiedRepository {
+	companion object {
+		const val confidenceValue = 0.8
+	}
+	
 	override fun getClassifiedCation(classificationBody: ClassificationBody): Single<List<Confidence>> {
 		return classifiedService.getClassificationSpectrogram(classificationBody).map { it ->
 			it.data?.attributes?.tags?.let { json ->

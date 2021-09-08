@@ -3,21 +3,14 @@ package org.rfcx.ranger.view.profile
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -96,18 +89,6 @@ class ProfileFragment : BaseFragment() {
 			changePasswordTextView.visibility = View.GONE
 			userProfileImageView.visibility = View.GONE
 		}
-		
-		locationTrackingViewModel.locationTrackingState.observe(this, Observer {
-			profileViewModel.onTracingStatusChange()
-		})
-		
-		profileViewModel.logoutState.observe(this, Observer {
-			if (it) {
-				dialog.show()
-			} else {
-				dialog.dismiss()
-			}
-		})
 	}
 	
 	private fun setOnClickButton() {
@@ -163,14 +144,6 @@ class ProfileFragment : BaseFragment() {
 			context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
 		}
 		
-		viewDataBinding.onClickOfflineMap = View.OnClickListener {
-			profileViewModel.offlineMapBox()
-		}
-		
-		viewDataBinding.onClickDeleteOffline = View.OnClickListener {
-			profileViewModel.deleteOfflineRegion(false)
-		}
-		
 		viewDataBinding.onClickStartDemo = View.OnClickListener {
 			val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
 			
@@ -214,7 +187,7 @@ class ProfileFragment : BaseFragment() {
 		view?.let {
 			Snackbar.make(it, R.string.feedback_submitted, Snackbar.LENGTH_SHORT)
 					.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-					.setAnchorView(R.id.newReportFabButton).show()
+					.setAnchorView(R.id.bottomBar).show() // TODO :: Check it work or not?
 		}
 	}
 	

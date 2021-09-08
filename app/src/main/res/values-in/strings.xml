@@ -64,11 +64,7 @@
     <string name="go_to_setting">Pengaturan</string>
 	
 	<!-- message list -->
-    <string name="profile_welcome">Hai, %s!</string>
-    <string name="profile_onduty">Sedang mengerjakan</string>
-    <string name="profile_nottracking">Tidak melacak</string>
-	<string name="error_no_guardian_group_set">Set proyek di settings</string>
-    <string name="please_set_guardian_group">Silakan proyek set</string>
+	<string name="please_set_guardian_group">Silakan proyek set</string>
     <string name="sent_to">kirim ke</string>
 
     <!-- report -->
@@ -96,8 +92,7 @@
 	<string name="location_tracking_label">Pelacakan lokasi</string>
     <string name="location_tracking_on_label">Di</string>
     <string name="location_tracking_off_label">Mati</string>
-    <string name="default_site_label">Tempat</string>
-    <string name="guardian_group_label">Proyek</string>
+	<string name="guardian_group_label">Proyek</string>
     <string name="notifications">Pemberitahuan</string>
     <string name="start_demo">Kirim peringatan uji</string>
     <string name="notification_will_sent">Pemberitahuan akan dikirim dalam waktu 30 detik untuk memverifikasi bahwa Anda dapat menerima pemberitahuan</string>
@@ -125,17 +120,9 @@
     <string name="switch_account">Ganti akun</string>
     
     <!-- Report -->
-    <string name="sync_reports_label">%d laporan</string>
-    <string name="sync_report_label">%d laporan</string>
-    <string name="sync_checkins_label">%d checkin lokasi</string>
-    <string name="sync_waiting_network">Menunggu jaringan…</string>
-    <string name="sync_starting">Mulai mengunggah…</string>
-    <string name="sync_uploading">Mengunggah…</string>
-    <string name="sync_complete">Pengunggahan selesai!</string>
-    <string name="empty_list_description">Tidak ada insiden baru-baru ini.\nNikmati harimu :)</string>
-    <string name="can_not_play_audio">Tidak dapat memutar audio, silakan coba lagi nanti.</string>
-    
-    <!-- Symbols -->
+	<string name="empty_list_description">Tidak ada insiden baru-baru ini.\nNikmati harimu :)</string>
+	
+	<!-- Symbols -->
     <string name="menu_camera">Kamera</string>
     <string name="menu_gallery">Galeri</string>
     
@@ -152,9 +139,6 @@
     
     <string name="location">Tempat</string>
     
-    <string name="menu_status">STATUS</string>
-    <string name="menu_map">PETA</string>
-    <string name="menu_alert">WASPADA</string>
     <string name="menu_profile">PROFIL</string>
     
     <string name="see_report_detail">Lihat Detil</string>
@@ -163,68 +147,19 @@
     <string name="report_hr_format">%dh</string>
     <string name="report_day_format">%dd</string>
     <string name="report_week_format">%dw</string>
-    <string name="follow_up_later_button">Ikuti nanti</string>
-    <string name="open_map_button">terbuka Peta</string>
-    
-    <string name="common_no">Tidak</string>
-    <string name="common_yes">Iya nih</string>
-    
-    <!-- Status -->
-    <string name="status_stat_title">Status mingguan Anda</string>
-    <string name="status_report_title">laporan sejarah</string>
-    <string name="status_duty_count_desc">menit bertugas</string>
-    <string name="status_alert_title">Alerts baru-baru ini</string>
-    <string name="status_see_more">Lihat Lainnya</string>
-    <string name="status_reported_desc">laporan yang disampaikan</string>
-    <string name="status_reviewed_desc">mengingatkan Ulasan</string>
-    <string name="format_location">%s, %s</string>
-    <string name="format_image_synced">%s gambar</string>
-    <string name="format_image_unsync">%s gambar (%s belum disinkronkan)</string>
-    <string name="format_images_synced">%s gambar</string>
-    <string name="format_images_unsync">%s gambar (%s belum disinkronkan)</string>
-    <string name="empty_report_text">"Tidak ada laporan dalam 7 hari terakhir.\ntekan + untuk membuat satu."</string>
-    <string name="button_later">Kemudian</string>
-    <string name="button_set_guardian_group">Proyek set</string>
-    
-    <!-- Override string res from matisse Image picker library -->
-    <string name="album_name_all">Semua Media</string>
-    <string name="button_preview">Pratinjau</string>
-    <string name="button_apply_default">Menerapkan</string>
-    <string name="button_apply">Menerapkan(%1$d)</string>
-    <string name="button_back">Kembali</string>
-    <string name="photo_grid_capture">Kamera</string>
-    <string name="empty_text">Belum ada media</string>
-    <string name="button_ok">Oke</string>
-    <string name="error_over_count_default">Anda telah mencapai maksimum file yang dapat dipilih</string>
-    <string name="error_over_count">Anda hanya dapat memilih hingga %1$d file media</string>
-    <string name="error_under_quality">Di bawah kualitas</string>
-    <string name="error_over_quality">Lebih dari kualitas</string>
-    <string name="error_file_type">Tipe file tidak didukung</string>
-    <string name="error_type_conflict">Tidak dapat memilih gambar dan video secara bersamaan</string>
-    <string name="error_no_video_activity">Tidak ada aplikasi yang ditemukan untuk mendukung pratinjau video</string>
-    <string name="error_over_original_size">Tidak dapat memilih gambar yang lebih besar dari %1$d MB</string>
-    <string name="error_over_original_count">%1$d gambar lebih dari %2$d MB. Asli tidak akan dicentang</string>
-    <string name="button_original">Asli</string>
-    <string name="button_sure_default">Oke</string>
-    <string name="button_sure">Oke(%1$d)</string>
-    <!-- Override string res from matisse Image picker library -->
+	
+	<!-- Status -->
+	
+	<!-- Override string res from matisse Image picker library -->
+	<string name="button_ok">Oke</string>
+	<!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Oleh Situs</string>
-    <string name="tab_all_alerts">semua Alerts</string>
-    <string name="yesterday">Kemarin</string>
+	<string name="yesterday">Kemarin</string>
     
     <string name="no_internet_connection">Tidak ada internet, Silakan coba lagi.</string>
-    <string name="warning_set_guardian_group">Proyek tidak ditemukan. Anda harus mengatur sebuah situs untuk menerima pemberitahuan!</string>
-    <string name="no_incident_occurred_recently">Tidak ada insiden terjadi baru-baru ini</string>
-    <string name="enjoy_you_day">Nikmati Anda hari :)</string>
-    <string name="see_older">Lihat Lama</string>
-    <string name="not_have_event_more">Tidak ada kejadian lebih</string>
-    
-    <string name="last_reviewed_by">Ulasan terakhir oleh</string>
-    <string name="not_have_review">Belum Ulasan</string>
-    
-    <!--Event value-->
+	
+	<!--Event value-->
     <string name="chainsaw">gergaji</string>
     <string name="gunshot">tembakan</string>
     <string name="vehicle">kendaraan</string>
@@ -260,12 +195,8 @@
     
     <string name="change_profile_photo">Ganti foto profil</string>
     <string name="edit_profile">Sunting profil</string>
-    <string name="offline_map">Offline Peta</string>
-    <string name="download">download</string>
-    <string name="delete">menghapus (%sMB)</string>
-    <string name="unavailable">TIDAK TERSEDIA</string>
-    
-    <!--Guardian Group List-->
+	
+	<!--Guardian Group List-->
     <string name="guardian_group_list">Proyek daftar</string>
 	<string name="audio_notes">Catatan audio</string>
     <string name="photos">Foto</string>
@@ -273,10 +204,8 @@
     
     <string name="notification_tracking_title">On-tugas dan pelacakan diaktifkan</string>
     <string name="notification_traking_message_format">%d menit direkam</string>
-    
-    <string name="reject_text">menolak</string>
-    <string name="confirm_text">Konfirmasi</string>
-    <string name="required">Yg dibutuhkan!</string>
+	
+	<string name="required">Yg dibutuhkan!</string>
     <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
     <string name="detected_at">terdeteksi di</string>
     

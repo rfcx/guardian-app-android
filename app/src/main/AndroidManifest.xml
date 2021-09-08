@@ -50,9 +50,6 @@
 		<activity android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.alerts.guardian.alertType.AlertValueActivity"
-			android:screenOrientation="portrait"/>
-		<activity
 			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait"/>
 		<activity
@@ -61,9 +58,6 @@
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
 			android:screenOrientation="portrait" />
-		<activity
-			android:name=".view.alerts.guardian.GuardianDetailActivity"
-			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".view.MainActivityNew"
 			android:launchMode="singleTask"

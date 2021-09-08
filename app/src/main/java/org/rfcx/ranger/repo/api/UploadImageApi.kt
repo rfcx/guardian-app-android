@@ -1,7 +1,6 @@
 package org.rfcx.ranger.repo.api
 
 import android.content.Context
-import android.util.Log
 import me.echodev.resizer.Resizer
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -46,11 +45,9 @@ class UploadImageApi {
 		
 		val response: Response<List<UploadImageResponse>>?
 		try {
-			Log.d("UploadImageApi", "Do try")
 			response = ApiManager.getInstance().apiRest.uploadImages(authUser, reportImage.guid!!, type, time, attachments).execute()
 		} catch (e: Exception) {
 			e.printStackTrace()
-			Log.d("UploadImageApi", e.message)
 			return Err(e)
 		}
 		

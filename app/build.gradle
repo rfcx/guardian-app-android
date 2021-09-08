@@ -7,11 +7,14 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
     flavorDimensions "mode"
     dataBinding {
         enabled = true
+    }
+    buildFeatures {
+        viewBinding true
     }
     defaultConfig {
         applicationId "org.rfcx.ranger"
@@ -19,7 +22,7 @@ android {
         versionCode 101
         versionName "1.3.8"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,11 +41,13 @@ android {
         production {
             manifestPlaceholders = [icon: "@mipmap/ic_launcher", roundIcon: "@mipmap/ic_launcher_round"]
             buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
+            buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://device-api.rfcx.org/"'
         }
         develop {
             applicationIdSuffix ".dev"
             manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
             buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
+            buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://staging-device-api.rfcx.org/"'
             // Ranger staging domain: "https://staging-api.rfcx.org/" -- 20/2/2020 still no data for testing
         }
     }
@@ -50,8 +55,8 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     testOptions {
         unitTests.returnDefaultValues = true
@@ -61,11 +66,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.2.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
@@ -114,7 +119,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation "com.squareup.okhttp3:okhttp:3.14.0"
-    implementation ('com.github.bumptech.glide:okhttp3-integration:4.7.1'){
+    implementation('com.github.bumptech.glide:okhttp3-integration:4.7.1') {
         exclude group: 'glide-parent'
     }
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.2'

@@ -55,7 +55,6 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
-import org.rfcx.ranger.view.alerts.guardian.alertType.AlertValueActivity
 import org.rfcx.ranger.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
@@ -81,15 +80,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var coordinates: ArrayList<ArrayList<Point>>? = null
 	private val locationListener = object : android.location.LocationListener {
-		override fun onLocationChanged(p0: Location?) {
+		override fun onLocationChanged(p0: Location) {
 			p0?.let {
 				moveCameraToCurrentLocation(it)
 			}
 		}
 		
 		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-		override fun onProviderEnabled(p0: String?) {}
-		override fun onProviderDisabled(p0: String?) {}
+		override fun onProviderEnabled(p0: String) {}
+		override fun onProviderDisabled(p0: String) {}
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -247,33 +246,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
 		val reportFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_REPORT_ID)
 		val checkInFeatures = mapBoxMap?.queryRenderedFeatures(screenPoint, MARKER_CHECK_IN_ID)
-		val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
-		var alertFeatures = listOf<Feature>()
-		queryLayerIds.forEach {
-			val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
-			if (features.isNotEmpty()) {
-				alertFeatures = features
-			}
-		}
-		
-		if (alertFeatures.isNotEmpty()) {
-			val pinCount = if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
-			if (pinCount > 1) {
-				val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0)
-				val features = clusterLeavesFeatureCollection?.features()
-				if (clusterLeavesFeatureCollection != null) {
-					if (features?.groupBy { it }?.size == 1) {
-						context?.let { AlertValueActivity.startActivity(it, null, "", features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
-					} else {
-						moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
-					}
-				}
-			} else {
-				val selectedFeature = alertFeatures[0]
-				context?.let { AlertValueActivity.startActivity(it, null, "", selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString) }
-			}
-			return true
-		}
 		
 		if (reportFeatures != null && reportFeatures.isNotEmpty()) {
 			clearCheckInFeatureSelected()
@@ -576,7 +548,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 						activateLocationComponent(locationComponentActivationOptions)
 					}
 					
-					isLocationComponentEnabled = true
 					cameraMode = CameraMode.TRACKING
 					renderMode = RenderMode.COMPASS
 				}

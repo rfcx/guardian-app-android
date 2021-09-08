@@ -2,46 +2,41 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/bottom_bar_height"
-	android:weightSum="5">
+	android:weightSum="4">
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem
-		android:id="@+id/menuStatus"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="1"
-		android:background="?selectableItemBackgroundBorderless"
-		app:icon="@drawable/ic_menu_discover"
-		app:iconTintColor="@color/colorPrimary"
-		app:menuSelected="false"
-		app:title="@string/menu_status"
-		app:titleColorSelected="@color/colorPrimary" />
-	
-	<org.rfcx.ranger.widget.BottomNavigationMenuItem
-		android:id="@+id/menuAlert"
+		android:id="@+id/menuNewEvents"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_alert"
 		app:iconTintColor="@color/colorPrimary"
-		app:showBadge="true"
-		app:title="@string/menu_alert"
+		app:menuSelected="false"
+		app:title="@string/menu_new_events"
 		app:titleColorSelected="@color/colorPrimary" />
 	
-	<View
+	<org.rfcx.ranger.widget.BottomNavigationMenuItem
+		android:id="@+id/menuDraftReports"
 		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="1" />
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:background="?selectableItemBackgroundBorderless"
+		app:icon="@drawable/ic_menu_discover"
+		app:iconTintColor="@color/colorPrimary"
+		app:showBadge="true"
+		app:title="@string/menu_draft_reports"
+		app:titleColorSelected="@color/colorPrimary" />
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem
-		android:id="@+id/menuMap"
+		android:id="@+id/menuSubmittedReports"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_map"
 		app:iconTintColor="@color/colorPrimary"
-		app:title="@string/menu_map"
+		app:title="@string/menu_submitted_reports"
 		app:titleColorSelected="@color/colorPrimary" />
 	
 	<org.rfcx.ranger.widget.BottomNavigationMenuItem

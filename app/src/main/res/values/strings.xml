@@ -56,10 +56,6 @@
 	<string name="go_to_setting">Settings</string>
 	
 	<!-- message list -->
-	<string name="profile_welcome">Hi, %s!</string>
-	<string name="profile_onduty">On duty</string>
-	<string name="profile_nottracking">Not tracking</string>
-	<string name="error_no_guardian_group_set">Set projects in Settings</string>
 	<string name="please_set_guardian_group">Please set projects</string>
 	<string name="sent_to">sent to</string>
 	
@@ -88,7 +84,6 @@
 	<string name="location_tracking_label">Location tracking</string>
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>
-	<string name="default_site_label">Site</string>
 	<string name="guardian_group_label">Projects</string>
 	<string name="notifications">Notifications</string>
 	<string name="start_demo">Send a test alert</string>
@@ -125,15 +120,7 @@
 	<string name="switch_account">switch account</string>
 	
 	<!-- Report -->
-	<string name="sync_reports_label">%d reports</string>
-	<string name="sync_report_label">%d report</string>
-	<string name="sync_checkins_label">%d location check-ins</string>
-	<string name="sync_waiting_network">Waiting for network…</string>
-	<string name="sync_starting">Starting upload…</string>
-	<string name="sync_uploading">Uploading…</string>
-	<string name="sync_complete">Upload complete!</string>
 	<string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
-	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
 	
 	<string name="menu_camera">Camera</string>
 	<string name="menu_gallery">Gallery</string>
@@ -152,10 +139,10 @@
 	<string name="photos">Photos</string>
 	<string name="audio_notes">Audio notes</string>
 	
-	<string name="menu_status">STATUS</string>
-	<string name="menu_map">MAP</string>
-	<string name="menu_alert">ALERT</string>
-	<string name="menu_profile">PROFILE</string>
+	<string name="menu_new_events">New Events</string>
+	<string name="menu_submitted_reports">Submitted Reports</string>
+	<string name="menu_draft_reports">Draft Reports</string>
+	<string name="menu_profile">Profile</string>
 	
 	<string name="see_report_detail">See Detail</string>
 	<string name="report_time_second">Just now</string>
@@ -163,66 +150,19 @@
 	<string name="report_hr_format">%dh</string>
 	<string name="report_day_format">%dd</string>
 	<string name="report_week_format">%dw</string>
-	<string name="follow_up_later_button">Follow up later</string>
-	<string name="open_map_button">Open Map</string>
 	
 	<string name="common_ok">OK</string>
-	<string name="common_no">No</string>
-	<string name="common_yes">Yes</string>
 	<string name="common_none">None</string>
 	
 	<!-- Status -->
-	<string name="status_stat_title">Your weekly status</string>
-	<string name="status_report_title">Report history</string>
-	<string name="status_alert_title">Recent alerts</string>
-	<string name="status_see_more">See more</string>
-	<string name="status_duty_count_desc">minutes on duty</string>
-	<string name="status_reported_desc">reports submitted</string>
-	<string name="status_reviewed_desc">alert reviewed</string>
-	<string name="format_location">%s, %s</string>
-	<string name="format_image_synced">%s photo</string>
-	<string name="format_image_unsync">%s photo (%s not yet synced)</string>
-	<string name="format_images_synced">%s photos</string>
-	<string name="format_images_unsync">%s photos (%s not yet synced)</string>
-	<string name="empty_report_text">No reports in the last 7 days.\npress + to create one.</string>
-	<string name="button_later">Later</string>
-	<string name="button_set_guardian_group">Set Projects</string>
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="album_name_all">All Media</string>
-	<string name="button_preview">Preview</string>
-	<string name="button_apply_default">Apply</string>
-	<string name="button_apply">Apply(%1$d)</string>
-	<string name="button_back">Back</string>
-	<string name="photo_grid_capture">Camera</string>
-	<string name="empty_text">No media yet</string>
 	<string name="button_ok">OK</string>
-	<string name="error_over_count_default">You have reached max selectable</string>
-	<string name="error_over_count">You can only select up to %1$d media files</string>
-	<string name="error_under_quality">Under quality</string>
-	<string name="error_over_quality">Over quality</string>
-	<string name="error_file_type">Unsupported file type</string>
-	<string name="error_type_conflict">Can\'t select photos and videos at the same time</string>
-	<string name="error_no_video_activity">No App found supporting video preview</string>
-	<string name="error_over_original_size">Can\'t select the photos larger than %1$d MB</string>
-	<string name="error_over_original_count">%1$d photos over %2$d MB. Original will be unchecked</string>
-	<string name="button_original">Original</string>
-	<string name="button_sure_default">OK</string>
-	<string name="button_sure">OK(%1$d)</string>
 	<!-- Override string res from matisse Image picker library -->
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">By Site</string>
-	<string name="tab_all_alerts">All Alerts</string>
 	<string name="yesterday">Yesterday</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
-	<string name="warning_set_guardian_group">Projects not found. You must set a site to receive alerts!</string>
-	<string name="no_incident_occurred_recently">There is no incident occurred recently</string>
-	<string name="enjoy_you_day">Enjoy you day :)</string>
-	<string name="see_older">See Older</string>
-	<string name="not_have_event_more">There is no more events</string>
-	<string name="last_reviewed_by">Last reviewed by</string>
-	<string name="not_have_review">Not yet reviewed</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
@@ -259,10 +199,6 @@
 	
 	<string name="change_profile_photo">Change profile photo</string>
 	<string name="edit_profile">Edit Profile</string>
-	<string name="offline_map">Offline Map</string>
-	<string name="download">download</string>
-	<string name="delete">delete (%sMB)</string>
-	<string name="unavailable">UNAVAILABLE</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Project List</string>
@@ -270,8 +206,6 @@
 	<string name="notification_tracking_title">On-duty and tracking enabled</string>
 	<string name="notification_traking_message_format">%d minutes recorded</string>
 	
-	<string name="reject_text">reject</string>
-	<string name="confirm_text">confirm</string>
 	<string name="required">Required!</string>
 	<string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
 	<string name="detected_at">detected at</string>
@@ -279,4 +213,16 @@
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
+	
+	<!-- NewEventsFragment -->
+	<string name="new_events_fragment">NewEventsFragment</string>
+	<string name="all_projects">All projects</string>
+	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
+	
+	<!-- DraftReportsFragment -->
+	<string name="draft_reports_fragment">DraftReportsFragment</string>
+	
+	<!-- SubmittedReportsFragment -->
+	<string name="submitted_reports_fragment">SubmittedReportsFragment</string>
+	
 </resources>

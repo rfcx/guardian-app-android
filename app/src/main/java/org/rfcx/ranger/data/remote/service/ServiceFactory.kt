@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
-import org.rfcx.ranger.data.remote.groupByGuardians.GroupByGuardiansEndpoint
+import org.rfcx.ranger.data.api.project.GetProjectsEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.password.PasswordChangeEndpoint
@@ -29,6 +29,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object ServiceFactory {
+	
+	fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
+		return createRetrofit(BuildConfig.DEVICE_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(GetProjectsEndpoint::class.java)
+	}
 	
 	fun makeEventService(isDebug: Boolean, context: Context): EventService {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
@@ -66,12 +72,6 @@ object ServiceFactory {
 				.create(SetNameEndpoint::class.java)
 	}
 	
-	fun makeGroupByGuardiansService(isDebug: Boolean, context: Context): GroupByGuardiansEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-				GsonProvider.getInstance().gson)
-				.create(GroupByGuardiansEndpoint::class.java)
-	}
-	
 	fun makeSiteNameService(isDebug: Boolean, context: Context): SiteEndpoint {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
@@ -95,7 +95,7 @@ object ServiceFactory {
 				GsonProvider.getInstance().gson)
 				.create(ProfilePhotoEndpoint::class.java)
 	}
-
+	
 	fun makeSubscribeService(isDebug: Boolean, context: Context): SubscribeEndpoint {
 		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)

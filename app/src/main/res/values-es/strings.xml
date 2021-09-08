@@ -64,10 +64,6 @@
 	<string name="go_to_setting">Configuración</string>
 	
 	<!-- message list -->
-	<string name="profile_welcome">¡Hola, %s!</string>
-	<string name="profile_onduty">En servicio</string>
-	<string name="profile_nottracking">No trastreando</string>
-	<string name="error_no_guardian_group_set">Proyecto conjunto de ajustes</string>
 	<string name="please_set_guardian_group">Por favor, proyecto conjunto</string>
 	<string name="sent_to">enviar a</string>
 	
@@ -96,7 +92,6 @@
 	<string name="location_tracking_label">Seguimiento de la ubicación</string>
 	<string name="location_tracking_on_label">Encendido</string>
 	<string name="location_tracking_off_label">Apagando</string>
-	<string name="default_site_label">Sitio</string>
 	<string name="guardian_group_label">Proyectos</string>
 	<string name="notifications">Notificaciones</string>
 	<string name="start_demo">Enviar una alerta de prueba</string>
@@ -125,15 +120,7 @@
 	<string name="switch_account">cambiar cuenta</string>
 	
 	<!-- Report -->
-	<string name="sync_reports_label">%d reportes</string>
-	<string name="sync_report_label">%d reporte</string>
-	<string name="sync_checkins_label">%d registros de ubicación</string>
-	<string name="sync_waiting_network">Esperando a la red…</string>
-	<string name="sync_starting">Iniciando carga…</string>
-	<string name="sync_uploading">Cargando…</string>
-	<string name="sync_complete">!Carga completa!</string>
 	<string name="empty_list_description">No hay incidentes recientemente.\nDisfrute su día :)</string>
-	<string name="can_not_play_audio">No se puede reproducir audio, inténtalo de nuevo más tarde.</string>
 	
 	<!-- Symbols -->
 	<string name="menu_camera">Cámara</string>
@@ -152,9 +139,6 @@
 	
 	<string name="location">Ubicación</string>
 	
-	<string name="menu_status">ESTADO</string>
-	<string name="menu_map">MAPA</string>
-	<string name="menu_alert">ALERTA</string>
 	<string name="menu_profile">PERFIL</string>
 	
 	<string name="see_report_detail">Ver detalle</string>
@@ -163,66 +147,17 @@
 	<string name="report_hr_format">%dh</string>
 	<string name="report_day_format">%dd</string>
 	<string name="report_week_format">%dw</string>
-	<string name="follow_up_later_button">Un seguimiento posterior</string>
-	<string name="open_map_button">Un seguimiento posterior</string>
-	
-	<string name="common_no">No</string>
-	<string name="common_yes">Sí</string>
 	
 	<!-- Status -->
-	<string name="status_stat_title">Su estado semanal</string>
-	<string name="status_report_title">Historial de Informes </string>
-	<string name="status_duty_count_desc">minutos de guardia</string>
-	<string name="status_alert_title">alertas recientes</string>
-	<string name="status_see_more">Ver más</string>
-	<string name="status_reported_desc">los informes presentados</string>
-	<string name="status_reviewed_desc">alertar revisado</string>
-	<string name="format_location">%s, %s</string>
-	<string name="format_image_synced">%s imagen</string>
-	<string name="format_image_unsync">%s imagen (%s aún no sincronizado)</string>
-	<string name="format_images_synced">%s imágenes</string>
-	<string name="format_images_unsync">%s imágenes (%s aún no sincronizadas)</string>
-	<string name="empty_report_text">"No hay informes en los últimos 7 días.\npulse + para crear uno."</string>
-	<string name="button_later">Luego</string>
-	<string name="button_set_guardian_group">Proyectos set</string>
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="album_name_all">Todos los archivos</string>
-	<string name="button_preview">Prevista</string>
-	<string name="button_apply_default">Aplicar</string>
-	<string name="button_apply">Aplicar(%1$d)</string>
-	<string name="button_back">Atrás</string>
-	<string name="photo_grid_capture">Cámara</string>
-	<string name="empty_text">No hay archivos</string>
 	<string name="button_ok">OK</string>
-	<string name="error_over_count_default">Haz alcanzado el limite de selección</string>
-	<string name="error_over_count">Solo puedes seleccionar hasta %1$d de archivos</string>
-	<string name="error_under_quality">Calidad baja</string>
-	<string name="error_over_quality">Calidad Alta</string>
-	<string name="error_file_type">Tipo de archivo incompatible </string>
-	<string name="error_type_conflict">No puede seleccionar imagenes y videos al mismo tiempo</string>
-	<string name="error_no_video_activity">No se ha encontrado ninguna aplicación para abrir el video</string>
-	<string name="error_over_original_size">No se puede seleccionar imagenes mas grande que %1$d MB</string>
-	<string name="error_over_original_count">%1$d imagenes sobre %2$d MB. Original quedará sin marcar</string>
-	<string name="button_original">Original</string>
-	<string name="button_sure_default">OK</string>
-	<string name="button_sure">OK(%1$d)</string>
 	<!-- Override string res from matisse Image picker library -->
 	
 	<!-- Alerts -->
-	<string name="tab_group_by_guardians">Por sitio</string>
-	<string name="tab_all_alerts">todas las alertas</string>
 	<string name="yesterday">Ayer</string>
 	
 	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
-	<string name="warning_set_guardian_group">Los proyectos no encontrados. Debe establecer un sitio para recibir alertas!</string>
-	<string name="no_incident_occurred_recently">No hay ningún incidente ocurrió recientemente</string>
-	<string name="enjoy_you_day">Usted disfruta de día :)</string>
-	<string name="see_older">ver más viejo</string>
-	<string name="not_have_event_more">No hay más eventos</string>
-	
-	<string name="last_reviewed_by">Último revisado por</string>
-	<string name="not_have_review">Todavía no revisado</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">motosierra</string>
@@ -260,10 +195,6 @@
 	
 	<string name="change_profile_photo">Cambio de perfil de fotos</string>
 	<string name="edit_profile">Editar perfil</string>
-	<string name="offline_map">Offline Mapa</string>
-	<string name="download">descargar</string>
-	<string name="delete">Eliminar (%sMB)</string>
-	<string name="unavailable">INDISPONIBLE</string>
 	
 	<!--Guardian Group List-->
 	<string name="guardian_group_list">Lista de proyectos</string>
@@ -274,8 +205,6 @@
 	<string name="notification_tracking_title">De guardia y el seguimiento habilitado</string>
 	<string name="notification_traking_message_format">%d minutos registraron</string>
 	
-	<string name="reject_text">rechazar</string>
-	<string name="confirm_text">confirmar</string>
 	<string name="required">Necesario!</string>
 	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
 	<string name="detected_at">detectado en</string>

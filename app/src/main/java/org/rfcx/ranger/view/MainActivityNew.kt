@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
+import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -19,26 +17,23 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.alerts.AlertsFragment
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.events.NewEventsFragment
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
-import org.rfcx.ranger.view.report.ReportActivity
-import org.rfcx.ranger.view.status.StatusFragment
+import org.rfcx.ranger.view.report.DraftReportsFragment
+import org.rfcx.ranger.view.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
 class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
-	
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
-	private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 	private val locationPermissions by lazy { LocationPermissions(this) }
-	private val analytics by lazy { Analytics(this) }
 	private var currentFragment: Fragment? = null
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -60,43 +55,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		if (state == DOWNLOADING_STATE) {
 			preferences.putString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_CANCEL_STATE)
 		}
-		
 		setupBottomMenu()
 		if (savedInstanceState == null) {
 			setupFragments()
 		}
 		
 		this.saveUserLoginWith()
-		
-		newReportFabButton.setOnClickListener {
-			analytics.trackStartToAddReportEvent()
-			ReportActivity.startIntent(this)
-		}
-		
-		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
-		bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-			override fun onSlide(bottomSheet: View, slideOffset: Float) {
-			
-			}
-			
-			override fun onStateChanged(bottomSheet: View, newState: Int) {
-				if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-					showBottomAppBar()
-					val bottomSheetFragment = supportFragmentManager.findFragmentByTag("BottomSheet")
-					if (bottomSheetFragment != null) {
-						supportFragmentManager.beginTransaction()
-								.remove(bottomSheetFragment)
-								.commit()
-					}
-				}
-			}
-			
-		})
-		
 		observeMain()
 		observeLocationTracking()
-		observeEventFromNotification()
-		
 		getEventFromIntentIfHave(intent)
 	}
 	
@@ -117,11 +83,10 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	override fun onBackPressed() {
-		
-		if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-			hideBottomSheet()
-		} else {
-			return super.onBackPressed()
+		if (projectRecyclerView.visibility == View.VISIBLE) {
+			showBottomAppBar()
+			projectRecyclerView.visibility = View.GONE
+			projectSwipeRefreshView.visibility = View.GONE
 		}
 	}
 	
@@ -148,15 +113,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	private fun setupBottomMenu() {
-		menuStatus.setOnClickListener {
+		menuNewEvents.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
-		menuMap.setOnClickListener {
+		menuSubmittedReports.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
-		menuAlert.setOnClickListener {
+		menuDraftReports.setOnClickListener {
 			onBottomMenuClick(it)
 		}
 		
@@ -164,41 +129,41 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			onBottomMenuClick(it)
 		}
 		
-		menuStatus.performClick()
+		menuNewEvents.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
 		if ((menu as BottomNavigationMenuItem).menuSelected) return
 		when (menu.id) {
-			menuStatus.id -> {
-				menuStatus.menuSelected = true
-				menuMap.menuSelected = false
-				menuAlert.menuSelected = false
+			menuNewEvents.id -> {
+				menuNewEvents.menuSelected = true
+				menuSubmittedReports.menuSelected = false
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
 				showStatus()
 			}
-			menuMap.id -> {
-				menuStatus.menuSelected = false
-				menuMap.menuSelected = true
-				menuAlert.menuSelected = false
+			menuSubmittedReports.id -> {
+				menuNewEvents.menuSelected = false
+				menuSubmittedReports.menuSelected = true
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
 				showMap()
 			}
-			menuAlert.id -> {
-				menuStatus.menuSelected = false
-				menuMap.menuSelected = false
-				menuAlert.menuSelected = true
+			menuDraftReports.id -> {
+				menuNewEvents.menuSelected = false
+				menuSubmittedReports.menuSelected = false
+				menuDraftReports.menuSelected = true
 				menuProfile.menuSelected = false
 				
 				showAlerts()
 			}
 			
 			menuProfile.id -> {
-				menuStatus.menuSelected = false
-				menuMap.menuSelected = false
-				menuAlert.menuSelected = false
+				menuNewEvents.menuSelected = false
+				menuSubmittedReports.menuSelected = false
+				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = true
 				
 				showProfile()
@@ -206,34 +171,22 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 	}
 	
-	override fun showBottomSheet(fragment: Fragment) {
-		hidBottomAppBar()
-		val layoutParams: CoordinatorLayout.LayoutParams = bottomSheetContainer.layoutParams
-				as CoordinatorLayout.LayoutParams
-		layoutParams.anchorGravity = Gravity.BOTTOM
-		bottomSheetContainer.layoutParams = layoutParams
-		supportFragmentManager.beginTransaction()
-				.replace(bottomSheetContainer.id, fragment, "BottomSheet")
-				.commit()
-		bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-	}
+	override fun showBottomSheet(fragment: Fragment) {}
 	
-	override fun hideBottomSheet() {
-		bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-	}
+	override fun hideBottomSheet() {}
 	
-	override fun hidBottomAppBar() {
-		newReportFabButton.visibility = View.INVISIBLE
-		bottomBar.visibility = View.INVISIBLE
+	override fun hideBottomAppBar() {
+		showAboveAppbar(false)
+		bottomBar.visibility = View.GONE
 	}
 	
 	override fun showBottomAppBar() {
+		showAboveAppbar(true)
 		bottomBar.visibility = View.VISIBLE
-		newReportFabButton.visibility = View.VISIBLE
 	}
 	
 	override fun alertScreen() {
-		menuAlert.performClick()
+		menuDraftReports.performClick()
 	}
 	
 	override fun moveMapIntoReportMarker(report: Report) {
@@ -243,66 +196,58 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		}
 	}
 	
-	private fun startFragment(fragment: Fragment, showAboveAppbar: Boolean) {
-		this.currentFragment = fragment
-		showAboveAppbar(showAboveAppbar)
-		supportFragmentManager.beginTransaction()
-				.replace(contentContainer.id, fragment)
-				.commit()
-	}
-	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
-				.add(contentContainer.id, getMap(), MapFragment.tag)
-				.add(contentContainer.id, getAlerts(), AlertsFragment.tag)
-				.add(contentContainer.id, getStatus(), StatusFragment.tag)
+				.add(contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
+				.add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
+				.add(contentContainer.id, getNewEvents(), NewEventsFragment.tag)
 				.commit()
 		
-		menuStatus.performClick()
+		menuNewEvents.performClick()
 	}
 	
-	private fun getStatus(): StatusFragment = supportFragmentManager.findFragmentByTag(StatusFragment.tag)
-			as StatusFragment? ?: StatusFragment.newInstance()
+	private fun getNewEvents(): NewEventsFragment = supportFragmentManager.findFragmentByTag(NewEventsFragment.tag)
+			as NewEventsFragment? ?: NewEventsFragment.newInstance()
 	
-	private fun getMap(): MapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
-			as MapFragment? ?: MapFragment.newInstance()
+	private fun getSubmittedReports(): SubmittedReportsFragment = supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag)
+			as SubmittedReportsFragment? ?: SubmittedReportsFragment.newInstance()
 	
-	private fun getAlerts(): AlertsFragment = supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
-			as AlertsFragment? ?: AlertsFragment.newInstance(null, 0)
+	private fun getDraftReports(): DraftReportsFragment = supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag)
+			as DraftReportsFragment? ?: DraftReportsFragment.newInstance()
 	
 	private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
 			as ProfileFragment? ?: ProfileFragment.newInstance()
 	
 	private fun showStatus() {
 		showAboveAppbar(true)
-		this.currentFragment = getStatus()
+		this.currentFragment = getNewEvents()
 		supportFragmentManager.beginTransaction()
-				.show(getStatus())
-				.hide(getMap())
-				.hide(getAlerts())
+				.show(getNewEvents())
+				.hide(getSubmittedReports())
+				.hide(getDraftReports())
 				.hide(getProfile())
 				.commit()
 	}
 	
 	private fun showAlerts() {
 		showAboveAppbar(true)
-		this.currentFragment = getAlerts()
+		this.currentFragment = getDraftReports()
 		supportFragmentManager.beginTransaction()
-				.show(getAlerts())
-				.hide(getStatus())
-				.hide(getMap())
+				.show(getDraftReports())
+				.hide(getNewEvents())
+				.hide(getSubmittedReports())
 				.hide(getProfile())
 				.commit()
 	}
 	
 	private fun showMap() {
 		showAboveAppbar(false)
-		this.currentFragment = getMap()
+		this.currentFragment = getSubmittedReports()
 		supportFragmentManager.beginTransaction()
-				.show(getMap())
-				.hide(getStatus())
-				.hide(getAlerts())
+				.show(getSubmittedReports())
+				.hide(getNewEvents())
+				.hide(getDraftReports())
 				.hide(getProfile())
 				.commit()
 	}
@@ -312,9 +257,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		this.currentFragment = getProfile()
 		supportFragmentManager.beginTransaction()
 				.show(getProfile())
-				.hide(getStatus())
-				.hide(getAlerts())
-				.hide(getMap())
+				.hide(getNewEvents())
+				.hide(getDraftReports())
+				.hide(getSubmittedReports())
 				.commit()
 	}
 	
@@ -341,27 +286,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		
 		mainViewModel.isLocationTrackingOn.observe(this, Observer {
 			if (it) enableLocationTracking()
-		})
-		
-		mainViewModel.alertCount.observe(this, Observer {
-			menuAlert.badgeNumber = it
-		})
-	}
-	
-	private fun observeEventFromNotification() {
-		mainViewModel.eventGuIdFromNotification.observe(this, Observer {
-			
-			val alertsFragment =
-					supportFragmentManager.findFragmentByTag(AlertsFragment.tag)
-			if (alertsFragment != null && alertsFragment is AlertsFragment) {
-				alertsFragment.showDetail(it, EventItem.State.NONE)
-			} else {
-				menuStatus.menuSelected = false
-				menuMap.menuSelected = false
-				menuAlert.menuSelected = true
-				menuProfile.menuSelected = false
-				startFragment(AlertsFragment.newInstance(it, 1), true)
-			}
 		})
 	}
 	
@@ -411,7 +335,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 interface MainActivityEventListener {
 	fun showBottomSheet(fragment: Fragment)
 	fun hideBottomSheet()
-	fun hidBottomAppBar()
+	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun alertScreen()
 	fun moveMapIntoReportMarker(report: Report)
