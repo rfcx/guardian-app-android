@@ -11,16 +11,14 @@ class ProjectDb(val realm: Realm) {
 	
 	fun insertOrUpdate(response: ProjectResponse) {
 		realm.executeTransaction {
-			val project =
-					it.where(Project::class.java)
-							.equalTo(Project.PROJECT_SERVER_ID, response.id)
-							.findFirst()
+			val project = it.where(Project::class.java)
+					.equalTo(Project.PROJECT_SERVER_ID, response.id)
+					.findFirst()
 			
 			if (project == null) {
 				val projectObject = response.toProject()
-				val id =
-						(it.where(Project::class.java).max(Project.PROJECT_ID)
-								?.toInt() ?: 0) + 1
+				val id = (it.where(Project::class.java).max(Project.PROJECT_ID)
+						?.toInt() ?: 0) + 1
 				projectObject.id = id
 				it.insert(projectObject)
 			} else {
