@@ -5,6 +5,7 @@ import io.realm.FieldAttribute
 import io.realm.RealmMigration
 import org.rfcx.ranger.entity.CachedEndpoint
 import org.rfcx.ranger.entity.event.EventReview
+import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
@@ -41,6 +42,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 12L && newVersion >= 12L) {
 			migrateToV12(c)
+		}
+		if (oldVersion < 13L && newVersion >= 13L) {
+			migrateToV13(c)
 		}
 	}
 	
@@ -196,7 +200,7 @@ class RangerRealmMigration : RealmMigration {
 		audio?.apply {
 			removeField("mp3")
 		}
-
+		
 		val event = realm.schema.get("Event")
 		event?.apply {
 			//review
@@ -258,7 +262,7 @@ class RangerRealmMigration : RealmMigration {
 	private fun migrateToV11(realm: DynamicRealm) {
 		val guardianGroup = realm.schema.get("GuardianGroup")
 		guardianGroup?.apply {
-			addRealmListField("values",  String::class.java)
+			addRealmListField("values", String::class.java)
 			
 		}
 	}
@@ -268,6 +272,18 @@ class RangerRealmMigration : RealmMigration {
 		event?.apply {
 			//reviewer
 			addField("firstNameReviewer", String::class.java).setRequired("firstNameReviewer", true)
+		}
+	}
+	
+	private fun migrateToV13(realm: DynamicRealm) {
+		val project = realm.schema.create(Project.TABLE_NAME)
+		project.apply {
+			addField(Project.PROJECT_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Project.PROJECT_NAME, String::class.java)
+					.setRequired(Project.PROJECT_NAME, true)
+			addField(Project.PROJECT_SERVER_ID, String::class.java)
+			addField(Project.PROJECT_PERMISSIONS, String::class.java)
+					.setRequired(Project.PROJECT_PERMISSIONS, true)
 		}
 	}
 	

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/appbar"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:theme="@style/AppTheme.Toolbar">
+	
+	<com.google.android.material.appbar.MaterialToolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		android:background="@color/topBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+		
+		<LinearLayout
+			android:id="@+id/projectTitleLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:gravity="center"
+			android:orientation="horizontal">
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/projectTitleTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginEnd="@dimen/margin_padding_xsmall"
+				android:gravity="center"
+				android:text="@string/menu_new_events" />
+			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/expandMoreImageView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_expand_more" />
+		</LinearLayout>
+	
+	
+	</com.google.android.material.appbar.MaterialToolbar>
+</com.google.android.material.appbar.AppBarLayout>

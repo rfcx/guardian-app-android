@@ -216,6 +216,8 @@
 	
 	<!-- NewEventsFragment -->
 	<string name="new_events_fragment">NewEventsFragment</string>
+	<string name="all_projects">All projects</string>
+	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	
 	<!-- DraftReportsFragment -->
 	<string name="draft_reports_fragment">DraftReportsFragment</string>

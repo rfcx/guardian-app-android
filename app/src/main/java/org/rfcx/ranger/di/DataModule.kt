@@ -7,6 +7,9 @@ import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
+import org.rfcx.ranger.data.api.project.GetProjectsRepository
+import org.rfcx.ranger.data.api.project.GetProjectsRepositoryImp
+import org.rfcx.ranger.data.api.project.GetProjectsUseCase
 import org.rfcx.ranger.data.local.*
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
@@ -67,6 +70,9 @@ object DataModule {
 		factory { JobExecutor() } bind ThreadExecutor::class
 		factory { UiThread() } bind PostExecutionThread::class
 		
+		single { GetProjectsRepositoryImp(get()) } bind GetProjectsRepository::class
+		single { GetProjectsUseCase(get(), get(), get()) }
+		
 		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
@@ -111,6 +117,7 @@ object DataModule {
 	}
 	
 	val remoteModule = module {
+		factory { ServiceFactory.makeProjectsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
@@ -126,9 +133,10 @@ object DataModule {
 	}
 	
 	val localModule = module {
-		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig())}
+		factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
 		factory { CachedEndpointDb(get()) }
 		factory { GuardianDb(get()) }
+		factory { ProjectDb(get()) }
 		factory { GuardianGroupDb(get()) }
 		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }

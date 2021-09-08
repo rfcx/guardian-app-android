@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main_new.*
+import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -54,7 +55,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		if (state == DOWNLOADING_STATE) {
 			preferences.putString(Preferences.OFFLINE_MAP_STATE, DOWNLOAD_CANCEL_STATE)
 		}
-		
 		setupBottomMenu()
 		if (savedInstanceState == null) {
 			setupFragments()
@@ -82,7 +82,13 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		getEventFromIntentIfHave(intent)
 	}
 	
-	override fun onBackPressed() {}
+	override fun onBackPressed() {
+		if (projectRecyclerView.visibility == View.VISIBLE) {
+			showBottomAppBar()
+			projectRecyclerView.visibility = View.GONE
+			projectSwipeRefreshView.visibility = View.GONE
+		}
+	}
 	
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -169,9 +175,15 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	override fun hideBottomSheet() {}
 	
-	override fun hidBottomAppBar() {}
+	override fun hideBottomAppBar() {
+		showAboveAppbar(false)
+		bottomBar.visibility = View.GONE
+	}
 	
-	override fun showBottomAppBar() {}
+	override fun showBottomAppBar() {
+		showAboveAppbar(true)
+		bottomBar.visibility = View.VISIBLE
+	}
 	
 	override fun alertScreen() {
 		menuDraftReports.performClick()
@@ -323,7 +335,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 interface MainActivityEventListener {
 	fun showBottomSheet(fragment: Fragment)
 	fun hideBottomSheet()
-	fun hidBottomAppBar()
+	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun alertScreen()
 	fun moveMapIntoReportMarker(report: Report)
