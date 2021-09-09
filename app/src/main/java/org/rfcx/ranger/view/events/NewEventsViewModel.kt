@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.events
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,11 +14,31 @@ import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.view.events.adapter.GuardianModel
 
 
 class NewEventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
+	
+	val nearbyGuardians = mutableListOf<GuardianModel>()
+	val othersGuardians = mutableListOf<GuardianModel>()
+	
+	var guardians = listOf(
+			GuardianModel("Guardian A", 5, 250.1F),
+			GuardianModel("Guardian C", 3, 1050.1F),
+			GuardianModel("Guardian E", 2, 200.0F),
+			GuardianModel("Guardian B", 5, 2200.0F),
+			GuardianModel("Guardian G", 5, 2560.9F),
+			GuardianModel("Guardian F", 0, 3560.3F),
+			GuardianModel("Guardian I", 9, 560.3F),
+			GuardianModel("Guardian K", 6, 5560.3F),
+			GuardianModel("Guardian H", 4, 8560.3F),
+			GuardianModel("Guardian D", 6, 5050.1F))  // TODO:: Delete @tree
+	
+	init {
+		handledGuardians()
+	}
 	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
@@ -48,5 +69,18 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 	fun setProjectSelected(id: Int) {
 		val preferences = Preferences.getInstance(context)
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
+	}
+	
+	private fun handledGuardians() {
+		val guardianList = guardians.sortedBy { g -> g.distance }
+		guardianList.map {
+			if (it.distance >= 2000) {
+				othersGuardians.add(it)
+			} else {
+				nearbyGuardians.add(it)
+			}
+		}
+		Log.d("handledGuardians","othersGuardians ${othersGuardians.size}")
+		Log.d("handledGuardians","nearbyGuardians ${nearbyGuardians.size}")
 	}
 }

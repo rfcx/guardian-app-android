@@ -16,12 +16,16 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
+import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
-class NewEventsFragment : Fragment(), ProjectOnClickListener {
+class NewEventsFragment : Fragment(), ProjectOnClickListener, (GuardianModel) -> Unit {
 	private val viewModel: NewEventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
+	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
+	private val othersAdapter by lazy { GuardianItemAdapter(this) }
 	lateinit var listener: MainActivityEventListener
 	
 	override fun onAttach(context: Context) {
@@ -77,6 +81,18 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
 		setProjectTitle(viewModel.getProjectName())
+		
+		nearbyRecyclerView.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = nearbyAdapter
+			nearbyAdapter.items = viewModel.nearbyGuardians
+		}
+		
+		othersRecyclerView.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = othersAdapter
+			othersAdapter.items = viewModel.othersGuardians
+		}
 	}
 	
 	private fun setOnClickListener() {
@@ -136,5 +152,9 @@ class NewEventsFragment : Fragment(), ProjectOnClickListener {
 		
 		@JvmStatic
 		fun newInstance() = NewEventsFragment()
+	}
+	
+	override fun invoke(guardian: GuardianModel) {
+		Log.d("GuardianModel", "${guardian.name}")
 	}
 }

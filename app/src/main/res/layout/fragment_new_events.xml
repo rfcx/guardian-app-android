@@ -11,11 +11,49 @@
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
 	
-	<TextView
+	<LinearLayout
+		android:id="@+id/nearbyLayout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/new_events_fragment" />
+		android:layout_height="0dp"
+		android:orientation="vertical"
+		app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/nearby" />
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/nearbyRecyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/white"
+			android:dividerHeight="1dp"/>
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/othersLayout"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:orientation="vertical"
+		app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/others" />
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/othersRecyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/white"
+			android:dividerHeight="1dp"/>
+	</LinearLayout>
 	
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 		android:id="@+id/projectSwipeRefreshView"
