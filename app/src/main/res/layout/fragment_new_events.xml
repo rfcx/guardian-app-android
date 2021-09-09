@@ -11,49 +11,62 @@
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
 	
-	<LinearLayout
-		android:id="@+id/nearbyLayout"
+	<ScrollView
+		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:orientation="vertical"
-		app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
 		
-		<androidx.appcompat.widget.AppCompatTextView
+		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/nearby" />
-		
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/nearbyRecyclerView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="@color/white"
-			android:dividerHeight="1dp"/>
-	</LinearLayout>
-	
-	<LinearLayout
-		android:id="@+id/othersLayout"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:orientation="vertical"
-		app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
-		
-		<androidx.appcompat.widget.AppCompatTextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/others" />
-		
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/othersRecyclerView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="@color/white"
-			android:dividerHeight="1dp"/>
-	</LinearLayout>
+			android:layout_height="wrap_content">
+			
+			<LinearLayout
+				android:id="@+id/nearbyLayout"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintTop_toTopOf="parent">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:padding="@dimen/margin_padding_normal"
+					android:text="@string/nearby" />
+				
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/nearbyRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/white"
+					android:dividerHeight="1dp" />
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/othersLayout"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:padding="@dimen/margin_padding_normal"
+					android:text="@string/others" />
+				
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/othersRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/white"
+					android:dividerHeight="1dp" />
+			</LinearLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
 	
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 		android:id="@+id/projectSwipeRefreshView"
