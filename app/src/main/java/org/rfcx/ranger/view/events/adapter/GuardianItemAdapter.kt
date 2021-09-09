@@ -41,6 +41,12 @@ class GuardianItemAdapter(private val onClickListener: (GuardianModel) -> Unit) 
 			guardianName.text = item.name
 			distance.text = item.distance.setFormatLabel()
 			numberOfAlerts.text = item.numberOfAlerts.toString()
+			
+			if (item.numberOfAlerts == 0) {
+				numberImageView.setImageResource(R.drawable.bg_circle_green)
+			} else {
+				numberImageView.setImageResource(R.drawable.bg_circle_red)
+			}
 		}
 	}
 }

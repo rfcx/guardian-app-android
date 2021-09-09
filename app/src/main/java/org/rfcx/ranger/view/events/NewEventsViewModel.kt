@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.events
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +30,7 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 			GuardianModel("Guardian B", 5, 2200.0F),
 			GuardianModel("Guardian G", 5, 2560.9F),
 			GuardianModel("Guardian F", 0, 3560.3F),
-			GuardianModel("Guardian I", 9, 560.3F),
+			GuardianModel("Guardian I", 0, 560.3F),
 			GuardianModel("Guardian K", 6, 5560.3F),
 			GuardianModel("Guardian H", 4, 8560.3F),
 			GuardianModel("Guardian D", 6, 5050.1F))  // TODO:: Delete @tree
@@ -80,7 +79,6 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 				nearbyGuardians.add(it)
 			}
 		}
-		Log.d("handledGuardians","othersGuardians ${othersGuardians.size}")
-		Log.d("handledGuardians","nearbyGuardians ${nearbyGuardians.size}")
+		othersGuardians.sortByDescending { g -> g.numberOfAlerts }
 	}
 }

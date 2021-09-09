@@ -15,6 +15,7 @@
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:overScrollMode="never"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
 		
@@ -41,7 +42,8 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:background="@color/white"
-					android:dividerHeight="1dp" />
+					android:dividerHeight="1dp"
+					android:overScrollMode="never" />
 			</LinearLayout>
 			
 			<LinearLayout
@@ -63,7 +65,8 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:background="@color/white"
-					android:dividerHeight="1dp" />
+					android:dividerHeight="1dp"
+					android:overScrollMode="never" />
 			</LinearLayout>
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
