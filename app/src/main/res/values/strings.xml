@@ -226,4 +226,9 @@
 	<!-- SubmittedReportsFragment -->
 	<string name="submitted_reports_fragment">SubmittedReportsFragment</string>
 	
+	<!-- GuardianEventDetailFragment -->
+	<string name="create_report">Create Report</string>
+	<string name="open_in_maps">Open in maps</string>
+	<string name="guardian_event_detail">Guardian Event Detail</string>
+
 </resources>

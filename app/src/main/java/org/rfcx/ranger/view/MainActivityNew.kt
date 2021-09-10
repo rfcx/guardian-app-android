@@ -1,13 +1,9 @@
 package org.rfcx.ranger.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -23,6 +19,7 @@ import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.NewEventsFragment
+import org.rfcx.ranger.view.events.detail.GuardianEventDetailFragment
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
@@ -87,6 +84,18 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	
 	override fun onBackPressed() {
+		when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
+			is GuardianEventDetailFragment -> {
+				if (supportFragmentManager.backStackEntryCount > 0) {
+					supportFragmentManager.popBackStack()
+				} else {
+					super.onBackPressed()
+				}
+				showBottomAppBar()
+			}
+		}
+		
+		if (projectRecyclerView == null) return
 		if (projectRecyclerView.visibility == View.VISIBLE) {
 			showBottomAppBar()
 			projectRecyclerView.visibility = View.GONE
@@ -191,6 +200,24 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	override fun alertScreen() {
 		menuDraftReports.performClick()
+	}
+	
+	override fun openGuardianEventDetail() {
+		hideBottomAppBar()
+		startFragment(GuardianEventDetailFragment.newInstance(), GuardianEventDetailFragment.tag)
+	}
+	
+	private fun startFragment(fragment: Fragment, tag: String = "") {
+		if (tag.isBlank()) {
+			supportFragmentManager.beginTransaction()
+					.replace(contentContainer.id, fragment)
+					.commit()
+		} else {
+			supportFragmentManager.beginTransaction()
+					.replace(contentContainer.id, fragment, tag)
+					.addToBackStack(tag)
+					.commit()
+		}
 	}
 	
 	override fun moveMapIntoReportMarker(report: Report) {
@@ -342,6 +369,8 @@ interface MainActivityEventListener {
 	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun alertScreen()
+	fun onBackPressed()
+	fun openGuardianEventDetail()
 	fun moveMapIntoReportMarker(report: Report)
 }
 
