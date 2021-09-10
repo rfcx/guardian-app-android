@@ -11,8 +11,15 @@
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
 	
+	<com.mapbox.mapboxsdk.maps.MapView
+		android:id="@+id/mapView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+		android:visibility="gone" />
+	
 	<ScrollView
-		android:id="@+id/scrollView"
+		android:id="@+id/guardianListScrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:overScrollMode="never"
