@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,21 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 	
 	private lateinit var mapView: MapView
 	private var mapBoxMap: MapboxMap? = null
+	private var locationManager: LocationManager? = null
+	private var lastLocation: Location? = null
 	private var permissionsManager: PermissionsManager = PermissionsManager(this)
+	private val locationListener = object : android.location.LocationListener {
+		override fun onLocationChanged(p0: Location) {
+			moveCameraToCurrentLocation(p0)
+			if (PermissionsManager.areLocationPermissionsGranted(context)) {
+				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
+			}
+		}
+		
+		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
+		override fun onProviderEnabled(p0: String) {}
+		override fun onProviderDisabled(p0: String) {}
+	}
 	
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
@@ -87,7 +102,7 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 		mapboxMap.setStyle(Style.OUTDOORS) { style ->
 			mapboxMap.uiSettings.isAttributionEnabled = false
 			mapboxMap.uiSettings.isLogoEnabled = false
-			enableLocationComponent(style)
+			getLocation()
 		}
 	}
 	
@@ -123,6 +138,29 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 				cameraMode = CameraMode.TRACKING
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
+			}
+		} else {
+			permissionsManager = PermissionsManager(this)
+			permissionsManager.requestLocationPermissions(activity)
+		}
+	}
+	
+	private fun getLocation() {
+		if (!isAdded || isDetached) return
+		val style = mapBoxMap?.style ?: return
+		
+		// Check if permissions are enabled and if not request
+		if (PermissionsManager.areLocationPermissionsGranted(context)) {
+			locationManager?.removeUpdates(locationListener)
+			locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+			try {
+				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+				lastLocation?.let { moveCameraToCurrentLocation(it) }
+				enableLocationComponent(style)
+			} catch (ex: SecurityException) {
+				ex.printStackTrace()
+			} catch (ex: IllegalArgumentException) {
+				ex.printStackTrace()
 			}
 		} else {
 			permissionsManager = PermissionsManager(this)
