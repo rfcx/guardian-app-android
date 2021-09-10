@@ -266,7 +266,7 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 	}
 	
 	override fun invoke(guardian: GuardianModel) {
-		listener.openGuardianEventDetail()
+		listener.openGuardianEventDetail(guardian.name, guardian.distance)
 	}
 	
 	override fun onResume() {

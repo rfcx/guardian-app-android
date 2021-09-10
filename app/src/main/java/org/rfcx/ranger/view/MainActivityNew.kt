@@ -202,9 +202,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		menuDraftReports.performClick()
 	}
 	
-	override fun openGuardianEventDetail() {
+	override fun openGuardianEventDetail(name: String, distance: Float) {
 		hideBottomAppBar()
-		startFragment(GuardianEventDetailFragment.newInstance(), GuardianEventDetailFragment.tag)
+		startFragment(GuardianEventDetailFragment.newInstance(name, distance), GuardianEventDetailFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "") {
@@ -370,7 +370,7 @@ interface MainActivityEventListener {
 	fun showBottomAppBar()
 	fun alertScreen()
 	fun onBackPressed()
-	fun openGuardianEventDetail()
+	fun openGuardianEventDetail(name: String, distance: Float)
 	fun moveMapIntoReportMarker(report: Report)
 }
 
