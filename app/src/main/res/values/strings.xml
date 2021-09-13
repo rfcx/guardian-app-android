@@ -239,6 +239,14 @@
 	<string name="today">Today</string>
 	<string name="earlier">Earlier...</string>
 	
-	<!--	<string name=""></string>-->
+	<!-- StepTwoFragment -->
+	<string name="what_evidence">What evidence of loggers did you encounter? Select all that apply</string>
+	<string name="cut_down_trees">Cut down trees</string>
+	<string name="cleared_areas">Cleared areas</string>
+	<string name="logging_equipment">Logging equipment</string>
+	<string name="loggers_at_site">Loggers at Site</string>
+	<string name="other_disruption">Other Disruption</string>
+	
+	<!--	<string name=""></string>   -->
 
 </resources>
