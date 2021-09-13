@@ -247,6 +247,21 @@
 	<string name="loggers_at_site">Loggers at Site</string>
 	<string name="other_disruption">Other Disruption</string>
 	
+	<!-- StepThreeFragment -->
+	<string name="what_scale">What was the scale of the logging operation?</string>
+	<string name="logging_equipment_found">No visible tree disruption but logging equipment found</string>
+	<string name="small_trees_cut_down">Small number of trees cut down</string>
+	<string name="medium_trees_cut_down">Medium number of trees cut down</string>
+	<string name="large_area_clear_cut">Large area substantially clear cut</string>
+	
+	<!-- StepFourFragment -->
+	<string name="what_action">What action did you take? Select all that apply</string>
+	<string name="confronted_loggers">Confronted loggers</string>
+	<string name="confiscated_equipment">Confiscated equipment</string>
+	<string name="collected_evidence">Collected evidence</string>
+	<string name="submitted_report">Submitted report of incident</string>
+	<string name="planning_patrol_area">Planning to patrol area again in near future</string>
+
 	<!--	<string name=""></string>   -->
 
 </resources>

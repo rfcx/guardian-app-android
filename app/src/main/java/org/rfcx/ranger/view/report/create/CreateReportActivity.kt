@@ -62,6 +62,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		when (step) {
 			1 -> startFragment(StepOneFragment.newInstance())
 			2 -> startFragment(StepTwoFragment.newInstance())
+			3 -> startFragment(StepThreeFragment.newInstance())
 		}
 	}
 	
