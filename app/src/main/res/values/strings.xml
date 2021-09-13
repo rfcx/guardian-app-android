@@ -230,5 +230,15 @@
 	<string name="create_report">Create Report</string>
 	<string name="open_in_maps">Open in maps</string>
 	<string name="guardian_event_detail">Guardian Event Detail</string>
+	
+	<!-- CreateReportActivity -->
+	<string name="create_report_steps">Create Report (step %d of 5)</string>
+	
+	<!-- StepOneFragment -->
+	<string name="when_investigate">When did you investigate?</string>
+	<string name="today">Today</string>
+	<string name="earlier">Earlier...</string>
+	
+	<!--	<string name=""></string>-->
 
 </resources>

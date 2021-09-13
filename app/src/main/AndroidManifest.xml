@@ -37,21 +37,25 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
-		<activity android:name=".view.profile.coordinates.CoordinatesActivity"
+		<activity
+			android:name=".view.profile.coordinates.CoordinatesActivity"
+			android:screenOrientation="portrait" />
+		<activity
+			android:name=".view.report.create.CreateReportActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
-		
 		<activity
 			android:name=".view.tutorial.TutorialActivity"
-			android:theme="@style/AppTheme.ForTutorial"
-			android:screenOrientation="portrait" />
-		<activity android:name=".view.profile.PasswordChangeActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.ForTutorial" />
+		<activity
+			android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.report.ReportDetailActivity"
 			android:screenOrientation="portrait" />

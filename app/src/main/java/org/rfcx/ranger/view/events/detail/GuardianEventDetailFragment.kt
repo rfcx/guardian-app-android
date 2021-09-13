@@ -15,6 +15,7 @@ import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
 import org.rfcx.ranger.view.events.adapter.EventModel
+import org.rfcx.ranger.view.report.create.CreateReportActivity
 import java.util.*
 
 class GuardianEventDetailFragment : Fragment() {
@@ -57,6 +58,11 @@ class GuardianEventDetailFragment : Fragment() {
 					EventModel("Chainsaw", Date(121, 8, 9, 19, 25)),
 					EventModel("Chainsaw", Date(121, 8, 10, 16, 23))
 			).sortedByDescending { item -> item.date }
+			
+			createReportButton.setOnClickListener {
+				val name = name ?: return@setOnClickListener
+				CreateReportActivity.startActivity(context, name)
+			}
 		}
 		
 		guardianNameTextView.text = name
