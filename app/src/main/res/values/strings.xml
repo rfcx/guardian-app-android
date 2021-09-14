@@ -261,7 +261,9 @@
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="submitted_report">Submitted report of incident</string>
 	<string name="planning_patrol_area">Planning to patrol area again in near future</string>
-
-	<!--	<string name=""></string>   -->
-
+	
+	<!-- StepFiveFragment -->
+	<string name="add_evidence">Add evidence</string>
+	<string name="save_draft">Save Draft</string>
+	
 </resources>

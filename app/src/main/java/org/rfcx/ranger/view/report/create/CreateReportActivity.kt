@@ -64,6 +64,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			2 -> startFragment(StepTwoFragment.newInstance())
 			3 -> startFragment(StepThreeFragment.newInstance())
 			4 -> startFragment(StepFourFragment.newInstance())
+			5 -> startFragment(StepFiveFragment.newInstance())
 		}
 	}
 	
