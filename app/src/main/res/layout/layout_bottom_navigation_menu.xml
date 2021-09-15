@@ -22,7 +22,7 @@
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
-		app:icon="@drawable/ic_menu_discover"
+		app:icon="@drawable/ic_clipboard_edit_outline"
 		app:iconTintColor="@color/colorPrimary"
 		app:showBadge="true"
 		app:title="@string/menu_draft_reports"
@@ -34,7 +34,7 @@
 		android:layout_height="match_parent"
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
-		app:icon="@drawable/ic_menu_map"
+		app:icon="@drawable/ic_clipboard_check_outline"
 		app:iconTintColor="@color/colorPrimary"
 		app:title="@string/menu_submitted_reports"
 		app:titleColorSelected="@color/colorPrimary" />

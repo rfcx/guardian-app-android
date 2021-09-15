@@ -11,11 +11,74 @@
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
 	
-	<TextView
+	<com.mapbox.mapboxsdk.maps.MapView
+		android:id="@+id/mapView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/new_events_fragment" />
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+	
+	<ScrollView
+		android:id="@+id/guardianListScrollView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			
+			<LinearLayout
+				android:id="@+id/nearbyLayout"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintTop_toTopOf="parent">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					style="@style/RangerText.Title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:padding="@dimen/margin_padding_normal"
+					android:text="@string/nearby" />
+				
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/nearbyRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/white"
+					android:dividerHeight="1dp"
+					android:overScrollMode="never" />
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/othersLayout"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					style="@style/RangerText.Title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:padding="@dimen/margin_padding_normal"
+					android:text="@string/others" />
+				
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/othersRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/white"
+					android:dividerHeight="1dp"
+					android:overScrollMode="never" />
+			</LinearLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
 	
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 		android:id="@+id/projectSwipeRefreshView"

@@ -132,5 +132,10 @@
 	<style name="BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
 		<item name="backgroundTint">@color/bottomBar</item>
 	</style>
+	
+	<style name="Toolbar.TitleText" parent="Widget.MaterialComponents.Toolbar.Primary">
+		<item name="android:textSize">18sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 
 </resources>

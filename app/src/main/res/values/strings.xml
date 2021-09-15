@@ -215,8 +215,9 @@
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 	
 	<!-- NewEventsFragment -->
-	<string name="new_events_fragment">NewEventsFragment</string>
 	<string name="all_projects">All projects</string>
+	<string name="nearby">nearby</string>
+	<string name="others">others</string>
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	
 	<!-- DraftReportsFragment -->
@@ -225,4 +226,9 @@
 	<!-- SubmittedReportsFragment -->
 	<string name="submitted_reports_fragment">SubmittedReportsFragment</string>
 	
+	<!-- GuardianEventDetailFragment -->
+	<string name="create_report">Create Report</string>
+	<string name="open_in_maps">Open in maps</string>
+	<string name="guardian_event_detail">Guardian Event Detail</string>
+
 </resources>

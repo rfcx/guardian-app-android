@@ -90,3 +90,7 @@ fun Context.getBackgroundColor(res: Int): Int {
 
 fun String.isValidEmail() =
 		this.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+fun Float.setFormatLabel(): String {
+	return if (this >= 1000) "${String.format("%.1f", this/1000)}km" else "${String.format("%.0f", this)}m"
+}

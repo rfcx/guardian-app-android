@@ -13,11 +13,21 @@ import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.view.events.adapter.GuardianModel
 
 
 class NewEventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
+	
+	val nearbyGuardians = mutableListOf<GuardianModel>()
+	val othersGuardians = mutableListOf<GuardianModel>()
+	
+	var guardians: List<GuardianModel> = listOf()
+	
+	init {
+		handledGuardians()
+	}
 	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
@@ -48,5 +58,17 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 	fun setProjectSelected(id: Int) {
 		val preferences = Preferences.getInstance(context)
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
+	}
+	
+	private fun handledGuardians() {
+		val guardianList = guardians.sortedBy { g -> g.distance }
+		guardianList.forEach {
+			if (it.distance >= 2000) {
+				othersGuardians.add(it)
+			} else {
+				nearbyGuardians.add(it)
+			}
+		}
+		othersGuardians.sortByDescending { g -> g.numberOfAlerts }
 	}
 }

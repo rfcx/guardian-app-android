@@ -14,30 +14,45 @@
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 		app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 		
-		<LinearLayout
-			android:id="@+id/projectTitleLayout"
+		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:gravity="center"
-			android:orientation="horizontal">
+			android:layout_height="match_parent">
 			
-			<androidx.appcompat.widget.AppCompatTextView
-				android:id="@+id/projectTitleTextView"
-				style="@style/RangerText.Body"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/projectTitleLayout"
+				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_marginEnd="@dimen/margin_padding_xsmall"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:gravity="center"
-				android:text="@string/menu_new_events" />
+				android:orientation="horizontal">
+				
+				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/projectTitleTextView"
+					style="@style/RangerText.Body"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginEnd="@dimen/margin_padding_xsmall"
+					android:gravity="center"
+					android:text="@string/menu_new_events" />
+				
+				<androidx.appcompat.widget.AppCompatImageView
+					android:id="@+id/expandMoreImageView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:src="@drawable/ic_expand_more" />
+			</LinearLayout>
 			
 			<androidx.appcompat.widget.AppCompatImageView
-				android:id="@+id/expandMoreImageView"
+				android:id="@+id/changePageImageView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:src="@drawable/ic_expand_more" />
-		</LinearLayout>
-	
-	
+				android:padding="@dimen/margin_padding_normal"
+				android:src="@drawable/ic_map"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
 	</com.google.android.material.appbar.MaterialToolbar>
 </com.google.android.material.appbar.AppBarLayout>
