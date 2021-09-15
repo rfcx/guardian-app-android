@@ -23,17 +23,7 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 	val nearbyGuardians = mutableListOf<GuardianModel>()
 	val othersGuardians = mutableListOf<GuardianModel>()
 	
-	var guardians = listOf(
-			GuardianModel("Guardian A", 5, 250.1F),
-			GuardianModel("Guardian C", 3, 1050.1F),
-			GuardianModel("Guardian E", 2, 200.0F),
-			GuardianModel("Guardian B", 5, 2200.0F),
-			GuardianModel("Guardian G", 5, 2560.9F),
-			GuardianModel("Guardian F", 0, 3560.3F),
-			GuardianModel("Guardian I", 0, 560.3F),
-			GuardianModel("Guardian K", 6, 5560.3F),
-			GuardianModel("Guardian H", 4, 8560.3F),
-			GuardianModel("Guardian D", 6, 5050.1F))  // TODO:: Delete @tree
+	var guardians: List<GuardianModel> = listOf()
 	
 	init {
 		handledGuardians()
@@ -72,7 +62,7 @@ class NewEventsViewModel(private val context: Context, private val getProjects: 
 	
 	private fun handledGuardians() {
 		val guardianList = guardians.sortedBy { g -> g.distance }
-		guardianList.map {
+		guardianList.forEach {
 			if (it.distance >= 2000) {
 				othersGuardians.add(it)
 			} else {
