@@ -266,7 +266,7 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 	}
 	
 	override fun invoke(guardian: GuardianModel) {
-		Toast.makeText(context, guardian.name, Toast.LENGTH_SHORT).show()
+		listener.openGuardianEventDetail(guardian.name, guardian.distance)
 	}
 	
 	override fun onResume() {
