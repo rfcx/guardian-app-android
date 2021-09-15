@@ -8,8 +8,8 @@
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/numberOfAlertsImageView"
-		android:layout_width="16dp"
-		android:layout_height="16dp"
+		android:layout_width="@dimen/number_alerts_site"
+		android:layout_height="@dimen/number_alerts_site"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:src="@drawable/bg_circle_red"
 		app:layout_constraintBottom_toBottomOf="@id/typeTextView"

@@ -95,11 +95,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 			}
 		}
 		
-		if (projectRecyclerView == null) return
-		if (projectRecyclerView.visibility == View.VISIBLE) {
-			showBottomAppBar()
-			projectRecyclerView.visibility = View.GONE
-			projectSwipeRefreshView.visibility = View.GONE
+		projectRecyclerView?.let {
+			if (it.visibility == View.VISIBLE) {
+				showBottomAppBar()
+				it.visibility = View.GONE
+				projectSwipeRefreshView.visibility = View.GONE
+			}
 		}
 	}
 	

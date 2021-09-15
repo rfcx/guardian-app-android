@@ -14,8 +14,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
-import org.rfcx.ranger.view.events.adapter.EventModel
-import java.util.*
 
 class GuardianEventDetailFragment : Fragment() {
 	lateinit var listener: MainActivityEventListener
@@ -48,15 +46,7 @@ class GuardianEventDetailFragment : Fragment() {
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = eventItemAdapter
-			eventItemAdapter.items = listOf(
-					EventModel("Chainsaw", Date(121, 7, 25, 22, 19)),
-					EventModel("Chainsaw", Date(121, 7, 25, 5, 38)),
-					EventModel("Chainsaw", Date(121, 7, 19, 17, 29)),
-					EventModel("Chainsaw", Date(121, 8, 1, 9, 36)),
-					EventModel("Chainsaw", Date(121, 8, 8, 15, 32)),
-					EventModel("Chainsaw", Date(121, 8, 9, 19, 25)),
-					EventModel("Chainsaw", Date(121, 8, 10, 16, 23))
-			).sortedByDescending { item -> item.date }
+			eventItemAdapter.items = listOf() // Add list of EventModel and should sortedByDescending( date )
 		}
 		
 		guardianNameTextView.text = name
