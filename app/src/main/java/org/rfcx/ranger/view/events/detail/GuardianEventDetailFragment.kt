@@ -23,12 +23,23 @@ class GuardianEventDetailFragment : Fragment() {
 	private val eventItemAdapter by lazy { EventItemAdapter() }
 	var name: String? = null
 	var distance: Float? = null
+	var number: Int? = null
+	
+	val list = listOf(
+			EventModel("Chainsaw", Date(121, 7, 25, 22, 19)),
+			EventModel("Chainsaw", Date(121, 7, 25, 5, 38)),
+			EventModel("Chainsaw", Date(121, 7, 19, 17, 29)),
+			EventModel("Chainsaw", Date(121, 8, 15, 9, 36)),
+			EventModel("Chainsaw", Date(121, 8, 8, 15, 32)),
+			EventModel("Chainsaw", Date(121, 8, 13, 19, 25)),
+			EventModel("Chainsaw", Date(121, 8, 14, 16, 23))
+	).sortedByDescending { item -> item.date }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
-		distance = arg.getFloat(ARG_DISTANCE)
+		number = arg.getInt(ARG_NUMBER)
 	}
 	
 	override fun onAttach(context: Context) {
@@ -49,15 +60,7 @@ class GuardianEventDetailFragment : Fragment() {
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = eventItemAdapter
-			eventItemAdapter.items = listOf(
-					EventModel("Chainsaw", Date(121, 7, 25, 22, 19)),
-					EventModel("Chainsaw", Date(121, 7, 25, 5, 38)),
-					EventModel("Chainsaw", Date(121, 7, 19, 17, 29)),
-					EventModel("Chainsaw", Date(121, 8, 1, 9, 36)),
-					EventModel("Chainsaw", Date(121, 8, 8, 15, 32)),
-					EventModel("Chainsaw", Date(121, 8, 9, 19, 25)),
-					EventModel("Chainsaw", Date(121, 8, 10, 16, 23))
-			).sortedByDescending { item -> item.date }
+			eventItemAdapter.items = list.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
 				val name = name ?: return@setOnClickListener
@@ -87,13 +90,15 @@ class GuardianEventDetailFragment : Fragment() {
 		const val tag = "GuardianEventDetailFragment"
 		private const val ARG_NAME = "ARG_NAME"
 		private const val ARG_DISTANCE = "ARG_DISTANCE"
+		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Float): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Float, num: Int): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
 					putFloat(ARG_DISTANCE, distance)
+					putInt(ARG_NUMBER, num)
 				}
 			}
 		}
