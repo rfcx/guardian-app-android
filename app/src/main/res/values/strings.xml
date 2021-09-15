@@ -265,5 +265,9 @@
 	<!-- StepFiveFragment -->
 	<string name="add_evidence">Add evidence</string>
 	<string name="save_draft">Save Draft</string>
+	<string name="add_photos">Add photos</string>
+	<string name="add_notes">Add notes</string>
+	<string name="upload_voice_notes">Upload voice notes</string>
+	<string name="none_collected">None collected</string>
 	
 </resources>

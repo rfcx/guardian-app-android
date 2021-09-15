@@ -5,7 +5,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	
 	tools:context=".view.report.create.StepFiveFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
@@ -18,11 +17,11 @@
 	
 	<TextView
 		android:id="@+id/attachImageTextView"
-		style="@style/RangerText.Title"
+		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:text="@string/report_attach_image_label"
+		android:text="@string/add_photos"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/addEvidenceTextView" />
 	
@@ -42,11 +41,11 @@
 	
 	<TextView
 		android:id="@+id/noteTextView"
-		style="@style/RangerText.Title"
+		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		android:text="@string/report_note_label"
+		android:text="@string/add_notes"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
 	
@@ -67,11 +66,11 @@
 	
 	<TextView
 		android:id="@+id/reportRecordTextView"
-		style="@style/RangerText.Title"
+		style="@style/RangerText.SubTitle.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		android:text="@string/report_record_label"
+		android:text="@string/upload_voice_notes"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/noteEditText" />
 	
@@ -83,6 +82,17 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+	
+	<CheckBox
+		android:id="@+id/noneCollectedCheckBox"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:padding="@dimen/margin_padding_normal"
+		android:text="@string/none_collected"
+		app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView" />
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/saveDraftButton"
