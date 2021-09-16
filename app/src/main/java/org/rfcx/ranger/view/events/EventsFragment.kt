@@ -41,8 +41,8 @@ import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
-class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (GuardianModel) -> Unit {
-	private val viewModel: NewEventsViewModel by viewModel()
+class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (GuardianModel) -> Unit {
+	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
 	private val othersAdapter by lazy { GuardianItemAdapter(this) }
@@ -298,7 +298,7 @@ class NewEventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, P
 		const val tag = "NewEventsFragment"
 		
 		@JvmStatic
-		fun newInstance() = NewEventsFragment()
+		fun newInstance() = EventsFragment()
 	}
 	
 	override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}

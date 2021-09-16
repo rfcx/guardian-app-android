@@ -18,7 +18,7 @@ import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
-import org.rfcx.ranger.view.events.NewEventsFragment
+import org.rfcx.ranger.view.events.EventsFragment
 import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.events.detail.GuardianEventDetailFragment
 import org.rfcx.ranger.view.map.MapFragment
@@ -234,14 +234,14 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
 				.add(contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
 				.add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
-				.add(contentContainer.id, getNewEvents(), NewEventsFragment.tag)
+				.add(contentContainer.id, getNewEvents(), EventsFragment.tag)
 				.commit()
 		
 		menuNewEvents.performClick()
 	}
 	
-	private fun getNewEvents(): NewEventsFragment = supportFragmentManager.findFragmentByTag(NewEventsFragment.tag)
-			as NewEventsFragment? ?: NewEventsFragment.newInstance()
+	private fun getNewEvents(): EventsFragment = supportFragmentManager.findFragmentByTag(EventsFragment.tag)
+			as EventsFragment? ?: EventsFragment.newInstance()
 	
 	private fun getSubmittedReports(): SubmittedReportsFragment = supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag)
 			as SubmittedReportsFragment? ?: SubmittedReportsFragment.newInstance()

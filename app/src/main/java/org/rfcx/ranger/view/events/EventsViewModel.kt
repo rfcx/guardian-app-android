@@ -16,7 +16,7 @@ import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.view.events.adapter.GuardianModel
 
 
-class NewEventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
+class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
