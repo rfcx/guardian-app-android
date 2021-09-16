@@ -5,25 +5,26 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context=".view.report.create.StepFourFragment">
+	tools:context=".view.report.create.SetWhatEvidenceFragment">
 	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/whatActionTextView"
+	<TextView
+		android:id="@+id/whenTextView"
+		style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/what_action"
+		android:text="@string/what_evidence"
 		app:layout_constraintTop_toTopOf="parent" />
 	
-	<LinearLayout
+	<RadioGroup
+		android:id="@+id/whatEvidenceRadioGroup"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:orientation="vertical"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/whatActionTextView">
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:checkedButton="@+id/whatEvidenceRadioButton"
+		app:layout_constraintTop_toBottomOf="@id/whenTextView">
 		
 		<CheckBox
-			android:id="@+id/confrontedLoggersCheckBox"
+			android:id="@+id/cutDownTreesCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -32,12 +33,12 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/confronted_loggers"
+			android:text="@string/cut_down_trees"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
 		<CheckBox
-			android:id="@+id/confiscatedEquipmentCheckBox"
+			android:id="@+id/clearedAreasCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -46,12 +47,12 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/confiscated_equipment"
+			android:text="@string/cleared_areas"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
 		<CheckBox
-			android:id="@+id/collectedEvidenceCheckBox"
+			android:id="@+id/loggingEquipmentCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -60,12 +61,12 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/collected_evidence"
+			android:text="@string/logging_equipment"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
 		<CheckBox
-			android:id="@+id/submittedReportCheckBox"
+			android:id="@+id/loggersAtSiteCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -74,12 +75,12 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/submitted_report"
+			android:text="@string/loggers_at_site"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
 		<CheckBox
-			android:id="@+id/planningPatrolAreaCheckBox"
+			android:id="@+id/otherDisruptionCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -88,21 +89,7 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/planning_patrol_area"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-		
-		<CheckBox
-			android:id="@+id/otherCheckBox"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_normal"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_normal"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/other"
+			android:text="@string/other_disruption"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
@@ -119,8 +106,8 @@
 			android:text="@string/common_none"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-	
-	</LinearLayout>
+		
+	</RadioGroup>
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"

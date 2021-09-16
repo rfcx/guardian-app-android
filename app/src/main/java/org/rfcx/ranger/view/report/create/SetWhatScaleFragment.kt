@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_step_two.*
+import kotlinx.android.synthetic.main.fragment_set_what_scale.*
 import org.rfcx.ranger.R
 
-class StepTwoFragment : Fragment() {
+class SetWhatScaleFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	
@@ -21,19 +21,18 @@ class StepTwoFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_step_two, container, false)
+		return inflater.inflate(R.layout.fragment_set_what_scale, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(3)
+			listener.handleCheckClicked(4)
 		}
 	}
 	
 	companion object {
-		
 		@JvmStatic
-		fun newInstance() = StepTwoFragment()
+		fun newInstance() = SetWhatScaleFragment()
 	}
 }

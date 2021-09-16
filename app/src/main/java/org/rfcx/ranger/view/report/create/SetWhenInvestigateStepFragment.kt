@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_step_three.*
+import kotlinx.android.synthetic.main.fragment_when_investigate_step.*
 import org.rfcx.ranger.R
 
-class StepThreeFragment : Fragment() {
+class SetWhenInvestigateStepFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	
@@ -21,18 +21,18 @@ class StepThreeFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_step_three, container, false)
+		return inflater.inflate(R.layout.fragment_when_investigate_step, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(4)
+			listener.handleCheckClicked(2)
 		}
 	}
 	
 	companion object {
 		@JvmStatic
-		fun newInstance() = StepThreeFragment()
+		fun newInstance() = SetWhenInvestigateStepFragment()
 	}
 }

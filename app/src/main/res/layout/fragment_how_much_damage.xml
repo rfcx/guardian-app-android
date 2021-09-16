@@ -5,14 +5,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context=".view.report.create.StepThreeFragment">
+	tools:context=".view.report.create.HowMuchDamageFragment">
 	
 	<TextView
 		android:id="@+id/whatScaleTextView"
 		style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/what_scale"
+		android:text="@string/how_much_damage"
 		app:layout_constraintTop_toTopOf="parent" />
 	
 	<androidx.constraintlayout.widget.Guideline

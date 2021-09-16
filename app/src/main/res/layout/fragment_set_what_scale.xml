@@ -5,14 +5,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context=".view.report.create.StepOneFragment">
+	tools:context=".view.report.create.SetWhatScaleFragment">
 	
 	<TextView
-		android:id="@+id/whenTextView"
+		android:id="@+id/whatScaleTextView"
 		style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/when_investigate"
+		android:text="@string/what_scale"
 		app:layout_constraintTop_toTopOf="parent" />
 	
 	<RadioGroup
@@ -20,49 +20,48 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_small"
-		android:checkedButton="@+id/radio_button_1"
-		app:layout_constraintTop_toBottomOf="@id/whenTextView">
+		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView">
 		
 		<RadioButton
-			android:id="@+id/todayRadioButton"
+			android:id="@+id/smallRadioButton"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/today"
+			android:text="@string/small"
 			android:textColor="@drawable/radio_text_color" />
 		
 		<RadioButton
-			android:id="@+id/yesterdayRadioButton"
+			android:id="@+id/largeRadioButton"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/yesterday"
+			android:text="@string/large"
 			android:textColor="@drawable/radio_text_color" />
 		
 		<RadioButton
-			android:id="@+id/earlierRadioButton"
+			android:id="@+id/notSureRadioButton"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/earlier"
+			android:text="@string/not_sure"
 			android:textColor="@drawable/radio_text_color" />
 	</RadioGroup>
 	
