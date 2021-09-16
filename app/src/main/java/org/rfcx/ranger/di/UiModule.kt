@@ -15,7 +15,6 @@ import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.PasswordChangeViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.profile.editprofile.EditProfileViewModel
-import org.rfcx.ranger.view.report.ReportDetailViewModel
 
 object UiModule {
 	
@@ -32,10 +31,6 @@ object UiModule {
 		viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 		viewModel { MapDetailViewModel(get(), get()) }
 		viewModel { ReportViewPagerFragmentViewModel(get()) }
-	}
-	
-	val statusModule = module {
-		viewModel { ReportDetailViewModel(get(), get(), get()) }
 	}
 	
 	val profileModule = module {
