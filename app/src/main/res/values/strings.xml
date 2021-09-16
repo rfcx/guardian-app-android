@@ -232,7 +232,7 @@
 	<string name="guardian_event_detail">Guardian Event Detail</string>
 	
 	<!-- CreateReportActivity -->
-	<string name="create_report_steps">Create Report (step %d of 5)</string>
+	<string name="create_report_steps">Create Report (step %d of 6)</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>

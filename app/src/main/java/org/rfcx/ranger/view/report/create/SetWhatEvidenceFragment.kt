@@ -1,7 +1,11 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +33,10 @@ class SetWhatEvidenceFragment : Fragment() {
 		nextStepButton.setOnClickListener {
 			listener.handleCheckClicked(3)
 		}
+		
+		val str = SpannableStringBuilder(getString(R.string.what_evidence))
+		str.setSpan(StyleSpan(Typeface.ITALIC), 43, 65, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+		whenTextView.text = str
 	}
 	
 	companion object {
