@@ -11,17 +11,17 @@ import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.adapter.OnReportImageAdapterClickListener
-import org.rfcx.ranger.adapter.ReportImageAdapter
 import org.rfcx.ranger.util.*
-import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.base.BaseFragment
+import org.rfcx.ranger.view.report.create.image.OnReportImageAdapterClickListener
+import org.rfcx.ranger.view.report.create.image.ReportImageAdapter
 import java.io.File
 
 /**
  * Shared image functionality between ReportActivity and ReportDetailActivity
  */
 
-abstract class BaseReportImageActivity: BaseActivity() {
+abstract class BaseImageFragment : BaseFragment() {
 	
 	protected abstract fun didAddImages(imagePaths: List<String>)
 	protected abstract fun didRemoveImage(imagePath: String)
@@ -30,8 +30,8 @@ abstract class BaseReportImageActivity: BaseActivity() {
 	private var imageFile: File? = null
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
-	private val cameraPermissions by lazy { CameraPermissions(this) }
-	private val galleryPermissions by lazy { GalleryPermissions(this) }
+	private val cameraPermissions by lazy { CameraPermissions(context as Activity) }
+	private val galleryPermissions by lazy { GalleryPermissions(context as Activity) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -74,8 +74,8 @@ abstract class BaseReportImageActivity: BaseActivity() {
 		bottomSheetView.menuTakePhoto.setOnClickListener {
 			takePhoto()
 		}
-		
-		attachImageDialog = BottomSheetDialog(this)
+		val context = context ?: return
+		attachImageDialog = BottomSheetDialog(context)
 		attachImageDialog.setContentView(bottomSheetView)
 	}
 	
@@ -95,13 +95,13 @@ abstract class BaseReportImageActivity: BaseActivity() {
 	private fun startTakePhoto() {
 		val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 		imageFile = ReportUtils.createReportImageFile()
-		if (imageFile != null) {
-			val photoURI = FileProvider.getUriForFile(this, ReportUtils.FILE_CONTENT_PROVIDER, imageFile!!)
-			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-			startActivityForResult(takePictureIntent, ReportUtils.REQUEST_TAKE_PHOTO)
-		} else {
-			// TODO: handle on can't create image file
-		}
+		
+		val image = imageFile ?: return
+		val context = context ?: return
+		val photoURI = FileProvider.getUriForFile(context, ReportUtils.FILE_CONTENT_PROVIDER, image)
+		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+		startActivityForResult(takePictureIntent, ReportUtils.REQUEST_TAKE_PHOTO)
+		
 	}
 	
 	private fun handleTakePhotoResult(requestCode: Int, resultCode: Int) {
@@ -152,7 +152,8 @@ abstract class BaseReportImageActivity: BaseActivity() {
 		val pathList = mutableListOf<String>()
 		val results = Matisse.obtainResult(intentData)
 		results.forEach {
-			val imagePath = ImageFileUtils.findRealPath(this, it)
+			val context = context ?: return
+			val imagePath = ImageFileUtils.findRealPath(context, it)
 			imagePath?.let { path ->
 				pathList.add(path)
 			}

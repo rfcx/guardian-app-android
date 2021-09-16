@@ -57,9 +57,6 @@
 			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.report.ReportDetailActivity"
-			android:screenOrientation="portrait" />
-		<activity
 			android:name=".view.profile.GuardianGroupActivity"
 			android:screenOrientation="portrait" />
 		<activity
@@ -76,10 +73,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name=".view.report.ReportActivity"
-			android:screenOrientation="portrait" />
-		
 		<service
 			android:name=".service.LocationTrackerService"
 			android:exported="false"

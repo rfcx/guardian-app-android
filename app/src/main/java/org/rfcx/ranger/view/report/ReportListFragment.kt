@@ -57,7 +57,6 @@ class ReportListFragment : Fragment() {
 			onItemClick = { position ->
 				val reportId = reportAdapter.getItemAt(position)?.getId()
 				if (reportId != null) {
-					context?.let { ReportDetailActivity.startIntent(it, reportId) }
 				}
 			}
 		}
