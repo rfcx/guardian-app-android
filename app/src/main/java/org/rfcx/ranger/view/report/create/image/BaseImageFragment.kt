@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.report
+package org.rfcx.ranger.view.report.create.image
 
 import android.app.Activity
 import android.content.Intent
@@ -13,8 +13,6 @@ import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseFragment
-import org.rfcx.ranger.view.report.create.image.OnReportImageAdapterClickListener
-import org.rfcx.ranger.view.report.create.image.ReportImageAdapter
 import java.io.File
 
 /**

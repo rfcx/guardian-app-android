@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_step_five.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.view.report.BaseImageFragment
+import org.rfcx.ranger.view.report.create.image.BaseImageFragment
 
 class StepFiveFragment : BaseImageFragment() {
 	
