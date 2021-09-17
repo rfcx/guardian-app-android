@@ -238,6 +238,7 @@
 	<string name="when_investigate">When did you investigate?</string>
 	<string name="today">Today</string>
 	<string name="earlier">Earlier...</string>
+	<string name="what_time">What time did you investigate?</string>
 	
 	<!-- SetWhatEvidenceFragment -->
 	<string name="what_evidence">What evidence of loggers did you encounter? Select all that apply</string>

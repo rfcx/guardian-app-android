@@ -40,8 +40,20 @@ class SetWhenInvestigateStepFragment : Fragment() {
 		timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
 			// get time with ($hourOfDay ${minute * TIME_PICKER_INTERVAL})
 		}
+		
+		radioGroup.setOnCheckedChangeListener { group, checkedId ->
+			when (checkedId) {
+				R.id.earlierRadioButton -> {
+					timePicker.visibility = View.VISIBLE
+					whatTimeTextView.visibility = View.VISIBLE
+				}
+				else -> {
+					timePicker.visibility = View.GONE
+					whatTimeTextView.visibility = View.GONE
+				}
+			}
+		}
 	}
-	
 	
 	private fun setMinutePicker() {
 		val numValues = 60 / TIME_PICKER_INTERVAL
@@ -60,7 +72,7 @@ class SetWhenInvestigateStepFragment : Fragment() {
 	}
 	
 	companion object {
-		const val TIME_PICKER_INTERVAL = 5
+		const val TIME_PICKER_INTERVAL = 15
 		
 		@JvmStatic
 		fun newInstance() = SetWhenInvestigateStepFragment()
