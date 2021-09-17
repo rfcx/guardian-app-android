@@ -246,11 +246,11 @@
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
 	<string name="loggers_at_site">Loggers at Site</string>
-	<string name="other_disruption">Other (explain in step 6)</string>
+	<string name="other_explain_step_6">Other (explain in step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->
 	<string name="how_much_damage">How much damage was done to the area?</string>
-	<string name="logging_equipment_found">No visible tree disruption but logging equipment found</string>
+	<string name="no_visible">No visible tree disruption found</string>
 	<string name="small_trees_cut_down">Small number of trees cut down</string>
 	<string name="medium_trees_cut_down">Medium number of trees cut down</string>
 	<string name="large_area_clear_cut">Large area substantially clear cut</string>

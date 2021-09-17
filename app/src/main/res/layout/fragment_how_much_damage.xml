@@ -16,119 +16,117 @@
 		app:layout_constraintTop_toTopOf="parent" />
 	
 	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/rightGutter"
+		android:id="@+id/guide"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		app:layout_constraintGuide_percent="0.15" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/chainsawImageView"
-		android:layout_width="20dp"
-		android:layout_height="20dp"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@id/whatScaleRadioGroup" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/smallTreesImageView"
-		android:layout_width="24dp"
-		android:layout_height="24dp"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintBottom_toTopOf="@id/mediumTreesImageView"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/chainsawImageView" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/mediumTreesImageView"
-		android:layout_width="28dp"
-		android:layout_height="28dp"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_large"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintBottom_toTopOf="@id/largeAreaImageView"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/smallTreesImageView" />
-	
+		app:layout_constraintGuide_percent="0.5" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/largeAreaImageView"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_large"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintBottom_toBottomOf="@id/whatScaleRadioGroup"
+		android:layout_width="0dp"
+		android:layout_height="150dp"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:background="@drawable/bg_grey_light"
+		android:src="@drawable/ic_mountains"
+		app:layout_constraintEnd_toEndOf="@id/guide"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/mediumTreesImageView" />
+		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView" />
 	
-	<RadioGroup
-		android:id="@+id/whatScaleRadioGroup"
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/largeAreaTextView"
+		style="@style/RangerText.Label"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:checkedButton="@+id/whatScaleRadioButton"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="@id/rightGutter"
-		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView">
-		
-		<RadioButton
-			android:id="@+id/loggingEquipmentRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/logging_equipment_found"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/smallTreesRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/small_trees_cut_down"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/mediumTreesRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/medium_trees_cut_down"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/largeAreaRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/large_area_clear_cut"
-			android:textColor="@drawable/radio_text_color" />
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/large_area_clear_cut"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaImageView" />
 	
-	</RadioGroup>
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/mediumTreesImageView"
+		android:layout_width="0dp"
+		android:layout_height="150dp"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		android:src="@drawable/ic_mountains"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/mediumTreesTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/medium_trees_cut_down"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaImageView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/SmallNumberImageView"
+		android:layout_width="0dp"
+		android:layout_height="150dp"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:background="@drawable/bg_grey_light"
+		android:src="@drawable/ic_mountains"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/smallTreesTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/small_trees_cut_down"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/SmallNumberImageView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/noVisibleImageView"
+		android:layout_width="0dp"
+		android:layout_height="150dp"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/mediumTreesTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/common_none"
+		android:textAllCaps="true"
+		app:layout_constraintBottom_toBottomOf="@id/noVisibleImageView"
+		app:layout_constraintEnd_toEndOf="@id/noVisibleImageView"
+		app:layout_constraintStart_toStartOf="@id/noVisibleImageView"
+		app:layout_constraintTop_toTopOf="@id/noVisibleImageView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/noVisibleTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/no_visible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/noVisibleImageView" />
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"
