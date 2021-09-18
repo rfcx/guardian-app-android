@@ -70,10 +70,8 @@
 		android:id="@+id/whatTimeTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_large"
 		android:text="@string/what_time"
-		android:visibility="gone"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 	
@@ -83,7 +81,6 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:timePickerMode="spinner"
-		android:visibility="gone"
 		app:layout_constraintTop_toBottomOf="@id/whatTimeTextView" />
 	
 	<androidx.appcompat.widget.AppCompatButton

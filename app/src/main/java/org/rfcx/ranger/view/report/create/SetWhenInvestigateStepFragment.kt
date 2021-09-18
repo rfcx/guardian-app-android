@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.report.create
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_when_investigate_step.*
 import org.rfcx.ranger.R
 import java.text.DecimalFormat
+import java.util.*
 
 class SetWhenInvestigateStepFragment : Fragment() {
 	
@@ -41,17 +43,14 @@ class SetWhenInvestigateStepFragment : Fragment() {
 			// get time with ($hourOfDay ${minute * TIME_PICKER_INTERVAL})
 		}
 		
-		radioGroup.setOnCheckedChangeListener { group, checkedId ->
-			when (checkedId) {
-				R.id.earlierRadioButton -> {
-					timePicker.visibility = View.VISIBLE
-					whatTimeTextView.visibility = View.VISIBLE
-				}
-				else -> {
-					timePicker.visibility = View.GONE
-					whatTimeTextView.visibility = View.GONE
-				}
-			}
+		val context = context ?: return
+		val date = Calendar.getInstance()
+		val datePicker = DatePickerDialog(context, { view, year, monthOfYear, dayOfMonth ->
+			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/$monthOfYear/$year")
+		}, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
+		
+		earlierRadioButton.setOnClickListener {
+			datePicker.show()
 		}
 	}
 	
