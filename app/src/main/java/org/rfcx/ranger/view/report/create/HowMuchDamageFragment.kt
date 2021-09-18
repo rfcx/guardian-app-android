@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_how_much_damage.*
 import org.rfcx.ranger.R
@@ -29,6 +30,33 @@ class HowMuchDamageFragment : Fragment() {
 		nextStepButton.setOnClickListener {
 			listener.handleCheckClicked(5)
 		}
+		largeAreaImageView.setOnClickListener {
+			setOnSelect(it)
+		}
+		mediumTreesImageView.setOnClickListener {
+			setOnSelect(it)
+		}
+		smallNumberImageView.setOnClickListener {
+			setOnSelect(it)
+		}
+		noVisibleImageView.setOnClickListener {
+			setOnSelect(it)
+		}
+	}
+	
+	private fun setOnSelect(selected: View) {
+		if (selected == largeAreaImageView) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
+		if (selected == mediumTreesImageView) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
+		if (selected == smallNumberImageView) smallNumberImageView.setBackgroundSelected() else smallNumberImageView.setBackgroundNoSelect()
+		if (selected == noVisibleImageView) noVisibleImageView.setBackgroundSelected() else noVisibleImageView.setBackgroundNoSelect()
+	}
+	
+	private fun ImageView.setBackgroundSelected() {
+		this.setBackgroundResource(R.drawable.bg_selected)
+	}
+	
+	private fun ImageView.setBackgroundNoSelect() {
+		this.setBackgroundResource(R.drawable.bg_grey_light)
 	}
 	
 	companion object {
