@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -18,6 +19,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -29,12 +33,19 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.expressions.Expression
+import com.mapbox.mapboxsdk.style.layers.CircleLayer
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
@@ -42,6 +53,22 @@ import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
 class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
+	
+	companion object {
+		const val tag = "NewEventsFragment"
+		
+		private const val COUNT = "count"
+		private const val CLUSTER = "cluster"
+		private const val BUILDING = "building"
+		private const val POINT_COUNT = "point_count"
+		private const val SOURCE_ALERT = "source.alert"
+		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
+		private const val UN_CLUSTERED_POINTS = "un-clustered-points"
+		
+		@JvmStatic
+		fun newInstance() = EventsFragment()
+	}
+	
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
@@ -65,6 +92,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		override fun onProviderDisabled(p0: String) {}
 	}
 	
+	private var alertSource: GeoJsonSource? = null
+	private var alertFeatures: FeatureCollection? = null
+	
+	private var queryLayerIds: Array<String> = arrayOf()
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
 	
@@ -164,6 +195,22 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			}, {
 			})
 		})
+		
+		// observe alerts
+		viewModel.getAlerts().observe(viewLifecycleOwner, { alerts ->
+			val features = alerts.map {
+				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.guardianName))
+				Feature.fromGeometry(Point.fromLngLat(it.longitude ?: 0.0, it.latitude
+						?: 0.0), properties.toJsonObject())
+			}
+			alertFeatures = FeatureCollection.fromFeatures(features)
+			refreshSource()
+			
+			if (alerts.isNotEmpty()) {
+				val lastCheckIn = alerts.last()
+				moveCameraTo(LatLng(lastCheckIn.latitude ?: 0.0, lastCheckIn.longitude ?: 0.0))
+			}
+		})
 	}
 	
 	private fun setProjectTitle(str: String) {
@@ -204,7 +251,62 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			mapboxMap.uiSettings.isAttributionEnabled = false
 			mapboxMap.uiSettings.isLogoEnabled = false
 			getLocation()
+			setupSources(style)
+			refreshSource()
+			addClusteredGeoJsonSource(style)
 		}
+	}
+	
+	private fun setupSources(it: Style) {
+		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
+				.withCluster(true)
+				.withClusterMaxZoom(15)
+				.withClusterRadius(20))
+		it.addSource(alertSource!!)
+	}
+	
+	private fun refreshSource() {
+		if (alertSource != null && alertFeatures != null) {
+			alertSource!!.setGeoJson(alertFeatures)
+		}
+	}
+	
+	private fun addClusteredGeoJsonSource(style: Style) {
+		val layers = Array(1) { IntArray(2) }
+		layers[0] = intArrayOf(0, Color.parseColor("#e41a1a"))
+		
+		queryLayerIds = Array(layers.size) { "" }
+		
+		layers.forEachIndexed { index, layer ->
+			queryLayerIds[index] = "cluster-$index"
+			val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
+			circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(10f))
+			val pointCount = Expression.toNumber(Expression.get(POINT_COUNT))
+			circles.setFilter(
+					if (index == 0)
+						Expression.gte(pointCount, Expression.literal(layer[0])) else
+						Expression.all(
+								Expression.gte(pointCount, Expression.literal(layer[0])),
+								Expression.lt(pointCount, Expression.literal(layers[index - 1][0]))
+						)
+			)
+			style.addLayerBelow(circles, BUILDING)
+		}
+		
+		val count = SymbolLayer(COUNT, SOURCE_ALERT)
+		count.setProperties(
+				PropertyFactory.textField(Expression.toString(Expression.get(POINT_COUNT))),
+				PropertyFactory.textSize(12f),
+				PropertyFactory.textColor(Color.WHITE),
+				PropertyFactory.textIgnorePlacement(true),
+				PropertyFactory.textAllowOverlap(true)
+		)
+		style.addLayer(count)
+		
+		val unClustered = CircleLayer(UN_CLUSTERED_POINTS, SOURCE_ALERT)
+		unClustered.setProperties(PropertyFactory.circleColor(Color.parseColor("#e41a1a")), PropertyFactory.circleRadius(10f), PropertyFactory.circleBlur(1f))
+		unClustered.setFilter(Expression.neq(Expression.get(CLUSTER), Expression.literal(true)))
+		style.addLayerBelow(unClustered, BUILDING)
 	}
 	
 	private fun enableLocationComponent(style: Style) {
@@ -270,7 +372,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
-		val latLng = LatLng(location.latitude, location.longitude)
+		moveCameraTo(LatLng(location.latitude, location.longitude))
+	}
+	
+	private fun moveCameraTo(latLng: LatLng) {
 		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
@@ -297,13 +402,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	override fun onPause() {
 		super.onPause()
 		mapView.onPause()
-	}
-	
-	companion object {
-		const val tag = "NewEventsFragment"
-		
-		@JvmStatic
-		fun newInstance() = EventsFragment()
 	}
 	
 	override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}

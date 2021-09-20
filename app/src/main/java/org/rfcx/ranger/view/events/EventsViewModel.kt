@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.events
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
@@ -20,6 +21,7 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
+import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianModel
 
@@ -27,6 +29,14 @@ import org.rfcx.ranger.view.events.adapter.GuardianModel
 class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
+	
+	fun getAlerts(): LiveData<List<Event>> {
+		return Transformations.map(
+				eventDb.getAllResultsAsync().asLiveData()
+		) {
+			it
+		}
+	}
 	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
