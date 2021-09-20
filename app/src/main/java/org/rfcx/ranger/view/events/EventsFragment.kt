@@ -97,100 +97,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setObserver()
 	}
 	
-	override fun onMapReady(mapboxMap: MapboxMap) {
-		mapBoxMap = mapboxMap
-		mapboxMap.setStyle(Style.OUTDOORS) { style ->
-			mapboxMap.uiSettings.isAttributionEnabled = false
-			mapboxMap.uiSettings.isLogoEnabled = false
-			getLocation()
-		}
-	}
-	
-	private fun enableLocationComponent(style: Style) {
-		val context = context ?: return
-		val mapboxMap = mapBoxMap ?: return
-		
-		// Check if permissions are enabled and if not request
-		if (PermissionsManager.areLocationPermissionsGranted(context)) {
-			
-			// Create and customize the LocationComponent's options
-			val customLocationComponentOptions = LocationComponentOptions.builder(context)
-					.trackingGesturesManagement(true)
-					.accuracyColor(ContextCompat.getColor(context, R.color.colorPrimary))
-					.build()
-			
-			val locationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
-					.locationComponentOptions(customLocationComponentOptions)
-					.build()
-			
-			// Get an instance of the LocationComponent and then adjust its settings
-			mapboxMap.locationComponent.apply {
-				// Activate the LocationComponent with options
-				activateLocationComponent(locationComponentActivationOptions)
-				// Enable to make the LocationComponent visible
-				if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-						&& ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-					return
-				}
-				isLocationComponentEnabled = true
-				
-				// Set the LocationComponent's camera mode
-				cameraMode = CameraMode.TRACKING
-				// Set the LocationComponent's render mode
-				renderMode = RenderMode.COMPASS
-			}
-		} else {
-			permissionsManager = PermissionsManager(this)
-			permissionsManager.requestLocationPermissions(activity)
-		}
-	}
-	
-	private fun getLocation() {
-		if (!isAdded || isDetached) return
-		val style = mapBoxMap?.style ?: return
-		
-		// Check if permissions are enabled and if not request
-		if (PermissionsManager.areLocationPermissionsGranted(context)) {
-			locationManager?.removeUpdates(locationListener)
-			locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-			try {
-				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-				lastLocation?.let { moveCameraToCurrentLocation(it) }
-				enableLocationComponent(style)
-			} catch (ex: SecurityException) {
-				ex.printStackTrace()
-			} catch (ex: IllegalArgumentException) {
-				ex.printStackTrace()
-			}
-		} else {
-			permissionsManager = PermissionsManager(this)
-			permissionsManager.requestLocationPermissions(activity)
-		}
-	}
-	
-	private fun moveCameraToCurrentLocation(location: Location) {
-		val latLng = LatLng(location.latitude, location.longitude)
-		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
-	}
-	
-	private fun setupToolbar() {
-		(activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
-		
-		changePageImageView.setOnClickListener {
-			if (isShowMapIcon) {
-				changePageImageView.setImageResource(R.drawable.ic_view_list)
-				mapView.visibility = View.VISIBLE
-				guardianListScrollView.visibility = View.GONE
-				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
-			} else {
-				changePageImageView.setImageResource(R.drawable.ic_map)
-				mapView.visibility = View.GONE
-				guardianListScrollView.visibility = View.VISIBLE
-			}
-			isShowMapIcon = !isShowMapIcon
-		}
-	}
-	
 	private fun setRecyclerView() {
 		projectRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -270,6 +176,102 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	override fun invoke(guardian: EventGroup) {
 		listener.openGuardianEventDetail(guardian)
+	}
+	
+	private fun setupToolbar() {
+		(activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
+		
+		changePageImageView.setOnClickListener {
+			if (isShowMapIcon) {
+				changePageImageView.setImageResource(R.drawable.ic_view_list)
+				mapView.visibility = View.VISIBLE
+				guardianListScrollView.visibility = View.GONE
+				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
+			} else {
+				changePageImageView.setImageResource(R.drawable.ic_map)
+				mapView.visibility = View.GONE
+				guardianListScrollView.visibility = View.VISIBLE
+			}
+			isShowMapIcon = !isShowMapIcon
+		}
+	}
+	
+	/* ------------------- vv Setup Map vv ------------------- */
+	
+	override fun onMapReady(mapboxMap: MapboxMap) {
+		mapBoxMap = mapboxMap
+		mapboxMap.setStyle(Style.OUTDOORS) { style ->
+			mapboxMap.uiSettings.isAttributionEnabled = false
+			mapboxMap.uiSettings.isLogoEnabled = false
+			getLocation()
+		}
+	}
+	
+	private fun enableLocationComponent(style: Style) {
+		val context = context ?: return
+		val mapboxMap = mapBoxMap ?: return
+		
+		// Check if permissions are enabled and if not request
+		if (PermissionsManager.areLocationPermissionsGranted(context)) {
+			
+			// Create and customize the LocationComponent's options
+			val customLocationComponentOptions = LocationComponentOptions.builder(context)
+					.trackingGesturesManagement(true)
+					.accuracyColor(ContextCompat.getColor(context, R.color.colorPrimary))
+					.build()
+			
+			val locationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
+					.locationComponentOptions(customLocationComponentOptions)
+					.build()
+			
+			// Get an instance of the LocationComponent and then adjust its settings
+			mapboxMap.locationComponent.apply {
+				// Activate the LocationComponent with options
+				activateLocationComponent(locationComponentActivationOptions)
+				// Enable to make the LocationComponent visible
+				if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+						&& ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+					return
+				}
+				isLocationComponentEnabled = true
+				
+				// Set the LocationComponent's camera mode
+				cameraMode = CameraMode.TRACKING
+				// Set the LocationComponent's render mode
+				renderMode = RenderMode.COMPASS
+			}
+		} else {
+			permissionsManager = PermissionsManager(this)
+			permissionsManager.requestLocationPermissions(activity)
+		}
+	}
+	
+	private fun getLocation() {
+		if (!isAdded || isDetached) return
+		val style = mapBoxMap?.style ?: return
+		
+		// Check if permissions are enabled and if not request
+		if (PermissionsManager.areLocationPermissionsGranted(context)) {
+			locationManager?.removeUpdates(locationListener)
+			locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+			try {
+				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+				lastLocation?.let { moveCameraToCurrentLocation(it) }
+				enableLocationComponent(style)
+			} catch (ex: SecurityException) {
+				ex.printStackTrace()
+			} catch (ex: IllegalArgumentException) {
+				ex.printStackTrace()
+			}
+		} else {
+			permissionsManager = PermissionsManager(this)
+			permissionsManager.requestLocationPermissions(activity)
+		}
+	}
+	
+	private fun moveCameraToCurrentLocation(location: Location) {
+		val latLng = LatLng(location.latitude, location.longitude)
+		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
 	}
 	
 	override fun onResume() {
