@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PointF
+import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -252,6 +254,41 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			addClusteredGeoJsonSource(style)
 			alertFeatures?.let { moveCameraToLeavesBounds(it) }
 		}
+		
+		mapboxMap.addOnMapClickListener { latLng ->
+			handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
+		}
+	}
+	
+	private fun handleClickIcon(screenPoint: PointF): Boolean {
+		val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
+		var alertFeatures = listOf<Feature>()
+		queryLayerIds.forEach {
+			val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
+			if (features.isNotEmpty()) {
+				alertFeatures = features
+			}
+		}
+		
+		if (alertFeatures.isNotEmpty()) {
+			val pinCount = if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
+			if (pinCount > 1) {
+				val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0)
+				val features = clusterLeavesFeatureCollection?.features()
+				if (clusterLeavesFeatureCollection != null) {
+					if (features?.groupBy { it }?.size == 1) {
+						Toast.makeText(context, features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString, Toast.LENGTH_SHORT).show()
+					} else {
+						moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+					}
+				}
+			} else {
+				val selectedFeature = alertFeatures[0]
+				Toast.makeText(context, selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString, Toast.LENGTH_SHORT).show()
+			}
+			return true
+		}
+		return false
 	}
 	
 	private fun setupSources(it: Style) {
