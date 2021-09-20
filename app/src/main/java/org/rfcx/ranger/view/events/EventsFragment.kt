@@ -36,12 +36,12 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.view.MainActivityEventListener
+import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
-import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
-class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (GuardianModel) -> Unit {
+class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
@@ -205,6 +205,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			nearbyAdapter.items = viewModel.nearbyGuardians
 		}
 		
+		nearbyLayout.visibility = if (viewModel.nearbyGuardians.isEmpty()) View.GONE else View.VISIBLE
+		othersTextView.visibility = if (viewModel.nearbyGuardians.isEmpty()) View.GONE else View.VISIBLE
+		
 		othersRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = othersAdapter
@@ -265,7 +268,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
 	}
 	
-	override fun invoke(guardian: GuardianModel) {
+	override fun invoke(guardian: EventGroup) {
 		listener.openGuardianEventDetail(guardian)
 	}
 	
