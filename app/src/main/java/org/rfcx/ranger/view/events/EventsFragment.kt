@@ -25,6 +25,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -205,11 +206,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			}
 			alertFeatures = FeatureCollection.fromFeatures(features)
 			refreshSource()
-			
-			if (alerts.isNotEmpty()) {
-				val lastCheckIn = alerts.last()
-				moveCameraTo(LatLng(lastCheckIn.latitude ?: 0.0, lastCheckIn.longitude ?: 0.0))
-			}
 		})
 	}
 	
@@ -254,6 +250,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			setupSources(style)
 			refreshSource()
 			addClusteredGeoJsonSource(style)
+			alertFeatures?.let { moveCameraToLeavesBounds(it) }
 		}
 	}
 	
@@ -377,6 +374,28 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun moveCameraTo(latLng: LatLng) {
 		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
+	}
+	
+	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
+		val latLngList: ArrayList<LatLng> = ArrayList()
+		if (featureCollectionToInspect.features() != null) {
+			for (singleClusterFeature in featureCollectionToInspect.features()!!) {
+				val clusterPoint = singleClusterFeature.geometry() as Point?
+				if (clusterPoint != null) {
+					latLngList.add(LatLng(clusterPoint.latitude(), clusterPoint.longitude()))
+				}
+			}
+			if (latLngList.size > 1) {
+				moveCameraWithLatLngList(latLngList)
+			}
+		}
+	}
+	
+	private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
+		val latLngBounds = LatLngBounds.Builder()
+				.includes(latLngList)
+				.build()
+		mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
 	}
 	
 	override fun onResume() {
