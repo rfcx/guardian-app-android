@@ -1,4 +1,4 @@
-package org.rfcx.ranger.view.submitted
+package org.rfcx.ranger.view.report.draft
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,17 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.rfcx.ranger.R
 
-class SubmittedReportsFragment : Fragment() {
+class DraftReportsFragment : Fragment() {
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_submitted_reports, container, false)
+		return inflater.inflate(R.layout.fragment_draft_reports, container, false)
 	}
 	
 	companion object {
-		const val tag = "SubmittedReportsFragment"
+		const val tag = "DraftReportsFragment"
 		
 		@JvmStatic
-		fun newInstance() = SubmittedReportsFragment()
+		fun newInstance() = DraftReportsFragment()
 	}
 }
