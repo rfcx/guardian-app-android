@@ -4,10 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_draft_reports.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Screen
 
-class DraftReportsFragment : Fragment() {
+class DraftReportsFragment : Fragment(), ReportOnClickListener {
+	
+	private val reportsAdapter by lazy { ReportsAdapter(this) }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -15,10 +21,25 @@ class DraftReportsFragment : Fragment() {
 		return inflater.inflate(R.layout.fragment_draft_reports, container, false)
 	}
 	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		
+		draftReportsRecyclerView.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = reportsAdapter
+		}
+		reportsAdapter.screen = Screen.DRAFT_REPORTS
+		reportsAdapter.items = listOf() // Add list of ReportModel and should sortedByDescending( date )
+	}
+	
 	companion object {
 		const val tag = "DraftReportsFragment"
 		
 		@JvmStatic
 		fun newInstance() = DraftReportsFragment()
+	}
+	
+	override fun onClickedDelete(report: ReportModel) {
+		Toast.makeText(context, "On click delete ${report.nameGuardian}", Toast.LENGTH_SHORT).show()
 	}
 }

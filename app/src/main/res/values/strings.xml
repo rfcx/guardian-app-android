@@ -225,6 +225,7 @@
 	
 	<!-- SubmittedReportsFragment -->
 	<string name="submitted_reports_fragment">SubmittedReportsFragment</string>
+	<string name="report_id">ID: %s</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>

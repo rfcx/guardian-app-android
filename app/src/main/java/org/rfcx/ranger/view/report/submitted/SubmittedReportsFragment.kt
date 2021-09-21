@@ -5,13 +5,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_submitted_reports.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.view.report.draft.ReportModel
+import org.rfcx.ranger.view.report.draft.ReportOnClickListener
+import org.rfcx.ranger.view.report.draft.ReportsAdapter
 
-class SubmittedReportsFragment : Fragment() {
+class SubmittedReportsFragment : Fragment(), ReportOnClickListener {
+	private val reportsAdapter by lazy { ReportsAdapter(this) }
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_submitted_reports, container, false)
+	}
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		submittedReportsRecyclerView.apply {
+			layoutManager = LinearLayoutManager(context)
+			adapter = reportsAdapter
+		}
+		
+		reportsAdapter.screen = Screen.SUBMITTED_REPORTS
+		reportsAdapter.items = listOf() // Add list of ReportModel and should sortedByDescending( date )
 	}
 	
 	companion object {
@@ -20,4 +39,6 @@ class SubmittedReportsFragment : Fragment() {
 		@JvmStatic
 		fun newInstance() = SubmittedReportsFragment()
 	}
+	
+	override fun onClickedDelete(report: ReportModel) {} // Function only on Draft Reports page
 }

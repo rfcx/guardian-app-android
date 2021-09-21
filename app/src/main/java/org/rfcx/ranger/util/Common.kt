@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import org.joda.time.Duration
 import org.rfcx.ranger.R
@@ -93,4 +94,8 @@ fun String.isValidEmail() =
 
 fun Float.setFormatLabel(): String {
 	return if (this >= 1000) "${String.format("%.1f", this/1000)}km" else "${String.format("%.0f", this)}m"
+}
+
+fun ImageView.setDrawableImage(context: Context, id: Int) {
+	this.setImageDrawable(ContextCompat.getDrawable(context, id))
 }
