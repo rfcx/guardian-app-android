@@ -305,6 +305,7 @@ class RangerRealmMigration : RealmMigration {
 					.setRequired(Response.RESPONSE_EVIDENCES, false)
 			addField(Response.RESPONSE_LOGGING_SCALE, Int::class.java)
 			addField(Response.RESPONSE_DAMAGE_SCALE, Int::class.java)
+			addField(Response.RESPONSE_SYNC_STATE, Int::class.java)
 			addRealmListField(Response.RESPONSE_RESPONSE_ACTIONS, Int::class.java)
 					.setRequired(Response.RESPONSE_RESPONSE_ACTIONS, false)
 			addField(Response.RESPONSE_NOTE, String::class.java)

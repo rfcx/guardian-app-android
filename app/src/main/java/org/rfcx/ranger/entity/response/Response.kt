@@ -17,7 +17,8 @@ open class Response(
 		var damageScale: Int = 0,
 		var responseActions: RealmList<Int> = RealmList(),
 		var note: String? = null,
-		var guardianId: String = ""
+		var guardianId: String = "",
+		var syncState: Int = 0
 ) : RealmObject() {
 	companion object {
 		const val TABLE_NAME = "Response"
@@ -32,5 +33,6 @@ open class Response(
 		const val RESPONSE_RESPONSE_ACTIONS = "responseActions"
 		const val RESPONSE_NOTE = "note"
 		const val RESPONSE_GUARDIAN_ID = "guardianId"
+		const val RESPONSE_SYNC_STATE = "syncState"
 	}
 }
