@@ -221,11 +221,11 @@
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	
 	<!-- DraftReportsFragment -->
-	<string name="draft_reports_fragment">DraftReportsFragment</string>
 	
 	<!-- SubmittedReportsFragment -->
-	<string name="submitted_reports_fragment">SubmittedReportsFragment</string>
-	<string name="report_id">ID: %s</string>
+	<string name="unsent">Unsent</string>
+	<string name="sending">Sending</string>
+	<string name="sent">Send</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>

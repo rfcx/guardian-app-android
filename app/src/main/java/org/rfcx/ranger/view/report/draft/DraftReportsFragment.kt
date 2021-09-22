@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_draft_reports.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.util.Screen
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	
-	private val reportsAdapter by lazy { ReportsAdapter(this) }
+	private val reportsAdapter by lazy { DraftReportsAdapter(this) }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -28,7 +27,6 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 			layoutManager = LinearLayoutManager(context)
 			adapter = reportsAdapter
 		}
-		reportsAdapter.screen = Screen.DRAFT_REPORTS
 		reportsAdapter.items = listOf() // Add list of ReportModel and should sortedByDescending( date )
 	}
 	
