@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_submitted_reports.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.syncImage
+import org.rfcx.ranger.entity.response.syncLabel
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
-import org.rfcx.ranger.view.report.draft.ReportModel
 
 class SubmittedReportsAdapter :
 		RecyclerView.Adapter<SubmittedReportsAdapter.ReportsViewHolder>() {
-	var items: List<ReportModel> = arrayListOf()
+	var items: List<Response> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -39,13 +41,13 @@ class SubmittedReportsAdapter :
 		private val syncLabelTextView = itemView.syncLabelTextView
 		private val actionImageView = itemView.actionImageView
 		
-		fun bind(report: ReportModel) {
-			actionImageView.setDrawableImage(itemView.context, report.syncImage)
-			reportIdTextView.visibility = if (report.reportId != null) View.VISIBLE else View.GONE
-			reportIdTextView.text = report.reportId.toString()
-			syncLabelTextView.text = itemView.context.getString(report.syncLabel)
-			guardianName.text = report.nameGuardian
-			dateTextView.text = report.date.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+		fun bind(report: Response) {
+			actionImageView.setDrawableImage(itemView.context, report.syncImage())
+			reportIdTextView.visibility = if (report.guid != null) View.VISIBLE else View.GONE
+			reportIdTextView.text = report.guid.toString()
+			syncLabelTextView.text = itemView.context.getString(report.syncLabel())
+			guardianName.text = report.guardianName
+			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 		}
 	}
 }

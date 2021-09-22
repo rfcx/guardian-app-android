@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_draft_reports.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Response
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	
@@ -37,7 +38,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 		fun newInstance() = DraftReportsFragment()
 	}
 	
-	override fun onClickedDelete(report: ReportModel) {
-		Toast.makeText(context, "On click delete ${report.nameGuardian}", Toast.LENGTH_SHORT).show()
+	override fun onClickedDelete(response: Response) {
+		Toast.makeText(context, "On click delete ${response.guardianName}", Toast.LENGTH_SHORT).show()
 	}
 }

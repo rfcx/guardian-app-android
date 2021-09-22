@@ -3,6 +3,7 @@ package org.rfcx.ranger.entity.response
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import org.rfcx.ranger.R
 import java.util.*
 
 open class Response(
@@ -18,6 +19,7 @@ open class Response(
 		var responseActions: RealmList<Int> = RealmList(),
 		var note: String? = null,
 		var guardianId: String = "",
+		var guardianName: String = "",
 		var syncState: Int = 0
 ) : RealmObject() {
 	companion object {
@@ -33,6 +35,19 @@ open class Response(
 		const val RESPONSE_RESPONSE_ACTIONS = "responseActions"
 		const val RESPONSE_NOTE = "note"
 		const val RESPONSE_GUARDIAN_ID = "guardianId"
+		const val RESPONSE_GUARDIAN_NAME = "guardianName"
 		const val RESPONSE_SYNC_STATE = "syncState"
 	}
+}
+
+fun Response.syncImage() = when (this.syncState) { // 0 unsent, 1 uploading, 2 uploaded
+	0 -> R.drawable.ic_cloud_queue
+	1 -> R.drawable.ic_cloud_upload
+	else -> R.drawable.ic_cloud_done
+}
+
+fun Response.syncLabel() = when (this.syncState) {
+	0 -> R.string.unsent
+	1 -> R.string.sending
+	else -> R.string.sent
 }

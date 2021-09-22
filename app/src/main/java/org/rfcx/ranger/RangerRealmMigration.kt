@@ -311,6 +311,8 @@ class RangerRealmMigration : RealmMigration {
 			addField(Response.RESPONSE_NOTE, String::class.java)
 			addField(Response.RESPONSE_GUARDIAN_ID, String::class.java)
 					.setRequired(Response.RESPONSE_GUARDIAN_ID, true)
+			addField(Response.RESPONSE_GUARDIAN_NAME, String::class.java)
+					.setRequired(Response.RESPONSE_GUARDIAN_NAME, true)
 		}
 	}
 	
