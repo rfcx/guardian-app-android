@@ -67,9 +67,9 @@ fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
 	} else if (niceDateStr.toString() == "Yesterday") {
 		"${context.getString(R.string.yesterday)} ${this.toTimeString()}"
 	} else if (!niceDateStr.toString().contains("ago")) {
-		this.toFullDateTimeString()
+		this.toDateTimeString()
 	} else if (niceDateStr.toString().contains("days ago")) {
-		this.toFullDateTimeString()
+		this.toDateTimeString()
 	} else {
 		niceDateStr.toString()
 	}

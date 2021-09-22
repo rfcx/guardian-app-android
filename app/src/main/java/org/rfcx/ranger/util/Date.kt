@@ -19,6 +19,7 @@ private val isoSdfNotZ by lazy {
 private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
+private const val dateFormat = "d MMM yyyy, HH:mm"
 
 private val outputTimeSdf by lazy {
 	val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
@@ -32,6 +33,11 @@ private val outputShortDateSdf by lazy {
 }
 private val outputStandardDateSdf by lazy {
 	val sdf = SimpleDateFormat(standardDateFormat, Locale.getDefault())
+	sdf.timeZone = TimeZone.getDefault()
+	sdf
+}
+private val outputDateSdf by lazy {
+	val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
 	sdf.timeZone = TimeZone.getDefault()
 	sdf
 }
@@ -56,6 +62,10 @@ fun Date.toShortDateString(): String {
 
 fun Date.toFullDateTimeString(): String {
 	return outputStandardDateSdf.format(this)
+}
+
+fun Date.toDateTimeString(): String {
+	return outputDateSdf.format(this)
 }
 
 fun Date.millisecondsSince(): Long {
