@@ -39,6 +39,38 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:443412271144:android:ef76a451638f00d5efe51d",
+        "android_client_info": {
+          "package_name": "org.rfcx.ranger.amazon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+        },
+        {
+          "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:443412271144:android:698cb1dbc3ab5e2c",
         "android_client_info": {
           "package_name": "org.rfcx.ranger.dev"
