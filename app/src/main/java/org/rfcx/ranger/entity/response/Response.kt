@@ -40,14 +40,18 @@ open class Response(
 	}
 }
 
-fun Response.syncImage() = when (this.syncState) { // 0 unsent, 1 uploading, 2 uploaded
-	0 -> R.drawable.ic_cloud_queue
-	1 -> R.drawable.ic_cloud_upload
+enum class SyncState(val value: Int) {
+	UNSENT(0), SENDING(1), SENT(2)
+}
+
+fun Response.syncImage() = when (this.syncState) {
+	SyncState.UNSENT.value -> R.drawable.ic_cloud_queue
+	SyncState.SENDING.value -> R.drawable.ic_cloud_upload
 	else -> R.drawable.ic_cloud_done
 }
 
 fun Response.syncLabel() = when (this.syncState) {
-	0 -> R.string.unsent
-	1 -> R.string.sending
+	SyncState.UNSENT.value -> R.string.unsent
+	SyncState.SENDING.value -> R.string.sending
 	else -> R.string.sent
 }
