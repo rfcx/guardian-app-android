@@ -21,8 +21,7 @@ class SubmittedReportsAdapter :
 		}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmittedReportsAdapter.ReportsViewHolder {
-		val view =
-				LayoutInflater.from(parent.context).inflate(R.layout.item_submitted_reports, parent, false)
+		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_submitted_reports, parent, false)
 		return ReportsViewHolder(view)
 	}
 	
