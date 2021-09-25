@@ -58,7 +58,7 @@ import org.rfcx.ranger.view.project.ProjectOnClickListener
 class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
 	
 	companion object {
-		const val tag = "NewEventsFragment"
+		const val tag = "EventsFragment"
 		
 		private const val COUNT = "count"
 		private const val CLUSTER = "cluster"

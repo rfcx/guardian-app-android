@@ -214,7 +214,7 @@
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 	
-	<!-- NewEventsFragment -->
+	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>
 	<string name="nearby">nearby</string>
 	<string name="others">others</string>
