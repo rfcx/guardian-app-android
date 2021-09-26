@@ -31,7 +31,7 @@ class EvidenceFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(3)
+			listener.handleCheckClicked(StepCreateReport.SCALE.step)
 		}
 		
 		val str = SpannableStringBuilder(getString(R.string.what_evidence))

@@ -27,7 +27,7 @@ class ScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(4)
+			listener.handleCheckClicked(StepCreateReport.DAMAGE.step)
 		}
 	}
 	

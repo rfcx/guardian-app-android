@@ -33,7 +33,7 @@ class InvestigationTimestampFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(2)
+			listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
 		}
 		
 		timePicker.setIs24HourView(true)

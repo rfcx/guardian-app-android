@@ -60,12 +60,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setTitleToolbar(step)
 		
 		when (step) {
-			1 -> startFragment(InvestigationTimestampFragment.newInstance())
-			2 -> startFragment(EvidenceFragment.newInstance())
-			3 -> startFragment(ScaleFragment.newInstance())
-			4 -> startFragment(DamageFragment.newInstance())
-			5 -> startFragment(ActionFragment.newInstance())
-			6 -> startFragment(AssetsFragment.newInstance())
+			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
+			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
+			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
+			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())
+			StepCreateReport.ACTION.step -> startFragment(ActionFragment.newInstance())
+			StepCreateReport.ASSETS.step -> startFragment(AssetsFragment.newInstance())
 		}
 	}
 	
@@ -81,3 +81,11 @@ interface CreateReportListener {
 	fun handleCheckClicked(step: Int)
 }
 
+enum class StepCreateReport(val step: Int) {
+	INVESTIGATION_TIMESTAMP(1),
+	EVIDENCE(2),
+	SCALE(3),
+	DAMAGE(4),
+	ACTION(5),
+	ASSETS(6)
+}

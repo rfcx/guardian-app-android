@@ -28,7 +28,7 @@ class DamageFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(5)
+			listener.handleCheckClicked(StepCreateReport.ACTION.step)
 		}
 		largeAreaImageView.setOnClickListener {
 			setOnSelect(it)

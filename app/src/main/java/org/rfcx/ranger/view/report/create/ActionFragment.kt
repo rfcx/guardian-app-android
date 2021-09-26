@@ -25,7 +25,7 @@ class ActionFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(6)
+			listener.handleCheckClicked(StepCreateReport.ASSETS.step)
 		}
 		
 		val str = SpannableStringBuilder(getString(R.string.what_action))
