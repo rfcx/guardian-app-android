@@ -41,8 +41,8 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 		fun bind(item: EventGroup) {
 			guardianName.text = item.guardianName
 			distance.text = item.distance.setFormatLabel()
-			numberOfAlerts.text = item.events.size.toString()
-
+			numberOfAlerts.text = if (item.events.size > 99) itemView.context.getString(R.string.num_more_then_99) else item.events.size.toString()
+			
 			if (item.events.isEmpty()) {
 				numberImageView.setImageResource(R.drawable.bg_circle_green)
 			} else {

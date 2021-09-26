@@ -67,6 +67,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		private const val SOURCE_ALERT = "source.alert"
 		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		private const val UN_CLUSTERED_POINTS = "un-clustered-points"
+		private const val DEFAULT_MAP_ZOOM = 15.0
+		private const val PADDING_BOUNDS = 230
+		private const val DURATION_MS = 1300
 		
 		@JvmStatic
 		fun newInstance() = EventsFragment()
@@ -127,7 +130,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
-		setRecyclerView()
 		setObserver()
 	}
 	
@@ -253,6 +255,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			refreshSource()
 			addClusteredGeoJsonSource(style)
 			alertFeatures?.let { moveCameraToLeavesBounds(it) }
+			lastLocation?.let { viewModel.handledGuardians(it) }
+			setRecyclerView()
 		}
 		
 		mapboxMap.addOnMapClickListener { latLng ->
@@ -406,11 +410,12 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun moveCameraToCurrentLocation(location: Location) {
+		lastLocation = location
 		moveCameraTo(LatLng(location.latitude, location.longitude))
 	}
 	
 	private fun moveCameraTo(latLng: LatLng) {
-		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0))
+		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM))
 	}
 	
 	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
@@ -432,7 +437,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		val latLngBounds = LatLngBounds.Builder()
 				.includes(latLngList)
 				.build()
-		mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
+		mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, PADDING_BOUNDS), DURATION_MS)
 	}
 	
 	override fun onResume() {

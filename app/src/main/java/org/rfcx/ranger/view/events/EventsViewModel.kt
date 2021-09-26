@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.events
 
 import android.content.Context
+import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -23,7 +24,6 @@ import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
-import org.rfcx.ranger.view.events.adapter.GuardianModel
 
 
 class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
@@ -31,31 +31,14 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
 	fun getAlerts(): LiveData<List<Event>> {
-		return Transformations.map(
-				eventDb.getAllResultsAsync().asLiveData()
-		) {
-			it
-		}
+		return Transformations.map(eventDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
 	
-	var guardians = listOf(
-			GuardianModel("Guardian A", 5, 250.1F),
-			GuardianModel("Guardian C", 3, 1050.1F),
-			GuardianModel("Guardian E", 2, 200.0F),
-			GuardianModel("Guardian B", 5, 2200.0F),
-			GuardianModel("Guardian G", 5, 2560.9F),
-			GuardianModel("Guardian F", 0, 3560.3F),
-			GuardianModel("Guardian I", 0, 560.3F),
-			GuardianModel("Guardian K", 6, 5560.3F),
-			GuardianModel("Guardian H", 4, 8560.3F),
-			GuardianModel("Guardian D", 6, 5050.1F))
-	
 	init {
 		loadAlerts()
-		handledGuardians(eventDb.getEvents())
 	}
 	
 	fun fetchProjects() {
@@ -89,7 +72,8 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
 	}
 	
-	private fun handledGuardians(events: List<Event>) {
+	fun handledGuardians(lastLocation: Location) {
+		val events = eventDb.getEvents()
 		// find main Guardian
 		val mainGroups = arrayListOf<String>()
 		events.distinctBy { it.guardianId }.mapTo(mainGroups, { it.guardianId })
@@ -102,7 +86,7 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 			var distance = 0.0
 			if (eventsOfGuardian.isNotEmpty()) {
 				distance = LatLng(eventsOfGuardian[0].latitude ?: 0.0, eventsOfGuardian[0].longitude
-						?: 0.0).distanceTo(LatLng(-1.5752, 101.145053))
+						?: 0.0).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
 			}
 			groups.add(EventGroup(eventsOfGuardian, distance, shortName))
 		}
@@ -119,14 +103,16 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	
 	private fun loadAlerts() {
 		val group = profileData.getGuardianGroup() ?: return
-		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC",
-				20, 0, group.values)
+		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC", LIMIT_EVENTS, 0, group.values)
 		
 		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
-			override fun onSuccess(t: Pair<List<Event>, Int>) {
-			}
+			override fun onSuccess(t: Pair<List<Event>, Int>) {}
 			
 			override fun onError(e: Throwable) {}
 		}, requestFactory)
+	}
+	
+	companion object {
+		const val LIMIT_EVENTS = 100
 	}
 }
