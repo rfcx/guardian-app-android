@@ -10,10 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_set_what_evidence.*
+import kotlinx.android.synthetic.main.fragment_evidence.*
 import org.rfcx.ranger.R
 
-class SetWhatEvidenceFragment : Fragment() {
+class EvidenceFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	
@@ -25,7 +25,7 @@ class SetWhatEvidenceFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_set_what_evidence, container, false)
+		return inflater.inflate(R.layout.fragment_evidence, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,6 +41,6 @@ class SetWhatEvidenceFragment : Fragment() {
 	
 	companion object {
 		@JvmStatic
-		fun newInstance() = SetWhatEvidenceFragment()
+		fun newInstance() = EvidenceFragment()
 	}
 }

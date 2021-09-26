@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context=".view.report.create.SetWhatEvidenceFragment">
+	tools:context=".view.report.create.EvidenceFragment">
 	
 	<TextView
 		android:id="@+id/whenTextView"

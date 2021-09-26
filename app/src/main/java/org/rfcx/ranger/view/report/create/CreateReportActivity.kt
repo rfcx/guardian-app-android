@@ -60,12 +60,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setTitleToolbar(step)
 		
 		when (step) {
-			1 -> startFragment(SetWhenInvestigateStepFragment.newInstance())
-			2 -> startFragment(SetWhatEvidenceFragment.newInstance())
-			3 -> startFragment(SetWhatScaleFragment.newInstance())
-			4 -> startFragment(HowMuchDamageFragment.newInstance())
-			5 -> startFragment(SetWhatActionFragment.newInstance())
-			6 -> startFragment(AddEvidenceFragment.newInstance())
+			1 -> startFragment(InvestigationTimestampFragment.newInstance())
+			2 -> startFragment(EvidenceFragment.newInstance())
+			3 -> startFragment(ScaleFragment.newInstance())
+			4 -> startFragment(DamageFragment.newInstance())
+			5 -> startFragment(ActionFragment.newInstance())
+			6 -> startFragment(AssetsFragment.newInstance())
 		}
 	}
 	
