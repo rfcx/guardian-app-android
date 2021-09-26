@@ -63,10 +63,11 @@ class SetWhenInvestigateStepFragment : Fragment() {
 		
 		val minute = timePicker?.findViewById<NumberPicker>(Resources.getSystem().getIdentifier("minute", "id", "android"))
 		if (minute != null) {
-			minutePicker = minute
-			minutePicker!!.minValue = 0
-			minutePicker!!.maxValue = numValues - 1
-			minutePicker!!.displayedValues = displayedValues
+			minutePicker = minute.also {
+				it.minValue = 0
+				it.maxValue = numValues - 1
+				it.displayedValues = displayedValues
+			}
 		}
 	}
 	

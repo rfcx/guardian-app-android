@@ -16,7 +16,6 @@ import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
 import org.rfcx.ranger.view.events.adapter.EventModel
 import org.rfcx.ranger.view.report.create.CreateReportActivity
-import java.util.*
 
 class GuardianEventDetailFragment : Fragment() {
 	lateinit var listener: MainActivityEventListener
@@ -25,15 +24,7 @@ class GuardianEventDetailFragment : Fragment() {
 	var distance: Float? = null
 	var number: Int? = null
 	
-	val list = listOf(
-			EventModel("Chainsaw", Date(121, 7, 25, 22, 19)),
-			EventModel("Chainsaw", Date(121, 7, 25, 5, 38)),
-			EventModel("Chainsaw", Date(121, 7, 19, 17, 29)),
-			EventModel("Chainsaw", Date(121, 8, 15, 9, 36)),
-			EventModel("Chainsaw", Date(121, 8, 8, 15, 32)),
-			EventModel("Chainsaw", Date(121, 8, 13, 19, 25)),
-			EventModel("Chainsaw", Date(121, 8, 14, 16, 23))
-	).sortedByDescending { item -> item.date }
+	val list = listOf<EventModel>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -63,8 +54,7 @@ class GuardianEventDetailFragment : Fragment() {
 			eventItemAdapter.items = list.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
-				val name = name ?: return@setOnClickListener
-				CreateReportActivity.startActivity(context, name)
+				name?.let { it1 -> CreateReportActivity.startActivity(context, it1) }
 			}
 		}
 		
@@ -93,12 +83,12 @@ class GuardianEventDetailFragment : Fragment() {
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Float, num: Int): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Float, eventSize: Int): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
 					putFloat(ARG_DISTANCE, distance)
-					putInt(ARG_NUMBER, num)
+					putInt(ARG_NUMBER, eventSize)
 				}
 			}
 		}
