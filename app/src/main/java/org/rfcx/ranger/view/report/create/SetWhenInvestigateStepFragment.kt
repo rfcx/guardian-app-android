@@ -38,14 +38,16 @@ class SetWhenInvestigateStepFragment : Fragment() {
 		
 		timePicker.setIs24HourView(true)
 		setMinutePicker()
+		setDatePicker()
 		
 		timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
 			// get time with ($hourOfDay ${minute * TIME_PICKER_INTERVAL})
 		}
-		
-		val context = context ?: return
+	}
+	
+	private fun setDatePicker() {
 		val date = Calendar.getInstance()
-		val datePicker = DatePickerDialog(context, { view, year, monthOfYear, dayOfMonth ->
+		val datePicker = DatePickerDialog(requireContext(), { view, year, monthOfYear, dayOfMonth ->
 			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/$monthOfYear/$year")
 		}, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
 		
