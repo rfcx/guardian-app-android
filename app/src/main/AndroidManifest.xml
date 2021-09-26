@@ -46,12 +46,7 @@
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
-		<activity
-			android:name=".view.tutorial.TutorialActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppTheme.ForTutorial" />
-		<activity
-			android:name=".view.profile.PasswordChangeActivity"
+		<activity android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"

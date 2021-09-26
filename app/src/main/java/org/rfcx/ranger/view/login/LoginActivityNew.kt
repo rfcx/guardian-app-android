@@ -12,8 +12,6 @@ import org.rfcx.ranger.util.getSiteName
 import org.rfcx.ranger.util.getUserNickname
 import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseActivity
-import org.rfcx.ranger.view.tutorial.TutorialActivity
-
 
 // TODO change class name
 class LoginActivityNew : BaseActivity(), LoginListener {
@@ -36,7 +34,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		val preferenceHelper = Preferences.getInstance(this)
 		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		
-		if(CredentialKeeper(this).hasValidCredentials() &&  isConsentGiven && getSiteName() != "" &&  getUserNickname().substring(0, 1) != "+"){
+		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && getSiteName() != "" && getUserNickname().substring(0, 1) != "+") {
 			openMain()
 		} else {
 			openLoginFragment()
@@ -48,28 +46,19 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
 		
-		if (CredentialKeeper(this).hasValidCredentials()) {
-			when {
-				getSiteName() == "" -> {
-					openInvitationCodeFragment()
-				}
-				getUserNickname().substring(0, 1) == "+" -> {
-					openSetUserNameFragmentFragment()
-				}
-				(!isConsentGiven) -> {
-					openTermsAndServiceFragment()
-				}
-				guardianGroup == null -> {
-					openSetProjectsFragment()
-				}
-				else -> {
-					openMain()
-				}
+		when {
+			getUserNickname().substring(0, 1) == "+" -> {
+				openSetUserNameFragmentFragment()
 			}
-		} else if (!CredentialKeeper(this).isRanger()) {
-			openInvitationCodeFragment()
-		} else {
-			openLoginFragment()
+			(!isConsentGiven) -> {
+				openTermsAndServiceFragment()
+			}
+			guardianGroup == null -> {
+				openSetProjectsFragment()
+			}
+			else -> {
+				openMain()
+			}
 		}
 	}
 	
@@ -79,24 +68,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	override fun openMain() {
-		val preferenceHelper = Preferences.getInstance(this)
-		val isFirstTime = preferenceHelper.getBoolean(Preferences.IS_FIRST_TIME,true)
-		
-		if (isFirstTime) {
-			TutorialActivity.startActivity(this@LoginActivityNew, null)
-		} else {
-			MainActivityNew.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
-		}
-		
+		MainActivityNew.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
 		finish()
 	}
-	
-	override fun openInvitationCodeFragment() {
-		supportFragmentManager.beginTransaction()
-				.replace(loginContainer.id, InvitationCodeFragment(),
-						"InvitationCodeFragment").commit()
-	}
-	
 	
 	override fun openSetUserNameFragmentFragment() {
 		supportFragmentManager.beginTransaction()
@@ -134,7 +108,6 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 
 interface LoginListener {
 	fun openMain()
-	fun openInvitationCodeFragment()
 	fun openSetUserNameFragmentFragment()
 	fun openTermsAndServiceFragment()
 	fun openSetProjectsFragment()
