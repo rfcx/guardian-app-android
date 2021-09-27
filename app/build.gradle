@@ -50,6 +50,12 @@ android {
             buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://staging-device-api.rfcx.org/"'
             // Ranger staging domain: "https://staging-api.rfcx.org/" -- 20/2/2020 still no data for testing
         }
+        amazon {
+            applicationIdSuffix ".amazon"
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
+            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
+            buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://device-api.rfcx.org/"'
+        }
     }
     lintOptions {
         abortOnError false

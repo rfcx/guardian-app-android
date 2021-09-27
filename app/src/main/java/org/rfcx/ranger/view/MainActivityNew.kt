@@ -24,8 +24,8 @@ import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
-import org.rfcx.ranger.view.report.DraftReportsFragment
-import org.rfcx.ranger.view.submitted.SubmittedReportsFragment
+import org.rfcx.ranger.view.report.draft.DraftReportsFragment
+import org.rfcx.ranger.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 

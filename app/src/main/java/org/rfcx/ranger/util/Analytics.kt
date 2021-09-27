@@ -8,17 +8,14 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 enum class Screen(val id: String) {
 	LOGIN("Login"),
-	INVITECODE("InviteCode"),
 	USERNAME("Username"),
-	STATUS("Status"),
 	ADDREPORT("AddReport"),
 	REPORTDETAIL("ReportDetail"),
 	MAP("Map"),
-	ALERT("Alert"),
-	ALERTGUARDIANDETAIL("AlertGuardianDetail"),
-	AlertDetail("AlertDetail"),
 	PROFILE("Profile"),
-	FEEDBACK("Feedback")
+	FEEDBACK("Feedback"),
+	DRAFT_REPORTS("DraftReports"),
+	SUBMITTED_REPORTS("SubmittedReports")
 }
 
 class Analytics(context: Context) {

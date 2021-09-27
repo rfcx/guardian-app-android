@@ -6,6 +6,7 @@ import io.realm.RealmMigration
 import org.rfcx.ranger.entity.CachedEndpoint
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
@@ -45,6 +46,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 13L && newVersion >= 13L) {
 			migrateToV13(c)
+		}
+		if (oldVersion < 14L && newVersion >= 14L) {
+			migrateToV14(c)
 		}
 	}
 	
@@ -284,6 +288,31 @@ class RangerRealmMigration : RealmMigration {
 			addField(Project.PROJECT_SERVER_ID, String::class.java)
 			addField(Project.PROJECT_PERMISSIONS, String::class.java)
 					.setRequired(Project.PROJECT_PERMISSIONS, true)
+		}
+	}
+	
+	private fun migrateToV14(realm: DynamicRealm) {
+		val response = realm.schema.create(Response.TABLE_NAME)
+		response.apply {
+			addField(Response.RESPONSE_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Response.RESPONSE_GUID, String::class.java)
+			addField(Response.RESPONSE_INVESTIGATED_AT, Date::class.java)
+					.setRequired(Response.RESPONSE_INVESTIGATED_AT, true)
+			addField(Response.RESPONSE_STARTED_AT, Date::class.java)
+					.setRequired(Response.RESPONSE_STARTED_AT, true)
+			addField(Response.RESPONSE_SUBMITTED_AT, Date::class.java)
+			addRealmListField(Response.RESPONSE_EVIDENCES, Int::class.java)
+					.setRequired(Response.RESPONSE_EVIDENCES, false)
+			addField(Response.RESPONSE_LOGGING_SCALE, Int::class.java)
+			addField(Response.RESPONSE_DAMAGE_SCALE, Int::class.java)
+			addField(Response.RESPONSE_SYNC_STATE, Int::class.java)
+			addRealmListField(Response.RESPONSE_RESPONSE_ACTIONS, Int::class.java)
+					.setRequired(Response.RESPONSE_RESPONSE_ACTIONS, false)
+			addField(Response.RESPONSE_NOTE, String::class.java)
+			addField(Response.RESPONSE_GUARDIAN_ID, String::class.java)
+					.setRequired(Response.RESPONSE_GUARDIAN_ID, true)
+			addField(Response.RESPONSE_GUARDIAN_NAME, String::class.java)
+					.setRequired(Response.RESPONSE_GUARDIAN_NAME, true)
 		}
 	}
 	

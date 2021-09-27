@@ -4,12 +4,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/white"
-	tools:context=".view.report.DraftReportsFragment">
+	tools:context=".view.report.draft.DraftReportsFragment">
 	
-	<TextView
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/draftReportsRecyclerView"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="center"
-		android:text="@string/draft_reports_fragment" />
+		android:layout_height="wrap_content"
+		android:background="@color/white"
+		android:dividerHeight="1dp"
+		android:overScrollMode="never" />
 
 </FrameLayout>
