@@ -19,6 +19,7 @@ import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.EventsFragment
+import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.events.detail.GuardianEventDetailFragment
 import org.rfcx.ranger.view.map.MapFragment
@@ -204,9 +205,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		menuDraftReports.performClick()
 	}
 	
-	override fun openGuardianEventDetail(item: GuardianModel) {
+	override fun openGuardianEventDetail(item: EventGroup) {
 		hideBottomAppBar()
-		startFragment(GuardianEventDetailFragment.newInstance(item.name, item.distance, item.numberOfAlerts), GuardianEventDetailFragment.tag)
+		startFragment(GuardianEventDetailFragment.newInstance(item.guardianName, item.distance, item.events.size), GuardianEventDetailFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "") {
@@ -372,7 +373,7 @@ interface MainActivityEventListener {
 	fun showBottomAppBar()
 	fun alertScreen()
 	fun onBackPressed()
-	fun openGuardianEventDetail(item: GuardianModel)
+	fun openGuardianEventDetail(item: EventGroup)
 	fun moveMapIntoReportMarker(report: Report)
 }
 

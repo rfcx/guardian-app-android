@@ -21,7 +21,7 @@ class GuardianEventDetailFragment : Fragment() {
 	lateinit var listener: MainActivityEventListener
 	private val eventItemAdapter by lazy { EventItemAdapter() }
 	var name: String? = null
-	var distance: Float? = null
+	var distance: Double? = null
 	var number: Int? = null
 	
 	val list = listOf<EventModel>()
@@ -83,11 +83,11 @@ class GuardianEventDetailFragment : Fragment() {
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Float, eventSize: Int): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double, eventSize: Int): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
-					putFloat(ARG_DISTANCE, distance)
+					putDouble(ARG_DISTANCE, distance)
 					putInt(ARG_NUMBER, eventSize)
 				}
 			}

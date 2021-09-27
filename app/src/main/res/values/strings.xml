@@ -214,11 +214,12 @@
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 	
-	<!-- NewEventsFragment -->
+	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>
 	<string name="nearby">nearby</string>
 	<string name="others">others</string>
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
+	<string name="num_more_then_99">99+</string>
 	
 	<!-- DraftReportsFragment -->
 	<string name="draft_reports_fragment">DraftReportsFragment</string>

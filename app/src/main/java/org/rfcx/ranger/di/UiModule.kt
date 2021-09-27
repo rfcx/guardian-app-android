@@ -24,7 +24,7 @@ object UiModule {
 	}
 	
 	val eventsModule = module {
-		viewModel { EventsViewModel(androidContext(), get(), get()) }
+		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get()) }
 	}
 	
 	val mapModule = module {

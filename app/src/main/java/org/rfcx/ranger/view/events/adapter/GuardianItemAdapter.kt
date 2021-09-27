@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.setFormatLabel
 
-class GuardianItemAdapter(private val onClickListener: (GuardianModel) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
-	var items: List<GuardianModel> = arrayListOf()
+class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
+	var items: List<EventGroup> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -37,12 +38,12 @@ class GuardianItemAdapter(private val onClickListener: (GuardianModel) -> Unit) 
 		private val guardianName = itemView.guardianNameTextView
 		private val distance = itemView.distanceTextView
 		
-		fun bind(item: GuardianModel) {
-			guardianName.text = item.name
+		fun bind(item: EventGroup) {
+			guardianName.text = item.guardianName
 			distance.text = item.distance.setFormatLabel()
-			numberOfAlerts.text = item.numberOfAlerts.toString()
+			numberOfAlerts.text = if (item.events.size > 99) itemView.context.getString(R.string.num_more_then_99) else item.events.size.toString()
 			
-			if (item.numberOfAlerts == 0) {
+			if (item.events.isEmpty()) {
 				numberImageView.setImageResource(R.drawable.bg_circle_green)
 			} else {
 				numberImageView.setImageResource(R.drawable.bg_circle_red)
@@ -52,3 +53,5 @@ class GuardianItemAdapter(private val onClickListener: (GuardianModel) -> Unit) 
 }
 
 data class GuardianModel(var name: String, var numberOfAlerts: Int, val distance: Float) //TODO:: Change to real model
+
+data class EventGroup(val events: List<Event>, val distance: Double, val guardianName: String)
