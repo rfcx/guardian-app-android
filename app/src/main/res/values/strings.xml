@@ -243,7 +243,7 @@
 	<string name="what_time">What time did you investigate?</string>
 	
 	<!-- SetWhatEvidenceFragment -->
-	<string name="what_evidence">What evidence of loggers did you encounter? Select all that apply</string>
+	<string name="what_evidence">What evidence of loggers did you encounter? <i>Select all that apply</i></string>
 	<string name="cut_down_trees">Cut down trees</string>
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
@@ -264,7 +264,7 @@
 	<string name="not_sure">Not sure</string>
 	
 	<!-- SetWhatActionFragment -->
-	<string name="what_action">What action did you take? Select all that apply</string>
+	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
 	<string name="confronted_loggers">Confronted loggers</string>
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>

@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_when_investigate_step.*
+import kotlinx.android.synthetic.main.fragment_investigation_timestamp.*
 import org.rfcx.ranger.R
 import java.text.DecimalFormat
 import java.util.*
 
-class SetWhenInvestigateStepFragment : Fragment() {
+class InvestigationTimestampFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	private var minutePicker: NumberPicker? = null
@@ -27,25 +27,27 @@ class SetWhenInvestigateStepFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_when_investigate_step, container, false)
+		return inflater.inflate(R.layout.fragment_investigation_timestamp, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(2)
+			listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
 		}
 		
 		timePicker.setIs24HourView(true)
 		setMinutePicker()
+		setDatePicker()
 		
 		timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
 			// get time with ($hourOfDay ${minute * TIME_PICKER_INTERVAL})
 		}
-		
-		val context = context ?: return
+	}
+	
+	private fun setDatePicker() {
 		val date = Calendar.getInstance()
-		val datePicker = DatePickerDialog(context, { view, year, monthOfYear, dayOfMonth ->
+		val datePicker = DatePickerDialog(requireContext(), { view, year, monthOfYear, dayOfMonth ->
 			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/$monthOfYear/$year")
 		}, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
 		
@@ -63,10 +65,11 @@ class SetWhenInvestigateStepFragment : Fragment() {
 		
 		val minute = timePicker?.findViewById<NumberPicker>(Resources.getSystem().getIdentifier("minute", "id", "android"))
 		if (minute != null) {
-			minutePicker = minute
-			minutePicker!!.minValue = 0
-			minutePicker!!.maxValue = numValues - 1
-			minutePicker!!.displayedValues = displayedValues
+			minutePicker = minute.also {
+				it.minValue = 0
+				it.maxValue = numValues - 1
+				it.displayedValues = displayedValues
+			}
 		}
 	}
 	
@@ -74,6 +77,6 @@ class SetWhenInvestigateStepFragment : Fragment() {
 		const val TIME_PICKER_INTERVAL = 15
 		
 		@JvmStatic
-		fun newInstance() = SetWhenInvestigateStepFragment()
+		fun newInstance() = InvestigationTimestampFragment()
 	}
 }

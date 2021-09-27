@@ -28,8 +28,8 @@ abstract class BaseImageFragment : BaseFragment() {
 	private var imageFile: File? = null
 	
 	private lateinit var attachImageDialog: BottomSheetDialog
-	private val cameraPermissions by lazy { CameraPermissions(context as Activity) }
-	private val galleryPermissions by lazy { GalleryPermissions(context as Activity) }
+	private val cameraPermissions by lazy { CameraPermissions(requireActivity()) }
+	private val galleryPermissions by lazy { GalleryPermissions(requireActivity()) }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -72,8 +72,7 @@ abstract class BaseImageFragment : BaseFragment() {
 		bottomSheetView.menuTakePhoto.setOnClickListener {
 			takePhoto()
 		}
-		val context = context ?: return
-		attachImageDialog = BottomSheetDialog(context)
+		attachImageDialog = BottomSheetDialog(requireContext())
 		attachImageDialog.setContentView(bottomSheetView)
 	}
 	
@@ -95,8 +94,7 @@ abstract class BaseImageFragment : BaseFragment() {
 		imageFile = ReportUtils.createReportImageFile()
 		
 		val image = imageFile ?: return
-		val context = context ?: return
-		val photoURI = FileProvider.getUriForFile(context, ReportUtils.FILE_CONTENT_PROVIDER, image)
+		val photoURI = FileProvider.getUriForFile(requireContext(), ReportUtils.FILE_CONTENT_PROVIDER, image)
 		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		startActivityForResult(takePictureIntent, ReportUtils.REQUEST_TAKE_PHOTO)
 		
@@ -150,8 +148,7 @@ abstract class BaseImageFragment : BaseFragment() {
 		val pathList = mutableListOf<String>()
 		val results = Matisse.obtainResult(intentData)
 		results.forEach {
-			val context = context ?: return
-			val imagePath = ImageFileUtils.findRealPath(context, it)
+			val imagePath = ImageFileUtils.findRealPath(requireContext(), it)
 			imagePath?.let { path ->
 				pathList.add(path)
 			}

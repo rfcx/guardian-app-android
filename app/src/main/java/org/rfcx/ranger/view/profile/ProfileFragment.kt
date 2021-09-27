@@ -23,7 +23,6 @@ import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.base.BaseFragment
 import org.rfcx.ranger.view.profile.coordinates.CoordinatesActivity
 import org.rfcx.ranger.view.profile.editprofile.EditProfileActivity
-import org.rfcx.ranger.view.tutorial.TutorialActivity
 
 class ProfileFragment : BaseFragment() {
 	
@@ -100,13 +99,7 @@ class ProfileFragment : BaseFragment() {
 				locationTrackingViewModel.requireEnableLocationTracking()
 			}
 		}
-		
-		viewDataBinding.onClickAppIntro = View.OnClickListener {
-			val preferenceHelper = context?.let { it1 -> Preferences.getInstance(it1) }
-			preferenceHelper?.putBoolean(Preferences.IS_FIRST_TIME, false)
-			context?.let { it1 -> TutorialActivity.startActivity(it1, null) }
-		}
-		
+
 		viewDataBinding.onClickGuardingGroup = View.OnClickListener {
 			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
 			context?.let { GuardianGroupActivity.startActivity(it) }

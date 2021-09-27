@@ -1,19 +1,15 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_set_what_evidence.*
+import kotlinx.android.synthetic.main.fragment_scale.*
 import org.rfcx.ranger.R
 
-class SetWhatEvidenceFragment : Fragment() {
+class ScaleFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	
@@ -25,22 +21,18 @@ class SetWhatEvidenceFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_set_what_evidence, container, false)
+		return inflater.inflate(R.layout.fragment_scale, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(3)
+			listener.handleCheckClicked(StepCreateReport.DAMAGE.step)
 		}
-		
-		val str = SpannableStringBuilder(getString(R.string.what_evidence))
-		str.setSpan(StyleSpan(Typeface.ITALIC), 43, 65, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-		whenTextView.text = str
 	}
 	
 	companion object {
 		@JvmStatic
-		fun newInstance() = SetWhatEvidenceFragment()
+		fun newInstance() = ScaleFragment()
 	}
 }

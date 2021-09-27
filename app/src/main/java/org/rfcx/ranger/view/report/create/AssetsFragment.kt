@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_add_evidence.*
+import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.view.report.create.image.BaseImageFragment
 
-class AddEvidenceFragment : BaseImageFragment() {
+class AssetsFragment : BaseImageFragment() {
 	
 	companion object {
 		@JvmStatic
-		fun newInstance() = AddEvidenceFragment()
+		fun newInstance() = AssetsFragment()
 	}
 	
 	override fun didAddImages(imagePaths: List<String>) {}
@@ -23,7 +23,7 @@ class AddEvidenceFragment : BaseImageFragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_add_evidence, container, false)
+		return inflater.inflate(R.layout.fragment_assets, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
