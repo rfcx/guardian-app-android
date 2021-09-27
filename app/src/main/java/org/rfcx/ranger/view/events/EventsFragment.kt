@@ -131,6 +131,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		viewModel.fetchProjects()
 		setOnClickListener()
 		setObserver()
+		lastLocation?.let { viewModel.handledGuardians(it) }
+		setRecyclerView()
 	}
 	
 	private fun setRecyclerView() {

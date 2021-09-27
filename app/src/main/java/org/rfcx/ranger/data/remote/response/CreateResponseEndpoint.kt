@@ -12,9 +12,9 @@ interface CreateResponseEndpoint {
 }
 
 data class CreateResponseRequest(
-		val investigatedAt: Date,
-		val startedAt: Date,
-		val submittedAt: Date,
+		val investigatedAt: String,
+		val startedAt: String,
+		val submittedAt: String,
 		val evidences: List<Int>,
 		val loggingScale: Int,
 		val damageScale: Int,

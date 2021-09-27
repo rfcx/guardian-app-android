@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import java.util.*
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var guardianName: String? = null
+	private val viewModel: CreateReportViewModel by viewModel()
 	
 	companion object {
 		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
@@ -60,7 +62,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setTitleToolbar(step)
 		
 		when (step) {
-			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
+//			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
+			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> viewModel.createResponse()
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
 			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())
