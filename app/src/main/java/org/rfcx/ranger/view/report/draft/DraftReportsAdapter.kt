@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_draft_reports.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 import java.util.*
 
 class DraftReportsAdapter(private val listener: ReportOnClickListener) : RecyclerView.Adapter<DraftReportsAdapter.ReportsViewHolder>() {
-	var items: List<ReportModel> = arrayListOf()
+	var items: List<Response> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -36,10 +37,10 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		private val dateTextView = itemView.dateTextView
 		private val actionImageView = itemView.actionImageView
 		
-		fun bind(report: ReportModel) {
+		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
-			guardianName.text = report.nameGuardian
-			dateTextView.text = report.date.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+			guardianName.text = report.guardianName
+			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			
 			actionImageView.setOnClickListener {
 				listener.onClickedDelete(report)
@@ -48,20 +49,6 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 	}
 }
 
-data class ReportModel(var nameGuardian: String, var date: Date, val syncInfo: Int, val reportId: String? = null) {
-	val syncImage = when (syncInfo) { // 0 unsent, 1 uploading, 2 uploaded
-		0 -> R.drawable.ic_cloud_queue
-		1 -> R.drawable.ic_cloud_upload
-		else -> R.drawable.ic_cloud_done
-	}
-	
-	val syncLabel = when (syncInfo) {
-		0 -> R.string.unsent
-		1 -> R.string.sending
-		else -> R.string.sent
-	}
-} //TODO:: Change to real model
-
 interface ReportOnClickListener {
-	fun onClickedDelete(report: ReportModel)
+	fun onClickedDelete(response: Response)
 }
