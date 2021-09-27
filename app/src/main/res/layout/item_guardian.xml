@@ -32,10 +32,13 @@
 	<TextView
 		android:id="@+id/guardianNameTextView"
 		style="@style/RangerText.Body"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:padding="@dimen/margin_padding_normal"
+		android:ellipsize="end"
+		android:maxLines="1"
+		app:layout_constraintEnd_toStartOf="@id/distanceTextView"
 		app:layout_constraintStart_toEndOf="@id/numberOfAlertsImageView"
 		app:layout_constraintTop_toTopOf="parent"
 		tools:text="Guardian A" />
@@ -43,9 +46,8 @@
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/distanceTextView"
 		style="@style/RangerText.Body"
-		android:layout_width="0dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="end"
 		android:padding="@dimen/margin_padding_normal"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toEndOf="@id/guardianNameTextView"

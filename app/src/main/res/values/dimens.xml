@@ -26,4 +26,5 @@
 	<dimen name="number_alerts_site">16dp</dimen>
 	<dimen name="padding_bottom">78dp</dimen>
 	<dimen name="bg_number_size">24dp</dimen>
+	<dimen name="scale_image_height">150dp</dimen>
 </resources>

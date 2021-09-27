@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/margin_padding_normal"
+	tools:context=".view.report.create.EvidenceFragment">
+	
+	<TextView
+		android:id="@+id/whenTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/what_evidence"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<RadioGroup
+		android:id="@+id/whatEvidenceRadioGroup"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:checkedButton="@+id/whatEvidenceRadioButton"
+		app:layout_constraintTop_toBottomOf="@id/whenTextView">
+		
+		<CheckBox
+			android:id="@+id/cutDownTreesCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/cut_down_trees"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/clearedAreasCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/cleared_areas"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/loggingEquipmentCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/logging_equipment"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/loggersAtSiteCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/loggers_at_site"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/otherDisruptionCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/other_explain_step_6"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/noneCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/common_none"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+	</RadioGroup>
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/nextStepButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/next"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

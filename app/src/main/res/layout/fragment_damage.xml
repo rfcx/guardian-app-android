@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/margin_padding_normal"
+	tools:context=".view.report.create.DamageFragment">
+	
+	<TextView
+		android:id="@+id/whatScaleTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/how_much_damage"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guide"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.5" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/largeAreaImageView"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/scale_image_height"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintHorizontal_bias="1.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/largeAreaTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/large_area_clear_cut"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaImageView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/mediumTreesImageView"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/scale_image_height"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/mediumTreesTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/medium_trees_cut_down"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaImageView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/smallNumberImageView"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/scale_image_height"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/largeAreaTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/smallTreesTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/small_trees_cut_down"
+		app:layout_constraintEnd_toEndOf="@id/guide"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/smallNumberImageView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/noVisibleImageView"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/scale_image_height"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/mediumTreesTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/common_none"
+		android:textAllCaps="true"
+		app:layout_constraintBottom_toBottomOf="@id/noVisibleImageView"
+		app:layout_constraintEnd_toEndOf="@id/noVisibleImageView"
+		app:layout_constraintStart_toStartOf="@id/noVisibleImageView"
+		app:layout_constraintTop_toTopOf="@id/noVisibleImageView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/noVisibleTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_small"
+		android:text="@string/no_visible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@id/guide"
+		app:layout_constraintTop_toBottomOf="@id/noVisibleImageView" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/nextStepButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/next"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

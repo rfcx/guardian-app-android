@@ -21,8 +21,7 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DraftReportsAdapter.ReportsViewHolder {
-		val view =
-				LayoutInflater.from(parent.context).inflate(R.layout.item_draft_reports, parent, false)
+		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_draft_reports, parent, false)
 		return ReportsViewHolder(view)
 	}
 	
