@@ -5,7 +5,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityViewModel
-import org.rfcx.ranger.view.events.NewEventsViewModel
+import org.rfcx.ranger.view.events.EventsViewModel
 import org.rfcx.ranger.view.login.*
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
@@ -15,7 +15,6 @@ import org.rfcx.ranger.view.profile.GuardianGroupViewModel
 import org.rfcx.ranger.view.profile.PasswordChangeViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.profile.editprofile.EditProfileViewModel
-import org.rfcx.ranger.view.report.ReportDetailViewModel
 
 object UiModule {
 	
@@ -25,17 +24,13 @@ object UiModule {
 	}
 	
 	val eventsModule = module {
-		viewModel { NewEventsViewModel(androidContext(), get(), get()) }
+		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get()) }
 	}
 	
 	val mapModule = module {
 		viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 		viewModel { MapDetailViewModel(get(), get()) }
 		viewModel { ReportViewPagerFragmentViewModel(get()) }
-	}
-	
-	val statusModule = module {
-		viewModel { ReportDetailViewModel(get(), get(), get()) }
 	}
 	
 	val profileModule = module {

@@ -14,7 +14,6 @@ import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.limitDecimalPlace
 import org.rfcx.ranger.util.toTimeSinceString
 import org.rfcx.ranger.view.base.BaseFragment
-import org.rfcx.ranger.view.report.ReportDetailActivity
 import org.rfcx.ranger.view.report.getLocalisedValue
 
 class MapDetailBottomSheetFragment : BaseFragment() {
@@ -61,7 +60,6 @@ class MapDetailBottomSheetFragment : BaseFragment() {
 			
 			seeDetailTextView.setOnClickListener {
 				analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)
-				ReportDetailActivity.startIntent(context, reportId = report.id)
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package org.rfcx.ranger.adapter
+package org.rfcx.ranger.view.report.create.image
 
 import android.content.Context
 import android.util.Log

@@ -37,7 +37,11 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		
-		<activity android:name=".view.profile.coordinates.CoordinatesActivity"
+		<activity
+			android:name=".view.profile.coordinates.CoordinatesActivity"
+			android:screenOrientation="portrait" />
+		<activity
+			android:name=".view.report.create.CreateReportActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
@@ -46,9 +50,6 @@
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"
-			android:screenOrientation="portrait"/>
-		<activity
-			android:name=".view.report.ReportDetailActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.GuardianGroupActivity"
@@ -67,10 +68,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name=".view.report.ReportActivity"
-			android:screenOrientation="portrait" />
-		
 		<service
 			android:name=".service.LocationTrackerService"
 			android:exported="false"

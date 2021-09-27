@@ -14,18 +14,23 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
+import org.rfcx.ranger.view.events.adapter.EventModel
+import org.rfcx.ranger.view.report.create.CreateReportActivity
 
 class GuardianEventDetailFragment : Fragment() {
 	lateinit var listener: MainActivityEventListener
 	private val eventItemAdapter by lazy { EventItemAdapter() }
 	var name: String? = null
-	var distance: Float? = null
+	var distance: Double? = null
+	var number: Int? = null
+	
+	val list = listOf<EventModel>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
-		distance = arg.getFloat(ARG_DISTANCE)
+		number = arg.getInt(ARG_NUMBER)
 	}
 	
 	override fun onAttach(context: Context) {
@@ -46,7 +51,11 @@ class GuardianEventDetailFragment : Fragment() {
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = eventItemAdapter
-			eventItemAdapter.items = listOf() // Add list of EventModel and should sortedByDescending( date )
+			eventItemAdapter.items = list.take(number ?: 0)
+			
+			createReportButton.setOnClickListener {
+				name?.let { it1 -> CreateReportActivity.startActivity(context, it1) }
+			}
 		}
 		
 		guardianNameTextView.text = name
@@ -71,13 +80,15 @@ class GuardianEventDetailFragment : Fragment() {
 		const val tag = "GuardianEventDetailFragment"
 		private const val ARG_NAME = "ARG_NAME"
 		private const val ARG_DISTANCE = "ARG_DISTANCE"
+		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Float): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double, eventSize: Int): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
-					putFloat(ARG_DISTANCE, distance)
+					putDouble(ARG_DISTANCE, distance)
+					putInt(ARG_NUMBER, eventSize)
 				}
 			}
 		}
