@@ -44,6 +44,36 @@ enum class SyncState(val value: Int) {
 	UNSENT(0), SENDING(1), SENT(2)
 }
 
+enum class LoggingScale(val value: Int) {
+	NOT_SURE(0), SMALL(1), LARGE(2)
+}
+
+enum class DamageScale(val value: Int) {
+	NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
+}
+
+enum class EvidenceTypes(val value: Int) {
+	NONE(100),
+	CUT_DOWN_TREES(101),
+	CLEARED_AREAS(102),
+	LOGGING_EQUIPMENT(103),
+	LOGGERS_AT_SITE(104),
+	ILLEGAL_CAMPS(105),
+	FIRED_BURNED_AREAS(106),
+	EVIDENCE_OF_POACHING(107)
+}
+
+enum class Actions(val value: Int) {
+	NONE(200),
+	COLLECTED_EVIDENCE(201),
+	ISSUE_A_WARNING(202),
+	CONFISCATED_EQUIPMENT(203),
+	ISSUE_A_FINE(204),
+	ARRESTS(205),
+	PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT(206),
+	OTHER(207)
+}
+
 fun Response.syncImage() = when (this.syncState) {
 	SyncState.UNSENT.value -> R.drawable.ic_cloud_queue
 	SyncState.SENDING.value -> R.drawable.ic_cloud_upload
