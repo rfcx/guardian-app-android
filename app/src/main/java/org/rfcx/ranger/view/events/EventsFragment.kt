@@ -48,6 +48,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
@@ -134,6 +135,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setObserver()
 		lastLocation?.let { viewModel.handledGuardians(it) }
 		setRecyclerView()
+		setProjectTitle(viewModel.getProjectName())
 	}
 	
 	private fun setRecyclerView() {

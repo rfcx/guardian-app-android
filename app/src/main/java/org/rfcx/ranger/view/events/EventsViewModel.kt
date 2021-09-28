@@ -62,9 +62,8 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	
 	fun getProjectName(): String {
 		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val project = projectDb.getProjectById(projectId)
-		return project?.name ?: context.getString(R.string.all_projects)
+		val project = preferences.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+		return project ?: context.getString(R.string.all_projects)
 	}
 	
 	fun setProjectSelected(id: Int) {
