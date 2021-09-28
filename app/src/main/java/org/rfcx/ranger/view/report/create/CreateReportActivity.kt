@@ -62,8 +62,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setTitleToolbar(step)
 		
 		when (step) {
-//			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
-			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> viewModel.createResponse()
+			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
 			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())

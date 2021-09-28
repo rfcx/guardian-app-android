@@ -19,7 +19,6 @@ class CreateReportViewModel(private val createResponse: CreateResponse) : ViewMo
 			override fun onError(e: Throwable) {
 				Log.d("createResponse", "onError $e")
 			}
-			
 		}, CreateResponseRequest(Date().toIsoString(), Date().toIsoString(), Date().toIsoString(), listOf(101, 103), 1, 1, listOf(201, 203), "I found a machete", "skhedl36rxb2"))
 	}
 }
