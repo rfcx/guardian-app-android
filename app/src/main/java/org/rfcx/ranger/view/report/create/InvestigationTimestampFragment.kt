@@ -50,7 +50,7 @@ class InvestigationTimestampFragment : Fragment() {
 		}
 		
 		timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
-			calendar.set(Calendar.HOUR, hourOfDay)
+			calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
 			calendar.set(Calendar.MINUTE, minute * TIME_PICKER_INTERVAL)
 		}
 		
@@ -105,20 +105,28 @@ class InvestigationTimestampFragment : Fragment() {
 				it.displayedValues = displayedValues
 			}
 		}
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			timePicker?.hour = calendar.get(Calendar.HOUR_OF_DAY)
+			timePicker?.minute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
+		} else {
+			timePicker?.currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+			timePicker?.currentMinute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
+		}
 	}
 	
 	private fun setCalendar(hour: Int, minute: Int, dayOfMonth: Int, monthOfYear: Int, year: Int) {
 		calendar.set(Calendar.YEAR, year)
-		calendar.set(Calendar.HOUR, hour)
+		calendar.set(Calendar.HOUR_OF_DAY, hour)
 		calendar.set(Calendar.MINUTE, minute)
 		calendar.set(Calendar.MONTH, monthOfYear)
 		calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 	}
 	
 	private fun getMinute(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-		timePicker.minute
+		timePicker.minute * TIME_PICKER_INTERVAL
 	} else {
-		timePicker.currentMinute
+		timePicker.currentMinute * TIME_PICKER_INTERVAL
 	}
 	
 	private fun getHour(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
