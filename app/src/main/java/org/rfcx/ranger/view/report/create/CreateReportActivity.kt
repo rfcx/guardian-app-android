@@ -17,10 +17,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	companion object {
 		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
+		private const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
 		
-		fun startActivity(context: Context, guardianName: String) {
+		fun startActivity(context: Context, guardianName: String, guardianId: String) {
 			val intent = Intent(context, CreateReportActivity::class.java)
 			intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
+			intent.putExtra(EXTRA_GUARDIAN_ID, guardianId)
 			context.startActivity(intent)
 		}
 	}
@@ -29,6 +31,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	private var passedChecks = ArrayList<Int>()
 	private var guardianName: String? = null
+	private var guardianId: String? = null
 	
 	private var _response: Response? = null
 	
@@ -36,6 +39,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_create_report)
 		guardianName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
+		guardianId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
 		
 		setupToolbar()
 		handleCheckClicked(1)
@@ -83,6 +87,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
+		response.guardianId = guardianId ?: ""
 		setResponse(response)
 	}
 	
@@ -117,6 +122,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		finish()
 	}
 	
+	override fun onSaveDraftButtonClick() {
+		TODO("Not yet implemented")
+	}
+	
+	override fun onSubmitButtonClick() {
+		val response = _response ?: Response()
+		response.submittedAt = Date()
+		viewModel.createResponse(response)
+	}
+	
 	private fun startFragment(fragment: Fragment) {
 		supportFragmentManager.beginTransaction()
 				.replace(createReportContainer.id, fragment)
@@ -134,6 +149,9 @@ interface CreateReportListener {
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
 	fun setAssets(note: String)
+	
+	fun onSaveDraftButtonClick()
+	fun onSubmitButtonClick()
 }
 
 enum class StepCreateReport(val step: Int) {

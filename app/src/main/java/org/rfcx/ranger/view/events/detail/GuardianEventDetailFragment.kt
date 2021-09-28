@@ -21,6 +21,7 @@ class GuardianEventDetailFragment : Fragment() {
 	lateinit var listener: MainActivityEventListener
 	private val eventItemAdapter by lazy { EventItemAdapter() }
 	var name: String? = null
+	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
 	
@@ -30,6 +31,7 @@ class GuardianEventDetailFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
+		guardianId = arg.getString(ARG_GUARDIAN_ID)
 		number = arg.getInt(ARG_NUMBER)
 	}
 	
@@ -54,7 +56,11 @@ class GuardianEventDetailFragment : Fragment() {
 			eventItemAdapter.items = list.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
-				name?.let { it1 -> CreateReportActivity.startActivity(context, it1) }
+				name?.let { name ->
+					guardianId?.let { id ->
+						CreateReportActivity.startActivity(context, name, id)
+					}
+				}
 			}
 		}
 		
@@ -80,13 +86,15 @@ class GuardianEventDetailFragment : Fragment() {
 		const val tag = "GuardianEventDetailFragment"
 		private const val ARG_NAME = "ARG_NAME"
 		private const val ARG_DISTANCE = "ARG_DISTANCE"
+		private const val ARG_GUARDIAN_ID = "ARG_GUARDIAN_ID"
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Double, eventSize: Int): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
+					putString(ARG_GUARDIAN_ID, guardianId)
 					putDouble(ARG_DISTANCE, distance)
 					putInt(ARG_NUMBER, eventSize)
 				}

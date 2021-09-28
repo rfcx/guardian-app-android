@@ -44,6 +44,7 @@ class AssetsFragment : BaseImageFragment() {
 		
 		submitButton.setOnClickListener {
 			setupNote()
+			listener.onSubmitButtonClick()
 		}
 	}
 	

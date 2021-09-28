@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_action.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Actions
 import org.rfcx.ranger.entity.response.EvidenceTypes
 import java.util.*
 
@@ -73,28 +74,28 @@ class ActionFragment : Fragment() {
 	
 	private fun setSelect() {
 		if (collectedEvidenceCheckBox.isChecked) {
-			selected.add(EvidenceTypes.CUT_DOWN_TREES.value)
+			selected.add(Actions.COLLECTED_EVIDENCE.value)
 		}
 		if (issueWarningCheckBox.isChecked) {
-			selected.add(EvidenceTypes.CLEARED_AREAS.value)
+			selected.add(Actions.ISSUE_A_WARNING.value)
 		}
 		if (confiscatedEquipmentCheckBox.isChecked) {
-			selected.add(EvidenceTypes.LOGGING_EQUIPMENT.value)
+			selected.add(Actions.CONFISCATED_EQUIPMENT.value)
 		}
 		if (issueFineCheckBox.isChecked) {
-			selected.add(EvidenceTypes.LOGGERS_AT_SITE.value)
+			selected.add(Actions.ISSUE_A_FINE.value)
 		}
 		if (arrestsCheckBox.isChecked) {
-			selected.add(EvidenceTypes.ILLEGAL_CAMPS.value)
+			selected.add(Actions.ARRESTS.value)
 		}
 		if (planningSecurityCheckBox.isChecked) {
-			selected.add(EvidenceTypes.FIRED_BURNED_AREAS.value)
+			selected.add(Actions.PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT.value)
 		}
 		if (otherCheckBox.isChecked) {
-			selected.add(EvidenceTypes.EVIDENCE_OF_POACHING.value)
+			selected.add(Actions.OTHER.value)
 		}
 		if (noneCheckBox.isChecked) {
-			selected.add(EvidenceTypes.NONE.value)
+			selected.add(Actions.NONE.value)
 		}
 		
 		listener.setAction(selected)

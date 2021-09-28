@@ -4,6 +4,8 @@ import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.remote.response.CreateResponseRequest
+import org.rfcx.ranger.util.toIsoString
 import java.util.*
 
 open class Response(
@@ -73,6 +75,19 @@ enum class Actions(val value: Int) {
 	PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT(206),
 	OTHER(207)
 }
+
+fun Response.toCreateResponseRequest(): CreateResponseRequest =
+		CreateResponseRequest(
+				this.investigatedAt.toIsoString(),
+				this.startedAt.toIsoString(),
+				this.submittedAt?.toIsoString() ?: "",
+				this.evidences,
+				this.loggingScale,
+				this.damageScale,
+				this.responseActions,
+				this.note ?: "",
+				this.guardianId
+		)
 
 fun Response.syncImage() = when (this.syncState) {
 	SyncState.UNSENT.value -> R.drawable.ic_cloud_queue
