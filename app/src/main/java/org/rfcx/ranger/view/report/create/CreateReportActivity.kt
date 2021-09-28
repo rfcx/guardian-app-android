@@ -3,17 +3,17 @@ package org.rfcx.ranger.view.report.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Response
 import java.util.*
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
-	private var guardianName: String? = null
-	private val viewModel: CreateReportViewModel by viewModel()
 	
 	companion object {
 		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
@@ -25,7 +25,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		}
 	}
 	
+	private val viewModel: CreateReportViewModel by viewModel()
+	
 	private var passedChecks = ArrayList<Int>()
+	private var guardianName: String? = null
+	
+	private var _response: Response? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -71,6 +76,37 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		}
 	}
 	
+	private fun setResponse(response: Response) {
+		this._response = response
+		Log.d("nextStepButton","${response.investigatedAt}")
+	}
+	
+	override fun setInvestigationTimestamp(date: Date) {
+		val response = _response ?: Response()
+		response.investigatedAt = date
+		setResponse(response)
+	}
+	
+	override fun setEvidence(evidence: List<Int>) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun setScale(scale: Int) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun setDamage(damage: Int) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun setAction(action: List<Int>) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun setAssets() {
+		TODO("Not yet implemented")
+	}
+	
 	private fun startFragment(fragment: Fragment) {
 		supportFragmentManager.beginTransaction()
 				.replace(createReportContainer.id, fragment)
@@ -81,6 +117,13 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 interface CreateReportListener {
 	fun setTitleToolbar(step: Int)
 	fun handleCheckClicked(step: Int)
+	
+	fun setInvestigationTimestamp(date: Date)
+	fun setEvidence(evidence: List<Int>)
+	fun setScale(scale: Int)
+	fun setDamage(damage: Int)
+	fun setAction(action: List<Int>)
+	fun setAssets()
 }
 
 enum class StepCreateReport(val step: Int) {
