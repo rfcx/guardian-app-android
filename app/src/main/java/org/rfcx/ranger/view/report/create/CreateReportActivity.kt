@@ -81,6 +81,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		this._response = response
 		Log.d("nextStepButton", "${response.investigatedAt}")
 		Log.d("nextStepButton", "${response.evidences}")
+		Log.d("nextStepButton", "${response.loggingScale}")
 	}
 	
 	override fun setInvestigationTimestamp(date: Date) {
@@ -96,19 +97,27 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	}
 	
 	override fun setScale(scale: Int) {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		response.loggingScale = scale
+		setResponse(response)
 	}
 	
 	override fun setDamage(damage: Int) {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		response.damageScale = damage
+		setResponse(response)
 	}
 	
 	override fun setAction(action: List<Int>) {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		response.responseActions.addAll(action)
+		setResponse(response)
 	}
 	
-	override fun setAssets() {
-		TODO("Not yet implemented")
+	override fun setAssets(note: String) {
+		val response = _response ?: Response()
+		response.note = note
+		setResponse(response)
 	}
 	
 	private fun startFragment(fragment: Fragment) {
@@ -127,7 +136,7 @@ interface CreateReportListener {
 	fun setScale(scale: Int)
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
-	fun setAssets()
+	fun setAssets(note: String)
 }
 
 enum class StepCreateReport(val step: Int) {

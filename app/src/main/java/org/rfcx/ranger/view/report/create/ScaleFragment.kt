@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_scale.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.LoggingScale
 
 class ScaleFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
+	var selected: Int? = null
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -27,7 +29,20 @@ class ScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(StepCreateReport.DAMAGE.step)
+			selected?.let { value ->
+				listener.setScale(value)
+				listener.handleCheckClicked(StepCreateReport.DAMAGE.step)
+			}
+		}
+		
+		scaleRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+			nextStepButton.isEnabled = true
+			
+			when (checkedId) {
+				R.id.notSureRadioButton -> selected = LoggingScale.NOT_SURE.value
+				R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
+				R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
+			}
 		}
 	}
 	
