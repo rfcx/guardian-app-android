@@ -127,6 +127,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
 		
+		getLocation()
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
@@ -257,8 +258,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			refreshSource()
 			addClusteredGeoJsonSource(style)
 			alertFeatures?.let { moveCameraToLeavesBounds(it) }
-			lastLocation?.let { viewModel.handledGuardians(it) }
-			setRecyclerView()
 		}
 		
 		mapboxMap.addOnMapClickListener { latLng ->
@@ -390,7 +389,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun getLocation() {
 		if (!isAdded || isDetached) return
-		val style = mapBoxMap?.style ?: return
 		
 		// Check if permissions are enabled and if not request
 		if (PermissionsManager.areLocationPermissionsGranted(context)) {
@@ -399,7 +397,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			try {
 				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 				lastLocation?.let { moveCameraToCurrentLocation(it) }
-				enableLocationComponent(style)
+				mapBoxMap?.style?.let { enableLocationComponent(it) }
 			} catch (ex: SecurityException) {
 				ex.printStackTrace()
 			} catch (ex: IllegalArgumentException) {
