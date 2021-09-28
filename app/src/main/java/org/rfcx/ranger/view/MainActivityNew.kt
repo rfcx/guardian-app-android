@@ -20,7 +20,6 @@ import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.EventsFragment
 import org.rfcx.ranger.view.events.adapter.EventGroup
-import org.rfcx.ranger.view.events.adapter.GuardianModel
 import org.rfcx.ranger.view.events.detail.GuardianEventDetailFragment
 import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
@@ -207,7 +206,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	
 	override fun openGuardianEventDetail(item: EventGroup) {
 		hideBottomAppBar()
-		startFragment(GuardianEventDetailFragment.newInstance(item.guardianName, item.distance, item.events.size), GuardianEventDetailFragment.tag)
+		startFragment(GuardianEventDetailFragment.newInstance(item.guardianName, item.distance, item.events.size, item.events[0].guardianId), GuardianEventDetailFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "") {
