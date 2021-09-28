@@ -15,12 +15,13 @@
 		android:text="@string/what_evidence"
 		app:layout_constraintTop_toTopOf="parent" />
 	
-	<RadioGroup
-		android:id="@+id/whatEvidenceRadioGroup"
+	<LinearLayout
+		android:id="@+id/whatEvidenceLinearLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_small"
 		android:checkedButton="@+id/whatEvidenceRadioButton"
+		android:orientation="vertical"
 		app:layout_constraintTop_toBottomOf="@id/whenTextView">
 		
 		<CheckBox
@@ -80,7 +81,7 @@
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
 		<CheckBox
-			android:id="@+id/otherDisruptionCheckBox"
+			android:id="@+id/illegalCampsCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -89,7 +90,21 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/other_explain_step_6"
+			android:text="@string/illegal_camps"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+		<CheckBox
+			android:id="@+id/firesBurnedAreasCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/fires_burned_areas"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
@@ -106,8 +121,22 @@
 			android:text="@string/common_none"
 			android:textColor="@drawable/radio_text_color"
 			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-		
-	</RadioGroup>
+			
+		<CheckBox
+			android:id="@+id/evidenceOfPoachingCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/evidence_of_poaching"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+	
+	</LinearLayout>
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"

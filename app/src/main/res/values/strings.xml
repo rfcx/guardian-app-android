@@ -249,6 +249,9 @@
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
 	<string name="loggers_at_site">Loggers at Site</string>
+	<string name="illegal_camps">Illegal camps</string>
+	<string name="fires_burned_areas">Fires/burned areas</string>
+	<string name="evidence_of_poaching">Evidence of poaching</string>
 	<string name="other_explain_step_6">Other (explain in step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->

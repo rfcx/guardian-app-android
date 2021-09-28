@@ -12,6 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
@@ -78,7 +79,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	private fun setResponse(response: Response) {
 		this._response = response
-		Log.d("nextStepButton","${response.investigatedAt}")
+		Log.d("nextStepButton", "${response.investigatedAt}")
+		Log.d("nextStepButton", "${response.evidences}")
 	}
 	
 	override fun setInvestigationTimestamp(date: Date) {
@@ -88,7 +90,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	}
 	
 	override fun setEvidence(evidence: List<Int>) {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		response.evidences.addAll(evidence)
+		setResponse(response)
 	}
 	
 	override fun setScale(scale: Int) {
