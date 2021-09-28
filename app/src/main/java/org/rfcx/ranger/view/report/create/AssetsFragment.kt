@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +38,7 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupImageRecycler()
+		view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		saveDraftButton.setOnClickListener {
 			setupNote()
@@ -61,5 +63,23 @@ class AssetsFragment : BaseImageFragment() {
 			setHasFixedSize(true)
 		}
 		reportImageAdapter.setImages(arrayListOf())
+	}
+	
+	private fun setOnFocusEditText() {
+		val screenHeight: Int = view?.rootView?.height ?: 0
+		val r = Rect()
+		view?.getWindowVisibleDisplayFrame(r)
+		val keypadHeight: Int = screenHeight - r.bottom
+		if (keypadHeight > screenHeight * 0.15) {
+			saveDraftButton.visibility = View.GONE
+			submitButton.visibility = View.GONE
+		} else {
+			if (saveDraftButton != null) {
+				saveDraftButton.visibility = View.VISIBLE
+			}
+			if (submitButton != null) {
+				submitButton.visibility = View.VISIBLE
+			}
+		}
 	}
 }
