@@ -34,11 +34,46 @@ class EvidenceFragment : Fragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		setOnChange()
 		
 		nextStepButton.setOnClickListener {
 			setSelect()
-			listener.handleCheckClicked(StepCreateReport.SCALE.step)
 		}
+	}
+	
+	private fun setOnChange() {
+		cutDownTreesCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		clearedAreasCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		loggingEquipmentCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		loggersAtSiteCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		illegalCampsCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		firesBurnedAreasCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		evidenceOfPoachingCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		noneCheckBox.setOnClickListener {
+			setEnabled()
+		}
+	}
+	
+	private fun setEnabled() {
+		nextStepButton.isEnabled = cutDownTreesCheckBox.isChecked ||
+				clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
+				loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
+				firesBurnedAreasCheckBox.isChecked || evidenceOfPoachingCheckBox.isChecked ||
+				noneCheckBox.isChecked
 	}
 	
 	private fun setSelect() {
@@ -68,5 +103,6 @@ class EvidenceFragment : Fragment() {
 		}
 		
 		listener.setEvidence(selected)
+		listener.handleCheckClicked(StepCreateReport.SCALE.step)
 	}
 }
