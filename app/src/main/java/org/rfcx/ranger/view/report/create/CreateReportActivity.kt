@@ -3,7 +3,6 @@ package org.rfcx.ranger.view.report.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
@@ -79,9 +78,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	private fun setResponse(response: Response) {
 		this._response = response
-		Log.d("nextStepButton", "${response.investigatedAt}")
-		Log.d("nextStepButton", "${response.evidences}")
-		Log.d("nextStepButton", "${response.loggingScale}")
 	}
 	
 	override fun setInvestigationTimestamp(date: Date) {
@@ -118,6 +114,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
+		finish()
 	}
 	
 	private fun startFragment(fragment: Fragment) {

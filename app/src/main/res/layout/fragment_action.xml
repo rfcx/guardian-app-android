@@ -23,7 +23,7 @@
 		app:layout_constraintTop_toBottomOf="@id/whatActionTextView">
 		
 		<CheckBox
-			android:id="@+id/confrontedLoggersCheckBox"
+			android:id="@+id/collectedEvidenceCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -32,9 +32,21 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/confronted_loggers"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:text="@string/collected_evidence"
+			android:textColor="@drawable/radio_text_color" />
+		
+		<CheckBox
+			android:id="@+id/issueWarningCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/issue_a_warning"
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
 			android:id="@+id/confiscatedEquipmentCheckBox"
@@ -47,11 +59,10 @@
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
 			android:text="@string/confiscated_equipment"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
-			android:id="@+id/collectedEvidenceCheckBox"
+			android:id="@+id/issueFineCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -60,12 +71,11 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/collected_evidence"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:text="@string/issue_a_fine"
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
-			android:id="@+id/submittedReportCheckBox"
+			android:id="@+id/arrestsCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -74,12 +84,11 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/submitted_report"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:text="@string/arrests"
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
-			android:id="@+id/planningPatrolAreaCheckBox"
+			android:id="@+id/planningSecurityCheckBox"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/margin_padding_normal"
@@ -88,9 +97,8 @@
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/planning_patrol_area"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:text="@string/planning_security"
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
 			android:id="@+id/otherCheckBox"
@@ -103,8 +111,7 @@
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
 			android:text="@string/other_explain_step_6"
-			android:textColor="@drawable/radio_text_color"
-			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:textColor="@drawable/radio_text_color" />
 		
 		<CheckBox
 			android:id="@+id/noneCheckBox"

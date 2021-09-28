@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.report.create
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,13 @@ class AssetsFragment : BaseImageFragment() {
 		fun newInstance() = AssetsFragment()
 	}
 	
+	lateinit var listener: CreateReportListener
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as CreateReportListener)
+	}
+	
 	override fun didAddImages(imagePaths: List<String>) {}
 	
 	override fun didRemoveImage(imagePath: String) {}
@@ -29,6 +37,20 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupImageRecycler()
+		
+		saveDraftButton.setOnClickListener {
+			setupNote()
+		}
+		
+		submitButton.setOnClickListener {
+			setupNote()
+		}
+	}
+	
+	private fun setupNote() {
+		noteEditText.text?.let {
+			listener.setAssets(it.toString())
+		}
 	}
 	
 	private fun setupImageRecycler() {
