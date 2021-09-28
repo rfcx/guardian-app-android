@@ -9,10 +9,12 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_damage.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.DamageScale
 
 class DamageFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
+	var selected: Int? = null
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -28,23 +30,32 @@ class DamageFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		nextStepButton.setOnClickListener {
-			listener.handleCheckClicked(StepCreateReport.ACTION.step)
+			selected?.let { value ->
+				listener.setDamage(value)
+				listener.handleCheckClicked(StepCreateReport.ACTION.step)
+			}
 		}
 		largeAreaImageView.setOnClickListener {
+			selected = DamageScale.LARGE.value
 			setOnSelect(it)
 		}
 		mediumTreesImageView.setOnClickListener {
+			selected = DamageScale.MEDIUM.value
 			setOnSelect(it)
 		}
 		smallNumberImageView.setOnClickListener {
+			selected = DamageScale.SMALL.value
 			setOnSelect(it)
 		}
 		noVisibleImageView.setOnClickListener {
+			selected = DamageScale.NO_VISIBLE.value
 			setOnSelect(it)
 		}
 	}
 	
 	private fun setOnSelect(selected: View) {
+		nextStepButton.isEnabled = true
+		
 		if (selected == largeAreaImageView) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
 		if (selected == mediumTreesImageView) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
 		if (selected == smallNumberImageView) smallNumberImageView.setBackgroundSelected() else smallNumberImageView.setBackgroundNoSelect()
