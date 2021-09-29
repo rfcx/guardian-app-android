@@ -11,14 +11,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.ResponseSyncWorker
+import org.rfcx.ranger.util.Screen
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	companion object {
-		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
-		private const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
+		const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		
+		const val RESULT_CODE = 20
+		const val EXTRA_SCREEN = "EXTRA_SCREEN"
 		
 		fun startActivity(context: Context, guardianName: String, guardianId: String) {
 			val intent = Intent(context, CreateReportActivity::class.java)
@@ -121,12 +125,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
-		finish()
 	}
 	
 	override fun onSaveDraftButtonClick() {
 		val response = _response ?: Response()
 		viewModel.saveResponseInLocalDb(response)
+		
+		val intent = Intent()
+		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
+		setResult(RESULT_CODE, intent)
+		finish()
 	}
 	
 	override fun onSubmitButtonClick() {
@@ -134,6 +142,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		response.submittedAt = Date()
 		viewModel.saveResponseInLocalDb(response)
 		ResponseSyncWorker.enqueue()
+		
+		val intent = Intent()
+		intent.putExtra(EXTRA_SCREEN, Screen.SUBMITTED_REPORTS.id)
+		setResult(RESULT_CODE, intent)
+		finish()
 	}
 	
 	private fun startFragment(fragment: Fragment) {

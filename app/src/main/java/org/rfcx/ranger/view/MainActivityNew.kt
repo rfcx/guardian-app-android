@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,13 +26,15 @@ import org.rfcx.ranger.view.map.MapFragment
 import org.rfcx.ranger.view.profile.ProfileFragment
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
+import org.rfcx.ranger.view.report.create.CreateReportActivity
+import org.rfcx.ranger.view.report.create.CreateReportActivity.Companion.RESULT_CODE
 import org.rfcx.ranger.view.report.draft.DraftReportsFragment
 import org.rfcx.ranger.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
-class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityListener {
+class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
@@ -47,6 +50,17 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 	}
 	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
+	private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+		if (it.resultCode == RESULT_CODE) {
+			showBottomAppBar()
+			supportFragmentManager.popBackStack()
+			
+			when (it.data?.getStringExtra(CreateReportActivity.EXTRA_SCREEN)) {
+				Screen.DRAFT_REPORTS.id -> menuDraftReports.performClick()
+				Screen.SUBMITTED_REPORTS.id -> menuSubmittedReports.performClick()
+			}
+		}
+	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -164,7 +178,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuDraftReports.menuSelected = false
 				menuProfile.menuSelected = false
 				
-				showMap()
+				showSubmittedReports()
 			}
 			menuDraftReports.id -> {
 				menuNewEvents.menuSelected = false
@@ -172,7 +186,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				menuDraftReports.menuSelected = true
 				menuProfile.menuSelected = false
 				
-				showAlerts()
+				showDraftReports()
 			}
 			
 			menuProfile.id -> {
@@ -200,10 +214,6 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		bottomBar.visibility = View.VISIBLE
 	}
 	
-	override fun alertScreen() {
-		menuDraftReports.performClick()
-	}
-	
 	override fun openGuardianEventDetail(item: EventGroup) {
 		hideBottomAppBar()
 		startFragment(GuardianEventDetailFragment.newInstance(item.guardianName, item.distance, item.events.size, item.events[0].guardianId), GuardianEventDetailFragment.tag)
@@ -227,6 +237,13 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 		if (mapFragment is MapFragment) {
 			mapFragment.moveToReportMarker(report)
 		}
+	}
+	
+	override fun openCreateReportActivity(guardianName: String, guardianId: String) {
+		val intent = Intent(this, CreateReportActivity::class.java)
+		intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_NAME, guardianName)
+		intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_ID, guardianId)
+		getResult.launch(intent)
 	}
 	
 	private fun setupFragments() {
@@ -263,7 +280,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				.commit()
 	}
 	
-	private fun showAlerts() {
+	private fun showDraftReports() {
 		showAboveAppbar(true)
 		this.currentFragment = getDraftReports()
 		supportFragmentManager.beginTransaction()
@@ -274,8 +291,8 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener, MainActivityL
 				.commit()
 	}
 	
-	private fun showMap() {
-		showAboveAppbar(false)
+	private fun showSubmittedReports() {
+		showAboveAppbar(true)
 		this.currentFragment = getSubmittedReports()
 		supportFragmentManager.beginTransaction()
 				.show(getSubmittedReports())
@@ -370,12 +387,8 @@ interface MainActivityEventListener {
 	fun hideBottomSheet()
 	fun hideBottomAppBar()
 	fun showBottomAppBar()
-	fun alertScreen()
 	fun onBackPressed()
 	fun openGuardianEventDetail(item: EventGroup)
 	fun moveMapIntoReportMarker(report: Report)
-}
-
-interface MainActivityListener {
-	fun alertScreen()
+	fun openCreateReportActivity(guardianName: String, guardianId: String)
 }

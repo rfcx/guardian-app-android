@@ -16,7 +16,6 @@ import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
-import org.rfcx.ranger.view.report.create.CreateReportActivity
 
 class GuardianEventDetailFragment : Fragment() {
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
@@ -61,7 +60,7 @@ class GuardianEventDetailFragment : Fragment() {
 			createReportButton.setOnClickListener {
 				name?.let { name ->
 					guardianId?.let { id ->
-						CreateReportActivity.startActivity(context, name, id)
+						listener.openCreateReportActivity(name, id)
 					}
 				}
 			}
