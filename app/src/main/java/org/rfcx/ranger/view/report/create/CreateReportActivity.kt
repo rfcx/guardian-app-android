@@ -123,7 +123,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	}
 	
 	override fun onSaveDraftButtonClick() {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		viewModel.saveResponseInLocalDb(response)
 	}
 	
 	override fun onSubmitButtonClick() {

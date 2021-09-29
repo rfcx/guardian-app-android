@@ -42,6 +42,7 @@ class AssetsFragment : BaseImageFragment() {
 		
 		saveDraftButton.setOnClickListener {
 			setupNote()
+			listener.onSaveDraftButtonClick()
 		}
 		
 		submitButton.setOnClickListener {
