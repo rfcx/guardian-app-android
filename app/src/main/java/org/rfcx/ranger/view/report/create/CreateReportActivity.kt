@@ -88,6 +88,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.investigatedAt = date
 		response.guardianId = guardianId ?: ""
+		response.guardianName = guardianName ?: ""
 		setResponse(response)
 	}
 	

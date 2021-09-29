@@ -75,7 +75,6 @@ class GuardianEventDetailFragment : Fragment() {
 		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
 			list = events.filter { e -> e.guardianId == guardianId }
 			eventItemAdapter.items = list.take(number ?: 0)
-			
 		})
 	}
 	

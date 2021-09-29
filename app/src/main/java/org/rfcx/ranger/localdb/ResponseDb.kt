@@ -1,6 +1,7 @@
 package org.rfcx.ranger.localdb
 
 import io.realm.Realm
+import io.realm.RealmResults
 import org.rfcx.ranger.entity.response.Response
 
 class ResponseDb(val realm: Realm) {
@@ -15,4 +16,7 @@ class ResponseDb(val realm: Realm) {
 	
 	fun unsentCount(): Long = realm.where(Response::class.java).notEqualTo("syncState", ReportDb.SENT).count()
 	
+	fun getAllResultsAsync(): RealmResults<Response> {
+		return realm.where(Response::class.java).findAllAsync()
+	}
 }

@@ -10,7 +10,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
-import java.util.*
 
 class DraftReportsAdapter(private val listener: ReportOnClickListener) : RecyclerView.Adapter<DraftReportsAdapter.ReportsViewHolder>() {
 	var items: List<Response> = arrayListOf()
