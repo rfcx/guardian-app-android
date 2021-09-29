@@ -20,7 +20,7 @@ class ResponseDb(val realm: Realm) {
 	fun lockUnsent(): List<Response> {
 		var unsentCopied: List<Response> = listOf()
 		realm.executeTransaction {
-			val unsent = it.where(Response::class.java).equalTo(Response.RESPONSE_SYNC_STATE, SyncState.UNSENT.value).findAll().createSnapshot()
+			val unsent = it.where(Response::class.java).equalTo(Response.RESPONSE_SYNC_STATE, SyncState.UNSENT.value).isNotNull(Response.RESPONSE_SUBMITTED_AT).findAll().createSnapshot()
 			unsentCopied = unsent.toList()
 			unsent.forEach { response ->
 				response.syncState = ReportDb.SENDING
