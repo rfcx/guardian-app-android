@@ -34,7 +34,7 @@ object UiModule {
 	}
 	
 	val reportsModule = module {
-		viewModel { CreateReportViewModel(get(), get()) }
+		viewModel { CreateReportViewModel(get()) }
 	}
 	
 	val mapModule = module {

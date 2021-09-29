@@ -22,7 +22,7 @@ open class Response(
 		var note: String? = null,
 		var guardianId: String = "",
 		var guardianName: String = "",
-		var syncState: Int = 0
+		var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
 	companion object {
 		const val TABLE_NAME = "Response"

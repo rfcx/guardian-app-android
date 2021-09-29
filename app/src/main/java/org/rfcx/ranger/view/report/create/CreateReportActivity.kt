@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.service.ResponseSyncWorker
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -132,7 +133,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
 		viewModel.saveResponseInLocalDb(response)
-		viewModel.createResponse(response)
+		ResponseSyncWorker.enqueue()
 	}
 	
 	private fun startFragment(fragment: Fragment) {

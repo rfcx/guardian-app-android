@@ -47,9 +47,6 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
 		
 		// In case any failed sending, we can resend
 		db.unlockSending()
-		if (unsent > 0) {
-			ReportSyncWorker.enqueue()
-		}
 	}
 	
 	companion object {
