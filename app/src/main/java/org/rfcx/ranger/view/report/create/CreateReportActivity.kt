@@ -129,6 +129,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
+		viewModel.saveResponseInLocalDb(response)
 		viewModel.createResponse(response)
 	}
 	

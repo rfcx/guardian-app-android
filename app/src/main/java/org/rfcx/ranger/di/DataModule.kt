@@ -58,10 +58,7 @@ import org.rfcx.ranger.data.remote.terms.TermsUseCase
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
-import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.localdb.ReportImageDb
-import org.rfcx.ranger.localdb.SiteGuardianDb
+import org.rfcx.ranger.localdb.*
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
@@ -148,6 +145,7 @@ object DataModule {
 		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
+		factory { ResponseDb(get()) }
 		factory { ReportImageDb(get()) }
 		factory { EventDb(get()) }
 		factory { WeeklySummaryData(get()) }
