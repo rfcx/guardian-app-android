@@ -28,7 +28,8 @@
 		android:layout_height="@dimen/scale_image_height"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_small"
-		android:background="@drawable/bg_grey_light"
+		android:scaleType="centerCrop"
+		android:src="@drawable/large"
 		app:layout_constraintEnd_toEndOf="@id/guide"
 		app:layout_constraintHorizontal_bias="1.0"
 		app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +54,8 @@
 		android:layout_marginStart="@dimen/margin_padding_small"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:background="@drawable/bg_grey_light"
+		android:scaleType="centerCrop"
+		android:src="@drawable/medium"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="@id/guide"
 		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView" />
@@ -76,6 +79,8 @@
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_small"
 		android:background="@drawable/bg_grey_light"
+		android:scaleType="centerCrop"
+		android:src="@drawable/small"
 		app:layout_constraintEnd_toEndOf="@id/guide"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/largeAreaTextView" />
@@ -99,20 +104,11 @@
 		android:layout_marginStart="@dimen/margin_padding_small"
 		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:background="@drawable/bg_grey_light"
+		android:scaleType="centerCrop"
+		android:src="@drawable/forest"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="@id/guide"
 		app:layout_constraintTop_toBottomOf="@id/mediumTreesTextView" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
-		style="@style/RangerText.SubTitle.Secondary"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/common_none"
-		android:textAllCaps="true"
-		app:layout_constraintBottom_toBottomOf="@id/noVisibleImageView"
-		app:layout_constraintEnd_toEndOf="@id/noVisibleImageView"
-		app:layout_constraintStart_toStartOf="@id/noVisibleImageView"
-		app:layout_constraintTop_toTopOf="@id/noVisibleImageView" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/noVisibleTextView"
