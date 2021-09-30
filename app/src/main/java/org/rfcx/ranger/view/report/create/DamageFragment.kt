@@ -67,7 +67,7 @@ class DamageFragment : Fragment() {
 	}
 	
 	private fun ImageView.setBackgroundNoSelect() {
-		this.setBackgroundResource(R.drawable.bg_grey_light)
+		this.setBackgroundResource(R.drawable.bg_circle_white)
 	}
 	
 	companion object {
