@@ -101,6 +101,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun setEvidence(evidence: List<Int>) {
 		val response = _response ?: Response()
+		response.evidences.clear()
 		response.evidences.addAll(evidence)
 		setResponse(response)
 	}

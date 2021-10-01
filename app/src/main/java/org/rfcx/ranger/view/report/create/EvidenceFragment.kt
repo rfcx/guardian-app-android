@@ -35,9 +35,19 @@ class EvidenceFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setOnChange()
+		setupEvidences()
 		
 		nextStepButton.setOnClickListener {
 			setSelect()
+		}
+	}
+	
+	private fun setupEvidences() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected.addAll(res.evidences)
+			nextStepButton.isEnabled = true
+			setSelected()
 		}
 	}
 	
@@ -69,6 +79,7 @@ class EvidenceFragment : Fragment() {
 	}
 	
 	private fun setEnabled() {
+		selected.clear()
 		nextStepButton.isEnabled = cutDownTreesCheckBox.isChecked ||
 				clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
 				loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
@@ -104,5 +115,34 @@ class EvidenceFragment : Fragment() {
 		
 		listener.setEvidence(selected)
 		listener.handleCheckClicked(StepCreateReport.SCALE.step)
+	}
+	
+	private fun setSelected() {
+		selected.forEach { id ->
+			if (id == EvidenceTypes.CUT_DOWN_TREES.value) {
+				cutDownTreesCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.CLEARED_AREAS.value) {
+				clearedAreasCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.LOGGING_EQUIPMENT.value) {
+				loggingEquipmentCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.LOGGERS_AT_SITE.value) {
+				loggersAtSiteCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.ILLEGAL_CAMPS.value) {
+				illegalCampsCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.FIRED_BURNED_AREAS.value) {
+				firesBurnedAreasCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.EVIDENCE_OF_POACHING.value) {
+				evidenceOfPoachingCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.NONE.value) {
+				noneCheckBox.isChecked = true
+			}
+		}
 	}
 }
