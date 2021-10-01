@@ -89,6 +89,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		this._response = response
 	}
 	
+	override fun getResponse(): Response? = _response
+	
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
@@ -180,6 +182,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 interface CreateReportListener {
 	fun setTitleToolbar(step: Int)
 	fun handleCheckClicked(step: Int)
+	
+	fun getResponse(): Response?
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
