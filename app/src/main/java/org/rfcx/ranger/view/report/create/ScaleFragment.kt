@@ -28,6 +28,8 @@ class ScaleFragment : Fragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		setupScale()
+		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->
 				listener.setScale(value)
@@ -43,6 +45,20 @@ class ScaleFragment : Fragment() {
 				R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
 				R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
 				R.id.noneRadioButton -> selected = LoggingScale.NONE.value
+			}
+		}
+	}
+	
+	private fun setupScale() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected = res.loggingScale
+			nextStepButton.isEnabled = selected != -1
+			when (selected) {
+				LoggingScale.NOT_SURE.value -> notSureRadioButton.isChecked = true
+				LoggingScale.SMALL.value -> smallRadioButton.isChecked = true
+				LoggingScale.LARGE.value -> largeRadioButton.isChecked = true
+				LoggingScale.NONE.value -> noneRadioButton.isChecked = true
 			}
 		}
 	}

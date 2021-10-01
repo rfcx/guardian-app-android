@@ -46,7 +46,7 @@ class EvidenceFragment : Fragment() {
 		val response = listener.getResponse()
 		response?.let { res ->
 			selected.addAll(res.evidences)
-			nextStepButton.isEnabled = true
+			nextStepButton.isEnabled = selected.isNotEmpty()
 			setSelected()
 		}
 	}
