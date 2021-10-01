@@ -47,7 +47,7 @@ enum class SyncState(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	NOT_SURE(0), SMALL(1), LARGE(2)
+	NOT_SURE(0), SMALL(1), LARGE(2), NONE(3)
 }
 
 enum class DamageScale(val value: Int) {

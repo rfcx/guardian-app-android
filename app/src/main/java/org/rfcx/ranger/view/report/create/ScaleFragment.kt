@@ -42,6 +42,7 @@ class ScaleFragment : Fragment() {
 				R.id.notSureRadioButton -> selected = LoggingScale.NOT_SURE.value
 				R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
 				R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
+				R.id.noneRadioButton -> selected = LoggingScale.NONE.value
 			}
 		}
 	}
