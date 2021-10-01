@@ -154,6 +154,27 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 				.replace(createReportContainer.id, fragment)
 				.commit()
 	}
+	
+	override fun onBackPressed() {
+		when (supportFragmentManager.findFragmentById(R.id.createReportContainer)) {
+			is EvidenceFragment -> {
+				handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+			}
+			is ScaleFragment -> {
+				handleCheckClicked(StepCreateReport.EVIDENCE.step)
+			}
+			is DamageFragment -> {
+				handleCheckClicked(StepCreateReport.SCALE.step)
+			}
+			is ActionFragment -> {
+				handleCheckClicked(StepCreateReport.DAMAGE.step)
+			}
+			is AssetsFragment -> {
+				handleCheckClicked(StepCreateReport.ACTION.step)
+			}
+			else -> super.onBackPressed()
+		}
+	}
 }
 
 interface CreateReportListener {

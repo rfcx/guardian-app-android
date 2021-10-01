@@ -45,8 +45,7 @@
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
+			android:padding="@dimen/margin_padding_normal"
 			android:text="@string/large"
 			android:textColor="@drawable/radio_text_color" />
 		
