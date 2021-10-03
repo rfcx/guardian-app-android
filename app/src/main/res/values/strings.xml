@@ -213,6 +213,7 @@
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
+	<string name="network_not_available">network not available</string>
 	
 	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>

@@ -13,6 +13,7 @@ import org.rfcx.ranger.entity.project.isGuest
 
 class ProjectAdapter(private val listener: ProjectOnClickListener) :
 		RecyclerView.Adapter<ProjectAdapter.ProjectSelectViewHolder>() {
+	var selectedPosition = -1
 	var items: List<Project> = arrayListOf()
 		set(value) {
 			field = value
@@ -28,8 +29,15 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 	override fun onBindViewHolder(holder: ProjectSelectViewHolder, position: Int) {
 		holder.bind(items[position])
 		
+		if (selectedPosition == position) {
+			holder.itemView.checkImageView.visibility = View.VISIBLE
+		} else {
+			holder.itemView.checkImageView.visibility = View.GONE
+		}
+		
 		holder.itemView.setOnClickListener {
 			if (items[position].permissions != Permissions.GUEST.value) {
+				selectedPosition = position
 				notifyDataSetChanged()
 				listener.onClicked(items[position])
 			}

@@ -42,15 +42,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setAlertsTextView" />
     
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/projectsRecycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/projectSwipeRefreshView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/margin_padding_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/submitProjectsButton"
-        app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription"/>
+        app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/projectsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submitProjectsButton"
@@ -65,16 +72,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    
-    <ProgressBar
-        android:id="@+id/projectsProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/projectsRecycler"
-        app:layout_constraintEnd_toEndOf="@id/projectsRecycler"
-        app:layout_constraintTop_toTopOf="@id/projectsRecycler"
-        app:layout_constraintStart_toStartOf="@id/projectsRecycler" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>
