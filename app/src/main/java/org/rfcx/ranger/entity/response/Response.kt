@@ -22,6 +22,7 @@ open class Response(
 		var note: String? = null,
 		var guardianId: String = "",
 		var guardianName: String = "",
+		var audioLocation: String? = null,
 		var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
 	companion object {
@@ -38,6 +39,7 @@ open class Response(
 		const val RESPONSE_NOTE = "note"
 		const val RESPONSE_GUARDIAN_ID = "guardianId"
 		const val RESPONSE_GUARDIAN_NAME = "guardianName"
+		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_SYNC_STATE = "syncState"
 	}
 }

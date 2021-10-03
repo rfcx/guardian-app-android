@@ -308,6 +308,8 @@ class RangerRealmMigration : RealmMigration {
 			addField(Response.RESPONSE_SYNC_STATE, Int::class.java)
 			addRealmListField(Response.RESPONSE_RESPONSE_ACTIONS, Int::class.java)
 					.setRequired(Response.RESPONSE_RESPONSE_ACTIONS, false)
+			addField(Response.RESPONSE_AUDIO_LOCATION, String::class.java)
+					.setRequired(Response.RESPONSE_AUDIO_LOCATION, false)
 			addField(Response.RESPONSE_NOTE, String::class.java)
 			addField(Response.RESPONSE_GUARDIAN_ID, String::class.java)
 					.setRequired(Response.RESPONSE_GUARDIAN_ID, true)

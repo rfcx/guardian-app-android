@@ -98,6 +98,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		_images = images
 	}
 	
+	override fun setAudio(audioPath: String?) {
+		val response = _response ?: Response()
+		response.audioLocation = audioPath
+		setResponse(response)
+	}
+	
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
@@ -209,6 +215,7 @@ interface CreateReportListener {
 	fun setAction(action: List<Int>)
 	fun setNotes(note: String)
 	fun setImages(images: List<String>)
+	fun setAudio(audioPath: String?)
 	
 	fun onSaveDraftButtonClick()
 	fun onSubmitButtonClick()
