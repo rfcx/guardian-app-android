@@ -132,7 +132,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		viewModel.fetchProjects()
 		setOnClickListener()
 		setObserver()
-		lastLocation?.let { viewModel.handledGuardians(it) }
 		setRecyclerView()
 	}
 	
@@ -185,6 +184,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
 		viewModel.setProjectSelected(project.id)
+		viewModel.loadStreams()
 		setProjectTitle(project.name)
 	}
 	
@@ -200,6 +200,19 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				projectSwipeRefreshView.isRefreshing = false
 				Toast.makeText(context, it.message
 						?: getString(R.string.something_is_wrong), Toast.LENGTH_LONG).show()
+			}, {
+			})
+		})
+		
+		viewModel.streams.observe(viewLifecycleOwner, { it ->
+			it.success({ list ->
+				val loc = Location(LocationManager.GPS_PROVIDER)
+				loc.latitude = 0.0
+				loc.longitude = 0.0
+				viewModel.handledStreams(lastLocation ?: loc, list)
+				nearbyAdapter.items = viewModel.nearbyGuardians
+				othersAdapter.items = viewModel.othersGuardians
+			}, {
 			}, {
 			})
 		})
