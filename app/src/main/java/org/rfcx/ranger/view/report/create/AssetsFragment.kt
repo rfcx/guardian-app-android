@@ -55,6 +55,17 @@ class AssetsFragment : BaseImageFragment() {
 	private fun setupAssets() {
 		val response = listener.getResponse()
 		response?.note?.let { note -> noteEditText.setText(note) }
+		
+		listener.getImages()
+		val images = listener.getImages()
+		if (images.isNotEmpty()) {
+			val pathList = mutableListOf<String>()
+			images.forEach {
+				pathList.add(it)
+			}
+			reportImageAdapter.addImages(pathList)
+			didAddImages(pathList)
+		}
 	}
 	
 	private fun saveAssets() {
