@@ -39,6 +39,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var guardianId: String? = null
 	
 	private var _response: Response? = null
+	private var _images: List<String> = listOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		guardianId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
 		
 		setupToolbar()
-		handleCheckClicked(1)
+		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 	}
 	
 	private fun setupToolbar() {
@@ -91,6 +92,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun getResponse(): Response? = _response
 	
+	override fun getImages(): List<String> = _images
+	
+	override fun setImages(images: List<String>) {
+		_images = images
+	}
+	
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
@@ -124,20 +131,28 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setResponse(response)
 	}
 	
-	override fun setAssets(note: String) {
+	override fun setNotes(note: String) {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
+		saveImages(response)
 	}
 	
 	override fun onSaveDraftButtonClick() {
 		val response = _response ?: Response()
 		viewModel.saveResponseInLocalDb(response)
+		saveImages(response)
 		
 		val intent = Intent()
 		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
 		setResult(RESULT_CODE, intent)
 		finish()
+	}
+	
+	private fun saveImages(response: Response) {
+		if (_images.isNotEmpty()) {
+			viewModel.saveImages(response, _images)
+		}
 	}
 	
 	override fun onSubmitButtonClick() {
@@ -185,13 +200,15 @@ interface CreateReportListener {
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?
+	fun getImages(): List<String>
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
 	fun setScale(scale: Int)
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
-	fun setAssets(note: String)
+	fun setNotes(note: String)
+	fun setImages(images: List<String>)
 	
 	fun onSaveDraftButtonClick()
 	fun onSubmitButtonClick()

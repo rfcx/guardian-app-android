@@ -41,20 +41,27 @@ class AssetsFragment : BaseImageFragment() {
 		view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		saveDraftButton.setOnClickListener {
-			setupNote()
+			saveAssets()
 			listener.onSaveDraftButtonClick()
 		}
 		
 		submitButton.setOnClickListener {
-			setupNote()
+			saveAssets()
 			listener.onSubmitButtonClick()
 		}
+		setupAssets()
 	}
 	
-	private fun setupNote() {
+	private fun setupAssets() {
+		val response = listener.getResponse()
+		response?.note?.let { note -> noteEditText.setText(note) }
+	}
+	
+	private fun saveAssets() {
 		noteEditText.text?.let {
-			listener.setAssets(it.toString())
+			listener.setNotes(it.toString())
 		}
+		listener.setImages(reportImageAdapter.getNewAttachImage())
 	}
 	
 	private fun setupImageRecycler() {
