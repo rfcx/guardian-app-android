@@ -32,6 +32,7 @@ class GuardianEventDetailFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
+		distance = arg.getDouble(ARG_DISTANCE)
 		guardianId = arg.getString(ARG_GUARDIAN_ID)
 		number = arg.getInt(ARG_NUMBER)
 	}

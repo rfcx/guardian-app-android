@@ -216,7 +216,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
 	override fun openGuardianEventDetail(item: EventGroup) {
 		hideBottomAppBar()
-//		startFragment(GuardianEventDetailFragment.newInstance(item.guardianName, item.distance, item.events.size, item.events[0].guardianId), GuardianEventDetailFragment.tag)
+		startFragment(GuardianEventDetailFragment.newInstance(item.streamName, item.distance, item.events.size, item.streamId), GuardianEventDetailFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "") {

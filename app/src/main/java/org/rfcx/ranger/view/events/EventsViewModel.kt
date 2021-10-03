@@ -122,7 +122,7 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 		list.forEach {
 			val events = listEvent.filter { list -> list.any { e -> e.streamId == it.id } }
 			val distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
-			groups.add(EventGroup(if (events.isEmpty()) listOf() else events[0], distance, it.name))
+			groups.add(EventGroup(if (events.isEmpty()) listOf() else events[0], distance, it.name, it.id))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
