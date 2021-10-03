@@ -133,6 +133,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun setAction(action: List<Int>) {
 		val response = _response ?: Response()
+		response.responseActions.clear()
 		response.responseActions.addAll(action)
 		setResponse(response)
 	}
