@@ -224,9 +224,9 @@
 	<!-- DraftReportsFragment -->
 	
 	<!-- SubmittedReportsFragment -->
-	<string name="unsent">Unsent</string>
+	<string name="unsent">Queued</string>
 	<string name="sending">Sending</string>
-	<string name="sent">Send</string>
+	<string name="sent">Sent</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>
