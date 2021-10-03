@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.api.events.GetEvents
+import org.rfcx.ranger.data.api.events.ResponseEvent
 import org.rfcx.ranger.data.api.project.GetProjectsUseCase
 import org.rfcx.ranger.data.api.project.ProjectResponse
 import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
@@ -29,7 +31,7 @@ import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
-class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase) : ViewModel() {
+class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
@@ -39,6 +41,8 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	fun getAlerts(): LiveData<List<Event>> {
 		return Transformations.map(eventDb.getAllResultsAsync().asLiveData()) { it }
 	}
+	
+	var listEvent: ArrayList<List<ResponseEvent>> = arrayListOf()
 	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
@@ -70,13 +74,27 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 		project?.serverId?.let { serverId ->
 			getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
 				override fun onSuccess(t: List<StreamResponse>) {
-					_streams.value = Result.Success(t)
+					loadEvents(t)
 				}
 				
 				override fun onError(e: Throwable) {
 					_streams.value = Result.Error(e)
 				}
 			}, StreamsRequestFactory(projects = listOf(serverId)))
+		}
+	}
+	
+	fun loadEvents(list: List<StreamResponse>) {
+		listEvent = arrayListOf()
+		list.forEach {
+			getEvents.execute(object : DisposableSingleObserver<List<ResponseEvent>>() {
+				override fun onSuccess(t: List<ResponseEvent>) {
+					listEvent.add(t)
+					_streams.value = Result.Success(list)
+				}
+				
+				override fun onError(e: Throwable) {}
+			}, it.id)
 		}
 	}
 	
@@ -102,8 +120,9 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 		
 		val groups = arrayListOf<EventGroup>()
 		list.forEach {
+			val events = listEvent.filter { list -> list.any { e -> e.streamId == it.id } }
 			val distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
-			groups.add(EventGroup(listOf(), distance, it.name))
+			groups.add(EventGroup(if (events.isEmpty()) listOf() else events[0], distance, it.name))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
@@ -135,7 +154,7 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 				distance = LatLng(eventsOfGuardian[0].latitude ?: 0.0, eventsOfGuardian[0].longitude
 						?: 0.0).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
 			}
-			groups.add(EventGroup(eventsOfGuardian, distance, shortName))
+//			groups.add(EventGroup(eventsOfGuardian, distance, shortName))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {

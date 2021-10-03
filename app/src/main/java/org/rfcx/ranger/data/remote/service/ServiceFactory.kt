@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
+import org.rfcx.ranger.data.api.events.EventsEndpoint
 import org.rfcx.ranger.data.api.project.GetProjectsEndpoint
 import org.rfcx.ranger.data.api.site.GetStreamsEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
@@ -42,6 +43,12 @@ object ServiceFactory {
 		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetStreamsEndpoint::class.java)
+	}
+	
+	fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
+		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(EventsEndpoint::class.java)
 	}
 	
 	fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
