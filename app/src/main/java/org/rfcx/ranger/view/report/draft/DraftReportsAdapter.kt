@@ -38,7 +38,7 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		
 		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
-			guardianName.text = report.guardianName
+			guardianName.text = report.streamName
 			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			
 			actionImageView.setOnClickListener {

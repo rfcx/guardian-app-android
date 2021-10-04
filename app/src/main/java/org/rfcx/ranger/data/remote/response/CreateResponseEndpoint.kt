@@ -23,5 +23,5 @@ data class CreateResponseRequest(
 		val damageScale: Int,
 		val responseActions: List<Int>,
 		val note: String,
-		val guardianId: String
+		val streamId: String
 )

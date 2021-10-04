@@ -35,8 +35,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private val viewModel: CreateReportViewModel by viewModel()
 	
 	private var passedChecks = ArrayList<Int>()
-	private var guardianName: String? = null
-	private var guardianId: String? = null
+	private var streamName: String? = null
+	private var streamId: String? = null
 	
 	private var _response: Response? = null
 	private var _images: List<String> = listOf()
@@ -44,8 +44,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_create_report)
-		guardianName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
-		guardianId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
+		streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
+		streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
 		
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
@@ -57,7 +57,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			subtitle = guardianName
+			subtitle = streamName
 		}
 	}
 	
@@ -107,8 +107,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
-		response.guardianId = guardianId ?: ""
-		response.guardianName = guardianName ?: ""
+		response.streamId = streamId ?: ""
+		response.streamName = streamName ?: ""
 		setResponse(response)
 	}
 	

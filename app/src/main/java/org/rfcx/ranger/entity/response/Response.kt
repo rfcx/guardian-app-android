@@ -20,8 +20,8 @@ open class Response(
 		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
 		var note: String? = null,
-		var guardianId: String = "",
-		var guardianName: String = "",
+		var streamId: String = "",
+		var streamName: String = "",
 		var audioLocation: String? = null,
 		var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
@@ -37,8 +37,8 @@ open class Response(
 		const val RESPONSE_DAMAGE_SCALE = "damageScale"
 		const val RESPONSE_RESPONSE_ACTIONS = "responseActions"
 		const val RESPONSE_NOTE = "note"
-		const val RESPONSE_GUARDIAN_ID = "guardianId"
-		const val RESPONSE_GUARDIAN_NAME = "guardianName"
+		const val RESPONSE_STREAM_ID = "streamId"
+		const val RESPONSE_STREAM_NAME = "streamName"
 		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_SYNC_STATE = "syncState"
 	}
@@ -88,7 +88,7 @@ fun Response.toCreateResponseRequest(): CreateResponseRequest =
 				this.damageScale,
 				this.responseActions,
 				this.note ?: "",
-				this.guardianId
+				this.streamId
 		)
 
 fun Response.syncImage() = when (this.syncState) {

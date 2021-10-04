@@ -45,7 +45,7 @@ class SubmittedReportsAdapter :
 			reportIdTextView.visibility = if (report.guid != null) View.VISIBLE else View.GONE
 			reportIdTextView.text = report.guid.toString()
 			syncLabelTextView.text = itemView.context.getString(report.syncLabel())
-			guardianName.text = report.guardianName
+			guardianName.text = report.streamName
 			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 		}
 	}

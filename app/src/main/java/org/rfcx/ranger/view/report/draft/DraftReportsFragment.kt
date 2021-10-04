@@ -47,6 +47,6 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	}
 	
 	override fun onClickedDelete(response: Response) {
-		Toast.makeText(context, "On click delete ${response.guardianName}", Toast.LENGTH_SHORT).show()
+		Toast.makeText(context, "On click delete ${response.streamName}", Toast.LENGTH_SHORT).show()
 	}
 }
