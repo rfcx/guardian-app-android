@@ -24,6 +24,8 @@ class AlertDb(private val realm: Realm) {
 		}
 	}
 	
+	fun getAlertCount(streamId: String): Long = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).count()
+	
 	fun getAllResultsAsync(): RealmResults<Alert> {
 		return realm.where(Alert::class.java).findAllAsync()
 	}

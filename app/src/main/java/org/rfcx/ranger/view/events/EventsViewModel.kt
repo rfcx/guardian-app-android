@@ -41,10 +41,6 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	private val _streams = MutableLiveData<Result<List<StreamResponse>>>()
 	val streams: LiveData<Result<List<StreamResponse>>> get() = _streams
 	
-	fun getAlerts(): LiveData<List<Event>> {
-		return Transformations.map(eventDb.getAllResultsAsync().asLiveData()) { it }
-	}
-	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
 	}
@@ -58,6 +54,8 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 		loadAlerts()
 		loadStreams()
 	}
+	
+	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
 	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
@@ -158,6 +156,8 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 			override fun onError(e: Throwable) {}
 		}, requestFactory)
 	}
+	
+	fun distance(lastLocation: Location, loc: Location): String = LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()
 	
 	companion object {
 		const val LIMIT_EVENTS = 100

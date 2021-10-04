@@ -61,11 +61,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		const val tag = "EventsFragment"
 		
 		private const val COUNT = "count"
+		private const val COUNT_EVENTS = "count.events"
 		private const val CLUSTER = "cluster"
 		private const val BUILDING = "building"
 		private const val POINT_COUNT = "point_count"
 		private const val SOURCE_ALERT = "source.alert"
 		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
+		private const val PROPERTY_MARKER_ALERT_DISTANCE = "alert.distance"
+		private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
+		private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
 		private const val UN_CLUSTERED_POINTS = "un-clustered-points"
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
@@ -219,7 +223,20 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
 			val features = streams.map {
-				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.name))
+				val loc = Location(LocationManager.GPS_PROVIDER)
+				loc.latitude = it.latitude
+				loc.longitude = it.longitude
+				
+				val last = Location(LocationManager.GPS_PROVIDER)
+				last.latitude = lastLocation?.latitude ?: 0.0
+				last.longitude = lastLocation?.longitude ?: 0.0
+				
+				val properties = mapOf(
+						Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
+						Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
+						Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
+						Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
+				)
 				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
 			}
 			alertFeatures = FeatureCollection.fromFeatures(features)
@@ -236,7 +253,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun invoke(guardian: EventGroup) {
-		listener.openGuardianEventDetail(guardian)
+		listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.events.size, guardian.streamId)
 	}
 	
 	private fun setupToolbar() {
@@ -293,14 +310,22 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				val features = clusterLeavesFeatureCollection?.features()
 				if (clusterLeavesFeatureCollection != null) {
 					if (features?.groupBy { it }?.size == 1) {
-						Toast.makeText(context, features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString, Toast.LENGTH_SHORT).show()
+						val name = features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString
+						val distance = features[0].getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
+						val eventSize = features[0].getProperty(PROPERTY_MARKER_ALERT_COUNT).asString
+						val streamId = features[0].getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
+						listener.openGuardianEventDetail(name, distance.toDouble(), eventSize.toInt(), streamId)
 					} else {
 						moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
 					}
 				}
 			} else {
 				val selectedFeature = alertFeatures[0]
-				Toast.makeText(context, selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString, Toast.LENGTH_SHORT).show()
+				val name = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString
+				val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
+				val eventSize = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_COUNT).asString
+				val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
+				listener.openGuardianEventDetail(name, distance.toDouble(), eventSize.toInt(), streamId)
 			}
 			return true
 		}
@@ -344,9 +369,19 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			style.addLayerBelow(circles, BUILDING)
 		}
 		
+		val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
+		eventsSize.setProperties(
+				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
+				PropertyFactory.textSize(12f),
+				PropertyFactory.textColor(Color.WHITE),
+				PropertyFactory.textIgnorePlacement(true),
+				PropertyFactory.textAllowOverlap(true)
+		)
+		style.addLayer(eventsSize)
+		
 		val count = SymbolLayer(COUNT, SOURCE_ALERT)
 		count.setProperties(
-				PropertyFactory.textField("0"),
+				PropertyFactory.textField(Expression.toString(Expression.get(POINT_COUNT))),
 				PropertyFactory.textSize(12f),
 				PropertyFactory.textColor(Color.WHITE),
 				PropertyFactory.textIgnorePlacement(true),
@@ -355,7 +390,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		style.addLayer(count)
 		
 		val unClustered = CircleLayer(UN_CLUSTERED_POINTS, SOURCE_ALERT)
-		unClustered.setProperties(PropertyFactory.circleColor(Color.parseColor("#2FB04A")), PropertyFactory.circleRadius(10f), PropertyFactory.circleBlur(1f))
+		val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() == "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
+		unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(10f))
 		unClustered.setFilter(Expression.neq(Expression.get(CLUSTER), Expression.literal(true)))
 		style.addLayerBelow(unClustered, BUILDING)
 	}
