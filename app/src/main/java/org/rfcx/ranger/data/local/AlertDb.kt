@@ -1,0 +1,29 @@
+package org.rfcx.ranger.data.local
+
+import io.realm.Realm
+import org.rfcx.ranger.data.api.events.ResponseEvent
+import org.rfcx.ranger.data.api.events.toAlert
+import org.rfcx.ranger.entity.alert.Alert
+
+class AlertDb(private val realm: Realm) {
+	fun getCount(): Long {
+		return realm.where(Alert::class.java).count()
+	}
+	
+	fun insertAlert(response: ResponseEvent) {
+		realm.executeTransaction {
+			val alert =
+					it.where(Alert::class.java)
+							.equalTo(Alert.ALERT_SERVER_ID, response.id)
+							.findFirst()
+			
+			if (alert == null) {
+				val alertObj = response.toAlert()
+				val id = (it.where(Alert::class.java).max(Alert.ALERT_ID)
+						?.toInt() ?: 0) + 1
+				alertObj.id = id
+				it.insert(alertObj)
+			}
+		}
+	}
+}

@@ -17,6 +17,7 @@ import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
 import org.rfcx.ranger.data.api.site.GetStreamsUseCase
 import org.rfcx.ranger.data.api.site.StreamResponse
 import org.rfcx.ranger.data.api.site.StreamsRequestFactory
+import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.ProjectDb
@@ -31,7 +32,7 @@ import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
-class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val alertDb: AlertDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
@@ -91,6 +92,9 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 				override fun onSuccess(t: List<ResponseEvent>) {
 					listEvent.add(t)
 					_streams.value = Result.Success(list)
+					t.forEach { res ->
+						alertDb.insertAlert(res)
+					}
 				}
 				
 				override fun onError(e: Throwable) {}
@@ -123,38 +127,6 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 			val events = listEvent.filter { list -> list.any { e -> e.streamId == it.id } }
 			val distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
 			groups.add(EventGroup(if (events.isEmpty()) listOf() else events[0], distance, it.name, it.id))
-		}
-		groups.sortBy { g -> g.distance }
-		groups.forEach {
-			if (it.distance >= 2000) {
-				othersGuardians.add(it)
-			} else {
-				nearbyGuardians.add(it)
-			}
-		}
-		othersGuardians.sortByDescending { g -> g.events.size }
-	}
-	
-	fun handledGuardians(lastLocation: Location) {
-		val events = eventDb.getEvents()
-		othersGuardians.clear()
-		nearbyGuardians.clear()
-		
-		// find main Guardian
-		val mainGroups = arrayListOf<String>()
-		events.distinctBy { it.guardianId }.mapTo(mainGroups, { it.guardianId })
-		
-		// split group
-		val groups = arrayListOf<EventGroup>()
-		mainGroups.forEach { guid ->
-			val eventsOfGuardian = events.filter { it.guardianId == guid }
-			val shortName = eventsOfGuardian.first { it.guardianId == guid }.guardianName
-			var distance = 0.0
-			if (eventsOfGuardian.isNotEmpty()) {
-				distance = LatLng(eventsOfGuardian[0].latitude ?: 0.0, eventsOfGuardian[0].longitude
-						?: 0.0).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
-			}
-//			groups.add(EventGroup(eventsOfGuardian, distance, shortName))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {

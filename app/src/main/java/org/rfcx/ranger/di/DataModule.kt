@@ -162,6 +162,7 @@ object DataModule {
 		factory { ResponseDb(get()) }
 		factory { ReportImageDb(get()) }
 		factory { EventDb(get()) }
+		factory { AlertDb(get()) }
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get(), get()) }
 		factory { Preferences.getInstance(androidContext()) }

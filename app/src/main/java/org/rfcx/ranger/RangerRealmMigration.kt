@@ -4,6 +4,9 @@ import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
 import org.rfcx.ranger.entity.CachedEndpoint
+import org.rfcx.ranger.entity.alert.Alert
+import org.rfcx.ranger.entity.alert.Classification
+import org.rfcx.ranger.entity.alert.Incident
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.response.Response
@@ -315,6 +318,34 @@ class RangerRealmMigration : RealmMigration {
 					.setRequired(Response.RESPONSE_GUARDIAN_ID, true)
 			addField(Response.RESPONSE_GUARDIAN_NAME, String::class.java)
 					.setRequired(Response.RESPONSE_GUARDIAN_NAME, true)
+		}
+		
+		val classification = realm.schema.create(Classification.TABLE_NAME)
+		classification.apply {
+			addField(Classification.CLASSIFICATION_VALUE, String::class.java)
+			addField(Classification.CLASSIFICATION_TITLE, String::class.java)
+		}
+		
+		val incident = realm.schema.create(Incident.TABLE_NAME)
+		incident.apply {
+			addField(Incident.INCIDENT_ID, String::class.java)
+			addField(Incident.INCIDENT_CLOSED_AT, Date::class.java)
+					.setRequired(Incident.INCIDENT_CLOSED_AT, false)
+			addField(Incident.INCIDENT_CREATED_AT, Date::class.java)
+		}
+		
+		val alert = realm.schema.create(Alert.TABLE_NAME)
+		alert.apply {
+			addField(Alert.ALERT_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Alert.ALERT_SERVER_ID, String::class.java)
+			addField(Alert.ALERT_NAME, String::class.java)
+			addField(Alert.ALERT_STREAM_ID, String::class.java)
+			addField(Alert.ALERT_PROJECT_ID, String::class.java)
+			addField(Alert.ALERT_CREATED_AT, Date::class.java)
+			addField(Alert.ALERT_START, Date::class.java)
+			addField(Alert.ALERT_END, Date::class.java)
+			addRealmObjectField(Alert.ALERT_CLASSIFICATION, classification)
+			addRealmObjectField(Alert.ALERT_INCIDENT, incident)
 		}
 	}
 	
