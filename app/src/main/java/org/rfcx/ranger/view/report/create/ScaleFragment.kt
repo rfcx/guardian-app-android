@@ -53,7 +53,7 @@ class ScaleFragment : Fragment() {
 		val response = listener.getResponse()
 		response?.let { res ->
 			selected = res.loggingScale
-			nextStepButton.isEnabled = selected != -1
+			nextStepButton.isEnabled = selected != LoggingScale.DEFAULT.value
 			when (selected) {
 				LoggingScale.NOT_SURE.value -> notSureRadioButton.isChecked = true
 				LoggingScale.SMALL.value -> smallRadioButton.isChecked = true

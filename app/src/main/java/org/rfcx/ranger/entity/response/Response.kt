@@ -16,8 +16,8 @@ open class Response(
 		var startedAt: Date = Date(),
 		var submittedAt: Date? = null,
 		var evidences: RealmList<Int> = RealmList(),
-		var loggingScale: Int = -1,
-		var damageScale: Int = -1,
+		var loggingScale: Int = LoggingScale.DEFAULT.value,
+		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
 		var note: String? = null,
 		var guardianId: String = "",
@@ -49,11 +49,11 @@ enum class SyncState(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	NOT_SURE(0), SMALL(1), LARGE(2), NONE(3)
+	DEFAULT(-1), NONE(0), NOT_SURE(1), SMALL(2), LARGE(3),
 }
 
 enum class DamageScale(val value: Int) {
-	NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
+	DEFAULT(-1), NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
 }
 
 enum class EvidenceTypes(val value: Int) {
