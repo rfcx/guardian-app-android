@@ -58,7 +58,7 @@ class DamageFragment : Fragment() {
 		val response = listener.getResponse()
 		response?.let { res ->
 			selected = res.damageScale
-			nextStepButton.isEnabled = res.damageScale != -1
+			nextStepButton.isEnabled = res.damageScale != DamageScale.DEFAULT.value
 			
 			if (selected == DamageScale.LARGE.value) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
 			if (selected == DamageScale.MEDIUM.value) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
@@ -81,7 +81,7 @@ class DamageFragment : Fragment() {
 	}
 	
 	private fun ImageView.setBackgroundNoSelect() {
-		this.setBackgroundResource(R.drawable.bg_grey_light)
+		this.setBackgroundResource(R.drawable.bg_circle_white)
 	}
 	
 	companion object {

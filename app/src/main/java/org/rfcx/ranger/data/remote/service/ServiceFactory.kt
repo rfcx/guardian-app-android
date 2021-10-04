@@ -52,7 +52,7 @@ object ServiceFactory {
 	}
 	
 	fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
-		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(CreateResponseEndpoint::class.java)
 	}

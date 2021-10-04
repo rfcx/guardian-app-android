@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +58,7 @@ class InvestigationTimestampFragment : Fragment() {
 			calendar.time = res.investigatedAt
 			nextStepButton.isEnabled = true
 			
-			if (calendar.getDay() == today.getDay() && calendar.getMonth() == today.getMonth() && calendar.getYear() == today.getYear()) {
+			if (DateUtils.isToday(res.investigatedAt.time)) {
 				todayRadioButton.isChecked = true
 			} else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
 				yesterdayRadioButton.isChecked = true
