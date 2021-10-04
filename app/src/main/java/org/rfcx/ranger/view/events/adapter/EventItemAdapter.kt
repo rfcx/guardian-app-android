@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_event.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
-import java.util.*
 
 class EventItemAdapter : RecyclerView.Adapter<EventItemAdapter.EventItemViewHolder>() {
-	var items: List<Event> = arrayListOf()
+	var items: List<Alert> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -34,9 +33,9 @@ class EventItemAdapter : RecyclerView.Adapter<EventItemAdapter.EventItemViewHold
 		private val typeTextView = itemView.typeTextView
 		private val dateTextView = itemView.dateTextView
 		
-		fun bind(item: Event) {
-			dateTextView.text = item.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
-			typeTextView.text = item.label
+		fun bind(item: Alert) {
+			dateTextView.text = item.createdAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+			typeTextView.text = item.classification?.title
 		}
 	}
 }

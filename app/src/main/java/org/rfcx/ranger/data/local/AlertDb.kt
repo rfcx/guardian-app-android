@@ -1,15 +1,12 @@
 package org.rfcx.ranger.data.local
 
 import io.realm.Realm
+import io.realm.RealmResults
 import org.rfcx.ranger.data.api.events.ResponseEvent
 import org.rfcx.ranger.data.api.events.toAlert
 import org.rfcx.ranger.entity.alert.Alert
 
 class AlertDb(private val realm: Realm) {
-	fun getCount(): Long {
-		return realm.where(Alert::class.java).count()
-	}
-	
 	fun insertAlert(response: ResponseEvent) {
 		realm.executeTransaction {
 			val alert =
@@ -25,5 +22,9 @@ class AlertDb(private val realm: Realm) {
 				it.insert(alertObj)
 			}
 		}
+	}
+	
+	fun getAllResultsAsync(): RealmResults<Alert> {
+		return realm.where(Alert::class.java).findAllAsync()
 	}
 }

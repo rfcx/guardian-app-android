@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
@@ -26,7 +26,7 @@ class GuardianEventDetailFragment : Fragment() {
 	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
-	var list = listOf<Event>()
+	var list = listOf<Alert>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -73,8 +73,8 @@ class GuardianEventDetailFragment : Fragment() {
 	
 	private fun setObserve() {
 		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
-			list = events.filter { e -> e.guardianId == guardianId }
-			eventItemAdapter.items = list.take(number ?: 0)
+			list = events.filter { e -> e.streamId == guardianId }
+			eventItemAdapter.items = list
 		})
 	}
 	
