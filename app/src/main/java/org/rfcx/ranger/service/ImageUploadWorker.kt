@@ -42,7 +42,7 @@ class ImageUploadWorker(context: Context, params: WorkerParameters)
 					Log.d(TAG, "doWork: failed ${image.id}")
 					if (result.error is FileNotFoundException) {
 						// remove this attachment if file has deleted
-						db.delete(image.id)
+						db.deleteImages(image.id)
 					} else {
 						db.markUnsent(image.id)
 						someFailed = true

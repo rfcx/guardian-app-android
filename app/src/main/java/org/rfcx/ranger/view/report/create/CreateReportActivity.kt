@@ -10,14 +10,19 @@ import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.service.ResponseSyncWorker
+import org.rfcx.ranger.util.Screen
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	companion object {
-		private const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
-		private const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
+		const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		
+		const val RESULT_CODE = 20
+		const val EXTRA_SCREEN = "EXTRA_SCREEN"
 		
 		fun startActivity(context: Context, guardianName: String, guardianId: String) {
 			val intent = Intent(context, CreateReportActivity::class.java)
@@ -34,6 +39,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var guardianId: String? = null
 	
 	private var _response: Response? = null
+	private var _images: List<String> = listOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -42,7 +48,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		guardianId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
 		
 		setupToolbar()
-		handleCheckClicked(1)
+		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 	}
 	
 	private fun setupToolbar() {
@@ -84,15 +90,31 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		this._response = response
 	}
 	
+	override fun getResponse(): Response? = _response
+	
+	override fun getImages(): List<String> = _images
+	
+	override fun setImages(images: List<String>) {
+		_images = images
+	}
+	
+	override fun setAudio(audioPath: String?) {
+		val response = _response ?: Response()
+		response.audioLocation = audioPath
+		setResponse(response)
+	}
+	
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
 		response.guardianId = guardianId ?: ""
+		response.guardianName = guardianName ?: ""
 		setResponse(response)
 	}
 	
 	override fun setEvidence(evidence: List<Int>) {
 		val response = _response ?: Response()
+		response.evidences.clear()
 		response.evidences.addAll(evidence)
 		setResponse(response)
 	}
@@ -111,25 +133,45 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun setAction(action: List<Int>) {
 		val response = _response ?: Response()
+		response.responseActions.clear()
 		response.responseActions.addAll(action)
 		setResponse(response)
 	}
 	
-	override fun setAssets(note: String) {
+	override fun setNotes(note: String) {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
-		finish()
+		saveImages(response)
 	}
 	
 	override fun onSaveDraftButtonClick() {
-		TODO("Not yet implemented")
+		val response = _response ?: Response()
+		viewModel.saveResponseInLocalDb(response)
+		saveImages(response)
+		
+		val intent = Intent()
+		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
+		setResult(RESULT_CODE, intent)
+		finish()
+	}
+	
+	private fun saveImages(response: Response) {
+		if (_images.isNotEmpty()) {
+			viewModel.saveImages(response, _images)
+		}
 	}
 	
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
-		viewModel.createResponse(response)
+		viewModel.saveResponseInLocalDb(response)
+		ResponseSyncWorker.enqueue()
+		
+		val intent = Intent()
+		intent.putExtra(EXTRA_SCREEN, Screen.SUBMITTED_REPORTS.id)
+		setResult(RESULT_CODE, intent)
+		finish()
 	}
 	
 	private fun startFragment(fragment: Fragment) {
@@ -137,18 +179,44 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 				.replace(createReportContainer.id, fragment)
 				.commit()
 	}
+	
+	override fun onBackPressed() {
+		when (supportFragmentManager.findFragmentById(R.id.createReportContainer)) {
+			is EvidenceFragment -> {
+				handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+			}
+			is ScaleFragment -> {
+				handleCheckClicked(StepCreateReport.EVIDENCE.step)
+			}
+			is DamageFragment -> {
+				handleCheckClicked(StepCreateReport.SCALE.step)
+			}
+			is ActionFragment -> {
+				handleCheckClicked(StepCreateReport.DAMAGE.step)
+			}
+			is AssetsFragment -> {
+				handleCheckClicked(StepCreateReport.ACTION.step)
+			}
+			else -> super.onBackPressed()
+		}
+	}
 }
 
 interface CreateReportListener {
 	fun setTitleToolbar(step: Int)
 	fun handleCheckClicked(step: Int)
 	
+	fun getResponse(): Response?
+	fun getImages(): List<String>
+	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
 	fun setScale(scale: Int)
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
-	fun setAssets(note: String)
+	fun setNotes(note: String)
+	fun setImages(images: List<String>)
+	fun setAudio(audioPath: String?)
 	
 	fun onSaveDraftButtonClick()
 	fun onSubmitButtonClick()

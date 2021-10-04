@@ -51,6 +51,20 @@ class DamageFragment : Fragment() {
 			selected = DamageScale.NO_VISIBLE.value
 			setOnSelect(it)
 		}
+		setupDamageScale()
+	}
+	
+	private fun setupDamageScale() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected = res.damageScale
+			nextStepButton.isEnabled = res.damageScale != DamageScale.DEFAULT.value
+			
+			if (selected == DamageScale.LARGE.value) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
+			if (selected == DamageScale.MEDIUM.value) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
+			if (selected == DamageScale.SMALL.value) smallNumberImageView.setBackgroundSelected() else smallNumberImageView.setBackgroundNoSelect()
+			if (selected == DamageScale.NO_VISIBLE.value) noVisibleImageView.setBackgroundSelected() else noVisibleImageView.setBackgroundNoSelect()
+		}
 	}
 	
 	private fun setOnSelect(selected: View) {

@@ -6,7 +6,11 @@ import org.koin.dsl.module
 import org.rfcx.ranger.view.LocationTrackingViewModel
 import org.rfcx.ranger.view.MainActivityViewModel
 import org.rfcx.ranger.view.events.EventsViewModel
-import org.rfcx.ranger.view.login.*
+import org.rfcx.ranger.view.events.detail.GuardianEventDetailViewModel
+import org.rfcx.ranger.view.login.LoginViewModel
+import org.rfcx.ranger.view.login.SetProjectsViewModel
+import org.rfcx.ranger.view.login.SetUserNameViewModel
+import org.rfcx.ranger.view.login.TermsAndServiceViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
@@ -26,10 +30,11 @@ object UiModule {
 	
 	val eventsModule = module {
 		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get()) }
+		viewModel { GuardianEventDetailViewModel(get()) }
 	}
 	
 	val reportsModule = module {
-		viewModel { CreateReportViewModel(get()) }
+		viewModel { CreateReportViewModel(get(), get()) }
 	}
 	
 	val mapModule = module {

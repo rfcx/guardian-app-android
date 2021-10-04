@@ -10,22 +10,23 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
-import org.rfcx.ranger.view.events.adapter.EventModel
-import org.rfcx.ranger.view.report.create.CreateReportActivity
 
 class GuardianEventDetailFragment : Fragment() {
+	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
 	private val eventItemAdapter by lazy { EventItemAdapter() }
+	
 	var name: String? = null
 	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
-	
-	val list = listOf<EventModel>()
+	var list = listOf<Event>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -49,6 +50,7 @@ class GuardianEventDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupToolbar()
+		setObserve()
 		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -58,7 +60,7 @@ class GuardianEventDetailFragment : Fragment() {
 			createReportButton.setOnClickListener {
 				name?.let { name ->
 					guardianId?.let { id ->
-						CreateReportActivity.startActivity(context, name, id)
+						listener.openCreateReportActivity(name, id)
 					}
 				}
 			}
@@ -66,6 +68,13 @@ class GuardianEventDetailFragment : Fragment() {
 		
 		guardianNameTextView.text = name
 		distanceTextView.text = distance?.setFormatLabel()
+	}
+	
+	private fun setObserve() {
+		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
+			list = events.filter { e -> e.guardianId == guardianId }
+			eventItemAdapter.items = list.take(number ?: 0)
+		})
 	}
 	
 	private fun setupToolbar() {
