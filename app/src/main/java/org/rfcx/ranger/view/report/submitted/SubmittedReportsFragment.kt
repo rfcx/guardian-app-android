@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.report.submitted
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,9 +31,11 @@ class SubmittedReportsFragment : Fragment() {
 		setObserve()
 	}
 	
+	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
 			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
+			reportsAdapter.notifyDataSetChanged()
 		})
 	}
 	

@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_action.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Actions
-import org.rfcx.ranger.entity.response.EvidenceTypes
 import java.util.*
 
 class ActionFragment : Fragment() {
@@ -25,6 +24,7 @@ class ActionFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setOnChange()
+		setupAction()
 		
 		nextStepButton.setOnClickListener {
 			setSelect()
@@ -65,6 +65,7 @@ class ActionFragment : Fragment() {
 	}
 	
 	private fun setEnabled() {
+		selected.clear()
 		nextStepButton.isEnabled = collectedEvidenceCheckBox.isChecked ||
 				issueWarningCheckBox.isChecked || confiscatedEquipmentCheckBox.isChecked ||
 				issueFineCheckBox.isChecked || arrestsCheckBox.isChecked ||
@@ -100,6 +101,29 @@ class ActionFragment : Fragment() {
 		
 		listener.setAction(selected)
 		listener.handleCheckClicked(StepCreateReport.ASSETS.step)
+	}
+	
+	private fun setupAction() {
+		val actions = listener.getResponse()?.responseActions?.toList()
+		actions?.let {
+			selected.addAll(it)
+			if (actions.isNotEmpty()) setupCheckBox()
+		}
+	}
+	
+	private fun setupCheckBox() {
+		selected.forEach { value ->
+			when (value) {
+				Actions.COLLECTED_EVIDENCE.value -> collectedEvidenceCheckBox.isChecked = true
+				Actions.ISSUE_A_WARNING.value -> issueWarningCheckBox.isChecked = true
+				Actions.CONFISCATED_EQUIPMENT.value -> confiscatedEquipmentCheckBox.isChecked = true
+				Actions.ISSUE_A_FINE.value -> issueFineCheckBox.isChecked = true
+				Actions.ARRESTS.value -> arrestsCheckBox.isChecked = true
+				Actions.PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT.value -> planningSecurityCheckBox.isChecked = true
+				Actions.OTHER.value -> otherCheckBox.isChecked = true
+				Actions.NONE.value -> noneCheckBox.isChecked = true
+			}
+		}
 	}
 	
 	companion object {

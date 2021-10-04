@@ -16,13 +16,14 @@ open class Response(
 		var startedAt: Date = Date(),
 		var submittedAt: Date? = null,
 		var evidences: RealmList<Int> = RealmList(),
-		var loggingScale: Int = 0,
-		var damageScale: Int = 0,
+		var loggingScale: Int = LoggingScale.DEFAULT.value,
+		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
 		var note: String? = null,
 		var guardianId: String = "",
 		var guardianName: String = "",
-		var syncState: Int = 0
+		var audioLocation: String? = null,
+		var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
 	companion object {
 		const val TABLE_NAME = "Response"
@@ -38,6 +39,7 @@ open class Response(
 		const val RESPONSE_NOTE = "note"
 		const val RESPONSE_GUARDIAN_ID = "guardianId"
 		const val RESPONSE_GUARDIAN_NAME = "guardianName"
+		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_SYNC_STATE = "syncState"
 	}
 }
@@ -47,11 +49,11 @@ enum class SyncState(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	NOT_SURE(0), SMALL(1), LARGE(2)
+	DEFAULT(-1), NONE(0), NOT_SURE(1), SMALL(2), LARGE(3),
 }
 
 enum class DamageScale(val value: Int) {
-	NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
+	DEFAULT(-1), NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
 }
 
 enum class EvidenceTypes(val value: Int) {
