@@ -4,6 +4,8 @@ import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
 import org.rfcx.ranger.entity.CachedEndpoint
+import org.rfcx.ranger.entity.ProjectInStream
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.alert.Classification
 import org.rfcx.ranger.entity.alert.Incident
@@ -346,6 +348,22 @@ class RangerRealmMigration : RealmMigration {
 			addField(Alert.ALERT_END, Date::class.java)
 			addRealmObjectField(Alert.ALERT_CLASSIFICATION, classification)
 			addRealmObjectField(Alert.ALERT_INCIDENT, incident)
+		}
+		
+		val project = realm.schema.create(ProjectInStream.TABLE_NAME)
+		project.apply {
+			addField(ProjectInStream.PROJECT_IN_STREAM_ID, String::class.java)
+			addField(ProjectInStream.PROJECT_IN_STREAM_NAME, String::class.java)
+		}
+		
+		val stream = realm.schema.create(Stream.TABLE_NAME)
+		stream.apply {
+			addField(Stream.STREAM_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Stream.STREAM_SERVER_ID, String::class.java)
+			addField(Stream.STREAM_NAME, String::class.java)
+			addField(Stream.STREAM_LATITUDE, Double::class.java)
+			addField(Stream.STREAM_LONGITUDE, Double::class.java)
+			addRealmObjectField(Stream.STREAM_PROJECT, project)
 		}
 	}
 	

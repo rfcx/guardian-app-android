@@ -24,15 +24,17 @@ import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.localdb.StreamDb
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
-class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val alertDb: AlertDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val alertDb: AlertDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
@@ -41,6 +43,10 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	
 	fun getAlerts(): LiveData<List<Event>> {
 		return Transformations.map(eventDb.getAllResultsAsync().asLiveData()) { it }
+	}
+	
+	fun getStreamsFromLocal(): LiveData<List<Stream>> {
+		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
 	var listEvent: ArrayList<List<ResponseEvent>> = arrayListOf()
@@ -76,6 +82,9 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 			getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
 				override fun onSuccess(t: List<StreamResponse>) {
 					loadEvents(t)
+					t.forEach { res ->
+						streamDb.insertStream(res)
+					}
 				}
 				
 				override fun onError(e: Throwable) {

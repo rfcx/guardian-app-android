@@ -217,12 +217,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			})
 		})
 		
-		// observe alerts
-		viewModel.getAlerts().observe(viewLifecycleOwner, { alerts ->
-			val features = alerts.map {
-				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.guardianName))
-				Feature.fromGeometry(Point.fromLngLat(it.longitude ?: 0.0, it.latitude
-						?: 0.0), properties.toJsonObject())
+		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
+			val features = streams.map {
+				val properties = mapOf(Pair(PROPERTY_MARKER_ALERT_SITE, it.name))
+				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
 			}
 			alertFeatures = FeatureCollection.fromFeatures(features)
 			refreshSource()
@@ -324,8 +322,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun addClusteredGeoJsonSource(style: Style) {
-		val layers = Array(1) { IntArray(2) }
-		layers[0] = intArrayOf(0, Color.parseColor("#e41a1a"))
+		val layers = Array(2) { IntArray(2) }
+		layers[0] = intArrayOf(0, Color.parseColor("#2FB04A"))
+		layers[1] = intArrayOf(1, Color.parseColor("#e41a1a"))
 		
 		queryLayerIds = Array(layers.size) { "" }
 		
@@ -347,7 +346,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		val count = SymbolLayer(COUNT, SOURCE_ALERT)
 		count.setProperties(
-				PropertyFactory.textField(Expression.toString(Expression.get(POINT_COUNT))),
+				PropertyFactory.textField("0"),
 				PropertyFactory.textSize(12f),
 				PropertyFactory.textColor(Color.WHITE),
 				PropertyFactory.textIgnorePlacement(true),
@@ -356,7 +355,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		style.addLayer(count)
 		
 		val unClustered = CircleLayer(UN_CLUSTERED_POINTS, SOURCE_ALERT)
-		unClustered.setProperties(PropertyFactory.circleColor(Color.parseColor("#e41a1a")), PropertyFactory.circleRadius(10f), PropertyFactory.circleBlur(1f))
+		unClustered.setProperties(PropertyFactory.circleColor(Color.parseColor("#2FB04A")), PropertyFactory.circleRadius(10f), PropertyFactory.circleBlur(1f))
 		unClustered.setFilter(Expression.neq(Expression.get(CLUSTER), Expression.literal(true)))
 		style.addLayerBelow(unClustered, BUILDING)
 	}
