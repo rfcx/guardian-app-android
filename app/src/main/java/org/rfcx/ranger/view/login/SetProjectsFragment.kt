@@ -16,6 +16,7 @@ import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.logout
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
 
@@ -43,7 +44,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		projectsRecycler.apply {
+		projectView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = projectAdapter
 		}
@@ -59,11 +60,15 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 			showToast(getString(R.string.network_not_available))
 		}
 		
-		submitProjectsButton.setOnClickListener {
+		selectProjectButton.setOnClickListener {
 			val preferences = Preferences.getInstance(requireContext())
 			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
 			listener.handleOpenPage()
 			// viewModel.setProjects(project)  for subscribe cloud messaging but now the notification not yet available
+		}
+		
+		logoutButton.setOnClickListener {
+			requireContext().logout()
 		}
 	}
 	
@@ -71,7 +76,13 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		viewModel.projects.observe(viewLifecycleOwner, {
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
+				if (viewModel.getProjectsFromLocal().isEmpty()) {
+					noContentTextView.visibility = View.VISIBLE
+				} else {
+					noContentTextView.visibility = View.GONE
+				}
 				projectAdapter.items = viewModel.getProjectsFromLocal()
+				
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
 				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
@@ -83,7 +94,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	
 	override fun onClicked(project: Project) {
 		selectedProject = project.id
-		submitProjectsButton.isEnabled = true
+		selectProjectButton.isEnabled = true
 	}
 	
 	override fun onLockImageClicked() {
