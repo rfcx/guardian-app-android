@@ -249,6 +249,9 @@
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
 	<string name="loggers_at_site">Loggers at Site</string>
+	<string name="illegal_camps">Illegal camps</string>
+	<string name="fires_burned_areas">Fires/burned areas</string>
+	<string name="evidence_of_poaching">Evidence of poaching</string>
 	<string name="other_explain_step_6">Other (explain in step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->
@@ -260,17 +263,18 @@
 	
 	<!-- SetWhatScaleFragment -->
 	<string name="what_scale">What was the scale of the logging operation?</string>
-	<string name="small">Small (farmers etc)</string>
-	<string name="large">Large (professional equipment etc)</string>
-	<string name="not_sure">Not sure</string>
+	<string name="small">Small (subsistence, agriculture etc)</string>
+	<string name="large">Large (commercial scale, heavy equipment etc)</string>
+	<string name="not_sure">Not sure (unknown)</string>
 	
 	<!-- SetWhatActionFragment -->
 	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
-	<string name="confronted_loggers">Confronted loggers</string>
+	<string name="issue_a_fine">Issue a fine</string>
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
-	<string name="submitted_report">Submitted report of incident</string>
-	<string name="planning_patrol_area">Planning to patrol area again in near future</string>
+	<string name="issue_a_warning">Issue a warning</string>
+	<string name="arrests">Arrests</string>
+	<string name="planning_security">Planning to come back w/security enforcement</string>
 	
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>

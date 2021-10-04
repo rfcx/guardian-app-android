@@ -68,6 +68,7 @@ class RangerApplication : MultiDexApplication() {
 		arrayListOf(
 				UiModule.mainModule,
 				UiModule.eventsModule,
+				UiModule.reportsModule,
 				UiModule.mapModule,
 				UiModule.profileModule,
 				UiModule.loginModule,

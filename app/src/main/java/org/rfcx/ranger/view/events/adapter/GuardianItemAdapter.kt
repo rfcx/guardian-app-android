@@ -52,6 +52,4 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 	}
 }
 
-data class GuardianModel(var name: String, var numberOfAlerts: Int, val distance: Float) //TODO:: Change to real model
-
 data class EventGroup(val events: List<Event>, val distance: Double, val guardianName: String)

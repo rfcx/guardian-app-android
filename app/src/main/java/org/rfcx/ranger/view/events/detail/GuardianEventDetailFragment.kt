@@ -10,26 +10,29 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventItemAdapter
-import org.rfcx.ranger.view.events.adapter.EventModel
-import org.rfcx.ranger.view.report.create.CreateReportActivity
 
 class GuardianEventDetailFragment : Fragment() {
+	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
 	private val eventItemAdapter by lazy { EventItemAdapter() }
+	
 	var name: String? = null
+	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
-	
-	val list = listOf<EventModel>()
+	var list = listOf<Event>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
+		guardianId = arg.getString(ARG_GUARDIAN_ID)
 		number = arg.getInt(ARG_NUMBER)
 	}
 	
@@ -47,6 +50,7 @@ class GuardianEventDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupToolbar()
+		setObserve()
 		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -54,12 +58,23 @@ class GuardianEventDetailFragment : Fragment() {
 			eventItemAdapter.items = list.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
-				name?.let { it1 -> CreateReportActivity.startActivity(context, it1) }
+				name?.let { name ->
+					guardianId?.let { id ->
+						listener.openCreateReportActivity(name, id)
+					}
+				}
 			}
 		}
 		
 		guardianNameTextView.text = name
 		distanceTextView.text = distance?.setFormatLabel()
+	}
+	
+	private fun setObserve() {
+		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
+			list = events.filter { e -> e.guardianId == guardianId }
+			eventItemAdapter.items = list.take(number ?: 0)
+		})
 	}
 	
 	private fun setupToolbar() {
@@ -80,13 +95,15 @@ class GuardianEventDetailFragment : Fragment() {
 		const val tag = "GuardianEventDetailFragment"
 		private const val ARG_NAME = "ARG_NAME"
 		private const val ARG_DISTANCE = "ARG_DISTANCE"
+		private const val ARG_GUARDIAN_ID = "ARG_GUARDIAN_ID"
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Double, eventSize: Int): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
+					putString(ARG_GUARDIAN_ID, guardianId)
 					putDouble(ARG_DISTANCE, distance)
 					putInt(ARG_NUMBER, eventSize)
 				}

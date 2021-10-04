@@ -74,6 +74,9 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	
 	fun handledGuardians(lastLocation: Location) {
 		val events = eventDb.getEvents()
+		othersGuardians.clear()
+		nearbyGuardians.clear()
+		
 		// find main Guardian
 		val mainGroups = arrayListOf<String>()
 		events.distinctBy { it.guardianId }.mapTo(mainGroups, { it.guardianId })

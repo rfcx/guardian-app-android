@@ -8,11 +8,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_draft_reports.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.view.MainActivityViewModel
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener {
-	
+	private val viewModel: MainActivityViewModel by viewModel()
 	private val reportsAdapter by lazy { DraftReportsAdapter(this) }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +30,13 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 			layoutManager = LinearLayoutManager(context)
 			adapter = reportsAdapter
 		}
-		reportsAdapter.items = listOf() // Add list of ReportModel and should sortedByDescending( date )
+		setObserve()
+	}
+	
+	private fun setObserve() {
+		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
+			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
+		})
 	}
 	
 	companion object {

@@ -16,7 +16,7 @@
 		app:layout_constraintTop_toTopOf="parent" />
 	
 	<RadioGroup
-		android:id="@+id/radioGroup"
+		android:id="@+id/scaleRadioGroup"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_padding_small"
@@ -45,8 +45,7 @@
 			android:layout_marginEnd="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
+			android:padding="@dimen/margin_padding_normal"
 			android:text="@string/large"
 			android:textColor="@drawable/radio_text_color" />
 		
@@ -63,6 +62,20 @@
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/not_sure"
 			android:textColor="@drawable/radio_text_color" />
+		
+		<RadioButton
+			android:id="@+id/noneRadioButton"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginStart="@dimen/margin_padding_small"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingEnd="@dimen/margin_padding_normal"
+			android:text="@string/common_none"
+			android:textColor="@drawable/radio_text_color" />
 	</RadioGroup>
 	
 	<androidx.appcompat.widget.AppCompatButton
@@ -70,6 +83,7 @@
 		style="@style/RangerButton.GreenButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:enabled="false"
 		android:text="@string/next"
 		app:layout_constraintBottom_toBottomOf="parent" />
 

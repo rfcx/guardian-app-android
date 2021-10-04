@@ -12,6 +12,7 @@ import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.password.PasswordChangeEndpoint
 import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoEndpoint
+import org.rfcx.ranger.data.remote.response.CreateResponseEndpoint
 import org.rfcx.ranger.data.remote.service.rest.ClassifiedService
 import org.rfcx.ranger.data.remote.service.rest.EventService
 import org.rfcx.ranger.data.remote.setusername.SetNameEndpoint
@@ -34,6 +35,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.DEVICE_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetProjectsEndpoint::class.java)
+	}
+	
+	fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(CreateResponseEndpoint::class.java)
 	}
 	
 	fun makeEventService(isDebug: Boolean, context: Context): EventService {

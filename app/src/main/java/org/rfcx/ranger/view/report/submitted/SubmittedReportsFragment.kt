@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.report.submitted
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_submitted_reports.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.view.MainActivityViewModel
 
 class SubmittedReportsFragment : Fragment() {
+	private val viewModel: MainActivityViewModel by viewModel()
 	private val reportsAdapter by lazy { SubmittedReportsAdapter() }
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +28,15 @@ class SubmittedReportsFragment : Fragment() {
 			layoutManager = LinearLayoutManager(context)
 			adapter = reportsAdapter
 		}
-		reportsAdapter.items = listOf() // Add list of ReportModel and should sortedByDescending( date )
+		setObserve()
+	}
+	
+	@SuppressLint("NotifyDataSetChanged")
+	private fun setObserve() {
+		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
+			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
+			reportsAdapter.notifyDataSetChanged()
+		})
 	}
 	
 	companion object {

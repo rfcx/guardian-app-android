@@ -33,6 +33,9 @@ import org.rfcx.ranger.data.remote.password.PasswordChangeUseCase
 import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoRepository
 import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoRepositoryImp
 import org.rfcx.ranger.data.remote.profilephoto.ProfilePhotoUseCase
+import org.rfcx.ranger.data.remote.response.CreateResponse
+import org.rfcx.ranger.data.remote.response.CreateResponseRepository
+import org.rfcx.ranger.data.remote.response.CreateResponseRepositoryImp
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.data.remote.setusername.SendNameUseCase
 import org.rfcx.ranger.data.remote.setusername.SetNameRepository
@@ -55,10 +58,7 @@ import org.rfcx.ranger.data.remote.terms.TermsUseCase
 import org.rfcx.ranger.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepository
 import org.rfcx.ranger.data.remote.usertouch.UserTouchRepositoryImp
-import org.rfcx.ranger.localdb.LocationDb
-import org.rfcx.ranger.localdb.ReportDb
-import org.rfcx.ranger.localdb.ReportImageDb
-import org.rfcx.ranger.localdb.SiteGuardianDb
+import org.rfcx.ranger.localdb.*
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
@@ -102,6 +102,9 @@ object DataModule {
 		single { ShortLinkRepositoryImp(get()) } bind ShortLinkRepository::class
 		single { ShortLinkUseCase(get(), get(), get()) }
 		
+		single { CreateResponseRepositoryImp(get()) } bind CreateResponseRepository::class
+		single { CreateResponse(get(), get(), get()) }
+		
 		single { ProfilePhotoRepositoryImp(get()) } bind ProfilePhotoRepository::class
 		single { ProfilePhotoUseCase(get(), get(), get()) }
 		
@@ -118,6 +121,7 @@ object DataModule {
 	
 	val remoteModule = module {
 		factory { ServiceFactory.makeProjectsService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
@@ -141,6 +145,7 @@ object DataModule {
 		factory { SiteGuardianDb(get()) }
 		factory { LocationDb(get()) }
 		factory { ReportDb(get()) }
+		factory { ResponseDb(get()) }
 		factory { ReportImageDb(get()) }
 		factory { EventDb(get()) }
 		factory { WeeklySummaryData(get()) }
