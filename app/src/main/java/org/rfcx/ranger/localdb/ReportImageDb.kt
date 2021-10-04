@@ -3,8 +3,9 @@ package org.rfcx.ranger.localdb
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
-import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.report.ReportImage
+import org.rfcx.ranger.entity.report.ReportImage.Companion.FIELD_REPORT_ID
+import org.rfcx.ranger.entity.response.Response
 
 /**
  * Manage the saving and sending of reports from the local database
@@ -16,13 +17,13 @@ class ReportImageDb(val realm: Realm) {
 		return realm.where(ReportImage::class.java).notEqualTo("syncState", SENT).count()
 	}
 	
-	fun save(report: Report, attachImages: List<String>) {
-		val imageCreateAt = report.reportedAt
+	fun save(response: Response, attachImages: List<String>) {
+		val imageCreateAt = response.startedAt
 		realm.executeTransaction {
 			// save attached image to be Report Image
 			attachImages.forEach { attachImage ->
 				val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-				val reportImage = ReportImage(imageId, guid = report.guid, reportId = report.id, localPath = attachImage, createAt = imageCreateAt)
+				val reportImage = ReportImage(imageId, guid = response.guid, reportId = response.id, localPath = attachImage, createAt = imageCreateAt)
 				it.insertOrUpdate(reportImage)
 			}
 		}
@@ -103,12 +104,10 @@ class ReportImageDb(val realm: Realm) {
 				.findAllAsync()
 	}
 	
-	fun delete(reportImageId: Int) {
-		val shouldDelete = realm.where(ReportImage::class.java)
-				.equalTo("id", reportImageId)
-				.findAll()
+	fun deleteImages(id: Int) {
 		realm.executeTransaction {
-			shouldDelete.deleteAllFromRealm()
+			realm.where(ReportImage::class.java).equalTo(FIELD_REPORT_ID, id)?.findAll()
+					?.deleteAllFromRealm()
 		}
 	}
 	

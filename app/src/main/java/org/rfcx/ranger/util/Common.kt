@@ -103,3 +103,7 @@ fun Float.setFormatLabel(): String {
 fun ImageView.setDrawableImage(context: Context, id: Int) {
 	this.setImageDrawable(ContextCompat.getDrawable(context, id))
 }
+
+fun Calendar.getDay(): Int = this.get(Calendar.DAY_OF_MONTH)
+fun Calendar.getMonth(): Int = this.get(Calendar.MONTH)
+fun Calendar.getYear(): Int = this.get(Calendar.YEAR)

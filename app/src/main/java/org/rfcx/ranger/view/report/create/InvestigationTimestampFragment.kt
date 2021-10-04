@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,9 @@ import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_investigation_timestamp.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.util.getDay
+import org.rfcx.ranger.util.getMonth
+import org.rfcx.ranger.util.getYear
 import java.text.DecimalFormat
 import java.util.*
 
@@ -22,6 +26,11 @@ class InvestigationTimestampFragment : Fragment() {
 	
 	private var calendar: Calendar = Calendar.getInstance()
 	private var earlier: Calendar = Calendar.getInstance()
+	
+	private val today = Calendar.getInstance()
+	private val yesterday = Calendar.getInstance().also {
+		it.add(Calendar.DATE, -1)
+	}
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -36,11 +45,28 @@ class InvestigationTimestampFragment : Fragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		
+		setupInvestigatedAt()
 		timePicker.setIs24HourView(true)
 		setMinutePicker()
 		setDatePicker()
 		setupOnListener()
+	}
+	
+	private fun setupInvestigatedAt() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			calendar.time = res.investigatedAt
+			nextStepButton.isEnabled = true
+			
+			if (DateUtils.isToday(res.investigatedAt.time)) {
+				todayRadioButton.isChecked = true
+			} else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
+				yesterdayRadioButton.isChecked = true
+			} else {
+				earlierRadioButton.text = getString(R.string.earlier_date, "${calendar.getDay()}/${calendar.getMonth()}/${calendar.getYear()}")
+				earlierRadioButton.isChecked = true
+			}
+		}
 	}
 	
 	private fun setupOnListener() {
@@ -59,17 +85,13 @@ class InvestigationTimestampFragment : Fragment() {
 			
 			when (checkedId) {
 				R.id.todayRadioButton -> {
-					val today = Calendar.getInstance()
-					setCalendar(getHour(), getMinute(), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH), today.get(Calendar.YEAR))
+					setCalendar(getHour(), getMinute(), today.getDay(), today.getMonth(), today.getYear())
 				}
 				R.id.yesterdayRadioButton -> {
-					val yesterday = Calendar.getInstance().also {
-						it.add(Calendar.DATE, -1)
-					}
-					setCalendar(getHour(), getMinute(), yesterday.get(Calendar.DAY_OF_MONTH), yesterday.get(Calendar.MONTH), yesterday.get(Calendar.YEAR))
+					setCalendar(getHour(), getMinute(), yesterday.getDay(), yesterday.getMonth(), yesterday.getYear())
 				}
 				R.id.earlierRadioButton -> {
-					setCalendar(getHour(), getMinute(), earlier.get(Calendar.DAY_OF_MONTH), earlier.get(Calendar.MONTH), earlier.get(Calendar.YEAR))
+					setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
 				}
 			}
 		}
@@ -82,8 +104,8 @@ class InvestigationTimestampFragment : Fragment() {
 			earlier.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 			earlier.set(Calendar.MONTH, monthOfYear)
 			earlier.set(Calendar.YEAR, year)
-			setCalendar(getHour(), getMinute(), earlier.get(Calendar.DAY_OF_MONTH), earlier.get(Calendar.MONTH), earlier.get(Calendar.YEAR))
-		}, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
+			setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
+		}, date.getYear(), date.getMonth(), date.getDay())
 		
 		earlierRadioButton.setOnClickListener {
 			datePicker.show()

@@ -263,9 +263,9 @@
 	
 	<!-- SetWhatScaleFragment -->
 	<string name="what_scale">What was the scale of the logging operation?</string>
-	<string name="small">Small (farmers etc)</string>
-	<string name="large">Large (professional equipment etc)</string>
-	<string name="not_sure">Not sure</string>
+	<string name="small">Small (subsistence, agriculture etc)</string>
+	<string name="large">Large (commercial scale, heavy equipment etc)</string>
+	<string name="not_sure">Not sure (unknown)</string>
 	
 	<!-- SetWhatActionFragment -->
 	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
