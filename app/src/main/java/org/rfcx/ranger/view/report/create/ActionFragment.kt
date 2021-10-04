@@ -107,6 +107,7 @@ class ActionFragment : Fragment() {
 		val actions = listener.getResponse()?.responseActions?.toList()
 		actions?.let {
 			selected.addAll(it)
+			nextStepButton.isEnabled = selected.isNotEmpty()
 			if (actions.isNotEmpty()) setupCheckBox()
 		}
 	}

@@ -13,20 +13,16 @@ import org.rfcx.ranger.data.api.project.GetProjectsUseCase
 import org.rfcx.ranger.data.api.project.ProjectResponse
 import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
 import org.rfcx.ranger.data.local.EventDb
-import org.rfcx.ranger.data.local.ProfileData
 import org.rfcx.ranger.data.local.ProjectDb
-import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.ranger.entity.event.Event
-import org.rfcx.ranger.entity.event.EventsRequestFactory
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
-class EventsViewModel(private val context: Context, private val profileData: ProfileData, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val eventsUserCase: GetEventsUseCase) : ViewModel() {
+class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
@@ -36,10 +32,6 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
-	
-	init {
-		loadAlerts()
-	}
 	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
@@ -102,20 +94,5 @@ class EventsViewModel(private val context: Context, private val profileData: Pro
 			}
 		}
 		othersGuardians.sortByDescending { g -> g.events.size }
-	}
-	
-	private fun loadAlerts() {
-		val group = profileData.getGuardianGroup() ?: return
-		val requestFactory = EventsRequestFactory(listOf(group.shortname), "measured_at", "DESC", LIMIT_EVENTS, 0, group.values)
-		
-		eventsUserCase.execute(object : ResponseCallback<Pair<List<Event>, Int>> {
-			override fun onSuccess(t: Pair<List<Event>, Int>) {}
-			
-			override fun onError(e: Throwable) {}
-		}, requestFactory)
-	}
-	
-	companion object {
-		const val LIMIT_EVENTS = 100
 	}
 }
