@@ -233,6 +233,7 @@
 	<string name="unsent">Queued</string>
 	<string name="sending">Sending</string>
 	<string name="sent">Sent</string>
+	<string name="incident_ref">#%s</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>

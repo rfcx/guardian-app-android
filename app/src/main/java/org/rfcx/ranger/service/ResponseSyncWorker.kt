@@ -30,9 +30,9 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 		var someFailed = false
 		for (response in responses) {
 			val result = eventService.createNewResponse(response.toCreateResponseRequest()).execute()
-			
 			if (result.isSuccessful) {
-				db.markSent(response.id, response.guid)
+				val incidentRef = result.body()?.incidentRef
+				db.markSent(response.id, response.guid, incidentRef)
 			} else {
 				someFailed = true
 				db.markUnsent(response.id)

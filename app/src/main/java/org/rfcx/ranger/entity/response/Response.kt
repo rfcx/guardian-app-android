@@ -23,6 +23,7 @@ open class Response(
 		var streamId: String = "",
 		var streamName: String = "",
 		var audioLocation: String? = null,
+		var incidentRef: String? = null,
 		var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
 	companion object {
@@ -40,6 +41,7 @@ open class Response(
 		const val RESPONSE_STREAM_ID = "streamId"
 		const val RESPONSE_STREAM_NAME = "streamName"
 		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
+		const val RESPONSE_INCIDENT_REF = "incidentRef"
 		const val RESPONSE_SYNC_STATE = "syncState"
 	}
 }

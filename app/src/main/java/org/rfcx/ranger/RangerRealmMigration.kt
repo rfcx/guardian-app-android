@@ -316,6 +316,7 @@ class RangerRealmMigration : RealmMigration {
 			addField(Response.RESPONSE_AUDIO_LOCATION, String::class.java)
 					.setRequired(Response.RESPONSE_AUDIO_LOCATION, false)
 			addField(Response.RESPONSE_NOTE, String::class.java)
+			addField(Response.RESPONSE_INCIDENT_REF, String::class.java)
 			addField(Response.RESPONSE_STREAM_ID, String::class.java)
 					.setRequired(Response.RESPONSE_STREAM_ID, true)
 			addField(Response.RESPONSE_STREAM_NAME, String::class.java)
