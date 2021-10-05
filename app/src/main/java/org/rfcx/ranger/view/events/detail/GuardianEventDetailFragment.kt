@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
@@ -54,8 +53,6 @@ class GuardianEventDetailFragment : Fragment() {
 		setupToolbar()
 		setObserve()
 		
-		guardianId?.let { viewModel.loadEvents(it) }
-		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = eventItemAdapter
@@ -75,13 +72,9 @@ class GuardianEventDetailFragment : Fragment() {
 	}
 	
 	private fun setObserve() {
-		viewModel.events.observe(viewLifecycleOwner, {
-			it.success({ events ->
-				list = events.filter { e -> e.streamId == guardianId }
-				eventItemAdapter.items = list
-			}, {
-			}, {
-			})
+		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
+			list = events.filter { e -> e.streamId == guardianId }
+			eventItemAdapter.items = list
 		})
 	}
 	
