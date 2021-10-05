@@ -5,10 +5,14 @@ import android.graphics.Rect
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
@@ -61,8 +65,30 @@ class AssetsFragment : BaseImageFragment() {
 			saveAssets()
 			listener.onSubmitButtonClick()
 		}
+		
+		setTextChanged()
+		setOnCheckedChange()
 		setupAssets()
 		setupRecordSoundProgressView()
+		checkIsEnabledButton()
+	}
+	
+	private fun setTextChanged() {
+		noteEditText.addTextChangedListener(object : TextWatcher {
+			override fun afterTextChanged(p0: Editable?) {
+				checkIsEnabledButton()
+			}
+			
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+			
+			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+		})
+	}
+	
+	private fun setOnCheckedChange() {
+		noneCollectedCheckBox.setOnCheckedChangeListener { _, _ ->
+			checkIsEnabledButton()
+		}
 	}
 	
 	private fun setupAssets() {
@@ -90,6 +116,11 @@ class AssetsFragment : BaseImageFragment() {
 	}
 	
 	private fun setupImageRecycler() {
+		reportImageAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+			override fun onChanged() {
+				checkIsEnabledButton()
+			}
+		})
 		attachImageRecycler.apply {
 			adapter = reportImageAdapter
 			layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -116,6 +147,31 @@ class AssetsFragment : BaseImageFragment() {
 		}
 	}
 	
+	private fun checkIsEnabledButton() {
+		when {
+			reportImageAdapter.getNewAttachImage().isNotEmpty() -> {
+				setEnabled(true)
+			}
+			!TextUtils.isEmpty(noteEditText.text) -> {
+				setEnabled(true)
+			}
+			recordFile?.canonicalPath != null -> {
+				setEnabled(true)
+			}
+			noneCollectedCheckBox.isChecked -> {
+				setEnabled(true)
+			}
+			else -> {
+				setEnabled(false)
+			}
+		}
+	}
+	
+	private fun setEnabled(isEnabled: Boolean) {
+		saveDraftButton.isEnabled = isEnabled
+		submitButton.isEnabled = isEnabled
+	}
+	
 	private fun setAudio(path: String) {
 		recordFile = File(path)
 		
@@ -130,12 +186,14 @@ class AssetsFragment : BaseImageFragment() {
 				SoundRecordState.NONE -> {
 					recordFile?.deleteOnExit()
 					recordFile = null
+					checkIsEnabledButton()
 				}
 				SoundRecordState.RECORDING -> {
 					record()
 				}
 				SoundRecordState.STOPPED_RECORD -> {
 					stopRecording()
+					checkIsEnabledButton()
 				}
 				SoundRecordState.PLAYING -> {
 					startPlaying()
