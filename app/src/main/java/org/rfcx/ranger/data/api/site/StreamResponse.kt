@@ -8,6 +8,7 @@ data class StreamResponse(
 		var name: String = "",
 		var latitude: Double = 0.0,
 		var longitude: Double = 0.0,
+		var eventsCount: Int = 0,
 		var project: ProjectResponse? = null
 )
 
@@ -15,7 +16,6 @@ data class ProjectResponse(
 		var id: String? = null,
 		var name: String = ""
 )
-
 
 fun StreamResponse.toStream(): Stream = Stream(serverId = id, name = name, latitude = latitude, longitude = longitude, project = project?.toProjectInStream())
 

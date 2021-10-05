@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.api.events.ResponseEvent
 import org.rfcx.ranger.util.setFormatLabel
 
 class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
@@ -41,9 +40,9 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 		fun bind(item: EventGroup) {
 			guardianName.text = item.streamName
 			distance.text = item.distance.setFormatLabel()
-			numberOfAlerts.text = if (item.events.size > 99) itemView.context.getString(R.string.num_more_then_99) else item.events.size.toString()
+			numberOfAlerts.text = if (item.eventSize > 99) itemView.context.getString(R.string.num_more_then_99) else item.eventSize.toString()
 			
-			if (item.events.isEmpty()) {
+			if (item.eventSize == 0) {
 				numberImageView.setImageResource(R.drawable.bg_circle_green)
 			} else {
 				numberImageView.setImageResource(R.drawable.bg_circle_red)
@@ -52,4 +51,4 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 	}
 }
 
-data class EventGroup(val events: List<ResponseEvent>, val distance: Double, val streamName: String, val streamId: String)
+data class EventGroup(val eventSize: Int, val distance: Double, val streamName: String, val streamId: String)

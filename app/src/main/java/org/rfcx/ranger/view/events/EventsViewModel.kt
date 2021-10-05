@@ -76,6 +76,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 					t.forEach { res ->
 						streamDb.insertStream(res)
 					}
+					_streams.value = Result.Success(t)
 				}
 				
 				override fun onError(e: Throwable) {
@@ -86,12 +87,9 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	}
 	
 	fun loadEvents(list: List<StreamResponse>) {
-		listEvent = arrayListOf()
 		list.forEach {
 			getEvents.execute(object : DisposableSingleObserver<List<ResponseEvent>>() {
 				override fun onSuccess(t: List<ResponseEvent>) {
-					listEvent.add(t)
-					_streams.value = Result.Success(list)
 					t.forEach { res ->
 						alertDb.insertAlert(res)
 					}
@@ -126,9 +124,8 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		
 		val groups = arrayListOf<EventGroup>()
 		list.forEach {
-			val events = listEvent.filter { list -> list.any { e -> e.streamId == it.id } }
 			val distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
-			groups.add(EventGroup(if (events.isEmpty()) listOf() else events[0], distance, it.name, it.id))
+			groups.add(EventGroup(it.eventsCount, distance, it.name, it.id))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
@@ -138,7 +135,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 				nearbyGuardians.add(it)
 			}
 		}
-		othersGuardians.sortByDescending { g -> g.events.size }
+		othersGuardians.sortByDescending { g -> g.eventSize }
 	}
 	
 	fun distance(lastLocation: Location, loc: Location): String = LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()

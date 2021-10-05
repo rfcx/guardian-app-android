@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.work.*
 import io.realm.Realm
 import org.rfcx.ranger.BuildConfig
+import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.entity.response.toCreateResponseRequest
 import org.rfcx.ranger.localdb.ResponseDb
@@ -24,6 +25,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 		
 		val eventService = ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, context)
 		val db = ResponseDb(Realm.getInstance(RealmHelper.migrationConfig()))
+		val alertDb = AlertDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val responses = db.lockUnsent()
 		Log.d(TAG, "doWork: found ${responses.size} unsent")
 		
@@ -34,6 +36,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 				val incidentRef = result.body()?.incidentRef
 				val responseId = result.headers().toString().split("/").last()
 				db.markSent(response.id, responseId, incidentRef)
+				alertDb.deleteAlert(response.streamId)
 			} else {
 				someFailed = true
 				db.markUnsent(response.id)

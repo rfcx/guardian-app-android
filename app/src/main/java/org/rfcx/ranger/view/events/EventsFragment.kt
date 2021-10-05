@@ -140,6 +140,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 	}
 	
+	override fun onHiddenChanged(hidden: Boolean) {
+		super.onHiddenChanged(hidden)
+		if (!hidden) {
+			viewModel.loadStreams()
+		}
+	}
+	
 	private fun setRecyclerView() {
 		projectRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -263,7 +270,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun invoke(guardian: EventGroup) {
-		listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.events.size, guardian.streamId)
+		listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.eventSize, guardian.streamId)
 	}
 	
 	private fun setupToolbar() {

@@ -2,6 +2,8 @@ package org.rfcx.ranger.localdb
 
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.kotlin.deleteFromRealm
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 
