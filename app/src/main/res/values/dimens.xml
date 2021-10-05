@@ -28,4 +28,5 @@
 	<dimen name="bg_number_size">24dp</dimen>
 	<dimen name="scale_image_height">150dp</dimen>
 	<dimen name="padding_border">3dp</dimen>
+	<dimen name="ic_mountains_size">152dp</dimen>
 </resources>

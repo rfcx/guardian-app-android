@@ -135,7 +135,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
-		showProgressBar()
+		isShowProgressBar()
 		setObserver()
 		setRecyclerView()
 	}
@@ -153,9 +153,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			adapter = nearbyAdapter
 			nearbyAdapter.items = viewModel.nearbyGuardians
 		}
-		
-		nearbyLayout.visibility = if (viewModel.nearbyGuardians.isEmpty()) View.GONE else View.VISIBLE
-		othersTextView.visibility = if (viewModel.nearbyGuardians.isEmpty()) View.GONE else View.VISIBLE
 		
 		othersRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -185,7 +182,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun onClicked(project: Project) {
-		showProgressBar()
+		nearbyLayout.visibility = View.GONE
+		othersLayout.visibility = View.GONE
+		
+		isShowProgressBar()
 		nearbyAdapter.items = listOf()
 		othersAdapter.items = listOf()
 		
@@ -219,13 +219,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				loc.latitude = 0.0
 				loc.longitude = 0.0
 				viewModel.handledStreams(lastLocation ?: loc, list)
-				hideProgressBar()
+				isShowProgressBar(false)
+				setShowListStream()
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty())
 				nearbyAdapter.items = viewModel.nearbyGuardians
 				othersAdapter.items = viewModel.othersGuardians
 			}, {
-				hideProgressBar()
+				isShowProgressBar(false)
 			}, {
-				showProgressBar()
+				isShowProgressBar()
 			})
 		})
 		
@@ -282,12 +284,19 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		}
 	}
 	
-	fun showProgressBar() {
-		progressBar.visibility = View.VISIBLE
+	private fun isShowProgressBar(show: Boolean = true) {
+		progressBar.visibility = if (show) View.VISIBLE else View.GONE
 	}
 	
-	fun hideProgressBar() {
-		progressBar.visibility = View.GONE
+	private fun isShowNotHaveStreams(show: Boolean) {
+		notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
+	}
+	
+	private fun setShowListStream() {
+		nearbyLayout.visibility = if (viewModel.nearbyGuardians.isNotEmpty()) View.VISIBLE else View.GONE
+		othersLayout.visibility = if (viewModel.othersGuardians.isNotEmpty()) View.VISIBLE else View.GONE
+		nearbyTextView.visibility = if (viewModel.nearbyGuardians.isNotEmpty() && viewModel.othersGuardians.isNotEmpty()) View.VISIBLE else View.GONE
+		othersTextView.visibility = if (viewModel.nearbyGuardians.isNotEmpty() && viewModel.othersGuardians.isNotEmpty()) View.VISIBLE else View.GONE
 	}
 	
 	/* ------------------- vv Setup Map vv ------------------- */

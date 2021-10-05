@@ -27,6 +27,7 @@
 		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/listSteamLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 			
@@ -35,9 +36,11 @@
 				android:layout_width="match_parent"
 				android:layout_height="0dp"
 				android:orientation="vertical"
+				android:visibility="gone"
 				app:layout_constraintTop_toTopOf="parent">
 				
 				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/nearbyTextView"
 					style="@style/RangerText.Title"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -59,6 +62,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="0dp"
 				android:orientation="vertical"
+				android:visibility="gone"
 				app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
 				
 				<androidx.appcompat.widget.AppCompatTextView
@@ -80,6 +84,38 @@
 			</LinearLayout>
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
+	
+	<androidx.constraintlayout.widget.Group
+		android:id="@+id/notHaveStreamsGroupView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		app:constraint_referenced_ids="notHaveStreamsImageView, emptyListTextView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/notHaveStreamsImageView"
+		android:layout_width="@dimen/ic_mountains_size"
+		android:layout_height="@dimen/ic_mountains_size"
+		android:src="@drawable/ic_mountains"
+		app:layout_constraintBottom_toTopOf="@+id/emptyListTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_chainStyle="packed" />
+	
+	<TextView
+		android:id="@+id/emptyListTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_padding_small"
+		android:gravity="center"
+		android:text="@string/not_have_stream"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/notHaveStreamsImageView"
+		app:layout_constraintVertical_chainStyle="packed" />
 	
 	<ProgressBar
 		android:id="@+id/progressBar"
