@@ -135,6 +135,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
+		showProgressBar()
 		setObserver()
 		setRecyclerView()
 	}
@@ -184,6 +185,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun onClicked(project: Project) {
+		showProgressBar()
+		nearbyAdapter.items = listOf()
+		othersAdapter.items = listOf()
+		
 		listener.showBottomAppBar()
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
@@ -214,10 +219,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				loc.latitude = 0.0
 				loc.longitude = 0.0
 				viewModel.handledStreams(lastLocation ?: loc, list)
+				hideProgressBar()
 				nearbyAdapter.items = viewModel.nearbyGuardians
 				othersAdapter.items = viewModel.othersGuardians
 			}, {
+				hideProgressBar()
 			}, {
+				showProgressBar()
 			})
 		})
 		
@@ -272,6 +280,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			}
 			isShowMapIcon = !isShowMapIcon
 		}
+	}
+	
+	fun showProgressBar() {
+		progressBar.visibility = View.VISIBLE
+	}
+	
+	fun hideProgressBar() {
+		progressBar.visibility = View.GONE
 	}
 	
 	/* ------------------- vv Setup Map vv ------------------- */

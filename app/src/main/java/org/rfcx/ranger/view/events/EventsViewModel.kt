@@ -97,7 +97,9 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 					}
 				}
 				
-				override fun onError(e: Throwable) {}
+				override fun onError(e: Throwable) {
+					_streams.value = Result.Error(e)
+				}
 			}, it.id)
 		}
 	}
