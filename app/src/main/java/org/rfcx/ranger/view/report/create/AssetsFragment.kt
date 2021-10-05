@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
@@ -41,9 +40,13 @@ class AssetsFragment : BaseImageFragment() {
 		listener = (context as CreateReportListener)
 	}
 	
-	override fun didAddImages(imagePaths: List<String>) {}
+	override fun didAddImages(imagePaths: List<String>) {
+		checkIsEnabledButton()
+	}
 	
-	override fun didRemoveImage(imagePath: String) {}
+	override fun didRemoveImage(imagePath: String) {
+		checkIsEnabledButton()
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -116,11 +119,6 @@ class AssetsFragment : BaseImageFragment() {
 	}
 	
 	private fun setupImageRecycler() {
-		reportImageAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-			override fun onChanged() {
-				checkIsEnabledButton()
-			}
-		})
 		attachImageRecycler.apply {
 			adapter = reportImageAdapter
 			layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
