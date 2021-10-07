@@ -10,6 +10,8 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 		responseDb.save(response)
 	}
 	
+	fun getResponseById(id: Int): Response? = responseDb.getResponseById(id)
+	
 	fun saveImages(response: Response, images: List<String>) {
 		reportImageDb.deleteImages(response.id)
 		reportImageDb.save(response, images)

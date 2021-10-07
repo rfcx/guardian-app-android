@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
@@ -245,6 +246,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		getResult.launch(intent)
 	}
 	
+	override fun openDetailResponse(response: Response) {
+		val intent = Intent(this, CreateReportActivity::class.java)
+		intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
+		getResult.launch(intent)
+	}
+	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
@@ -390,4 +397,5 @@ interface MainActivityEventListener {
 	fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
+	fun openDetailResponse(response: Response)
 }

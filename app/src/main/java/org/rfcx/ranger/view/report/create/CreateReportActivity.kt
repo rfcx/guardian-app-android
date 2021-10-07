@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import io.realm.RealmList
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,14 +21,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	companion object {
 		const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
 		const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		const val EXTRA_RESPONSE_ID = "EXTRA_RESPONSE_ID"
 		
 		const val RESULT_CODE = 20
 		const val EXTRA_SCREEN = "EXTRA_SCREEN"
 		
-		fun startActivity(context: Context, guardianName: String, guardianId: String) {
+		fun startActivity(context: Context, guardianName: String, guardianId: String, responseId: Int?) {
 			val intent = Intent(context, CreateReportActivity::class.java)
 			intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
 			intent.putExtra(EXTRA_GUARDIAN_ID, guardianId)
+			intent.putExtra(EXTRA_RESPONSE_ID, responseId)
 			context.startActivity(intent)
 		}
 	}
@@ -37,6 +40,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var passedChecks = ArrayList<Int>()
 	private var streamName: String? = null
 	private var streamId: String? = null
+	private var responseId: Int? = null
 	
 	private var _response: Response? = null
 	private var _images: List<String> = listOf()
@@ -46,7 +50,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setContentView(R.layout.activity_create_report)
 		streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
 		streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
+		responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
 		
+		responseId?.let {
+			val response = viewModel.getResponseById(it)
+			response?.let { res -> setResponse(res) }
+		}
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 	}
