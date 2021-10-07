@@ -213,7 +213,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		bottomBar.visibility = View.VISIBLE
 	}
 	
-	override fun openGuardianEventDetail(name: String, distance: Double, eventSize: Int, guardianId: String) {
+	override fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String) {
 		hideBottomAppBar()
 		startFragment(GuardianEventDetailFragment.newInstance(name, distance, eventSize, guardianId), GuardianEventDetailFragment.tag)
 	}
@@ -387,7 +387,7 @@ interface MainActivityEventListener {
 	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun onBackPressed()
-	fun openGuardianEventDetail(name: String, distance: Double, eventSize: Int, guardianId: String)
+	fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
 }

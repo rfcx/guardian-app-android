@@ -39,7 +39,8 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 		
 		fun bind(item: EventGroup) {
 			guardianName.text = item.streamName
-			distance.text = item.distance.setFormatLabel()
+			distance.visibility = if (item.distance == null || item.distance >= 100000) View.GONE else View.VISIBLE
+			distance.text = item.distance?.setFormatLabel()
 			numberOfAlerts.text = if (item.eventSize > 99) itemView.context.getString(R.string.num_more_then_99) else item.eventSize.toString()
 			
 			if (item.eventSize == 0) {
@@ -51,4 +52,4 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 	}
 }
 
-data class EventGroup(val eventSize: Int, val distance: Double, val streamName: String, val streamId: String)
+data class EventGroup(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String)

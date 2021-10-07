@@ -222,10 +222,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.streams.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
-				val loc = Location(LocationManager.GPS_PROVIDER)
-				loc.latitude = 0.0
-				loc.longitude = 0.0
-				viewModel.handledStreams(lastLocation ?: loc, list)
+				viewModel.handledStreams(lastLocation, list)
 				isShowProgressBar(false)
 				setShowListStream()
 				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty())

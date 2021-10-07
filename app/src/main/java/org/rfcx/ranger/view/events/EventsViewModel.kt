@@ -118,21 +118,28 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
 	}
 	
-	fun handledStreams(lastLocation: Location, list: List<StreamResponse>) {
+	fun handledStreams(lastLocation: Location?, list: List<StreamResponse>) {
 		othersGuardians.clear()
 		nearbyGuardians.clear()
 		
 		val groups = arrayListOf<EventGroup>()
 		list.forEach {
-			val distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude))
+			var distance: Double? = null
+			lastLocation?.let { loc ->
+				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
+			}
 			groups.add(EventGroup(it.eventsCount, distance, it.name, it.id))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
-			if (it.distance >= 2000) {
+			if (it.distance == null) {
 				othersGuardians.add(it)
 			} else {
-				nearbyGuardians.add(it)
+				if (it.distance >= 2000) {
+					othersGuardians.add(it)
+				} else {
+					nearbyGuardians.add(it)
+				}
 			}
 		}
 		othersGuardians.sortByDescending { g -> g.eventSize }
