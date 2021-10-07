@@ -54,6 +54,8 @@ import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
 import org.rfcx.ranger.view.project.ProjectAdapter
 import org.rfcx.ranger.view.project.ProjectOnClickListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
 	
@@ -92,6 +94,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location) {
 			moveCameraToCurrentLocation(p0)
+			viewModel.saveTimeOfLastLocationKnow(requireContext(), Date().time)
+			
 			if (PermissionsManager.areLocationPermissionsGranted(context)) {
 				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
 			}
@@ -473,7 +477,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 			try {
 				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-				lastLocation?.let { moveCameraToCurrentLocation(it) }
+				lastLocation?.let {
+					moveCameraToCurrentLocation(it)
+					viewModel.saveTimeOfLastLocationKnow(requireContext(), Date().time)
+				}
 				mapBoxMap?.style?.let { enableLocationComponent(it) }
 			} catch (ex: SecurityException) {
 				ex.printStackTrace()
