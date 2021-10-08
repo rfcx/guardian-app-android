@@ -126,8 +126,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
-		response.streamId = streamId ?: ""
-		response.streamName = streamName ?: ""
+		response.streamId = streamId ?: response.streamId
+		response.streamName = streamName ?: response.streamName
 		setResponse(response)
 	}
 	
