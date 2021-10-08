@@ -23,7 +23,7 @@ class ReportImageDb(val realm: Realm) {
 			// save attached image to be Report Image
 			attachImages.forEach { attachImage ->
 				val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-				val reportImage = ReportImage(imageId, guid = response.guid, reportId = response.id, localPath = attachImage, createAt = imageCreateAt)
+				val reportImage = ReportImage(imageId, guid = null, reportId = response.id, localPath = attachImage, createAt = imageCreateAt)
 				it.insertOrUpdate(reportImage)
 			}
 		}
@@ -100,7 +100,7 @@ class ReportImageDb(val realm: Realm) {
 	
 	fun getByReportIdAsync(reportId: Int): RealmResults<ReportImage> {
 		return realm.where(ReportImage::class.java)
-				.equalTo("reportId", reportId)
+				.equalTo(FIELD_REPORT_ID, reportId)
 				.findAllAsync()
 	}
 	

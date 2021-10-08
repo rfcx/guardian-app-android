@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +42,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var responseId: Int? = null
 	
 	private var _response: Response? = null
-	private var _images: List<String> = listOf()
+	private var _images: ArrayList<String> = arrayListOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -56,8 +55,19 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			val response = viewModel.getResponseById(it)
 			response?.let { res -> setResponse(res) }
 		}
+		setObserver()
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+	}
+	
+	private fun setObserver() {
+		responseId?.let {
+			viewModel.getImagesFromLocal(it).observe(this, { images ->
+				images.forEach { reportImage ->
+					_images.add(reportImage.remotePath ?: reportImage.localPath)
+				}
+			})
+		}
 	}
 	
 	private fun setupToolbar() {
@@ -101,9 +111,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun getResponse(): Response? = _response
 	
-	override fun getImages(): List<String> = _images
+	override fun getImages(): ArrayList<String> = _images
 	
-	override fun setImages(images: List<String>) {
+	override fun setImages(images: ArrayList<String>) {
 		_images = images
 	}
 	
@@ -216,7 +226,7 @@ interface CreateReportListener {
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?
-	fun getImages(): List<String>
+	fun getImages(): ArrayList<String>
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
@@ -224,7 +234,7 @@ interface CreateReportListener {
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
 	fun setNotes(note: String)
-	fun setImages(images: List<String>)
+	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
 	
 	fun onSaveDraftButtonClick()

@@ -114,7 +114,7 @@ class AssetsFragment : BaseImageFragment() {
 		noteEditText.text?.let {
 			listener.setNotes(it.toString())
 		}
-		listener.setImages(reportImageAdapter.getNewAttachImage())
+		listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
 		listener.setAudio(recordFile?.canonicalPath)
 	}
 	
