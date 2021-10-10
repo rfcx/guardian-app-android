@@ -4,10 +4,15 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
@@ -56,12 +61,32 @@ class AssetsFragment : BaseImageFragment() {
 		}
 		
 		submitButton.setOnClickListener {
-			saveAssets()
-			listener.onSubmitButtonClick()
+			if (!TextUtils.isEmpty(noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
+				saveAssets()
+				listener.onSubmitButtonClick()
+			} else {
+				showDefaultDialog()
+			}
 		}
 		
 		setupAssets()
 		setupRecordSoundProgressView()
+	}
+	
+	private fun showDefaultDialog() {
+		val dialog = MaterialAlertDialogBuilder(context)
+				.setTitle(R.string.submit_report)
+				.setMessage(resources.getString(R.string.are_you_sure))
+				.setNegativeButton(resources.getString(R.string.report_submit_button_label)) { _, _ ->
+					saveAssets()
+					listener.onSubmitButtonClick()
+				}
+				.setPositiveButton(resources.getString(R.string.cancel)) { _, _ -> }
+				.show()
+		
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
 	}
 	
 	private fun setupAssets() {

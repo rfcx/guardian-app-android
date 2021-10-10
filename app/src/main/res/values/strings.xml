@@ -292,4 +292,6 @@
 	<string name="upload_voice_notes">Voice notes</string>
 	<string name="none_collected">None collected</string>
 	
+	<string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+	<string name="submit_report">Submit report</string>
 </resources>
