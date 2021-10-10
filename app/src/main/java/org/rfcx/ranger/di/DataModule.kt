@@ -136,6 +136,7 @@ object DataModule {
 		factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }

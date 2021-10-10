@@ -16,13 +16,16 @@ class ResponseDb(val realm: Realm) {
 		return null
 	}
 	
-	fun save(response: Response) {
+	fun save(response: Response): Response {
+		var res = response
 		realm.executeTransaction {
 			if (response.id == 0) {
 				response.id = (it.where(Response::class.java).max("id")?.toInt() ?: 0) + 1
+				res = response
 			}
 			it.insertOrUpdate(response)
 		}
+		return res
 	}
 	
 	fun lockUnsent(): List<Response> {

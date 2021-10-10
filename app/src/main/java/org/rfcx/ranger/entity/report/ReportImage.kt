@@ -10,6 +10,7 @@ open class ReportImage(
 		var id: Int = 0,
 		@Expose(serialize = false)
 		var reportId: Int = 0,
+		var reportServerId: String? = null,
 		var guid: String? = null,
 		@Expose(serialize = false)
 		var localPath: String = "",   // path of image on device
@@ -19,6 +20,8 @@ open class ReportImage(
 		var remotePath: String? = null // image url after synced to server
 ) : RealmObject() {
 	companion object {
+		const val TABLE_NAME = "ReportImage"
 		const val FIELD_REPORT_ID = "reportId"
+		const val FIELD_REPORT_SERVER_ID = "reportServerId"
 	}
 }

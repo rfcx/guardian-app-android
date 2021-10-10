@@ -161,13 +161,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
-		saveImages(response)
 	}
 	
 	override fun onSaveDraftButtonClick() {
 		val response = _response ?: Response()
-		viewModel.saveResponseInLocalDb(response)
-		saveImages(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		
 		val intent = Intent()
 		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
@@ -175,16 +173,10 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		finish()
 	}
 	
-	private fun saveImages(response: Response) {
-		if (_images.isNotEmpty()) {
-			viewModel.saveImages(response, _images)
-		}
-	}
-	
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
-		viewModel.saveResponseInLocalDb(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		ResponseSyncWorker.enqueue()
 		
 		val intent = Intent()
