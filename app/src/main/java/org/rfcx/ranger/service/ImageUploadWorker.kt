@@ -1,7 +1,6 @@
 package org.rfcx.ranger.service
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.work.*
 import io.realm.Realm
@@ -26,13 +25,9 @@ class ImageUploadWorker(private val context: Context, params: WorkerParameters)
 	: Worker(context, params) {
 	
 	override fun doWork(): Result {
-		Log.d(TAG, "doWork")
-		
 		val api = ServiceFactory.makeAssetsService(BuildConfig.DEBUG, context)
 		val db = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val images = db.lockUnsent()
-		
-		Log.d(TAG, "doWork images ${images.size}")
 		
 		var someFailed = false
 		for (image in images) {
@@ -54,8 +49,10 @@ class ImageUploadWorker(private val context: Context, params: WorkerParameters)
 			image.reportServerId?.let {
 				result = api.uploadAssets(it, file).execute()
 				if (result.isSuccessful) {
-					val remotePath = result.headers().toString().split("/").last()
-					db.markSent(image.id, remotePath)
+					val assetPath = result.headers().get("Location")
+					assetPath?.let { path ->
+						db.markSent(image.id, path.substring(1, path.length))
+					}
 				} else {
 					db.markUnsent(image.id)
 					someFailed = true
