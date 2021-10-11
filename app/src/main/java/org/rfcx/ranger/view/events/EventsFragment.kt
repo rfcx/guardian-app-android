@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
@@ -205,6 +206,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectSwipeRefreshView.visibility = View.GONE
 		viewModel.setProjectSelected(project.id)
 		viewModel.loadStreams()
+		setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
 	}
 	
@@ -240,25 +242,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		})
 		
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
-			val features = streams.map {
-				val loc = Location(LocationManager.GPS_PROVIDER)
-				loc.latitude = it.latitude
-				loc.longitude = it.longitude
-				
-				val last = Location(LocationManager.GPS_PROVIDER)
-				last.latitude = lastLocation?.latitude ?: 0.0
-				last.longitude = lastLocation?.longitude ?: 0.0
-				
-				val properties = mapOf(
-						Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-						Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
-						Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
-						Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
-				)
-				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
-			}
-			alertFeatures = FeatureCollection.fromFeatures(features)
-			refreshSource()
+			setAlertFeatures(streams)
 		})
 	}
 	
@@ -324,6 +308,30 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapboxMap.addOnMapClickListener { latLng ->
 			handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
 		}
+	}
+	
+	private fun setAlertFeatures(streams: List<Stream>) {
+		val projectServerId = viewModel.getProject()?.serverId
+		val listOfStream = streams.filter { s -> s.project?.id == projectServerId }
+		val features = listOfStream.map {
+			val loc = Location(LocationManager.GPS_PROVIDER)
+			loc.latitude = it.latitude
+			loc.longitude = it.longitude
+			
+			val last = Location(LocationManager.GPS_PROVIDER)
+			last.latitude = lastLocation?.latitude ?: 0.0
+			last.longitude = lastLocation?.longitude ?: 0.0
+			
+			val properties = mapOf(
+					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
+					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
+					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
+					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
+			)
+			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
+		}
+		alertFeatures = FeatureCollection.fromFeatures(features)
+		refreshSource()
 	}
 	
 	private fun handleClickIcon(screenPoint: PointF): Boolean {

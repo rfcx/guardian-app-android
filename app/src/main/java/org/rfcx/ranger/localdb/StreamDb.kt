@@ -26,4 +26,8 @@ class StreamDb(private val realm: Realm) {
 	fun getAllResultsAsync(): RealmResults<Stream> {
 		return realm.where(Stream::class.java).findAllAsync()
 	}
+	
+	fun getStreams(): List<Stream> {
+		return realm.where(Stream::class.java).findAll() ?: arrayListOf()
+	}
 }
