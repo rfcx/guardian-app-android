@@ -31,16 +31,15 @@ class ReportImageDb(val realm: Realm) {
 	}
 	
 	fun saveReportServerIdToImage(serverId: String, reportId: Int) {
-		val images =
-				realm.where(ReportImage::class.java)
+		val images = realm.where(ReportImage::class.java)
 						.equalTo(FIELD_REPORT_ID, reportId)
 						.findAll()
-		realm.executeTransaction { transition ->
+		realm.executeTransaction { transaction ->
 			images?.forEach {
 				val image = it.apply {
 					this.reportServerId = serverId
 				}
-				transition.insertOrUpdate(image)
+				transaction.insertOrUpdate(image)
 			}
 		}
 	}
