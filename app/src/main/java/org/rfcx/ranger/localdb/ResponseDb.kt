@@ -8,12 +8,8 @@ import org.rfcx.ranger.entity.response.SyncState
 class ResponseDb(val realm: Realm) {
 	
 	fun getResponseById(id: Int): Response? {
-		val response =
-				realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst()
-		if (response != null) {
-			return realm.copyFromRealm(response)
-		}
-		return null
+		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst() ?: return null
+		return realm.copyFromRealm(response)
 	}
 	
 	fun save(response: Response): Response {
