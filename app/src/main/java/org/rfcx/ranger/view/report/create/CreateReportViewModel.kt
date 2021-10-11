@@ -15,14 +15,13 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 		return Transformations.map(reportImageDb.getByReportIdAsync(id).asLiveData()) { it }
 	}
 	
-	fun saveResponseInLocalDb(response: Response) {
-		responseDb.save(response)
+	fun saveResponseInLocalDb(response: Response, images: List<String>?) {
+		val res = responseDb.save(response)
+		if (!images.isNullOrEmpty()) {
+			reportImageDb.deleteImages(res.id)
+			reportImageDb.save(res, images)
+		}
 	}
 	
 	fun getResponseById(id: Int): Response? = responseDb.getResponseById(id)
-	
-	fun saveImages(response: Response, images: List<String>) {
-		reportImageDb.deleteImages(response.id)
-		reportImageDb.save(response, images)
-	}
 }

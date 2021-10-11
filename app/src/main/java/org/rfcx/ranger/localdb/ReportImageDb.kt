@@ -5,6 +5,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.report.ReportImage.Companion.FIELD_REPORT_ID
+import org.rfcx.ranger.entity.report.ReportImage.Companion.FIELD_REPORT_SERVER_ID
 import org.rfcx.ranger.entity.response.Response
 
 /**
@@ -29,12 +30,26 @@ class ReportImageDb(val realm: Realm) {
 		}
 	}
 	
+	fun saveReportServerIdToImage(serverId: String, reportId: Int) {
+		val images = realm.where(ReportImage::class.java)
+						.equalTo(FIELD_REPORT_ID, reportId)
+						.findAll()
+		realm.executeTransaction { transaction ->
+			images?.forEach {
+				val image = it.apply {
+					this.reportServerId = serverId
+				}
+				transaction.insertOrUpdate(image)
+			}
+		}
+	}
+	
 	fun lockUnsent(): List<ReportImage> {
 		var unsentCopied: List<ReportImage> = listOf()
 		realm.executeTransaction { it ->
 			val unsent = it.where(ReportImage::class.java)
 					.equalTo("syncState", UNSENT)
-					.isNotNull("guid")
+					.isNotNull(FIELD_REPORT_SERVER_ID)
 					.findAll().createSnapshot()
 			unsentCopied = unsent.toList()
 			unsent.forEach {

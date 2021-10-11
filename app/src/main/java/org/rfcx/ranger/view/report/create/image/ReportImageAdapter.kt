@@ -11,13 +11,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_report_image.view.*
+import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.adapter.entity.BaseListItem
 import org.rfcx.ranger.databinding.AdapterReportImageBinding
 import org.rfcx.ranger.databinding.ItemAddImageReportBinding
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.localdb.ReportImageDb
-import org.rfcx.ranger.util.GlideApp
+import org.rfcx.ranger.util.getTokenID
+import org.rfcx.ranger.util.setReportImage
 
 class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(ReportImageAdapterDiffUtil()) {
 	
@@ -152,12 +154,20 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	}
 	
 	inner class ReportImageAdapterViewHolder(val binding: AdapterReportImageBinding, private val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?) : RecyclerView.ViewHolder(binding.root) {
+		private val imageReport = itemView.imageReport
+		private val progressBar = itemView.progressBarOfImageView
+		
 		fun bind(imagePath: String, canDelete: Boolean) {
-			GlideApp.with(binding.imageReport)
-					.load(imagePath)
-					.placeholder(R.drawable.bg_grey_light)
-					.error(R.drawable.bg_grey_light)
-					.into(itemView.imageReport)
+			val fromServer = imagePath.startsWith(BuildConfig.RANGER_API_DOMAIN)
+			val token = itemView.context.getTokenID()
+			
+			imageReport.setReportImage(
+					url = imagePath,
+					fromServer = fromServer,
+					token = token,
+					progressBar = progressBar
+			)
+			
 			binding.onClickDeleteImageButton = View.OnClickListener {
 				onReportImageAdapterClickListener?.onDeleteImageClick(adapterPosition, imagePath)
 			}

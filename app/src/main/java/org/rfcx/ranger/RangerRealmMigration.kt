@@ -11,6 +11,7 @@ import org.rfcx.ranger.entity.alert.Classification
 import org.rfcx.ranger.entity.alert.Incident
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
@@ -54,6 +55,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 14L && newVersion >= 14L) {
 			migrateToV14(c)
+		}
+		if (oldVersion < 15L && newVersion >= 15L) {
+			migrateToV15(c)
 		}
 	}
 	
@@ -365,6 +369,13 @@ class RangerRealmMigration : RealmMigration {
 			addField(Stream.STREAM_LATITUDE, Double::class.java)
 			addField(Stream.STREAM_LONGITUDE, Double::class.java)
 			addRealmObjectField(Stream.STREAM_PROJECT, project)
+		}
+	}
+	
+	private fun migrateToV15(realm: DynamicRealm) {
+		val reportImage = realm.schema.get(ReportImage.TABLE_NAME)
+		reportImage?.apply {
+			addField(ReportImage.FIELD_REPORT_SERVER_ID, String::class.java)
 		}
 	}
 	

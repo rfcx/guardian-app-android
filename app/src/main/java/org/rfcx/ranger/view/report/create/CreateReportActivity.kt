@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.ResponseSyncWorker
@@ -64,7 +65,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		responseId?.let {
 			viewModel.getImagesFromLocal(it).observe(this, { images ->
 				images.forEach { reportImage ->
-					_images.add(reportImage.remotePath ?: reportImage.localPath)
+					val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_DOMAIN + reportImage.remotePath else "file://${reportImage.localPath}"
+					_images.add(path)
 				}
 			})
 		}
@@ -161,13 +163,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
-		saveImages(response)
 	}
 	
 	override fun onSaveDraftButtonClick() {
 		val response = _response ?: Response()
-		viewModel.saveResponseInLocalDb(response)
-		saveImages(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		
 		val intent = Intent()
 		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
@@ -175,16 +175,10 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		finish()
 	}
 	
-	private fun saveImages(response: Response) {
-		if (_images.isNotEmpty()) {
-			viewModel.saveImages(response, _images)
-		}
-	}
-	
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
-		viewModel.saveResponseInLocalDb(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		ResponseSyncWorker.enqueue()
 		
 		val intent = Intent()
