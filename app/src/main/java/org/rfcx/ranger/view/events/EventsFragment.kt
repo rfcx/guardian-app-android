@@ -407,18 +407,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 								Expression.lt(pointCount, Expression.literal(layers[index - 1][0]))
 						)
 			)
-			style.addLayerBelow(circles, BUILDING)
+			style.addLayer(circles)
 		}
-		
-		val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
-		eventsSize.setProperties(
-				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
-				PropertyFactory.textSize(12f),
-				PropertyFactory.textColor(Color.WHITE),
-				PropertyFactory.textIgnorePlacement(true),
-				PropertyFactory.textAllowOverlap(true)
-		)
-		style.addLayer(eventsSize)
 		
 		val count = SymbolLayer(COUNT, SOURCE_ALERT)
 		count.setProperties(
@@ -430,11 +420,36 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		)
 		style.addLayer(count)
 		
-		val unClustered = CircleLayer(UN_CLUSTERED_POINTS, SOURCE_ALERT)
-		val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() == "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
-		unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(10f))
-		unClustered.setFilter(Expression.neq(Expression.get(CLUSTER), Expression.literal(true)))
-		style.addLayerBelow(unClustered, BUILDING)
+		layers.forEachIndexed { i, ly ->
+			val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
+			val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() != "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
+			unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(10f))
+			val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+			unClustered.setFilter(
+					if (i == 0) {
+						Expression.all(
+								Expression.gte(eventsSize, Expression.literal(ly[0])),
+								Expression.gte(eventsSize, Expression.literal(1))
+						)
+					} else {
+						Expression.all(
+								Expression.gte(eventsSize, Expression.literal(ly[0])),
+								Expression.gt(eventsSize, Expression.literal(layers[i - 1][0]))
+						)
+					}
+			)
+			style.addLayer(unClustered)
+		}
+		
+		val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
+		eventsSize.setProperties(
+				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
+				PropertyFactory.textSize(12f),
+				PropertyFactory.textColor(Color.WHITE),
+				PropertyFactory.textIgnorePlacement(true),
+				PropertyFactory.textAllowOverlap(true)
+		)
+		style.addLayer(eventsSize)
 	}
 	
 	private fun enableLocationComponent(style: Style) {
