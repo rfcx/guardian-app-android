@@ -115,7 +115,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun saveTimeOfLastLocationKnow(context: Context, time: Long) {
 		val preferences = Preferences.getInstance(context)
-		preferences.putLong(Preferences.LAST_LOCATION_KNOW_TIME, time)
+		preferences.putLong(Preferences.LAST_TIME_TO_KNOW_THE_CURRENT_LOCATION, time)
 	}
 	
 	fun setProjectSelected(id: Int) {

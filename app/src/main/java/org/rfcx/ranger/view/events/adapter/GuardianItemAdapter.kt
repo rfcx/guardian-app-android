@@ -41,7 +41,7 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 		
 		fun bind(item: EventGroup) {
 			val preferences = Preferences.getInstance(itemView.context)
-			val time = preferences.getLong(Preferences.LAST_LOCATION_KNOW_TIME, 0)
+			val time = preferences.getLong(Preferences.LAST_TIME_TO_KNOW_THE_CURRENT_LOCATION, 0)
 			val diff = Date().time - time
 			
 			guardianName.text = item.streamName

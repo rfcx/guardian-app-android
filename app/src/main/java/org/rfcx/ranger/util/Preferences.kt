@@ -55,7 +55,7 @@ class Preferences(context: Context) {
 		
 		/*-- New design --*/
 		const val SELECTED_PROJECT = "${PREFIX}SELECTED_PROJECT"
-		const val LAST_LOCATION_KNOW_TIME = "${PREFIX}LAST_LOCATION_KNOW_TIME"
+		const val LAST_TIME_TO_KNOW_THE_CURRENT_LOCATION = "${PREFIX}LAST_TIME_TO_KNOW_THE_CURRENT_LOCATION"
 		
 	}
 	
