@@ -119,6 +119,12 @@ class ReportImageDb(val realm: Realm) {
 				.findAllAsync()
 	}
 	
+	fun getByReportId(reportId: Int): List<ReportImage> {
+		return realm.where(ReportImage::class.java)
+				.equalTo(FIELD_REPORT_ID, reportId)
+				.findAll()
+	}
+	
 	fun deleteImages(id: Int) {
 		realm.executeTransaction {
 			realm.where(ReportImage::class.java).equalTo(FIELD_REPORT_ID, id)?.findAll()
