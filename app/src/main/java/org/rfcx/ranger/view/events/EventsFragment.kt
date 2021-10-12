@@ -72,6 +72,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
 		private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
 		private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
+		private const val PROPERTY_CLUSTER_COUNT_EVENTS = "cluster.count.events"
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
 		private const val DURATION_MS = 1300
@@ -388,6 +389,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 								Expression.literal(0),
 								Expression.literal(1)
 						)
+				).withClusterProperty(
+						PROPERTY_CLUSTER_COUNT_EVENTS,
+						Expression.sum(Expression.accumulated(), Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS)),
+						Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
 				)
 		)
 		it.addSource(alertSource!!)
@@ -426,7 +431,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		val count = SymbolLayer(COUNT, SOURCE_ALERT)
 		count.setProperties(
-				PropertyFactory.textField(Expression.toString(Expression.get(POINT_COUNT))),
+				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS))),
 				PropertyFactory.textSize(12f),
 				PropertyFactory.textColor(Color.WHITE),
 				PropertyFactory.textIgnorePlacement(true),
@@ -459,7 +464,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		eventsSize.setProperties(
 				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
 				PropertyFactory.textSize(12f),
-				PropertyFactory.textColor(Color.LTGRAY),
+				PropertyFactory.textColor(Color.WHITE),
 				PropertyFactory.textIgnorePlacement(true),
 				PropertyFactory.textAllowOverlap(true)
 		)
