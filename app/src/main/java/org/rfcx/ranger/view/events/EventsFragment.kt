@@ -230,7 +230,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				viewModel.handledStreams(lastLocation, list)
 				isShowProgressBar(false)
 				setShowListStream()
-				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty())
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
 				nearbyAdapter.items = viewModel.nearbyGuardians
 				othersAdapter.items = viewModel.othersGuardians
 			}, {
