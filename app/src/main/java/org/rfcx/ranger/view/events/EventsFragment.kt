@@ -65,15 +65,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		private const val COUNT = "count"
 		private const val COUNT_EVENTS = "count.events"
-		private const val CLUSTER = "cluster"
-		private const val BUILDING = "building"
 		private const val POINT_COUNT = "point_count"
 		private const val SOURCE_ALERT = "source.alert"
 		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		private const val PROPERTY_MARKER_ALERT_DISTANCE = "alert.distance"
 		private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
 		private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
-		private const val UN_CLUSTERED_POINTS = "un-clustered-points"
+		private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
 		private const val DURATION_MS = 1300
@@ -377,7 +375,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
 				.withCluster(true)
 				.withClusterMaxZoom(15)
-				.withClusterRadius(20))
+				.withClusterRadius(20)
+				.withClusterProperty(
+						PROPERTY_CLUSTER_TYPE,
+						Expression.sum(Expression.accumulated(), Expression.get(PROPERTY_CLUSTER_TYPE)),
+						Expression.switchCase(
+								Expression.any(
+										Expression.eq(
+												Expression.get(PROPERTY_MARKER_ALERT_COUNT), "0"
+										)
+								),
+								Expression.literal(0),
+								Expression.literal(1)
+						)
+				)
+		)
 		it.addSource(alertSource!!)
 	}
 	
@@ -397,15 +409,17 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		layers.forEachIndexed { index, layer ->
 			queryLayerIds[index] = "cluster-$index"
 			val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
-			circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(10f))
-			val pointCount = Expression.toNumber(Expression.get(POINT_COUNT))
+			circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(14f))
+			val type = Expression.toNumber(Expression.get(PROPERTY_CLUSTER_TYPE))
 			circles.setFilter(
-					if (index == 0)
-						Expression.gte(pointCount, Expression.literal(layer[0])) else
+					if (index == 0) {
+						Expression.gte(type, Expression.literal(layer[0]))
+					} else {
 						Expression.all(
-								Expression.gte(pointCount, Expression.literal(layer[0])),
-								Expression.lt(pointCount, Expression.literal(layers[index - 1][0]))
+								Expression.gte(type, Expression.literal(layer[0])),
+								Expression.gt(type, Expression.literal(layers[index - 1][0]))
 						)
+					}
 			)
 			style.addLayer(circles)
 		}
@@ -423,7 +437,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		layers.forEachIndexed { i, ly ->
 			val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
 			val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() != "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
-			unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(10f))
+			unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
 			val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
 			unClustered.setFilter(
 					if (i == 0) {
@@ -445,7 +459,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		eventsSize.setProperties(
 				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
 				PropertyFactory.textSize(12f),
-				PropertyFactory.textColor(Color.WHITE),
+				PropertyFactory.textColor(Color.LTGRAY),
 				PropertyFactory.textIgnorePlacement(true),
 				PropertyFactory.textAllowOverlap(true)
 		)
