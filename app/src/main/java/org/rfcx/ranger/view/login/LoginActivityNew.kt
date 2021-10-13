@@ -35,7 +35,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
 		
-		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && selectedProject == -1 && getUserNickname().substring(0, 1) != "+") {
+		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && selectedProject != -1 && getUserNickname().substring(0, 1) != "+") {
 			openMain()
 		} else {
 			openLoginFragment()
