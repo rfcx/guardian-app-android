@@ -10,6 +10,8 @@ import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.alert.Classification
 import org.rfcx.ranger.entity.alert.Incident
 import org.rfcx.ranger.entity.event.EventReview
+import org.rfcx.ranger.entity.location.Coordinate
+import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
@@ -376,6 +378,26 @@ class RangerRealmMigration : RealmMigration {
 		val reportImage = realm.schema.get(ReportImage.TABLE_NAME)
 		reportImage?.apply {
 			addField(ReportImage.FIELD_REPORT_SERVER_ID, String::class.java)
+		}
+		
+		val coordinate = realm.schema.create(Coordinate.TABLE_NAME)
+		coordinate.apply {
+			addField(Coordinate.COORDINATE_LATITUDE, Double::class.java)
+			addField(Coordinate.COORDINATE_LONGITUDE, Double::class.java)
+			addField(Coordinate.COORDINATE_ALTITUDE, Double::class.java)
+		}
+		
+		val tracking = realm.schema.create(Tracking.TABLE_NAME)
+		tracking.apply {
+			addField(
+					Tracking.TRACKING_ID,
+					Int::class.java,
+					FieldAttribute.PRIMARY_KEY
+			)
+			addField(Tracking.TRACKING_START_AT, Date::class.java)
+					.setNullable(Tracking.TRACKING_START_AT, false)
+			addField(Tracking.TRACKING_STOP_AT, Date::class.java)
+			addRealmListField(Tracking.TRACKING_POINTS, coordinate)
 		}
 	}
 	

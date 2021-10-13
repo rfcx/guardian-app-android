@@ -21,14 +21,17 @@ import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.Stream
+import org.rfcx.ranger.entity.location.Coordinate
+import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.localdb.StreamDb
+import org.rfcx.ranger.localdb.TrackingDb
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
-class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
@@ -39,8 +42,6 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
-	var listEvent: ArrayList<List<ResponseEvent>> = arrayListOf()
-	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
 	
@@ -49,6 +50,19 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	}
 	
 	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
+	
+	fun saveTracking(tracking: Tracking, location: Location) {
+		val coordinate = Coordinate(
+				latitude = location.latitude,
+				longitude = location.longitude,
+				altitude = location.altitude
+		)
+		trackingDb.insertOrUpdate(tracking, coordinate)
+	}
+	
+	fun deleteTracking(context: Context) {
+		trackingDb.deleteTracking(1, context)
+	}
 	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {

@@ -48,7 +48,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
+import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
@@ -62,6 +64,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	companion object {
 		const val tag = "EventsFragment"
+		private const val FIVE_MINUTES = 5 * 60 * 1000
 		
 		private const val COUNT = "count"
 		private const val COUNT_EVENTS = "count.events"
@@ -96,6 +99,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			moveCameraToCurrentLocation(p0)
 			viewModel.saveTimeOfLastLocationKnow(requireContext(), Date().time)
 			
+			val lastGetLocationTime = Preferences.getInstance(requireContext()).getLong(Preferences.LATEST_GET_LOCATION_TIME, 0L)
+			if (System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
+				saveLocation(p0)
+			}
+			
 			if (PermissionsManager.areLocationPermissionsGranted(context)) {
 				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
 			}
@@ -112,6 +120,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
+	private var tracking = Tracking()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -142,6 +151,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		isShowProgressBar()
 		setObserver()
 		setRecyclerView()
+		
+		val lastGetLocationTime = Preferences.getInstance(requireContext()).getLong(Preferences.LATEST_GET_LOCATION_TIME, 0L)
+		if (System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
+			lastLocation?.let { saveLocation(it) }
+		}
 	}
 	
 	override fun onHiddenChanged(hidden: Boolean) {
@@ -307,6 +321,12 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapboxMap.addOnMapClickListener { latLng ->
 			handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
 		}
+	}
+	
+	private fun saveLocation(location: Location) {
+		tracking.id = 1
+		viewModel.saveTracking(tracking, location)
+		Preferences.getInstance(requireContext()).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	
 	private fun setAlertFeatures(streams: List<Stream>) {
