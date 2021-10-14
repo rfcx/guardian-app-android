@@ -7,9 +7,15 @@ import org.koin.dsl.module
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.JobExecutor
 import org.rfcx.ranger.UiThread
+import org.rfcx.ranger.data.api.events.EventsRepository
+import org.rfcx.ranger.data.api.events.EventsRepositoryImp
+import org.rfcx.ranger.data.api.events.GetEvents
 import org.rfcx.ranger.data.api.project.GetProjectsRepository
 import org.rfcx.ranger.data.api.project.GetProjectsRepositoryImp
 import org.rfcx.ranger.data.api.project.GetProjectsUseCase
+import org.rfcx.ranger.data.api.site.GetStreamsRepository
+import org.rfcx.ranger.data.api.site.GetStreamsRepositoryImp
+import org.rfcx.ranger.data.api.site.GetStreamsUseCase
 import org.rfcx.ranger.data.local.*
 import org.rfcx.ranger.data.remote.data.alert.EventRepository
 import org.rfcx.ranger.data.remote.data.classified.ClassifiedRepository
@@ -73,6 +79,12 @@ object DataModule {
 		single { GetProjectsRepositoryImp(get()) } bind GetProjectsRepository::class
 		single { GetProjectsUseCase(get(), get(), get()) }
 		
+		single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class
+		single { GetStreamsUseCase(get(), get(), get()) }
+		
+		single { EventsRepositoryImp(get()) } bind EventsRepository::class
+		single { GetEvents(get(), get(), get()) }
+		
 		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
 		single { GetClassifiedUseCase(get(), get(), get()) }
 		
@@ -121,7 +133,10 @@ object DataModule {
 	
 	val remoteModule = module {
 		factory { ServiceFactory.makeProjectsService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
@@ -148,6 +163,8 @@ object DataModule {
 		factory { ResponseDb(get()) }
 		factory { ReportImageDb(get()) }
 		factory { EventDb(get()) }
+		factory { AlertDb(get()) }
+		factory { StreamDb(get()) }
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get(), get()) }
 		factory { Preferences.getInstance(androidContext()) }

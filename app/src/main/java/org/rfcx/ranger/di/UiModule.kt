@@ -29,7 +29,7 @@ object UiModule {
 	}
 	
 	val eventsModule = module {
-		viewModel { EventsViewModel(androidContext(), get(), get(), get()) }
+		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get()) }
 		viewModel { GuardianEventDetailViewModel(get()) }
 	}
 	
@@ -55,6 +55,6 @@ object UiModule {
 		viewModel { LoginViewModel(androidContext(), get()) }
 		viewModel { SetUserNameViewModel(androidContext(), get()) }
 		viewModel { TermsAndServiceViewModel(androidContext(), get()) }
-		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get()) }
+		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get(), get()) }
 	}
 }

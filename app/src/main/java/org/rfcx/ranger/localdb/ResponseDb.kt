@@ -6,16 +6,23 @@ import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 
 class ResponseDb(val realm: Realm) {
-	fun save(response: Response) {
+	
+	fun getResponseById(id: Int): Response? {
+		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst() ?: return null
+		return realm.copyFromRealm(response)
+	}
+	
+	fun save(response: Response): Response {
+		var res = response
 		realm.executeTransaction {
 			if (response.id == 0) {
 				response.id = (it.where(Response::class.java).max("id")?.toInt() ?: 0) + 1
+				res = response
 			}
 			it.insertOrUpdate(response)
 		}
+		return res
 	}
-	
-	fun unsentCount(): Long = realm.where(Response::class.java).notEqualTo("syncState", ReportDb.SENT).count()
 	
 	fun lockUnsent(): List<Response> {
 		var unsentCopied: List<Response> = listOf()
@@ -33,17 +40,17 @@ class ResponseDb(val realm: Realm) {
 		mark(id = id, syncState = SyncState.UNSENT.value)
 	}
 	
-	fun markSent(id: Int, guid: String?) {
-		mark(id, guid, SyncState.SENT.value)
-		
+	fun markSent(id: Int, guid: String?, incidentRef: String?) {
+		mark(id, guid, SyncState.SENT.value, incidentRef)
 	}
 	
-	private fun mark(id: Int, guid: String? = null, syncState: Int) {
+	private fun mark(id: Int, guid: String? = null, syncState: Int, incidentRef: String? = null) {
 		realm.executeTransaction {
 			val response = it.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst()
 			if (response != null) {
 				response.guid = guid
 				response.syncState = syncState
+				response.incidentRef = incidentRef
 			}
 		}
 	}

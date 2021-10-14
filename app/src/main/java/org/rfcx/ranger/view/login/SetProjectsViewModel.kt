@@ -7,41 +7,47 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.api.project.GetProjectsUseCase
+import org.rfcx.ranger.data.api.project.ProjectResponse
+import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
 import org.rfcx.ranger.data.local.EventDb
-import org.rfcx.ranger.data.remote.ResponseCallback
+import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
-import org.rfcx.ranger.entity.event.GuardianGroupFactory
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.getGuardianGroup
-import org.rfcx.ranger.util.getResultError
 
-class SetProjectsViewModel(private val context: Context, private val getProjects: GetGuardianGroups, private val eventDb: EventDb, private val unsubscribeUseCase: UnsubscribeUseCase, private val subscribeUseCase: SubscribeUseCase) : ViewModel() {
-	private val _items = MutableLiveData<Result<List<GuardianGroup>>>()
-	val items: LiveData<Result<List<GuardianGroup>>> get() = _items
+class SetProjectsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val eventDb: EventDb, private val unsubscribeUseCase: UnsubscribeUseCase, private val subscribeUseCase: SubscribeUseCase) : ViewModel() {
+	private val _projects = MutableLiveData<Result<List<Project>>>()
+	val projects: LiveData<Result<List<Project>>> get() = _projects
 	
 	init {
-		loadProjects()
+		fetchProjects()
 	}
 	
-	private fun loadProjects() {
-		_items.value = Result.Loading
-		getProjects.execute(object : ResponseCallback<List<GuardianGroup>> {
-			override fun onSuccess(t: List<GuardianGroup>) {
-				_items.value = Result.Success(t)
+	fun fetchProjects() {
+		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
+			override fun onSuccess(t: List<ProjectResponse>) {
+				t.map {
+					projectDb.insertOrUpdate(it)
+				}
+				_projects.value = Result.Success(listOf())
 			}
 			
 			override fun onError(e: Throwable) {
-				_items.value = Result.Error(e)
+				_projects.value = Result.Error(e)
 			}
-			
-		}, GuardianGroupFactory())
+		}, ProjectsRequestFactory())
+	}
+	
+	fun getProjectsFromLocal(): List<Project> {
+		return projectDb.getProjects()
 	}
 	
 	fun setProjects(guardianGroup: GuardianGroup, callback: (Boolean) -> Unit) {

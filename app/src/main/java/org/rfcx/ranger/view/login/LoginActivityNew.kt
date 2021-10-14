@@ -33,8 +33,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 		val preferenceHelper = Preferences.getInstance(this)
 		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
+		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
 		
-		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && getSiteName() != "" && getUserNickname().substring(0, 1) != "+") {
+		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && selectedProject != -1 && getUserNickname().substring(0, 1) != "+") {
 			openMain()
 		} else {
 			openLoginFragment()
@@ -44,7 +45,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun handleOpenPage() {
 		val preferenceHelper = Preferences.getInstance(this)
 		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
-		val guardianGroup = preferenceHelper.getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
 		
 		when {
 			getUserNickname().substring(0, 1) == "+" -> {
@@ -53,7 +54,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 			(!isConsentGiven) -> {
 				openTermsAndServiceFragment()
 			}
-			guardianGroup == null -> {
+			selectedProject == -1 -> {
 				openSetProjectsFragment()
 			}
 			else -> {

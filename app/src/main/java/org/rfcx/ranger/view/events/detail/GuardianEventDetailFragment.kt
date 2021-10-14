@@ -12,26 +12,27 @@ import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
-import org.rfcx.ranger.view.events.adapter.EventItemAdapter
+import org.rfcx.ranger.view.events.adapter.AlertItemAdapter
 
 class GuardianEventDetailFragment : Fragment() {
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
-	private val eventItemAdapter by lazy { EventItemAdapter() }
+	private val alertItemAdapter by lazy { AlertItemAdapter() }
 	
 	var name: String? = null
 	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
-	var list = listOf<Event>()
+	var alerts = listOf<Alert>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
+		distance = arg.getDouble(ARG_DISTANCE)
 		guardianId = arg.getString(ARG_GUARDIAN_ID)
 		number = arg.getInt(ARG_NUMBER)
 	}
@@ -54,8 +55,8 @@ class GuardianEventDetailFragment : Fragment() {
 		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = eventItemAdapter
-			eventItemAdapter.items = list.take(number ?: 0)
+			adapter = alertItemAdapter
+			alertItemAdapter.items = alerts.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
 				name?.let { name ->
@@ -71,9 +72,9 @@ class GuardianEventDetailFragment : Fragment() {
 	}
 	
 	private fun setObserve() {
-		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
-			list = events.filter { e -> e.guardianId == guardianId }
-			eventItemAdapter.items = list.take(number ?: 0)
+		viewModel.getAlerts().observe(viewLifecycleOwner, { events ->
+			alerts = events.filter { e -> e.streamId == guardianId }
+			alertItemAdapter.items = alerts
 		})
 	}
 	
@@ -99,13 +100,13 @@ class GuardianEventDetailFragment : Fragment() {
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Double, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double?, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
 					putString(ARG_GUARDIAN_ID, guardianId)
-					putDouble(ARG_DISTANCE, distance)
 					putInt(ARG_NUMBER, eventSize)
+					if (distance != null) putDouble(ARG_DISTANCE, distance)
 				}
 			}
 		}

@@ -7,7 +7,10 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.ranger.BuildConfig
+import org.rfcx.ranger.data.api.assets.AssetsEndpoint
+import org.rfcx.ranger.data.api.events.EventsEndpoint
 import org.rfcx.ranger.data.api.project.GetProjectsEndpoint
+import org.rfcx.ranger.data.api.site.GetStreamsEndpoint
 import org.rfcx.ranger.data.remote.guardianGroup.GuardianGroupEndpoint
 import org.rfcx.ranger.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.ranger.data.remote.password.PasswordChangeEndpoint
@@ -32,15 +35,33 @@ import java.util.concurrent.TimeUnit
 object ServiceFactory {
 	
 	fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
-		return createRetrofit(BuildConfig.DEVICE_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetProjectsEndpoint::class.java)
+	}
+	
+	fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(GetStreamsEndpoint::class.java)
+	}
+	
+	fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(EventsEndpoint::class.java)
 	}
 	
 	fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
 		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(CreateResponseEndpoint::class.java)
+	}
+	
+	fun makeAssetsService(isDebug: Boolean, context: Context): AssetsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(AssetsEndpoint::class.java)
 	}
 	
 	fun makeEventService(isDebug: Boolean, context: Context): EventService {

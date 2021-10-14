@@ -5,6 +5,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.report.ReportImage.Companion.FIELD_REPORT_ID
+import org.rfcx.ranger.entity.report.ReportImage.Companion.FIELD_REPORT_SERVER_ID
 import org.rfcx.ranger.entity.response.Response
 
 /**
@@ -23,8 +24,22 @@ class ReportImageDb(val realm: Realm) {
 			// save attached image to be Report Image
 			attachImages.forEach { attachImage ->
 				val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-				val reportImage = ReportImage(imageId, guid = response.guid, reportId = response.id, localPath = attachImage, createAt = imageCreateAt)
+				val reportImage = ReportImage(imageId, guid = null, reportId = response.id, localPath = attachImage, createAt = imageCreateAt)
 				it.insertOrUpdate(reportImage)
+			}
+		}
+	}
+	
+	fun saveReportServerIdToImage(serverId: String, reportId: Int) {
+		val images = realm.where(ReportImage::class.java)
+						.equalTo(FIELD_REPORT_ID, reportId)
+						.findAll()
+		realm.executeTransaction { transaction ->
+			images?.forEach {
+				val image = it.apply {
+					this.reportServerId = serverId
+				}
+				transaction.insertOrUpdate(image)
 			}
 		}
 	}
@@ -34,7 +49,7 @@ class ReportImageDb(val realm: Realm) {
 		realm.executeTransaction { it ->
 			val unsent = it.where(ReportImage::class.java)
 					.equalTo("syncState", UNSENT)
-					.isNotNull("guid")
+					.isNotNull(FIELD_REPORT_SERVER_ID)
 					.findAll().createSnapshot()
 			unsentCopied = unsent.toList()
 			unsent.forEach {
@@ -100,8 +115,14 @@ class ReportImageDb(val realm: Realm) {
 	
 	fun getByReportIdAsync(reportId: Int): RealmResults<ReportImage> {
 		return realm.where(ReportImage::class.java)
-				.equalTo("reportId", reportId)
+				.equalTo(FIELD_REPORT_ID, reportId)
 				.findAllAsync()
+	}
+	
+	fun getByReportId(reportId: Int): List<ReportImage> {
+		return realm.where(ReportImage::class.java)
+				.equalTo(FIELD_REPORT_ID, reportId)
+				.findAll()
 	}
 	
 	fun deleteImages(id: Int) {

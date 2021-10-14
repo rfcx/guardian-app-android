@@ -111,6 +111,12 @@
 	<!-- Button -->
 	<style name="RangerButton" parent="Widget.AppCompat.Button"/>
 	
+	<style name="RangerButton.GreenButton.Line" parent="RangerButton">
+		<item name="android:background">@drawable/bg_button_green_outline</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@color/color_button_outline_text</item>
+	</style>
+	
 	<style name="RangerButton.GreenButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_color_primary_button</item>
 		<item name="android:textStyle">bold</item>

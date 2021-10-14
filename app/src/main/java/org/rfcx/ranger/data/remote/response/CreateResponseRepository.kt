@@ -4,5 +4,5 @@ import io.reactivex.Single
 import okhttp3.ResponseBody
 
 interface CreateResponseRepository {
-	fun createResponseRequest(sendBody: CreateResponseRequest): Single<ResponseBody>
+	fun createResponseRequest(sendBody: CreateResponseRequest): Single<CreateResponseRes>
 }

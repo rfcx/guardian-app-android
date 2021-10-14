@@ -7,36 +7,35 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_event.view.*
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.event.Event
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
-import java.util.*
 
-class EventItemAdapter : RecyclerView.Adapter<EventItemAdapter.EventItemViewHolder>() {
-	var items: List<Event> = arrayListOf()
+class AlertItemAdapter : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHolder>() {
+	var items: List<Alert> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
 			notifyDataSetChanged()
 		}
 	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventItemViewHolder {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertItemViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
-		return EventItemViewHolder(view)
+		return AlertItemViewHolder(view)
 	}
 	
 	override fun getItemCount(): Int = items.size
 	
-	override fun onBindViewHolder(holder: EventItemViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: AlertItemViewHolder, position: Int) {
 		holder.bind(items[position])
 	}
 	
-	inner class EventItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+	inner class AlertItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val typeTextView = itemView.typeTextView
 		private val dateTextView = itemView.dateTextView
 		
-		fun bind(item: Event) {
-			dateTextView.text = item.beginsAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
-			typeTextView.text = item.label
+		fun bind(item: Alert) {
+			dateTextView.text = item.createdAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+			typeTextView.text = item.classification?.title
 		}
 	}
 }

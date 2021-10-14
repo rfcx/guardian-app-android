@@ -213,6 +213,12 @@
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
+	<string name="network_not_available">network not available</string>
+	<string name="set_project">Set Project</string>
+	<string name="choose_project">Choose which project you are working with</string>
+	<string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
+	<string name="logout">logout</string>
+	<string name="select">Select</string>
 	
 	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>
@@ -220,13 +226,16 @@
 	<string name="others">others</string>
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	<string name="num_more_then_99">99+</string>
+	<string name="not_have_stream">Not have stream in this project.</string>
 	
 	<!-- DraftReportsFragment -->
+	<string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
 	
 	<!-- SubmittedReportsFragment -->
-	<string name="unsent">Unsent</string>
+	<string name="unsent">Queued</string>
 	<string name="sending">Sending</string>
-	<string name="sent">Send</string>
+	<string name="sent">Sent</string>
+	<string name="incident_ref">#%s</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>
@@ -253,19 +262,19 @@
 	<string name="fires_burned_areas">Fires/burned areas</string>
 	<string name="evidence_of_poaching">Evidence of poaching</string>
 	<string name="other_explain_step_6">Other (explain in step 6)</string>
+	<string name="none_of_the_above">None of the above (specify in Step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->
 	<string name="how_much_damage">How much damage was done to the area?</string>
 	<string name="no_visible">No visible tree disruption found</string>
-	<string name="small_trees_cut_down">Small number of trees cut down</string>
-	<string name="medium_trees_cut_down">Medium number of trees cut down</string>
-	<string name="large_area_clear_cut">Large area substantially clear cut</string>
+	<string name="small_trees_cut_down">Minimal - a few trees cut down (1 truck)</string>
+	<string name="medium_trees_cut_down">Moderate destruction (2-5 trucks)</string>
+	<string name="large_area_clear_cut">Substantially clear-cut (5+ trucks of wood)</string>
 	
 	<!-- SetWhatScaleFragment -->
 	<string name="what_scale">What was the scale of the logging operation?</string>
 	<string name="small">Small (subsistence, agriculture etc)</string>
 	<string name="large">Large (commercial scale, heavy equipment etc)</string>
-	<string name="not_sure">Not sure (unknown)</string>
 	
 	<!-- SetWhatActionFragment -->
 	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
@@ -279,9 +288,11 @@
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>
 	<string name="save_draft">Save Draft</string>
-	<string name="add_photos">Add photos</string>
-	<string name="add_notes">Add notes</string>
-	<string name="upload_voice_notes">Upload voice notes</string>
+	<string name="add_photos">Photos (up to 5)</string>
+	<string name="add_notes">Text notes</string>
+	<string name="upload_voice_notes">Voice notes</string>
 	<string name="none_collected">None collected</string>
 	
+	<string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+	<string name="submit_report">Submit report</string>
 </resources>

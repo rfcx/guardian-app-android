@@ -8,10 +8,10 @@ import retrofit2.http.POST
 
 interface CreateResponseEndpoint {
 	@POST("responses")
-	fun createResponse(@Body body: CreateResponseRequest): Single<ResponseBody>
+	fun createResponse(@Body body: CreateResponseRequest): Single<CreateResponseRes>
 	
 	@POST("responses")
-	fun createNewResponse(@Body body: CreateResponseRequest): Call<ResponseBody>
+	fun createNewResponse(@Body body: CreateResponseRequest): Call<CreateResponseRes>
 }
 
 data class CreateResponseRequest(
@@ -23,5 +23,9 @@ data class CreateResponseRequest(
 		val damageScale: Int,
 		val responseActions: List<Int>,
 		val note: String,
-		val guardianId: String
+		val streamId: String
+)
+
+open class CreateResponseRes(
+		val incidentRef: String
 )

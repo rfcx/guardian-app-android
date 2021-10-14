@@ -42,10 +42,10 @@ class SubmittedReportsAdapter :
 		
 		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, report.syncImage())
-			reportIdTextView.visibility = if (report.guid != null) View.VISIBLE else View.GONE
-			reportIdTextView.text = report.guid.toString()
+			reportIdTextView.visibility = if (report.incidentRef != null) View.VISIBLE else View.GONE
+			reportIdTextView.text = itemView.context.getString(R.string.incident_ref, report.incidentRef)
 			syncLabelTextView.text = itemView.context.getString(report.syncLabel())
-			guardianName.text = report.guardianName
+			guardianName.text = report.streamName
 			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 		}
 	}

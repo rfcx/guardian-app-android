@@ -1,14 +1,18 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
-import android.graphics.Rect
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
@@ -50,7 +54,6 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupImageRecycler()
-		view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		saveDraftButton.setOnClickListener {
 			saveAssets()
@@ -58,11 +61,32 @@ class AssetsFragment : BaseImageFragment() {
 		}
 		
 		submitButton.setOnClickListener {
-			saveAssets()
-			listener.onSubmitButtonClick()
+			if (!TextUtils.isEmpty(noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
+				saveAssets()
+				listener.onSubmitButtonClick()
+			} else {
+				showDefaultDialog()
+			}
 		}
+		
 		setupAssets()
 		setupRecordSoundProgressView()
+	}
+	
+	private fun showDefaultDialog() {
+		val dialog = MaterialAlertDialogBuilder(context)
+				.setTitle(R.string.submit_report)
+				.setMessage(resources.getString(R.string.are_you_sure))
+				.setNegativeButton(resources.getString(R.string.report_submit_button_label)) { _, _ ->
+					saveAssets()
+					listener.onSubmitButtonClick()
+				}
+				.setPositiveButton(resources.getString(R.string.cancel)) { _, _ -> }
+				.show()
+		
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
 	}
 	
 	private fun setupAssets() {
@@ -85,7 +109,7 @@ class AssetsFragment : BaseImageFragment() {
 		noteEditText.text?.let {
 			listener.setNotes(it.toString())
 		}
-		listener.setImages(reportImageAdapter.getNewAttachImage())
+		listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
 		listener.setAudio(recordFile?.canonicalPath)
 	}
 	
@@ -96,24 +120,6 @@ class AssetsFragment : BaseImageFragment() {
 			setHasFixedSize(true)
 		}
 		reportImageAdapter.setImages(arrayListOf())
-	}
-	
-	private fun setOnFocusEditText() {
-		val screenHeight: Int = view?.rootView?.height ?: 0
-		val r = Rect()
-		view?.getWindowVisibleDisplayFrame(r)
-		val keypadHeight: Int = screenHeight - r.bottom
-		if (keypadHeight > screenHeight * 0.15) {
-			saveDraftButton.visibility = View.GONE
-			submitButton.visibility = View.GONE
-		} else {
-			if (saveDraftButton != null) {
-				saveDraftButton.visibility = View.VISIBLE
-			}
-			if (submitButton != null) {
-				submitButton.visibility = View.VISIBLE
-			}
-		}
 	}
 	
 	private fun setAudio(path: String) {

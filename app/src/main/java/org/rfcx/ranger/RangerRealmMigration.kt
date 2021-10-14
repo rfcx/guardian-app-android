@@ -3,9 +3,11 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
-import org.rfcx.ranger.entity.CachedEndpoint
+import org.rfcx.ranger.entity.*
+import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
@@ -49,6 +51,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 14L && newVersion >= 14L) {
 			migrateToV14(c)
+		}
+		if (oldVersion < 15L && newVersion >= 15L) {
+			migrateToV15(c)
 		}
 	}
 	
@@ -311,10 +316,56 @@ class RangerRealmMigration : RealmMigration {
 			addField(Response.RESPONSE_AUDIO_LOCATION, String::class.java)
 					.setRequired(Response.RESPONSE_AUDIO_LOCATION, false)
 			addField(Response.RESPONSE_NOTE, String::class.java)
-			addField(Response.RESPONSE_GUARDIAN_ID, String::class.java)
-					.setRequired(Response.RESPONSE_GUARDIAN_ID, true)
-			addField(Response.RESPONSE_GUARDIAN_NAME, String::class.java)
-					.setRequired(Response.RESPONSE_GUARDIAN_NAME, true)
+			addField(Response.RESPONSE_INCIDENT_REF, String::class.java)
+			addField(Response.RESPONSE_STREAM_ID, String::class.java)
+					.setRequired(Response.RESPONSE_STREAM_ID, true)
+			addField(Response.RESPONSE_STREAM_NAME, String::class.java)
+					.setRequired(Response.RESPONSE_STREAM_NAME, true)
+		}
+		
+		val classification = realm.schema.create(Classification.TABLE_NAME)
+		classification.apply {
+			addField(Classification.CLASSIFICATION_VALUE, String::class.java)
+			addField(Classification.CLASSIFICATION_TITLE, String::class.java)
+		}
+		
+		val incident = realm.schema.create(Incident.TABLE_NAME)
+		incident.apply {
+			addField(Incident.INCIDENT_ID, String::class.java)
+			addField(Incident.INCIDENT_CLOSED_AT, Date::class.java)
+					.setRequired(Incident.INCIDENT_CLOSED_AT, false)
+			addField(Incident.INCIDENT_CREATED_AT, Date::class.java)
+		}
+		
+		val alert = realm.schema.create(Alert.TABLE_NAME)
+		alert.apply {
+			addField(Alert.ALERT_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Alert.ALERT_SERVER_ID, String::class.java)
+			addField(Alert.ALERT_NAME, String::class.java)
+			addField(Alert.ALERT_STREAM_ID, String::class.java)
+			addField(Alert.ALERT_PROJECT_ID, String::class.java)
+			addField(Alert.ALERT_CREATED_AT, Date::class.java)
+			addField(Alert.ALERT_START, Date::class.java)
+			addField(Alert.ALERT_END, Date::class.java)
+			addRealmObjectField(Alert.ALERT_CLASSIFICATION, classification)
+			addRealmObjectField(Alert.ALERT_INCIDENT, incident)
+		}
+		
+		val stream = realm.schema.create(Stream.TABLE_NAME)
+		stream.apply {
+			addField(Stream.STREAM_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Stream.STREAM_SERVER_ID, String::class.java)
+			addField(Stream.STREAM_NAME, String::class.java)
+			addField(Stream.STREAM_LATITUDE, Double::class.java)
+			addField(Stream.STREAM_LONGITUDE, Double::class.java)
+			addField(Stream.STREAM_PROJECT_SERVER_ID, String::class.java)
+		}
+	}
+	
+	private fun migrateToV15(realm: DynamicRealm) {
+		val reportImage = realm.schema.get(ReportImage.TABLE_NAME)
+		reportImage?.apply {
+			addField(ReportImage.FIELD_REPORT_SERVER_ID, String::class.java)
 		}
 	}
 	

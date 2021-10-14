@@ -55,6 +55,7 @@ class Preferences(context: Context) {
 		
 		/*-- New design --*/
 		const val SELECTED_PROJECT = "${PREFIX}SELECTED_PROJECT"
+		const val LATEST_CURRENT_LOCATION_TIME = "${PREFIX}LATEST_CURRENT_LOCATION_TIME"
 		
 	}
 	
