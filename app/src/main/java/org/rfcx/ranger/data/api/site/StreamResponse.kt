@@ -1,6 +1,6 @@
 package org.rfcx.ranger.data.api.site
 
-import org.rfcx.ranger.entity.ProjectInStream
+import org.rfcx.ranger.entity.LocationGroup
 import org.rfcx.ranger.entity.Stream
 
 data class StreamResponse(
@@ -17,6 +17,6 @@ data class ProjectResponse(
 		var name: String = ""
 )
 
-fun StreamResponse.toStream(): Stream = Stream(serverId = id, name = name, latitude = latitude, longitude = longitude, project = project?.toProjectInStream())
+fun StreamResponse.toStream(): Stream = Stream(serverId = id, name = name, latitude = latitude, longitude = longitude, project = project?.toLocationGroup())
 
-fun ProjectResponse.toProjectInStream(): ProjectInStream = ProjectInStream(id = id, name = name)
+fun ProjectResponse.toLocationGroup(): LocationGroup = LocationGroup(id = id, name = name)

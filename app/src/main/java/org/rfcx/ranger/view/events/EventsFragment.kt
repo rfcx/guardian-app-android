@@ -206,7 +206,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserver() {
-		viewModel.projects.observe(viewLifecycleOwner, { it ->
+		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
 				projectAdapter.items = listOf()
@@ -220,7 +220,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			})
 		})
 		
-		viewModel.streams.observe(viewLifecycleOwner, { it ->
+		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
 				val loc = Location(LocationManager.GPS_PROVIDER)
 				loc.latitude = 0.0

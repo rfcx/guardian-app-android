@@ -10,10 +10,7 @@ import org.rfcx.ranger.entity.alert.Alert
 class AlertDb(private val realm: Realm) {
 	fun insertAlert(response: ResponseEvent) {
 		realm.executeTransaction {
-			val alert =
-					it.where(Alert::class.java)
-							.equalTo(Alert.ALERT_SERVER_ID, response.id)
-							.findFirst()
+			val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_SERVER_ID, response.id).findFirst()
 			
 			if (alert == null) {
 				val alertObj = response.toAlert()
@@ -33,9 +30,7 @@ class AlertDb(private val realm: Realm) {
 	
 	fun deleteAlert(id: String) {
 		realm.executeTransaction {
-			val alert =
-					it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id)
-							.findFirst()
+			val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id).findFirst()
 			alert?.deleteFromRealm()
 		}
 	}

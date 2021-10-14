@@ -3,12 +3,8 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
-import org.rfcx.ranger.entity.CachedEndpoint
-import org.rfcx.ranger.entity.ProjectInStream
-import org.rfcx.ranger.entity.Stream
+import org.rfcx.ranger.entity.*
 import org.rfcx.ranger.entity.alert.Alert
-import org.rfcx.ranger.entity.alert.Classification
-import org.rfcx.ranger.entity.alert.Incident
 import org.rfcx.ranger.entity.event.EventReview
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.response.Response
@@ -351,10 +347,10 @@ class RangerRealmMigration : RealmMigration {
 			addRealmObjectField(Alert.ALERT_INCIDENT, incident)
 		}
 		
-		val project = realm.schema.create(ProjectInStream.TABLE_NAME)
-		project.apply {
-			addField(ProjectInStream.PROJECT_IN_STREAM_ID, String::class.java)
-			addField(ProjectInStream.PROJECT_IN_STREAM_NAME, String::class.java)
+		val locationGroup = realm.schema.create(LocationGroup.TABLE_NAME)
+		locationGroup.apply {
+			addField(LocationGroup.LOCATION_GROUP_ID, String::class.java)
+			addField(LocationGroup.LOCATION_GROUP_NAME, String::class.java)
 		}
 		
 		val stream = realm.schema.create(Stream.TABLE_NAME)
@@ -364,7 +360,7 @@ class RangerRealmMigration : RealmMigration {
 			addField(Stream.STREAM_NAME, String::class.java)
 			addField(Stream.STREAM_LATITUDE, Double::class.java)
 			addField(Stream.STREAM_LONGITUDE, Double::class.java)
-			addRealmObjectField(Stream.STREAM_PROJECT, project)
+			addRealmObjectField(Stream.STREAM_LOCATION_GROUP, locationGroup)
 		}
 	}
 	

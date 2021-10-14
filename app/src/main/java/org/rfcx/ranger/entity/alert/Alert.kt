@@ -3,6 +3,8 @@ package org.rfcx.ranger.entity.alert
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import org.rfcx.ranger.entity.Classification
+import org.rfcx.ranger.entity.Incident
 import java.util.*
 
 @RealmClass
@@ -31,31 +33,5 @@ open class Alert(
 		const val ALERT_END = "end"
 		const val ALERT_CLASSIFICATION = "classification"
 		const val ALERT_INCIDENT = "incident"
-	}
-}
-
-@RealmClass
-open class Classification(
-		var value: String = "",
-		var title: String = ""
-) : RealmModel {
-	companion object {
-		const val TABLE_NAME = "Classification"
-		const val CLASSIFICATION_VALUE = "value"
-		const val CLASSIFICATION_TITLE = "title"
-	}
-}
-
-@RealmClass
-open class Incident(
-		var id: String = "",
-		var closedAt: Date? = null,
-		var createdAt: Date = Date()
-) : RealmModel {
-	companion object {
-		const val TABLE_NAME = "Incident"
-		const val INCIDENT_ID = "id"
-		const val INCIDENT_CLOSED_AT = "name"
-		const val INCIDENT_CREATED_AT = "serverId"
 	}
 }

@@ -34,19 +34,19 @@ import java.util.concurrent.TimeUnit
 object ServiceFactory {
 	
 	fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
-		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetProjectsEndpoint::class.java)
 	}
 	
 	fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {
-		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetStreamsEndpoint::class.java)
 	}
 	
 	fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
-		return createRetrofit("https://staging-ranger-api.rfcx.org/", createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(EventsEndpoint::class.java)
 	}

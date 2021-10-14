@@ -30,10 +30,10 @@ import org.rfcx.ranger.view.events.adapter.EventGroup
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
-	val projects: LiveData<Result<List<Project>>> get() = _projects
+	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
 	
 	private val _streams = MutableLiveData<Result<List<StreamResponse>>>()
-	val streams: LiveData<Result<List<StreamResponse>>> get() = _streams
+	val getStreamsFromRemote: LiveData<Result<List<StreamResponse>>> get() = _streams
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
