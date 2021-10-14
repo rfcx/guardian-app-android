@@ -82,6 +82,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		fun newInstance() = EventsFragment()
 	}
 	
+	val preferences = Preferences.getInstance(requireContext())
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
@@ -159,7 +160,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
 		
-		val preferences = Preferences.getInstance(requireContext())
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
@@ -314,7 +314,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun setAlertFeatures(streams: List<Stream>) {
-		val preferences = Preferences.getInstance(requireContext())
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		
 		val projectServerId = viewModel.getProject(projectId)?.serverId
