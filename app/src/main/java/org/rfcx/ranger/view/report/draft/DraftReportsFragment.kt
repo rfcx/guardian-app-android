@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_draft_reports.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.SyncState
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.MainActivityViewModel
 
@@ -59,6 +60,10 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	}
 	
 	override fun onClickedItem(response: Response) {
-		listener.openDetailResponse(response)
+		if (response.syncState == SyncState.SENT.value) {
+			Toast.makeText(context, getString(R.string.can_not_open_the_report), Toast.LENGTH_SHORT).show()
+		} else {
+			listener.openDetailResponse(response)
+		}
 	}
 }

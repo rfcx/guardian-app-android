@@ -229,6 +229,7 @@
 	<string name="not_have_stream">Not have stream in this project.</string>
 	
 	<!-- DraftReportsFragment -->
+	<string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
 	
 	<!-- SubmittedReportsFragment -->
 	<string name="unsent">Queued</string>

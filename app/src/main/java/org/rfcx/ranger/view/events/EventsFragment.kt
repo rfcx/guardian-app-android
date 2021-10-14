@@ -47,7 +47,9 @@ import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
@@ -64,15 +66,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		private const val COUNT = "count"
 		private const val COUNT_EVENTS = "count.events"
-		private const val CLUSTER = "cluster"
-		private const val BUILDING = "building"
 		private const val POINT_COUNT = "point_count"
 		private const val SOURCE_ALERT = "source.alert"
 		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		private const val PROPERTY_MARKER_ALERT_DISTANCE = "alert.distance"
 		private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
 		private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
-		private const val UN_CLUSTERED_POINTS = "un-clustered-points"
+		private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
+		private const val PROPERTY_CLUSTER_COUNT_EVENTS = "cluster.count.events"
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
 		private const val DURATION_MS = 1300
@@ -81,6 +82,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		fun newInstance() = EventsFragment()
 	}
 	
+	private val preferences = Preferences.getInstance(requireContext())
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
@@ -157,7 +159,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			adapter = projectAdapter
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
-		setProjectTitle(viewModel.getProjectName())
+		
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		setProjectTitle(viewModel.getProjectName(projectId))
 		
 		nearbyRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -205,6 +209,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectSwipeRefreshView.visibility = View.GONE
 		viewModel.setProjectSelected(project.id)
 		viewModel.loadStreams()
+		setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
 	}
 	
@@ -229,7 +234,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				viewModel.handledStreams(lastLocation, list)
 				isShowProgressBar(false)
 				setShowListStream()
-				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty())
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
 				nearbyAdapter.items = viewModel.nearbyGuardians
 				othersAdapter.items = viewModel.othersGuardians
 			}, {
@@ -240,25 +245,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		})
 		
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
-			val features = streams.map {
-				val loc = Location(LocationManager.GPS_PROVIDER)
-				loc.latitude = it.latitude
-				loc.longitude = it.longitude
-				
-				val last = Location(LocationManager.GPS_PROVIDER)
-				last.latitude = lastLocation?.latitude ?: 0.0
-				last.longitude = lastLocation?.longitude ?: 0.0
-				
-				val properties = mapOf(
-						Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-						Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
-						Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
-						Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
-				)
-				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
-			}
-			alertFeatures = FeatureCollection.fromFeatures(features)
-			refreshSource()
+			setAlertFeatures(streams)
 		})
 	}
 	
@@ -326,6 +313,32 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		}
 	}
 	
+	private fun setAlertFeatures(streams: List<Stream>) {
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		
+		val projectServerId = viewModel.getProject(projectId)?.serverId
+		val listOfStream = streams.filter { s -> s.project?.id == projectServerId }
+		val features = listOfStream.map {
+			val loc = Location(LocationManager.GPS_PROVIDER)
+			loc.latitude = it.latitude
+			loc.longitude = it.longitude
+			
+			val last = Location(LocationManager.GPS_PROVIDER)
+			last.latitude = lastLocation?.latitude ?: 0.0
+			last.longitude = lastLocation?.longitude ?: 0.0
+			
+			val properties = mapOf(
+					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
+					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
+					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
+					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
+			)
+			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
+		}
+		alertFeatures = FeatureCollection.fromFeatures(features)
+		refreshSource()
+	}
+	
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
 		val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
 		var alertFeatures = listOf<Feature>()
@@ -369,7 +382,25 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
 				.withCluster(true)
 				.withClusterMaxZoom(15)
-				.withClusterRadius(20))
+				.withClusterRadius(20)
+				.withClusterProperty(
+						PROPERTY_CLUSTER_TYPE,
+						Expression.sum(Expression.accumulated(), Expression.get(PROPERTY_CLUSTER_TYPE)),
+						Expression.switchCase(
+								Expression.any(
+										Expression.eq(
+												Expression.get(PROPERTY_MARKER_ALERT_COUNT), "0"
+										)
+								),
+								Expression.literal(0),
+								Expression.literal(1)
+						)
+				).withClusterProperty(
+						PROPERTY_CLUSTER_COUNT_EVENTS,
+						Expression.sum(Expression.accumulated(), Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS)),
+						Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+				)
+		)
 		it.addSource(alertSource!!)
 	}
 	
@@ -389,17 +420,50 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		layers.forEachIndexed { index, layer ->
 			queryLayerIds[index] = "cluster-$index"
 			val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
-			circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(10f))
-			val pointCount = Expression.toNumber(Expression.get(POINT_COUNT))
+			circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(14f))
+			val type = Expression.toNumber(Expression.get(PROPERTY_CLUSTER_TYPE))
 			circles.setFilter(
-					if (index == 0)
-						Expression.gte(pointCount, Expression.literal(layer[0])) else
+					if (index == 0) {
+						Expression.gte(type, Expression.literal(layer[0]))
+					} else {
 						Expression.all(
-								Expression.gte(pointCount, Expression.literal(layer[0])),
-								Expression.lt(pointCount, Expression.literal(layers[index - 1][0]))
+								Expression.gte(type, Expression.literal(layer[0])),
+								Expression.gt(type, Expression.literal(layers[index - 1][0]))
 						)
+					}
 			)
-			style.addLayerBelow(circles, BUILDING)
+			style.addLayer(circles)
+		}
+		
+		val count = SymbolLayer(COUNT, SOURCE_ALERT)
+		count.setProperties(
+				PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS))),
+				PropertyFactory.textSize(12f),
+				PropertyFactory.textColor(Color.WHITE),
+				PropertyFactory.textIgnorePlacement(true),
+				PropertyFactory.textAllowOverlap(true)
+		)
+		style.addLayer(count)
+		
+		layers.forEachIndexed { i, ly ->
+			val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
+			val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() != "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
+			unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
+			val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+			unClustered.setFilter(
+					if (i == 0) {
+						Expression.all(
+								Expression.gte(eventsSize, Expression.literal(ly[0])),
+								Expression.gte(eventsSize, Expression.literal(1))
+						)
+					} else {
+						Expression.all(
+								Expression.gte(eventsSize, Expression.literal(ly[0])),
+								Expression.gt(eventsSize, Expression.literal(layers[i - 1][0]))
+						)
+					}
+			)
+			style.addLayer(unClustered)
 		}
 		
 		val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
@@ -411,22 +475,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				PropertyFactory.textAllowOverlap(true)
 		)
 		style.addLayer(eventsSize)
-		
-		val count = SymbolLayer(COUNT, SOURCE_ALERT)
-		count.setProperties(
-				PropertyFactory.textField(Expression.toString(Expression.get(POINT_COUNT))),
-				PropertyFactory.textSize(12f),
-				PropertyFactory.textColor(Color.WHITE),
-				PropertyFactory.textIgnorePlacement(true),
-				PropertyFactory.textAllowOverlap(true)
-		)
-		style.addLayer(count)
-		
-		val unClustered = CircleLayer(UN_CLUSTERED_POINTS, SOURCE_ALERT)
-		val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT)).toString() == "0") Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
-		unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(10f))
-		unClustered.setFilter(Expression.neq(Expression.get(CLUSTER), Expression.literal(true)))
-		style.addLayerBelow(unClustered, BUILDING)
 	}
 	
 	private fun enableLocationComponent(style: Style) {

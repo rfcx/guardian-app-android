@@ -106,11 +106,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		return projectDb.getProjects()
 	}
 	
-	fun getProjectName(): String {
-		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val project = projectDb.getProjectById(projectId)
-		return project?.name ?: context.getString(R.string.all_projects)
+	fun getStreams(): List<Stream> = streamDb.getStreams()
+	
+	fun getProjectName(id: Int): String = getProject(id)?.name
+			?: context.getString(R.string.all_projects)
+	
+	fun getProject(id: Int): Project? {
+		return projectDb.getProjectById(id)
 	}
 	
 	fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {

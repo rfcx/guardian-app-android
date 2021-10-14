@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_draft_reports.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.SyncState
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -38,6 +40,14 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		
 		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
+			if (report.syncState == SyncState.SENT.value) {
+				guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+				dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+			} else {
+				guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+				dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+			}
+			
 			guardianName.text = report.streamName
 			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			
