@@ -71,7 +71,7 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 			if (project.isGuest()) {
 				locationGroupTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {
-				locationGroupTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
+				locationGroupTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
 			}
 			
 			lockImageView.setColorFilter(ContextCompat.getColor(itemView.context,

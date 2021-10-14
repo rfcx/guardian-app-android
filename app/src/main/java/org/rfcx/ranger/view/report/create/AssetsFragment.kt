@@ -1,17 +1,18 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
-import android.graphics.Rect
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
@@ -40,13 +41,9 @@ class AssetsFragment : BaseImageFragment() {
 		listener = (context as CreateReportListener)
 	}
 	
-	override fun didAddImages(imagePaths: List<String>) {
-		checkIsEnabledButton()
-	}
+	override fun didAddImages(imagePaths: List<String>) {}
 	
-	override fun didRemoveImage(imagePath: String) {
-		checkIsEnabledButton()
-	}
+	override fun didRemoveImage(imagePath: String) {}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -57,7 +54,6 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupImageRecycler()
-		view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		saveDraftButton.setOnClickListener {
 			saveAssets()
@@ -65,33 +61,32 @@ class AssetsFragment : BaseImageFragment() {
 		}
 		
 		submitButton.setOnClickListener {
-			saveAssets()
-			listener.onSubmitButtonClick()
+			if (!TextUtils.isEmpty(noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
+				saveAssets()
+				listener.onSubmitButtonClick()
+			} else {
+				showDefaultDialog()
+			}
 		}
 		
-		setTextChanged()
-		setOnCheckedChange()
 		setupAssets()
 		setupRecordSoundProgressView()
-		checkIsEnabledButton()
 	}
 	
-	private fun setTextChanged() {
-		noteEditText.addTextChangedListener(object : TextWatcher {
-			override fun afterTextChanged(p0: Editable?) {
-				checkIsEnabledButton()
-			}
-			
-			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-			
-			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-		})
-	}
-	
-	private fun setOnCheckedChange() {
-		noneCollectedCheckBox.setOnCheckedChangeListener { _, _ ->
-			checkIsEnabledButton()
-		}
+	private fun showDefaultDialog() {
+		val dialog = MaterialAlertDialogBuilder(context)
+				.setTitle(R.string.submit_report)
+				.setMessage(resources.getString(R.string.are_you_sure))
+				.setNegativeButton(resources.getString(R.string.report_submit_button_label)) { _, _ ->
+					saveAssets()
+					listener.onSubmitButtonClick()
+				}
+				.setPositiveButton(resources.getString(R.string.cancel)) { _, _ -> }
+				.show()
+		
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
 	}
 	
 	private fun setupAssets() {
@@ -114,7 +109,7 @@ class AssetsFragment : BaseImageFragment() {
 		noteEditText.text?.let {
 			listener.setNotes(it.toString())
 		}
-		listener.setImages(reportImageAdapter.getNewAttachImage())
+		listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
 		listener.setAudio(recordFile?.canonicalPath)
 	}
 	
@@ -125,49 +120,6 @@ class AssetsFragment : BaseImageFragment() {
 			setHasFixedSize(true)
 		}
 		reportImageAdapter.setImages(arrayListOf())
-	}
-	
-	private fun setOnFocusEditText() {
-		val screenHeight: Int = view?.rootView?.height ?: 0
-		val r = Rect()
-		view?.getWindowVisibleDisplayFrame(r)
-		val keypadHeight: Int = screenHeight - r.bottom
-		if (keypadHeight > screenHeight * 0.15) {
-			saveDraftButton.visibility = View.GONE
-			submitButton.visibility = View.GONE
-		} else {
-			if (saveDraftButton != null) {
-				saveDraftButton.visibility = View.VISIBLE
-			}
-			if (submitButton != null) {
-				submitButton.visibility = View.VISIBLE
-			}
-		}
-	}
-	
-	private fun checkIsEnabledButton() {
-		when {
-			reportImageAdapter.getNewAttachImage().isNotEmpty() -> {
-				setEnabled(true)
-			}
-			!TextUtils.isEmpty(noteEditText.text) -> {
-				setEnabled(true)
-			}
-			recordFile?.canonicalPath != null -> {
-				setEnabled(true)
-			}
-			noneCollectedCheckBox.isChecked -> {
-				setEnabled(true)
-			}
-			else -> {
-				setEnabled(false)
-			}
-		}
-	}
-	
-	private fun setEnabled(isEnabled: Boolean) {
-		saveDraftButton.isEnabled = isEnabled
-		submitButton.isEnabled = isEnabled
 	}
 	
 	private fun setAudio(path: String) {
@@ -184,14 +136,12 @@ class AssetsFragment : BaseImageFragment() {
 				SoundRecordState.NONE -> {
 					recordFile?.deleteOnExit()
 					recordFile = null
-					checkIsEnabledButton()
 				}
 				SoundRecordState.RECORDING -> {
 					record()
 				}
 				SoundRecordState.STOPPED_RECORD -> {
 					stopRecording()
-					checkIsEnabledButton()
 				}
 				SoundRecordState.PLAYING -> {
 					startPlaying()

@@ -46,18 +46,6 @@
 			android:textColor="@drawable/radio_text_color" />
 		
 		<RadioButton
-			android:id="@+id/notSureRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/not_sure"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
 			android:id="@+id/noneRadioButton"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"

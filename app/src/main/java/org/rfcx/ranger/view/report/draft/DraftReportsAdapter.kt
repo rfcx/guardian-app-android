@@ -44,10 +44,15 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 			actionImageView.setOnClickListener {
 				listener.onClickedDelete(report)
 			}
+			
+			itemView.setOnClickListener {
+				listener.onClickedItem(report)
+			}
 		}
 	}
 }
 
 interface ReportOnClickListener {
 	fun onClickedDelete(response: Response)
+	fun onClickedItem(response: Response)
 }

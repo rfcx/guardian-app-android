@@ -95,17 +95,6 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
-			
-			<CheckBox
-				android:id="@+id/noneCollectedCheckBox"
-				style="@style/RangerText.SubTitle.Secondary"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/none_collected"
-				app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
@@ -116,7 +105,6 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_small"
-		android:enabled="false"
 		android:text="@string/save_draft"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toStartOf="@id/submitButton"
@@ -128,7 +116,6 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_small"
-		android:enabled="false"
 		android:text="@string/report_submit_button_label"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"

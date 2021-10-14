@@ -100,13 +100,13 @@ class GuardianEventDetailFragment : Fragment() {
 		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Double, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double?, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
 					putString(ARG_GUARDIAN_ID, guardianId)
-					putDouble(ARG_DISTANCE, distance)
 					putInt(ARG_NUMBER, eventSize)
+					if (distance != null) putDouble(ARG_DISTANCE, distance)
 				}
 			}
 		}

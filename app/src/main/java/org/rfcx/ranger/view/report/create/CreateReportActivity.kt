@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.ResponseSyncWorker
@@ -20,14 +21,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	companion object {
 		const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
 		const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+		const val EXTRA_RESPONSE_ID = "EXTRA_RESPONSE_ID"
 		
 		const val RESULT_CODE = 20
 		const val EXTRA_SCREEN = "EXTRA_SCREEN"
 		
-		fun startActivity(context: Context, guardianName: String, guardianId: String) {
+		fun startActivity(context: Context, guardianName: String, guardianId: String, responseId: Int?) {
 			val intent = Intent(context, CreateReportActivity::class.java)
 			intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
 			intent.putExtra(EXTRA_GUARDIAN_ID, guardianId)
+			intent.putExtra(EXTRA_RESPONSE_ID, responseId)
 			context.startActivity(intent)
 		}
 	}
@@ -37,18 +40,35 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	private var passedChecks = ArrayList<Int>()
 	private var streamName: String? = null
 	private var streamId: String? = null
+	private var responseId: Int? = null
 	
 	private var _response: Response? = null
-	private var _images: List<String> = listOf()
+	private var _images: ArrayList<String> = arrayListOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_create_report)
 		streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
 		streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
+		responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
 		
+		responseId?.let {
+			val response = viewModel.getResponseById(it)
+			response?.let { res -> setResponse(res) }
+		}
+		getImagesFromLocal()
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+	}
+	
+	private fun getImagesFromLocal() {
+		responseId?.let {
+			val images = viewModel.getImagesFromLocal(it)
+			images.forEach { reportImage ->
+				val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_DOMAIN + reportImage.remotePath else "file://${reportImage.localPath}"
+				_images.add(path)
+			}
+		}
 	}
 	
 	private fun setupToolbar() {
@@ -92,9 +112,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun getResponse(): Response? = _response
 	
-	override fun getImages(): List<String> = _images
+	override fun getImages(): ArrayList<String> = _images
 	
-	override fun setImages(images: List<String>) {
+	override fun setImages(images: ArrayList<String>) {
 		_images = images
 	}
 	
@@ -107,8 +127,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setInvestigationTimestamp(date: Date) {
 		val response = _response ?: Response()
 		response.investigatedAt = date
-		response.streamId = streamId ?: ""
-		response.streamName = streamName ?: ""
+		response.streamId = streamId ?: response.streamId
+		response.streamName = streamName ?: response.streamName
 		setResponse(response)
 	}
 	
@@ -142,13 +162,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
-		saveImages(response)
 	}
 	
 	override fun onSaveDraftButtonClick() {
 		val response = _response ?: Response()
-		viewModel.saveResponseInLocalDb(response)
-		saveImages(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		
 		val intent = Intent()
 		intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
@@ -156,16 +174,10 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		finish()
 	}
 	
-	private fun saveImages(response: Response) {
-		if (_images.isNotEmpty()) {
-			viewModel.saveImages(response, _images)
-		}
-	}
-	
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
-		viewModel.saveResponseInLocalDb(response)
+		viewModel.saveResponseInLocalDb(response, _images)
 		ResponseSyncWorker.enqueue()
 		
 		val intent = Intent()
@@ -207,7 +219,7 @@ interface CreateReportListener {
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?
-	fun getImages(): List<String>
+	fun getImages(): ArrayList<String>
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
@@ -215,7 +227,7 @@ interface CreateReportListener {
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
 	fun setNotes(note: String)
-	fun setImages(images: List<String>)
+	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
 	
 	fun onSaveDraftButtonClick()

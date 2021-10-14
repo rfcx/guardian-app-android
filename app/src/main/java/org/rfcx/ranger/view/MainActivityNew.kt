@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.report.Report
+import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
 import org.rfcx.ranger.util.*
@@ -213,7 +214,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		bottomBar.visibility = View.VISIBLE
 	}
 	
-	override fun openGuardianEventDetail(name: String, distance: Double, eventSize: Int, guardianId: String) {
+	override fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String) {
 		hideBottomAppBar()
 		startFragment(GuardianEventDetailFragment.newInstance(name, distance, eventSize, guardianId), GuardianEventDetailFragment.tag)
 	}
@@ -242,6 +243,12 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		val intent = Intent(this, CreateReportActivity::class.java)
 		intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_NAME, guardianName)
 		intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_ID, guardianId)
+		getResult.launch(intent)
+	}
+	
+	override fun openDetailResponse(response: Response) {
+		val intent = Intent(this, CreateReportActivity::class.java)
+		intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
 		getResult.launch(intent)
 	}
 	
@@ -387,7 +394,8 @@ interface MainActivityEventListener {
 	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun onBackPressed()
-	fun openGuardianEventDetail(name: String, distance: Double, eventSize: Int, guardianId: String)
+	fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
+	fun openDetailResponse(response: Response)
 }

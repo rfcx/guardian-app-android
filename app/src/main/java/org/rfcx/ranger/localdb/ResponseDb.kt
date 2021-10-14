@@ -2,19 +2,26 @@ package org.rfcx.ranger.localdb
 
 import io.realm.Realm
 import io.realm.RealmResults
-import io.realm.kotlin.deleteFromRealm
-import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 
 class ResponseDb(val realm: Realm) {
-	fun save(response: Response) {
+	
+	fun getResponseById(id: Int): Response? {
+		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst() ?: return null
+		return realm.copyFromRealm(response)
+	}
+	
+	fun save(response: Response): Response {
+		var res = response
 		realm.executeTransaction {
 			if (response.id == 0) {
 				response.id = (it.where(Response::class.java).max("id")?.toInt() ?: 0) + 1
+				res = response
 			}
 			it.insertOrUpdate(response)
 		}
+		return res
 	}
 	
 	fun lockUnsent(): List<Response> {
