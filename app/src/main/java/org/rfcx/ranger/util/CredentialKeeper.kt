@@ -48,7 +48,7 @@ class CredentialKeeper(val context: Context) {
 
     fun hasValidCredentials(): Boolean {
         val preferences = Preferences.getInstance(context)
-        return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty() && preferences.getStringSet(Preferences.ROLES).contains("rfcxUser")
+        return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty()
     }
     
     fun isRanger(): Boolean {
