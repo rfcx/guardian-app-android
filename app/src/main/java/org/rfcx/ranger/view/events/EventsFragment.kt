@@ -88,6 +88,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
 	private val othersAdapter by lazy { GuardianItemAdapter(this) }
+	lateinit var preferences: Preferences
 	
 	private lateinit var mapView: MapView
 	private var mapBoxMap: MapboxMap? = null
@@ -97,7 +98,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private val locationListener = object : android.location.LocationListener {
 		override fun onLocationChanged(p0: Location) {
 			moveCameraToCurrentLocation(p0)
-			viewModel.saveTimeOfLastLocationKnow(requireContext(), Date().time)
+			viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
 			
 			val lastGetLocationTime = Preferences.getInstance(requireContext()).getLong(Preferences.LATEST_GET_LOCATION_TIME, 0L)
 			if (System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
@@ -143,6 +144,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
+		preferences = Preferences.getInstance(requireContext())
 		
 		getLocation()
 		setupToolbar()
@@ -171,7 +173,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			adapter = projectAdapter
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
-		setProjectTitle(viewModel.getProjectName())
+		
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		setProjectTitle(viewModel.getProjectName(projectId))
 		
 		nearbyRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -225,7 +229,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserver() {
-		viewModel.projects.observe(viewLifecycleOwner, { it ->
+		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
 				projectAdapter.items = listOf()
@@ -239,7 +243,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			})
 		})
 		
-		viewModel.streams.observe(viewLifecycleOwner, { it ->
+		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
 				viewModel.handledStreams(lastLocation, list)
 				isShowProgressBar(false)
@@ -330,8 +334,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun setAlertFeatures(streams: List<Stream>) {
-		val projectServerId = viewModel.getProject()?.serverId
-		val listOfStream = streams.filter { s -> s.project?.id == projectServerId }
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		
+		val projectServerId = viewModel.getProject(projectId)?.serverId
+		val listOfStream = streams.filter { s -> s.projectServerId == projectServerId }
 		val features = listOfStream.map {
 			val loc = Location(LocationManager.GPS_PROVIDER)
 			loc.latitude = it.latitude
@@ -541,7 +547,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 				lastLocation?.let {
 					moveCameraToCurrentLocation(it)
-					viewModel.saveTimeOfLastLocationKnow(requireContext(), Date().time)
+					viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
 				}
 				mapBoxMap?.style?.let { enableLocationComponent(it) }
 			} catch (ex: SecurityException) {

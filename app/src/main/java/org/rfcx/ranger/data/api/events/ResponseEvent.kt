@@ -1,8 +1,8 @@
 package org.rfcx.ranger.data.api.events
 
+import org.rfcx.ranger.entity.Classification
+import org.rfcx.ranger.entity.Incident
 import org.rfcx.ranger.entity.alert.Alert
-import org.rfcx.ranger.entity.alert.Classification
-import org.rfcx.ranger.entity.alert.Incident
 import java.util.*
 
 data class ResponseEvent(

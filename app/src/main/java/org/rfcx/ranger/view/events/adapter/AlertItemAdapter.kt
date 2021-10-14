@@ -10,7 +10,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
-class EventItemAdapter : RecyclerView.Adapter<EventItemAdapter.EventItemViewHolder>() {
+class AlertItemAdapter : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHolder>() {
 	var items: List<Alert> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
@@ -18,18 +18,18 @@ class EventItemAdapter : RecyclerView.Adapter<EventItemAdapter.EventItemViewHold
 			notifyDataSetChanged()
 		}
 	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventItemViewHolder {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertItemViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
-		return EventItemViewHolder(view)
+		return AlertItemViewHolder(view)
 	}
 	
 	override fun getItemCount(): Int = items.size
 	
-	override fun onBindViewHolder(holder: EventItemViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: AlertItemViewHolder, position: Int) {
 		holder.bind(items[position])
 	}
 	
-	inner class EventItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+	inner class AlertItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val typeTextView = itemView.typeTextView
 		private val dateTextView = itemView.dateTextView
 		

@@ -33,10 +33,10 @@ import org.rfcx.ranger.view.events.adapter.EventGroup
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	private val _projects = MutableLiveData<Result<List<Project>>>()
-	val projects: LiveData<Result<List<Project>>> get() = _projects
+	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
 	
 	private val _streams = MutableLiveData<Result<List<StreamResponse>>>()
-	val streams: LiveData<Result<List<StreamResponse>>> get() = _streams
+	val getStreamsFromRemote: LiveData<Result<List<StreamResponse>>> get() = _streams
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
@@ -122,22 +122,16 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun getStreams(): List<Stream> = streamDb.getStreams()
 	
-	fun getProjectName(): String {
-		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val project = projectDb.getProjectById(projectId)
-		return project?.name ?: context.getString(R.string.all_projects)
+	fun getProjectName(id: Int): String = getProject(id)?.name
+			?: context.getString(R.string.all_projects)
+	
+	fun getProject(id: Int): Project? {
+		return projectDb.getProjectById(id)
 	}
 	
-	fun getProject(): Project? {
+	fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
 		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		return projectDb.getProjectById(projectId)
-	}
-	
-	fun saveTimeOfLastLocationKnow(context: Context, time: Long) {
-		val preferences = Preferences.getInstance(context)
-		preferences.putLong(Preferences.LAST_LOCATION_KNOW_TIME, time)
+		preferences.putLong(Preferences.LATEST_CURRENT_LOCATION_TIME, time)
 	}
 	
 	fun setProjectSelected(id: Int) {

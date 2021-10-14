@@ -56,19 +56,18 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			val response = viewModel.getResponseById(it)
 			response?.let { res -> setResponse(res) }
 		}
-		setObserver()
+		getImagesFromLocal()
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 	}
 	
-	private fun setObserver() {
+	private fun getImagesFromLocal() {
 		responseId?.let {
-			viewModel.getImagesFromLocal(it).observe(this, { images ->
-				images.forEach { reportImage ->
-					val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_DOMAIN + reportImage.remotePath else "file://${reportImage.localPath}"
-					_images.add(path)
-				}
-			})
+			val images = viewModel.getImagesFromLocal(it)
+			images.forEach { reportImage ->
+				val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_DOMAIN + reportImage.remotePath else "file://${reportImage.localPath}"
+				_images.add(path)
+			}
 		}
 	}
 	
