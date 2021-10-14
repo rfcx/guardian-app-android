@@ -49,6 +49,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
@@ -157,7 +158,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			adapter = projectAdapter
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
-		setProjectTitle(viewModel.getProjectName())
+		
+		val preferences = Preferences.getInstance(requireContext())
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		setProjectTitle(viewModel.getProjectName(projectId))
 		
 		nearbyRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -310,7 +314,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun setAlertFeatures(streams: List<Stream>) {
-		val projectServerId = viewModel.getProject()?.serverId
+		val preferences = Preferences.getInstance(requireContext())
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		
+		val projectServerId = viewModel.getProject(projectId)?.serverId
 		val listOfStream = streams.filter { s -> s.project?.id == projectServerId }
 		val features = listOfStream.map {
 			val loc = Location(LocationManager.GPS_PROVIDER)
