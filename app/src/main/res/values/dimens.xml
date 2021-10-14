@@ -23,6 +23,7 @@
 	​<dimen name="viewpager_padding">48dp</dimen>
 	<dimen name="icon_app_size">110dp</dimen>
 	<dimen name="alert_size">46dp</dimen>
+	<dimen name="padding_size">25dp</dimen>
 	<dimen name="number_alerts_site">16dp</dimen>
 	<dimen name="padding_bottom">78dp</dimen>
 	<dimen name="bg_number_size">24dp</dimen>

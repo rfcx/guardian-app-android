@@ -1,5 +1,6 @@
 package org.rfcx.ranger.view.report.draft
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,18 @@ import kotlinx.android.synthetic.main.fragment_draft_reports.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.MainActivityViewModel
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	private val viewModel: MainActivityViewModel by viewModel()
 	private val reportsAdapter by lazy { DraftReportsAdapter(this) }
+	lateinit var listener: MainActivityEventListener
+	
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		listener = (context as MainActivityEventListener)
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
@@ -48,5 +56,9 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	
 	override fun onClickedDelete(response: Response) {
 		Toast.makeText(context, "On click delete ${response.streamName}", Toast.LENGTH_SHORT).show()
+	}
+	
+	override fun onClickedItem(response: Response) {
+		listener.openDetailResponse(response)
 	}
 }

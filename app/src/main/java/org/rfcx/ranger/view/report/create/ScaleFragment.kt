@@ -41,7 +41,6 @@ class ScaleFragment : Fragment() {
 			nextStepButton.isEnabled = true
 			
 			when (checkedId) {
-				R.id.notSureRadioButton -> selected = LoggingScale.NOT_SURE.value
 				R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
 				R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
 				R.id.noneRadioButton -> selected = LoggingScale.NONE.value
@@ -55,7 +54,6 @@ class ScaleFragment : Fragment() {
 			selected = res.loggingScale
 			nextStepButton.isEnabled = selected != LoggingScale.DEFAULT.value
 			when (selected) {
-				LoggingScale.NOT_SURE.value -> notSureRadioButton.isChecked = true
 				LoggingScale.SMALL.value -> smallRadioButton.isChecked = true
 				LoggingScale.LARGE.value -> largeRadioButton.isChecked = true
 				LoggingScale.NONE.value -> noneRadioButton.isChecked = true
