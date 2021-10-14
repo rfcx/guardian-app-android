@@ -86,6 +86,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
 	private val othersAdapter by lazy { GuardianItemAdapter(this) }
+	lateinit var preferences: Preferences
 	
 	private lateinit var mapView: MapView
 	private var mapBoxMap: MapboxMap? = null
@@ -135,6 +136,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView = view.findViewById(R.id.mapView)
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
+		preferences = Preferences.getInstance(requireContext())
 		
 		getLocation()
 		setupToolbar()
@@ -159,7 +161,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			projectAdapter.items = viewModel.getProjectsFromLocal()
 		}
 		
-		val preferences = Preferences.getInstance(requireContext())
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
@@ -314,7 +315,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun setAlertFeatures(streams: List<Stream>) {
-		val preferences = Preferences.getInstance(requireContext())
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		
 		val projectServerId = viewModel.getProject(projectId)?.serverId
