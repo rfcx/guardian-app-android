@@ -82,7 +82,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		fun newInstance() = EventsFragment()
 	}
 	
-	val preferences = Preferences.getInstance(requireContext())
+	private val preferences = Preferences.getInstance(requireContext())
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
