@@ -8,7 +8,7 @@ import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.asLiveData
 
 class GuardianEventDetailViewModel(private val alertDb: AlertDb) : ViewModel() {
-	fun getEvents(): LiveData<List<Alert>> {
+	fun getAlerts(): LiveData<List<Alert>> {
 		return Transformations.map(alertDb.getAllResultsAsync().asLiveData()) { it }
 	}
 }

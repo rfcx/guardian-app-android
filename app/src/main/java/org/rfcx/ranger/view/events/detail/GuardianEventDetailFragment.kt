@@ -15,18 +15,18 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
-import org.rfcx.ranger.view.events.adapter.EventItemAdapter
+import org.rfcx.ranger.view.events.adapter.AlertItemAdapter
 
 class GuardianEventDetailFragment : Fragment() {
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
-	private val eventItemAdapter by lazy { EventItemAdapter() }
+	private val alertItemAdapter by lazy { AlertItemAdapter() }
 	
 	var name: String? = null
 	var guardianId: String? = null
 	var distance: Double? = null
 	var number: Int? = null
-	var list = listOf<Alert>()
+	var alerts = listOf<Alert>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -55,8 +55,8 @@ class GuardianEventDetailFragment : Fragment() {
 		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = eventItemAdapter
-			eventItemAdapter.items = list.take(number ?: 0)
+			adapter = alertItemAdapter
+			alertItemAdapter.items = alerts.take(number ?: 0)
 			
 			createReportButton.setOnClickListener {
 				name?.let { name ->
@@ -72,9 +72,9 @@ class GuardianEventDetailFragment : Fragment() {
 	}
 	
 	private fun setObserve() {
-		viewModel.getEvents().observe(viewLifecycleOwner, { events ->
-			list = events.filter { e -> e.streamId == guardianId }
-			eventItemAdapter.items = list
+		viewModel.getAlerts().observe(viewLifecycleOwner, { events ->
+			alerts = events.filter { e -> e.streamId == guardianId }
+			alertItemAdapter.items = alerts
 		})
 	}
 	
