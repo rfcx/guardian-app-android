@@ -351,12 +351,6 @@ class RangerRealmMigration : RealmMigration {
 			addRealmObjectField(Alert.ALERT_INCIDENT, incident)
 		}
 		
-		val locationGroup = realm.schema.create(LocationGroup.TABLE_NAME)
-		locationGroup.apply {
-			addField(LocationGroup.LOCATION_GROUP_ID, String::class.java)
-			addField(LocationGroup.LOCATION_GROUP_NAME, String::class.java)
-		}
-		
 		val stream = realm.schema.create(Stream.TABLE_NAME)
 		stream.apply {
 			addField(Stream.STREAM_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -364,7 +358,7 @@ class RangerRealmMigration : RealmMigration {
 			addField(Stream.STREAM_NAME, String::class.java)
 			addField(Stream.STREAM_LATITUDE, Double::class.java)
 			addField(Stream.STREAM_LONGITUDE, Double::class.java)
-			addRealmObjectField(Stream.STREAM_LOCATION_GROUP, locationGroup)
+			addField(Stream.STREAM_PROJECT_SERVER_ID, String::class.java)
 		}
 	}
 	
