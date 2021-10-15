@@ -9,12 +9,14 @@ import io.realm.Realm
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.rfcx.companion.service.TrackingSyncWorker
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.data.remote.service.ServiceFactory
 import org.rfcx.ranger.entity.response.toCreateResponseRequest
 import org.rfcx.ranger.localdb.ReportImageDb
 import org.rfcx.ranger.localdb.ResponseDb
+import org.rfcx.ranger.localdb.TrackingFileDb
 import org.rfcx.ranger.util.RealmHelper
 import java.io.File
 
@@ -34,6 +36,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 		val db = ResponseDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val alertDb = AlertDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val reportImageDb = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
+		val trackingFileDb = TrackingFileDb(Realm.getInstance(RealmHelper.migrationConfig()))
 		val responses = db.lockUnsent()
 		Log.d(TAG, "doWork: found ${responses.size} unsent")
 		
@@ -45,6 +48,8 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 				val fullId = result.headers().get("Location")
 				val id = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length)
 				db.markSent(response.id, id, incidentRef)
+				trackingFileDb.updateResponseServerId(response.id, id)
+				TrackingSyncWorker.enqueue()
 				
 				val audioFileOrNull = if (!response.audioLocation.isNullOrEmpty()) createLocalFilePart("file", Uri.parse(response.audioLocation!!), "audio/mpeg") else null
 				if (id != null) {

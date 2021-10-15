@@ -166,6 +166,7 @@ object DataModule {
 		factory { AlertDb(get()) }
 		factory { StreamDb(get()) }
 		factory { TrackingDb(get()) }
+		factory { TrackingFileDb(get()) }
 		factory { WeeklySummaryData(get()) }
 		factory { ProfileData(get(), get()) }
 		factory { Preferences.getInstance(androidContext()) }

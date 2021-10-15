@@ -178,6 +178,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
 		viewModel.saveResponseInLocalDb(response, _images)
+		viewModel.saveTrackingFile(response, this)
 		ResponseSyncWorker.enqueue()
 		
 		val intent = Intent()
