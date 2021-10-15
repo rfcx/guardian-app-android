@@ -15,6 +15,7 @@ import org.rfcx.ranger.di.UiModule
 import org.rfcx.ranger.service.CleanupAudioCacheWorker
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.RealmHelper
 
 
@@ -39,8 +40,7 @@ class RangerApplication : MultiDexApplication() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
-		
-		
+		LocationTracking.set(this, true)
 	}
 	
 	private fun setUpRealm() {

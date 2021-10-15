@@ -51,19 +51,6 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
 	
-	fun saveTracking(tracking: Tracking, location: Location) {
-		val coordinate = Coordinate(
-				latitude = location.latitude,
-				longitude = location.longitude,
-				altitude = location.altitude
-		)
-		trackingDb.insertOrUpdate(tracking, coordinate)
-	}
-	
-	fun deleteTracking(context: Context) {
-		trackingDb.deleteTracking(1, context)
-	}
-	
 	fun fetchProjects() {
 		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
 			override fun onSuccess(t: List<ProjectResponse>) {
