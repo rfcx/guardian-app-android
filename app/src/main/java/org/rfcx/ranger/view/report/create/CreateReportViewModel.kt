@@ -46,6 +46,7 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 			)
 			trackingFileDb.insertOrUpdate(trackingFile)
 		}
+		trackingDb.deleteTracking(1, context)
 	}
 	
 	fun getResponseById(id: Int): Response? = responseDb.getResponseById(id)
