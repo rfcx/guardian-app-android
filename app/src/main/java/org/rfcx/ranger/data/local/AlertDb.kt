@@ -2,6 +2,7 @@ package org.rfcx.ranger.data.local
 
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
 import io.realm.kotlin.deleteFromRealm
 import org.rfcx.ranger.data.api.events.ResponseEvent
 import org.rfcx.ranger.data.api.events.toAlert
@@ -24,14 +25,18 @@ class AlertDb(private val realm: Realm) {
 	
 	fun getAlertCount(streamId: String): Long = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).count()
 	
+	fun getAlerts(streamId: String): List<Alert> = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.ASCENDING).findAll()
+	
 	fun getAllResultsAsync(): RealmResults<Alert> {
 		return realm.where(Alert::class.java).findAllAsync()
 	}
 	
 	fun deleteAlert(id: String) {
 		realm.executeTransaction {
-			val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id).findFirst()
-			alert?.deleteFromRealm()
+			val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id).findAll()
+			alert?.forEach { a ->
+				a.deleteFromRealm()
+			}
 		}
 	}
 }

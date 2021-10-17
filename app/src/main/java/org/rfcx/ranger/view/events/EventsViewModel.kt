@@ -21,7 +21,6 @@ import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.Stream
-import org.rfcx.ranger.entity.location.Coordinate
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.localdb.StreamDb
