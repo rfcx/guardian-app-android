@@ -23,6 +23,7 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -37,9 +38,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.expressions.Expression
-import com.mapbox.mapboxsdk.style.layers.CircleLayer
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.layers.*
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.fragment_new_events.*
@@ -69,6 +68,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		private const val COUNT_EVENTS = "count.events"
 		private const val POINT_COUNT = "point_count"
 		private const val SOURCE_ALERT = "source.alert"
+		private const val SOURCE_LINE = "source.line"
 		private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
 		private const val PROPERTY_MARKER_ALERT_DISTANCE = "alert.distance"
 		private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
@@ -111,6 +111,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private var alertSource: GeoJsonSource? = null
 	private var alertFeatures: FeatureCollection? = null
+	
+	private var lineSource: GeoJsonSource? = null
+	private var lineFeatures: FeatureCollection? = null
 	
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var isShowMapIcon = true
@@ -250,6 +253,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
 			setAlertFeatures(streams)
 		})
+		
+		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner, { trackings ->
+			setTrackingFeatures(trackings)
+		})
 	}
 	
 	private fun setProjectTitle(str: String) {
@@ -308,6 +315,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			setupSources(style)
 			refreshSource()
 			addClusteredGeoJsonSource(style)
+			addLineLayer(style)
 			alertFeatures?.let { moveCameraToLeavesBounds(it) }
 		}
 		
@@ -340,6 +348,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		}
 		alertFeatures = FeatureCollection.fromFeatures(features)
 		refreshSource()
+	}
+	
+	private fun setTrackingFeatures(trackingList: List<Tracking>) {
+		trackingList.map { tracking ->
+			val trackingCoordinates = tracking.points.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
+			lineFeatures = FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
+			refreshSource()
+		}
 	}
 	
 	private fun handleClickIcon(screenPoint: PointF): Boolean {
@@ -381,7 +397,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		return false
 	}
 	
-	private fun setupSources(it: Style) {
+	private fun setupSources(style: Style) {
 		alertSource = GeoJsonSource(SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
 				.withCluster(true)
 				.withClusterMaxZoom(15)
@@ -404,13 +420,29 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 						Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
 				)
 		)
-		it.addSource(alertSource!!)
+		style.addSource(alertSource!!)
+		
+		lineSource = GeoJsonSource(SOURCE_LINE)
+		style.addSource(lineSource!!)
 	}
 	
 	private fun refreshSource() {
 		if (alertSource != null && alertFeatures != null) {
 			alertSource!!.setGeoJson(alertFeatures)
 		}
+		if (lineSource != null && lineFeatures != null) {
+			lineSource!!.setGeoJson(lineFeatures)
+		}
+	}
+	
+	private fun addLineLayer(style: Style) {
+		val lineLayer = LineLayer("line-layer", SOURCE_LINE).withProperties(
+				PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
+				PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+				PropertyFactory.lineWidth(5f),
+				PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+		)
+		style.addLayer(lineLayer)
 	}
 	
 	private fun addClusteredGeoJsonSource(style: Style) {

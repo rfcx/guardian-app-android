@@ -2,6 +2,8 @@ package org.rfcx.ranger.localdb
 
 import android.content.Context
 import io.realm.Realm
+import io.realm.RealmResults
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Coordinate
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.util.Preferences
@@ -39,5 +41,9 @@ class TrackingDb(private val realm: Realm) {
 	
 	fun getFirstTracking(): Tracking? {
 		return realm.where(Tracking::class.java).findFirst()
+	}
+	
+	fun getAllResultsAsync(): RealmResults<Tracking> {
+		return realm.where(Tracking::class.java).findAllAsync()
 	}
 }

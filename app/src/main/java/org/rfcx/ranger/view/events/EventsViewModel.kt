@@ -42,6 +42,10 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
+	fun getTrackingFromLocal(): LiveData<List<Tracking>> {
+		return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }
+	}
+	
 	val nearbyGuardians = mutableListOf<EventGroup>()
 	val othersGuardians = mutableListOf<EventGroup>()
 	
