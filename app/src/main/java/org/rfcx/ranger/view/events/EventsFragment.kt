@@ -78,6 +78,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
 		private const val DURATION_MS = 1300
+		private const val THREE_HOURS = 3 * 60 * 60 * 1000
 		
 		@JvmStatic
 		fun newInstance() = EventsFragment()
@@ -352,7 +353,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun setTrackingFeatures(trackingList: List<Tracking>) {
 		trackingList.map { tracking ->
-			val trackingCoordinates = tracking.points.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
+			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.saveAt.time <= THREE_HOURS }
+			val trackingCoordinates = tracks.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
 			lineFeatures = FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
 			refreshSource()
 		}
