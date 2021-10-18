@@ -3,6 +3,7 @@ package org.rfcx.ranger.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.AirplaneModeReceiver
@@ -252,6 +254,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		getResult.launch(intent)
 	}
 	
+	override fun openGoogleMap(stream: Stream) {
+		val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:${stream.latitude},${stream.longitude}"))
+		startActivity(intent)
+	}
+	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
@@ -398,4 +405,5 @@ interface MainActivityEventListener {
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
 	fun openDetailResponse(response: Response)
+	fun openGoogleMap(stream: Stream)
 }
