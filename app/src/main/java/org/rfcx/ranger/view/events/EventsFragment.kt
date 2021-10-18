@@ -212,6 +212,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun onClicked(project: Project) {
+		isShowNotHaveStreams(false)
 		nearbyLayout.visibility = View.GONE
 		othersLayout.visibility = View.GONE
 		expandMoreImageView.rotation = 0F

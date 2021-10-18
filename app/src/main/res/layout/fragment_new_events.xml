@@ -94,9 +94,9 @@
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/notHaveStreamsImageView"
-		android:layout_width="@dimen/ic_mountains_size"
-		android:layout_height="@dimen/ic_mountains_size"
-		android:src="@drawable/ic_mountains"
+		android:layout_width="@dimen/ic_empty_list_size"
+		android:layout_height="@dimen/ic_empty_list_size"
+		android:src="@drawable/ic_pin_drop"
 		app:layout_constraintBottom_toTopOf="@+id/emptyListTextView"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
