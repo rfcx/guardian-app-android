@@ -255,7 +255,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	}
 	
 	override fun openGoogleMap(stream: Stream) {
-		val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:${stream.latitude},${stream.longitude}"))
+		val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:${stream.latitude},${stream.longitude}?q=${stream.latitude},${stream.longitude}(${stream.name})"))
 		startActivity(intent)
 	}
 	
