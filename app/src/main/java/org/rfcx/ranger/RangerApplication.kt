@@ -31,8 +31,6 @@ class RangerApplication : MultiDexApplication() {
 		setUpRealm()
 		setupKoin()
 		ReportCleanupWorker.enqueuePeriodically()
-		LocationCleanupWorker.enqueuePeriodically()
-		CleanupAudioCacheWorker.enqueuePeriodically()
 		
 		if (BuildConfig.USE_STETHO) {
 			Stetho.initialize(Stetho.newInitializerBuilder(this)
