@@ -379,16 +379,12 @@ class RangerRealmMigration : RealmMigration {
 			addField(Coordinate.COORDINATE_LATITUDE, Double::class.java)
 			addField(Coordinate.COORDINATE_LONGITUDE, Double::class.java)
 			addField(Coordinate.COORDINATE_ALTITUDE, Double::class.java)
-			addField(Coordinate.COORDINATE_SAVE_AT, Date::class.java)
+			addField(Coordinate.COORDINATE_CREATED_AT, Date::class.java)
 		}
 		
 		val tracking = realm.schema.create(Tracking.TABLE_NAME)
 		tracking.apply {
-			addField(
-					Tracking.TRACKING_ID,
-					Int::class.java,
-					FieldAttribute.PRIMARY_KEY
-			)
+			addField(Tracking.TRACKING_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
 			addField(Tracking.TRACKING_START_AT, Date::class.java)
 					.setNullable(Tracking.TRACKING_START_AT, false)
 			addField(Tracking.TRACKING_STOP_AT, Date::class.java)

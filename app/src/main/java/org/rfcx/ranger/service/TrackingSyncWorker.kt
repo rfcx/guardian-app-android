@@ -26,7 +26,6 @@ class TrackingSyncWorker(val context: Context, params: WorkerParameters) :
 		var someFailed = false
 		
 		tracking.forEach {
-			
 			val file = File(it.localPath)
 			val mimeType = file.getMimeType()
 			val requestFile = RequestBody.create(MediaType.parse(mimeType), file)

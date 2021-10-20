@@ -66,7 +66,7 @@ object GeoJsonUtils {
 	
 	private fun createFile(context: Context, fileName: String, json: JsonObject): File {
 		val gson = Gson()
-		val dir = File(context.filesDir, "deployment-tracking")
+		val dir = File(context.filesDir, "tracking")
 		if (!dir.exists()) {
 			dir.mkdir()
 		}

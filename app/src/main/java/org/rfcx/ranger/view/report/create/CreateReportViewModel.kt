@@ -33,7 +33,7 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 			val alerts = alertDb.getAlerts(response.streamId)
 			var point = t.points.toListDoubleArray()
 			if (alerts.isNotEmpty()) {
-				point = t.points.filter { p -> p.saveAt >= alerts[0].start }.toDoubleArray()
+				point = t.points.filter { p -> p.createdAt >= alerts[0].start }.toDoubleArray()
 			}
 			val trackingFile = TrackingFile(
 					responseId = response.id,

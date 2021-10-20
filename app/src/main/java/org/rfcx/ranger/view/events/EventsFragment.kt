@@ -353,7 +353,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun setTrackingFeatures(trackingList: List<Tracking>) {
 		trackingList.map { tracking ->
-			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.saveAt.time <= THREE_HOURS }
+			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.createdAt.time <= THREE_HOURS }
 			val trackingCoordinates = tracks.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
 			lineFeatures = FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
 			refreshSource()
