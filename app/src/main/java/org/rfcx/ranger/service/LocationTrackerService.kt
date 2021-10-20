@@ -13,6 +13,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -24,7 +25,6 @@ import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.localdb.TrackingDb
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.Preferences.Companion.LATEST_GET_LOCATION_TIME
 import org.rfcx.ranger.util.RealmHelper
 import org.rfcx.ranger.view.MainActivityNew
 import java.util.*
@@ -46,7 +46,7 @@ class LocationTrackerService : Service() {
 		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
 		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
 		
-		private const val FIVE_MINUTES = 5 * 60 * 1000
+		private const val FIVE_MINUTES = 5L * 60L * 1000L
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
 		private const val TAG = "LocationTrackerService"
@@ -74,7 +74,7 @@ class LocationTrackerService : Service() {
 	}
 	
 	private val locationListener = object : LocationListener {
-		override fun onLocationChanged(p0: Location) {
+		override fun onLocationChanged(location: Location) {
 			val myProcess = RunningAppProcessInfo()
 			ActivityManager.getMyMemoryState(myProcess)
 			val isInForeground = myProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
@@ -82,28 +82,28 @@ class LocationTrackerService : Service() {
 			if (isInForeground && System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
 				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
 				analytics.trackLocationTracking(time)
-				saveLocation(p0)
+				saveLocation(location)
+				Log.d("onStatusChanged","$location")
+				
 			} else if (myProcess.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
 				this@LocationTrackerService.stopService(Intent(this@LocationTrackerService, LocationTrackerService::class.java))
 			}
 		}
 		
-		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LATEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
-					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
-				}
-				
-			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
+		override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+			if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+				Log.d("onStatusChanged","TEMPORARILY_UNAVAILABLE ")
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
+			} else if (status == LocationProvider.OUT_OF_SERVICE) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 			}
 		}
 		
-		override fun onProviderEnabled(p0: String) {
+		override fun onProviderEnabled(provider: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 		}
 		
-		override fun onProviderDisabled(p0: String) {
+		override fun onProviderDisabled(provider: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 		}
 		
@@ -182,7 +182,7 @@ class LocationTrackerService : Service() {
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 			
 			trackingStatTimer?.cancel()
-			trackingStatTimer = fixedRateTimer("timer", false, 60 * 1000, 60 * 1000) {
+			trackingStatTimer = fixedRateTimer("timer", false, FIVE_MINUTES, FIVE_MINUTES) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(isLocationAvailability))
 			}
 			
@@ -191,7 +191,7 @@ class LocationTrackerService : Service() {
 			
 			// Tracking satellite
 			trackingSatelliteTimer?.cancel()
-			trackingSatelliteTimer = fixedRateTimer("satellite_timer", false, 30 * 1000, 30 * 1000) {
+			trackingSatelliteTimer = fixedRateTimer("satellite_timer", false, FIVE_MINUTES, FIVE_MINUTES) {
 				analytics.trackSatelliteCount(satelliteCount) // tracking satellite count per 30s
 			}
 		} catch (ex: SecurityException) {
