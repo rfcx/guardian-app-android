@@ -16,7 +16,6 @@ import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.android.exoplayer2.util.Log
 import com.google.android.gms.location.LocationRequest
 import io.realm.Realm
 import org.rfcx.ranger.R
@@ -264,7 +263,6 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun saveLocation(location: Location) {
-		Log.d("saveLocation", "$location")
 		tracking.id = 1
 		val coordinate = Coordinate(
 				latitude = location.latitude,
