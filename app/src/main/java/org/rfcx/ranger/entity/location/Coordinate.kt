@@ -19,12 +19,10 @@ open class Coordinate(
 	}
 }
 
-fun List<Coordinate>.toDoubleArray(): List<DoubleArray> {
-	return this.map { listOf(it.longitude, it.latitude).toDoubleArray() }.toList()
+fun List<Coordinate>.toListDoubleArray(): List<DoubleArray> {
+	return this.map { doubleArrayOf(it.longitude, it.latitude) }
 }
 
 fun RealmList<Coordinate>.toListDoubleArray(): List<DoubleArray> {
-	return this.map {
-		listOf(it.longitude, it.latitude).toDoubleArray()
-	}.toList()
+	return this.map { doubleArrayOf(it.longitude, it.latitude) }
 }
