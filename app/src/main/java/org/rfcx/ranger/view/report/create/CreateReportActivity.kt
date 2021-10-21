@@ -12,6 +12,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.ResponseSyncWorker
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Screen
 import java.util.*
 import kotlin.collections.ArrayList
@@ -212,6 +213,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			}
 			else -> super.onBackPressed()
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		LocationTracking.set(this, false)
+	}
+	
+	override fun onDestroy() {
+		super.onDestroy()
+		LocationTracking.set(this, true)
 	}
 }
 

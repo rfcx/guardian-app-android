@@ -13,7 +13,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -83,8 +82,6 @@ class LocationTrackerService : Service() {
 				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
 				analytics.trackLocationTracking(time)
 				saveLocation(location)
-				Log.d("onStatusChanged","$location")
-				
 			} else if (myProcess.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
 				this@LocationTrackerService.stopService(Intent(this@LocationTrackerService, LocationTrackerService::class.java))
 			}
@@ -92,7 +89,6 @@ class LocationTrackerService : Service() {
 		
 		override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
 			if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-				Log.d("onStatusChanged","TEMPORARILY_UNAVAILABLE ")
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 			} else if (status == LocationProvider.OUT_OF_SERVICE) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
