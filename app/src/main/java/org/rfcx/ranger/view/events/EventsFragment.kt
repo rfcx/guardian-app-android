@@ -282,7 +282,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun invoke(guardian: EventGroup) {
-		listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.eventSize, guardian.streamId)
+		listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.streamId)
 	}
 	
 	private fun setupToolbar() {
@@ -392,9 +392,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 					if (features?.groupBy { it }?.size == 1) {
 						val name = features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString
 						val distance = features[0].getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
-						val eventSize = features[0].getProperty(PROPERTY_MARKER_ALERT_COUNT).asString
 						val streamId = features[0].getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-						listener.openGuardianEventDetail(name, distance.toDouble(), eventSize.toInt(), streamId)
+						listener.openGuardianEventDetail(name, distance.toDouble(), streamId)
 					} else {
 						moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
 					}
@@ -403,9 +402,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				val selectedFeature = alertFeatures[0]
 				val name = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString
 				val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
-				val eventSize = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_COUNT).asString
 				val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-				listener.openGuardianEventDetail(name, distance.toDouble(), eventSize.toInt(), streamId)
+				listener.openGuardianEventDetail(name, distance.toDouble(), streamId)
 			}
 			return true
 		}

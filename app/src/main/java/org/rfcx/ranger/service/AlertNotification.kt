@@ -22,7 +22,7 @@ object AlertNotification {
 		
 		val intent = Intent(context, MainActivityNew::class.java)
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-		intent.putExtra(ALERT_ID_NOTI_INTENT, getEventGuId(data))
+		intent.putExtra(ALERT_ID_NOTI_INTENT, getStreamName(data))
 		
 		val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 		val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -49,8 +49,8 @@ object AlertNotification {
 		return notificationBuilder.build()
 	}
 	
-	private fun getEventGuId(data: Map<String, String>): String? {
-		return data["event_guid"]
+	private fun getStreamName(data: Map<String, String>): String? {
+		return data["streamName"]
 	}
 	
 	const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"

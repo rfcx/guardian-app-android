@@ -216,9 +216,9 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 		bottomBar.visibility = View.VISIBLE
 	}
 	
-	override fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String) {
+	override fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String) {
 		hideBottomAppBar()
-		startFragment(GuardianEventDetailFragment.newInstance(name, distance, eventSize, guardianId), GuardianEventDetailFragment.tag)
+		startFragment(GuardianEventDetailFragment.newInstance(name, distance, guardianId), GuardianEventDetailFragment.tag)
 	}
 	
 	private fun startFragment(fragment: Fragment, tag: String = "") {
@@ -354,8 +354,11 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
 		if (intent?.hasExtra(AlertNotification.ALERT_ID_NOTI_INTENT) == true) {
-			val eventGuId: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
-			mainViewModel.eventGuIdFromNotification.value = eventGuId
+			val streamName: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
+			streamName?.let { name ->
+				val stream = mainViewModel.getStreamByName(name)
+				stream?.serverId?.let { openGuardianEventDetail(name, null, it) }
+			}
 		}
 	}
 	
@@ -401,7 +404,7 @@ interface MainActivityEventListener {
 	fun hideBottomAppBar()
 	fun showBottomAppBar()
 	fun onBackPressed()
-	fun openGuardianEventDetail(name: String, distance: Double?, eventSize: Int, guardianId: String)
+	fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
 	fun openDetailResponse(response: Response)
