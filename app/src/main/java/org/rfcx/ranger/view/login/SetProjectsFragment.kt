@@ -30,6 +30,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	private val viewModel: SetProjectsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private var selectedProject = -1
+	private var project: Project? = null
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -63,8 +64,17 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		selectProjectButton.setOnClickListener {
 			val preferences = Preferences.getInstance(requireContext())
 			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
-			listener.handleOpenPage()
-			// viewModel.setProjects(project)  for subscribe cloud messaging but now the notification not yet available
+			project?.let { it1 ->
+				viewModel.setProjects(it1) {
+					if (it) {
+						Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_LONG).show()
+						
+					} else {
+						Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_LONG).show()
+					}
+					listener.handleOpenPage()
+				}
+			}
 		}
 		
 		logoutButton.setOnClickListener {
@@ -93,6 +103,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	}
 	
 	override fun onClicked(project: Project) {
+		this.project = project
 		selectedProject = project.id
 		selectProjectButton.isEnabled = true
 	}

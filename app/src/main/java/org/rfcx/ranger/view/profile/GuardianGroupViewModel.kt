@@ -11,7 +11,6 @@ import org.rfcx.ranger.data.local.CachedEndpointDb
 import org.rfcx.ranger.data.local.EventDb
 import org.rfcx.ranger.data.remote.ResponseCallback
 import org.rfcx.ranger.data.remote.Result
-import org.rfcx.ranger.data.remote.domain.BaseDisposableSingle
 import org.rfcx.ranger.data.remote.guardianGroup.GetGuardianGroups
 import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
@@ -93,7 +92,7 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 				
 				// sub&unsub noti
 				CloudMessaging.unsubscribe(context) {
-					CloudMessaging.setGroup(context, guardianGroup.shortname)
+					CloudMessaging.setProject(context, guardianGroup.shortname)
 					CloudMessaging.subscribeIfRequired(context) {
 						callback(true)
 					}

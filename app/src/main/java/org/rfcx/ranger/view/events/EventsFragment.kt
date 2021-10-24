@@ -229,6 +229,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		viewModel.loadStreams()
 		setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
+		
+		viewModel.pushNotification(project) {}
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")

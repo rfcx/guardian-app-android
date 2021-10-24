@@ -25,6 +25,7 @@ import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.localdb.StreamDb
 import org.rfcx.ranger.localdb.TrackingDb
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
 import org.rfcx.ranger.view.events.adapter.EventGroup
@@ -158,4 +159,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun distance(lastLocation: Location, loc: Location): String = LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()
 	
+	
+	fun pushNotification(project: Project, callback: (Boolean) -> Unit) {
+		CloudMessaging.unsubscribe(context) {
+			project.serverId?.let { it1 -> CloudMessaging.setProject(context, it1) }
+			CloudMessaging.subscribeIfRequired(context) {
+				callback(true)
+			}
+		}
+	}
 }
