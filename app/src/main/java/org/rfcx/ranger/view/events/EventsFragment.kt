@@ -198,14 +198,23 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	private fun setOnClickProjectName() {
-		listener.hideBottomAppBar()
-		projectRecyclerView.visibility = View.VISIBLE
-		projectSwipeRefreshView.visibility = View.VISIBLE
+		if (projectRecyclerView.visibility == View.VISIBLE) {
+			expandMoreImageView.rotation = 0F
+			listener.showBottomAppBar()
+			projectRecyclerView.visibility = View.GONE
+			projectSwipeRefreshView.visibility = View.GONE
+		} else {
+			expandMoreImageView.rotation = 180F
+			listener.hideBottomAppBar()
+			projectRecyclerView.visibility = View.VISIBLE
+			projectSwipeRefreshView.visibility = View.VISIBLE
+		}
 	}
 	
 	override fun onClicked(project: Project) {
 		nearbyLayout.visibility = View.GONE
 		othersLayout.visibility = View.GONE
+		expandMoreImageView.rotation = 0F
 		
 		isShowProgressBar()
 		nearbyAdapter.items = listOf()
