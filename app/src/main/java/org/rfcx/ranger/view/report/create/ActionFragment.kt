@@ -74,6 +74,7 @@ class ActionFragment : Fragment() {
 	}
 	
 	private fun setSelect() {
+		selected.clear()
 		if (collectedEvidenceCheckBox.isChecked) {
 			selected.add(Actions.COLLECTED_EVIDENCE.value)
 		}

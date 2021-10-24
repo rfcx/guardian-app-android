@@ -158,7 +158,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setResponse(response)
 	}
 	
-	override fun setNotes(note: String) {
+	override fun setNotes(note: String?) {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
@@ -227,7 +227,7 @@ interface CreateReportListener {
 	fun setScale(scale: Int)
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
-	fun setNotes(note: String)
+	fun setNotes(note: String?)
 	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
 	

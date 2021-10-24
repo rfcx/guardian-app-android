@@ -88,6 +88,7 @@ class EvidenceFragment : Fragment() {
 	}
 	
 	private fun setSelect() {
+		selected.clear()
 		if (cutDownTreesCheckBox.isChecked) {
 			selected.add(EvidenceTypes.CUT_DOWN_TREES.value)
 		}
