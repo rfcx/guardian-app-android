@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.saveToAnswers
 import org.rfcx.ranger.service.ResponseSyncWorker
 import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Screen
@@ -178,6 +179,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
+		response.answers = response.saveToAnswers()
 		viewModel.saveResponseInLocalDb(response, _images)
 		viewModel.saveTrackingFile(response, this)
 		ResponseSyncWorker.enqueue()

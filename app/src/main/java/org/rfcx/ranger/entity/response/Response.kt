@@ -15,6 +15,7 @@ open class Response(
 		var investigatedAt: Date = Date(),
 		var startedAt: Date = Date(),
 		var submittedAt: Date? = null,
+		var answers: RealmList<Int> = RealmList(),
 		var evidences: RealmList<Int> = RealmList(),
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
@@ -37,6 +38,7 @@ open class Response(
 		const val RESPONSE_LOGGING_SCALE = "loggingScale"
 		const val RESPONSE_DAMAGE_SCALE = "damageScale"
 		const val RESPONSE_RESPONSE_ACTIONS = "responseActions"
+		const val RESPONSE_ANSWERS = "answers"
 		const val RESPONSE_NOTE = "note"
 		const val RESPONSE_STREAM_ID = "streamId"
 		const val RESPONSE_STREAM_NAME = "streamName"
@@ -51,11 +53,11 @@ enum class SyncState(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	DEFAULT(-1), NONE(0), NOT_SURE(1), SMALL(2), LARGE(3),
+	DEFAULT(-1), NONE(300), NOT_SURE(301), SMALL(302), LARGE(303),
 }
 
 enum class DamageScale(val value: Int) {
-	DEFAULT(-1), NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
+	DEFAULT(-1), NO_VISIBLE(400), SMALL(401), MEDIUM(402), LARGE(403)
 }
 
 enum class EvidenceTypes(val value: Int) {
@@ -103,4 +105,17 @@ fun Response.syncLabel() = when (this.syncState) {
 	SyncState.UNSENT.value -> R.string.unsent
 	SyncState.SENDING.value -> R.string.sending
 	else -> R.string.sent
+}
+
+fun Response.saveToAnswers() : RealmList<Int> {
+	val answers = RealmList<Int>()
+	answers.addAll(this.evidences)
+	answers.addAll(this.responseActions)
+	if (this.damageScale != DamageScale.DEFAULT.value) {
+		answers.add(this.damageScale)
+	}
+	if (this.loggingScale != LoggingScale.DEFAULT.value) {
+		answers.add(this.loggingScale)
+	}
+	return answers
 }
