@@ -226,7 +226,7 @@
 	<string name="others">others</string>
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	<string name="num_more_then_99">99+</string>
-	<string name="not_have_stream">No sites in this project.</string>
+	<string name="not_have_stream">No sites in this project</string>
 	
 	<!-- DraftReportsFragment -->
 	<string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>

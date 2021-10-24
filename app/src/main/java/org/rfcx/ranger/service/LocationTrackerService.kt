@@ -204,7 +204,6 @@ class LocationTrackerService : Service() {
 				altitude = location.altitude
 		)
 		trackingDb.insertOrUpdate(tracking, coordinate)
-		LocationSyncWorker.enqueue()
 		Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	

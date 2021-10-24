@@ -6,9 +6,26 @@ import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 
 class ResponseDb(val realm: Realm) {
+	fun unsentCount(): Long {
+		return realm.where(Response::class.java)
+				.notEqualTo(Response.RESPONSE_SYNC_STATE, SyncState.SENT.value)
+				.count()
+	}
+	
+	fun unlockSending() {
+		realm.executeTransaction {
+			val snapshot = it.where(Response::class.java)
+					.equalTo(Response.RESPONSE_SYNC_STATE, SyncState.SENDING.value).findAll()
+					.createSnapshot()
+			snapshot.forEach { res ->
+				res.syncState = SyncState.UNSENT.value
+			}
+		}
+	}
 	
 	fun getResponseById(id: Int): Response? {
-		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst() ?: return null
+		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst()
+				?: return null
 		return realm.copyFromRealm(response)
 	}
 	
