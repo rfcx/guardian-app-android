@@ -161,7 +161,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private fun setItemOnAdapter() {
 		isShowProgressBar(false)
 		setShowListStream()
-		isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
+		isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 		nearbyAdapter.items = viewModel.nearbyGuardians
 		othersAdapter.items = viewModel.othersGuardians
 	}
@@ -269,6 +269,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 			})
 		})
 		
