@@ -17,6 +17,23 @@ class TrackingFileDb(private val realm: Realm) {
 		}
 	}
 	
+	fun unsentCount(): Long {
+		return realm.where(TrackingFile::class.java)
+				.notEqualTo(TrackingFile.FIELD_SYNC_STATE, SyncState.SENT.value)
+				.count()
+	}
+	
+	fun unlockSending() {
+		realm.executeTransaction {
+			val snapshot = it.where(TrackingFile::class.java)
+					.equalTo(TrackingFile.FIELD_SYNC_STATE, SyncState.SENDING.value).findAll()
+					.createSnapshot()
+			snapshot.forEach { file ->
+				file.syncState = SyncState.UNSENT.value
+			}
+		}
+	}
+	
 	fun updateResponseServerId(responseId: Int, serverId: String?) {
 		realm.executeTransaction {
 			//update server id in track

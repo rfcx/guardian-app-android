@@ -226,16 +226,18 @@
 	<string name="others">others</string>
 	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
 	<string name="num_more_then_99">99+</string>
-	<string name="not_have_stream">Not have stream in this project.</string>
+	<string name="not_have_stream">No sites in this project</string>
 	
 	<!-- DraftReportsFragment -->
 	<string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
+	<string name="not_have_draft_reports">You don’t have any draft reports</string>
 	
 	<!-- SubmittedReportsFragment -->
 	<string name="unsent">Queued</string>
 	<string name="sending">Sending</string>
 	<string name="sent">Sent</string>
 	<string name="incident_ref">#%s</string>
+	<string name="not_submitted_reports_yet">You haven’t submitted any reports yet</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>

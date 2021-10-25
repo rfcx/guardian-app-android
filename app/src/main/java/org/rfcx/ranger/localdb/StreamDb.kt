@@ -30,4 +30,7 @@ class StreamDb(private val realm: Realm) {
 	fun getStreams(): List<Stream> {
 		return realm.where(Stream::class.java).findAll() ?: arrayListOf()
 	}
+	
+	fun getStreamByCoreId(serverId: String): Stream? = realm.where(Stream::class.java).equalTo(Stream.STREAM_SERVER_ID, serverId).findFirst()
+	
 }

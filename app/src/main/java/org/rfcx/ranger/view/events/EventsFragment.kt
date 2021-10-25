@@ -49,6 +49,7 @@ import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.toJsonObject
 import org.rfcx.ranger.view.MainActivityEventListener
@@ -212,6 +213,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun onClicked(project: Project) {
+		isShowNotHaveStreams(false)
 		nearbyLayout.visibility = View.GONE
 		othersLayout.visibility = View.GONE
 		expandMoreImageView.rotation = 0F
@@ -555,6 +557,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				cameraMode = CameraMode.TRACKING
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
+			}
+			val stateTracking = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, LocationTracking.TRACKING_OFF)
+			if (stateTracking != LocationTracking.TRACKING_ON) {
+				LocationTracking.set(requireContext(), true)
 			}
 		} else {
 			permissionsManager = PermissionsManager(this)

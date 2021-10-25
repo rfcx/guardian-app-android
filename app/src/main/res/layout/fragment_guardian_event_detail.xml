@@ -58,7 +58,7 @@
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/openMapsButton"
-			style="@style/RangerButton.GreenButton"
+			style="@style/RangerButton.GreenButton.Line"
 			android:layout_width="0dp"
 			android:layout_height="@dimen/button_height"
 			android:layout_marginStart="@dimen/margin_padding_normal"

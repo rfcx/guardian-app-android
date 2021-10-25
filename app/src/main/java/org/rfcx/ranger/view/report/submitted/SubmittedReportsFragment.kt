@@ -34,6 +34,7 @@ class SubmittedReportsFragment : Fragment() {
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
+			notHaveSubmittedReportsGroupView.visibility = if (responses.isEmpty()) View.VISIBLE else View.GONE
 			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
 			reportsAdapter.notifyDataSetChanged()
 		})

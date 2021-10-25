@@ -12,6 +12,7 @@ import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.ResponseSyncWorker
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Screen
 import java.util.*
 import kotlin.collections.ArrayList
@@ -158,7 +159,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setResponse(response)
 	}
 	
-	override fun setNotes(note: String) {
+	override fun setNotes(note: String?) {
 		val response = _response ?: Response()
 		response.note = note
 		setResponse(response)
@@ -213,6 +214,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			else -> super.onBackPressed()
 		}
 	}
+	
+	override fun onResume() {
+		super.onResume()
+		LocationTracking.set(this, false)
+	}
+	
+	override fun onDestroy() {
+		super.onDestroy()
+		LocationTracking.set(this, true)
+	}
 }
 
 interface CreateReportListener {
@@ -227,7 +238,7 @@ interface CreateReportListener {
 	fun setScale(scale: Int)
 	fun setDamage(damage: Int)
 	fun setAction(action: List<Int>)
-	fun setNotes(note: String)
+	fun setNotes(note: String?)
 	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
 	

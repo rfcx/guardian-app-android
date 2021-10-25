@@ -22,7 +22,7 @@ data class CreateResponseRequest(
 		val loggingScale: Int,
 		val damageScale: Int,
 		val responseActions: List<Int>,
-		val note: String,
+		val note: String?,
 		val streamId: String
 )
 

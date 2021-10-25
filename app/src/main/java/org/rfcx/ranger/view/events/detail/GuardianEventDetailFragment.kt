@@ -16,6 +16,9 @@ import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.AlertItemAdapter
+import android.content.Intent
+import android.net.Uri
+
 
 class GuardianEventDetailFragment : Fragment() {
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
@@ -63,6 +66,15 @@ class GuardianEventDetailFragment : Fragment() {
 					guardianId?.let { id ->
 						listener.openCreateReportActivity(name, id)
 					}
+				}
+			}
+		}
+		
+		openMapsButton.setOnClickListener {
+			guardianId?.let { id ->
+				val stream = viewModel.getStream(id)
+				if (stream != null) {
+					listener.openGoogleMap(stream)
 				}
 			}
 		}
