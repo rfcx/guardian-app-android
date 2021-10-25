@@ -52,7 +52,7 @@ fun Preferences.getTokenID(): String? {
 
 fun Context?.logout() {
 	this?.let {
-		CloudMessaging.unsubscribe(this)
+//		CloudMessaging.unsubscribe(this)
 		Preferences.getInstance(this).clear()
 		LocationTracking.set(this, false)
 		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->

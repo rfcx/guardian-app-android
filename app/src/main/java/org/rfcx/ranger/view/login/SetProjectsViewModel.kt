@@ -49,13 +49,16 @@ class SetProjectsViewModel(private val context: Context, private val getProjects
 		return projectDb.getProjects()
 	}
 	
-	fun setProjects(project: Project, callback: (Boolean) -> Unit) {
-		project.serverId?.let { serverId ->
-			CloudMessaging.setProject(context, serverId)
-			CloudMessaging.subscribeIfRequired(context) {
-				callback(true)
-			}
-		}
+	fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
+		if (project.serverId == null) return callback(false)
+		CloudMessaging.subscribeIfRequired(project.serverId!!) { status -> callback(status) }
+		CloudMessaging.setProject(context, project.serverId!!)
+	}
+	
+	fun unsubscribeProject(project: Project, callback: (Boolean) -> Unit) {
+		if (project.serverId == null) return callback(false)
+		
+		CloudMessaging.unsubscribe(project.serverId!!) { status -> callback(status) }
 	}
 	
 	private fun subscribeByEmail(guardianGroup: String) {

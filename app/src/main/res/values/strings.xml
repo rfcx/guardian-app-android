@@ -219,6 +219,8 @@
 	<string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
 	<string name="logout">logout</string>
 	<string name="select">Select</string>
+	<string name="failed_receive_notification">Failed to receive notification from %s</string>
+	<string name="failed_unsubscribe_receive_notification">Failed to unsubscribe receive notification from %s</string>
 	
 	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>

@@ -161,11 +161,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	
 	fun pushNotification(project: Project, callback: (Boolean) -> Unit) {
-		CloudMessaging.unsubscribe(context) {
-			project.serverId?.let { it1 -> CloudMessaging.setProject(context, it1) }
-			CloudMessaging.subscribeIfRequired(context) {
-				callback(true)
-			}
-		}
+//		project.serverId?.let { coreId ->
+//			CloudMessaging.unsubscribe(coreId) {
+//				project.serverId?.let { it1 -> CloudMessaging.setProject(context, it1) }
+//				CloudMessaging.subscribeIfRequired(context) {
+//					callback(true)
+//				}
+//			}
+//		}
 	}
 }

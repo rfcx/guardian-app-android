@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.item_select_subscribe_projects.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.project.isGuest
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 	var items: List<ProjectsItem> = arrayListOf()
@@ -34,10 +35,16 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 	inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
 		private val checkBoxImageView = itemView.checkBoxImageView
+		private val lockImageView = itemView.lockImageView
 		
 		fun bind(item: ProjectsItem) {
 			textView.text = item.project.name
+			lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
+			checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
 			checkBoxImageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, if (item.selected) R.drawable.ic_check_box else R.drawable.ic_check_box_outline))
+			lockImageView.setOnClickListener {
+				listener.onLockImageClicked()
+			}
 		}
 	}
 }

@@ -14,7 +14,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
-import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.logout
 
@@ -27,9 +26,6 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
 	private val projectsAdapter by lazy { ProjectsAdapter(this) }
-	
-	//	private var selectedProject = -1
-	private var project: Project? = null
 	private var projectsItem: List<ProjectsItem>? = null
 	
 	override fun onAttach(context: Context) {
@@ -62,19 +58,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		}
 		
 		selectProjectButton.setOnClickListener {
-//			val preferences = Preferences.getInstance(requireContext())
-//			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
-//			project?.let { it1 ->
-//				viewModel.setProjects(it1) {
-//					if (it) {
-//						Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_LONG).show()
-//
-//					} else {
-//						Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_LONG).show()
-//					}
-//					listener.handleOpenPage()
-//				}
-//			}
+			listener.handleOpenPage()
 		}
 		
 		logoutButton.setOnClickListener {
@@ -101,16 +85,6 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 			})
 		})
 	}
-
-//	override fun onClicked(project: Project) {
-//		this.project = project
-//		selectedProject = project.id
-//		selectProjectButton.isEnabled = true
-//	}
-
-//	override fun onLockImageClicked() {
-//		showToast(getString(R.string.not_have_permission))
-//	}
 	
 	private fun showToast(message: String) {
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show()
@@ -121,9 +95,35 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	}
 	
 	override fun onItemClick(item: ProjectsItem, position: Int) {
+		if (item.selected) {
+			viewModel.unsubscribeProject(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
+				}
+			}
+		} else {
+			viewModel.setProjectsAndSubscribe(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_receive_notification, item.project.name))
+				}
+			}
+		}
 		projectsItem?.let { items ->
 			items[position].selected = !items[position].selected
 			projectsAdapter.items = items
 		}
+		selectProjectButton.isEnabled = true
+	}
+	
+	override fun onLockImageClicked() {
+		showToast(getString(R.string.not_have_permission))
 	}
 }

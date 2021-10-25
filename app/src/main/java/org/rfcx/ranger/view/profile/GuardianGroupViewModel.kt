@@ -91,12 +91,12 @@ class GuardianGroupViewModel(private val context: Context, private val getGuardi
 				subscribeByEmail(guardianGroup.shortname)
 				
 				// sub&unsub noti
-				CloudMessaging.unsubscribe(context) {
-					CloudMessaging.setProject(context, guardianGroup.shortname)
-					CloudMessaging.subscribeIfRequired(context) {
-						callback(true)
-					}
-				}
+//				CloudMessaging.unsubscribe(context) {
+//					CloudMessaging.setProject(context, guardianGroup.shortname)
+//					CloudMessaging.subscribeIfRequired(context) {
+//						callback(true)
+//					}
+//				}
 			} else {
 				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_SHORT).show()
 				callback(false)
