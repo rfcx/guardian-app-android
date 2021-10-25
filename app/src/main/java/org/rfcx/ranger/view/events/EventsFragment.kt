@@ -562,8 +562,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				}
 				isLocationComponentEnabled = true
 				
-				// Set the LocationComponent's camera mode
-				cameraMode = CameraMode.TRACKING
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
 			}
