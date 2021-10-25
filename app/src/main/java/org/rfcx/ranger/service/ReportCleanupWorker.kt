@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import io.realm.Realm
-import org.rfcx.ranger.localdb.ReportDb
+import org.rfcx.companion.service.TrackingSyncWorker
+import org.rfcx.ranger.localdb.ReportImageDb
+import org.rfcx.ranger.localdb.ResponseDb
+import org.rfcx.ranger.localdb.TrackingFileDb
 import org.rfcx.ranger.util.RealmHelper
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 
@@ -20,33 +22,34 @@ class ReportCleanupWorker(context: Context, params: WorkerParameters)
 	override fun doWork(): Result {
 		Log.d(TAG, "doWork")
 		
-		deleteSentReports()
 		resendIfRequired()
 		
 		return Result.success()
 	}
 	
-	private fun deleteSentReports() {
-		val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
-		val leftoverFiles = db.deleteSent()
-		
-		for (filename in leftoverFiles) {
-			Log.d(TAG, "deleteSentReports: $filename")
-			val file = File(filename)
-			if (file.exists()) {
-				val result = file.delete()
-				Log.d(TAG, "deleteSentReports success: $result")
-			}
-		}
-	}
-	
 	private fun resendIfRequired() {
-		val db = ReportDb(Realm.getInstance(RealmHelper.migrationConfig()))
-		val unsent = db.unsentCount()
-		Log.d(TAG, "resendIfRequired: found $unsent unsent")
+		val realm = Realm.getInstance(RealmHelper.migrationConfig())
+		val responseDb = ResponseDb(realm)
+		val unsent = responseDb.unsentCount()
 		
-		// In case any failed sending, we can resend
-		db.unlockSending()
+		responseDb.unlockSending()
+		if (unsent > 0) {
+			ResponseSyncWorker.enqueue()
+		}
+		
+		val imageDb = ReportImageDb(realm)
+		val imageUnsent = imageDb.unsentCount()
+		imageDb.unlockSending()
+		if (imageUnsent > 0) {
+			ImageUploadWorker.enqueue()
+		}
+		
+		val trackingFileDb = TrackingFileDb(realm)
+		val trackingFileUnsent = trackingFileDb.unsentCount()
+		trackingFileDb.unlockSending()
+		if (trackingFileUnsent > 0) {
+			TrackingSyncWorker.enqueue()
+		}
 	}
 	
 	companion object {

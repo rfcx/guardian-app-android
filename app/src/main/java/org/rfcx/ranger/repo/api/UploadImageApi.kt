@@ -3,6 +3,7 @@ package org.rfcx.ranger.repo.api
 import android.content.Context
 import me.echodev.resizer.Resizer
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.entity.Err
@@ -61,7 +62,7 @@ class UploadImageApi {
 	}
 	
 	private fun createLocalFilePart(file: File, mediaType: String): MultipartBody.Part {
-		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)
+		val requestFile = RequestBody.create(mediaType.toMediaTypeOrNull(), file)
 		return MultipartBody.Part.createFormData("attachments", file.name, requestFile)
 	}
 	

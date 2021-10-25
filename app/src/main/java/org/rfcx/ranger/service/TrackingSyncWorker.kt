@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.work.*
 import io.realm.Realm
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.BuildConfig
@@ -29,7 +30,7 @@ class TrackingSyncWorker(val context: Context, params: WorkerParameters) :
 			
 			val file = File(it.localPath)
 			val mimeType = file.getMimeType()
-			val requestFile = RequestBody.create(MediaType.parse(mimeType), file)
+			val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), file)
 			val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 			it.responseServerId?.let { resServerId ->
 				val result = api.uploadAssets(resServerId, body).execute()

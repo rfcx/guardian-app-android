@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.work.*
 import io.realm.Realm
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.companion.service.TrackingSyncWorker
@@ -71,7 +72,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 	
 	private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
 		val file = File(fileUri.path)
-		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)
+		val requestFile = RequestBody.create(mediaType.toMediaTypeOrNull(), file)
 		return MultipartBody.Part.createFormData(partName, file.name, requestFile)
 	}
 	
