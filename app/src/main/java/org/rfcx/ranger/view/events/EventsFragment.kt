@@ -363,7 +363,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			
 			val properties = mapOf(
 					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId).toString()),
+					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
 					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
 					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
 			)

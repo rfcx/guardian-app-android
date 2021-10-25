@@ -54,7 +54,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		loadStreams()
 	}
 	
-	fun getEventsCount(streamId: String): Long = alertDb.getAlertCount(streamId)
+	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
 	
 	fun fetchProjects() {
 		if (context.isNetworkAvailable()) {
