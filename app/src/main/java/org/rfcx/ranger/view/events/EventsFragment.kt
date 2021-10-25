@@ -149,9 +149,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
-		isShowProgressBar()
 		setObserver()
 		setRecyclerView()
+		
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val projectServerId = viewModel.getProject(projectId)?.serverId
+		viewModel.handledStreams(lastLocation, viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
+		setItemOnAdapter()
+	}
+	
+	private fun setItemOnAdapter() {
+		isShowProgressBar(false)
+		setShowListStream()
+		isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
+		nearbyAdapter.items = viewModel.nearbyGuardians
+		othersAdapter.items = viewModel.othersGuardians
 	}
 	
 	override fun onHiddenChanged(hidden: Boolean) {
@@ -251,12 +263,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
-				viewModel.handledStreams(lastLocation, list)
-				isShowProgressBar(false)
-				setShowListStream()
-				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
-				nearbyAdapter.items = viewModel.nearbyGuardians
-				othersAdapter.items = viewModel.othersGuardians
+				viewModel.handledStreamsResponse(lastLocation, list)
+				setItemOnAdapter()
 			}, {
 				isShowProgressBar(false)
 			}, {
@@ -354,7 +362,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			
 			val properties = mapOf(
 					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
+					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId).toString()),
 					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
 					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
 			)
