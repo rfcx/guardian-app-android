@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import org.rfcx.ranger.data.local.AlertDb
 import org.rfcx.ranger.entity.location.TrackingFile
-import org.rfcx.ranger.entity.location.toDoubleArray
 import org.rfcx.ranger.entity.location.toListDoubleArray
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
@@ -33,7 +32,7 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 			val alerts = alertDb.getAlerts(response.streamId)
 			var point = t.points.toListDoubleArray()
 			if (alerts.isNotEmpty()) {
-				point = t.points.filter { p -> p.saveAt >= alerts[0].start }.toDoubleArray()
+				point = t.points.filter { p -> p.createdAt >= alerts[0].start }.toListDoubleArray()
 			}
 			val trackingFile = TrackingFile(
 					responseId = response.id,
