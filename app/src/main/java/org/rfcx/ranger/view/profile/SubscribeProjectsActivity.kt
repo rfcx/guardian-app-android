@@ -1,7 +1,6 @@
 package org.rfcx.ranger.view.profile
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,58 +12,54 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
 
 
-class GuardianGroupActivity : BaseActivity() {
+class SubscribeProjectsActivity : BaseActivity() {
 	private val viewModel: GuardianGroupViewModel by viewModel()
-	private val guardianGroupAdapter by lazy { GuardianGroupAdapter() }
-	private val analytics by lazy { Analytics(this) }
+	private val subscribeProjectsAdapter by lazy { SubscribeProjectsAdapter() }
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_guardian_group)
-		
 		setupToolbar()
-		
-		val dialog: AlertDialog = AlertDialog.Builder(this)
-				.setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
-				.setCancelable(false)
-				.create()
 		
 		// setup list
 		guardianGroupRecycler.apply {
-			layoutManager = LinearLayoutManager(this@GuardianGroupActivity)
-			adapter = guardianGroupAdapter
+			layoutManager = LinearLayoutManager(this@SubscribeProjectsActivity)
+			adapter = subscribeProjectsAdapter
 		}
 		
 		viewModel.items.observe(this, Observer { it ->
 			it.success({
 				// Success block
 				loadingProgress.visibility = View.INVISIBLE
-				guardianGroupAdapter.items = it
+//				subscribeProjectsAdapter.items = it
 				
 			}, {
 				loadingProgress.visibility = View.INVISIBLE
-				this@GuardianGroupActivity.handleError(it)
+				this@SubscribeProjectsActivity.handleError(it)
 			}, {
 				// Loading block
 				loadingProgress.visibility = View.VISIBLE
 			})
 		})
 		
-		guardianGroupAdapter.mOnItemClickListener = object : OnItemClickListener {
-			override fun onItemClick(guardianGroup: GuardianGroup) {
-				dialog.show()
-				analytics.trackSetGuardianGroupEvent()
-				viewModel.changeGuardianGroup(guardianGroup) {
-					if (it) {
-						dialog.dismiss()
-						finish()
-					}
-				}
+		subscribeProjectsAdapter.mOnItemClickListener = object : OnItemClickListener {
+//			override fun onItemClick(guardianGroup: GuardianGroup) {
+//				viewModel.changeGuardianGroup(guardianGroup) {
+//					if (it) {
+//						dialog.dismiss()
+//						finish()
+//					}
+//				}
+//			}
+//
+			override fun onItemClick(project: Project) {
+				TODO("Not yet implemented")
 			}
 		}
 	}
@@ -86,12 +81,12 @@ class GuardianGroupActivity : BaseActivity() {
 	
 	companion object {
 		fun startActivity(context: Context) {
-			val intent = Intent(context, GuardianGroupActivity::class.java)
+			val intent = Intent(context, SubscribeProjectsActivity::class.java)
 			context.startActivity(intent)
 		}
 	}
 }
 
 interface OnItemClickListener {
-	fun onItemClick(guardianGroup: GuardianGroup)
+	fun onItemClick(project: Project)
 }

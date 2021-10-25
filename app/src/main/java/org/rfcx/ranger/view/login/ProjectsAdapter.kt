@@ -3,11 +3,12 @@ package org.rfcx.ranger.view.login
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_guardian_group.view.*
+import kotlinx.android.synthetic.main.item_select_subscribe_projects.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
-import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.project.Project
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 	var items: List<ProjectsItem> = arrayListOf()
@@ -17,7 +18,7 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
-		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian_group, parent, false)
+		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
 		return ProjectsViewHolder(view)
 	}
 	
@@ -32,13 +33,13 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 	
 	inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
-		private val checkImageView = itemView.checkImageView
+		private val checkBoxImageView = itemView.checkBoxImageView
 		
 		fun bind(item: ProjectsItem) {
 			textView.text = item.project.name
-			checkImageView.visibility = if(item.selected) View.VISIBLE else View.GONE
+			checkBoxImageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, if (item.selected) R.drawable.ic_check_box else R.drawable.ic_check_box_outline))
 		}
 	}
 }
 
-data class ProjectsItem(val project: GuardianGroup, val selected: Boolean)
+data class ProjectsItem(val project: Project, var selected: Boolean)

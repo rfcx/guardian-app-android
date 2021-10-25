@@ -13,14 +13,12 @@ import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
+import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.project.Project
-import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.logout
-import org.rfcx.ranger.view.project.ProjectAdapter
-import org.rfcx.ranger.view.project.ProjectOnClickListener
 
-class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayout.OnRefreshListener {
+class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	companion object {
 		@JvmStatic
 		fun newInstance() = SetProjectsFragment()
@@ -28,9 +26,11 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
-	private val projectAdapter by lazy { ProjectAdapter(this) }
-	private var selectedProject = -1
+	private val projectsAdapter by lazy { ProjectsAdapter(this) }
+	
+	//	private var selectedProject = -1
 	private var project: Project? = null
+	private var projectsItem: List<ProjectsItem>? = null
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -47,7 +47,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		
 		projectView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = projectAdapter
+			adapter = projectsAdapter
 		}
 		
 		projectSwipeRefreshView.apply {
@@ -62,19 +62,19 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		}
 		
 		selectProjectButton.setOnClickListener {
-			val preferences = Preferences.getInstance(requireContext())
-			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
-			project?.let { it1 ->
-				viewModel.setProjects(it1) {
-					if (it) {
-						Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_LONG).show()
-						
-					} else {
-						Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_LONG).show()
-					}
-					listener.handleOpenPage()
-				}
-			}
+//			val preferences = Preferences.getInstance(requireContext())
+//			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
+//			project?.let { it1 ->
+//				viewModel.setProjects(it1) {
+//					if (it) {
+//						Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_LONG).show()
+//
+//					} else {
+//						Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_LONG).show()
+//					}
+//					listener.handleOpenPage()
+//				}
+//			}
 		}
 		
 		logoutButton.setOnClickListener {
@@ -91,8 +91,8 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 				} else {
 					noContentTextView.visibility = View.GONE
 				}
-				projectAdapter.items = viewModel.getProjectsFromLocal()
-				
+				projectsItem = viewModel.getProjectsFromLocal().map { project -> ProjectsItem(project, false) }
+				projectsItem?.let { items -> projectsAdapter.items = items }
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
 				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
@@ -101,16 +101,16 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 			})
 		})
 	}
-	
-	override fun onClicked(project: Project) {
-		this.project = project
-		selectedProject = project.id
-		selectProjectButton.isEnabled = true
-	}
-	
-	override fun onLockImageClicked() {
-		showToast(getString(R.string.not_have_permission))
-	}
+
+//	override fun onClicked(project: Project) {
+//		this.project = project
+//		selectedProject = project.id
+//		selectProjectButton.isEnabled = true
+//	}
+
+//	override fun onLockImageClicked() {
+//		showToast(getString(R.string.not_have_permission))
+//	}
 	
 	private fun showToast(message: String) {
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show()
@@ -118,5 +118,12 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	
 	override fun onRefresh() {
 		viewModel.fetchProjects()
+	}
+	
+	override fun onItemClick(item: ProjectsItem, position: Int) {
+		projectsItem?.let { items ->
+			items[position].selected = !items[position].selected
+			projectsAdapter.items = items
+		}
 	}
 }
