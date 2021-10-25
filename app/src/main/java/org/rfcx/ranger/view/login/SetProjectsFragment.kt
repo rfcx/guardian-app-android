@@ -65,15 +65,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 			val preferences = Preferences.getInstance(requireContext())
 			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
 			project?.let { it1 ->
-				viewModel.setProjects(it1) {
-					if (it) {
-						Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_LONG).show()
-						
-					} else {
-						Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_LONG).show()
-					}
-					listener.handleOpenPage()
-				}
+				viewModel.setProjects(it1) { listener.handleOpenPage() }
 			}
 		}
 		
