@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import id.zelory.compressor.Compressor
 import io.reactivex.observers.DisposableSingleObserver
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.data.remote.Result
@@ -48,7 +49,7 @@ class EditProfileViewModel(private val context: Context, private val profilePhot
 	}
 	
 	private fun createLocalFilePart(file: File): MultipartBody.Part {
-		val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+		val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
 		return MultipartBody.Part.createFormData("file", file.name, requestFile)
 	}
 	

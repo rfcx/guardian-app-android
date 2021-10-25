@@ -38,7 +38,6 @@ class RangerApplication : MultiDexApplication() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
-		LocationTracking.set(this, true)
 	}
 	
 	private fun setUpRealm() {

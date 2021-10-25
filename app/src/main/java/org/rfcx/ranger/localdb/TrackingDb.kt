@@ -3,7 +3,6 @@ package org.rfcx.ranger.localdb
 import android.content.Context
 import io.realm.Realm
 import io.realm.RealmResults
-import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Coordinate
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.util.Preferences
@@ -12,9 +11,8 @@ import java.util.*
 class TrackingDb(private val realm: Realm) {
 	fun insertOrUpdate(tracking: Tracking, coordinate: Coordinate) {
 		realm.executeTransaction {
-			val track =
-					it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, tracking.id)
-							.findFirst()
+			val track = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, tracking.id)
+					.findFirst()
 			
 			if (track != null) {
 				tracking.startAt = track.startAt
@@ -29,9 +27,8 @@ class TrackingDb(private val realm: Realm) {
 	
 	fun deleteTracking(id: Int, context: Context) {
 		realm.executeTransaction {
-			val tracking =
-					it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, id)
-							.findFirst()
+			val tracking = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, id)
+					.findFirst()
 			tracking?.deleteFromRealm()
 			
 			val preferences = Preferences.getInstance(context)
