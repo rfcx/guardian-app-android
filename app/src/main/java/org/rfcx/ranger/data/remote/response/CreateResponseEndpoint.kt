@@ -18,10 +18,7 @@ data class CreateResponseRequest(
 		val investigatedAt: String,
 		val startedAt: String,
 		val submittedAt: String,
-		val evidences: List<Int>,
-		val loggingScale: Int,
-		val damageScale: Int,
-		val responseActions: List<Int>,
+		val answers: List<Int>,
 		val note: String?,
 		val streamId: String
 )

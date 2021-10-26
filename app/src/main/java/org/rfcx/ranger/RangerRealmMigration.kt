@@ -311,6 +311,8 @@ class RangerRealmMigration : RealmMigration {
 					.setRequired(Response.RESPONSE_INVESTIGATED_AT, true)
 			addField(Response.RESPONSE_STARTED_AT, Date::class.java)
 					.setRequired(Response.RESPONSE_STARTED_AT, true)
+			addRealmListField(Response.RESPONSE_ANSWERS, Int::class.java)
+					.setRequired(Response.RESPONSE_ANSWERS, false)
 			addField(Response.RESPONSE_SUBMITTED_AT, Date::class.java)
 			addRealmListField(Response.RESPONSE_EVIDENCES, Int::class.java)
 					.setRequired(Response.RESPONSE_EVIDENCES, false)

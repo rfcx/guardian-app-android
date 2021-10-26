@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.report.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
@@ -11,9 +12,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.saveToAnswers
 import org.rfcx.ranger.service.ResponseSyncWorker
 import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.Screen
+import org.rfcx.ranger.util.isNetworkAvailable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -178,9 +181,14 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
+		response.answers = response.saveToAnswers()
 		viewModel.saveResponseInLocalDb(response, _images)
 		viewModel.saveTrackingFile(response, this)
-		ResponseSyncWorker.enqueue()
+		if (this.isNetworkAvailable()) {
+			ResponseSyncWorker.enqueue()
+		} else {
+			Toast.makeText(this, getString(R.string.network_not_available), Toast.LENGTH_LONG).show()
+		}
 		
 		val intent = Intent()
 		intent.putExtra(EXTRA_SCREEN, Screen.SUBMITTED_REPORTS.id)
