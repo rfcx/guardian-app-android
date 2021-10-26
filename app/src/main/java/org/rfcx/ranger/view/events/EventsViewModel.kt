@@ -190,15 +190,4 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun distance(lastLocation: Location, loc: Location): String = LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()
 	
-	
-	fun pushNotification(project: Project, callback: (Boolean) -> Unit) {
-//		project.serverId?.let { coreId ->
-//			CloudMessaging.unsubscribe(coreId) {
-//				project.serverId?.let { it1 -> CloudMessaging.setProject(context, it1) }
-//				CloudMessaging.subscribeIfRequired(context) {
-//					callback(true)
-//				}
-//			}
-//		}
-	}
 }
