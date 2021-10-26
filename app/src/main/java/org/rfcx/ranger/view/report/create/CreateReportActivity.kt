@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Actions
+import org.rfcx.ranger.entity.response.EvidenceTypes
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.saveToAnswers
 import org.rfcx.ranger.service.ResponseSyncWorker
@@ -214,7 +216,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 				handleCheckClicked(StepCreateReport.SCALE.step)
 			}
 			is ActionFragment -> {
-				handleCheckClicked(StepCreateReport.DAMAGE.step)
+				val response = _response ?: Response()
+				if (response.evidences.contains(EvidenceTypes.NONE.value)) {
+					handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				} else {
+					handleCheckClicked(StepCreateReport.DAMAGE.step)
+				}
 			}
 			is AssetsFragment -> {
 				handleCheckClicked(StepCreateReport.ACTION.step)

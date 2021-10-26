@@ -123,7 +123,11 @@ class EvidenceFragment : Fragment() {
 		}
 		
 		listener.setEvidence(selected)
-		listener.handleCheckClicked(StepCreateReport.SCALE.step)
+		if (selected.contains(EvidenceTypes.NONE.value)) {
+			listener.handleCheckClicked(StepCreateReport.ACTION.step)
+		} else {
+			listener.handleCheckClicked(StepCreateReport.SCALE.step)
+		}
 	}
 	
 	private fun setSelected() {
