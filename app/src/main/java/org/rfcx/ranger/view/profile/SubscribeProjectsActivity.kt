@@ -1,67 +1,77 @@
 package org.rfcx.ranger.view.profile
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_guardian_group.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kotlinx.android.synthetic.main.activity_subscribe_projects.*
+import kotlinx.android.synthetic.main.activity_subscribe_projects.projectSwipeRefreshView
+import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.project.Project
-import org.rfcx.ranger.util.Analytics
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.handleError
 import org.rfcx.ranger.view.base.BaseActivity
+import org.rfcx.ranger.view.login.ProjectsAdapter
+import org.rfcx.ranger.view.login.ProjectsItem
+import java.util.*
 
 
-class SubscribeProjectsActivity : BaseActivity() {
+class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	private val viewModel: GuardianGroupViewModel by viewModel()
-	private val subscribeProjectsAdapter by lazy { SubscribeProjectsAdapter() }
+	private val projectsAdapter by lazy { ProjectsAdapter(this) }
+	private var projectsItem: List<ProjectsItem>? = null
+	private var subscribedProjects: ArrayList<String> = arrayListOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_guardian_group)
+		setContentView(R.layout.activity_subscribe_projects)
 		setupToolbar()
+		setList()
 		
 		// setup list
-		guardianGroupRecycler.apply {
+		projectsRecycler.apply {
 			layoutManager = LinearLayoutManager(this@SubscribeProjectsActivity)
-			adapter = subscribeProjectsAdapter
+			adapter = projectsAdapter
 		}
 		
-		viewModel.items.observe(this, Observer { it ->
+		getSubscribedProject()?.let { projects -> subscribedProjects.addAll(projects) }
+		
+		projectSwipeRefreshView.apply {
+			setOnRefreshListener(this@SubscribeProjectsActivity)
+			setColorSchemeResources(R.color.colorPrimary)
+		}
+		
+		viewModel.getProjectsFromRemote.observe(this, Observer { it ->
 			it.success({
-				// Success block
-				loadingProgress.visibility = View.INVISIBLE
-//				subscribeProjectsAdapter.items = it
-				
+				projectSwipeRefreshView.isRefreshing = false
+				setList()
 			}, {
-				loadingProgress.visibility = View.INVISIBLE
+				projectSwipeRefreshView.isRefreshing = false
 				this@SubscribeProjectsActivity.handleError(it)
 			}, {
-				// Loading block
-				loadingProgress.visibility = View.VISIBLE
+				projectSwipeRefreshView.isRefreshing = true
 			})
 		})
-		
-		subscribeProjectsAdapter.mOnItemClickListener = object : OnItemClickListener {
-//			override fun onItemClick(guardianGroup: GuardianGroup) {
-//				viewModel.changeGuardianGroup(guardianGroup) {
-//					if (it) {
-//						dialog.dismiss()
-//						finish()
-//					}
-//				}
-//			}
-//
-			override fun onItemClick(project: Project) {
-				TODO("Not yet implemented")
-			}
+	}
+	
+	private fun setList() {
+		projectsItem = viewModel.getProjectsFromLocal().map { project ->
+			ProjectsItem(project, getSubscribedProject()?.contains(project.serverId)
+					?: false)
 		}
+		projectsAdapter.items = projectsItem as List<ProjectsItem>
+	}
+	
+	private fun getSubscribedProject(): ArrayList<String>? {
+		val preferenceHelper = Preferences.getInstance(this)
+		return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
 	}
 	
 	private fun setupToolbar() {
@@ -70,7 +80,7 @@ class SubscribeProjectsActivity : BaseActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			title = getString(R.string.guardian_group_list)
+			title = getString(R.string.receive_alert_notification)
 		}
 	}
 	
@@ -84,6 +94,58 @@ class SubscribeProjectsActivity : BaseActivity() {
 			val intent = Intent(context, SubscribeProjectsActivity::class.java)
 			context.startActivity(intent)
 		}
+	}
+	
+	override fun onItemClick(item: ProjectsItem, position: Int) {
+		if (item.selected) {
+			viewModel.unsubscribeProject(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.remove(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
+				}
+			}
+		} else {
+			viewModel.setProjectsAndSubscribe(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.add(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
+				}
+			}
+		}
+		projectsItem?.let { items ->
+			items[position].selected = !items[position].selected
+			projectsAdapter.items = items
+		}
+	}
+	
+	private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
+		val preferenceHelper = Preferences.getInstance(this)
+		preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
+		preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
+	}
+	
+	override fun onLockImageClicked() {
+		showToast(getString(R.string.not_have_permission))
+	}
+	
+	override fun onRefresh() {
+		viewModel.fetchProjects()
+	}
+	
+	private fun showToast(message: String) {
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 	}
 }
 

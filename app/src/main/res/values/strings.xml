@@ -85,6 +85,7 @@
 	<string name="location_tracking_on_label">On</string>
 	<string name="location_tracking_off_label">Off</string>
 	<string name="guardian_group_label">Projects</string>
+	<string name="receive_alert_notification">Receive alert notification</string>
 	<string name="notifications">Notifications</string>
 	<string name="start_demo">Send a test alert</string>
 	<string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>
