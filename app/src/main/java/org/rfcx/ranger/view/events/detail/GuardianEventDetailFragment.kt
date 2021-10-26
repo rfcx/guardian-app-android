@@ -35,9 +35,11 @@ class GuardianEventDetailFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
-		distance = arg.getDouble(ARG_DISTANCE)
 		guardianId = arg.getString(ARG_GUARDIAN_ID)
 		number = arg.getInt(ARG_NUMBER)
+		if (arg.get(ARG_DISTANCE) != null) {
+			distance = arg.getDouble(ARG_DISTANCE)
+		}
 	}
 	
 	override fun onAttach(context: Context) {
@@ -80,6 +82,7 @@ class GuardianEventDetailFragment : Fragment() {
 		}
 		
 		guardianNameTextView.text = name
+		distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
 		distanceTextView.text = distance?.setFormatLabel()
 	}
 	
