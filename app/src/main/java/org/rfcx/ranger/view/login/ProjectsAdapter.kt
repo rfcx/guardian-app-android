@@ -32,12 +32,30 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		}
 	}
 	
+	private fun setClickable(view: View?, clickable: Boolean) {
+		if (view != null) {
+			if (view is ViewGroup) {
+				val viewGroup = view
+				for (i in 0 until viewGroup.childCount) {
+					setClickable(viewGroup.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
+		}
+	}
+	
 	inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
 		private val checkBoxImageView = itemView.checkBoxImageView
 		private val lockImageView = itemView.lockImageView
 		
 		fun bind(item: ProjectsItem) {
+			setClickable(itemView, item.project.isGuest())
+			if (item.project.isGuest()) {
+				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+			} else {
+				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
+			}
 			textView.text = item.project.name
 			lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
 			checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
