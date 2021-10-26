@@ -3,9 +3,15 @@ package org.rfcx.ranger
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
-import org.rfcx.ranger.entity.*
+import org.rfcx.ranger.entity.CachedEndpoint
+import org.rfcx.ranger.entity.Classification
+import org.rfcx.ranger.entity.Incident
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.entity.event.EventReview
+import org.rfcx.ranger.entity.location.Coordinate
+import org.rfcx.ranger.entity.location.Tracking
+import org.rfcx.ranger.entity.location.TrackingFile
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
@@ -366,6 +372,36 @@ class RangerRealmMigration : RealmMigration {
 		val reportImage = realm.schema.get(ReportImage.TABLE_NAME)
 		reportImage?.apply {
 			addField(ReportImage.FIELD_REPORT_SERVER_ID, String::class.java)
+		}
+		
+		val coordinate = realm.schema.create(Coordinate.TABLE_NAME)
+		coordinate.apply {
+			addField(Coordinate.COORDINATE_LATITUDE, Double::class.java)
+			addField(Coordinate.COORDINATE_LONGITUDE, Double::class.java)
+			addField(Coordinate.COORDINATE_ALTITUDE, Double::class.java)
+			addField(Coordinate.COORDINATE_CREATED_AT, Date::class.java)
+		}
+		
+		val tracking = realm.schema.create(Tracking.TABLE_NAME)
+		tracking.apply {
+			addField(Tracking.TRACKING_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Tracking.TRACKING_START_AT, Date::class.java)
+					.setNullable(Tracking.TRACKING_START_AT, false)
+			addField(Tracking.TRACKING_STOP_AT, Date::class.java)
+			addRealmListField(Tracking.TRACKING_POINTS, coordinate)
+		}
+		
+		val trackingFile = realm.schema.create(TrackingFile.TABLE_NAME)
+		trackingFile.apply {
+			addField(TrackingFile.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(TrackingFile.FIELD_RESPONSE_ID, Int::class.java)
+			addField(TrackingFile.FIELD_RESPONSE_SERVER_ID, String::class.java)
+			addField(TrackingFile.FIELD_LOCAL_PATH, String::class.java)
+					.setNullable(TrackingFile.FIELD_LOCAL_PATH, false)
+			addField(TrackingFile.FIELD_REMOTE_PATH, String::class.java)
+			addField(TrackingFile.FIELD_SYNC_STATE, Int::class.java)
+			addField(TrackingFile.FIELD_STREAM_ID, Int::class.java)
+			addField(TrackingFile.FIELD_STREAM_SERVER_ID, String::class.java)
 		}
 	}
 	

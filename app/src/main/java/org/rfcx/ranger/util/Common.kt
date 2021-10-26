@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import org.joda.time.Duration
@@ -107,3 +109,8 @@ fun ImageView.setDrawableImage(context: Context, id: Int) {
 fun Calendar.getDay(): Int = this.get(Calendar.DAY_OF_MONTH)
 fun Calendar.getMonth(): Int = this.get(Calendar.MONTH)
 fun Calendar.getYear(): Int = this.get(Calendar.YEAR)
+
+fun View.hideKeyboard() = this.let {
+	val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+	imm.hideSoftInputFromWindow(windowToken, 0)
+}

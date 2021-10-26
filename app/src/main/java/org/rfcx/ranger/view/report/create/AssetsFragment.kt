@@ -1,6 +1,7 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
+import android.graphics.Rect
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.util.RecordingPermissions
+import org.rfcx.ranger.util.hideKeyboard
 import org.rfcx.ranger.view.report.create.image.BaseImageFragment
 import org.rfcx.ranger.widget.SoundRecordState
 import java.io.File
@@ -54,6 +56,7 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupImageRecycler()
+		view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 		
 		saveDraftButton.setOnClickListener {
 			saveAssets()
@@ -69,8 +72,32 @@ class AssetsFragment : BaseImageFragment() {
 			}
 		}
 		
+		noteEditText.setOnFocusChangeListener { v, hasFocus ->
+			if (!hasFocus) {
+				v.hideKeyboard()
+			}
+		}
+		
 		setupAssets()
 		setupRecordSoundProgressView()
+	}
+	
+	private fun setOnFocusEditText() {
+		val screenHeight: Int = view?.rootView?.height ?: 0
+		val r = Rect()
+		view?.getWindowVisibleDisplayFrame(r)
+		val keypadHeight: Int = screenHeight - r.bottom
+		if (keypadHeight > screenHeight * 0.15) {
+			saveDraftButton.visibility = View.GONE
+			submitButton.visibility = View.GONE
+		} else {
+			if (saveDraftButton != null) {
+				saveDraftButton.visibility = View.VISIBLE
+			}
+			if (submitButton != null) {
+				submitButton.visibility = View.VISIBLE
+			}
+		}
 	}
 	
 	private fun showDefaultDialog() {
@@ -107,7 +134,9 @@ class AssetsFragment : BaseImageFragment() {
 	
 	private fun saveAssets() {
 		noteEditText.text?.let {
-			listener.setNotes(it.toString())
+			if (it.isNotBlank()) {
+				listener.setNotes(it.toString())
+			}
 		}
 		listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
 		listener.setAudio(recordFile?.canonicalPath)
@@ -138,6 +167,7 @@ class AssetsFragment : BaseImageFragment() {
 					recordFile = null
 				}
 				SoundRecordState.RECORDING -> {
+					view?.hideKeyboard()
 					record()
 				}
 				SoundRecordState.STOPPED_RECORD -> {

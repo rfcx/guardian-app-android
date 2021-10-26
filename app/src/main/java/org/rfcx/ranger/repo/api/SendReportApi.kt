@@ -3,6 +3,7 @@ package org.rfcx.ranger.repo.api
 import android.content.Context
 import android.net.Uri
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.ranger.entity.Err
@@ -60,7 +61,7 @@ class SendReportApi {
 	
 	private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
 		val file = File(fileUri.path)
-		val requestFile = RequestBody.create(MediaType.parse(mediaType), file)
+		val requestFile = RequestBody.create(mediaType.toMediaTypeOrNull(), file)
 		return MultipartBody.Part.createFormData(partName, file.name, requestFile)
 	}
 	

@@ -3,12 +3,12 @@ package org.rfcx.ranger.service
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.*
-import android.media.RingtoneManager
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
@@ -18,11 +18,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
 import io.realm.Realm
-import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.data.local.WeeklySummaryData
-import org.rfcx.ranger.entity.location.CheckIn
-import org.rfcx.ranger.localdb.LocationDb
+import org.rfcx.ranger.entity.location.Coordinate
+import org.rfcx.ranger.entity.location.Tracking
+import org.rfcx.ranger.localdb.TrackingDb
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
@@ -39,18 +38,21 @@ import kotlin.concurrent.fixedRateTimer
 class LocationTrackerService : Service() {
 	
 	companion object {
-		const val NOTIFICATION_LOCATION_ID = 22
-		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
-		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
 		val locationRequest = LocationRequest().apply {
 			priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 		}
+		const val NOTIFICATION_LOCATION_ID = 22
+		const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
+		const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
 		
+		private const val FIVE_MINUTES = 5L * 60L * 1000L
 		private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
 		private const val LOCATION_DISTANCE = 0f// 0 meter
-		private const val LASTEST_GET_LOCATION_TIME = "LASTEST_GET_LOCATION_TIME"
-		private const val TAG = " LocationTrackerService"
+		private const val TAG = "LocationTrackerService"
 	}
+	
+	private val realm by lazy { Realm.getInstance(RealmHelper.migrationConfig()) }
+	private val trackingDb by lazy { TrackingDb(realm) }
 	
 	private val binder = LocationTrackerServiceBinder()
 	
@@ -59,10 +61,10 @@ class LocationTrackerService : Service() {
 	private var trackingStatTimer: Timer? = null
 	private var trackingWorkTimer: Timer? = null
 	private var trackingSatelliteTimer: Timer? = null
-	private lateinit var weeklySummaryData: WeeklySummaryData
 	var lastUpdated: Date? = null
 	private val analytics by lazy { Analytics(this) }
 	private var satelliteCount = 0
+	private var tracking = Tracking()
 	
 	fun calculateTime(newTime: Date, lastTime: Date): Long {
 		val differenceTime1 = newTime.time - lastTime.time
@@ -71,30 +73,33 @@ class LocationTrackerService : Service() {
 	}
 	
 	private val locationListener = object : LocationListener {
-		
-		override fun onLocationChanged(p0: Location) {
-			val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
-			analytics.trackLocationTracking(time)
-			saveLocation(p0)
-			if (BuildConfig.DEBUG) playSound()
+		override fun onLocationChanged(location: Location) {
+			val myProcess = RunningAppProcessInfo()
+			ActivityManager.getMyMemoryState(myProcess)
+			val isInForeground = myProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+			val lastGetLocationTime = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LATEST_GET_LOCATION_TIME, 0L)
+			if (isInForeground && System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
+				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
+				analytics.trackLocationTracking(time)
+				saveLocation(location)
+			} else if (myProcess.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+				this@LocationTrackerService.stopService(Intent(this@LocationTrackerService, LocationTrackerService::class.java))
+			}
 		}
 		
-		override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-			if (p1 == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-				if ((System.currentTimeMillis() - Preferences.getInstance(this@LocationTrackerService).getLong(LASTEST_GET_LOCATION_TIME, 0L)) > 10 * 1000L) {
-					getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
-				}
-				
-			} else if (p1 == LocationProvider.OUT_OF_SERVICE) {
+		override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+			if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
+			} else if (status == LocationProvider.OUT_OF_SERVICE) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 			}
 		}
 		
-		override fun onProviderEnabled(p0: String) {
+		override fun onProviderEnabled(provider: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 		}
 		
-		override fun onProviderDisabled(p0: String) {
+		override fun onProviderDisabled(provider: String) {
 			getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
 		}
 		
@@ -142,7 +147,6 @@ class LocationTrackerService : Service() {
 	override fun onCreate() {
 		super.onCreate()
 		// check login first
-		weeklySummaryData = WeeklySummaryData(Preferences(this))
 		if (Preferences.getInstance(this).getString(Preferences.ID_TOKEN, "").isNotEmpty()) {
 			startTracker()
 		}
@@ -153,9 +157,11 @@ class LocationTrackerService : Service() {
 		if (!check) {
 			this.stopSelf()
 		}
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			createNotificationChannel()
 		}
+		
 		mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		try {
 			mLocationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListener)
@@ -169,12 +175,10 @@ class LocationTrackerService : Service() {
 				mLocationManager?.addGpsStatusListener(gpsStatusListener)
 			}
 			
-			// Start notification on duty tracking
 			startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
 			
-			// Tracking stat timer
 			trackingStatTimer?.cancel()
-			trackingStatTimer = fixedRateTimer("timer", false, 60 * 1000, 60 * 1000) {
+			trackingStatTimer = fixedRateTimer("timer", false, FIVE_MINUTES, FIVE_MINUTES) {
 				getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(isLocationAvailability))
 			}
 			
@@ -183,7 +187,7 @@ class LocationTrackerService : Service() {
 			
 			// Tracking satellite
 			trackingSatelliteTimer?.cancel()
-			trackingSatelliteTimer = fixedRateTimer("satellite_timer", false, 30 * 1000, 30 * 1000) {
+			trackingSatelliteTimer = fixedRateTimer("satellite_timer", false, FIVE_MINUTES, FIVE_MINUTES) {
 				analytics.trackSatelliteCount(satelliteCount) // tracking satellite count per 30s
 			}
 		} catch (ex: SecurityException) {
@@ -231,13 +235,6 @@ class LocationTrackerService : Service() {
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {
 			setContentTitle(getString(R.string.notification_tracking_title))
 			this@LocationTrackerService.isLocationAvailability = isLocationAvailability
-			
-			if (this@LocationTrackerService.isLocationAvailability) {
-				setContentText(getString(R.string.notification_traking_message_format, weeklySummaryData.getOnDutyTimeMinute()))
-			} else {
-				setContentText(getString(R.string.notification_location_not_availability))
-			}
-			
 			setSmallIcon(R.drawable.ic_notification)
 			setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_large_tracking_location_img))
 			setOnlyAlertOnce(true)
@@ -262,20 +259,14 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun saveLocation(location: Location) {
-		LocationDb(Realm.getInstance(RealmHelper.migrationConfig())).save(CheckIn(latitude = location.latitude, longitude = location.longitude))
-		LocationSyncWorker.enqueue()
-		Preferences.getInstance(this).putLong(LASTEST_GET_LOCATION_TIME, System.currentTimeMillis())
-	}
-	
-	// Just for debug mode
-	private fun playSound() {
-		try {
-			val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-			val r = RingtoneManager.getRingtone(this, notification)
-			r.play()
-		} catch (e: Exception) {
-			e.printStackTrace()
-		}
+		tracking.id = 1
+		val coordinate = Coordinate(
+				latitude = location.latitude,
+				longitude = location.longitude,
+				altitude = location.altitude
+		)
+		trackingDb.insertOrUpdate(tracking, coordinate)
+		Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	
 	private fun clearTimer() {

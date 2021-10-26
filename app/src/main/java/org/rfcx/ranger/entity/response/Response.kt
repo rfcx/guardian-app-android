@@ -89,7 +89,7 @@ fun Response.toCreateResponseRequest(): CreateResponseRequest =
 				this.loggingScale,
 				this.damageScale,
 				this.responseActions,
-				this.note ?: "",
+				this.note,
 				this.streamId
 		)
 

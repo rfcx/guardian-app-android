@@ -29,12 +29,12 @@ object UiModule {
 	}
 	
 	val eventsModule = module {
-		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get()) }
-		viewModel { GuardianEventDetailViewModel(get()) }
+		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
+		viewModel { GuardianEventDetailViewModel(get(), get()) }
 	}
 	
 	val reportsModule = module {
-		viewModel { CreateReportViewModel(get(), get()) }
+		viewModel { CreateReportViewModel(get(), get(), get(), get(), get()) }
 	}
 	
 	val mapModule = module {

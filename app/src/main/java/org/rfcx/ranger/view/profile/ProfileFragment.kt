@@ -91,15 +91,6 @@ class ProfileFragment : BaseFragment() {
 	}
 	
 	private fun setOnClickButton() {
-		viewDataBinding.onClickLocationTracking = View.OnClickListener {
-			if (locationTrackingSwitch.isChecked) {
-				// off location tracking
-				locationTrackingViewModel.requireDisableLocationTracking()
-			} else {
-				locationTrackingViewModel.requireEnableLocationTracking()
-			}
-		}
-
 		viewDataBinding.onClickGuardingGroup = View.OnClickListener {
 			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
 			context?.let { GuardianGroupActivity.startActivity(it) }

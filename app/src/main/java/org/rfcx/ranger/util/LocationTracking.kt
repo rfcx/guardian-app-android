@@ -35,14 +35,10 @@ class LocationTracking {
 		}
 		
 		private fun updateService(context: Context) {
-			val weeklySummaryData = WeeklySummaryData(Preferences(context))
-			
 			if (isOn(context)) {
 				ContextCompat.startForegroundService(context, Intent(context, LocationTrackerService::class.java))
-				weeklySummaryData.startDutyTracking()
 			} else {
 				context.stopService(Intent(context, LocationTrackerService::class.java))
-				weeklySummaryData.stopDutyTracking()
 			}
 		}
 	}

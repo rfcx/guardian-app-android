@@ -15,6 +15,7 @@ import org.rfcx.ranger.di.UiModule
 import org.rfcx.ranger.service.CleanupAudioCacheWorker
 import org.rfcx.ranger.service.LocationCleanupWorker
 import org.rfcx.ranger.service.ReportCleanupWorker
+import org.rfcx.ranger.util.LocationTracking
 import org.rfcx.ranger.util.RealmHelper
 
 
@@ -30,8 +31,6 @@ class RangerApplication : MultiDexApplication() {
 		setUpRealm()
 		setupKoin()
 		ReportCleanupWorker.enqueuePeriodically()
-		LocationCleanupWorker.enqueuePeriodically()
-		CleanupAudioCacheWorker.enqueuePeriodically()
 		
 		if (BuildConfig.USE_STETHO) {
 			Stetho.initialize(Stetho.newInitializerBuilder(this)
@@ -39,8 +38,6 @@ class RangerApplication : MultiDexApplication() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
-		
-		
 	}
 	
 	private fun setUpRealm() {
