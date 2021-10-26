@@ -57,7 +57,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
 					reportImageDb.saveReportServerIdToImage(id, response.id)
 					audioFileOrNull?.let { audioFile -> assetsService.uploadAssets(id, audioFile).execute() }
 				}
-				alertDb.deleteAlert(response.streamId)
+				alertDb.deleteAlertsByStreamId(response.streamId)
 			} else {
 				someFailed = true
 				db.markUnsent(response.id)

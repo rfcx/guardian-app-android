@@ -11,9 +11,7 @@ import java.util.*
 class TrackingDb(private val realm: Realm) {
 	fun insertOrUpdate(tracking: Tracking, coordinate: Coordinate) {
 		realm.executeTransaction {
-			val track = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, tracking.id)
-					.findFirst()
-			
+			val track = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, tracking.id).findFirst()
 			if (track != null) {
 				tracking.startAt = track.startAt
 				tracking.points = track.points
@@ -27,8 +25,7 @@ class TrackingDb(private val realm: Realm) {
 	
 	fun deleteTracking(id: Int, context: Context) {
 		realm.executeTransaction {
-			val tracking = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, id)
-					.findFirst()
+			val tracking = it.where(Tracking::class.java).equalTo(Tracking.TRACKING_ID, id).findFirst()
 			tracking?.deleteFromRealm()
 			
 			val preferences = Preferences.getInstance(context)

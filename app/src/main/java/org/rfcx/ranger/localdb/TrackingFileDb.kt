@@ -61,8 +61,7 @@ class TrackingFileDb(private val realm: Realm) {
 	
 	fun markSent(id: Int, remotePath: String?) {
 		realm.executeTransaction {
-			val file =
-					it.where(TrackingFile::class.java).equalTo(TrackingFile.FIELD_ID, id).findFirst()
+			val file = it.where(TrackingFile::class.java).equalTo(TrackingFile.FIELD_ID, id).findFirst()
 			if (file != null) {
 				file.syncState = SyncState.SENT.value
 				file.remotePath = remotePath
@@ -72,8 +71,7 @@ class TrackingFileDb(private val realm: Realm) {
 	
 	fun markUnsent(id: Int) {
 		realm.executeTransaction {
-			val file =
-					it.where(TrackingFile::class.java).equalTo(TrackingFile.FIELD_ID, id).findFirst()
+			val file = it.where(TrackingFile::class.java).equalTo(TrackingFile.FIELD_ID, id).findFirst()
 			if (file != null) {
 				file.syncState = SyncState.UNSENT.value
 			}

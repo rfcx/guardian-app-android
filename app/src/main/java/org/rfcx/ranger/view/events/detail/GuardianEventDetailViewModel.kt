@@ -14,5 +14,5 @@ class GuardianEventDetailViewModel(private val alertDb: AlertDb, private val str
 		return Transformations.map(alertDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
-	fun getStream(serverId: String) : Stream? = streamDb.getStreamByServer(serverId)
+	fun getStream(serverId: String) : Stream? = streamDb.getStreamByCoreId(serverId)
 }

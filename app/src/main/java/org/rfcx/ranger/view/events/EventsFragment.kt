@@ -149,9 +149,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setupToolbar()
 		viewModel.fetchProjects()
 		setOnClickListener()
-		isShowProgressBar()
 		setObserver()
 		setRecyclerView()
+		
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val projectServerId = viewModel.getProject(projectId)?.serverId
+		viewModel.handledStreams(lastLocation, viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
+		setItemOnAdapter()
+	}
+	
+	private fun setItemOnAdapter() {
+		isShowProgressBar(false)
+		setShowListStream()
+		isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+		nearbyAdapter.items = viewModel.nearbyGuardians
+		othersAdapter.items = viewModel.othersGuardians
 	}
 	
 	override fun onHiddenChanged(hidden: Boolean) {
@@ -251,16 +263,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
-				viewModel.handledStreams(lastLocation, list)
-				isShowProgressBar(false)
-				setShowListStream()
-				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE)
-				nearbyAdapter.items = viewModel.nearbyGuardians
-				othersAdapter.items = viewModel.othersGuardians
+				viewModel.handledStreamsResponse(lastLocation, list)
+				setItemOnAdapter()
 			}, {
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 			})
 		})
 		
@@ -366,7 +375,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun setTrackingFeatures(trackingList: List<Tracking>) {
 		trackingList.map { tracking ->
-			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.saveAt.time <= THREE_HOURS }
+			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.createdAt.time <= THREE_HOURS }
 			val trackingCoordinates = tracks.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
 			lineFeatures = FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
 			refreshSource()
@@ -553,8 +562,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				}
 				isLocationComponentEnabled = true
 				
-				// Set the LocationComponent's camera mode
-				cameraMode = CameraMode.TRACKING
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
 			}

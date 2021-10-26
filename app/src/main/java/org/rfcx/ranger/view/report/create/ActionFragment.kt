@@ -39,27 +39,31 @@ class ActionFragment : Fragment() {
 	
 	private fun setOnChange() {
 		collectedEvidenceCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone()
 			setEnabled()
 		}
 		issueWarningCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone()
 			setEnabled()
 		}
 		confiscatedEquipmentCheckBox.setOnClickListener {
-			setEnabled()
-		}
-		issueFineCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone()
 			setEnabled()
 		}
 		arrestsCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone()
 			setEnabled()
 		}
 		planningSecurityCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone()
 			setEnabled()
 		}
 		otherCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone(selectedOther = true)
 			setEnabled()
 		}
 		noneCheckBox.setOnClickListener {
+			setWhenSelectedOtherAndNone(selectedNone = true)
 			setEnabled()
 		}
 	}
@@ -68,9 +72,20 @@ class ActionFragment : Fragment() {
 		selected.clear()
 		nextStepButton.isEnabled = collectedEvidenceCheckBox.isChecked ||
 				issueWarningCheckBox.isChecked || confiscatedEquipmentCheckBox.isChecked ||
-				issueFineCheckBox.isChecked || arrestsCheckBox.isChecked ||
-				planningSecurityCheckBox.isChecked || otherCheckBox.isChecked ||
-				noneCheckBox.isChecked
+				arrestsCheckBox.isChecked || planningSecurityCheckBox.isChecked ||
+				otherCheckBox.isChecked || noneCheckBox.isChecked
+	}
+	
+	private fun setWhenSelectedOtherAndNone(selectedOther: Boolean = false, selectedNone: Boolean = false) {
+		if (selectedOther || selectedNone) {
+			collectedEvidenceCheckBox.isChecked = false
+			issueWarningCheckBox.isChecked = false
+			confiscatedEquipmentCheckBox.isChecked = false
+			arrestsCheckBox.isChecked = false
+			planningSecurityCheckBox.isChecked = false
+		}
+		otherCheckBox.isChecked = selectedOther
+		noneCheckBox.isChecked = selectedNone
 	}
 	
 	private fun setSelect() {
@@ -83,9 +98,6 @@ class ActionFragment : Fragment() {
 		}
 		if (confiscatedEquipmentCheckBox.isChecked) {
 			selected.add(Actions.CONFISCATED_EQUIPMENT.value)
-		}
-		if (issueFineCheckBox.isChecked) {
-			selected.add(Actions.ISSUE_A_FINE.value)
 		}
 		if (arrestsCheckBox.isChecked) {
 			selected.add(Actions.ARRESTS.value)
@@ -119,7 +131,6 @@ class ActionFragment : Fragment() {
 				Actions.COLLECTED_EVIDENCE.value -> collectedEvidenceCheckBox.isChecked = true
 				Actions.ISSUE_A_WARNING.value -> issueWarningCheckBox.isChecked = true
 				Actions.CONFISCATED_EQUIPMENT.value -> confiscatedEquipmentCheckBox.isChecked = true
-				Actions.ISSUE_A_FINE.value -> issueFineCheckBox.isChecked = true
 				Actions.ARRESTS.value -> arrestsCheckBox.isChecked = true
 				Actions.PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT.value -> planningSecurityCheckBox.isChecked = true
 				Actions.OTHER.value -> otherCheckBox.isChecked = true

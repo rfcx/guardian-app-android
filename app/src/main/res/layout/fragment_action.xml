@@ -72,19 +72,6 @@
 				android:textColor="@drawable/radio_text_color" />
 			
 			<CheckBox
-				android:id="@+id/issueFineCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/issue_a_fine"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
 				android:id="@+id/arrestsCheckBox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

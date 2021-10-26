@@ -31,7 +31,7 @@ class AlertDb(private val realm: Realm) {
 		return realm.where(Alert::class.java).findAllAsync()
 	}
 	
-	fun deleteAlert(id: String) {
+	fun deleteAlertsByStreamId(id: String) {
 		realm.executeTransaction {
 			val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id).findAll()
 			alert?.forEach { a ->
