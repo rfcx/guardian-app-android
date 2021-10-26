@@ -49,6 +49,8 @@ class SetProjectsViewModel(private val context: Context, private val getProjects
 		return projectDb.getProjects()
 	}
 	
+	fun getProjectLocalId(coreId: String): Int = projectDb.getProjectLocalId(coreId) ?: -1
+	
 	fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
 		if (project.serverId == null) return callback(false)
 		CloudMessaging.subscribeIfRequired(project.serverId!!) { status -> callback(status) }

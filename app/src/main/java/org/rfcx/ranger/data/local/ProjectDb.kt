@@ -34,6 +34,10 @@ class ProjectDb(val realm: Realm) {
 				.equalTo(Project.PROJECT_ID, id).findFirst()
 	}
 	
+	fun getProjectLocalId(coreId: String): Int? {
+		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()?.id
+	}
+	
 	fun getProjects(): List<Project> {
 		return realm.where(Project::class.java)
 				.sort(Project.PROJECT_NAME, Sort.ASCENDING).findAll()

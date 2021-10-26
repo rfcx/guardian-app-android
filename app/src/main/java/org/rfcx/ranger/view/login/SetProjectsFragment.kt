@@ -14,8 +14,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
+import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.logout
+import java.util.*
 
 class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	companion object {
@@ -27,6 +29,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	private val viewModel: SetProjectsViewModel by viewModel()
 	private val projectsAdapter by lazy { ProjectsAdapter(this) }
 	private var projectsItem: List<ProjectsItem>? = null
+	private var subscribedProjects: ArrayList<String> = arrayListOf()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -58,6 +61,9 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		}
 		
 		selectProjectButton.setOnClickListener {
+			val preferences = Preferences.getInstance(requireContext())
+			val id = viewModel.getProjectLocalId(subscribedProjects.random())
+			preferences.putInt(Preferences.SELECTED_PROJECT, id)
 			listener.handleOpenPage()
 		}
 		
@@ -75,7 +81,10 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 				} else {
 					noContentTextView.visibility = View.GONE
 				}
-				projectsItem = viewModel.getProjectsFromLocal().map { project -> ProjectsItem(project, false) }
+				projectsItem = viewModel.getProjectsFromLocal().map { project ->
+					ProjectsItem(project, getSubscribedProject()?.contains(project.serverId)
+							?: false)
+				}
 				projectsItem?.let { items -> projectsAdapter.items = items }
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
@@ -103,6 +112,9 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 						projectsAdapter.items = items
 					}
 					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.remove(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
 				}
 			}
 		} else {
@@ -113,6 +125,9 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 						projectsAdapter.items = items
 					}
 					showToast(getString(R.string.failed_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.add(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
 				}
 			}
 		}
@@ -121,6 +136,17 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 			projectsAdapter.items = items
 		}
 		selectProjectButton.isEnabled = true
+	}
+	
+	private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
+		val preferenceHelper = Preferences.getInstance(requireContext())
+		preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
+		preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
+	}
+	
+	private fun getSubscribedProject(): ArrayList<String>? {
+		val preferenceHelper = Preferences.getInstance(requireContext())
+		return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
 	}
 	
 	override fun onLockImageClicked() {
