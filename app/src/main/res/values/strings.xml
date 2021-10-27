@@ -224,7 +224,7 @@
 	<string name="all_projects">All projects</string>
 	<string name="nearby">nearby</string>
 	<string name="others">others</string>
-	<string name="not_have_permission">You don’t have permission to deploy to this project. You can ask the project owner to change your user permissions.</string>
+	<string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
 	<string name="num_more_then_99">99+</string>
 	<string name="not_have_stream">No sites in this project</string>
 	
@@ -242,7 +242,7 @@
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>
 	<string name="open_in_maps">Open in maps</string>
-	<string name="guardian_event_detail">Guardian Event Detail</string>
+	<string name="guardian_event_detail">Event Detail</string>
 	
 	<!-- CreateReportActivity -->
 	<string name="create_report_steps">Create Report (step %d of 6)</string>

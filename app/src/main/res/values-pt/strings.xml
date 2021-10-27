@@ -71,7 +71,7 @@
     <string name="report_title">Relatório</string>
 	<string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
-    <string name="report_submit_button_label">Enviar</string>
+    <string name="report_submit_button_label">Submeter</string>
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
     <string name="report_attach_image_label">FOTOS (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
@@ -200,7 +200,7 @@
     <string name="guardian_group_list">Lista de projetos</string>
 	<string name="audio_notes">Notas de áudio</string>
     <string name="photos">Foto</string>
-	<string name="common_none">Nada</string>
+	<string name="common_none">NDA</string>
     
     <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
     <string name="notification_traking_message_format">%d minutos gravado</string>
@@ -212,5 +212,52 @@
     <!-- SetProjectsFragment -->
     <string name="set_alerts">Alertas definidos</string>
     <string name="choose_which_projects">Escolha quais os projetos para receber notificações de alerta</string>
+	<string name="not_have_permission">Você não tem permissão para usar este projeto. Peça para o administrador mudar o seu perfil de acesso.</string>
+    <string name="not_have_stream">Sem localidades neste projeto</string>
+    <string name="not_have_draft_reports">"Você não tem nenhum rascunho "</string>
+    <string name="not_submitted_reports_yet">Você ainda não submeteu relatórios</string>
+    <string name="guardian_event_detail">Detalhe da Ocorrência</string>
+    <string name="create_report">Criar Relatório</string>
+    <string name="open_in_maps">Abrir nos Mapas</string>
+    <string name="create_report_steps">Criar Relatório (passo %d de 6)</string>
+    <string name="when_investigate">Quando ocorreu a sua vistoria?</string>
+    <string name="what_time">A que horas você efetuou a vistoria?</string>
+    <string name="today">Hoje</string>
+    <string name="earlier">Data anterior...</string>
+    <string name="earlier_date">Data anterior... ( %s )</string>
+    <string name="what_evidence">Que evidência de madeireiros encontrou?  <i>Selecione tudo que for relacionado </i></string>
+    <string name="cut_down_trees">Árvores derrubadas</string>
+    <string name="cleared_areas">Limpeza de área</string>
+    <string name="logging_equipment">Serraria Móvel</string>
+    <string name="loggers_at_site">Madeireiros no local</string>
+    <string name="illegal_camps">Acampamento Ilegal</string>
+    <string name="fires_burned_areas">Fogo/Queimadas</string>
+    <string name="evidence_of_poaching">Provas de caça ilegal</string>
+    <string name="none_of_the_above">NDA - Nenhuma das anteriores (detalhar no Passo 6)</string>
+    <string name="other_explain_step_6">Outros (explicar no passo 6)</string>
+    <string name="how_much_damage">"Qual a extensão do dano na área?  "</string>
+    <string name="no_visible">Não há desmatamento/corte visível</string>
+    <string name="small_trees_cut_down">Pequena - alguns paus derrubados (um caminhão)</string>
+    <string name="medium_trees_cut_down">Moderada - desmatamento (2 a 5 caminhões de madeira)</string>
+    <string name="large_area_clear_cut">Expressiva - limpeza de área (+5 caminhões de madeira)</string>
+    <string name="what_scale">Qual foi a escala da atividade?</string>
+    <string name="small">Pequena (subsistência, agricultura)</string>
+    <string name="large">Grande (escala comercial, equipamento pesado, etc…)</string>
+    <string name="what_action">Que ação tomou? <i>Selecione tudo que for relacionado</i></string>
+    <string name="issue_a_fine">Multa</string>
+    <string name="collected_evidence">Recolhimento de provas/evidências</string>
+    <string name="confiscated_equipment">Confisco de equipamento</string>
+    <string name="issue_a_warning">Emissão de um aviso</string>
+    <string name="arrests">Detenção</string>
+    <string name="planning_security">"Planejar retorno com efetivo de segurança  "</string>
+    <string name="add_evidence">Adicionar prova/evidência</string>
+	<string name="save_draft">Salvar rascunho</string>
+    <string name="add_photos">Fotos (até 5)</string>
+    <string name="add_notes">Anotação</string>
+    <string name="upload_voice_notes">Gravação de áudio</string>
+    <string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+    <string name="menu_new_events">Novas Ocorrências</string>
+    <string name="menu_submitted_reports">Relatórios Enviados</string>
+    <string name="menu_draft_reports">Rascunhos</string>
 
 </resources>
