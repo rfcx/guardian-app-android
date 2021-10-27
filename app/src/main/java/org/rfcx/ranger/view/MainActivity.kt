@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_main_new.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,7 +36,7 @@ import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
 // TODO change class name
-class MainActivityNew : BaseActivity(), MainActivityEventListener {
+class MainActivity : BaseActivity(), MainActivityEventListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
@@ -66,7 +66,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main_new)
+		setContentView(R.layout.activity_main)
 		
 		val preferences = Preferences.getInstance(this)
 		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
@@ -390,7 +390,7 @@ class MainActivityNew : BaseActivity(), MainActivityEventListener {
 	
 	companion object {
 		fun startActivity(context: Context, eventGuId: String?) {
-			val intent = Intent(context, MainActivityNew::class.java)
+			val intent = Intent(context, MainActivity::class.java)
 			if (eventGuId != null)
 				intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
 			context.startActivity(intent)
