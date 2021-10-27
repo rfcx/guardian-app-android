@@ -16,7 +16,7 @@ class MessagingService : FirebaseMessagingService() {
 		
 		if (remoteMessage.notification == null) return
 		Log.i("MessagingService", "-- " + remoteMessage.data.toString())
-		if (remoteMessage.data.containsKey("event_guid")) {
+		if (remoteMessage.data.containsKey("streamName")) {
 			val alertNotification = createAlert(this, getNotificationManager()
 					, remoteMessage.notification!!, remoteMessage.data)
 			notify(createNotificationID(), alertNotification)

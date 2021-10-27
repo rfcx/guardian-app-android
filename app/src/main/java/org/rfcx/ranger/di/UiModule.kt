@@ -25,7 +25,7 @@ object UiModule {
 	
 	val mainModule = module {
 		viewModel { LocationTrackingViewModel(get()) }
-		viewModel { MainActivityViewModel(get(), get(), get()) }
+		viewModel { MainActivityViewModel(get(), get(), get(), get()) }
 	}
 	
 	val eventsModule = module {
@@ -45,7 +45,7 @@ object UiModule {
 	
 	val profileModule = module {
 		viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get(), get()) }
-		viewModel { GuardianGroupViewModel(androidContext(), get(), get(), get(), get(), get()) }
+		viewModel { GuardianGroupViewModel(androidContext(), get(), get()) }
 		viewModel { FeedbackViewModel(androidContext()) }
 		viewModel { PasswordChangeViewModel(get()) }
 		viewModel { EditProfileViewModel(androidContext(), get()) }

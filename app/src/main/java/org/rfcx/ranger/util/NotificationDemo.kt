@@ -10,15 +10,15 @@ import androidx.core.app.NotificationCompat
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.event.Event
 import org.rfcx.ranger.service.AlertNotification
-import org.rfcx.ranger.view.MainActivityNew
+import org.rfcx.ranger.view.MainActivity
 
 class NotificationDemo(private val event: Event?) {
 	fun startDemo(context: Context) {
 		Handler().postDelayed({
-			val intent = Intent(context, MainActivityNew::class.java)
+			val intent = Intent(context, MainActivity::class.java)
 			intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, event?.id ?: "0ebcc9be-3222-4ae8-aa08-b023f215394d")
 			val stackBuilder = TaskStackBuilder.create(context)
-			stackBuilder.addParentStack(MainActivityNew::class.java)
+			stackBuilder.addParentStack(MainActivity::class.java)
 			stackBuilder.addNextIntent(intent)
 			val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 			val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

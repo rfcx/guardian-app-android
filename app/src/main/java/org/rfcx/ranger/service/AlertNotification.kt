@@ -11,7 +11,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.RemoteMessage
 import org.rfcx.ranger.R
-import org.rfcx.ranger.view.MainActivityNew
+import org.rfcx.ranger.view.MainActivity
 
 object AlertNotification {
 	
@@ -20,9 +20,9 @@ object AlertNotification {
 		
 		val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 		
-		val intent = Intent(context, MainActivityNew::class.java)
+		val intent = Intent(context, MainActivity::class.java)
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-		intent.putExtra(ALERT_ID_NOTI_INTENT, getEventGuId(data))
+		intent.putExtra(ALERT_ID_NOTI_INTENT, getStreamName(data))
 		
 		val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 		val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -49,8 +49,8 @@ object AlertNotification {
 		return notificationBuilder.build()
 	}
 	
-	private fun getEventGuId(data: Map<String, String>): String? {
-		return data["event_guid"]
+	private fun getStreamName(data: Map<String, String>): String? {
+		return data["streamName"]
 	}
 	
 	const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"

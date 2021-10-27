@@ -91,9 +91,8 @@ class ProfileFragment : BaseFragment() {
 	}
 	
 	private fun setOnClickButton() {
-		viewDataBinding.onClickGuardingGroup = View.OnClickListener {
-			analytics?.trackSetGuardianGroupStartEvent(Screen.PROFILE)
-			context?.let { GuardianGroupActivity.startActivity(it) }
+		viewDataBinding.onClickProject = View.OnClickListener {
+			context?.let { SubscribeProjectsActivity.startActivity(it) }
 		}
 		
 		viewDataBinding.onClickRatingApp = View.OnClickListener {

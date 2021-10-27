@@ -17,7 +17,6 @@ import org.rfcx.ranger.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.ranger.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.ranger.entity.SubscribeRequest
 import org.rfcx.ranger.entity.SubscribeResponse
-import org.rfcx.ranger.entity.guardian.GuardianGroup
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
@@ -50,27 +49,18 @@ class SetProjectsViewModel(private val context: Context, private val getProjects
 		return projectDb.getProjects()
 	}
 	
-	fun setProjects(guardianGroup: GuardianGroup, callback: (Boolean) -> Unit) {
-		eventDb.deleteAllEvents {
-			if (it) {
-				val preferences = Preferences.getInstance(context)
-				preferences.putString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME, guardianGroup.name)
-				
-				// sub&unsub email
-				subscribeByEmail(guardianGroup.shortname)
-				
-				// sub&unsub noti
-				CloudMessaging.unsubscribe(context) {
-					CloudMessaging.setGroup(context, guardianGroup.shortname)
-					CloudMessaging.subscribeIfRequired(context) {
-						callback(true)
-					}
-				}
-			} else {
-				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_SHORT).show()
-				callback(false)
-			}
-		}
+	fun getProjectLocalId(coreId: String): Int = projectDb.getProjectLocalId(coreId) ?: -1
+	
+	fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
+		if (project.serverId == null) return callback(false)
+		CloudMessaging.subscribeIfRequired(project.serverId!!) { status -> callback(status) }
+		CloudMessaging.setProject(context, project.serverId!!)
+	}
+	
+	fun unsubscribeProject(project: Project, callback: (Boolean) -> Unit) {
+		if (project.serverId == null) return callback(false)
+		
+		CloudMessaging.unsubscribe(project.serverId!!) { status -> callback(status) }
 	}
 	
 	private fun subscribeByEmail(guardianGroup: String) {

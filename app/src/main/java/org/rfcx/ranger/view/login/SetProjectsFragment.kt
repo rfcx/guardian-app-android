@@ -13,14 +13,13 @@ import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.util.logout
-import org.rfcx.ranger.view.project.ProjectAdapter
-import org.rfcx.ranger.view.project.ProjectOnClickListener
+import java.util.*
 
-class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayout.OnRefreshListener {
+class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	companion object {
 		@JvmStatic
 		fun newInstance() = SetProjectsFragment()
@@ -28,8 +27,9 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 	
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
-	private val projectAdapter by lazy { ProjectAdapter(this) }
-	private var selectedProject = -1
+	private val projectsAdapter by lazy { ProjectsAdapter(this) }
+	private var projectsItem: List<ProjectsItem>? = null
+	private var subscribedProjects: ArrayList<String> = arrayListOf()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -46,7 +46,7 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		
 		projectView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = projectAdapter
+			adapter = projectsAdapter
 		}
 		
 		projectSwipeRefreshView.apply {
@@ -62,9 +62,9 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		
 		selectProjectButton.setOnClickListener {
 			val preferences = Preferences.getInstance(requireContext())
-			preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject)
+			val id = viewModel.getProjectLocalId(subscribedProjects.random())
+			preferences.putInt(Preferences.SELECTED_PROJECT, id)
 			listener.handleOpenPage()
-			// viewModel.setProjects(project)  for subscribe cloud messaging but now the notification not yet available
 		}
 		
 		logoutButton.setOnClickListener {
@@ -81,8 +81,11 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 				} else {
 					noContentTextView.visibility = View.GONE
 				}
-				projectAdapter.items = viewModel.getProjectsFromLocal()
-				
+				projectsItem = viewModel.getProjectsFromLocal().map { project ->
+					ProjectsItem(project, getSubscribedProject()?.contains(project.serverId)
+							?: false)
+				}
+				projectsItem?.let { items -> projectsAdapter.items = items }
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
 				Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
@@ -92,20 +95,62 @@ class SetProjectsFragment : Fragment(), ProjectOnClickListener, SwipeRefreshLayo
 		})
 	}
 	
-	override fun onClicked(project: Project) {
-		selectedProject = project.id
-		selectProjectButton.isEnabled = true
-	}
-	
-	override fun onLockImageClicked() {
-		showToast(getString(R.string.not_have_permission))
-	}
-	
 	private fun showToast(message: String) {
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 	}
 	
 	override fun onRefresh() {
 		viewModel.fetchProjects()
+	}
+	
+	override fun onItemClick(item: ProjectsItem, position: Int) {
+		if (item.selected) {
+			viewModel.unsubscribeProject(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.remove(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
+					selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
+				}
+			}
+		} else {
+			viewModel.setProjectsAndSubscribe(item.project) { status ->
+				if (!status) {
+					projectsItem?.let { items ->
+						items[position].selected = !items[position].selected
+						projectsAdapter.items = items
+					}
+					showToast(getString(R.string.failed_receive_notification, item.project.name))
+				} else {
+					subscribedProjects.add(item.project.serverId ?: "")
+					saveSubscribedProject(subscribedProjects)
+					selectProjectButton.isEnabled = true
+				}
+			}
+		}
+		projectsItem?.let { items ->
+			items[position].selected = !items[position].selected
+			projectsAdapter.items = items
+		}
+	}
+	
+	private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
+		val preferenceHelper = Preferences.getInstance(requireContext())
+		preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
+		preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
+	}
+	
+	private fun getSubscribedProject(): ArrayList<String>? {
+		val preferenceHelper = Preferences.getInstance(requireContext())
+		return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
+	}
+	
+	override fun onLockImageClicked() {
+		showToast(getString(R.string.not_have_permission))
 	}
 }

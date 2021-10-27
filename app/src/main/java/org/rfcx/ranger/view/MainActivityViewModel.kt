@@ -5,14 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.rfcx.ranger.data.local.ProfileData
+import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.localdb.ResponseDb
+import org.rfcx.ranger.localdb.StreamDb
 import org.rfcx.ranger.service.ReviewEventSyncWorker
 import org.rfcx.ranger.util.CredentialKeeper
 import org.rfcx.ranger.util.asLiveData
 
 class MainActivityViewModel(private val profileData: ProfileData,
                             private val responseDb: ResponseDb,
+                            private val streamDb: StreamDb,
                             credentialKeeper: CredentialKeeper) : ViewModel() {
 	
 	val isRequireToLogin = MutableLiveData<Boolean>()
@@ -36,4 +39,7 @@ class MainActivityViewModel(private val profileData: ProfileData,
 	fun updateLocationTracking() {
 		_isLocationTrackingOn.value = profileData.getTracking()
 	}
+	
+	fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
+	
 }
