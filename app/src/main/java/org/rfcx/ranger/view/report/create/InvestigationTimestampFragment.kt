@@ -63,7 +63,7 @@ class InvestigationTimestampFragment : Fragment() {
 			} else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
 				yesterdayRadioButton.isChecked = true
 			} else {
-				earlierRadioButton.text = getString(R.string.earlier_date, "${calendar.getDay()}/${calendar.getMonth()}/${calendar.getYear()}")
+				earlierRadioButton.text = getString(R.string.earlier_date, "${calendar.getDay()}/${calendar.getMonth() + 1}/${calendar.getYear()}")
 				earlierRadioButton.isChecked = true
 			}
 		}
@@ -100,7 +100,7 @@ class InvestigationTimestampFragment : Fragment() {
 	private fun setDatePicker() {
 		val date = Calendar.getInstance()
 		val datePicker = DatePickerDialog(requireContext(), { view, year, monthOfYear, dayOfMonth ->
-			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/$monthOfYear/$year")
+			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/${monthOfYear + 1}/$year")
 			earlier.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 			earlier.set(Calendar.MONTH, monthOfYear)
 			earlier.set(Calendar.YEAR, year)
