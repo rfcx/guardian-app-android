@@ -1,11 +1,13 @@
 package org.rfcx.ranger.view.report.create
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
-import android.text.TextUtils
+import android.text.*
+import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.response.Actions
+import org.rfcx.ranger.entity.response.EvidenceTypes
 import org.rfcx.ranger.util.RecordingPermissions
 import org.rfcx.ranger.util.hideKeyboard
 import org.rfcx.ranger.view.report.create.image.BaseImageFragment
@@ -80,6 +84,31 @@ class AssetsFragment : BaseImageFragment() {
 		
 		setupAssets()
 		setupRecordSoundProgressView()
+		setRequiredNote()
+	}
+	
+	private fun setRequiredNote() {
+		val res = listener.getResponse()
+		res?.let { response ->
+			if (response.evidences.contains(EvidenceTypes.NONE.value) || response.responseActions.contains(Actions.OTHER.value)) {
+				submitButton.isEnabled = false
+				
+				val spannableString = SpannableString(getString(R.string.add_notes_required))
+				val red = ForegroundColorSpan(Color.RED)
+				spannableString.setSpan(red, getString(R.string.add_notes_required).length - 1, getString(R.string.add_notes_required).length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+				noteTextView.text = spannableString
+				
+				noteEditText.addTextChangedListener(object : TextWatcher {
+					override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+					
+					override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+					
+					override fun afterTextChanged(s: Editable?) {
+						submitButton.isEnabled = !s.isNullOrBlank()
+					}
+				})
+			}
+		}
 	}
 	
 	private fun setOnFocusEditText() {

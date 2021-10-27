@@ -2,6 +2,9 @@ package org.rfcx.ranger.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 import java.util.*
 
 class Preferences(context: Context) {
@@ -29,8 +32,8 @@ class Preferences(context: Context) {
 		const val ROLES = "${PREFIX}ROLES"
 		const val ACCESSIBLE_SITES = "${PREFIX}ACCESSIBLE_SITES"
 		const val DEFAULT_SITE = "${PREFIX}SITE"
-		const val HAS_SUBSCRIBED_TO_SELECTED_GUARDIAN_GROUP = "${PREFIX}HAS_SUBSCRIBED_TO_DEFAULT_SITE"
 		const val SHOULD_RECEIVE_EVENT_NOTIFICATIONS = "${PREFIX}SHOULD_RECEIVE_EVENT_NOTIFICATIONS"
+		const val SELECTED_PROJECT_CORE_ID = "${PREFIX}SELECTED_PROJECT_CORE_ID"
 		const val SELECTED_GUARDIAN_GROUP = "${PREFIX}SELECTED_GUARDIAN_GROUP"
 		const val SELECTED_GUARDIAN_GROUP_FULLNAME = "${PREFIX}SELECTED_GUARDIAN_GROUP_FULLNAME"
 		const val SITE_FULLNAME = "${PREFIX}SITE_FULLNAME"
@@ -43,16 +46,30 @@ class Preferences(context: Context) {
 		const val EMAIL_SUBSCRIBE = "${PREFIX}EMAIL_SUBSCRIBE"
 		const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
 		const val CONSENT_GIVEN = "${PREFIX}CONSENT_GIVEN"
-		const val OFFLINE_MAP_STATE  = "${PREFIX}OFFLINE_MAP_STATE"
+		const val OFFLINE_MAP_STATE = "${PREFIX}OFFLINE_MAP_STATE"
 		
 		/*-- New design --*/
 		const val SELECTED_PROJECT = "${PREFIX}SELECTED_PROJECT"
 		const val LATEST_GET_LOCATION_TIME = "${PREFIX}LATEST_GET_LOCATION_TIME"
 		const val LATEST_CURRENT_LOCATION_TIME = "${PREFIX}LATEST_CURRENT_LOCATION_TIME"
+		const val SUBSCRIBED_PROJECTS = "${PREFIX}SUBSCRIBED_PROJECTS"
 	}
 	
 	init {
 		sharedPreferences = context.applicationContext.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+	}
+	
+	fun getArrayList(key: String): ArrayList<String>? {
+		val gson = Gson()
+		val json: String? = sharedPreferences.getString(key, null)
+		val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+		return gson.fromJson(json, type)
+	}
+	
+	fun putArrayList(key: String, list: ArrayList<String>) {
+		val gson = Gson()
+		val json: String = gson.toJson(list)
+		sharedPreferences.edit().putString(key, json).apply()
 	}
 	
 	fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {

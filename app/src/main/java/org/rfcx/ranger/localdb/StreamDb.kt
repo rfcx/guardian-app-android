@@ -33,4 +33,5 @@ class StreamDb(private val realm: Realm) {
 	
 	fun getStreamByCoreId(serverId: String): Stream? = realm.where(Stream::class.java).equalTo(Stream.STREAM_SERVER_ID, serverId).findFirst()
 	
+	fun getStreamByName(name: String): Stream? = realm.where(Stream::class.java).equalTo(Stream.STREAM_NAME, name).findFirst()
 }

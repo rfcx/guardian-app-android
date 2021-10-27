@@ -25,7 +25,7 @@ import org.rfcx.ranger.localdb.TrackingDb
 import org.rfcx.ranger.util.Analytics
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.RealmHelper
-import org.rfcx.ranger.view.MainActivityNew
+import org.rfcx.ranger.view.MainActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.fixedRateTimer
@@ -229,7 +229,7 @@ class LocationTrackerService : Service() {
 	}
 	
 	private fun createLocationTrackerNotification(isLocationAvailability: Boolean): Notification {
-		val intent = Intent(this, MainActivityNew::class.java)
+		val intent = Intent(this, MainActivity::class.java)
 		val pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT)
 		return NotificationCompat.Builder(this, NOTIFICATION_LOCATION_CHANNEL_ID).apply {

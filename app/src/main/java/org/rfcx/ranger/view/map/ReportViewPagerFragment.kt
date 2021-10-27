@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_report_view_pager.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
-import org.rfcx.ranger.view.MainActivityNew
+import org.rfcx.ranger.view.MainActivity
 
 class ReportViewPagerFragment : BottomSheetDialogFragment() {
 	
@@ -55,8 +55,8 @@ class ReportViewPagerFragment : BottomSheetDialogFragment() {
 		viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 			override fun onPageSelected(position: Int) {
 				
-				if (activity is MainActivityNew && position < viewPagerAdapter.itemCount) {
-					(activity as MainActivityNew).moveMapIntoReportMarker(
+				if (activity is MainActivity && position < viewPagerAdapter.itemCount) {
+					(activity as MainActivity).moveMapIntoReportMarker(
 							viewPagerAdapter.reports[position]
 					)
 				}

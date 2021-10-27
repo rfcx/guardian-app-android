@@ -52,8 +52,11 @@ fun Preferences.getTokenID(): String? {
 
 fun Context?.logout() {
 	this?.let {
-		CloudMessaging.unsubscribe(this)
-		Preferences.getInstance(this).clear()
+		val preferenceHelper = Preferences.getInstance(it)
+		val projectCoreIds = preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
+		projectCoreIds?.forEach { coreId ->
+			CloudMessaging.unsubscribe(coreId)
+		}
 		LocationTracking.set(this, false)
 		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
 			realm.executeTransactionAsync({ bgRealm ->
@@ -65,6 +68,7 @@ fun Context?.logout() {
 				realm.close()
 			})
 		}
+		Preferences.getInstance(this).clear()
 	}
 }
 

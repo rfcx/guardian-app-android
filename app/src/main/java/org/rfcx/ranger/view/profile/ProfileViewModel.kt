@@ -64,11 +64,11 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		profileData.updateReceivingNotification(enable)
 		notificationReceiving.value = enable
 		// set messaging
-		if (enable) {
-			CloudMessaging.subscribeIfRequired(context)
-		} else {
-			CloudMessaging.unsubscribe(context)
-		}
+//		if (enable) {
+//			CloudMessaging.subscribeIfRequired(context)
+//		} else {
+//			CloudMessaging.unsubscribe(context)
+//		}
 	}
 	
 	fun onReceivingByEmail(enable: Boolean) {

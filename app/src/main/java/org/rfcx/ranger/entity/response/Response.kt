@@ -15,6 +15,7 @@ open class Response(
 		var investigatedAt: Date = Date(),
 		var startedAt: Date = Date(),
 		var submittedAt: Date? = null,
+		var answers: RealmList<Int> = RealmList(),
 		var evidences: RealmList<Int> = RealmList(),
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
@@ -43,6 +44,7 @@ open class Response(
 		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_INCIDENT_REF = "incidentRef"
 		const val RESPONSE_SYNC_STATE = "syncState"
+		const val RESPONSE_ANSWERS = "answers"
 	}
 }
 
@@ -51,11 +53,11 @@ enum class SyncState(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	DEFAULT(-1), NONE(0), NOT_SURE(1), SMALL(2), LARGE(3),
+	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
 }
 
 enum class DamageScale(val value: Int) {
-	DEFAULT(-1), NO_VISIBLE(0), SMALL(1), MEDIUM(2), LARGE(3)
+	DEFAULT(-1), NO_VISIBLE(401), SMALL(402), MEDIUM(403), LARGE(404)
 }
 
 enum class EvidenceTypes(val value: Int) {
@@ -85,10 +87,7 @@ fun Response.toCreateResponseRequest(): CreateResponseRequest =
 				this.investigatedAt.toIsoString(),
 				this.startedAt.toIsoString(),
 				this.submittedAt?.toIsoString() ?: "",
-				this.evidences,
-				this.loggingScale,
-				this.damageScale,
-				this.responseActions,
+				this.answers,
 				this.note,
 				this.streamId
 		)
@@ -103,4 +102,17 @@ fun Response.syncLabel() = when (this.syncState) {
 	SyncState.UNSENT.value -> R.string.unsent
 	SyncState.SENDING.value -> R.string.sending
 	else -> R.string.sent
+}
+
+fun Response.saveToAnswers(): RealmList<Int> {
+	val answers = RealmList<Int>()
+	answers.addAll(this.evidences)
+	answers.addAll(this.responseActions)
+	if (this.damageScale != DamageScale.DEFAULT.value) {
+		answers.add(this.damageScale)
+	}
+	if (this.loggingScale != LoggingScale.DEFAULT.value) {
+		answers.add(this.loggingScale)
+	}
+	return answers
 }

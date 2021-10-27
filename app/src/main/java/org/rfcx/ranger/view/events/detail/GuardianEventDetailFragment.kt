@@ -28,16 +28,16 @@ class GuardianEventDetailFragment : Fragment() {
 	var name: String? = null
 	var guardianId: String? = null
 	var distance: Double? = null
-	var number: Int? = null
 	var alerts = listOf<Alert>()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val arg = arguments ?: return
 		name = arg.getString(ARG_NAME)
-		distance = arg.getDouble(ARG_DISTANCE)
 		guardianId = arg.getString(ARG_GUARDIAN_ID)
-		number = arg.getInt(ARG_NUMBER)
+		if (arg.get(ARG_DISTANCE) != null) {
+			distance = arg.getDouble(ARG_DISTANCE)
+		}
 	}
 	
 	override fun onAttach(context: Context) {
@@ -59,7 +59,7 @@ class GuardianEventDetailFragment : Fragment() {
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = alertItemAdapter
-			alertItemAdapter.items = alerts.take(number ?: 0)
+			alertItemAdapter.items = alerts
 			
 			createReportButton.setOnClickListener {
 				name?.let { name ->
@@ -80,6 +80,7 @@ class GuardianEventDetailFragment : Fragment() {
 		}
 		
 		guardianNameTextView.text = name
+		distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
 		distanceTextView.text = distance?.setFormatLabel()
 	}
 	
@@ -109,15 +110,13 @@ class GuardianEventDetailFragment : Fragment() {
 		private const val ARG_NAME = "ARG_NAME"
 		private const val ARG_DISTANCE = "ARG_DISTANCE"
 		private const val ARG_GUARDIAN_ID = "ARG_GUARDIAN_ID"
-		private const val ARG_NUMBER = "ARG_NUMBER"
 		
 		@JvmStatic
-		fun newInstance(name: String, distance: Double?, eventSize: Int, guardianId: String): GuardianEventDetailFragment {
+		fun newInstance(name: String, distance: Double?, guardianId: String): GuardianEventDetailFragment {
 			return GuardianEventDetailFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_NAME, name)
 					putString(ARG_GUARDIAN_ID, guardianId)
-					putInt(ARG_NUMBER, eventSize)
 					if (distance != null) putDouble(ARG_DISTANCE, distance)
 				}
 			}

@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.fragment_terms_and_service.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.view.MainActivityNew
 import org.rfcx.ranger.view.base.BaseFragment
 
 class TermsAndServiceFragment : BaseFragment() {

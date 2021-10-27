@@ -25,8 +25,10 @@ import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.localdb.StreamDb
 import org.rfcx.ranger.localdb.TrackingDb
+import org.rfcx.ranger.util.CloudMessaging
 import org.rfcx.ranger.util.Preferences
 import org.rfcx.ranger.util.asLiveData
+import org.rfcx.ranger.util.isNetworkAvailable
 import org.rfcx.ranger.view.events.adapter.EventGroup
 
 
@@ -55,38 +57,42 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
 	
 	fun fetchProjects() {
-		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
-			override fun onSuccess(t: List<ProjectResponse>) {
-				t.map {
-					projectDb.insertOrUpdate(it)
-				}
-				_projects.value = Result.Success(listOf())
-			}
-			
-			override fun onError(e: Throwable) {
-				_projects.value = Result.Error(e)
-			}
-		}, ProjectsRequestFactory())
-	}
-	
-	fun loadStreams() {
-		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val project = projectDb.getProjectById(projectId)
-		project?.serverId?.let { serverId ->
-			getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
-				override fun onSuccess(t: List<StreamResponse>) {
-					loadEvents(t)
-					t.forEach { res ->
-						streamDb.insertStream(res)
+		if (context.isNetworkAvailable()) {
+			getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
+				override fun onSuccess(t: List<ProjectResponse>) {
+					t.map {
+						projectDb.insertOrUpdate(it)
 					}
-					_streams.value = Result.Success(t)
+					_projects.value = Result.Success(listOf())
 				}
 				
 				override fun onError(e: Throwable) {
-					_streams.value = Result.Error(e)
+					_projects.value = Result.Error(e)
 				}
-			}, StreamsRequestFactory(projects = listOf(serverId)))
+			}, ProjectsRequestFactory())
+		}
+	}
+	
+	fun loadStreams() {
+		if (context.isNetworkAvailable()) {
+			val preferences = Preferences.getInstance(context)
+			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+			val project = projectDb.getProjectById(projectId)
+			project?.serverId?.let { serverId ->
+				getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
+					override fun onSuccess(t: List<StreamResponse>) {
+						loadEvents(t)
+						t.forEach { res ->
+							streamDb.insertStream(res)
+						}
+						_streams.value = Result.Success(t)
+					}
+					
+					override fun onError(e: Throwable) {
+						_streams.value = Result.Error(e)
+					}
+				}, StreamsRequestFactory(projects = listOf(serverId)))
+			}
 		}
 	}
 	
@@ -129,7 +135,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
 	}
 	
-	fun handledStreams(lastLocation: Location?, list: List<StreamResponse>) {
+	fun handledStreamsResponse(lastLocation: Location?, list: List<StreamResponse>) {
 		othersGuardians.clear()
 		nearbyGuardians.clear()
 		
@@ -140,6 +146,32 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
 			}
 			groups.add(EventGroup(it.eventsCount, distance, it.name, it.id))
+		}
+		groups.sortBy { g -> g.distance }
+		groups.forEach {
+			if (it.distance == null) {
+				othersGuardians.add(it)
+			} else {
+				if (it.distance >= 2000) {
+					othersGuardians.add(it)
+				} else {
+					nearbyGuardians.add(it)
+				}
+			}
+		}
+		othersGuardians.sortByDescending { g -> g.eventSize }
+	}
+	
+	fun handledStreams(lastLocation: Location?, streams: List<Stream>) {
+		othersGuardians.clear()
+		nearbyGuardians.clear()
+		val groups = arrayListOf<EventGroup>()
+		streams.forEach {
+			var distance: Double? = null
+			lastLocation?.let { loc ->
+				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
+			}
+			groups.add(EventGroup(getEventsCount(it.serverId).toInt(), distance, it.name, it.serverId))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {

@@ -52,10 +52,10 @@
 			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.profile.GuardianGroupActivity"
+			android:name=".view.profile.SubscribeProjectsActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name=".view.MainActivityNew"
+			android:name=".view.MainActivity"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme" />

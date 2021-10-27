@@ -53,27 +53,35 @@ class EvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		cutDownTreesCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		clearedAreasCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		loggingEquipmentCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		loggersAtSiteCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		illegalCampsCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		firesBurnedAreasCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		evidenceOfPoachingCheckBox.setOnClickListener {
+			setWhenNotInOption(false)
 			setEnabled()
 		}
 		noneCheckBox.setOnClickListener {
+			setWhenNotInOption(true)
 			setEnabled()
 		}
 	}
@@ -115,7 +123,11 @@ class EvidenceFragment : Fragment() {
 		}
 		
 		listener.setEvidence(selected)
-		listener.handleCheckClicked(StepCreateReport.SCALE.step)
+		if (selected.contains(EvidenceTypes.NONE.value)) {
+			listener.handleCheckClicked(StepCreateReport.ACTION.step)
+		} else {
+			listener.handleCheckClicked(StepCreateReport.SCALE.step)
+		}
 	}
 	
 	private fun setSelected() {
@@ -145,5 +157,18 @@ class EvidenceFragment : Fragment() {
 				noneCheckBox.isChecked = true
 			}
 		}
+	}
+	
+	private fun setWhenNotInOption(isNotInOption: Boolean) {
+		if (isNotInOption) {
+			cutDownTreesCheckBox.isChecked = !isNotInOption
+			clearedAreasCheckBox.isChecked = !isNotInOption
+			loggingEquipmentCheckBox.isChecked = !isNotInOption
+			loggersAtSiteCheckBox.isChecked = !isNotInOption
+			illegalCampsCheckBox.isChecked = !isNotInOption
+			firesBurnedAreasCheckBox.isChecked = !isNotInOption
+			evidenceOfPoachingCheckBox.isChecked = !isNotInOption
+		}
+		noneCheckBox.isChecked = isNotInOption
 	}
 }

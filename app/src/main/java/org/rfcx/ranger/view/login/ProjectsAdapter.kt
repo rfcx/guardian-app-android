@@ -3,11 +3,13 @@ package org.rfcx.ranger.view.login
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_guardian_group.view.*
+import kotlinx.android.synthetic.main.item_select_subscribe_projects.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
-import org.rfcx.ranger.entity.guardian.GuardianGroup
+import org.rfcx.ranger.entity.project.Project
+import org.rfcx.ranger.entity.project.isGuest
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 	var items: List<ProjectsItem> = arrayListOf()
@@ -17,7 +19,7 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
-		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian_group, parent, false)
+		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
 		return ProjectsViewHolder(view)
 	}
 	
@@ -30,15 +32,39 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		}
 	}
 	
+	private fun setClickable(view: View?, clickable: Boolean) {
+		if (view != null) {
+			if (view is ViewGroup) {
+				val viewGroup = view
+				for (i in 0 until viewGroup.childCount) {
+					setClickable(viewGroup.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
+		}
+	}
+	
 	inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val textView = itemView.guardianGroupTextView
-		private val checkImageView = itemView.checkImageView
+		private val checkBoxImageView = itemView.checkBoxImageView
+		private val lockImageView = itemView.lockImageView
 		
 		fun bind(item: ProjectsItem) {
+			setClickable(itemView, item.project.isGuest())
+			if (item.project.isGuest()) {
+				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+			} else {
+				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
+			}
 			textView.text = item.project.name
-			checkImageView.visibility = if(item.selected) View.VISIBLE else View.GONE
+			lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
+			checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
+			checkBoxImageView.setImageDrawable(ContextCompat.getDrawable(itemView.context, if (item.selected) R.drawable.ic_check_box else R.drawable.ic_check_box_outline))
+			lockImageView.setOnClickListener {
+				listener.onLockImageClicked()
+			}
 		}
 	}
 }
 
-data class ProjectsItem(val project: GuardianGroup, val selected: Boolean)
+data class ProjectsItem(val project: Project, var selected: Boolean)
