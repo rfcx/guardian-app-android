@@ -115,6 +115,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 				} else {
 					subscribedProjects.remove(item.project.serverId ?: "")
 					saveSubscribedProject(subscribedProjects)
+					selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 				}
 			}
 		} else {
@@ -128,6 +129,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 				} else {
 					subscribedProjects.add(item.project.serverId ?: "")
 					saveSubscribedProject(subscribedProjects)
+					selectProjectButton.isEnabled = true
 				}
 			}
 		}
@@ -135,7 +137,6 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 			items[position].selected = !items[position].selected
 			projectsAdapter.items = items
 		}
-		selectProjectButton.isEnabled = true
 	}
 	
 	private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
