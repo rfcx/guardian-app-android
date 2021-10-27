@@ -35,7 +35,6 @@ import org.rfcx.ranger.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
-// TODO change class name
 class MainActivity : BaseActivity(), MainActivityEventListener {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
