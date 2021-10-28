@@ -15,8 +15,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.OnProjectsItemClickListener
 import org.rfcx.ranger.entity.project.Project
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.handleError
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.login.ProjectsAdapter
 import org.rfcx.ranger.view.login.ProjectsItem
@@ -59,6 +58,8 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 				projectSwipeRefreshView.isRefreshing = true
 			})
 		})
+		
+		checkStateBeforeFetchProjects()
 	}
 	
 	private fun setList() {
@@ -97,36 +98,46 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 	}
 	
 	override fun onItemClick(item: ProjectsItem, position: Int) {
-		if (item.selected) {
-			viewModel.unsubscribeProject(item.project) { status ->
-				if (!status) {
-					projectsItem?.let { items ->
-						items[position].selected = !items[position].selected
-						projectsAdapter.items = items
+		when {
+			this.isOnAirplaneMode() -> {
+				this.showToast(getString(R.string.pls_off_air_plane_mode))
+			}
+			!this.isNetworkAvailable() -> {
+				this.showToast(getString(R.string.no_internet_connection))
+			}
+			else -> {
+				if (item.selected) {
+					viewModel.unsubscribeProject(item.project) { status ->
+						if (!status) {
+							projectsItem?.let { items ->
+								items[position].selected = !items[position].selected
+								projectsAdapter.items = items
+							}
+							showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
+						} else {
+							subscribedProjects.remove(item.project.serverId ?: "")
+							saveSubscribedProject(subscribedProjects)
+						}
 					}
-					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
 				} else {
-					subscribedProjects.remove(item.project.serverId ?: "")
-					saveSubscribedProject(subscribedProjects)
+					viewModel.setProjectsAndSubscribe(item.project) { status ->
+						if (!status) {
+							projectsItem?.let { items ->
+								items[position].selected = !items[position].selected
+								projectsAdapter.items = items
+							}
+							showToast(getString(R.string.failed_receive_notification, item.project.name))
+						} else {
+							subscribedProjects.add(item.project.serverId ?: "")
+							saveSubscribedProject(subscribedProjects)
+						}
+					}
+				}
+				projectsItem?.let { items ->
+					items[position].selected = !items[position].selected
+					projectsAdapter.items = items
 				}
 			}
-		} else {
-			viewModel.setProjectsAndSubscribe(item.project) { status ->
-				if (!status) {
-					projectsItem?.let { items ->
-						items[position].selected = !items[position].selected
-						projectsAdapter.items = items
-					}
-					showToast(getString(R.string.failed_receive_notification, item.project.name))
-				} else {
-					subscribedProjects.add(item.project.serverId ?: "")
-					saveSubscribedProject(subscribedProjects)
-				}
-			}
-		}
-		projectsItem?.let { items ->
-			items[position].selected = !items[position].selected
-			projectsAdapter.items = items
 		}
 	}
 	
@@ -141,7 +152,21 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 	}
 	
 	override fun onRefresh() {
-		viewModel.fetchProjects()
+		checkStateBeforeFetchProjects()
+	}
+	
+	private fun checkStateBeforeFetchProjects() {
+		when {
+			this.isOnAirplaneMode() -> {
+				this.showToast(getString(R.string.pls_off_air_plane_mode))
+			}
+			!this.isNetworkAvailable() -> {
+				this.showToast(getString(R.string.no_internet_connection))
+			}
+			else -> {
+				viewModel.fetchProjects()
+			}
+		}
 	}
 	
 	private fun showToast(message: String) {
