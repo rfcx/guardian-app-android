@@ -158,10 +158,12 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 	private fun checkStateBeforeFetchProjects() {
 		when {
 			this.isOnAirplaneMode() -> {
-				this.showToast(getString(R.string.pls_off_air_plane_mode))
+				projectSwipeRefreshView.isRefreshing = false
+				this.showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
 			}
 			!this.isNetworkAvailable() -> {
-				this.showToast(getString(R.string.no_internet_connection))
+				projectSwipeRefreshView.isRefreshing = false
+				this.showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
 			}
 			else -> {
 				viewModel.fetchProjects()
