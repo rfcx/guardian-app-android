@@ -3,9 +3,7 @@ package org.rfcx.ranger.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.Uri
+import android.net.*
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -87,13 +85,26 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	}
 	
 	private fun checkNetworkCallback() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-			connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-				override fun onAvailable(network: Network) {
-					ResponseSyncWorker.enqueue()
-				}
-			})
+		val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+		when {
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
+				connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+					override fun onAvailable(network: Network) {
+						ResponseSyncWorker.enqueue()
+					}
+				})
+			}
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+				val request = NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build();
+				connectivityManager.registerNetworkCallback(request, object : ConnectivityManager.NetworkCallback() {
+					override fun onAvailable(network: Network) {
+						ResponseSyncWorker.enqueue()
+					}
+				})
+			}
+			else -> {
+				if (this.isNetworkAvailable()) ResponseSyncWorker.enqueue()
+			}
 		}
 	}
 	
