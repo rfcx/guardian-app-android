@@ -20,6 +20,7 @@ import org.rfcx.ranger.view.profile.PasswordChangeViewModel
 import org.rfcx.ranger.view.profile.ProfileViewModel
 import org.rfcx.ranger.view.profile.editprofile.EditProfileViewModel
 import org.rfcx.ranger.view.report.create.CreateReportViewModel
+import org.rfcx.ranger.view.report.detail.ResponseDetailViewModel
 
 object UiModule {
 	
@@ -35,6 +36,7 @@ object UiModule {
 	
 	val reportsModule = module {
 		viewModel { CreateReportViewModel(get(), get(), get(), get(), get()) }
+		viewModel { ResponseDetailViewModel(get()) }
 	}
 	
 	val mapModule = module {
