@@ -23,8 +23,30 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/scheduleImageView"
+				android:layout_width="@dimen/icon_front_text"
+				android:layout_height="@dimen/icon_front_text"
+				android:layout_margin="@dimen/margin_padding_normal"
+				android:src="@drawable/ic_schedule"
+				app:layout_constraintBottom_toBottomOf="@id/investigateAtTextView"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="@id/investigateAtTextView" />
 			
-			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/investigateAtTextView"
+				style="@style/RangerText.Label"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_small"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				app:layout_constraintStart_toEndOf="@id/scheduleImageView"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="28 0ct 2021, 15:45" />
+		
+		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.core.widget.NestedScrollView>
 

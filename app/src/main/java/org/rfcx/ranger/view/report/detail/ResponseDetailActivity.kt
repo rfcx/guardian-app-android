@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_response_detail.*
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
 class ResponseDetailActivity : AppCompatActivity() {
 	
@@ -31,6 +33,10 @@ class ResponseDetailActivity : AppCompatActivity() {
 		responseCoreId = intent?.getStringExtra(EXTRA_RESPONSE_CORE_ID)
 		response = responseCoreId?.let { viewModel.getResponseByCoreId(it) }
 		setupToolbar()
+		
+		response?.let { res ->
+			investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
+		}
 	}
 	
 	private fun setupToolbar() {
