@@ -207,11 +207,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				when {
 					requireContext().isOnAirplaneMode() -> {
 						isRefreshing = false
-						view?.showSnackBar(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
+						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
 					}
 					!requireContext().isNetworkAvailable() -> {
 						isRefreshing = false
-						view?.showSnackBar(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
+						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
 					}
 					else -> {
 						viewModel.fetchProjects()
@@ -254,11 +254,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		when {
 			requireContext().isOnAirplaneMode() -> {
 				setStreamsWithLocalData()
-				view?.showSnackBarWithAnchorView(getString(R.string.pls_off_air_plane_mode))
+				requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
 			}
 			!requireContext().isNetworkAvailable() -> {
 				setStreamsWithLocalData()
-				view?.showSnackBarWithAnchorView(getString(R.string.no_internet_connection))
+				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
 				viewModel.loadStreams()

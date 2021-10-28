@@ -8,8 +8,8 @@ import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.google.android.material.snackbar.Snackbar
 import org.joda.time.Duration
 import org.rfcx.ranger.R
 import java.util.*
@@ -116,13 +116,6 @@ fun View.hideKeyboard() = this.let {
 	imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun View.showSnackBarWithAnchorView(mgs: String) {
-	Snackbar.make(this, mgs, Snackbar.LENGTH_LONG)
-			.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-			.setAnchorView(R.id.bottomBar).show()
-}
-
-fun View.showSnackBar(mgs: String) {
-	Snackbar.make(this, mgs, Snackbar.LENGTH_LONG)
-			.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show()
+fun Context.showToast(message: String) {
+	Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }

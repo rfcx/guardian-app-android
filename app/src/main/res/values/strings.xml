@@ -164,6 +164,8 @@
 	<!-- Alerts -->
 	<string name="yesterday">Yesterday</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
+	<string name="unable_to_submit_no_internet_connection">Unable to submit while there is no connection.</string>
+	<string name="unable_to_submit_on_airplane_mode">Unable to submit while in airplane mode.</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
