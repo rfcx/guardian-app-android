@@ -222,6 +222,7 @@
 	<string name="select">Select</string>
 	<string name="failed_receive_notification">Failed to receive notification from %s</string>
 	<string name="failed_unsubscribe_receive_notification">Failed to unsubscribe receive notification from %s</string>
+	<string name="project_could_not_refreshed">The project could not be refreshed.</string>
 	
 	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>

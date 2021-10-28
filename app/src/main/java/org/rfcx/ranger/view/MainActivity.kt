@@ -44,7 +44,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
 		if (isOnAirplaneMode) {
-			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		}
@@ -363,7 +362,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	
 	private fun enableLocationTracking() {
 		if (isOnAirplaneMode()) {
-			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		} else {
@@ -372,14 +370,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
-	}
-	
-	private fun showLocationError() {
-		AlertDialog.Builder(this)
-				.setTitle(R.string.in_air_plane_mode)
-				.setMessage(R.string.pls_off_air_plane_mode)
-				.setPositiveButton(R.string.common_ok, null)
-				.show()
 	}
 	
 	private fun disableLocationTracking() {

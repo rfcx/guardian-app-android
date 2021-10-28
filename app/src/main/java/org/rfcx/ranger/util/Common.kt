@@ -116,8 +116,13 @@ fun View.hideKeyboard() = this.let {
 	imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun View.showSnackBar(mgs: String) {
+fun View.showSnackBarWithAnchorView(mgs: String) {
 	Snackbar.make(this, mgs, Snackbar.LENGTH_LONG)
 			.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
 			.setAnchorView(R.id.bottomBar).show()
+}
+
+fun View.showSnackBar(mgs: String) {
+	Snackbar.make(this, mgs, Snackbar.LENGTH_LONG)
+			.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show()
 }
