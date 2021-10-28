@@ -3,11 +3,13 @@ package org.rfcx.ranger.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.Network
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,6 +22,7 @@ import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.service.AirplaneModeReceiver
 import org.rfcx.ranger.service.AlertNotification
+import org.rfcx.ranger.service.ResponseSyncWorker
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.EventsFragment
@@ -80,6 +83,18 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		observeMain()
 		observeLocationTracking()
 		getEventFromIntentIfHave(intent)
+		checkNetworkCallback()
+	}
+	
+	private fun checkNetworkCallback() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+			connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+				override fun onAvailable(network: Network) {
+					ResponseSyncWorker.enqueue()
+				}
+			})
+		}
 	}
 	
 	override fun onResume() {
