@@ -150,6 +150,19 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setObserver()
 		setRecyclerView()
 		setStreamsWithLocalData()
+		onClickCurrentLocationButton()
+	}
+	
+	private fun onClickCurrentLocationButton() {
+		currentLocationButton.setOnClickListener {
+			mapBoxMap?.locationComponent?.isLocationComponentActivated?.let {
+				if (it) {
+					moveCameraToCurrentLocation()
+				} else {
+					getLocation()
+				}
+			}
+		}
 	}
 	
 	private fun setStreamsWithLocalData() {
@@ -328,11 +341,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowNotHaveStreams(false)
 				changePageImageView.setImageResource(R.drawable.ic_view_list)
 				mapView.visibility = View.VISIBLE
+				currentLocationButton.visibility = View.VISIBLE
 				guardianListScrollView.visibility = View.GONE
 				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
 			} else {
 				changePageImageView.setImageResource(R.drawable.ic_map)
 				mapView.visibility = View.GONE
+				currentLocationButton.visibility = View.GONE
 				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
@@ -634,8 +649,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		moveCameraTo(LatLng(location.latitude, location.longitude))
 	}
 	
-	private fun moveCameraTo(latLng: LatLng) {
-		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM))
+	private fun moveCameraTo(latLng: LatLng, zoom: Double = DEFAULT_MAP_ZOOM) {
+		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
 	}
 	
 	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
@@ -658,6 +673,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				.includes(latLngList)
 				.build()
 		mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, PADDING_BOUNDS), DURATION_MS)
+	}
+	
+	private fun moveCameraToCurrentLocation() {
+		mapBoxMap?.locationComponent?.lastKnownLocation?.let { curLoc ->
+			val currentLatLng = LatLng(curLoc.latitude, curLoc.longitude)
+			moveCameraTo(currentLatLng, mapBoxMap?.cameraPosition?.zoom ?: DEFAULT_MAP_ZOOM)
+		}
 	}
 	
 	override fun onResume() {
