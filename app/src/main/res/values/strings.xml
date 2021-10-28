@@ -217,8 +217,6 @@
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 	<string name="network_not_available">network not available</string>
-	<string name="set_project">Set Project</string>
-	<string name="choose_project">Choose which project you are working with</string>
 	<string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
 	<string name="logout">logout</string>
 	<string name="select">Select</string>
