@@ -31,7 +31,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -49,9 +48,7 @@ import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
-import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.toJsonObject
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
@@ -151,7 +148,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setOnClickListener()
 		setObserver()
 		setRecyclerView()
-		
+		setStreamsWithLocalData()
+	}
+	
+	private fun setStreamsWithLocalData() {
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		val projectServerId = viewModel.getProject(projectId)?.serverId
 		viewModel.handledStreams(lastLocation, viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
@@ -238,7 +238,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
 		viewModel.setProjectSelected(project.id)
-		viewModel.loadStreams()
+		
+		when {
+			requireContext().isOnAirplaneMode() -> {
+				setStreamsWithLocalData()
+				view?.showSnackBar(getString(R.string.pls_off_air_plane_mode))
+			}
+			!requireContext().isNetworkAvailable() -> {
+				setStreamsWithLocalData()
+				view?.showSnackBar(getString(R.string.no_internet_connection))
+			}
+			else -> {
+				viewModel.loadStreams()
+			}
+		}
+		
 		setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
 	}
@@ -297,6 +311,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		changePageImageView.setOnClickListener {
 			if (isShowMapIcon) {
+				isShowNotHaveStreams(false)
 				changePageImageView.setImageResource(R.drawable.ic_view_list)
 				mapView.visibility = View.VISIBLE
 				guardianListScrollView.visibility = View.GONE
@@ -304,6 +319,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			} else {
 				changePageImageView.setImageResource(R.drawable.ic_map)
 				mapView.visibility = View.GONE
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
 			isShowMapIcon = !isShowMapIcon
