@@ -301,4 +301,10 @@
 	
 	<string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
 	<string name="submit_report">Submit report</string>
+	
+	<string name="answers">Answers:</string>
+	<string name="logging_scale">Logging Scale: </string>
+	<string name="damage">Damage: </string>
+	<string name="small_text">Small</string>
+	<string name="large_text">Large</string>
 </resources>

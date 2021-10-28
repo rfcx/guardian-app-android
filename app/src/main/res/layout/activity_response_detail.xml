@@ -45,7 +45,28 @@
 				app:layout_constraintStart_toEndOf="@id/scheduleImageView"
 				app:layout_constraintTop_toTopOf="parent"
 				tools:text="28 0ct 2021, 15:45" />
-		
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/answersTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small"
+				android:text="@string/answers"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/investigateAtTextView" />
+			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/answersRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/white"
+				android:dividerHeight="1dp"
+				android:overScrollMode="never"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/answersTextView" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.core.widget.NestedScrollView>
