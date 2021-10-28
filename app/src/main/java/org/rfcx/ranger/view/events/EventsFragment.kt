@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.api.site.toStream
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Tracking
@@ -289,6 +290,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			it.success({ list ->
 				viewModel.handledStreamsResponse(lastLocation, list)
 				setItemOnAdapter()
+				setAlertFeatures(list.map { s -> s.toStream() })
 			}, {
 				isShowProgressBar(false)
 			}, {
@@ -396,6 +398,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
 		}
 		alertFeatures = FeatureCollection.fromFeatures(features)
+		alertFeatures?.let { moveCameraToLeavesBounds(it) }
 		refreshSource()
 	}
 	
