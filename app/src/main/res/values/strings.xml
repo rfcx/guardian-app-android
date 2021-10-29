@@ -303,8 +303,11 @@
 	<string name="submit_report">Submit report</string>
 	
 	<string name="answers">Answers:</string>
-	<string name="logging_scale">Logging Scale: </string>
-	<string name="damage">Damage: </string>
+	<string name="logging_scale">Logging Scale:</string>
+	<string name="damage">Damage:</string>
 	<string name="small_text">Small</string>
 	<string name="large_text">Large</string>
+	
+	<string name="assets">Assets:</string>
+	<string name="note">Note: %s</string>
 </resources>

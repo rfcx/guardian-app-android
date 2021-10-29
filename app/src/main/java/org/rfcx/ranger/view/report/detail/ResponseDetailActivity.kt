@@ -3,6 +3,7 @@ package org.rfcx.ranger.view.report.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_response_detail.*
@@ -45,6 +46,8 @@ class ResponseDetailActivity : AppCompatActivity() {
 		response?.let { res ->
 			investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
 			responseDetailAdapter.items = getMessageList(res.answers)
+			noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
+			noteTextView.text =  getString(R.string.note, res.note)
 		}
 	}
 	
