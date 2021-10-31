@@ -2,17 +2,27 @@ package org.rfcx.ranger.view.report.detail
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_response_detail.*
+import kotlinx.android.synthetic.main.activity_response_detail.attachImageRecycler
+import kotlinx.android.synthetic.main.activity_response_detail.noteTextView
+import kotlinx.android.synthetic.main.activity_response_detail.soundRecordProgressView
+import kotlinx.android.synthetic.main.fragment_assets.*
 import kotlinx.android.synthetic.main.toolbar_default.*
+import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.*
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.ranger.view.report.create.image.ReportImageAdapter
+import org.rfcx.ranger.widget.SoundRecordState
+import java.io.File
+import java.io.IOException
 
 class ResponseDetailActivity : AppCompatActivity() {
 	
@@ -32,6 +42,8 @@ class ResponseDetailActivity : AppCompatActivity() {
 	
 	private var responseCoreId: String? = null
 	private var response: Response? = null
+	private var recordFile: File? = null
+	private var player: MediaPlayer? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -39,6 +51,7 @@ class ResponseDetailActivity : AppCompatActivity() {
 		responseCoreId = intent?.getStringExtra(EXTRA_RESPONSE_CORE_ID)
 		response = responseCoreId?.let { viewModel.getResponseByCoreId(it) }
 		setupToolbar()
+		setupRecordSoundProgressView()
 		
 		answersRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -56,6 +69,8 @@ class ResponseDetailActivity : AppCompatActivity() {
 			responseDetailAdapter.items = getMessageList(res.answers)
 			noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
 			noteTextView.text = getString(R.string.note, res.note)
+			res.audioLocation?.let { path -> setAudio(path) }
+			soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
 			res.guid?.let { reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false) }
 		}
 	}
@@ -135,6 +150,58 @@ class ResponseDetailActivity : AppCompatActivity() {
 		}
 	}
 	
+	private fun setAudio(path: String) {
+		recordFile = File(path)
+		
+		if (recordFile?.exists() == true) {
+			soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+		}
+	}
+	
+	private fun setupRecordSoundProgressView() {
+		soundRecordProgressView.onStateChangeListener = { state ->
+			when (state) {
+				SoundRecordState.NONE -> {
+					recordFile?.deleteOnExit()
+					recordFile = null
+				}
+				SoundRecordState.PLAYING -> {
+					startPlaying()
+				}
+				SoundRecordState.STOP_PLAYING -> {
+					stopPlaying()
+					cancelButton.visibility = View.GONE
+				}
+			}
+		}
+	}
+	
+	private fun startPlaying() {
+		if (recordFile == null) {
+			soundRecordProgressView.state = SoundRecordState.NONE
+			return
+		}
+		player = MediaPlayer().apply {
+			try {
+				setDataSource(recordFile!!.absolutePath)
+				prepare()
+				start()
+				setOnCompletionListener {
+					soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+				}
+			} catch (e: IOException) {
+				soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+				Snackbar.make(assetsView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+				e.printStackTrace()
+			}
+		}
+	}
+	
+	private fun stopPlaying() {
+		player?.release()
+		player = null
+	}
+	
 	private fun setupToolbar() {
 		setSupportActionBar(toolbarDefault)
 		supportActionBar?.apply {
@@ -143,6 +210,11 @@ class ResponseDetailActivity : AppCompatActivity() {
 			elevation = 0f
 			title = "#" + response?.incidentRef + " " + response?.streamName
 		}
+	}
+	
+	override fun onDestroy() {
+		super.onDestroy()
+		stopPlaying()
 	}
 	
 	override fun onSupportNavigateUp(): Boolean {

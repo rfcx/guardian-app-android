@@ -99,8 +99,8 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:clipToPadding="false"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -108,6 +108,15 @@
 				tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
 				tools:listitem="@layout/adapter_report_image"
 				tools:orientation="horizontal" />
+			
+			<org.rfcx.ranger.widget.SoundRecordProgressView
+				android:id="@+id/soundRecordProgressView"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/sound_record_progress_height"
+				android:layout_margin="@dimen/margin_padding_normal"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/attachImageRecycler" />
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.core.widget.NestedScrollView>
