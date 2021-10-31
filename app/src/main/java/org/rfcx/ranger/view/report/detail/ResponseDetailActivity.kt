@@ -12,6 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.*
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.ranger.view.report.create.image.ReportImageAdapter
 
 class ResponseDetailActivity : AppCompatActivity() {
 	
@@ -27,6 +28,7 @@ class ResponseDetailActivity : AppCompatActivity() {
 	
 	private val viewModel: ResponseDetailViewModel by viewModel()
 	private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
+	private val reportImageAdapter by lazy { ReportImageAdapter() }
 	
 	private var responseCoreId: String? = null
 	private var response: Response? = null
@@ -43,11 +45,18 @@ class ResponseDetailActivity : AppCompatActivity() {
 			adapter = responseDetailAdapter
 		}
 		
+		attachImageRecycler.apply {
+			adapter = reportImageAdapter
+			layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+			setHasFixedSize(true)
+		}
+		
 		response?.let { res ->
 			investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
 			responseDetailAdapter.items = getMessageList(res.answers)
 			noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
-			noteTextView.text =  getString(R.string.note, res.note)
+			noteTextView.text = getString(R.string.note, res.note)
+			res.guid?.let { reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false) }
 		}
 	}
 	

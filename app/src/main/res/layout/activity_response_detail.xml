@@ -75,6 +75,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_small"
 				android:paddingEnd="@dimen/margin_padding_normal"
 				android:paddingBottom="@dimen/margin_padding_small"
 				android:text="@string/assets"
@@ -86,14 +87,28 @@
 				style="@style/RangerText.Label"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:paddingTop="@dimen/margin_padding_small"
 				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_small"
 				android:paddingEnd="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small"
 				android:text="@string/note"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/assetsTextView" />
 			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/attachImageRecycler"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:clipToPadding="false"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/noteTextView"
+				tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+				tools:listitem="@layout/adapter_report_image"
+				tools:orientation="horizontal" />
+		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.core.widget.NestedScrollView>
 
