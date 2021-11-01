@@ -2,7 +2,6 @@ package org.rfcx.ranger.view.report.detail
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -18,6 +17,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
@@ -252,7 +252,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 						feature?.let {
 							tempTrack.add(it)
 						}
-						addLineLayer(style, "#ffffff")
+						addLineLayer(style)
 						lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
 						moveCamera(LatLng(16.76968313993174, 100.18986389078498))
 					}
@@ -270,12 +270,12 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 		style.addSource(lineSource!!)
 	}
 	
-	private fun addLineLayer(style: Style, color: String) {
+	private fun addLineLayer(style: Style) {
 		val lineLayer = LineLayer("line-layer", SOURCE_LINE).withProperties(
 				PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
 				PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
 				PropertyFactory.lineWidth(5f),
-				PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+				PropertyFactory.lineColor(Expression.get("color"))
 		)
 		style.addLayer(lineLayer)
 	}
