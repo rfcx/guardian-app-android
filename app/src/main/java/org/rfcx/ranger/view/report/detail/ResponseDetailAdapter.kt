@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.item_response_detail.view.*
 import org.rfcx.ranger.R
 
 class ResponseDetailAdapter : RecyclerView.Adapter<ResponseDetailAdapter.ResponseDetailViewHolder>() {
-	var items: List<String> = arrayListOf()
+	var items: List<AnswerItem> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -18,9 +18,11 @@ class ResponseDetailAdapter : RecyclerView.Adapter<ResponseDetailAdapter.Respons
 	
 	inner class ResponseDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val msgTextView = itemView.msgTextView
+		private val iconImageView = itemView.iconImageView
 		
-		fun bind(text: String) {
-			msgTextView.text = text
+		fun bind(item: AnswerItem) {
+			msgTextView.text = item.text
+			iconImageView.setColorFilter(itemView.resources.getColor(item.color))
 		}
 	}
 	

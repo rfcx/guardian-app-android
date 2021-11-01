@@ -102,80 +102,93 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 			soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
 			res.guid?.let {
 				reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
+				assetsTextView.visibility = if (viewModel.getImagesByCoreId(it).isEmpty() && res.note == null && viewModel.getTrackingByCoreId(it) == null) View.GONE else View.VISIBLE
 			}
 		}
 	}
 	
-	private fun getMessageList(answers: List<Int>): List<String> {
-		val messageList = arrayListOf<String>()
+	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
+		val answerList = arrayListOf<AnswerItem>()
 		answers.forEach { id ->
-			id.getMessage()?.let { msg -> messageList.add(msg) }
+			id.getAnswerItem()?.let { item -> answerList.add(item) }
 		}
-		return messageList
+		return answerList
 	}
 	
-	private fun Int.getMessage(): String? {
+	private fun Int.getAnswerItem(): AnswerItem? {
 		return when {
 			// LoggingScale
+			this == LoggingScale.NONE.value -> {
+				AnswerItem(getString(R.string.logging_scale) + " " + getString(R.string.common_none), R.color.logging_color)
+			}
 			this == LoggingScale.LARGE.value -> {
-				getString(R.string.logging_scale) + " " + getString(R.string.large_text)
+				AnswerItem(getString(R.string.logging_scale) + " " + getString(R.string.large_text), R.color.logging_color)
 			}
 			this == LoggingScale.SMALL.value -> {
-				getString(R.string.logging_scale) + " " + getString(R.string.small_text)
+				AnswerItem(getString(R.string.logging_scale) + " " + getString(R.string.small_text), R.color.logging_color)
 			}
 			
 			// DamageScale
 			this == DamageScale.NO_VISIBLE.value -> {
-				getString(R.string.damage) + " " + getString(R.string.no_visible)
+				AnswerItem(getString(R.string.damage) + " " + getString(R.string.no_visible), R.color.damage_color)
 			}
 			this == DamageScale.SMALL.value -> {
-				getString(R.string.damage) + " " + getString(R.string.small_trees_cut_down)
+				AnswerItem(getString(R.string.damage) + " " + getString(R.string.small_trees_cut_down), R.color.damage_color)
 			}
 			this == DamageScale.MEDIUM.value -> {
-				getString(R.string.damage) + " " + getString(R.string.medium_trees_cut_down)
+				AnswerItem(getString(R.string.damage) + " " + getString(R.string.medium_trees_cut_down), R.color.damage_color)
 			}
 			this == DamageScale.LARGE.value -> {
-				getString(R.string.damage) + " " + getString(R.string.large_area_clear_cut)
+				AnswerItem(getString(R.string.damage) + " " + getString(R.string.large_area_clear_cut), R.color.damage_color)
 			}
 			
 			// EvidenceTypes
+			this == EvidenceTypes.NONE.value -> {
+				AnswerItem(getString(R.string.common_none), R.color.evidence_color)
+			}
 			this == EvidenceTypes.CUT_DOWN_TREES.value -> {
-				getString(R.string.cut_down_trees)
+				AnswerItem(getString(R.string.cut_down_trees), R.color.evidence_color)
 			}
 			this == EvidenceTypes.CLEARED_AREAS.value -> {
-				getString(R.string.cleared_areas)
+				AnswerItem(getString(R.string.cleared_areas), R.color.evidence_color)
 			}
 			this == EvidenceTypes.LOGGING_EQUIPMENT.value -> {
-				getString(R.string.logging_equipment)
+				AnswerItem(getString(R.string.logging_equipment), R.color.evidence_color)
 			}
 			this == EvidenceTypes.LOGGERS_AT_SITE.value -> {
-				getString(R.string.loggers_at_site)
+				AnswerItem(getString(R.string.loggers_at_site), R.color.evidence_color)
 			}
 			this == EvidenceTypes.ILLEGAL_CAMPS.value -> {
-				getString(R.string.illegal_camps)
+				AnswerItem(getString(R.string.illegal_camps), R.color.evidence_color)
 			}
 			this == EvidenceTypes.FIRED_BURNED_AREAS.value -> {
-				getString(R.string.fires_burned_areas)
+				AnswerItem(getString(R.string.fires_burned_areas), R.color.evidence_color)
 			}
 			this == EvidenceTypes.EVIDENCE_OF_POACHING.value -> {
-				getString(R.string.evidence_of_poaching)
+				AnswerItem(getString(R.string.evidence_of_poaching), R.color.evidence_color)
 			}
 			
 			// Actions
+			this == Actions.NONE.value -> {
+				AnswerItem(getString(R.string.common_none), R.color.action_color)
+			}
 			this == Actions.COLLECTED_EVIDENCE.value -> {
-				getString(R.string.collected_evidence)
+				AnswerItem(getString(R.string.collected_evidence), R.color.action_color)
 			}
 			this == Actions.ISSUE_A_WARNING.value -> {
-				getString(R.string.issue_a_warning)
+				AnswerItem(getString(R.string.issue_a_warning), R.color.action_color)
 			}
 			this == Actions.CONFISCATED_EQUIPMENT.value -> {
-				getString(R.string.confiscated_equipment)
+				AnswerItem(getString(R.string.confiscated_equipment), R.color.action_color)
 			}
 			this == Actions.ARRESTS.value -> {
-				getString(R.string.arrests)
+				AnswerItem(getString(R.string.arrests), R.color.action_color)
 			}
 			this == Actions.PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT.value -> {
-				getString(R.string.planning_security)
+				AnswerItem(getString(R.string.planning_security), R.color.action_color)
+			}
+			this == Actions.OTHER.value -> {
+				AnswerItem(getString(R.string.other_text), R.color.action_color)
 			}
 			else -> null
 		}
@@ -260,6 +273,8 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 						
 						val lastLocation = feature?.geometry() as LineString
 						moveCameraToLeavesBounds(lastLocation.coordinates())
+					} else {
+						mapView.visibility = View.GONE
 					}
 				}
 			}
