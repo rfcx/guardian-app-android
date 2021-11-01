@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -58,7 +59,7 @@ import org.rfcx.ranger.view.project.ProjectOnClickListener
 import java.util.*
 import kotlin.collections.ArrayList
 
-class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
+class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, SwipeRefreshLayout.OnRefreshListener, (EventGroup) -> Unit {
 	
 	companion object {
 		const val tag = "EventsFragment"
@@ -151,6 +152,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 		setStreamsWithLocalData()
 		onClickCurrentLocationButton()
+		
+		refreshView.apply {
+			setOnRefreshListener(this@EventsFragment)
+			setColorSchemeResources(R.color.colorPrimary)
+		}
 	}
 	
 	private fun onClickCurrentLocationButton() {
@@ -304,7 +310,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				viewModel.handledStreamsResponse(lastLocation, list)
 				setItemOnAdapter()
 				setAlertFeatures(list.map { s -> s.toStream() })
+				refreshView.isRefreshing = false
 			}, {
+				refreshView.isRefreshing = false
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
@@ -717,5 +725,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		} else {
 			Toast.makeText(context, R.string.location_permission_msg, Toast.LENGTH_LONG).show()
 		}
+	}
+	
+	override fun onRefresh() {
+		viewModel.loadStreams()
 	}
 }
