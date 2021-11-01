@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -254,11 +257,32 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 						}
 						addLineLayer(style)
 						lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
-						moveCamera(LatLng(16.76968313993174, 100.18986389078498))
+						
+						val lastLocation = feature?.geometry() as LineString
+						moveCameraToLeavesBounds(lastLocation.coordinates())
 					}
 				}
 			}
 		}
+	}
+	
+	private fun moveCameraToLeavesBounds(features: List<Point>) {
+		val latLngList: ArrayList<LatLng> = ArrayList()
+		for (singleClusterFeature in features) {
+			latLngList.add(LatLng(singleClusterFeature.latitude(), singleClusterFeature.longitude()))
+		}
+		if (latLngList.size > 1) {
+			moveCameraWithLatLngList(latLngList)
+		} else {
+			moveCamera(latLngList[0])
+		}
+	}
+	
+	private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
+		val latLngBounds = LatLngBounds.Builder()
+				.includes(latLngList)
+				.build()
+		mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
 	}
 	
 	private fun moveCamera(loc: LatLng) {
