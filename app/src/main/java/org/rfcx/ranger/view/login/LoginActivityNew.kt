@@ -31,10 +31,9 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		setContentView(R.layout.activity_login_new)
 		
 		val preferenceHelper = Preferences.getInstance(this)
-		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
 		
-		if (CredentialKeeper(this).hasValidCredentials() && isConsentGiven && selectedProject != -1 && getUserNickname().substring(0, 1) != "+") {
+		if (CredentialKeeper(this).hasValidCredentials() && selectedProject != -1 && getUserNickname().substring(0, 1) != "+") {
 			openMain()
 		} else {
 			openLoginFragment()
@@ -43,15 +42,11 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	
 	override fun handleOpenPage() {
 		val preferenceHelper = Preferences.getInstance(this)
-		val isConsentGiven = preferenceHelper.getBoolean(Preferences.CONSENT_GIVEN, false)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
 		
 		when {
 			getUserNickname().substring(0, 1) == "+" -> {
 				openSetUserNameFragmentFragment()
-			}
-			(!isConsentGiven) -> {
-				openTermsAndServiceFragment()
 			}
 			selectedProject == -1 -> {
 				openSetProjectsFragment()
@@ -79,12 +74,6 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		
 	}
 	
-	override fun openTermsAndServiceFragment() {
-		supportFragmentManager.beginTransaction()
-				.replace(loginContainer.id, TermsAndServiceFragment(),
-						"TermsAndServiceFragment").commit()
-	}
-	
 	override fun openSetProjectsFragment() {
 		supportFragmentManager.beginTransaction()
 				.replace(loginContainer.id, SetProjectsFragment(),
@@ -109,7 +98,6 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 interface LoginListener {
 	fun openMain()
 	fun openSetUserNameFragmentFragment()
-	fun openTermsAndServiceFragment()
 	fun openSetProjectsFragment()
 	fun openLoginFragment()
 	fun handleOpenPage()
