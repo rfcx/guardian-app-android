@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.activity_response_detail.attachImageRecycl
 import kotlinx.android.synthetic.main.activity_response_detail.noteTextView
 import kotlinx.android.synthetic.main.activity_response_detail.soundRecordProgressView
 import kotlinx.android.synthetic.main.fragment_assets.*
-import kotlinx.android.synthetic.main.toolbar_default.*
 import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
@@ -320,7 +319,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun setupToolbar() {
-		setSupportActionBar(toolbarDefault)
+		setSupportActionBar(toolbarLayout)
 		supportActionBar?.apply {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
