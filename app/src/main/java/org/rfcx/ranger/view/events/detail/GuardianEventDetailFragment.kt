@@ -9,15 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
-import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.alert.Alert
 import org.rfcx.ranger.util.setFormatLabel
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.AlertItemAdapter
-import android.content.Intent
-import android.net.Uri
 
 
 class GuardianEventDetailFragment : Fragment() {
@@ -93,14 +90,14 @@ class GuardianEventDetailFragment : Fragment() {
 	
 	private fun setupToolbar() {
 		val activity = (activity as AppCompatActivity?) ?: return
-		activity.setSupportActionBar(toolbarDefault)
+		activity.setSupportActionBar(toolbarLayout)
 		activity.supportActionBar?.apply {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			title = getString(R.string.guardian_event_detail)
 		}
 		
-		toolbarDefault.setNavigationOnClickListener {
+		toolbarLayout.setNavigationOnClickListener {
 			listener.onBackPressed()
 		}
 	}

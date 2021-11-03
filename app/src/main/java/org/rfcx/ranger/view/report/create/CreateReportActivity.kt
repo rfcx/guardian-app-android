@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
-import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
@@ -74,7 +73,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	}
 	
 	private fun setupToolbar() {
-		setSupportActionBar(toolbarDefault)
+		setSupportActionBar(toolbarLayout)
 		supportActionBar?.apply {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
