@@ -10,7 +10,6 @@ import org.rfcx.ranger.view.events.detail.GuardianEventDetailViewModel
 import org.rfcx.ranger.view.login.LoginViewModel
 import org.rfcx.ranger.view.login.SetProjectsViewModel
 import org.rfcx.ranger.view.login.SetUserNameViewModel
-import org.rfcx.ranger.view.login.TermsAndServiceViewModel
 import org.rfcx.ranger.view.map.MapDetailViewModel
 import org.rfcx.ranger.view.map.MapViewModel
 import org.rfcx.ranger.view.map.ReportViewPagerFragmentViewModel
@@ -56,7 +55,6 @@ object UiModule {
 	var loginModule = module {
 		viewModel { LoginViewModel(androidContext(), get()) }
 		viewModel { SetUserNameViewModel(androidContext(), get()) }
-		viewModel { TermsAndServiceViewModel(androidContext(), get()) }
 		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get(), get()) }
 	}
 }

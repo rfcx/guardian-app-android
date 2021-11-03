@@ -349,12 +349,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowNotHaveStreams(false)
 				changePageImageView.setImageResource(R.drawable.ic_view_list)
 				mapView.visibility = View.VISIBLE
+				refreshView.visibility = View.GONE
 				currentLocationButton.visibility = View.VISIBLE
 				guardianListScrollView.visibility = View.GONE
 				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
 			} else {
 				changePageImageView.setImageResource(R.drawable.ic_map)
 				mapView.visibility = View.GONE
+				refreshView.visibility = View.VISIBLE
 				currentLocationButton.visibility = View.GONE
 				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
