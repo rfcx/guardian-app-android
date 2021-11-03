@@ -61,18 +61,6 @@ class LoginFragment : BaseFragment() {
 			}
 		}
 		
-		facebookLoginButton.setOnClickListener {
-			loading()
-			analytics?.trackLoginEvent("facebook")
-			activity?.let { loginViewModel.loginWithFacebook(it) }
-		}
-		
-		smsLoginButton.setOnClickListener {
-			loading()
-			analytics?.trackLoginEvent("sms")
-			activity?.let { loginViewModel.loginMagicLink(it) }
-		}
-		
 		forgotYourPasswordTextView.setOnClickListener {
 			alertDialogResetPassword()
 		}

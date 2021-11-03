@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.work.*
 import io.realm.Realm
 import me.echodev.resizer.Resizer
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -56,6 +55,8 @@ class ImageUploadWorker(private val context: Context, params: WorkerParameters)
 				}
 			}
 		}
+		
+		VoiceSyncWorker.enqueue()
 		
 		return if (someFailed) Result.retry() else Result.success()
 	}

@@ -162,6 +162,7 @@ object DataModule {
 		factory { ReportDb(get()) }
 		factory { ResponseDb(get()) }
 		factory { ReportImageDb(get()) }
+		factory { VoiceDb(get()) }
 		factory { EventDb(get()) }
 		factory { AlertDb(get()) }
 		factory { StreamDb(get()) }
