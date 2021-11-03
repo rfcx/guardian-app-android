@@ -7,14 +7,11 @@ import org.rfcx.ranger.entity.location.TrackingFile
 import org.rfcx.ranger.entity.location.toListDoubleArray
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
-import org.rfcx.ranger.localdb.ReportImageDb
-import org.rfcx.ranger.localdb.ResponseDb
-import org.rfcx.ranger.localdb.TrackingDb
-import org.rfcx.ranger.localdb.TrackingFileDb
+import org.rfcx.ranger.localdb.*
 import org.rfcx.ranger.util.GeoJsonUtils
 import java.util.*
 
-class CreateReportViewModel(private val responseDb: ResponseDb, private val reportImageDb: ReportImageDb, private val trackingDb: TrackingDb, private val trackingFileDb: TrackingFileDb, private val alertDb: AlertDb) : ViewModel() {
+class CreateReportViewModel(private val responseDb: ResponseDb, private val voiceDb: VoiceDb, private val reportImageDb: ReportImageDb, private val trackingDb: TrackingDb, private val trackingFileDb: TrackingFileDb, private val alertDb: AlertDb) : ViewModel() {
 	
 	fun getImagesFromLocal(id: Int): List<ReportImage> = reportImageDb.getByReportId(id)
 	
@@ -24,6 +21,7 @@ class CreateReportViewModel(private val responseDb: ResponseDb, private val repo
 			reportImageDb.deleteImages(res.id)
 			reportImageDb.save(res, images)
 		}
+		voiceDb.save(res)
 	}
 	
 	fun saveTrackingFile(response: Response, context: Context) {
