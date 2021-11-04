@@ -417,7 +417,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			val properties = mapOf(
 					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
 					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
-					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
+					Pair(PROPERTY_MARKER_ALERT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
 					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
 			)
 			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
@@ -466,7 +466,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				val name = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString
 				val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
 				val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-				listener.openGuardianEventDetail(name, distance.toDouble(), streamId)
+				listener.openGuardianEventDetail(name, if (distance.isBlank()) null else distance.toDouble(), streamId)
 			}
 			return true
 		}
