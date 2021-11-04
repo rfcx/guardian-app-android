@@ -143,6 +143,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
 		preferences = Preferences.getInstance(requireContext())
+		isShowProgressBar()
 		
 		getLocation()
 		setupToolbar()
@@ -150,8 +151,12 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setOnClickListener()
 		setObserver()
 		setRecyclerView()
-		setStreamsWithLocalData()
 		onClickCurrentLocationButton()
+		
+		if (!context.isNetworkAvailable()) {
+			setStreamsWithLocalData()
+			isShowProgressBar(false)
+		}
 		
 		refreshView.apply {
 			setOnRefreshListener(this@EventsFragment)
