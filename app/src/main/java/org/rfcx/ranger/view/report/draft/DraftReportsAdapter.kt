@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_draft_reports.view.*
 import org.rfcx.ranger.R
+import org.rfcx.ranger.entity.project.isGuest
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 import org.rfcx.ranger.util.setDrawableImage
@@ -40,6 +41,8 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		
 		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
+			setClickable(itemView, report.syncState == SyncState.SENT.value)
+			
 			if (report.syncState == SyncState.SENT.value) {
 				guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 				dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
@@ -58,6 +61,18 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 			itemView.setOnClickListener {
 				listener.onClickedItem(report)
 			}
+		}
+	}
+	
+	fun setClickable(view: View?, clickable: Boolean) {
+		if (view != null) {
+			if (view is ViewGroup) {
+				val viewGroup = view
+				for (i in 0 until viewGroup.childCount) {
+					setClickable(viewGroup.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
 }
