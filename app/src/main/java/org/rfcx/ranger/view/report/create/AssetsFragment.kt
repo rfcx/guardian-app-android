@@ -91,7 +91,7 @@ class AssetsFragment : BaseImageFragment() {
 		val res = listener.getResponse()
 		res?.let { response ->
 			if (response.evidences.contains(EvidenceTypes.NONE.value) || response.responseActions.contains(Actions.OTHER.value)) {
-				submitButton.isEnabled = false
+				submitButton.isEnabled = noteEditText.text?.isNotBlank() ?: false
 				
 				val spannableString = SpannableString(getString(R.string.add_notes_required))
 				val red = ForegroundColorSpan(Color.RED)
