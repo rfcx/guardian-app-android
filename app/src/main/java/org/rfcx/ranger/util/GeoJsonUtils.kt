@@ -27,7 +27,7 @@ object GeoJsonUtils {
 		featureItem.addProperty("type", "Feature")
 		
 		val propertyItem = JsonObject()
-		propertyItem.addProperty("color", randomColor())
+		propertyItem.addProperty("color", "#969faa")
 		featureItem.add("properties", propertyItem)
 		
 		//create Geometry type
