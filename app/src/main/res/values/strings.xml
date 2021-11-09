@@ -164,6 +164,8 @@
 	<!-- Alerts -->
 	<string name="yesterday">Yesterday</string>
 	<string name="no_internet_connection">No internet, Please try again.</string>
+	<string name="unable_to_submit_no_internet_connection">Unable to submit while there is no connection.</string>
+	<string name="unable_to_submit_on_airplane_mode">Unable to submit while in airplane mode.</string>
 	
 	<!--Event value-->
 	<string name="chainsaw">chainsaw</string>
@@ -215,13 +217,12 @@
 	<string name="set_alerts">Set alerts</string>
 	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
 	<string name="network_not_available">network not available</string>
-	<string name="set_project">Set Project</string>
-	<string name="choose_project">Choose which project you are working with</string>
 	<string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
 	<string name="logout">logout</string>
 	<string name="select">Select</string>
 	<string name="failed_receive_notification">Failed to receive notification from %s</string>
 	<string name="failed_unsubscribe_receive_notification">Failed to unsubscribe receive notification from %s</string>
+	<string name="project_could_not_refreshed">The project could not be refreshed.</string>
 	
 	<!-- EventsFragment -->
 	<string name="all_projects">All projects</string>
@@ -300,4 +301,14 @@
 	
 	<string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
 	<string name="submit_report">Submit report</string>
+	
+	<string name="answers">Answers:</string>
+	<string name="logging_scale">Logging Scale:</string>
+	<string name="damage">Damage:</string>
+	<string name="small_text">Small</string>
+	<string name="large_text">Large</string>
+	<string name="other_text">Other</string>
+	
+	<string name="assets">Assets:</string>
+	<string name="note">Note: %s</string>
 </resources>

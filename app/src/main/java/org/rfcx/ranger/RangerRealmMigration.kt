@@ -15,6 +15,7 @@ import org.rfcx.ranger.entity.location.TrackingFile
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.report.ReportImage
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.Voice
 import org.rfcx.ranger.util.legacyDateParser
 import java.util.*
 
@@ -60,6 +61,9 @@ class RangerRealmMigration : RealmMigration {
 		}
 		if (oldVersion < 15L && newVersion >= 15L) {
 			migrateToV15(c)
+		}
+		if (oldVersion < 16L && newVersion >= 16L) {
+			migrateToV16(c)
 		}
 	}
 	
@@ -404,6 +408,18 @@ class RangerRealmMigration : RealmMigration {
 			addField(TrackingFile.FIELD_SYNC_STATE, Int::class.java)
 			addField(TrackingFile.FIELD_STREAM_ID, Int::class.java)
 			addField(TrackingFile.FIELD_STREAM_SERVER_ID, String::class.java)
+		}
+	}
+	
+	private fun migrateToV16(realm: DynamicRealm) {
+		val voice = realm.schema.create(Voice.TABLE_NAME)
+		voice.apply {
+			addField(Voice.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+			addField(Voice.FIELD_RESPONSE_ID, Int::class.java)
+			addField(Voice.FIELD_RESPONSE_SERVER_ID, String::class.java)
+			addField(Voice.FIELD_LOCAL_PATH, String::class.java)
+			addField(Voice.FIELD_REMOTE_PATH, String::class.java)
+			addField(Voice.FIELD_SYNC_STATE, Int::class.java)
 		}
 	}
 	

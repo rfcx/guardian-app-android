@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
+import org.rfcx.ranger.R
 import org.rfcx.ranger.data.api.project.GetProjectsUseCase
 import org.rfcx.ranger.data.api.project.ProjectResponse
 import org.rfcx.ranger.data.api.project.ProjectsRequestFactory
@@ -12,15 +13,14 @@ import org.rfcx.ranger.data.local.ProjectDb
 import org.rfcx.ranger.data.remote.Result
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.util.CloudMessaging
+import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.isOnAirplaneMode
+import org.rfcx.ranger.util.showToast
 
 class GuardianGroupViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb) : ViewModel() {
 	
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
-	
-	init {
-		fetchProjects()
-	}
 	
 	fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
 	

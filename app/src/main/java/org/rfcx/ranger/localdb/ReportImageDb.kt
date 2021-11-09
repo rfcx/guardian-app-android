@@ -32,8 +32,8 @@ class ReportImageDb(val realm: Realm) {
 	
 	fun saveReportServerIdToImage(serverId: String, reportId: Int) {
 		val images = realm.where(ReportImage::class.java)
-						.equalTo(FIELD_REPORT_ID, reportId)
-						.findAll()
+				.equalTo(FIELD_REPORT_ID, reportId)
+				.findAll()
 		realm.executeTransaction { transaction ->
 			images?.forEach {
 				val image = it.apply {
@@ -122,6 +122,12 @@ class ReportImageDb(val realm: Realm) {
 	fun getByReportId(reportId: Int): List<ReportImage> {
 		return realm.where(ReportImage::class.java)
 				.equalTo(FIELD_REPORT_ID, reportId)
+				.findAll()
+	}
+	
+	fun getByCoreId(coreId: String): List<ReportImage> {
+		return realm.where(ReportImage::class.java)
+				.equalTo(FIELD_REPORT_SERVER_ID, coreId)
 				.findAll()
 	}
 	

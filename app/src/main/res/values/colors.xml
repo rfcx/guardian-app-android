@@ -32,4 +32,9 @@
 	<color name="topBar">#FFFFFF</color>
 	<color name="separateLine">#F0F0F0</color>
 	<color name="bottomBar">#FFFFFF</color>
+	
+	<color name="evidence_color">#9100e6</color>
+	<color name="action_color">#3971e6</color>
+	<color name="logging_color">#187f36</color>
+	<color name="damage_color">#e6b400</color>
 </resources>

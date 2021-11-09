@@ -3,22 +3,17 @@ package org.rfcx.ranger.view.report.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
-import kotlinx.android.synthetic.main.toolbar_default.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.BuildConfig
 import org.rfcx.ranger.R
-import org.rfcx.ranger.entity.response.Actions
 import org.rfcx.ranger.entity.response.EvidenceTypes
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.saveToAnswers
 import org.rfcx.ranger.service.ResponseSyncWorker
-import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.Screen
-import org.rfcx.ranger.util.isNetworkAvailable
+import org.rfcx.ranger.util.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -78,7 +73,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	}
 	
 	private fun setupToolbar() {
-		setSupportActionBar(toolbarDefault)
+		setSupportActionBar(toolbarLayout)
 		supportActionBar?.apply {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
@@ -186,10 +181,16 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		response.answers = response.saveToAnswers()
 		viewModel.saveResponseInLocalDb(response, _images)
 		viewModel.saveTrackingFile(response, this)
-		if (this.isNetworkAvailable()) {
-			ResponseSyncWorker.enqueue()
-		} else {
-			Toast.makeText(this, getString(R.string.network_not_available), Toast.LENGTH_LONG).show()
+		when {
+			this.isOnAirplaneMode() -> {
+				this.showToast(getString(R.string.unable_to_submit_on_airplane_mode) + " " + getString(R.string.pls_off_air_plane_mode))
+			}
+			!this.isNetworkAvailable() -> {
+				this.showToast(getString(R.string.unable_to_submit_no_internet_connection))
+			}
+			else -> {
+				ResponseSyncWorker.enqueue()
+			}
 		}
 		
 		val intent = Intent()

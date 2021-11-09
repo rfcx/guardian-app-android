@@ -11,6 +11,13 @@
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
 	
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guidelineVertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_percent="0.9" />
+	
 	<com.mapbox.mapboxsdk.maps.MapView
 		android:id="@+id/mapView"
 		android:layout_width="match_parent"
@@ -18,72 +25,92 @@
 		android:visibility="gone"
 		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 	
-	<androidx.core.widget.NestedScrollView
-		android:id="@+id/guardianListScrollView"
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/currentLocationButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_padding_large"
+		android:src="@drawable/ic_current_location"
+		android:visibility="gone"
+		app:backgroundTint="@color/white"
+		app:fabCustomSize="@dimen/zoom_loc_size"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="@id/guidelineVertical"
+		app:layout_constraintStart_toStartOf="@id/guidelineVertical"
+		app:tint="@color/colorPrimary" />
+	
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		android:id="@+id/refreshView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:overScrollMode="never"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
 		
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/listSteamLayout"
+		<androidx.core.widget.NestedScrollView
+			android:id="@+id/guardianListScrollView"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="0dp"
+			android:overScrollMode="never">
 			
-			<LinearLayout
-				android:id="@+id/nearbyLayout"
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/listSteamLayout"
 				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:orientation="vertical"
-				android:visibility="gone"
-				app:layout_constraintTop_toTopOf="parent">
+				android:layout_height="wrap_content">
 				
-				<androidx.appcompat.widget.AppCompatTextView
-					android:id="@+id/nearbyTextView"
-					style="@style/RangerText.Title"
+				<LinearLayout
+					android:id="@+id/nearbyLayout"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center"
-					android:padding="@dimen/margin_padding_normal"
-					android:text="@string/nearby" />
+					android:layout_height="0dp"
+					android:orientation="vertical"
+					android:visibility="gone"
+					app:layout_constraintTop_toTopOf="parent">
+					
+					<androidx.appcompat.widget.AppCompatTextView
+						android:id="@+id/nearbyTextView"
+						style="@style/RangerText.Title"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:gravity="center"
+						android:padding="@dimen/margin_padding_normal"
+						android:text="@string/nearby" />
+					
+					<androidx.recyclerview.widget.RecyclerView
+						android:id="@+id/nearbyRecyclerView"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:background="@color/white"
+						android:dividerHeight="1dp"
+						android:overScrollMode="never" />
+				</LinearLayout>
 				
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/nearbyRecyclerView"
+				<LinearLayout
+					android:id="@+id/othersLayout"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:background="@color/white"
-					android:dividerHeight="1dp"
-					android:overScrollMode="never" />
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/othersLayout"
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:orientation="vertical"
-				android:visibility="gone"
-				app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
-				
-				<androidx.appcompat.widget.AppCompatTextView
-					android:id="@+id/othersTextView"
-					style="@style/RangerText.Title"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center"
-					android:padding="@dimen/margin_padding_normal"
-					android:text="@string/others" />
-				
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/othersRecyclerView"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:background="@color/white"
-					android:dividerHeight="1dp"
-					android:overScrollMode="never" />
-			</LinearLayout>
-		</androidx.constraintlayout.widget.ConstraintLayout>
-	</androidx.core.widget.NestedScrollView >
+					android:layout_height="0dp"
+					android:orientation="vertical"
+					android:visibility="gone"
+					app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
+					
+					<androidx.appcompat.widget.AppCompatTextView
+						android:id="@+id/othersTextView"
+						style="@style/RangerText.Title"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:gravity="center"
+						android:padding="@dimen/margin_padding_normal"
+						android:text="@string/others" />
+					
+					<androidx.recyclerview.widget.RecyclerView
+						android:id="@+id/othersRecyclerView"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:background="@color/white"
+						android:dividerHeight="1dp"
+						android:overScrollMode="never" />
+				</LinearLayout>
+			</androidx.constraintlayout.widget.ConstraintLayout>
+		</androidx.core.widget.NestedScrollView>
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 	
 	<androidx.constraintlayout.widget.Group
 		android:id="@+id/notHaveStreamsGroupView"

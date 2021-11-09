@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -31,7 +32,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -45,13 +45,12 @@ import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.ranger.R
+import org.rfcx.ranger.data.api.site.toStream
 import org.rfcx.ranger.data.remote.success
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.location.Tracking
 import org.rfcx.ranger.entity.project.Project
-import org.rfcx.ranger.util.LocationTracking
-import org.rfcx.ranger.util.Preferences
-import org.rfcx.ranger.util.toJsonObject
+import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.MainActivityEventListener
 import org.rfcx.ranger.view.events.adapter.EventGroup
 import org.rfcx.ranger.view.events.adapter.GuardianItemAdapter
@@ -60,7 +59,7 @@ import org.rfcx.ranger.view.project.ProjectOnClickListener
 import java.util.*
 import kotlin.collections.ArrayList
 
-class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, (EventGroup) -> Unit {
+class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener, SwipeRefreshLayout.OnRefreshListener, (EventGroup) -> Unit {
 	
 	companion object {
 		const val tag = "EventsFragment"
@@ -151,7 +150,28 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setOnClickListener()
 		setObserver()
 		setRecyclerView()
+		setStreamsWithLocalData()
+		onClickCurrentLocationButton()
 		
+		refreshView.apply {
+			setOnRefreshListener(this@EventsFragment)
+			setColorSchemeResources(R.color.colorPrimary)
+		}
+	}
+	
+	private fun onClickCurrentLocationButton() {
+		currentLocationButton.setOnClickListener {
+			mapBoxMap?.locationComponent?.isLocationComponentActivated?.let {
+				if (it) {
+					moveCameraToCurrentLocation()
+				} else {
+					getLocation()
+				}
+			}
+		}
+	}
+	
+	private fun setStreamsWithLocalData() {
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		val projectServerId = viewModel.getProject(projectId)?.serverId
 		viewModel.handledStreams(lastLocation, viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
@@ -203,8 +223,20 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		projectSwipeRefreshView.apply {
 			setOnRefreshListener {
-				viewModel.fetchProjects()
 				isRefreshing = true
+				when {
+					requireContext().isOnAirplaneMode() -> {
+						isRefreshing = false
+						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
+					}
+					!requireContext().isNetworkAvailable() -> {
+						isRefreshing = false
+						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
+					}
+					else -> {
+						viewModel.fetchProjects()
+					}
+				}
 			}
 			setColorSchemeResources(R.color.colorPrimary)
 		}
@@ -238,7 +270,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectRecyclerView.visibility = View.GONE
 		projectSwipeRefreshView.visibility = View.GONE
 		viewModel.setProjectSelected(project.id)
-		viewModel.loadStreams()
+		
+		when {
+			requireContext().isOnAirplaneMode() -> {
+				setStreamsWithLocalData()
+				requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
+			}
+			!requireContext().isNetworkAvailable() -> {
+				setStreamsWithLocalData()
+				requireContext().showToast(getString(R.string.no_internet_connection))
+			}
+			else -> {
+				viewModel.loadStreams()
+			}
+		}
+		
 		setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
 	}
@@ -263,7 +309,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			it.success({ list ->
 				viewModel.handledStreamsResponse(lastLocation, list)
 				setItemOnAdapter()
+				setAlertFeatures(list.map { s -> s.toStream() })
+				refreshView.isRefreshing = false
 			}, {
+				refreshView.isRefreshing = false
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
@@ -297,13 +346,19 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		changePageImageView.setOnClickListener {
 			if (isShowMapIcon) {
+				isShowNotHaveStreams(false)
 				changePageImageView.setImageResource(R.drawable.ic_view_list)
 				mapView.visibility = View.VISIBLE
+				refreshView.visibility = View.GONE
+				currentLocationButton.visibility = View.VISIBLE
 				guardianListScrollView.visibility = View.GONE
 				mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
 			} else {
 				changePageImageView.setImageResource(R.drawable.ic_map)
 				mapView.visibility = View.GONE
+				refreshView.visibility = View.VISIBLE
+				currentLocationButton.visibility = View.GONE
+				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
 			isShowMapIcon = !isShowMapIcon
@@ -368,6 +423,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
 		}
 		alertFeatures = FeatureCollection.fromFeatures(features)
+		alertFeatures?.let { moveCameraToLeavesBounds(it) }
 		refreshSource()
 	}
 	
@@ -603,8 +659,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		moveCameraTo(LatLng(location.latitude, location.longitude))
 	}
 	
-	private fun moveCameraTo(latLng: LatLng) {
-		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM))
+	private fun moveCameraTo(latLng: LatLng, zoom: Double = DEFAULT_MAP_ZOOM) {
+		mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
 	}
 	
 	private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
@@ -627,6 +683,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				.includes(latLngList)
 				.build()
 		mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, PADDING_BOUNDS), DURATION_MS)
+	}
+	
+	private fun moveCameraToCurrentLocation() {
+		mapBoxMap?.locationComponent?.lastKnownLocation?.let { curLoc ->
+			val currentLatLng = LatLng(curLoc.latitude, curLoc.longitude)
+			moveCameraTo(currentLatLng, mapBoxMap?.cameraPosition?.zoom ?: DEFAULT_MAP_ZOOM)
+		}
 	}
 	
 	override fun onResume() {
@@ -664,5 +727,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		} else {
 			Toast.makeText(context, R.string.location_permission_msg, Toast.LENGTH_LONG).show()
 		}
+	}
+	
+	override fun onRefresh() {
+		viewModel.loadStreams()
 	}
 }

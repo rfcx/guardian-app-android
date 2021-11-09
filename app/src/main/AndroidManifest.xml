@@ -11,6 +11,9 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+	
 	<!-- Required for foreground services on P+. -->
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	
@@ -38,6 +41,10 @@
 		</provider>
 		
 		<activity
+			android:name=".view.report.detail.ResponseDetailActivity"
+			android:exported="true"
+			android:screenOrientation="portrait" />
+		<activity
 			android:name=".view.profile.coordinates.CoordinatesActivity"
 			android:screenOrientation="portrait" />
 		<activity
@@ -46,7 +53,8 @@
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
-		<activity android:name=".view.profile.PasswordChangeActivity"
+		<activity
+			android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"
@@ -68,6 +76,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<service
 			android:name=".service.LocationTrackerService"
 			android:exported="false"

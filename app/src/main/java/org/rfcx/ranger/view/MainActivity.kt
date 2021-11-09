@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,8 +17,8 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.Stream
 import org.rfcx.ranger.entity.report.Report
 import org.rfcx.ranger.entity.response.Response
-import org.rfcx.ranger.service.AirplaneModeReceiver
-import org.rfcx.ranger.service.AlertNotification
+import org.rfcx.ranger.service.*
+import org.rfcx.ranger.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.ranger.util.*
 import org.rfcx.ranger.view.base.BaseActivity
 import org.rfcx.ranger.view.events.EventsFragment
@@ -30,21 +29,22 @@ import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.create.CreateReportActivity
 import org.rfcx.ranger.view.report.create.CreateReportActivity.Companion.RESULT_CODE
+import org.rfcx.ranger.view.report.detail.ResponseDetailActivity
 import org.rfcx.ranger.view.report.draft.DraftReportsFragment
 import org.rfcx.ranger.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
 
 
-class MainActivity : BaseActivity(), MainActivityEventListener {
+class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
 	private val locationPermissions by lazy { LocationPermissions(this) }
+	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	private var currentFragment: Fragment? = null
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
 		if (isOnAirplaneMode) {
-			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		}
@@ -85,12 +85,14 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	
 	override fun onResume() {
 		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
 		super.onResume()
 		mainViewModel.updateLocationTracking()
 	}
 	
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
+		unregisterReceiver(onNetworkReceived)
 		super.onPause()
 	}
 	
@@ -247,7 +249,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		getResult.launch(intent)
 	}
 	
-	override fun openDetailResponse(response: Response) {
+	override fun openDetailResponse(coreId: String) {
+		ResponseDetailActivity.startActivity(this, coreId)
+	}
+	
+	override fun openCreateResponse(response: Response) {
 		val intent = Intent(this, CreateReportActivity::class.java)
 		intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
 		getResult.launch(intent)
@@ -363,7 +369,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	
 	private fun enableLocationTracking() {
 		if (isOnAirplaneMode()) {
-			showLocationError()
 			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		} else {
@@ -372,14 +377,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
-	}
-	
-	private fun showLocationError() {
-		AlertDialog.Builder(this)
-				.setTitle(R.string.in_air_plane_mode)
-				.setMessage(R.string.pls_off_air_plane_mode)
-				.setPositiveButton(R.string.common_ok, null)
-				.show()
 	}
 	
 	private fun disableLocationTracking() {
@@ -395,6 +392,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 			context.startActivity(intent)
 		}
 	}
+	
+	override fun onNetworkStateChange(state: NetworkState) {
+		when (state) {
+			NetworkState.ONLINE -> ResponseSyncWorker.enqueue()
+		}
+	}
 }
 
 interface MainActivityEventListener {
@@ -406,6 +409,7 @@ interface MainActivityEventListener {
 	fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
-	fun openDetailResponse(response: Response)
+	fun openDetailResponse(coreId: String)
+	fun openCreateResponse(response: Response)
 	fun openGoogleMap(stream: Stream)
 }
