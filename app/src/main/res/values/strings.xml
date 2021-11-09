@@ -311,4 +311,5 @@
 	
 	<string name="assets">Assets:</string>
 	<string name="note">Note: %s</string>
+	<string name="tracking_line">#969faa</string>
 </resources>
