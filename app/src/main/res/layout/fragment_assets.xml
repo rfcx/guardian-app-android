@@ -87,7 +87,7 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/noteEditText" />
 			
-			<org.rfcx.ranger.widget.SoundRecordProgressView
+			<org.rfcx.incidents.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
 				android:layout_width="0dp"
 				android:layout_height="48dp"
