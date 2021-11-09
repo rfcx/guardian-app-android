@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
@@ -118,4 +119,16 @@ fun View.hideKeyboard() = this.let {
 
 fun Context.showToast(message: String) {
 	Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun setClickable(view: View?, clickable: Boolean) {
+	if (view != null) {
+		if (view is ViewGroup) {
+			val viewGroup = view
+			for (i in 0 until viewGroup.childCount) {
+				setClickable(viewGroup.getChildAt(i), clickable)
+			}
+		}
+		view.isClickable = clickable
+	}
 }

@@ -11,6 +11,7 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.project.isGuest
 import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
+import org.rfcx.ranger.util.setClickable
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -61,18 +62,6 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 			itemView.setOnClickListener {
 				listener.onClickedItem(report)
 			}
-		}
-	}
-	
-	fun setClickable(view: View?, clickable: Boolean) {
-		if (view != null) {
-			if (view is ViewGroup) {
-				val viewGroup = view
-				for (i in 0 until viewGroup.childCount) {
-					setClickable(viewGroup.getChildAt(i), clickable)
-				}
-			}
-			view.isClickable = clickable
 		}
 	}
 }
