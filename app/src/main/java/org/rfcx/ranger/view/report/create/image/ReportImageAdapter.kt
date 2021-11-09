@@ -33,19 +33,19 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 	private var context: Context? = null
 	private var imagesSource = arrayListOf<BaseListItem>()
 	
-	fun setImages(reportImages: List<ReportImage>) {
+	fun setImages(reportImages: List<ReportImage>, showAddImage: Boolean = true) {
 		imagesSource = arrayListOf()
 		var index = 0
 		reportImages.forEach {
 			Log.d("setImages", "${it.remotePath}")
 			if (it.remotePath != null) {
-				imagesSource.add(RemoteImageItem(index, it.remotePath!!, false))
+				imagesSource.add(RemoteImageItem(index, if (it.remotePath!!.startsWith(BuildConfig.RANGER_API_DOMAIN)) it.remotePath!! else BuildConfig.RANGER_API_DOMAIN + it.remotePath!!, false))
 			} else {
 				imagesSource.add(LocalImageItem(index, it.localPath, it.syncState == ReportImageDb.UNSENT))
 			}
 			index++
 		}
-		if (imagesSource.count() < MAX_IMAGE_SIZE) {
+		if (imagesSource.count() < MAX_IMAGE_SIZE && showAddImage) {
 			imagesSource.add(AddImageItem())
 		}
 		

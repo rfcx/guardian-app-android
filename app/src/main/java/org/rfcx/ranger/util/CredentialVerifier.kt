@@ -65,26 +65,12 @@ class CredentialVerifier(val context: Context) {
 				}
 			}
 			
-			val userUntrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
-			var consentGivenRangerApp: String? = null
-			
-			if (userUntrusted.body[userMetaDataKey] == null) {
-				consentGivenRangerApp = null
-			}
-			
-			val userMetadata = userUntrusted.body[userMetaDataKey]
-			if (userMetadata != null) {
-				if ((userMetadata is HashMap<*, *>)) {
-					consentGivenRangerApp = userMetadata["consentGivenRangerApp"] as String?
-				}
-			}
-			
 			when {
 				guid.isNullOrEmpty() -> {
 					return Err(getString(R.string.an_error_occurred))
 				}
 				else -> {
-					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture, consentGivenRangerApp))
+					return Ok(UserAuthResponse(guid, email, nickname, token, credentials.accessToken, credentials.refreshToken, roles, accessibleSites, defaultSite, picture))
 				}
 			}
 		} catch (e: Exception) {

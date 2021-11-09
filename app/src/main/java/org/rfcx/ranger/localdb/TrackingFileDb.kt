@@ -6,6 +6,9 @@ import org.rfcx.ranger.entity.location.TrackingFile
 import org.rfcx.ranger.entity.response.SyncState
 
 class TrackingFileDb(private val realm: Realm) {
+	
+	fun getByCoreId(coreId: String): TrackingFile? = realm.where(TrackingFile::class.java).equalTo(TrackingFile.FIELD_RESPONSE_SERVER_ID, coreId).findFirst()
+	
 	fun insertOrUpdate(file: TrackingFile) {
 		realm.executeTransaction {
 			if (file.id == 0) {

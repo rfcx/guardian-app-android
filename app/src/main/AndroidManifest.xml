@@ -41,6 +41,10 @@
 		</provider>
 		
 		<activity
+			android:name=".view.report.detail.ResponseDetailActivity"
+			android:exported="true"
+			android:screenOrientation="portrait" />
+		<activity
 			android:name=".view.profile.coordinates.CoordinatesActivity"
 			android:screenOrientation="portrait" />
 		<activity
@@ -49,7 +53,8 @@
 		<activity
 			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
-		<activity android:name=".view.profile.PasswordChangeActivity"
+		<activity
+			android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".view.profile.FeedbackActivity"
@@ -71,6 +76,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<service
 			android:name=".service.LocationTrackerService"
 			android:exported="false"

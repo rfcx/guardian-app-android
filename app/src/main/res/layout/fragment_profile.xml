@@ -162,53 +162,6 @@
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="@color/grey_light" />
-			
-			<TextView
-				android:id="@+id/locationTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
-				android:text="@string/location" />
-			
-			<LinearLayout
-				android:id="@+id/coordinatesLinearLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickCoordinates}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small">
-				
-				<TextView
-					android:id="@+id/coordinatesTextViewTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/coordinates" />
-				
-				<TextView
-					android:id="@+id/formatCoordinatesTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@{viewModel.formatCoordinates}"
-					tools:text="DD" />
-			
-			</LinearLayout>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="10dp"
 				android:background="@color/grey_light" />
 			
 			<TextView
@@ -260,19 +213,6 @@
 				android:paddingEnd="@dimen/margin_padding_small"
 				android:paddingBottom="@dimen/margin_padding_normal"
 				android:text="@string/profile_feedback_label" />
-			
-			<TextView
-				android:id="@+id/rateAppTextView"
-				style="@style/RangerText.SubTitle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickRatingApp}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/profile_rate_app_label" />
 			
 			<View
 				android:layout_width="match_parent"

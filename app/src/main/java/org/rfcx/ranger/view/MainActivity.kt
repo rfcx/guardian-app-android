@@ -29,6 +29,7 @@ import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.ranger.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.ranger.view.report.create.CreateReportActivity
 import org.rfcx.ranger.view.report.create.CreateReportActivity.Companion.RESULT_CODE
+import org.rfcx.ranger.view.report.detail.ResponseDetailActivity
 import org.rfcx.ranger.view.report.draft.DraftReportsFragment
 import org.rfcx.ranger.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.ranger.widget.BottomNavigationMenuItem
@@ -248,7 +249,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		getResult.launch(intent)
 	}
 	
-	override fun openDetailResponse(response: Response) {
+	override fun openDetailResponse(coreId: String) {
+		ResponseDetailActivity.startActivity(this, coreId)
+	}
+	
+	override fun openCreateResponse(response: Response) {
 		val intent = Intent(this, CreateReportActivity::class.java)
 		intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
 		getResult.launch(intent)
@@ -404,6 +409,7 @@ interface MainActivityEventListener {
 	fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String)
 	fun moveMapIntoReportMarker(report: Report)
 	fun openCreateReportActivity(guardianName: String, guardianId: String)
-	fun openDetailResponse(response: Response)
+	fun openDetailResponse(coreId: String)
+	fun openCreateResponse(response: Response)
 	fun openGoogleMap(stream: Stream)
 }

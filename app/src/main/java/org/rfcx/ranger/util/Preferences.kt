@@ -45,7 +45,6 @@ class Preferences(context: Context) {
 		const val IMAGE_PROFILE = "${PREFIX}IMAGE_PROFILE"
 		const val EMAIL_SUBSCRIBE = "${PREFIX}EMAIL_SUBSCRIBE"
 		const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
-		const val CONSENT_GIVEN = "${PREFIX}CONSENT_GIVEN"
 		const val OFFLINE_MAP_STATE = "${PREFIX}OFFLINE_MAP_STATE"
 		
 		/*-- New design --*/

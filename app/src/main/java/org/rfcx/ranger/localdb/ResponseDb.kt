@@ -29,6 +29,12 @@ class ResponseDb(val realm: Realm) {
 		return realm.copyFromRealm(response)
 	}
 	
+	fun getResponseByCoreId(id: String): Response? {
+		val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_GUID, id).findFirst()
+				?: return null
+		return realm.copyFromRealm(response)
+	}
+	
 	fun save(response: Response): Response {
 		var res = response
 		realm.executeTransaction {
