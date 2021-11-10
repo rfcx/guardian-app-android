@@ -162,6 +162,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 		onClickCurrentLocationButton()
 		
+		if (PermissionsManager.areLocationPermissionsGranted(context)) {
+			LocationTracking.set(requireContext(), true)
+		}
+		
 		if (!context.isNetworkAvailable()) {
 			setStreamsWithLocalData()
 			isShowProgressBar(false)
