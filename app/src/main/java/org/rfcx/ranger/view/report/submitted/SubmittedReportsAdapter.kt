@@ -11,7 +11,6 @@ import org.rfcx.ranger.entity.response.Response
 import org.rfcx.ranger.entity.response.SyncState
 import org.rfcx.ranger.entity.response.syncImage
 import org.rfcx.ranger.entity.response.syncLabel
-import org.rfcx.ranger.util.setClickable
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -54,6 +53,17 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
 			itemView.setOnClickListener {
 				listener.onClickedItem(report)
 			}
+		}
+		
+		private fun setClickable(view: View?, clickable: Boolean) {
+			if (view == null) return
+			
+			if (view is ViewGroup) {
+				for (i in 0 until view.childCount) {
+					setClickable(view.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
 }

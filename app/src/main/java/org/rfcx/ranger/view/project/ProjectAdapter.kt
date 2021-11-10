@@ -10,7 +10,6 @@ import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.project.Permissions
 import org.rfcx.ranger.entity.project.Project
 import org.rfcx.ranger.entity.project.isGuest
-import org.rfcx.ranger.util.setClickable
 
 class ProjectAdapter(private val listener: ProjectOnClickListener) :
 		RecyclerView.Adapter<ProjectAdapter.ProjectSelectViewHolder>() {
@@ -69,6 +68,17 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 			lockImageView.setOnClickListener {
 				listener.onLockImageClicked()
 			}
+		}
+		
+		private fun setClickable(view: View?, clickable: Boolean) {
+			if (view == null) return
+			
+			if (view is ViewGroup) {
+				for (i in 0 until view.childCount) {
+					setClickable(view.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
 }
