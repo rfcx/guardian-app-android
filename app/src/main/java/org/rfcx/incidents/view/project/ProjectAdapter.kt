@@ -44,18 +44,6 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 		}
 	}
 	
-	fun setClickable(view: View?, clickable: Boolean) {
-		if (view != null) {
-			if (view is ViewGroup) {
-				val viewGroup = view
-				for (i in 0 until viewGroup.childCount) {
-					setClickable(viewGroup.getChildAt(i), clickable)
-				}
-			}
-			view.isClickable = clickable
-		}
-	}
-	
 	override fun getItemCount(): Int = items.size
 	
 	inner class ProjectSelectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -80,6 +68,17 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 			lockImageView.setOnClickListener {
 				listener.onLockImageClicked()
 			}
+		}
+		
+		private fun setClickable(view: View?, clickable: Boolean) {
+			if (view == null) return
+			
+			if (view is ViewGroup) {
+				for (i in 0 until view.childCount) {
+					setClickable(view.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
 }

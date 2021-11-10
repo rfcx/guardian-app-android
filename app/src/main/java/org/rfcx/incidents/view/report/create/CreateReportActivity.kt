@@ -233,12 +233,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun onResume() {
 		super.onResume()
-//		LocationTracking.set(this, false)
+		LocationTracking.set(this, false)
 	}
 	
 	override fun onDestroy() {
 		super.onDestroy()
-//		LocationTracking.set(this, true)
+		LocationTracking.set(this, true)
 	}
 }
 

@@ -664,7 +664,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			}
 			val stateTracking = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, LocationTracking.TRACKING_OFF)
 			if (stateTracking != LocationTracking.TRACKING_ON) {
-//				LocationTracking.set(requireContext(), true)
+				LocationTracking.set(requireContext(), true)
 			}
 		} else {
 			permissionsManager = PermissionsManager(this)
