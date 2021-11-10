@@ -2,9 +2,15 @@ package org.rfcx.incidents.view.report.create
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.exoplayer2.util.Log
 import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
@@ -60,6 +66,30 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		getImagesFromLocal()
 		setupToolbar()
 		handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+		
+		createReportContainer.setOnTouchListener(object : View.OnTouchListener {
+			override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+				val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+				imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+				return true
+			}
+		})
+	}
+	
+	override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+		if (event.action == MotionEvent.ACTION_DOWN) {
+			val v = currentFocus
+			if (v is EditText) {
+				val outRect = Rect()
+				v.getGlobalVisibleRect(outRect)
+				if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+					v.clearFocus()
+					val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+					imm.hideSoftInputFromWindow(v.windowToken, 0)
+				}
+			}
+		}
+		return super.dispatchTouchEvent(event)
 	}
 	
 	private fun getImagesFromLocal() {
