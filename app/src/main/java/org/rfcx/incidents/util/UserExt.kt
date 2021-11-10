@@ -57,7 +57,7 @@ fun Context?.logout() {
 		projectCoreIds?.forEach { coreId ->
 			CloudMessaging.unsubscribe(coreId)
 		}
-		LocationTracking.set(this, false)
+//		LocationTracking.set(this, false)
 		Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
 			realm.executeTransactionAsync({ bgRealm ->
 				bgRealm.deleteAll()

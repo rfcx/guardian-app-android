@@ -362,7 +362,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	}
 	
 	private fun observeLocationTracking() {
-		LocationTracking.set(this, true)
+//		LocationTracking.set(this, true)
 	}
 	
 	private fun observeMain() {
@@ -387,18 +387,18 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	
 	private fun enableLocationTracking() {
 		if (isOnAirplaneMode()) {
-			LocationTracking.set(this, false)
+//			LocationTracking.set(this, false)
 			locationTrackingViewModel.trackingStateChange()
 		} else {
 			locationPermissions.check { hasPermission: Boolean ->
-				LocationTracking.set(this, hasPermission)
+//				LocationTracking.set(this, hasPermission)
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
 	}
 	
 	private fun disableLocationTracking() {
-		LocationTracking.set(this, false)
+//		LocationTracking.set(this, false)
 		locationTrackingViewModel.trackingStateChange()
 	}
 	
