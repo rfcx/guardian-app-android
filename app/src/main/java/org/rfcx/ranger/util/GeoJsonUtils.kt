@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import org.rfcx.ranger.R
 import java.io.File
 import java.io.FileWriter
 import java.util.*
@@ -27,7 +28,7 @@ object GeoJsonUtils {
 		featureItem.addProperty("type", "Feature")
 		
 		val propertyItem = JsonObject()
-		propertyItem.addProperty("color", randomColor())
+		propertyItem.addProperty("color", context.getString(R.string.tracking_line))
 		featureItem.add("properties", propertyItem)
 		
 		//create Geometry type

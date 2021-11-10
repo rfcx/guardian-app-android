@@ -362,13 +362,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 	}
 	
 	private fun observeLocationTracking() {
-		locationTrackingViewModel.requireLocationTrackingState.observe(this, Observer {
-			if (it) {
-				enableLocationTracking()
-			} else {
-				disableLocationTracking()
-			}
-		})
+		LocationTracking.set(this, true)
 	}
 	
 	private fun observeMain() {
