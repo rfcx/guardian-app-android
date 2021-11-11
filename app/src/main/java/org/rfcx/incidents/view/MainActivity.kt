@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -34,6 +35,12 @@ import org.rfcx.incidents.view.report.detail.ResponseDetailActivity
 import org.rfcx.incidents.view.report.draft.DraftReportsFragment
 import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.incidents.widget.BottomNavigationMenuItem
+import android.app.PendingIntent
+import android.content.pm.PackageManager
+
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
@@ -77,10 +84,18 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		if (savedInstanceState == null) {
 			setupFragments()
 		}
-		
 		this.saveUserLoginWith()
 		observeMain()
 		getEventFromIntentIfHave(intent)
+		
+		val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
+		val locationIntent = PendingIntent.getBroadcast(this, 1234, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+		val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+		val locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(180000).setMaxWaitTime(300000)
+		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+			return
+		}
+		locationProviderClient.requestLocationUpdates(locationRequest, locationIntent)
 	}
 	
 	override fun onResume() {
