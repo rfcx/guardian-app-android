@@ -3,7 +3,6 @@ package org.rfcx.incidents.di
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.rfcx.incidents.view.LocationTrackingViewModel
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.EventsViewModel
 import org.rfcx.incidents.view.events.detail.GuardianEventDetailViewModel
@@ -24,8 +23,7 @@ import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 object UiModule {
 	
 	val mainModule = module {
-		viewModel { LocationTrackingViewModel(get()) }
-		viewModel { MainActivityViewModel(get(), get(), get(), get()) }
+		viewModel { MainActivityViewModel(get(), get(), get()) }
 	}
 	
 	val eventsModule = module {

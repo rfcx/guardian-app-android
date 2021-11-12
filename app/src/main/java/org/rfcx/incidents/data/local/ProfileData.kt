@@ -4,7 +4,6 @@ import io.realm.Realm
 import org.rfcx.incidents.adapter.SyncInfo
 import org.rfcx.incidents.entity.guardian.GuardianGroup
 import org.rfcx.incidents.localdb.SiteGuardianDb
-import org.rfcx.incidents.util.LocationTracking
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.RealmHelper
 
@@ -33,11 +32,6 @@ class ProfileData(private val preferences: Preferences,private val guardianGroup
 	fun getUserNickname(): String {
 		val nickname = preferences.getString(Preferences.NICKNAME)
 		return if (nickname != null && nickname.isNotEmpty()) nickname.capitalize() else "${getSiteName()} Ranger"
-	}
-	
-	fun getTracking(): Boolean {
-		val tracking = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, LocationTracking.TRACKING_OFF)
-		return tracking == LocationTracking.TRACKING_ON
 	}
 	
 	fun getReceiveNotification(): Boolean {

@@ -37,21 +37,11 @@ import org.rfcx.incidents.widget.BottomNavigationMenuItem
 
 
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
-	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	private var currentFragment: Fragment? = null
-	
-	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
-		if (isOnAirplaneMode) {
-			this.removeLocationUpdates()
-		} else {
-			this.startLocationChange()
-		}
-	}
-	private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 	
 	private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		if (it.resultCode == RESULT_CODE) {
@@ -85,14 +75,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	}
 	
 	override fun onResume() {
-		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
 		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
 		super.onResume()
-		mainViewModel.updateLocationTracking()
 	}
 	
 	override fun onPause() {
-		unregisterReceiver(airplaneModeReceiver)
 		unregisterReceiver(onNetworkReceived)
 		super.onPause()
 	}
@@ -131,7 +118,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 			if (it is EventsFragment) {
 				it.onRequestPermissionsResult(requestCode, permissions, grantResults)
 				if (PermissionsManager.areLocationPermissionsGranted(this)) {
-					LocationTracking.set(this, true)
+					this.startLocationChange()
 				}
 			}
 		}
@@ -345,10 +332,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		mainViewModel.isRequireToLogin.observe(this, Observer {
 			if (it) logout()
 		})
-		
-		mainViewModel.isLocationTrackingOn.observe(this, Observer {
-			if (it) enableLocationTracking()
-		})
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?) {
@@ -357,18 +340,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 			streamName?.let { name ->
 				val stream = mainViewModel.getStreamByName(name)
 				stream?.serverId?.let { openGuardianEventDetail(name, null, it) }
-			}
-		}
-	}
-	
-	private fun enableLocationTracking() {
-		if (isOnAirplaneMode()) {
-			LocationTracking.set(this, false)
-			locationTrackingViewModel.trackingStateChange()
-		} else {
-			locationPermissions.check { hasPermission: Boolean ->
-				LocationTracking.set(this, hasPermission)
-				locationTrackingViewModel.trackingStateChange()
 			}
 		}
 	}

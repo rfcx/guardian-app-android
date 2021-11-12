@@ -13,15 +13,11 @@ import org.rfcx.incidents.service.ReviewEventSyncWorker
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.asLiveData
 
-class MainActivityViewModel(private val profileData: ProfileData,
-                            private val responseDb: ResponseDb,
+class MainActivityViewModel(private val responseDb: ResponseDb,
                             private val streamDb: StreamDb,
                             credentialKeeper: CredentialKeeper) : ViewModel() {
 	
 	val isRequireToLogin = MutableLiveData<Boolean>()
-	
-	private val _isLocationTrackingOn = MutableLiveData<Boolean>()
-	val isLocationTrackingOn = _isLocationTrackingOn
 	
 	fun getResponses(): LiveData<List<Response>> {
 		return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
@@ -31,13 +27,7 @@ class MainActivityViewModel(private val profileData: ProfileData,
 	
 	init {
 		isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
-		_isLocationTrackingOn.value = profileData.getTracking()
-		
 		ReviewEventSyncWorker.enqueue()
-	}
-	
-	fun updateLocationTracking() {
-		_isLocationTrackingOn.value = profileData.getTracking()
 	}
 	
 	fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)

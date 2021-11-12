@@ -20,7 +20,6 @@ import kotlin.random.Random
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase, private val eventDb: EventDb) : ViewModel() {
 	
-	val locationTracking = MutableLiveData<Boolean>()
 	val notificationReceiving = MutableLiveData<Boolean>()
 	val notificationReceivingByEmail = MutableLiveData<Boolean>()
 	val userSite = MutableLiveData<String>()
@@ -36,7 +35,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	init {
 		getSiteName()
-		locationTracking.value = profileData.getTracking()
 		notificationReceiving.value = profileData.getReceiveNotification()
 		notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
 		appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
@@ -134,10 +132,6 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				Toast.makeText(context, context.getString(R.string.error_common), Toast.LENGTH_SHORT).show()
 			}
 		}, SubscribeRequest(listOf(context.getGuardianGroup().toString())))
-	}
-	
-	fun onTracingStatusChange() {
-		locationTracking.value = profileData.getTracking()
 	}
 	
 	fun updateSiteName() {

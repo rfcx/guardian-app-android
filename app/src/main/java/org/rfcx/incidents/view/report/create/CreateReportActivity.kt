@@ -260,16 +260,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			else -> super.onBackPressed()
 		}
 	}
-	
-	override fun onResume() {
-		super.onResume()
-		LocationTracking.set(this, false)
-	}
-	
-	override fun onDestroy() {
-		super.onDestroy()
-		LocationTracking.set(this, true)
-	}
 }
 
 interface CreateReportListener {

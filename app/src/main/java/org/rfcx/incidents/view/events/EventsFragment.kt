@@ -162,10 +162,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 		onClickCurrentLocationButton()
 		
-		if (PermissionsManager.areLocationPermissionsGranted(context)) {
-			LocationTracking.set(requireContext(), true)
-		}
-		
 		if (!context.isNetworkAvailable()) {
 			setStreamsWithLocalData()
 			isShowProgressBar(false)
@@ -665,10 +661,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
-			}
-			val stateTracking = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, LocationTracking.TRACKING_OFF)
-			if (stateTracking != LocationTracking.TRACKING_ON) {
-				LocationTracking.set(requireContext(), true)
 			}
 		} else {
 			permissionsManager = PermissionsManager(this)
