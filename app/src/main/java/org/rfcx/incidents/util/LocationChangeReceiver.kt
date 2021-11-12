@@ -17,7 +17,7 @@ class LocationChangeReceiver : BroadcastReceiver() {
 	private var tracking = Tracking()
 	
 	companion object {
-		private const val FIVE_MINUTES = 40L * 1000L
+		private const val FIVE_MINUTES = 5L* 60L * 1000L
 	}
 	
 	override fun onReceive(context: Context?, intent: Intent?) {

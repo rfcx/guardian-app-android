@@ -1,6 +1,10 @@
 package org.rfcx.incidents
 
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
@@ -14,12 +18,15 @@ import org.rfcx.incidents.di.DataModule
 import org.rfcx.incidents.di.UiModule
 import org.rfcx.incidents.service.ReportCleanupWorker
 import org.rfcx.incidents.util.RealmHelper
+import org.rfcx.incidents.util.removeLocationUpdates
+import org.rfcx.incidents.util.startLocationChange
 
 
-class RangerApplication : MultiDexApplication() {
+class RangerApplication : MultiDexApplication(), LifecycleObserver {
 	
 	override fun onCreate() {
 		super.onCreate()
+		ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 		
 		MultiDex.install(this)
 		Realm.init(this)
@@ -35,6 +42,16 @@ class RangerApplication : MultiDexApplication() {
 					.enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
 					.build())
 		}
+	}
+	
+	@OnLifecycleEvent(Lifecycle.Event.ON_START)
+	fun onAppInForeground() {
+		this.startLocationChange()
+	}
+	
+	@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+	fun onAppInBackground() {
+		this.removeLocationUpdates()
 	}
 	
 	private fun setUpRealm() {
