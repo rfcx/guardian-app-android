@@ -547,7 +547,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		)
 		style.addLayer(lineLayer)
 		
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
 		if (mBitmap != null) {
 			style.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
