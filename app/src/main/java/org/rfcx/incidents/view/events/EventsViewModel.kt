@@ -29,6 +29,7 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.EventGroup
+import java.util.*
 
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
@@ -144,7 +145,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 			lastLocation?.let { loc ->
 				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
 			}
-			groups.add(EventGroup(it.eventsCount, distance, it.name, it.id))
+			groups.add(EventGroup(it.eventsCount, distance, it.name, it.id, alertDb.getStartTimeOfAlerts(it.id)))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
