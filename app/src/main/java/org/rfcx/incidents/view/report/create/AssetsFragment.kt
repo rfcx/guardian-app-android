@@ -85,6 +85,10 @@ class AssetsFragment : BaseImageFragment() {
 		setupAssets()
 		setupRecordSoundProgressView()
 		setRequiredNote()
+		
+		view.setOnClickListener {
+			it.hideKeyboard()
+		}
 	}
 	
 	private fun setRequiredNote() {

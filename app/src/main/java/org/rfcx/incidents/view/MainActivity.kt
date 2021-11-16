@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.mapbox.android.core.permissions.PermissionsManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
@@ -80,7 +81,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		
 		this.saveUserLoginWith()
 		observeMain()
-		observeLocationTracking()
 		getEventFromIntentIfHave(intent)
 		checkNetworkCallback()
 	}
@@ -151,8 +151,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		locationPermissions.handleRequestResult(requestCode, grantResults)
 		
 		currentFragment?.let {
-			if (it is MapFragment) {
+			if (it is EventsFragment) {
 				it.onRequestPermissionsResult(requestCode, permissions, grantResults)
+				if (PermissionsManager.areLocationPermissionsGranted(this)) {
+					LocationTracking.set(this, true)
+				}
 			}
 		}
 	}
@@ -162,7 +165,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		locationPermissions.handleActivityResult(requestCode, resultCode)
 		
 		currentFragment?.let {
-			if (it is MapFragment) {
+			if (it is EventsFragment) {
 				it.onActivityResult(requestCode, resultCode, data)
 			}
 		}
@@ -361,10 +364,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
 	}
 	
-	private fun observeLocationTracking() {
-//		LocationTracking.set(this, true)
-	}
-	
 	private fun observeMain() {
 		mainViewModel.isRequireToLogin.observe(this, Observer {
 			if (it) logout()
@@ -395,11 +394,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 				locationTrackingViewModel.trackingStateChange()
 			}
 		}
-	}
-	
-	private fun disableLocationTracking() {
-		LocationTracking.set(this, false)
-		locationTrackingViewModel.trackingStateChange()
 	}
 	
 	companion object {
