@@ -37,4 +37,5 @@
 	<color name="action_color">#3971e6</color>
 	<color name="logging_color">#187f36</color>
 	<color name="damage_color">#e6b400</color>
+	<color name="tracking_line">#969faa</color>
 </resources>

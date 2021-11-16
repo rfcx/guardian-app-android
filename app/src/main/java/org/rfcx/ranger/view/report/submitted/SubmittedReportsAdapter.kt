@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_submitted_reports.view.*
 import org.rfcx.ranger.R
 import org.rfcx.ranger.entity.response.Response
+import org.rfcx.ranger.entity.response.SyncState
 import org.rfcx.ranger.entity.response.syncImage
 import org.rfcx.ranger.entity.response.syncLabel
 import org.rfcx.ranger.util.setDrawableImage
 import org.rfcx.ranger.util.toTimeSinceStringAlternativeTimeAgo
 
-class SubmittedReportsAdapter :
+class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListener) :
 		RecyclerView.Adapter<SubmittedReportsAdapter.ReportsViewHolder>() {
 	var items: List<Response> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
@@ -41,12 +42,32 @@ class SubmittedReportsAdapter :
 		private val actionImageView = itemView.actionImageView
 		
 		fun bind(report: Response) {
+			setClickable(itemView, report.syncState != SyncState.SENT.value)
 			actionImageView.setDrawableImage(itemView.context, report.syncImage())
 			reportIdTextView.visibility = if (report.incidentRef != null) View.VISIBLE else View.GONE
 			reportIdTextView.text = itemView.context.getString(R.string.incident_ref, report.incidentRef)
 			syncLabelTextView.text = itemView.context.getString(report.syncLabel())
 			guardianName.text = report.streamName
 			dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+			
+			itemView.setOnClickListener {
+				listener.onClickedItem(report)
+			}
+		}
+		
+		private fun setClickable(view: View?, clickable: Boolean) {
+			if (view == null) return
+			
+			if (view is ViewGroup) {
+				for (i in 0 until view.childCount) {
+					setClickable(view.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
+}
+
+interface SubmittedReportsOnClickListener {
+	fun onClickedItem(response: Response)
 }

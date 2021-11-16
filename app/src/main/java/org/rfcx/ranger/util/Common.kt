@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast

@@ -62,11 +62,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	
 	override fun onClickedItem(response: Response) {
 		if (response.syncState == SyncState.SENT.value) {
-			if (response.guid == null) {
-				Toast.makeText(context, getString(R.string.can_not_open_the_report), Toast.LENGTH_SHORT).show()
-			} else {
-				response.guid?.let { listener.openDetailResponse(it) }
-			}
+			Toast.makeText(context, getString(R.string.can_not_open_the_report), Toast.LENGTH_SHORT).show()
 		} else {
 			listener.openCreateResponse(response)
 		}

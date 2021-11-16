@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -41,6 +42,7 @@ import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.*
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.fragment_new_events.*
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,6 +77,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
 		private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
 		private const val PROPERTY_CLUSTER_COUNT_EVENTS = "cluster.count.events"
+		private const val SOURCE_CHECK_IN = "source.checkin"
+		private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
+		private const val MARKER_CHECK_IN_ID = "marker.checkin"
+		
 		private const val DEFAULT_MAP_ZOOM = 15.0
 		private const val PADDING_BOUNDS = 230
 		private const val DURATION_MS = 1300
@@ -116,6 +122,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private var lineSource: GeoJsonSource? = null
 	private var lineFeatures: FeatureCollection? = null
 	
+	private var checkInSource: GeoJsonSource? = null
+	private var checkInFeatures: FeatureCollection? = null
+	
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
@@ -143,6 +152,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
 		preferences = Preferences.getInstance(requireContext())
+		isShowProgressBar()
 		
 		getLocation()
 		setupToolbar()
@@ -150,8 +160,12 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setOnClickListener()
 		setObserver()
 		setRecyclerView()
-		setStreamsWithLocalData()
 		onClickCurrentLocationButton()
+		
+		if (!context.isNetworkAvailable()) {
+			setStreamsWithLocalData()
+			isShowProgressBar(false)
+		}
 		
 		refreshView.apply {
 			setOnRefreshListener(this@EventsFragment)
@@ -417,7 +431,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			val properties = mapOf(
 					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
 					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
-					Pair(PROPERTY_MARKER_ALERT_DISTANCE, viewModel.distance(last, loc)),
+					Pair(PROPERTY_MARKER_ALERT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
 					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
 			)
 			Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
@@ -432,6 +446,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.createdAt.time <= THREE_HOURS }
 			val trackingCoordinates = tracks.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
 			lineFeatures = FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
+			
+			// Create point
+			val pointFeatures = tracks.map {
+				Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude))
+			}
+			
+			checkInFeatures = FeatureCollection.fromFeatures(pointFeatures)
 			refreshSource()
 		}
 	}
@@ -466,7 +487,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				val name = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString
 				val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
 				val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-				listener.openGuardianEventDetail(name, distance.toDouble(), streamId)
+				listener.openGuardianEventDetail(name, if (distance.isBlank()) null else distance.toDouble(), streamId)
 			}
 			return true
 		}
@@ -500,6 +521,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		lineSource = GeoJsonSource(SOURCE_LINE)
 		style.addSource(lineSource!!)
+		
+		checkInSource = GeoJsonSource(SOURCE_CHECK_IN, FeatureCollection.fromFeatures(listOf()))
+		style.addSource(checkInSource!!)
 	}
 	
 	private fun refreshSource() {
@@ -509,6 +533,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		if (lineSource != null && lineFeatures != null) {
 			lineSource!!.setGeoJson(lineFeatures)
 		}
+		if (checkInSource != null && checkInFeatures != null) {
+			checkInSource!!.setGeoJson(checkInFeatures)
+		}
 	}
 	
 	private fun addLineLayer(style: Style) {
@@ -516,9 +543,25 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
 				PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
 				PropertyFactory.lineWidth(5f),
-				PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+				PropertyFactory.lineColor(resources.getColor(R.color.tracking_line))
 		)
 		style.addLayer(lineLayer)
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		if (mBitmap != null) {
+			style.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
+		}
+		
+		val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
+			withProperties(
+					PropertyFactory.iconImage(MARKER_CHECK_IN_IMAGE),
+					PropertyFactory.iconAllowOverlap(true),
+					PropertyFactory.iconIgnorePlacement(true),
+					PropertyFactory.iconSize(1f)
+			)
+		}
+		style.addLayer(checkInLayer)
 	}
 	
 	private fun addClusteredGeoJsonSource(style: Style) {

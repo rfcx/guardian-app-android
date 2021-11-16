@@ -40,6 +40,8 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 		
 		fun bind(report: Response) {
 			actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
+			setClickable(itemView, report.syncState == SyncState.SENT.value)
+			
 			if (report.syncState == SyncState.SENT.value) {
 				guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 				dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
@@ -58,6 +60,17 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) : Recycle
 			itemView.setOnClickListener {
 				listener.onClickedItem(report)
 			}
+		}
+		
+		private fun setClickable(view: View?, clickable: Boolean) {
+			if (view == null) return
+			
+			if (view is ViewGroup) {
+				for (i in 0 until view.childCount) {
+					setClickable(view.getChildAt(i), clickable)
+				}
+			}
+			view.isClickable = clickable
 		}
 	}
 }
