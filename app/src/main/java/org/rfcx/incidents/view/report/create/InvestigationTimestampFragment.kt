@@ -107,6 +107,8 @@ class InvestigationTimestampFragment : Fragment() {
 			setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
 		}, date.getYear(), date.getMonth(), date.getDay())
 		
+		datePicker.datePicker.maxDate = today.timeInMillis
+		
 		earlierRadioButton.setOnClickListener {
 			datePicker.show()
 		}
