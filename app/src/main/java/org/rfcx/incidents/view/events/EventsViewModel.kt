@@ -21,6 +21,7 @@ import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.localdb.StreamDb
@@ -40,6 +41,10 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
+	}
+	
+	fun getAlertsFromLocal(): LiveData<List<Alert>> {
+		return Transformations.map(alertDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
 	fun getTrackingFromLocal(): LiveData<List<Tracking>> {

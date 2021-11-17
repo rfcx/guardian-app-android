@@ -29,8 +29,9 @@ class ImageUploadWorker(private val context: Context, params: WorkerParameters)
 		
 		var someFailed = false
 		for (image in images) {
+			val localPath = if (image.localPath.startsWith("file://")) image.localPath.replace("file://", "") else image.localPath
 			
-			val imageFile = File(image.localPath)
+			val imageFile = File(localPath)
 			if (!imageFile.exists()) {
 				return Result.failure()
 			}

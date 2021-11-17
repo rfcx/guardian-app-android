@@ -1,7 +1,11 @@
 package org.rfcx.incidents.util
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
@@ -9,7 +13,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import org.joda.time.Duration
 import org.rfcx.incidents.R
 import java.util.*
@@ -118,4 +125,26 @@ fun View.hideKeyboard() = this.let {
 
 fun Context.showToast(message: String) {
 	Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun Context.removeLocationUpdates() {
+	val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+	val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
+	val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+	locationProviderClient.removeLocationUpdates(locationIntent)
+}
+
+fun Context.startLocationChange() {
+	val interval = 3L * 60L * 1000L
+	val maxWaitTime = 5L * 60L * 1000L
+	
+	val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+	val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
+	val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+	
+	val locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(interval).setMaxWaitTime(maxWaitTime)
+	if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+		return
+	}
+	locationProviderClient.requestLocationUpdates(locationRequest, locationIntent)
 }

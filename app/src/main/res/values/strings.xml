@@ -257,6 +257,7 @@
 	<string name="earlier">Earlier...</string>
 	<string name="earlier_date">Earlier... ( %s )</string>
 	<string name="what_time">What time did you investigate?</string>
+	<string name="do_not_future_time">Do not set a future time</string>
 	
 	<!-- SetWhatEvidenceFragment -->
 	<string name="what_evidence">What evidence of loggers did you encounter? <i>Select all that apply</i></string>
@@ -311,5 +312,5 @@
 	
 	<string name="assets">Assets:</string>
 	<string name="note">Note: %s</string>
-	<string name="tracking_line">#969faa</string>
+	<string name="tracking_line">#e55e5e</string>
 </resources>

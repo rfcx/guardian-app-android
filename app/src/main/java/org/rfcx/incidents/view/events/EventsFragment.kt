@@ -162,10 +162,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 		onClickCurrentLocationButton()
 		
-		if (PermissionsManager.areLocationPermissionsGranted(context)) {
-			LocationTracking.set(requireContext(), true)
-		}
-		
 		if (!context.isNetworkAvailable()) {
 			setStreamsWithLocalData()
 			isShowProgressBar(false)
@@ -340,6 +336,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
 			setAlertFeatures(streams)
+		})
+		
+		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner, {
+			setAlertFeatures(viewModel.getStreams())
 		})
 		
 		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner, { trackings ->
@@ -551,7 +551,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		)
 		style.addLayer(lineLayer)
 		
-		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_chek_in_pin_on_map, null)
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
 		if (mBitmap != null) {
 			style.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
@@ -665,10 +665,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				
 				// Set the LocationComponent's render mode
 				renderMode = RenderMode.COMPASS
-			}
-			val stateTracking = preferences.getString(Preferences.ENABLE_LOCATION_TRACKING, LocationTracking.TRACKING_OFF)
-			if (stateTracking != LocationTracking.TRACKING_ON) {
-				LocationTracking.set(requireContext(), true)
 			}
 		} else {
 			permissionsManager = PermissionsManager(this)

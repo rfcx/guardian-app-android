@@ -13,12 +13,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentProfileBinding
 import org.rfcx.incidents.util.*
-import org.rfcx.incidents.view.LocationTrackingViewModel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.base.BaseFragment
 import org.rfcx.incidents.view.profile.coordinates.CoordinatesActivity
@@ -28,7 +26,6 @@ class ProfileFragment : BaseFragment() {
 	
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val profileViewModel: ProfileViewModel by viewModel()
-	private val locationTrackingViewModel: LocationTrackingViewModel by sharedViewModel()
 	lateinit var listener: MainActivityEventListener
 	private lateinit var viewDataBinding: FragmentProfileBinding
 	
