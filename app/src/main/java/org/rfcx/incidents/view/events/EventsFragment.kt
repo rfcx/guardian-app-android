@@ -338,6 +338,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			setAlertFeatures(streams)
 		})
 		
+		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner, {
+			setAlertFeatures(viewModel.getStreams())
+		})
+		
 		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner, { trackings ->
 			setTrackingFeatures(trackings)
 		})
