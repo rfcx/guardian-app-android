@@ -48,7 +48,7 @@
         app:layout_constraintStart_toEndOf="@id/cancelButton"
         app:layout_constraintTop_toTopOf="@+id/bgView" />
 
-    <org.rfcx.ranger.widget.NoneTouchableRecycler
+    <org.rfcx.incidents.widget.NoneTouchableRecycler
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"

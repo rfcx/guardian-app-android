@@ -10,7 +10,7 @@
 		
 		<variable
 			name="viewModel"
-			type="org.rfcx.ranger.view.profile.ProfileViewModel" />
+			type="org.rfcx.incidents.view.profile.ProfileViewModel" />
 		
 		<variable
 			name="onClickPassword"

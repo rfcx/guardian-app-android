@@ -115,7 +115,7 @@
 				tools:listitem="@layout/adapter_report_image"
 				tools:orientation="horizontal" />
 			
-			<org.rfcx.ranger.widget.SoundRecordProgressView
+			<org.rfcx.incidents.widget.SoundRecordProgressView
 				android:id="@+id/soundRecordProgressView"
 				android:layout_width="0dp"
 				android:layout_height="@dimen/sound_record_progress_height"
