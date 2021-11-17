@@ -16,6 +16,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.util.getDay
 import org.rfcx.incidents.util.getMonth
 import org.rfcx.incidents.util.getYear
+import org.rfcx.incidents.util.showToast
 import java.text.DecimalFormat
 import java.util.*
 
@@ -71,8 +72,12 @@ class InvestigationTimestampFragment : Fragment() {
 	
 	private fun setupOnListener() {
 		nextStepButton.setOnClickListener {
-			listener.setInvestigationTimestamp(calendar.time)
-			listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
+			if (calendar.time > today.time) {
+				context?.showToast(getString(R.string.do_not_future_time))
+			} else {
+				listener.setInvestigationTimestamp(calendar.time)
+				listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
+			}
 		}
 		
 		timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
@@ -106,6 +111,8 @@ class InvestigationTimestampFragment : Fragment() {
 			earlier.set(Calendar.YEAR, year)
 			setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
 		}, date.getYear(), date.getMonth(), date.getDay())
+		
+		datePicker.datePicker.maxDate = today.timeInMillis
 		
 		earlierRadioButton.setOnClickListener {
 			datePicker.show()
