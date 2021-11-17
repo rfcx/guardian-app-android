@@ -3,8 +3,7 @@ package org.rfcx.incidents.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.*
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,9 +18,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.service.AirplaneModeReceiver
-import org.rfcx.incidents.service.AlertNotification
-import org.rfcx.incidents.service.ResponseSyncWorker
+import org.rfcx.incidents.service.*
+import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
@@ -38,11 +36,12 @@ import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.incidents.widget.BottomNavigationMenuItem
 
 
-class MainActivity : BaseActivity(), MainActivityEventListener {
+class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
 	private val locationTrackingViewModel: LocationTrackingViewModel by viewModel()
 	private val mainViewModel: MainActivityViewModel by viewModel()
 	
 	private val locationPermissions by lazy { LocationPermissions(this) }
+	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	private var currentFragment: Fragment? = null
 	
 	private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
@@ -82,41 +81,18 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 		this.saveUserLoginWith()
 		observeMain()
 		getEventFromIntentIfHave(intent)
-		checkNetworkCallback()
-	}
-	
-	private fun checkNetworkCallback() {
-		val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-		when {
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
-				connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-					override fun onAvailable(network: Network) {
-						ResponseSyncWorker.enqueue()
-					}
-				})
-			}
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-				val request = NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build();
-				connectivityManager.registerNetworkCallback(request, object : ConnectivityManager.NetworkCallback() {
-					override fun onAvailable(network: Network) {
-						ResponseSyncWorker.enqueue()
-					}
-				})
-			}
-			else -> {
-				if (this.isNetworkAvailable()) ResponseSyncWorker.enqueue()
-			}
-		}
 	}
 	
 	override fun onResume() {
 		registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+		registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
 		super.onResume()
 		mainViewModel.updateLocationTracking()
 	}
 	
 	override fun onPause() {
 		unregisterReceiver(airplaneModeReceiver)
+		unregisterReceiver(onNetworkReceived)
 		super.onPause()
 	}
 	
@@ -402,6 +378,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener {
 			if (eventGuId != null)
 				intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
 			context.startActivity(intent)
+		}
+	}
+	
+	override fun onNetworkStateChange(state: NetworkState) {
+		when (state) {
+			NetworkState.ONLINE -> ResponseSyncWorker.enqueue()
 		}
 	}
 }
