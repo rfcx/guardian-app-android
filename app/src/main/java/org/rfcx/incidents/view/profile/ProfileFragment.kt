@@ -74,18 +74,6 @@ class ProfileFragment : BaseFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		viewDataBinding.viewModel = profileViewModel
 		setOnClickButton()
-		
-		// TODO:: Wait to fix the endpoint first
-//		val loginWith = context?.let { Preferences.getInstance(it).getString(Preferences.LOGIN_WITH) }
-//		if (loginWith == LOGIN_WITH_EMAIL) {
-//			changeImageProfileTextView.visibility = View.VISIBLE
-//			changePasswordTextView.visibility = View.VISIBLE
-//			userProfileImageView.visibility = View.VISIBLE
-//		} else {
-//			changeImageProfileTextView.visibility = View.GONE
-//			changePasswordTextView.visibility = View.GONE
-//			userProfileImageView.visibility = View.GONE
-//		}
 	}
 	
 	private fun setOnClickButton() {
