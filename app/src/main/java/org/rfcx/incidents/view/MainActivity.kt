@@ -90,6 +90,14 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	}
 	
 	override fun onBackPressed() {
+		projectRecyclerView?.let {
+			if (it.visibility == View.VISIBLE) {
+				showBottomAppBar()
+				it.visibility = View.GONE
+				projectSwipeRefreshView.visibility = View.GONE
+			}
+		}
+		
 		when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
 			is GuardianEventDetailFragment -> {
 				if (supportFragmentManager.backStackEntryCount > 0) {
@@ -99,13 +107,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 				}
 				showBottomAppBar()
 			}
-		}
-		
-		projectRecyclerView?.let {
-			if (it.visibility == View.VISIBLE) {
-				showBottomAppBar()
-				it.visibility = View.GONE
-				projectSwipeRefreshView.visibility = View.GONE
+			else -> {
+				return super.onBackPressed()
 			}
 		}
 	}

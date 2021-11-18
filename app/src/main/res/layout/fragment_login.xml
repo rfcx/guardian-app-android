@@ -25,7 +25,7 @@
 		android:layout_height="@dimen/icon_app_size"
 		android:layout_marginTop="@dimen/margin_padding_small"
 		android:layout_marginBottom="@dimen/margin_padding_small"
-		android:src="@drawable/ic_ranger_icon"
+		android:src="@drawable/ic_app"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
