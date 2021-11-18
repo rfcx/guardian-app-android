@@ -23,6 +23,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:textColor="@color/white"
+		android:textSize="@dimen/text_xsmall"
 		app:layout_constraintBottom_toBottomOf="@id/numberOfAlertsImageView"
 		app:layout_constraintEnd_toEndOf="@id/numberOfAlertsImageView"
 		app:layout_constraintStart_toStartOf="@id/numberOfAlertsImageView"
