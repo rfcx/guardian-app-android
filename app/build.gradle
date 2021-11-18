@@ -39,7 +39,7 @@ android {
     }
     productFlavors {
         production {
-            manifestPlaceholders = [icon: "@mipmap/ic_launcher", roundIcon: "@mipmap/ic_launcher"]
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher_app", roundIcon: "@mipmap/ic_launcher_app"]
             buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
             buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://device-api.rfcx.org/"'
             buildConfigField 'String', 'RANGER_API_DOMAIN', '"https://ranger-api.rfcx.org/"'
