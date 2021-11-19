@@ -72,12 +72,14 @@ class AssetsFragment : BaseImageFragment() {
 		
 		saveDraftButton.setOnClickListener {
 			saveAssets()
+			analytics?.trackSaveDraftResponseEvent()
 			listener.onSaveDraftButtonClick()
 		}
 		
 		submitButton.setOnClickListener {
 			if (!TextUtils.isEmpty(noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
 				saveAssets()
+				analytics?.trackSubmitResponseEvent()
 				listener.onSubmitButtonClick()
 			} else {
 				showDefaultDialog()
@@ -147,6 +149,7 @@ class AssetsFragment : BaseImageFragment() {
 				.setMessage(resources.getString(R.string.are_you_sure))
 				.setNegativeButton(resources.getString(R.string.report_submit_button_label)) { _, _ ->
 					saveAssets()
+					analytics?.trackSubmitResponseEvent()
 					listener.onSubmitButtonClick()
 				}
 				.setPositiveButton(resources.getString(R.string.cancel)) { _, _ -> }

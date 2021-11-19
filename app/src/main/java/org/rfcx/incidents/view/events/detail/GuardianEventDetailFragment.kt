@@ -69,6 +69,7 @@ class GuardianEventDetailFragment : Fragment() {
 			createReportButton.setOnClickListener {
 				name?.let { name ->
 					guardianId?.let { id ->
+						analytics?.trackCreateResponseEvent()
 						listener.openCreateReportActivity(name, id)
 					}
 				}

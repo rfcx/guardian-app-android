@@ -57,6 +57,21 @@ class Analytics(context: Context) {
 		trackEvent("set_username", bundle)
 	}
 	
+	fun trackCreateResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("create_response", bundle)
+	}
+	
+	fun trackSubmitResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("submit_response", bundle)
+	}
+	
+	fun trackSaveDraftResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("save_draft_response", bundle)
+	}
+	
 	fun trackStartToAddReportEvent() {
 		val bundle = Bundle()
 		trackEvent("add_report_start", bundle)
