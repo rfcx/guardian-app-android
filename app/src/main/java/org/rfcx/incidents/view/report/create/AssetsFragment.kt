@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.fragment_assets.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.Actions
 import org.rfcx.incidents.entity.response.EvidenceTypes
+import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.RecordingPermissions
+import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.hideKeyboard
 import org.rfcx.incidents.view.report.create.image.BaseImageFragment
 import org.rfcx.incidents.widget.SoundRecordState
@@ -35,6 +37,7 @@ class AssetsFragment : BaseImageFragment() {
 		fun newInstance() = AssetsFragment()
 	}
 	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
 	private var recordFile: File? = null
 	private var recorder: MediaRecorder? = null
@@ -45,6 +48,11 @@ class AssetsFragment : BaseImageFragment() {
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as CreateReportListener)
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.ASSETS)
 	}
 	
 	override fun didAddImages(imagePaths: List<String>) {}

@@ -34,6 +34,8 @@ import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.report.create.image.ReportImageAdapter
 import org.rfcx.incidents.widget.SoundRecordState
@@ -53,7 +55,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 			context.startActivity(intent)
 		}
 	}
-	
+	private val analytics by lazy { Analytics(this) }
 	private val viewModel: ResponseDetailViewModel by viewModel()
 	private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
 	private val reportImageAdapter by lazy { ReportImageAdapter() }
@@ -258,6 +260,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	override fun onResume() {
 		super.onResume()
 		mapView.onResume()
+		analytics.trackScreen(Screen.RESPONSE_DETAIL)
 	}
 	
 	override fun onStart() {

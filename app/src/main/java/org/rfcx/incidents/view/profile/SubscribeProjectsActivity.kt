@@ -23,6 +23,7 @@ import java.util.*
 
 
 class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+	private val analytics by lazy { Analytics(this) }
 	private val viewModel: GuardianGroupViewModel by viewModel()
 	private val projectsAdapter by lazy { ProjectsAdapter(this) }
 	private var projectsItem: List<ProjectsItem>? = null
@@ -173,6 +174,11 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 	
 	private fun showToast(message: String) {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics.trackScreen(Screen.SUBSCRIBE_PROJECTS)
 	}
 }
 

@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_evidence.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.EvidenceTypes
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
 import java.util.*
 
 class EvidenceFragment : Fragment() {
@@ -18,6 +20,7 @@ class EvidenceFragment : Fragment() {
 		fun newInstance() = EvidenceFragment()
 	}
 	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
 	private var selected = ArrayList<Int>()
 	
@@ -40,6 +43,11 @@ class EvidenceFragment : Fragment() {
 		nextStepButton.setOnClickListener {
 			setSelect()
 		}
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.EVIDENCE)
 	}
 	
 	private fun setupEvidences() {

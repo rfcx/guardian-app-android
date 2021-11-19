@@ -13,15 +13,12 @@ import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_investigation_timestamp.*
 import org.rfcx.incidents.R
-import org.rfcx.incidents.util.getDay
-import org.rfcx.incidents.util.getMonth
-import org.rfcx.incidents.util.getYear
-import org.rfcx.incidents.util.showToast
+import org.rfcx.incidents.util.*
 import java.text.DecimalFormat
 import java.util.*
 
 class InvestigationTimestampFragment : Fragment() {
-	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
 	private var minutePicker: NumberPicker? = null
 	
@@ -31,6 +28,11 @@ class InvestigationTimestampFragment : Fragment() {
 	private val today = Calendar.getInstance()
 	private val yesterday = Calendar.getInstance().also {
 		it.add(Calendar.DATE, -1)
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.INVESTIGATION_TIMESTAMP)
 	}
 	
 	override fun onAttach(context: Context) {

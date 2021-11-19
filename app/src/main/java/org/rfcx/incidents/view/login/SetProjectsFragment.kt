@@ -14,9 +14,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.*
 import org.rfcx.incidents.util.isNetworkAvailable
-import org.rfcx.incidents.util.logout
 import java.util.*
 
 class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
@@ -24,6 +23,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		@JvmStatic
 		fun newInstance() = SetProjectsFragment()
 	}
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	lateinit var listener: LoginListener
 	private val viewModel: SetProjectsViewModel by viewModel()
@@ -34,6 +34,11 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as LoginListener)
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.SUBSCRIBE_PROJECTS)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

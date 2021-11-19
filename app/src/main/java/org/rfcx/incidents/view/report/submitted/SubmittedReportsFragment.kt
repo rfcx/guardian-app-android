@@ -13,10 +13,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 
 class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener {
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: MainActivityViewModel by viewModel()
 	private val reportsAdapter by lazy { SubmittedReportsAdapter(this) }
 	lateinit var listener: MainActivityEventListener
@@ -39,6 +42,11 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener {
 			adapter = reportsAdapter
 		}
 		setObserve()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.SUBMITTED_REPORTS)
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")
