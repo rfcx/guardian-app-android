@@ -3,19 +3,25 @@ package org.rfcx.incidents.util
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 
 enum class Screen(val id: String) {
 	LOGIN("Login"),
 	USERNAME("Username"),
-	ADDREPORT("AddReport"),
-	REPORTDETAIL("ReportDetail"),
 	MAP("Map"),
 	PROFILE("Profile"),
 	FEEDBACK("Feedback"),
+	SUBSCRIBE_PROJECTS("SubscribeProjects"),
+	NEW_EVENTS("NewEvents"),
 	DRAFT_REPORTS("DraftReports"),
-	SUBMITTED_REPORTS("SubmittedReports")
+	SUBMITTED_REPORTS("SubmittedReports"),
+	RESPONSE_DETAIL("ResponseDetail"),
+	GUARDIAN_EVENT_DETAIL("GuardianEventDetail"),
+	INVESTIGATION_TIMESTAMP("InvestigationTimestamp"),
+	EVIDENCE("Evidence"),
+	DAMAGE("Damage"),
+	ACTION("Action"),
+	ASSETS("Assets")
 }
 
 class Analytics(context: Context) {
@@ -35,7 +41,6 @@ class Analytics(context: Context) {
 	}
 	
 	fun trackLoginEvent(method: String) {
-		Log.d("", method)
 		val bundle = Bundle()
 		bundle.putString(FirebaseAnalytics.Param.METHOD, method)
 		trackEvent(FirebaseAnalytics.Event.LOGIN, bundle)
@@ -52,6 +57,21 @@ class Analytics(context: Context) {
 		trackEvent("set_username", bundle)
 	}
 	
+	fun trackCreateResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("create_response", bundle)
+	}
+	
+	fun trackSubmitResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("submit_response", bundle)
+	}
+	
+	fun trackSaveDraftResponseEvent() {
+		val bundle = Bundle()
+		trackEvent("save_draft_response", bundle)
+	}
+	
 	fun trackStartToAddReportEvent() {
 		val bundle = Bundle()
 		trackEvent("add_report_start", bundle)
@@ -60,22 +80,6 @@ class Analytics(context: Context) {
 	fun trackSubmitTheReportEvent() {
 		val bundle = Bundle()
 		trackEvent("add_report_submit", bundle)
-	}
-	
-	fun trackLocationTracking(time: Long) {
-		val bundle = Bundle()
-		if(time == 0L){
-			Log.d("LocationTrackerService", "time == 0")
-		} else {
-			val status = when {
-				time < 120 -> "tracking_ok"
-				time in 121..599 -> "tracking_slow"
-				else -> "tracking_veryslow" // > 600
-			}
-			bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, status)
-			bundle.putLong(FirebaseAnalytics.Param.VALUE, time)
-			trackEvent("add_location_tracking", bundle)
-		}
 	}
 	
 	fun trackSatelliteCount(count: Int) {

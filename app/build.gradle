@@ -99,8 +99,8 @@ dependencies {
     implementation 'com.github.hkk595:Resizer:v1.5'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
-    implementation 'com.google.firebase:firebase-analytics:18.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
+    implementation 'com.google.firebase:firebase-analytics:20.0.0'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'
