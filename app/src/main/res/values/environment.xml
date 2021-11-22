@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" translatable="false">
-    <string name="app_name">RFCx Incidents</string>
+    <string name="app_name">Responder</string>
 
     <string name="auth0_client_id">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
     <string name="auth0_domain">auth.rfcx.org</string>
