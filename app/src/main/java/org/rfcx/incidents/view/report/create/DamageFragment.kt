@@ -10,15 +10,23 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_damage.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.DamageScale
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
 
 class DamageFragment : Fragment() {
 	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
 	var selected: Int? = null
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as CreateReportListener)
+	}
+	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.DAMAGE)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

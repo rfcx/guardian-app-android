@@ -79,8 +79,6 @@ class LocationTrackerService : Service() {
 			val isInForeground = myProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 			val lastGetLocationTime = Preferences.getInstance(this@LocationTrackerService).getLong(Preferences.LATEST_GET_LOCATION_TIME, 0L)
 			if (isInForeground && System.currentTimeMillis() - lastGetLocationTime >= FIVE_MINUTES) {
-				val time = calculateTime(Calendar.getInstance().time, lastUpdated ?: Date())
-				analytics.trackLocationTracking(time)
 				saveLocation(location)
 			} else if (myProcess.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
 				this@LocationTrackerService.stopService(Intent(this@LocationTrackerService, LocationTrackerService::class.java))

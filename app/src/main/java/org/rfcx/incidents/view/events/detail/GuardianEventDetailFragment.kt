@@ -12,12 +12,15 @@ import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
 
 class GuardianEventDetailFragment : Fragment() {
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
 	private val alertItemAdapter by lazy { AlertItemAdapter() }
@@ -42,6 +45,11 @@ class GuardianEventDetailFragment : Fragment() {
 		listener = (context as MainActivityEventListener)
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		analytics?.trackScreen(Screen.GUARDIAN_EVENT_DETAIL)
+	}
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
@@ -61,6 +69,7 @@ class GuardianEventDetailFragment : Fragment() {
 			createReportButton.setOnClickListener {
 				name?.let { name ->
 					guardianId?.let { id ->
+						analytics?.trackCreateResponseEvent()
 						listener.openCreateReportActivity(name, id)
 					}
 				}

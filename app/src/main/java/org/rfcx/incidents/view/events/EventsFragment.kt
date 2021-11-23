@@ -90,6 +90,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		fun newInstance() = EventsFragment()
 	}
 	
+	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
@@ -364,6 +365,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		changePageImageView.setOnClickListener {
 			if (isShowMapIcon) {
+				analytics?.trackScreen(Screen.MAP)
 				isShowNotHaveStreams(false)
 				changePageImageView.setImageResource(R.drawable.ic_view_list)
 				mapView.visibility = View.VISIBLE
@@ -738,6 +740,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	override fun onResume() {
 		super.onResume()
 		mapView.onResume()
+		analytics?.trackScreen(Screen.NEW_EVENTS)
 	}
 	
 	override fun onStart() {
