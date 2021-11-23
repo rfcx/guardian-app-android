@@ -34,4 +34,7 @@
 	<dimen name="icon_front_text">16dp</dimen>
 	<dimen name="sound_record_progress_height">48dp</dimen>
 	<dimen name="map_height">250dp</dimen>
+	
+	<dimen name="spectrogram_height">400dp</dimen>
+
 </resources>

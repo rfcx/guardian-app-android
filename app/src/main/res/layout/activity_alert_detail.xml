@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".view.alert.AlertDetailActivity">
+	
+	<FrameLayout
+		android:id="@+id/spectrogramLayout"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/spectrogram_height"
+		android:layout_gravity="center"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:id="@+id/spectrogramImageView"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/spectrogram_height"
+			android:scaleType="fitXY"
+			android:src="@drawable/spectrogram_place_holder" />
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/classificationRecyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/spectrogram_height"
+			android:background="@color/transparent" />
+		
+		<androidx.appcompat.widget.AppCompatSeekBar
+			android:id="@+id/soundProgressSeekBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingStart="0dp"
+			android:paddingEnd="0dp"
+			android:progress="0"
+			android:progressDrawable="@null"
+			android:thumb="@drawable/seek_bar_thumb" />
+		
+		<ProgressBar
+			android:id="@+id/loadingSoundProgressBar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center" />
+		
+		<ProgressBar
+			android:id="@+id/loadingImageProgressBar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center" />
+	
+	</FrameLayout>
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/alertTitleLayout"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/spectrogramLayout">
+		
+		<TextView
+			android:id="@+id/guardianNameTextView"
+			style="@style/RangerText.Body"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:textStyle="bold"
+			app:layout_constrainedWidth="true"
+			app:layout_constraintEnd_toStartOf="@id/timeTextView"
+			app:layout_constraintHorizontal_bias="0"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Alert Tilte" />
+		
+		<TextView
+			android:id="@+id/timeTextView"
+			style="@style/RangerText.Caption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			app:layout_constraintBottom_toBottomOf="@+id/alertTitleLayout"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/alertTitleLayout"
+			tools:text="October 29, 2019 19:06" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
