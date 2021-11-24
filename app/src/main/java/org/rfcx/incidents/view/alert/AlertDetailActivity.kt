@@ -5,9 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_alert_detail.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.incidents.view.events.detail.GuardianEventDetailViewModel
 
 class AlertDetailActivity : AppCompatActivity() {
+	private val viewModel: AlertDetailViewModel by viewModel()
 	
 	companion object {
 		const val EXTRA_ALERT_ID = "EXTRA_ALERT_ID"
@@ -25,6 +29,10 @@ class AlertDetailActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_alert_detail)
 		alertId = intent?.getStringExtra(EXTRA_ALERT_ID)
 		setupToolbar()
+		
+		val alert = alertId?.let { viewModel.getAlert(it) }
+		guardianNameTextView.text = alert?.classification?.title
+		timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
 	}
 	
 	private fun setupToolbar() {
@@ -33,7 +41,7 @@ class AlertDetailActivity : AppCompatActivity() {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			title = getString(R.string.event_detail)
+			title = getString(R.string.guardian_event_detail)
 		}
 	}
 	

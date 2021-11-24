@@ -4,6 +4,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.incidents.view.MainActivityViewModel
+import org.rfcx.incidents.view.alert.AlertDetailViewModel
 import org.rfcx.incidents.view.events.EventsViewModel
 import org.rfcx.incidents.view.events.detail.GuardianEventDetailViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
@@ -29,6 +30,7 @@ object UiModule {
 	val eventsModule = module {
 		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
 		viewModel { GuardianEventDetailViewModel(get(), get()) }
+		viewModel { AlertDetailViewModel(get()) }
 	}
 	
 	val reportsModule = module {
