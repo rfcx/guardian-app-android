@@ -6,12 +6,22 @@
 	android:layout_height="match_parent"
 	tools:context=".view.alert.AlertDetailActivity">
 	
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbarLayout"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+	
 	<FrameLayout
 		android:id="@+id/spectrogramLayout"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/spectrogram_height"
 		android:layout_gravity="center"
-		app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 		
 		<androidx.appcompat.widget.AppCompatImageView
 			android:id="@+id/spectrogramImageView"
@@ -50,6 +60,7 @@
 			android:layout_gravity="center" />
 	
 	</FrameLayout>
+	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/alertTitleLayout"
 		android:layout_width="0dp"
