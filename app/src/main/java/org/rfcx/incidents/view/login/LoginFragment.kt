@@ -120,20 +120,20 @@ class LoginFragment : BaseFragment() {
 	}
 	
 	private fun setupObserver() {
-		loginViewModel.userAuth.observe(this, Observer {
+		loginViewModel.userAuth.observe(viewLifecycleOwner, Observer {
 			loading()
 			it ?: return@Observer
 			loginViewModel.checkUserDetail(it)
 		})
 		
-		loginViewModel.loginFailure.observe(this, Observer { errorMessage ->
+		loginViewModel.loginFailure.observe(viewLifecycleOwner, Observer { errorMessage ->
 			if (errorMessage != null && errorMessage.isNotEmpty()) {
 				Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
 			}
 			loading(false)
 		})
 		
-		loginViewModel.statusUserTouch.observe(this, Observer { status ->
+		loginViewModel.statusUserTouch.observe(viewLifecycleOwner, Observer { status ->
 			if (status !== null && status) {
 				listener.handleOpenPage()
 			} else {
@@ -141,7 +141,7 @@ class LoginFragment : BaseFragment() {
 			}
 		})
 		
-		loginViewModel.resetPassword.observe(this, Observer { str ->
+		loginViewModel.resetPassword.observe(viewLifecycleOwner, Observer { str ->
 			if (str == SUCCESS) {
 				loading(false)
 				Toast.makeText(context, getString(R.string.reset_link_send), Toast.LENGTH_LONG).show()

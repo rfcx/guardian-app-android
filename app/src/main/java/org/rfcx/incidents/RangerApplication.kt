@@ -70,7 +70,6 @@ class RangerApplication : MultiDexApplication(), LifecycleObserver {
 	@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
 	fun onAppInBackground() {
 		this.removeLocationUpdates()
-		unregisterReceiver(airplaneModeReceiver)
 	}
 	
 	private fun setUpRealm() {
