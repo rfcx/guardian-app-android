@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- LoginActivity -->
-	<string name="app_name_label">RFCx Responder</string>
+	<string name="app_name_label">RFCx Guardian</string>
 	<string name="email">E-mail</string>
 	<string name="password">Password</string>
 	<string name="login">Σύνδεση</string>
