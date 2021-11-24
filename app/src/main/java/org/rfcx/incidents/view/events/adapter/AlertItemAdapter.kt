@@ -10,7 +10,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 
-class AlertItemAdapter : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHolder>() {
+class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHolder>() {
 	var items: List<Alert> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
@@ -27,6 +27,9 @@ class AlertItemAdapter : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHold
 	
 	override fun onBindViewHolder(holder: AlertItemViewHolder, position: Int) {
 		holder.bind(items[position])
+		holder.itemView.setOnClickListener {
+			onClickListener(items[position])
+		}
 	}
 	
 	inner class AlertItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

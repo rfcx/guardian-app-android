@@ -16,11 +16,13 @@ import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.service.*
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.util.*
+import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
 import org.rfcx.incidents.view.events.detail.GuardianEventDetailFragment
@@ -258,6 +260,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		startActivity(intent)
 	}
 	
+	override fun openAlertDetail(alert: Alert) {
+		AlertDetailActivity.startActivity(this, alert.serverId)
+	}
+	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
@@ -375,4 +381,5 @@ interface MainActivityEventListener {
 	fun openDetailResponse(coreId: String)
 	fun openCreateResponse(response: Response)
 	fun openGoogleMap(stream: Stream)
+	fun openAlertDetail(alert: Alert)
 }

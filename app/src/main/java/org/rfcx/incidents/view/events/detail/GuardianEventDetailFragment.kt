@@ -19,11 +19,11 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
 
-class GuardianEventDetailFragment : Fragment() {
+class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
-	private val alertItemAdapter by lazy { AlertItemAdapter() }
+	private val alertItemAdapter by lazy { AlertItemAdapter(this) }
 	
 	var name: String? = null
 	var guardianId: String? = null
@@ -109,6 +109,10 @@ class GuardianEventDetailFragment : Fragment() {
 		toolbarLayout.setNavigationOnClickListener {
 			listener.onBackPressed()
 		}
+	}
+	
+	override fun invoke(alert: Alert) {
+		listener.openAlertDetail(alert)
 	}
 	
 	companion object {
