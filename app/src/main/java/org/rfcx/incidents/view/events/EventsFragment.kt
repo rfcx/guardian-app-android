@@ -43,7 +43,9 @@ import com.mapbox.mapboxsdk.style.layers.*
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import kotlinx.android.synthetic.main.fragment_new_events.*
+import kotlinx.android.synthetic.main.fragment_new_events.progressBar
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
@@ -153,7 +155,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		mapView.onCreate(savedInstanceState)
 		mapView.getMapAsync(this)
 		preferences = Preferences.getInstance(requireContext())
-		isShowProgressBar()
 		
 		getLocation()
 		setupToolbar()
@@ -163,14 +164,30 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setRecyclerView()
 		onClickCurrentLocationButton()
 		
-		if (!context.isNetworkAvailable()) {
-			setStreamsWithLocalData()
-			isShowProgressBar(false)
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val projectServerId = viewModel.getProject(projectId)?.serverId
+		
+		projectServerId?.let {
+			if (viewModel.isStreamsEmpty(projectServerId)) {
+				isShowProgressBar()
+				checkInternet()
+			} else {
+				setStreamsWithLocalData()
+				checkInternet()
+			}
 		}
 		
 		refreshView.apply {
 			setOnRefreshListener(this@EventsFragment)
 			setColorSchemeResources(R.color.colorPrimary)
+		}
+	}
+	
+	private fun checkInternet() {
+		if (!context.isNetworkAvailable()) {
+			isShowProgressBar(false)
+		} else {
+			viewModel.loadStreams()
 		}
 	}
 	
@@ -326,12 +343,21 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				setItemOnAdapter()
 				setAlertFeatures(list.map { s -> s.toStream() })
 				refreshView.isRefreshing = false
+				isShowProgressBar(false)
 			}, {
 				refreshView.isRefreshing = false
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
 				isShowNotHaveStreams(viewModel.nearbyGuardians.isEmpty() && viewModel.othersGuardians.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+			})
+		})
+		
+		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
+			it.success({ list ->
+				setStreamsWithLocalData()
+			}, {
+			}, {
 			})
 		})
 		
@@ -776,6 +802,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	}
 	
 	override fun onRefresh() {
-		viewModel.loadStreams()
+		if (context.isNetworkAvailable()) {
+			viewModel.loadStreams()
+		} else {
+			refreshView.isRefreshing = false
+			requireContext().showToast(getString(R.string.no_internet_connection))
+		}
 	}
 }

@@ -30,15 +30,21 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.EventGroup
-import java.util.*
 
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+	
+	val nearbyGuardians = mutableListOf<EventGroup>()
+	val othersGuardians = mutableListOf<EventGroup>()
+	
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
 	
 	private val _streams = MutableLiveData<Result<List<StreamResponse>>>()
 	val getStreamsFromRemote: LiveData<Result<List<StreamResponse>>> get() = _streams
+	
+	private val _alerts = MutableLiveData<Result<List<ResponseEvent>>>()
+	val getAlertsFromRemote: LiveData<Result<List<ResponseEvent>>> get() = _alerts
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
@@ -52,14 +58,27 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
-	val nearbyGuardians = mutableListOf<EventGroup>()
-	val othersGuardians = mutableListOf<EventGroup>()
-	
-	init {
-		loadStreams()
-	}
-	
 	fun getEventsCount(streamId: String): String = alertDb.getAlertCount(streamId).toString()
+	
+	private fun fetchEvents(streamId: String) {
+		_alerts.value = Result.Loading
+		
+		getEvents.execute(object : DisposableSingleObserver<List<ResponseEvent>>() {
+			override fun onSuccess(t: List<ResponseEvent>) {
+				if (alertDb.getAlertCount(streamId).toInt() != t.size) {
+					alertDb.deleteAlertsByStreamId(streamId)
+					t.forEach { res ->
+						alertDb.insertAlert(res)
+					}
+				}
+				_alerts.value = Result.Success(t)
+			}
+			
+			override fun onError(e: Throwable) {
+				_alerts.value = Result.Error(e)
+			}
+		}, streamId)
+	}
 	
 	fun fetchProjects() {
 		if (context.isNetworkAvailable()) {
@@ -103,17 +122,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun loadEvents(list: List<StreamResponse>) {
 		list.forEach {
-			getEvents.execute(object : DisposableSingleObserver<List<ResponseEvent>>() {
-				override fun onSuccess(t: List<ResponseEvent>) {
-					t.forEach { res ->
-						alertDb.insertAlert(res)
-					}
-				}
-				
-				override fun onError(e: Throwable) {
-					_streams.value = Result.Error(e)
-				}
-			}, it.id)
+			fetchEvents(it.id)
 		}
 	}
 	
@@ -122,6 +131,8 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	}
 	
 	fun getStreams(): List<Stream> = streamDb.getStreams()
+	
+	fun isStreamsEmpty(projectServerId: String): Boolean = streamDb.getStreams().none { s -> s.projectServerId == projectServerId }
 	
 	fun getProjectName(id: Int): String = getProject(id)?.name
 			?: context.getString(R.string.all_projects)
@@ -176,7 +187,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 			lastLocation?.let { loc ->
 				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
 			}
-			groups.add(EventGroup(getEventsCount(it.serverId).toInt(), distance, it.name, it.serverId))
+			groups.add(EventGroup(getEventsCount(it.serverId).toInt(), distance, it.name, it.serverId, alertDb.getStartTimeOfAlerts(it.serverId)))
 		}
 		groups.sortBy { g -> g.distance }
 		groups.forEach {
