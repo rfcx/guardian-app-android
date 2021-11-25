@@ -59,14 +59,12 @@ class ProfileFragment : BaseFragment() {
 		if (!hidden) {
 			analytics?.trackScreen(Screen.PROFILE)
 			profileViewModel.resumed()
-			userProfileImageView.setImageProfile(context.getUserProfile())
 		}
 	}
 	
 	override fun onResume() {
 		super.onResume()
 		profileViewModel.resumed()
-		userProfileImageView.setImageProfile(context.getUserProfile())
 	}
 	
 	@SuppressLint("DefaultLocale")
