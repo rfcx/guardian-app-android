@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_assets.*
 import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.*
+import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -55,6 +55,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 			context.startActivity(intent)
 		}
 	}
+	
 	private val analytics by lazy { Analytics(this) }
 	private val viewModel: ResponseDetailViewModel by viewModel()
 	private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
@@ -109,11 +110,28 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-		val answerList = arrayListOf<AnswerItem>()
+		val evidenceList = arrayListOf<AnswerItem>()
+		val loggingList = arrayListOf<AnswerItem>()
+		val damageList = arrayListOf<AnswerItem>()
+		val actionsList = arrayListOf<AnswerItem>()
+		
 		answers.forEach { id ->
-			id.getAnswerItem(this)?.let { item -> answerList.add(item) }
+			when {
+				id.toString().startsWith("1") -> {
+					id.getAnswerItem(this)?.let { item -> evidenceList.add(item) }
+				}
+				id.toString().startsWith("2") -> {
+					id.getAnswerItem(this)?.let { item -> actionsList.add(item) }
+				}
+				id.toString().startsWith("3") -> {
+					id.getAnswerItem(this)?.let { item -> loggingList.add(item) }
+				}
+				id.toString().startsWith("4") -> {
+					id.getAnswerItem(this)?.let { item -> damageList.add(item) }
+				}
+			}
 		}
-		return answerList
+		return evidenceList + loggingList + damageList + actionsList
 	}
 	
 	private fun setAudio(path: String) {
