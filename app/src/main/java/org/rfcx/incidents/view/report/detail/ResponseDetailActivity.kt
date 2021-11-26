@@ -117,28 +117,12 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-		val evidenceList = arrayListOf<AnswerItem>()
-		val loggingList = arrayListOf<AnswerItem>()
-		val damageList = arrayListOf<AnswerItem>()
-		val actionsList = arrayListOf<AnswerItem>()
-		
-		answers.forEach { id ->
-			when {
-				id.toString().startsWith("1") -> {
-					id.getAnswerItem(this)?.let { item -> evidenceList.add(item) }
-				}
-				id.toString().startsWith("2") -> {
-					id.getAnswerItem(this)?.let { item -> actionsList.add(item) }
-				}
-				id.toString().startsWith("3") -> {
-					id.getAnswerItem(this)?.let { item -> loggingList.add(item) }
-				}
-				id.toString().startsWith("4") -> {
-					id.getAnswerItem(this)?.let { item -> damageList.add(item) }
-				}
-			}
+		val sorted: List<Int> = answers.sortedWith(compareBy({ it.toString()[0] == '2' }, { it.toString()[0] == '4' }, { it.toString()[0] == '3' }, { it.toString()[0] == '1' }))
+		val answerItems = arrayListOf<AnswerItem>()
+		sorted.forEach {
+			it.getAnswerItem(this)?.let { item -> answerItems.add(item) }
 		}
-		return evidenceList + loggingList + damageList + actionsList
+		return answerItems
 	}
 	
 	private fun setAudio(path: String) {
