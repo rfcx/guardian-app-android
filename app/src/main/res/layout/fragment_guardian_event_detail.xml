@@ -40,14 +40,31 @@
 			app:layout_constraintEnd_toEndOf="@id/toolbarLayout"
 			app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 		
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/alertsRecyclerView"
+		<ProgressBar
+			android:id="@+id/progressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@color/transparent"
+			android:visibility="gone"
+			app:layout_constraintBottom_toTopOf="@id/createReportButton"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/guardianNameTextView" />
+		
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:id="@+id/alertsSwipeRefreshView"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_marginBottom="@dimen/margin_padding_normal"
-			android:overScrollMode="never"
 			app:layout_constraintBottom_toTopOf="@id/createReportButton"
-			app:layout_constraintTop_toBottomOf="@id/guardianNameTextView" />
+			app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
+			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/alertsRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_marginBottom="@dimen/margin_padding_normal"
+				android:overScrollMode="never" />
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/createReportButton"

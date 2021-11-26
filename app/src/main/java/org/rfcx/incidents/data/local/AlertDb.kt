@@ -28,6 +28,8 @@ class AlertDb(private val realm: Realm) {
 	
 	fun getAlerts(streamId: String): List<Alert> = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.ASCENDING).findAll()
 	
+	fun getAlertsByDescending(streamId: String): List<Alert> = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.DESCENDING).findAll()
+	
 	fun getStartTimeOfAlerts(streamId: String): Date? {
 		val alerts = realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.ASCENDING).findAll()
 		return if (alerts.isNotEmpty()) alerts[0]?.start else null
