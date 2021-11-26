@@ -257,10 +257,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	private fun setupSources(style: Style) {
 		lineSource = GeoJsonSource(SOURCE_LINE)
-		style.addSource(lineSource!!)
+		lineSource?.let { style.addSource(it) }
 		
 		checkInSource = GeoJsonSource(SOURCE_CHECK_IN)
-		style.addSource(checkInSource!!)
+		checkInSource?.let { style.addSource(it) }
 	}
 	
 	private fun addLineLayer(style: Style) {
@@ -274,9 +274,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
 		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
-		if (mBitmap != null) {
-			style.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
-		}
+		mBitmap?.let { style.addImage(MARKER_CHECK_IN_IMAGE, it) }
 		
 		val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
 			withProperties(
