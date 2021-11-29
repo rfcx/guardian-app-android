@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mapbox.geojson.Feature
@@ -24,7 +25,9 @@ import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_response_detail.*
 import kotlinx.android.synthetic.main.activity_response_detail.attachImageRecycler
 import kotlinx.android.synthetic.main.activity_response_detail.noteTextView
@@ -33,7 +36,7 @@ import kotlinx.android.synthetic.main.fragment_assets.*
 import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.*
+import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -48,6 +51,9 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	companion object {
 		const val EXTRA_RESPONSE_CORE_ID = "EXTRA_RESPONSE_CORE_ID"
 		private const val SOURCE_LINE = "source.line"
+		private const val SOURCE_CHECK_IN = "source.checkin"
+		private const val MARKER_CHECK_IN_ID = "marker.checkin"
+		private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
 		
 		fun startActivity(context: Context, responseCoreId: String) {
 			val intent = Intent(context, ResponseDetailActivity::class.java)
@@ -55,6 +61,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 			context.startActivity(intent)
 		}
 	}
+	
 	private val analytics by lazy { Analytics(this) }
 	private val viewModel: ResponseDetailViewModel by viewModel()
 	private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
@@ -68,6 +75,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	private lateinit var mapView: MapView
 	private lateinit var mapBoxMap: MapboxMap
 	private var lineSource: GeoJsonSource? = null
+	private var checkInSource: GeoJsonSource? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -109,11 +117,12 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-		val answerList = arrayListOf<AnswerItem>()
-		answers.forEach { id ->
-			id.getAnswerItem(this)?.let { item -> answerList.add(item) }
+		val sorted: List<Int> = answers.sortedWith(compareBy({ it.toString()[0] == '2' }, { it.toString()[0] == '4' }, { it.toString()[0] == '3' }, { it.toString()[0] == '1' }))
+		val answerItems = arrayListOf<AnswerItem>()
+		sorted.forEach {
+			it.getAnswerItem(this)?.let { item -> answerItems.add(item) }
 		}
-		return answerList
+		return answerItems
 	}
 	
 	private fun setAudio(path: String) {
@@ -194,6 +203,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 						lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
 						
 						val lastLocation = feature?.geometry() as LineString
+						val pointFeatures = lastLocation.coordinates().map {
+							Feature.fromGeometry(Point.fromLngLat(it.longitude(), it.latitude()))
+						}
+						checkInSource?.setGeoJson(FeatureCollection.fromFeatures(pointFeatures))
 						moveCameraToLeavesBounds(lastLocation.coordinates())
 					} else {
 						mapView.visibility = View.GONE
@@ -228,7 +241,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	
 	private fun setupSources(style: Style) {
 		lineSource = GeoJsonSource(SOURCE_LINE)
-		style.addSource(lineSource!!)
+		lineSource?.let { style.addSource(it) }
+		
+		checkInSource = GeoJsonSource(SOURCE_CHECK_IN)
+		checkInSource?.let { style.addSource(it) }
 	}
 	
 	private fun addLineLayer(style: Style) {
@@ -239,6 +255,20 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 				PropertyFactory.lineColor(Expression.get("color"))
 		)
 		style.addLayer(lineLayer)
+		
+		val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
+		val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
+		mBitmap?.let { style.addImage(MARKER_CHECK_IN_IMAGE, it) }
+		
+		val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
+			withProperties(
+					PropertyFactory.iconImage(MARKER_CHECK_IN_IMAGE),
+					PropertyFactory.iconAllowOverlap(true),
+					PropertyFactory.iconIgnorePlacement(true),
+					PropertyFactory.iconSize(1f)
+			)
+		}
+		style.addLayer(checkInLayer)
 	}
 	
 	private fun setupToolbar() {

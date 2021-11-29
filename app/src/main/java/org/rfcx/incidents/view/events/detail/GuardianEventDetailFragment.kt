@@ -8,18 +8,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
+import kotlinx.android.synthetic.main.fragment_guardian_event_detail.progressBar
+import kotlinx.android.synthetic.main.fragment_guardian_event_detail.toolbarLayout
+import kotlinx.android.synthetic.main.fragment_new_events.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.events.toAlert
+import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.alert.Alert
-import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Screen
-import org.rfcx.incidents.util.setFormatLabel
+import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
 
-class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit {
+class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
@@ -60,6 +64,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit {
 		super.onViewCreated(view, savedInstanceState)
 		setupToolbar()
 		setObserve()
+		isShowProgressBar()
 		
 		alertsRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
@@ -88,12 +93,36 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit {
 		guardianNameTextView.text = name
 		distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
 		distanceTextView.text = distance?.setFormatLabel()
+		
+		guardianId?.let {
+			if (viewModel.getEventsCount(it) != 0L) {
+				alertItemAdapter.items = viewModel.getAlertsByStream(it)
+				isShowProgressBar(false)
+			} else {
+				if (!context.isNetworkAvailable()) {
+					isShowProgressBar(false)
+				} else {
+					viewModel.fetchEvents(it)
+				}
+			}
+		}
+		
+		alertsSwipeRefreshView.apply {
+			setOnRefreshListener(this@GuardianEventDetailFragment)
+			setColorSchemeResources(R.color.colorPrimary)
+		}
 	}
 	
 	private fun setObserve() {
-		viewModel.getAlerts().observe(viewLifecycleOwner, { events ->
-			alerts = events.filter { e -> e.streamId == guardianId }
-			alertItemAdapter.items = alerts
+		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
+			it.success({ list ->
+				alertItemAdapter.items = list.map { a -> a.toAlert() }
+				isShowProgressBar(false)
+				alertsSwipeRefreshView.isRefreshing = false
+			}, {
+				alertsSwipeRefreshView.isRefreshing = false
+			}, {
+			})
 		})
 	}
 	
@@ -113,6 +142,14 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit {
 	
 	override fun invoke(alert: Alert) {
 		listener.openAlertDetail(alert)
+	}
+	
+	override fun onRefresh() {
+		guardianId?.let { viewModel.fetchEvents(it) }
+	}
+	
+	private fun isShowProgressBar(show: Boolean = true) {
+		progressBar.visibility = if (show) View.VISIBLE else View.GONE
 	}
 	
 	companion object {
