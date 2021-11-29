@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_alert_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.util.getTokenID
+import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.events.detail.GuardianEventDetailViewModel
 
@@ -33,6 +35,14 @@ class AlertDetailActivity : AppCompatActivity() {
 		val alert = alertId?.let { viewModel.getAlert(it) }
 		guardianNameTextView.text = alert?.classification?.title
 		timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
+		val token = this.getTokenID()
+		
+		spectrogramImageView.setReportImage(
+				url = "https://ranger-api.rfcx.org/media/6nohqqvyhvjb_t20211128T153441279Z.20211128T153506239Z_rfull_g1_fspec_d600.512_wdolph_z120.png",
+				fromServer = true,
+				token = token,
+				progressBar = loadingImageProgressBar
+		)
 	}
 	
 	private fun setupToolbar() {

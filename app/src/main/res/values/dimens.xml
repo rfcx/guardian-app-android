@@ -36,5 +36,6 @@
 	<dimen name="map_height">250dp</dimen>
 	
 	<dimen name="spectrogram_height">400dp</dimen>
+	<dimen name="progress_bar_size">60dp</dimen>
 
 </resources>
