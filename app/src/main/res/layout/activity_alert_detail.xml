@@ -60,6 +60,19 @@
 			android:layout_height="@dimen/progress_bar_size"
 			android:layout_gravity="center"
 			android:visibility="gone" />
+		
+		<ImageView
+			android:id="@+id/replayButton"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="fitXY"
+			android:src="@drawable/ic_replay_black_40dp"
+			android:visibility="invisible"
+			app:tint="@color/colorPrimaryDark" />
 	
 	</FrameLayout>
 	

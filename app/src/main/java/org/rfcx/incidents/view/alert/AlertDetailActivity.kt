@@ -2,17 +2,19 @@ package org.rfcx.incidents.view.alert
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.activity_alert_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
-import org.rfcx.incidents.util.toIsoFormatString
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.incidents.view.alert.AlertDetailViewModel.Companion.maxProgress
 
 class AlertDetailActivity : AppCompatActivity() {
 	private val viewModel: AlertDetailViewModel by viewModel()
@@ -41,16 +43,59 @@ class AlertDetailActivity : AppCompatActivity() {
 		
 		alert?.let {
 			spectrogramImageView.setReportImage(
-					url = setFormatUrlOfSpectrogram(it),
+					url = viewModel.setFormatUrlOfSpectrogram(it),
 					fromServer = true,
 					token = token,
 					progressBar = loadingImageProgressBar
 			)
+			viewModel.setAlert(it)
+			setupView(viewModel.setFormatAudio(it))
+			observePlayer()
 		}
 	}
 	
-	private fun setFormatUrlOfSpectrogram(alert: Alert): String {
-		return "${BuildConfig.RANGER_API_DOMAIN}/media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
+	private fun setupView(url: String) {
+		soundProgressSeekBar.isEnabled = false
+		soundProgressSeekBar.max = maxProgress
+		
+		replayButton.setOnClickListener {
+			viewModel.replaySound(url)
+		}
+	}
+	
+	private fun observePlayer() {
+		viewModel.playerError.observe(this, {
+			Toast.makeText(this, R.string.can_not_play_audio, Toast.LENGTH_SHORT).show()
+			loadingSoundProgressBar.visibility = View.INVISIBLE
+			replayButton.visibility = View.VISIBLE
+		})
+		
+		viewModel.playerState.observe(this, {
+			when (it) {
+				Player.STATE_BUFFERING -> {
+					replayButton.visibility = View.INVISIBLE
+					loadingSoundProgressBar.visibility = View.VISIBLE
+				}
+				Player.STATE_READY -> {
+					replayButton.visibility = View.INVISIBLE
+					loadingSoundProgressBar.visibility = View.INVISIBLE
+				}
+				Player.STATE_IDLE -> {
+					loadingSoundProgressBar.visibility = View.INVISIBLE
+				}
+				Player.STATE_ENDED -> {
+					replayButton.visibility = View.VISIBLE
+				}
+			}
+		})
+		
+		viewModel.playerProgress.observe(this, {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				soundProgressSeekBar?.setProgress(it, true)
+			} else {
+				soundProgressSeekBar?.progress = it
+			}
+		})
 	}
 	
 	private fun setupToolbar() {

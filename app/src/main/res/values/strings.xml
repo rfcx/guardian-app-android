@@ -313,6 +313,8 @@
 	<string name="large_text">Large</string>
 	<string name="other_text">Other</string>
 	
+	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+	
 	<string name="assets">Assets:</string>
 	<string name="note">Note: %s</string>
 	<string name="tracking_line">#e55e5e</string>

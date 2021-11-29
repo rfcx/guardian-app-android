@@ -29,7 +29,7 @@ object UiModule {
 	
 	val eventsModule = module {
 		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
-		viewModel { AlertDetailViewModel(get()) }
+		viewModel { AlertDetailViewModel(androidContext(), get()) }
 		viewModel { GuardianEventDetailViewModel(get(), get(), get()) }
 	}
 	
