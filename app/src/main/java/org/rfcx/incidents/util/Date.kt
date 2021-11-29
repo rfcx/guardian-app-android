@@ -11,6 +11,12 @@ private val isoSdf by lazy {
 	sdf
 }
 
+private val isoFormat by lazy {
+	val sdf = SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'", Locale.US)
+	sdf.timeZone = TimeZone.getTimeZone("UTC")
+	sdf
+}
+
 private val isoSdfNotZ by lazy {
 	val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
 	sdf.timeZone = TimeZone.getTimeZone("UTC")
@@ -42,10 +48,12 @@ private val outputDateSdf by lazy {
 	sdf
 }
 
-
-
 fun Date.toIsoString(): String {
 	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
+}
+
+fun Date.toIsoFormatString(): String {
+	return isoFormat.format(this) // pattern 20211128T153441279Z
 }
 
 fun Date.toIsoNotZString(): String {
