@@ -12,8 +12,8 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.setFormatLabel
 import java.util.*
 
-class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
-	var items: List<EventGroup> = arrayListOf()
+class GuardianItemAdapter(private val onClickListener: (StreamItem) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
+	var items: List<StreamItem> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {
 			field = value
@@ -41,7 +41,7 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 		private val timeTextView = itemView.timeTextView
 		private val distance = itemView.distanceTextView
 		
-		fun bind(item: EventGroup) {
+		fun bind(item: StreamItem) {
 			val preferences = Preferences.getInstance(itemView.context)
 			val time = preferences.getLong(Preferences.LATEST_CURRENT_LOCATION_TIME, 0)
 			val diff = Date().time - time
@@ -102,4 +102,4 @@ class GuardianItemAdapter(private val onClickListener: (EventGroup) -> Unit) : R
 	}
 }
 
-data class EventGroup(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: Date? = null)
+data class StreamItem(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: Date? = null)

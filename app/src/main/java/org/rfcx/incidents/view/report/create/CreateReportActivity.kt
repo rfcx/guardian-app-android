@@ -70,7 +70,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		createReportContainer.setOnTouchListener(object : View.OnTouchListener {
 			override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 				val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-				imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+				if(currentFocus != null) {
+					imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+				}
 				return true
 			}
 		})
