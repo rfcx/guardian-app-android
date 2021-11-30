@@ -10,6 +10,9 @@ import org.rfcx.incidents.UiThread
 import org.rfcx.incidents.data.api.events.EventsRepository
 import org.rfcx.incidents.data.api.events.EventsRepositoryImp
 import org.rfcx.incidents.data.api.events.GetEvents
+import org.rfcx.incidents.data.api.media.MediaRepository
+import org.rfcx.incidents.data.api.media.MediaRepositoryImp
+import org.rfcx.incidents.data.api.media.MediaUseCase
 import org.rfcx.incidents.data.api.project.GetProjectsRepository
 import org.rfcx.incidents.data.api.project.GetProjectsRepositoryImp
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
@@ -126,6 +129,9 @@ object DataModule {
 		single { UnsubscribeRepositoryImp(get()) } bind UnsubscribeRepository::class
 		single { UnsubscribeUseCase(get(), get(), get()) }
 		
+		single { MediaRepositoryImp(get()) } bind MediaRepository::class
+		single { MediaUseCase(get(), get(), get()) }
+		
 		single { TermsRepositoryImp(get()) } bind TermsRepository::class
 		single { TermsUseCase(get(), get(), get()) }
 		
@@ -134,6 +140,7 @@ object DataModule {
 	val remoteModule = module {
 		factory { ServiceFactory.makeProjectsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeMediaService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
