@@ -67,6 +67,17 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 		}
 	}
 	
+	override fun onCleared() {
+		super.onCleared()
+		playerTimeHandler.removeCallbacks(playerTimeRunnable)
+		try {
+			exoPlayer.removeListener(exoPlayerListener)
+			exoPlayer.release()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
+	}
+	
 	private val exoPlayerListener = object : Player.EventListener {
 		override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
 			_playerState.value = playbackState
