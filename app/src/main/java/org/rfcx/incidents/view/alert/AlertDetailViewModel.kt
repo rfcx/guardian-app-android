@@ -13,21 +13,27 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import io.reactivex.observers.DisposableSingleObserver
+import okhttp3.ResponseBody
+import okio.BufferedSink
+import okio.buffer
+import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.media.MediaUseCase
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.entity.alert.Alert
-import org.rfcx.incidents.service.CleanupAudioCacheWorker.Companion.AUDIOS_SUB_DIRECTORY
 import org.rfcx.incidents.util.toIsoFormatString
 import java.io.File
+import java.io.IOException
 
-class AlertDetailViewModel(private val context: Context, private val alertDb: AlertDb) : ViewModel() {
+class AlertDetailViewModel(private val context: Context, private val alertDb: AlertDb, private val mediaUseCase: MediaUseCase) : ViewModel() {
 	var _alert: Alert? = null
 		private set
 	
 	fun setAlert(alert: Alert) {
 		_alert = alert
-		initPlayer(setFormatAudio(alert))
+		getAudio(alert)
 	}
 	
 	private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
@@ -50,6 +56,7 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 			playerTimeHandler.postDelayed(this, delayTime)
 		}
 	}
+	var audioFileName: String? = null
 	
 	private fun updateSoundProgress() {
 		exoPlayer.let {
@@ -104,11 +111,8 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	private fun initPlayer(audioUrl: String) {
 		if (_alert == null) return
 		
-		val descriptorFactory =
-				DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
-		
-		val audiosDirectory = File(context.cacheDir, AUDIOS_SUB_DIRECTORY)
-		val audioFile = File(audiosDirectory, setFormatAudio(_alert!!))
+		val descriptorFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
+		val audioFile = File(this.context.getExternalFilesDir(null).toString(), audioUrl)
 		val mediaSource = if (audioFile.exists()) {
 			ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
 		} else {
@@ -123,9 +127,43 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	
 	fun getAlert(coreId: String): Alert? = alertDb.getAlert(coreId)
 	
-	fun setFormatAudio(alert: Alert): String {
-		return "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-//		return "${BuildConfig.RANGER_API_DOMAIN}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fmp3"
+	private fun getAudio(alert: Alert) {
+		val fileName = alert.streamId + "_t" + alert.start.toIsoFormatString() + "." + alert.end.toIsoFormatString() + "_rfull_g1_fmp3.mp3"
+		mediaUseCase.execute(object : DisposableSingleObserver<ResponseBody>() {
+			override fun onSuccess(t: ResponseBody) {
+				saveFile(t, fileName) {
+					if (it) {
+						audioFileName = fileName
+						initPlayer(fileName)
+					}
+				}
+			}
+			
+			override fun onError(e: Throwable) {
+				e.printStackTrace()
+			}
+		}, fileName)
+	}
+	
+	private fun saveFile(response: ResponseBody, fileName: String, callback: (Boolean) -> Unit) {
+		val temp = File(this.context.getExternalFilesDir(null).toString(), "temp_$fileName") as File
+		val file = File(this.context.getExternalFilesDir(null).toString(), fileName)
+		
+		if (file.exists()) {
+			callback.invoke(true)
+			return
+		}
+		
+		try {
+			val sink: BufferedSink = temp.sink().buffer()
+			sink.writeAll(response.source())
+			sink.close()
+			temp.renameTo(file)
+			callback.invoke(true)
+		} catch (e: IOException) {
+			e.printStackTrace()
+			callback.invoke(false)
+		}
 	}
 	
 	fun setFormatUrlOfSpectrogram(alert: Alert): String {
@@ -135,6 +173,5 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	companion object {
 		const val maxProgress = 100_000
 		private const val delayTime = 100L
-		const val confidenceValue = 0.8
 	}
 }
