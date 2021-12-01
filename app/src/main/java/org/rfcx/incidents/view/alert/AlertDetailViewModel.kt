@@ -66,6 +66,8 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 		}
 	}
 	
+	fun getDuration(): Long = exoPlayer.duration
+	
 	override fun onCleared() {
 		super.onCleared()
 		playerTimeHandler.removeCallbacks(playerTimeRunnable)

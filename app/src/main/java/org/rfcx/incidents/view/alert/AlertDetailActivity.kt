@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.Player
@@ -52,10 +53,21 @@ class AlertDetailActivity : AppCompatActivity() {
 			setupView(viewModel.setFormatUrlOfAudio(it))
 			observePlayer()
 		}
+		
+		soundProgressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+				if (fromUser) {
+					viewModel.seekPlayerTo(progress.toLong() * viewModel.getDuration() / maxProgress)
+				}
+			}
+			
+			override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+			
+			override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+		})
 	}
 	
 	private fun setupView(url: String) {
-		soundProgressSeekBar.isEnabled = false
 		soundProgressSeekBar.max = maxProgress
 		
 		replayButton.setOnClickListener {
