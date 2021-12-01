@@ -56,7 +56,6 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 			playerTimeHandler.postDelayed(this, delayTime)
 		}
 	}
-	var audioFileName: String? = null
 	
 	private fun updateSoundProgress() {
 		exoPlayer.let {
@@ -144,7 +143,6 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 			override fun onSuccess(t: ResponseBody) {
 				saveFile(t, fileName) {
 					if (it) {
-						audioFileName = fileName
 						initPlayer(fileName)
 					}
 				}
@@ -179,6 +177,10 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	
 	fun setFormatUrlOfSpectrogram(alert: Alert): String {
 		return "${BuildConfig.RANGER_API_DOMAIN}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
+	}
+	
+	fun setFormatUrlOfAudio(alert: Alert): String {
+		return "${BuildConfig.RANGER_API_DOMAIN}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}__rfull_g1_fmp3.mp3"
 	}
 	
 	companion object {

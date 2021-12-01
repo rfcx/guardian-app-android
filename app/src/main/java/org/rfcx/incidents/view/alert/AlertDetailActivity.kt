@@ -49,7 +49,7 @@ class AlertDetailActivity : AppCompatActivity() {
 					progressBar = loadingImageProgressBar
 			)
 			viewModel.setAlert(it)
-			viewModel.audioFileName?.let { it1 -> setupView(it1) }
+			setupView(viewModel.setFormatUrlOfAudio(it))
 			observePlayer()
 		}
 	}
