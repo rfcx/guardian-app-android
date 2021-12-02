@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.util.Log
 import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
@@ -19,7 +18,10 @@ import org.rfcx.incidents.entity.response.EvidenceTypes
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
+import org.rfcx.incidents.util.showToast
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -70,7 +72,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		createReportContainer.setOnTouchListener(object : View.OnTouchListener {
 			override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 				val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-				if(currentFocus != null) {
+				if (currentFocus != null) {
 					imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
 				}
 				return true
@@ -110,7 +112,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			subtitle = streamName
 		}
 	}
 	
@@ -146,6 +147,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun getResponse(): Response? = _response
 	
 	override fun getImages(): ArrayList<String> = _images
+	
+	override fun getSiteName(): String? = streamName
 	
 	override fun setImages(images: ArrayList<String>) {
 		_images = images
@@ -270,6 +273,7 @@ interface CreateReportListener {
 	
 	fun getResponse(): Response?
 	fun getImages(): ArrayList<String>
+	fun getSiteName(): String?
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)

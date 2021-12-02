@@ -53,6 +53,8 @@ class InvestigationTimestampFragment : Fragment() {
 		setMinutePicker()
 		setDatePicker()
 		setupOnListener()
+		
+		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 	}
 	
 	private fun setupInvestigatedAt() {
