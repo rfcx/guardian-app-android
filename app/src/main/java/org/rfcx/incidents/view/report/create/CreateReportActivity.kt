@@ -132,6 +132,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		
 		when (step) {
 			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
+			StepCreateReport.INVESTIGATION_TYPE.step -> startFragment(InvestigationTypeFragment.newInstance())
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
 			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())
@@ -242,8 +243,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun onBackPressed() {
 		when (supportFragmentManager.findFragmentById(R.id.createReportContainer)) {
-			is EvidenceFragment -> {
+			is InvestigationTypeFragment -> {
 				handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+			}
+			is EvidenceFragment -> {
+				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 			}
 			is ScaleFragment -> {
 				handleCheckClicked(StepCreateReport.EVIDENCE.step)
@@ -290,9 +294,10 @@ interface CreateReportListener {
 
 enum class StepCreateReport(val step: Int) {
 	INVESTIGATION_TIMESTAMP(1),
-	EVIDENCE(2),
-	SCALE(3),
-	DAMAGE(4),
-	ACTION(5),
-	ASSETS(6)
+	INVESTIGATION_TYPE(2),
+	EVIDENCE(3),
+	SCALE(4),
+	DAMAGE(5),
+	ACTION(6),
+	ASSETS(7)
 }

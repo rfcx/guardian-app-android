@@ -52,6 +52,10 @@ enum class SyncState(val value: Int) {
 	UNSENT(0), SENDING(1), SENT(2)
 }
 
+enum class InvestigationType(val value: Int) {
+	DEFAULT(-1), LOGGING(1), POACHING(2), OTHER(3)
+}
+
 enum class LoggingScale(val value: Int) {
 	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
 }
