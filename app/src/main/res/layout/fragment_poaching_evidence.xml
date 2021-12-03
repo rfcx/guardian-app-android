@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".view.report.create.PoachingEvidenceFragment">
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/siteNameTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_normal"
+		android:textStyle="bold"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Site Z" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/whatPoachingTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:text="@string/what_poaching_evidence"
+		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
+	
+	<ScrollView
+		android:id="@+id/scrollView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingBottom="@dimen/margin_padding_small"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/whatPoachingTextView">
+		
+		<LinearLayout
+			android:id="@+id/whatPoachingLinearLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:checkedButton="@+id/whatPoachingRadioButton"
+			android:orientation="vertical"
+			android:paddingBottom="@dimen/padding_bottom">
+			
+			<CheckBox
+				android:id="@+id/bulletShellsCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/bullet_shells"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/footprintsCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/footprints"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/dogTracksCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/dog_tracks"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/otherSpecifyCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/other_specify_to_6"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		</LinearLayout>
+	</ScrollView>
+	
+	<View
+		android:id="@+id/lineBottomView"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/white"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/nextStepButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:enabled="false"
+		android:text="@string/next"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,7 @@ class InvestigationTypeFragment : Fragment() {
 		nextStepButton.setOnClickListener {
 			when (selected) {
 				InvestigationType.LOGGING.value -> listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
-				InvestigationType.POACHING.value -> listener.handleCheckClicked(StepCreateReport.EVIDENCE.step) // TODO:: handle
+				InvestigationType.POACHING.value -> listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
 				InvestigationType.OTHER.value -> listener.handleCheckClicked(StepCreateReport.ASSETS.step)
 			}
 		}

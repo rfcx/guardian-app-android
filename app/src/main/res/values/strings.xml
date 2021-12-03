@@ -289,6 +289,12 @@
 	<string name="small">Small (subsistence, agriculture etc)</string>
 	<string name="large">Large (commercial scale, heavy equipment etc)</string>
 	
+	<!-- PoachingEvidenceFragment -->
+	<string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
+	<string name="bullet_shells">Bullet shells / gun remains</string>
+	<string name="footprints">Footprints (human)</string>
+	<string name="dog_tracks">Dog tracks</string>
+	
 	<!-- SetWhatActionFragment -->
 	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
 	<string name="confiscated_equipment">Confiscated equipment</string>

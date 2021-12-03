@@ -135,7 +135,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			StepCreateReport.INVESTIGATION_TYPE.step -> startFragment(InvestigationTypeFragment.newInstance())
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
-			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())
+			StepCreateReport.POACHING_EVIDENCE.step -> startFragment(PoachingEvidenceFragment.newInstance())
 			StepCreateReport.ACTION.step -> startFragment(ActionFragment.newInstance())
 			StepCreateReport.ASSETS.step -> startFragment(AssetsFragment.newInstance())
 		}
@@ -249,11 +249,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			is EvidenceFragment -> {
 				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 			}
+			is PoachingEvidenceFragment -> {
+				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+			}
 			is ScaleFragment -> {
 				handleCheckClicked(StepCreateReport.EVIDENCE.step)
-			}
-			is DamageFragment -> {
-				handleCheckClicked(StepCreateReport.SCALE.step)
 			}
 			is ActionFragment -> {
 				val response = _response ?: Response()
@@ -297,7 +297,11 @@ enum class StepCreateReport(val step: Int) {
 	INVESTIGATION_TYPE(2),
 	EVIDENCE(3),
 	SCALE(4),
-	DAMAGE(5),
-	ACTION(6),
-	ASSETS(7)
+	POACHING_EVIDENCE(5),
+	SCALE_POACHING(6),
+	ACTION(7),
+	ASSETS(8),
+	
+	
+	DAMAGE(9),
 }

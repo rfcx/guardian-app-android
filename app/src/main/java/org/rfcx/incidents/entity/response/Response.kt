@@ -64,6 +64,10 @@ enum class DamageScale(val value: Int) {
 	DEFAULT(-1), NO_VISIBLE(401), SMALL(402), MEDIUM(403), LARGE(404)
 }
 
+enum class PoachingEvidence(val value: Int) {
+	DEFAULT(-1), BULLET_SHELLS(1), FOOTPRINTS(2), DOG_TRACKS(3), OTHER(4)
+}
+
 enum class EvidenceTypes(val value: Int) {
 	NONE(100),
 	CUT_DOWN_TREES(101),
@@ -72,7 +76,6 @@ enum class EvidenceTypes(val value: Int) {
 	LOGGERS_AT_SITE(104),
 	ILLEGAL_CAMPS(105),
 	FIRED_BURNED_AREAS(106),
-	EVIDENCE_OF_POACHING(107)
 }
 
 enum class Actions(val value: Int) {
