@@ -122,7 +122,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun setTitleToolbar(step: Int) {
 		supportActionBar?.apply {
-			title = getString(R.string.create_report_steps, step)
+			title = getString(R.string.create_report_steps, step, "...")
 		}
 	}
 	
@@ -136,6 +136,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
 			StepCreateReport.POACHING_EVIDENCE.step -> startFragment(PoachingEvidenceFragment.newInstance())
+			StepCreateReport.SCALE_POACHING.step -> startFragment(PoachingScaleFragment.newInstance())
 			StepCreateReport.ACTION.step -> startFragment(ActionFragment.newInstance())
 			StepCreateReport.ASSETS.step -> startFragment(AssetsFragment.newInstance())
 		}
@@ -255,7 +256,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			is ScaleFragment -> {
 				handleCheckClicked(StepCreateReport.EVIDENCE.step)
 			}
+			is PoachingScaleFragment -> {
+				handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
+			}
 			is ActionFragment -> {
+				// todo check Poaching? Evidence?
 				val response = _response ?: Response()
 				if (response.evidences.contains(EvidenceTypes.NONE.value)) {
 					handleCheckClicked(StepCreateReport.EVIDENCE.step)

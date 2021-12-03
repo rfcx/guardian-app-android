@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_scale.*
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.LoggingScale
+import org.rfcx.incidents.entity.response.PoachingScale
 
-class ScaleFragment : Fragment() {
+class PoachingScaleFragment : Fragment() {
 	
 	lateinit var listener: CreateReportListener
 	var selected: Int? = null
@@ -23,17 +23,15 @@ class ScaleFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_scale, container, false)
+		return inflater.inflate(R.layout.fragment_poaching_scale, container, false)
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		setupScale()
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->
-				listener.setScale(value)
 				listener.handleCheckClicked(StepCreateReport.ACTION.step)
 			}
 		}
@@ -42,28 +40,15 @@ class ScaleFragment : Fragment() {
 			nextStepButton.isEnabled = true
 			
 			when (checkedId) {
-				R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
-				R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
-				R.id.noneRadioButton -> selected = LoggingScale.NONE.value
-			}
-		}
-	}
-	
-	private fun setupScale() {
-		val response = listener.getResponse()
-		response?.let { res ->
-			selected = res.loggingScale
-			nextStepButton.isEnabled = selected != LoggingScale.DEFAULT.value
-			when (selected) {
-				LoggingScale.SMALL.value -> smallRadioButton.isChecked = true
-				LoggingScale.LARGE.value -> largeRadioButton.isChecked = true
-				LoggingScale.NONE.value -> noneRadioButton.isChecked = true
+				R.id.smallRadioButton -> selected = PoachingScale.SMALL.value
+				R.id.largeRadioButton -> selected = PoachingScale.LARGE.value
+				R.id.noneRadioButton -> selected = PoachingScale.NONE.value
 			}
 		}
 	}
 	
 	companion object {
 		@JvmStatic
-		fun newInstance() = ScaleFragment()
+		fun newInstance() = PoachingScaleFragment()
 	}
 }

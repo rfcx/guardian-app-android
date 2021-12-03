@@ -252,7 +252,7 @@
 	<string name="guardian_event_detail">Event Detail</string>
 	
 	<!-- CreateReportActivity -->
-	<string name="create_report_steps">Create Report (step %d of 6)</string>
+	<string name="create_report_steps">Create Report (step %d of %s)</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
@@ -289,6 +289,11 @@
 	<string name="small">Small (subsistence, agriculture etc)</string>
 	<string name="large">Large (commercial scale, heavy equipment etc)</string>
 	
+	<!-- PoachingScaleFragment -->
+	<string name="what_scale_poaching">What was the <b>scale of the poaching</b> operation?</string>
+	<string name="small_poaching">Small (individual, informal)</string>
+	<string name="large_poaching">Large (many vehicles, coordinated)</string>
+	
 	<!-- PoachingEvidenceFragment -->
 	<string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
 	<string name="bullet_shells">Bullet shells / gun remains</string>
@@ -296,12 +301,11 @@
 	<string name="dog_tracks">Dog tracks</string>
 	
 	<!-- SetWhatActionFragment -->
-	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
+	<string name="what_action">What <b>action</b> was taken?</string>
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="issue_a_warning">Issue a warning</string>
-	<string name="arrests">Arrests</string>
-	<string name="planning_security">Planning to come back w/security enforcement</string>
+	<string name="issue_a_fine">Issue a fine</string>
 	
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>

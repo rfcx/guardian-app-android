@@ -80,7 +80,7 @@ class PoachingEvidenceFragment : Fragment() {
 			selected.add(PoachingEvidence.OTHER.value)
 		}
 		
-		listener.handleCheckClicked(StepCreateReport.SCALE.step) // change
+		listener.handleCheckClicked(StepCreateReport.SCALE_POACHING.step) // change
 	}
 	
 	private fun setSelectedOther(isOther: Boolean) {

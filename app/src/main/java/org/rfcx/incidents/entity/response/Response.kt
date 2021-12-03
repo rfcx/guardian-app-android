@@ -60,6 +60,10 @@ enum class LoggingScale(val value: Int) {
 	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
 }
 
+enum class PoachingScale(val value: Int) {
+	DEFAULT(-1), NONE(1), SMALL(2), LARGE(3),
+}
+
 enum class DamageScale(val value: Int) {
 	DEFAULT(-1), NO_VISIBLE(401), SMALL(402), MEDIUM(403), LARGE(404)
 }

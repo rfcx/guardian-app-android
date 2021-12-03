@@ -219,7 +219,7 @@
     <string name="guardian_event_detail">Detalhe da Ocorrência</string>
     <string name="create_report">Criar Relatório</string>
     <string name="open_in_maps">Abrir nos Mapas</string>
-    <string name="create_report_steps">Criar Relatório (passo %d de 6)</string>
+    <string name="create_report_steps">Criar Relatório (passo %d de %s)</string>
     <string name="when_investigate">Quando ocorreu a sua vistoria?</string>
     <string name="what_time">A que horas você efetuou a vistoria?</string>
     <string name="today">Hoje</string>
