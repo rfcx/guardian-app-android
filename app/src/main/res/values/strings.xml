@@ -285,7 +285,7 @@
 	<string name="large_area_clear_cut">Substantially clear-cut (5+ trucks of wood)</string>
 	
 	<!-- SetWhatScaleFragment -->
-	<string name="what_scale">What was the scale of the logging operation?</string>
+	<string name="what_scale">What was the <b>scale of the logging</b> operation?</string>
 	<string name="small">Small (subsistence, agriculture etc)</string>
 	<string name="large">Large (commercial scale, heavy equipment etc)</string>
 	

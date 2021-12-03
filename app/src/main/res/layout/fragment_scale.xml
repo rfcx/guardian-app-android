@@ -7,13 +7,23 @@
 	android:padding="@dimen/margin_padding_normal"
 	tools:context=".view.report.create.ScaleFragment">
 	
-	<TextView
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/siteNameTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/margin_padding_normal"
+		android:textStyle="bold"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Site Z" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/whatScaleTextView"
 		style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/what_scale"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
 	
 	<RadioGroup
 		android:id="@+id/scaleRadioGroup"

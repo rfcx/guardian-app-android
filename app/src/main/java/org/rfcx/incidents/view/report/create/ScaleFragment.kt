@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_scale.*
+import kotlinx.android.synthetic.main.fragment_scale.nextStepButton
+import kotlinx.android.synthetic.main.fragment_scale.siteNameTextView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.LoggingScale
 
@@ -29,6 +31,7 @@ class ScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupScale()
+		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->

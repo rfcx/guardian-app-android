@@ -232,9 +232,6 @@
     <string name="loggers_at_site">Madeireiros no local</string>
     <string name="illegal_camps">Acampamento Ilegal</string>
     <string name="fires_burned_areas">Fogo/Queimadas</string>
-    <string name="evidence_of_poaching">Provas de caça ilegal</string>
-    <string name="none_of_the_above">NDA - Nenhuma das anteriores (detalhar no Passo 6)</string>
-    <string name="other_explain_step_6">Outros (explicar no passo 6)</string>
     <string name="how_much_damage">"Qual a extensão do dano na área?  "</string>
     <string name="no_visible">Não há desmatamento/corte visível</string>
     <string name="small_trees_cut_down">Pequena - alguns paus derrubados (um caminhão)</string>
@@ -244,7 +241,6 @@
     <string name="small">Pequena (subsistência, agricultura)</string>
     <string name="large">Grande (escala comercial, equipamento pesado, etc…)</string>
     <string name="what_action">Que ação tomou? <i>Selecione tudo que for relacionado</i></string>
-    <string name="issue_a_fine">Multa</string>
     <string name="collected_evidence">Recolhimento de provas/evidências</string>
     <string name="confiscated_equipment">Confisco de equipamento</string>
     <string name="issue_a_warning">Emissão de um aviso</string>
