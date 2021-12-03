@@ -58,9 +58,6 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
 		this == EvidenceTypes.FIRED_BURNED_AREAS.value -> {
 			AnswerItem(context.getString(R.string.fires_burned_areas), R.color.evidence_color)
 		}
-		this == EvidenceTypes.EVIDENCE_OF_POACHING.value -> {
-			AnswerItem(context.getString(R.string.evidence_of_poaching), R.color.evidence_color)
-		}
 		
 		// Actions
 		this == Actions.NONE.value -> {

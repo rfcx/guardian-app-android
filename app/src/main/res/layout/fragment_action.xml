@@ -107,7 +107,7 @@
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
 				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/other_explain_step_6"
+				android:text="@string/other_specify_to_6"
 				android:textColor="@drawable/radio_text_color" />
 			
 			<CheckBox

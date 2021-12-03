@@ -269,16 +269,13 @@
 	<string name="other_specify_to_6">Other (specify in Step 6)</string>
 	
 	<!-- SetWhatEvidenceFragment -->
-	<string name="what_evidence">What evidence of loggers did you encounter? <i>Select all that apply</i></string>
+	<string name="what_evidence">What <b>logging evidence</b> did you encounter? <i>Select all that apply</i></string>
 	<string name="cut_down_trees">Cut down trees</string>
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
 	<string name="loggers_at_site">Loggers at Site</string>
 	<string name="illegal_camps">Illegal camps</string>
 	<string name="fires_burned_areas">Fires/burned areas</string>
-	<string name="evidence_of_poaching">Evidence of poaching</string>
-	<string name="other_explain_step_6">Other (explain in step 6)</string>
-	<string name="none_of_the_above">None of the above (specify in Step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->
 	<string name="how_much_damage">How much damage was done to the area?</string>
