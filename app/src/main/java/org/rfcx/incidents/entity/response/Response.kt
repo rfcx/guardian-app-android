@@ -20,6 +20,9 @@ open class Response(
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
+		var investigateType: Int = InvestigationType.DEFAULT.value,
+		var poachingScale: Int = PoachingScale.DEFAULT.value,
+		var poachingEvidence: RealmList<Int> = RealmList(),
 		var note: String? = null,
 		var streamId: String = "",
 		var streamName: String = "",
@@ -44,6 +47,9 @@ open class Response(
 		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_INCIDENT_REF = "incidentRef"
 		const val RESPONSE_SYNC_STATE = "syncState"
+		const val RESPONSE_INVESTIGATE_TYPE = "investigateType"
+		const val RESPONSE_POACHING_SCALE = "poachingScale"
+		const val RESPONSE_POACHING_EVIDENCE = "poachingEvidence"
 		const val RESPONSE_ANSWERS = "answers"
 	}
 }
@@ -53,7 +59,7 @@ enum class SyncState(val value: Int) {
 }
 
 enum class InvestigationType(val value: Int) {
-	DEFAULT(-1), LOGGING(1), POACHING(2), OTHER(3)
+	DEFAULT(-1), LOGGING(501), POACHING(502), OTHER(503)
 }
 
 enum class LoggingScale(val value: Int) {
@@ -61,7 +67,7 @@ enum class LoggingScale(val value: Int) {
 }
 
 enum class PoachingScale(val value: Int) {
-	DEFAULT(-1), NONE(1), SMALL(2), LARGE(3),
+	DEFAULT(-1), NONE(701), SMALL(702), LARGE(703),
 }
 
 enum class DamageScale(val value: Int) {
@@ -69,7 +75,7 @@ enum class DamageScale(val value: Int) {
 }
 
 enum class PoachingEvidence(val value: Int) {
-	DEFAULT(-1), BULLET_SHELLS(1), FOOTPRINTS(2), DOG_TRACKS(3), OTHER(4)
+	DEFAULT(-1), BULLET_SHELLS(601), FOOTPRINTS(602), DOG_TRACKS(603), OTHER(604)
 }
 
 enum class EvidenceTypes(val value: Int) {
