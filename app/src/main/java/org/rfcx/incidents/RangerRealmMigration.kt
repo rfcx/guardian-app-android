@@ -429,10 +429,11 @@ class RangerRealmMigration : RealmMigration {
 	private fun migrateToV17(realm: DynamicRealm) {
 		val response = realm.schema.get(Response.TABLE_NAME)
 		response?.apply {
-			addField(Response.RESPONSE_INVESTIGATE_TYPE, Int::class.java)
 			addField(Response.RESPONSE_POACHING_SCALE, Int::class.java)
 			addRealmListField(Response.RESPONSE_POACHING_EVIDENCE, Int::class.java)
 					.setRequired(Response.RESPONSE_POACHING_EVIDENCE, false)
+			addRealmListField(Response.RESPONSE_INVESTIGATE_TYPE, Int::class.java)
+					.setRequired(Response.RESPONSE_INVESTIGATE_TYPE, false)
 		}
 	}
 	

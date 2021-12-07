@@ -11,11 +11,12 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
+import java.util.*
 
 class InvestigationTypeFragment : Fragment() {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
-	var selected: Int? = null
+	private var selected = ArrayList<Int>()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -35,25 +36,62 @@ class InvestigationTypeFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
+		setOnChange()
 		
 		nextStepButton.setOnClickListener {
-			selected?.let { it1 -> listener.setInvestigateType(it1) }
-			when (selected) {
-				InvestigationType.LOGGING.value -> listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
-				InvestigationType.POACHING.value -> listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
-				InvestigationType.OTHER.value -> listener.handleCheckClicked(StepCreateReport.ASSETS.step)
+			selected.clear()
+			if (loggingCheckBox.isChecked) {
+				selected.add(InvestigationType.LOGGING.value)
 			}
-		}
-		
-		typeRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-			nextStepButton.isEnabled = true
+			if (poachingCheckBox.isChecked) {
+				selected.add(InvestigationType.POACHING.value)
+			}
+			if (otherCheckBox.isChecked) {
+				selected.add(InvestigationType.OTHER.value)
+			}
+			listener.setInvestigateType(selected)
 			
-			when (checkedId) {
-				R.id.loggingRadioButton -> selected = InvestigationType.LOGGING.value
-				R.id.poachingRadioButton -> selected = InvestigationType.POACHING.value
-				R.id.otherRadioButton -> selected = InvestigationType.OTHER.value
+			when {
+				selected.contains(InvestigationType.OTHER.value) -> {
+					listener.handleCheckClicked(StepCreateReport.ASSETS.step)
+				}
+				selected.contains(InvestigationType.LOGGING.value) -> {
+					listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				}
+				selected.contains(InvestigationType.POACHING.value) -> {
+					listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
+				}
 			}
 		}
+	}
+	
+	private fun setOnChange() {
+		loggingCheckBox.setOnClickListener {
+			setSelectedOther(false)
+			setEnabled()
+		}
+		poachingCheckBox.setOnClickListener {
+			setSelectedOther(false)
+			setEnabled()
+		}
+		otherCheckBox.setOnClickListener {
+			setSelectedOther(true)
+			setEnabled()
+		}
+	}
+	
+	private fun setEnabled() {
+		selected.clear()
+		nextStepButton.isEnabled = loggingCheckBox.isChecked ||
+				poachingCheckBox.isChecked || otherCheckBox.isChecked
+	}
+	
+	private fun setSelectedOther(isOther: Boolean) {
+		if (isOther) {
+			loggingCheckBox.isChecked = !isOther
+			poachingCheckBox.isChecked = !isOther
+		}
+		otherCheckBox.isChecked = isOther
 	}
 	
 	companion object {

@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.EvidenceTypes
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
@@ -130,9 +129,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun handleCheckClicked(step: Int) {
 		passedChecks.add(step)
 		val response = _response ?: Response()
-		if (response.investigateType == InvestigationType.POACHING.value || response.investigateType == InvestigationType.LOGGING.value) {
+		if (response.investigateType.contains(InvestigationType.POACHING.value) || response.investigateType.contains(InvestigationType.LOGGING.value)) {
 			setTitleToolbar(step, "8")
-		} else if (response.investigateType == InvestigationType.OTHER.value) {
+		} else if (response.investigateType.contains(InvestigationType.OTHER.value)) {
 			setTitleToolbar(3, "3")
 		} else {
 			setTitleToolbar(step, "...")
@@ -171,9 +170,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		setResponse(response)
 	}
 	
-	override fun setInvestigateType(type: Int) {
+	override fun setInvestigateType(type: ArrayList<Int>) {
 		val response = _response ?: Response()
-		response.investigateType = type
+		response.investigateType.addAll(type)
 		setResponse(response)
 	}
 	
@@ -279,7 +278,12 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 			}
 			is PoachingEvidenceFragment -> {
-				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+				val response = _response ?: Response()
+				if (response.investigateType.contains(InvestigationType.LOGGING.value)) {
+					handleCheckClicked(StepCreateReport.SCALE.step)
+				} else {
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+				}
 			}
 			is ScaleFragment -> {
 				handleCheckClicked(StepCreateReport.EVIDENCE.step)
@@ -288,12 +292,15 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 				handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
 			}
 			is ActionFragment -> {
-				// todo check Poaching? Evidence?
 				val response = _response ?: Response()
-				if (response.evidences.contains(EvidenceTypes.NONE.value)) {
-					handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				if (response.investigateType.contains(InvestigationType.LOGGING.value)) {
+					if (response.investigateType.contains(InvestigationType.POACHING.value)) {
+						handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
+					} else {
+						handleCheckClicked(StepCreateReport.SCALE.step)
+					}
 				} else {
-					handleCheckClicked(StepCreateReport.DAMAGE.step)
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 				}
 			}
 			is AssetsFragment -> {
@@ -320,7 +327,7 @@ interface CreateReportListener {
 	fun setNotes(note: String?)
 	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
-	fun setInvestigateType(type: Int)
+	fun setInvestigateType(type: ArrayList<Int>)
 	fun setPoachingScale(poachingScale: Int)
 	fun setPoachingEvidence(poachingEvidence: List<Int>)
 	

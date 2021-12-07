@@ -20,7 +20,7 @@ open class Response(
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
-		var investigateType: Int = InvestigationType.DEFAULT.value,
+		var investigateType: RealmList<Int> = RealmList(),
 		var poachingScale: Int = PoachingScale.DEFAULT.value,
 		var poachingEvidence: RealmList<Int> = RealmList(),
 		var note: String? = null,
