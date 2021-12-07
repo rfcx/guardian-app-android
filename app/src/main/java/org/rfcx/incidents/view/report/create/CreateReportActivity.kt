@@ -15,6 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.EvidenceTypes
+import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
@@ -120,15 +121,23 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		return true
 	}
 	
-	override fun setTitleToolbar(step: Int) {
+	override fun setTitleToolbar(step: Int, to: String) {
 		supportActionBar?.apply {
-			title = getString(R.string.create_report_steps, step, "...")
+			title = getString(R.string.create_report_steps, step, to)
 		}
 	}
 	
 	override fun handleCheckClicked(step: Int) {
 		passedChecks.add(step)
-		setTitleToolbar(step)
+		val response = _response ?: Response()
+		if (response.investigateType == InvestigationType.POACHING.value || response.investigateType == InvestigationType.LOGGING.value) {
+			setTitleToolbar(step, "8")
+		} else if (response.investigateType == InvestigationType.OTHER.value) {
+			setTitleToolbar(3, "3")
+		} else {
+			setTitleToolbar(step, "...")
+		}
+		
 		
 		when (step) {
 			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
@@ -159,6 +168,25 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setAudio(audioPath: String?) {
 		val response = _response ?: Response()
 		response.audioLocation = audioPath
+		setResponse(response)
+	}
+	
+	override fun setInvestigateType(type: Int) {
+		val response = _response ?: Response()
+		response.investigateType = type
+		setResponse(response)
+	}
+	
+	override fun setPoachingScale(poachingScale: Int) {
+		val response = _response ?: Response()
+		response.poachingScale = poachingScale
+		setResponse(response)
+	}
+	
+	override fun setPoachingEvidence(poachingEvidence: List<Int>) {
+		val response = _response ?: Response()
+		response.poachingEvidence.clear()
+		response.poachingEvidence.addAll(poachingEvidence)
 		setResponse(response)
 	}
 	
@@ -277,7 +305,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 }
 
 interface CreateReportListener {
-	fun setTitleToolbar(step: Int)
+	fun setTitleToolbar(step: Int, to: String)
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?
@@ -292,6 +320,9 @@ interface CreateReportListener {
 	fun setNotes(note: String?)
 	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
+	fun setInvestigateType(type: Int)
+	fun setPoachingScale(poachingScale: Int)
+	fun setPoachingEvidence(poachingEvidence: List<Int>)
 	
 	fun onSaveDraftButtonClick()
 	fun onSubmitButtonClick()

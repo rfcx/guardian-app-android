@@ -37,6 +37,7 @@ class InvestigationTypeFragment : Fragment() {
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
+			selected?.let { it1 -> listener.setInvestigateType(it1) }
 			when (selected) {
 				InvestigationType.LOGGING.value -> listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
 				InvestigationType.POACHING.value -> listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)

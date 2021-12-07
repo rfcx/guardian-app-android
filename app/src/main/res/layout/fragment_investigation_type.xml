@@ -64,7 +64,7 @@
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/other_specify_to_6"
+			android:text="@string/other_specify_to_3"
 			android:textColor="@drawable/radio_text_color" />
 	</RadioGroup>
 	
