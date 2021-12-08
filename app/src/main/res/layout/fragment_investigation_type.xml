@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/margin_padding_normal"
-	tools:context=".view.report.create.ScaleFragment">
+	tools:context=".view.report.create.InvestigationTypeFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/siteNameTextView"
@@ -18,55 +18,58 @@
 		tools:text="Site Z" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/whatScaleTextView"
-		style="@style/RangerText.Body"
+		android:id="@+id/whatInvestigateTextView"
+		style="@style/RangerText.SubTitle"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/what_scale"
+		android:text="@string/what_investigate"
 		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
 	
-	<RadioGroup
-		android:id="@+id/scaleRadioGroup"
+	<LinearLayout
+		android:id="@+id/typeLinearLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		app:layout_constraintTop_toBottomOf="@id/whatScaleTextView">
+		android:checkedButton="@+id/whatPoachingRadioButton"
+		android:orientation="vertical"
+		app:layout_constraintTop_toBottomOf="@id/whatInvestigateTextView">
 		
-		<RadioButton
-			android:id="@+id/smallRadioButton"
+		<CheckBox
+			android:id="@+id/loggingCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/small"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/largeRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:padding="@dimen/margin_padding_normal"
-			android:text="@string/large"
-			android:textColor="@drawable/radio_text_color" />
+			android:text="@string/logging"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
-		<RadioButton
-			android:id="@+id/noneRadioButton"
+		<CheckBox
+			android:id="@+id/poachingCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/common_none"
-			android:textColor="@drawable/radio_text_color" />
-	</RadioGroup>
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/poaching"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		
+		<CheckBox
+			android:id="@+id/otherCheckBox"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:padding="@dimen/margin_padding_normal"
+			android:text="@string/other_specify_to_3"
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+	
+	</LinearLayout>
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"
@@ -76,5 +79,4 @@
 		android:enabled="false"
 		android:text="@string/next"
 		app:layout_constraintBottom_toBottomOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

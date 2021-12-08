@@ -53,6 +53,8 @@ class InvestigationTimestampFragment : Fragment() {
 		setMinutePicker()
 		setDatePicker()
 		setupOnListener()
+		
+		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 	}
 	
 	private fun setupInvestigatedAt() {
@@ -78,7 +80,7 @@ class InvestigationTimestampFragment : Fragment() {
 				context?.showToast(getString(R.string.do_not_future_time))
 			} else {
 				listener.setInvestigationTimestamp(calendar.time)
-				listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				listener.handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 			}
 		}
 		

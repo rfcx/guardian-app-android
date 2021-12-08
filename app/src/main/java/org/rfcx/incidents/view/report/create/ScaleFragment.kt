@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_scale.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.LoggingScale
 
 class ScaleFragment : Fragment() {
@@ -29,11 +30,20 @@ class ScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupScale()
+		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->
 				listener.setScale(value)
-				listener.handleCheckClicked(StepCreateReport.DAMAGE.step)
+				val response = listener.getResponse()
+				
+				response?.let {
+					if (it.investigateType.contains(InvestigationType.POACHING.value)) {
+						listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
+					} else {
+						listener.handleCheckClicked(StepCreateReport.ACTION.step)
+					}
+				}
 			}
 		}
 		

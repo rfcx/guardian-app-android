@@ -58,9 +58,6 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
 		this == EvidenceTypes.FIRED_BURNED_AREAS.value -> {
 			AnswerItem(context.getString(R.string.fires_burned_areas), R.color.evidence_color)
 		}
-		this == EvidenceTypes.EVIDENCE_OF_POACHING.value -> {
-			AnswerItem(context.getString(R.string.evidence_of_poaching), R.color.evidence_color)
-		}
 		
 		// Actions
 		this == Actions.NONE.value -> {
@@ -74,12 +71,6 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
 		}
 		this == Actions.CONFISCATED_EQUIPMENT.value -> {
 			AnswerItem(context.getString(R.string.confiscated_equipment), R.color.action_color)
-		}
-		this == Actions.ARRESTS.value -> {
-			AnswerItem(context.getString(R.string.arrests), R.color.action_color)
-		}
-		this == Actions.PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT.value -> {
-			AnswerItem(context.getString(R.string.planning_security), R.color.action_color)
 		}
 		this == Actions.OTHER.value -> {
 			AnswerItem(context.getString(R.string.other_text), R.color.action_color)

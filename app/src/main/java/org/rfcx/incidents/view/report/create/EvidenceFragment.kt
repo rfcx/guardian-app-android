@@ -39,6 +39,7 @@ class EvidenceFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		setOnChange()
 		setupEvidences()
+		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			setSelect()
@@ -61,35 +62,21 @@ class EvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		cutDownTreesCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
 			setEnabled()
 		}
 		clearedAreasCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
 			setEnabled()
 		}
 		loggingEquipmentCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
 			setEnabled()
 		}
 		loggersAtSiteCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
 			setEnabled()
 		}
 		illegalCampsCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
 			setEnabled()
 		}
 		firesBurnedAreasCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
-			setEnabled()
-		}
-		evidenceOfPoachingCheckBox.setOnClickListener {
-			setWhenNotInOption(false)
-			setEnabled()
-		}
-		noneCheckBox.setOnClickListener {
-			setWhenNotInOption(true)
 			setEnabled()
 		}
 	}
@@ -99,8 +86,7 @@ class EvidenceFragment : Fragment() {
 		nextStepButton.isEnabled = cutDownTreesCheckBox.isChecked ||
 				clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
 				loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
-				firesBurnedAreasCheckBox.isChecked || evidenceOfPoachingCheckBox.isChecked ||
-				noneCheckBox.isChecked
+				firesBurnedAreasCheckBox.isChecked
 	}
 	
 	private fun setSelect() {
@@ -123,19 +109,9 @@ class EvidenceFragment : Fragment() {
 		if (firesBurnedAreasCheckBox.isChecked) {
 			selected.add(EvidenceTypes.FIRED_BURNED_AREAS.value)
 		}
-		if (evidenceOfPoachingCheckBox.isChecked) {
-			selected.add(EvidenceTypes.EVIDENCE_OF_POACHING.value)
-		}
-		if (noneCheckBox.isChecked) {
-			selected.add(EvidenceTypes.NONE.value)
-		}
 		
 		listener.setEvidence(selected)
-		if (selected.contains(EvidenceTypes.NONE.value)) {
-			listener.handleCheckClicked(StepCreateReport.ACTION.step)
-		} else {
-			listener.handleCheckClicked(StepCreateReport.SCALE.step)
-		}
+		listener.handleCheckClicked(StepCreateReport.SCALE.step)
 	}
 	
 	private fun setSelected() {
@@ -158,25 +134,6 @@ class EvidenceFragment : Fragment() {
 			if (id == EvidenceTypes.FIRED_BURNED_AREAS.value) {
 				firesBurnedAreasCheckBox.isChecked = true
 			}
-			if (id == EvidenceTypes.EVIDENCE_OF_POACHING.value) {
-				evidenceOfPoachingCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.NONE.value) {
-				noneCheckBox.isChecked = true
-			}
 		}
-	}
-	
-	private fun setWhenNotInOption(isNotInOption: Boolean) {
-		if (isNotInOption) {
-			cutDownTreesCheckBox.isChecked = !isNotInOption
-			clearedAreasCheckBox.isChecked = !isNotInOption
-			loggingEquipmentCheckBox.isChecked = !isNotInOption
-			loggersAtSiteCheckBox.isChecked = !isNotInOption
-			illegalCampsCheckBox.isChecked = !isNotInOption
-			firesBurnedAreasCheckBox.isChecked = !isNotInOption
-			evidenceOfPoachingCheckBox.isChecked = !isNotInOption
-		}
-		noneCheckBox.isChecked = isNotInOption
 	}
 }
