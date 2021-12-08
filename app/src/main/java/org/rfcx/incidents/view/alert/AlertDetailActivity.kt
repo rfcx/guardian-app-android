@@ -82,6 +82,11 @@ class AlertDetailActivity : AppCompatActivity() {
 			replayButton.visibility = View.VISIBLE
 		})
 		
+		viewModel.loadAudioError.observe(this, {
+			Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+			loadingSoundProgressBar.visibility = View.INVISIBLE
+		})
+		
 		viewModel.playerState.observe(this, {
 			when (it) {
 				Player.STATE_BUFFERING -> {

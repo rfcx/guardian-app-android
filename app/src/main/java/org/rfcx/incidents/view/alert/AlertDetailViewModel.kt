@@ -60,6 +60,10 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	val playerError: LiveData<ExoPlaybackException?>
 		get() = _playerError
 	
+	private var _loadAudioError: MutableLiveData<String> = MutableLiveData()
+	val loadAudioError: LiveData<String?>
+		get() = _loadAudioError
+	
 	private var _playerProgress: MutableLiveData<Int> = MutableLiveData()
 	val playerProgress: LiveData<Int>
 		get() = _playerProgress
@@ -166,6 +170,7 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 			}
 			
 			override fun onError(e: Throwable) {
+				_loadAudioError.value = e.message
 				e.printStackTrace()
 			}
 		}, fileName)
