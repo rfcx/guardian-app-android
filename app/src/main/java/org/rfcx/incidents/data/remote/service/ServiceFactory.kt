@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.api.assets.AssetsEndpoint
 import org.rfcx.incidents.data.api.events.EventsEndpoint
+import org.rfcx.incidents.data.api.events.detections.DetectionsEndpoint
 import org.rfcx.incidents.data.api.media.MediaEndpoint
 import org.rfcx.incidents.data.api.project.GetProjectsEndpoint
 import org.rfcx.incidents.data.api.site.GetStreamsEndpoint
@@ -45,6 +46,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetStreamsEndpoint::class.java)
+	}
+	
+	fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(DetectionsEndpoint::class.java)
 	}
 	
 	fun makeMediaService(isDebug: Boolean, context: Context): MediaEndpoint {

@@ -20,20 +20,35 @@ import okio.buffer
 import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.events.detections.GetDetections
 import org.rfcx.incidents.data.api.media.MediaUseCase
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.alert.DetectionFactory
+import org.rfcx.incidents.entity.alert.Detections
 import org.rfcx.incidents.util.toIsoFormatString
 import java.io.File
 import java.io.IOException
 
-class AlertDetailViewModel(private val context: Context, private val alertDb: AlertDb, private val mediaUseCase: MediaUseCase) : ViewModel() {
+class AlertDetailViewModel(private val context: Context, private val alertDb: AlertDb, private val mediaUseCase: MediaUseCase, private val getDetections: GetDetections) : ViewModel() {
 	var _alert: Alert? = null
 		private set
 	
 	fun setAlert(alert: Alert) {
 		_alert = alert
 		getAudio(alert)
+		
+		getDetections.execute(object : DisposableSingleObserver<List<Detections>>() {
+			
+			override fun onError(e: Throwable) {
+				// TODO :: onError
+			}
+			
+			override fun onSuccess(t: List<Detections>) {
+				// TODO :: onSuccess
+			}
+		}, DetectionFactory(alert.streamId, alert.start.time, alert.end.time, listOf(alert.classification?.value
+				?: "")))
 	}
 	
 	private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
