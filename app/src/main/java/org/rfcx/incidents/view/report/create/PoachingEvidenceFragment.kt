@@ -33,9 +33,19 @@ class PoachingEvidenceFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		setOnChange()
+		setupPoachingEvidence()
 		
 		nextStepButton.setOnClickListener {
 			setSelect()
+		}
+	}
+	
+	private fun setupPoachingEvidence() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected.addAll(res.poachingEvidence)
+			nextStepButton.isEnabled = selected.isNotEmpty()
+			setSelected()
 		}
 	}
 	
@@ -79,7 +89,7 @@ class PoachingEvidenceFragment : Fragment() {
 		if (otherSpecifyCheckBox.isChecked) {
 			selected.add(PoachingEvidence.OTHER.value)
 		}
-		
+		listener.setPoachingEvidence(selected)
 		listener.handleCheckClicked(StepCreateReport.SCALE_POACHING.step) // change
 	}
 	
