@@ -36,8 +36,10 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		private val textView = itemView.guardianGroupTextView
 		private val checkBoxImageView = itemView.checkBoxImageView
 		private val lockImageView = itemView.lockImageView
+		private val subscribeProgress = itemView.subscribeProgress
 		
 		fun bind(item: ProjectsItem) {
+			subscribeProgress.visibility = if (item.subscribeProgress) View.VISIBLE else View.GONE
 			setClickable(itemView, item.project.isGuest())
 			if (item.project.isGuest()) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
@@ -66,4 +68,4 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 	}
 }
 
-data class ProjectsItem(val project: Project, var selected: Boolean)
+data class ProjectsItem(val project: Project, var selected: Boolean, var subscribeProgress: Boolean = false)
