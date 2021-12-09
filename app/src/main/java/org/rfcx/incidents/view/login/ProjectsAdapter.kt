@@ -40,7 +40,7 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		
 		fun bind(item: ProjectsItem) {
 			subscribeProgress.visibility = if (item.subscribeProgress) View.VISIBLE else View.GONE
-			setClickable(itemView, item.project.isGuest())
+			setClickable(itemView, item.project.isGuest() || items.any { p -> p.subscribeProgress })
 			if (item.project.isGuest()) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {

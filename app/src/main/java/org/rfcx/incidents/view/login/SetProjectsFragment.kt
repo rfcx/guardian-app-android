@@ -113,6 +113,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		val items = projectsItem ?: return
 		items[position].subscribeProgress = true
 		projectsAdapter.items = items
+		selectProjectButton.isEnabled = false
 		
 		if (item.selected) {
 			viewModel.unsubscribeProject(item.project) { status ->
@@ -123,9 +124,9 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 				} else {
 					subscribedProjects.remove(item.project.serverId ?: "")
 					saveSubscribedProject(subscribedProjects)
-					selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 					setSelectedProject(items, position)
 				}
+				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		} else {
 			viewModel.setProjectsAndSubscribe(item.project) { status ->
@@ -138,6 +139,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 					selectProjectButton.isEnabled = true
 					setSelectedProject(items, position)
 				}
+				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		}
 	}
