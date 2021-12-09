@@ -12,14 +12,14 @@ class StreamDb(private val realm: Realm) {
 			val stream = it.where(Stream::class.java)
 					.equalTo(Stream.STREAM_SERVER_ID, response.id)
 					.findFirst()
-			
+			val streamObj = response.toStream()
 			if (stream == null) {
-				val streamObj = response.toStream()
-				val id = (it.where(Stream::class.java).max(Stream.STREAM_ID)
+				streamObj.id = (it.where(Stream::class.java).max(Stream.STREAM_ID)
 						?.toInt() ?: 0) + 1
-				streamObj.id = id
-				it.insert(streamObj)
+			} else {
+				streamObj.id = stream.id
 			}
+			it.insertOrUpdate(streamObj)
 		}
 	}
 	
