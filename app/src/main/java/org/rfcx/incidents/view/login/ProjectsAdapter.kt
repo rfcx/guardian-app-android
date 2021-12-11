@@ -10,6 +10,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.project.isGuest
+import org.rfcx.incidents.util.Preferences
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 	var items: List<ProjectsItem> = arrayListOf()
@@ -39,8 +40,11 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		private val subscribeProgress = itemView.subscribeProgress
 		
 		fun bind(item: ProjectsItem) {
-			subscribeProgress.visibility = if (item.subscribeProgress) View.VISIBLE else View.GONE
-			setClickable(itemView, item.project.isGuest() || items.any { p -> p.subscribeProgress })
+			val preferenceHelper = Preferences.getInstance(itemView.context)
+			val subscribingProject = preferenceHelper.getString(Preferences.SUBSCRIBING_PROJECT)
+			
+			subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
+			setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
 			if (item.project.isGuest()) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {
@@ -68,4 +72,4 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 	}
 }
 
-data class ProjectsItem(val project: Project, var selected: Boolean, var subscribeProgress: Boolean = false)
+data class ProjectsItem(val project: Project, var selected: Boolean)
