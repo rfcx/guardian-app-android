@@ -37,6 +37,7 @@ class InvestigationTypeFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		setOnChange()
+		setupInvestigateType()
 		
 		nextStepButton.setOnClickListener {
 			selected.clear()
@@ -61,6 +62,29 @@ class InvestigationTypeFragment : Fragment() {
 				selected.contains(InvestigationType.POACHING.value) -> {
 					listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
 				}
+			}
+		}
+	}
+	
+	private fun setupInvestigateType() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected.addAll(res.investigateType)
+			nextStepButton.isEnabled = selected.isNotEmpty()
+			setSelected()
+		}
+	}
+	
+	private fun setSelected() {
+		selected.forEach { id ->
+			if (id == InvestigationType.LOGGING.value) {
+				loggingCheckBox.isChecked = true
+			}
+			if (id == InvestigationType.POACHING.value) {
+				poachingCheckBox.isChecked = true
+			}
+			if (id == InvestigationType.OTHER.value) {
+				otherCheckBox.isChecked = true
 			}
 		}
 	}

@@ -172,6 +172,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun setInvestigateType(type: ArrayList<Int>) {
 		val response = _response ?: Response()
+		response.investigateType.clear()
 		response.investigateType.addAll(type)
 		setResponse(response)
 	}
