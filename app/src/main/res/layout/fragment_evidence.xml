@@ -127,6 +127,34 @@
 				android:text="@string/fires_burned_areas"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/otherCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/other_text"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/noneCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/common_none"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		</LinearLayout>
 	</ScrollView>
 	

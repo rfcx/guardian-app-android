@@ -86,6 +86,7 @@ enum class EvidenceTypes(val value: Int) {
 	LOGGERS_AT_SITE(104),
 	ILLEGAL_CAMPS(105),
 	FIRED_BURNED_AREAS(106),
+	OTHER(107)
 }
 
 enum class Actions(val value: Int) {

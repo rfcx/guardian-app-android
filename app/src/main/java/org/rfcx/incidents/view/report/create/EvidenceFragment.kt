@@ -62,31 +62,59 @@ class EvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		cutDownTreesCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		clearedAreasCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		loggingEquipmentCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		loggersAtSiteCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		illegalCampsCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		firesBurnedAreasCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = false)
+			setEnabled()
+		}
+		otherCheckBox.setOnClickListener {
+			setSelectedOther(isOther = true, isNone = false)
+			setEnabled()
+		}
+		noneCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = true)
 			setEnabled()
 		}
 	}
+	
+	private fun setSelectedOther(isOther: Boolean, isNone: Boolean) {
+		if (isOther || isNone) {
+			cutDownTreesCheckBox.isChecked = false
+			clearedAreasCheckBox.isChecked = false
+			loggingEquipmentCheckBox.isChecked = false
+			loggersAtSiteCheckBox.isChecked = false
+			illegalCampsCheckBox.isChecked = false
+			firesBurnedAreasCheckBox.isChecked = false
+		}
+		otherCheckBox.isChecked = isOther
+		noneCheckBox.isChecked = isNone
+	}
+	
 	
 	private fun setEnabled() {
 		selected.clear()
 		nextStepButton.isEnabled = cutDownTreesCheckBox.isChecked ||
 				clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
 				loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
-				firesBurnedAreasCheckBox.isChecked
+				firesBurnedAreasCheckBox.isChecked || otherCheckBox.isChecked || noneCheckBox.isChecked
 	}
 	
 	private fun setSelect() {
@@ -108,6 +136,12 @@ class EvidenceFragment : Fragment() {
 		}
 		if (firesBurnedAreasCheckBox.isChecked) {
 			selected.add(EvidenceTypes.FIRED_BURNED_AREAS.value)
+		}
+		if (otherCheckBox.isChecked) {
+			selected.add(EvidenceTypes.OTHER.value)
+		}
+		if (noneCheckBox.isChecked) {
+			selected.add(EvidenceTypes.NONE.value)
 		}
 		
 		listener.setEvidence(selected)
@@ -133,6 +167,12 @@ class EvidenceFragment : Fragment() {
 			}
 			if (id == EvidenceTypes.FIRED_BURNED_AREAS.value) {
 				firesBurnedAreasCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.OTHER.value) {
+				otherCheckBox.isChecked = true
+			}
+			if (id == EvidenceTypes.NONE.value) {
+				noneCheckBox.isChecked = true
 			}
 		}
 	}
