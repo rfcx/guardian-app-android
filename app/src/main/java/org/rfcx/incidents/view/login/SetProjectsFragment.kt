@@ -114,6 +114,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		projectsAdapter.subscribingProject = item.project.name
 		projectsAdapter.items = items
 		selectProjectButton.isEnabled = false
+		logoutButton.isEnabled = false
 		
 		if (item.selected) {
 			viewModel.unsubscribeProject(item.project) { status ->
@@ -126,6 +127,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 					subscribedProjects.remove(item.project.serverId ?: "")
 					setSelectedProject(items, position)
 				}
+				logoutButton.isEnabled = true
 				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		} else {
@@ -140,6 +142,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 					selectProjectButton.isEnabled = true
 					setSelectedProject(items, position)
 				}
+				logoutButton.isEnabled = true
 				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		}
