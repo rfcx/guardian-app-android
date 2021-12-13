@@ -43,11 +43,18 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		fun bind(item: ProjectsItem) {
 			subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
 			setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
-			if (item.project.isGuest() || items.any { p -> subscribingProject == p.project.name }) {
+			if (item.project.isGuest()) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
 			}
+			
+			if (items.any { p -> subscribingProject == p.project.name }) {
+				checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+			} else {
+				checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_primary))
+			}
+			
 			textView.text = item.project.name
 			lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
 			checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
