@@ -10,7 +10,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.project.isGuest
-import org.rfcx.incidents.util.Preferences
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 	var items: List<ProjectsItem> = arrayListOf()
@@ -44,7 +43,7 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		fun bind(item: ProjectsItem) {
 			subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
 			setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
-			if (item.project.isGuest()) {
+			if (item.project.isGuest() || items.any { p -> subscribingProject == p.project.name }) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
