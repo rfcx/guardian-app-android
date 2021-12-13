@@ -75,7 +75,7 @@ enum class DamageScale(val value: Int) {
 }
 
 enum class PoachingEvidence(val value: Int) {
-	DEFAULT(-1), BULLET_SHELLS(601), FOOTPRINTS(602), DOG_TRACKS(603), OTHER(604)
+	DEFAULT(-1), BULLET_SHELLS(601), FOOTPRINTS(602), DOG_TRACKS(603), OTHER(604), NONE(605)
 }
 
 enum class EvidenceTypes(val value: Int) {

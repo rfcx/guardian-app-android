@@ -51,19 +51,23 @@ class PoachingEvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		bulletShellsCheckBox.setOnClickListener {
-			setSelectedOther(false)
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		footprintsCheckBox.setOnClickListener {
-			setSelectedOther(false)
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		dogTracksCheckBox.setOnClickListener {
-			setSelectedOther(false)
+			setSelectedOther(isOther = false, isNone = false)
 			setEnabled()
 		}
 		otherSpecifyCheckBox.setOnClickListener {
-			setSelectedOther(true)
+			setSelectedOther(isOther = true, isNone = false)
+			setEnabled()
+		}
+		noneCheckBox.setOnClickListener {
+			setSelectedOther(isOther = false, isNone = true)
 			setEnabled()
 		}
 	}
@@ -72,7 +76,7 @@ class PoachingEvidenceFragment : Fragment() {
 		selected.clear()
 		nextStepButton.isEnabled = bulletShellsCheckBox.isChecked ||
 				footprintsCheckBox.isChecked || dogTracksCheckBox.isChecked ||
-				otherSpecifyCheckBox.isChecked
+				otherSpecifyCheckBox.isChecked || noneCheckBox.isChecked
 	}
 	
 	private fun setSelect() {
@@ -89,18 +93,22 @@ class PoachingEvidenceFragment : Fragment() {
 		if (otherSpecifyCheckBox.isChecked) {
 			selected.add(PoachingEvidence.OTHER.value)
 		}
+		if (noneCheckBox.isChecked) {
+			selected.add(PoachingEvidence.NONE.value)
+		}
 		listener.setPoachingEvidence(selected)
 		listener.handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
 	}
 	
-	private fun setSelectedOther(isOther: Boolean) {
-		if (isOther) {
-			bulletShellsCheckBox.isChecked = !isOther
-			footprintsCheckBox.isChecked = !isOther
-			dogTracksCheckBox.isChecked = !isOther
-			otherSpecifyCheckBox.isChecked = !isOther
+	private fun setSelectedOther(isOther: Boolean, isNone: Boolean) {
+		if (isOther || isNone) {
+			bulletShellsCheckBox.isChecked = false
+			footprintsCheckBox.isChecked = false
+			dogTracksCheckBox.isChecked = false
+			otherSpecifyCheckBox.isChecked = false
 		}
 		otherSpecifyCheckBox.isChecked = isOther
+		noneCheckBox.isChecked = isNone
 	}
 	
 	private fun setSelected() {
@@ -116,6 +124,9 @@ class PoachingEvidenceFragment : Fragment() {
 			}
 			if (id == PoachingEvidence.OTHER.value) {
 				otherSpecifyCheckBox.isChecked = true
+			}
+			if (id == PoachingEvidence.NONE.value) {
+				noneCheckBox.isChecked = true
 			}
 		}
 	}

@@ -266,8 +266,6 @@
 	<string name="what_investigate">What did you investigate?</string>
 	<string name="logging">Logging</string>
 	<string name="poaching">Poaching</string>
-	<string name="other_specify_to_6">Other (specify in Step 6)</string>
-	<string name="other_specify_to_3">Other (specify in Step 3)</string>
 	
 	<!-- SetWhatEvidenceFragment -->
 	<string name="what_evidence">What <b>logging evidence</b> did you encounter? <i>Select all that apply</i></string>
