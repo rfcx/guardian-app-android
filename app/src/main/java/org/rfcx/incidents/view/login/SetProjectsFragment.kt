@@ -111,13 +111,13 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	
 	override fun onItemClick(item: ProjectsItem, position: Int) {
 		val items = projectsItem ?: return
-		saveSubscribingProject(item.project.name)
+		projectsAdapter.subscribingProject = item.project.name
 		projectsAdapter.items = items
 		selectProjectButton.isEnabled = false
 		
 		if (item.selected) {
 			viewModel.unsubscribeProject(item.project) { status ->
-				removeSubscribingProject()
+				projectsAdapter.subscribingProject = null
 				if (!status) {
 					setSelectedProject(items, position)
 					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
@@ -130,7 +130,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 			}
 		} else {
 			viewModel.setProjectsAndSubscribe(item.project) { status ->
-				removeSubscribingProject()
+				projectsAdapter.subscribingProject = null
 				if (!status) {
 					setSelectedProject(items, position)
 					showToast(getString(R.string.failed_receive_notification, item.project.name))
@@ -154,17 +154,6 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		val preferenceHelper = Preferences.getInstance(requireContext())
 		preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
 		preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
-	}
-	
-	private fun saveSubscribingProject(project: String) {
-		val preferenceHelper = Preferences.getInstance(requireContext())
-		preferenceHelper.remove(Preferences.SUBSCRIBING_PROJECT)
-		preferenceHelper.putString(Preferences.SUBSCRIBING_PROJECT, project)
-	}
-	
-	private fun removeSubscribingProject() {
-		val preferenceHelper = Preferences.getInstance(requireContext())
-		preferenceHelper.remove(Preferences.SUBSCRIBING_PROJECT)
 	}
 	
 	private fun getSubscribedProject(): ArrayList<String>? {

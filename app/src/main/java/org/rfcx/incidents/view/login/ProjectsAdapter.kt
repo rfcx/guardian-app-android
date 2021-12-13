@@ -19,6 +19,8 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 			notifyDataSetChanged()
 		}
 	
+	var subscribingProject: String? = null
+	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
 		return ProjectsViewHolder(view)
@@ -40,9 +42,6 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		private val subscribeProgress = itemView.subscribeProgress
 		
 		fun bind(item: ProjectsItem) {
-			val preferenceHelper = Preferences.getInstance(itemView.context)
-			val subscribingProject = preferenceHelper.getString(Preferences.SUBSCRIBING_PROJECT)
-			
 			subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
 			setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
 			if (item.project.isGuest()) {
