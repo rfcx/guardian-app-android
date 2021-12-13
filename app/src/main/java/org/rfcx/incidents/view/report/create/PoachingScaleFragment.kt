@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_scale.*
+import kotlinx.android.synthetic.main.fragment_poaching_scale.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.PoachingScale
 
@@ -29,9 +29,11 @@ class PoachingScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
+		setupScale()
 		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->
+				listener.setPoachingScale(value)
 				listener.handleCheckClicked(StepCreateReport.ACTION.step)
 			}
 		}
@@ -43,6 +45,19 @@ class PoachingScaleFragment : Fragment() {
 				R.id.smallRadioButton -> selected = PoachingScale.SMALL.value
 				R.id.largeRadioButton -> selected = PoachingScale.LARGE.value
 				R.id.noneRadioButton -> selected = PoachingScale.NONE.value
+			}
+		}
+	}
+	
+	private fun setupScale() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected = res.poachingScale
+			nextStepButton.isEnabled = selected != PoachingScale.DEFAULT.value
+			when (selected) {
+				PoachingScale.SMALL.value -> smallRadioButton.isChecked = true
+				PoachingScale.LARGE.value -> largeRadioButton.isChecked = true
+				PoachingScale.NONE.value -> noneRadioButton.isChecked = true
 			}
 		}
 	}
