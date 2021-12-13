@@ -300,12 +300,19 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 					} else {
 						handleCheckClicked(StepCreateReport.SCALE.step)
 					}
+				} else if (response.investigateType.contains(InvestigationType.POACHING.value)) {
+					handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
 				} else {
 					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 				}
 			}
 			is AssetsFragment -> {
-				handleCheckClicked(StepCreateReport.ACTION.step)
+				val response = _response ?: Response()
+				if (response.investigateType.contains(InvestigationType.OTHER.value)) {
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+				} else {
+					handleCheckClicked(StepCreateReport.ACTION.step)
+				}
 			}
 			else -> super.onBackPressed()
 		}

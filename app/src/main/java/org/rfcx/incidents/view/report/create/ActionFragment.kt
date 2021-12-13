@@ -31,8 +31,10 @@ class ActionFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
+		setupResponseActions()
 		
 		nextStepButton.setOnClickListener {
+			selected?.let { listener.setAction(listOf(it)) }
 			listener.handleCheckClicked(StepCreateReport.ASSETS.step)
 		}
 		
@@ -52,6 +54,22 @@ class ActionFragment : Fragment() {
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_action, container, false)
+	}
+	
+	private fun setupResponseActions() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			val list = res.responseActions
+			nextStepButton.isEnabled = list.isNotEmpty()
+			if (list.isNotEmpty()) {
+				when (list[0]) {
+					Actions.COLLECTED_EVIDENCE.value -> collectedRadioButton.isChecked = true
+					Actions.ISSUE_A_WARNING.value -> warningRadioButton.isChecked = true
+					Actions.CONFISCATED_EQUIPMENT.value -> confiscatedRadioButton.isChecked = true
+					Actions.ISSUE_A_FINE.value -> fineRadioButton.isChecked = true
+				}
+			}
+		}
 	}
 	
 	companion object {
