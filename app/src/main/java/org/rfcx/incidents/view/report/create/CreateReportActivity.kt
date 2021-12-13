@@ -112,6 +112,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
+			title = getString(R.string.create_report_steps)
 		}
 	}
 	
@@ -120,23 +121,15 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		return true
 	}
 	
-	override fun setTitleToolbar(step: Int, to: String) {
+	private fun setSubtitleToolbar(text: String) {
 		supportActionBar?.apply {
-			title = getString(R.string.create_report_steps, step, to)
+			subtitle = text
 		}
 	}
 	
 	override fun handleCheckClicked(step: Int) {
 		passedChecks.add(step)
-		val response = _response ?: Response()
-		if (response.investigateType.contains(InvestigationType.POACHING.value) || response.investigateType.contains(InvestigationType.LOGGING.value)) {
-			setTitleToolbar(step, "8")
-		} else if (response.investigateType.contains(InvestigationType.OTHER.value)) {
-			setTitleToolbar(3, "3")
-		} else {
-			setTitleToolbar(step, "...")
-		}
-		
+		setSubtitle(step)
 		
 		when (step) {
 			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
@@ -152,6 +145,32 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	private fun setResponse(response: Response) {
 		this._response = response
+	}
+	
+	private fun setNumberOnSubtitle(step: Int, isSelectedBoth: Boolean) {
+		when (step) {
+			StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 5)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
+			StepCreateReport.SCALE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 4)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
+			StepCreateReport.POACHING_EVIDENCE.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
+			StepCreateReport.SCALE_POACHING.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
+			StepCreateReport.ACTION.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle_one_step))
+		}
+	}
+	
+	private fun setSubtitle(step: Int) {
+		val response = _response ?: Response()
+		if (response.investigateType.contains(InvestigationType.POACHING.value) && response.investigateType.contains(InvestigationType.LOGGING.value)) {
+			setNumberOnSubtitle(step, true)
+		} else {
+			setNumberOnSubtitle(step, false)
+		}
+		
+		if (step == StepCreateReport.ASSETS.step) {
+			setSubtitleToolbar(getString(R.string.last_step))
+		}
+		if (step == StepCreateReport.INVESTIGATION_TIMESTAMP.step || step == StepCreateReport.INVESTIGATION_TYPE.step) {
+			setSubtitleToolbar("")
+		}
 	}
 	
 	override fun getResponse(): Response? = _response
@@ -320,7 +339,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 }
 
 interface CreateReportListener {
-	fun setTitleToolbar(step: Int, to: String)
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?

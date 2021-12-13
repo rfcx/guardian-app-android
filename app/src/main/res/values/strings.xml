@@ -252,7 +252,10 @@
 	<string name="guardian_event_detail">Event Detail</string>
 	
 	<!-- CreateReportActivity -->
-	<string name="create_report_steps">Create Report (step %d of %s)</string>
+	<string name="create_report_steps">Report</string>
+	<string name="create_report_subtitle">%d steps remaining</string>
+	<string name="create_report_subtitle_one_step">1 step remaining</string>
+	<string name="last_step">last step</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
