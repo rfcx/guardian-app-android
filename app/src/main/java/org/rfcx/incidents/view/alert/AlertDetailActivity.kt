@@ -108,6 +108,11 @@ class AlertDetailActivity : AppCompatActivity() {
 				soundProgressSeekBar?.progress = it
 			}
 		})
+		
+		viewModel.loadAudioError.observe(this, {
+			Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+			loadingSoundProgressBar.visibility = View.INVISIBLE
+		})
 	}
 	
 	private fun setupToolbar() {

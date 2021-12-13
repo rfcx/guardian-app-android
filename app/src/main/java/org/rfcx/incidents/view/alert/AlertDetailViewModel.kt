@@ -64,6 +64,11 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	val playerProgress: LiveData<Int>
 		get() = _playerProgress
 	
+	private var _loadAudioError: MutableLiveData<String> = MutableLiveData()
+	val loadAudioError: LiveData<String?>
+		get() = _loadAudioError
+	
+	
 	private val playerTimeHandler: Handler = Handler()
 	private val playerTimeRunnable = object : Runnable {
 		override fun run() {
@@ -166,6 +171,7 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 			}
 			
 			override fun onError(e: Throwable) {
+				_loadAudioError.value = e.message
 				e.printStackTrace()
 			}
 		}, fileName)
