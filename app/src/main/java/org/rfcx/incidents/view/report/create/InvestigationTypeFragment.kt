@@ -53,14 +53,14 @@ class InvestigationTypeFragment : Fragment() {
 			listener.setInvestigateType(selected)
 			
 			when {
-				selected.contains(InvestigationType.OTHER.value) -> {
-					listener.handleCheckClicked(StepCreateReport.ASSETS.step)
-				}
 				selected.contains(InvestigationType.LOGGING.value) -> {
 					listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
 				}
 				selected.contains(InvestigationType.POACHING.value) -> {
 					listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
+				}
+				selected.contains(InvestigationType.OTHER.value) -> {
+					listener.handleCheckClicked(StepCreateReport.ASSETS.step)
 				}
 			}
 		}
@@ -91,15 +91,12 @@ class InvestigationTypeFragment : Fragment() {
 	
 	private fun setOnChange() {
 		loggingCheckBox.setOnClickListener {
-			setSelectedOther(false)
 			setEnabled()
 		}
 		poachingCheckBox.setOnClickListener {
-			setSelectedOther(false)
 			setEnabled()
 		}
 		otherCheckBox.setOnClickListener {
-			setSelectedOther(true)
 			setEnabled()
 		}
 	}
@@ -108,14 +105,6 @@ class InvestigationTypeFragment : Fragment() {
 		selected.clear()
 		nextStepButton.isEnabled = loggingCheckBox.isChecked ||
 				poachingCheckBox.isChecked || otherCheckBox.isChecked
-	}
-	
-	private fun setSelectedOther(isOther: Boolean) {
-		if (isOther) {
-			loggingCheckBox.isChecked = !isOther
-			poachingCheckBox.isChecked = !isOther
-		}
-		otherCheckBox.isChecked = isOther
 	}
 	
 	companion object {

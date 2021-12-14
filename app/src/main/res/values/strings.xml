@@ -266,7 +266,7 @@
 	<string name="do_not_future_time">Do not set a future time</string>
 	
 	<!-- InvestigationTypeFragment -->
-	<string name="what_investigate">What did you investigate?</string>
+	<string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>
 	<string name="logging">Logging</string>
 	<string name="poaching">Poaching</string>
 	

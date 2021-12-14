@@ -62,49 +62,49 @@ class EvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		cutDownTreesCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		clearedAreasCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		loggingEquipmentCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		loggersAtSiteCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		illegalCampsCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		firesBurnedAreasCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		otherCheckBox.setOnClickListener {
-			setSelectedOther(isOther = true, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		noneCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = true)
+			setSelectedNone(true)
 			setEnabled()
 		}
 	}
 	
-	private fun setSelectedOther(isOther: Boolean, isNone: Boolean) {
-		if (isOther || isNone) {
+	private fun setSelectedNone(isNone: Boolean) {
+		if (isNone) {
 			cutDownTreesCheckBox.isChecked = false
 			clearedAreasCheckBox.isChecked = false
 			loggingEquipmentCheckBox.isChecked = false
 			loggersAtSiteCheckBox.isChecked = false
 			illegalCampsCheckBox.isChecked = false
 			firesBurnedAreasCheckBox.isChecked = false
+			otherCheckBox.isChecked = false
 		}
-		otherCheckBox.isChecked = isOther
 		noneCheckBox.isChecked = isNone
 	}
 	

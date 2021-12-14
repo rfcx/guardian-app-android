@@ -51,23 +51,23 @@ class PoachingEvidenceFragment : Fragment() {
 	
 	private fun setOnChange() {
 		bulletShellsCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		footprintsCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		dogTracksCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		otherSpecifyCheckBox.setOnClickListener {
-			setSelectedOther(isOther = true, isNone = false)
+			setSelectedNone(false)
 			setEnabled()
 		}
 		noneCheckBox.setOnClickListener {
-			setSelectedOther(isOther = false, isNone = true)
+			setSelectedNone(true)
 			setEnabled()
 		}
 	}
@@ -100,14 +100,14 @@ class PoachingEvidenceFragment : Fragment() {
 		listener.handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
 	}
 	
-	private fun setSelectedOther(isOther: Boolean, isNone: Boolean) {
-		if (isOther || isNone) {
+	private fun setSelectedNone(isNone: Boolean) {
+		if (isNone) {
 			bulletShellsCheckBox.isChecked = false
 			footprintsCheckBox.isChecked = false
 			dogTracksCheckBox.isChecked = false
 			otherSpecifyCheckBox.isChecked = false
+			otherSpecifyCheckBox.isChecked = false
 		}
-		otherSpecifyCheckBox.isChecked = isOther
 		noneCheckBox.isChecked = isNone
 	}
 	

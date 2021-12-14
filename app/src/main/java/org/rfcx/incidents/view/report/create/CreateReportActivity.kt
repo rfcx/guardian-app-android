@@ -327,7 +327,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			}
 			is AssetsFragment -> {
 				val response = _response ?: Response()
-				if (response.investigateType.contains(InvestigationType.OTHER.value)) {
+				if (response.investigateType.contains(InvestigationType.OTHER.value) && !response.investigateType.contains(InvestigationType.POACHING.value) && !response.investigateType.contains(InvestigationType.LOGGING.value)) {
 					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 				} else {
 					handleCheckClicked(StepCreateReport.ACTION.step)
