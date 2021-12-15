@@ -53,7 +53,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/bullet_shells"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
@@ -67,7 +68,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/footprints"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
@@ -95,7 +97,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/other_text"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
@@ -109,7 +112,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/common_none"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
