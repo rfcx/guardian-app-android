@@ -88,8 +88,8 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?): String? {
-		if (intent?.hasExtra("event_guid") == true) {
-			return intent.getStringExtra("event_guid")
+		if (intent?.hasExtra("streamName") == true) {
+			return intent.getStringExtra("streamName")
 		}
 		return null
 	}
