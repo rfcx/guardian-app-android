@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.events.detail
 
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,9 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.toAlert
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.service.LocationTrackerService
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
@@ -75,6 +79,9 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 				name?.let { name ->
 					guardianId?.let { id ->
 						analytics?.trackCreateResponseEvent()
+						listener.getCurrentLocation()?.let { loc ->
+							saveLocation(loc)
+						}
 						listener.openCreateReportActivity(name, id)
 					}
 				}
@@ -138,6 +145,17 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 		toolbarLayout.setNavigationOnClickListener {
 			listener.onBackPressed()
 		}
+	}
+	
+	fun saveLocation(location: Location) {
+		val tracking = Tracking(id = 1)
+		val coordinate = Coordinate(
+				latitude = location.latitude,
+				longitude = location.longitude,
+				altitude = location.altitude
+		)
+		viewModel.saveLocation(tracking, coordinate)
+		Preferences.getInstance(requireContext()).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	
 	override fun onRefresh() {

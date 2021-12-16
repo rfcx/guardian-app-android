@@ -56,8 +56,8 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
-import org.rfcx.incidents.view.events.adapter.StreamItem
 import org.rfcx.incidents.view.events.adapter.GuardianItemAdapter
+import org.rfcx.incidents.view.events.adapter.StreamItem
 import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
 import java.util.*
@@ -710,6 +710,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			try {
 				lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 				lastLocation?.let {
+					listener.setCurrentLocation(it)
 					moveCameraToCurrentLocation(it)
 					viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
 				}
