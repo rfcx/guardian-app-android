@@ -147,7 +147,7 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 		}
 	}
 	
-	fun saveLocation(location: Location) {
+	private fun saveLocation(location: Location) {
 		val tracking = Tracking(id = 1)
 		val coordinate = Coordinate(
 				latitude = location.latitude,
