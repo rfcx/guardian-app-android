@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
 	android:orientation="vertical"
 	tools:context=".view.report.create.CreateReportActivity">
 	
@@ -14,8 +15,8 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:subtitleTextAppearance="@style/RangerText.SubTitle.Secondary"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:subtitleTextAppearance="@style/RangerText.SubTitle.Secondary"
 		app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 	
 	<FrameLayout
