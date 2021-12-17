@@ -3,11 +3,13 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Preferences.Companion.DISPLAY_THEME
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.view.MainActivity
 import org.rfcx.incidents.view.base.BaseActivity
@@ -29,6 +31,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
+		setupDisplayTheme()
 		
 		val preferenceHelper = Preferences.getInstance(this)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
@@ -38,6 +41,23 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 		} else {
 			openLoginFragment()
 		}
+	}
+	
+	private fun setupDisplayTheme() {
+		val preferences = Preferences.getInstance(this)
+		val themeOption = this.resources.getStringArray(R.array.theme_more_than_9)
+		val theme = when (preferences.getString(DISPLAY_THEME, themeOption[1])) {
+			themeOption[0] -> {
+				AppCompatDelegate.MODE_NIGHT_NO
+			}
+			themeOption[1] -> {
+				AppCompatDelegate.MODE_NIGHT_YES
+			}
+			else -> {
+				AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+			}
+		}
+		AppCompatDelegate.setDefaultNightMode(theme)
 	}
 	
 	override fun handleOpenPage() {
