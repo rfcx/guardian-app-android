@@ -2,7 +2,10 @@ package org.rfcx.incidents.view.events
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
@@ -19,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -132,10 +136,31 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
 	private var tracking = Tracking()
+	private lateinit var localBroadcastManager: LocalBroadcastManager
+	
+	private val streamNameReceived = object : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+			if (intent == null) return
+			val streamName = intent.getStringExtra("streamName")
+			if (streamName != null) {
+				viewModel.loadStreams()
+				setStreamsWithLocalData()
+			}
+		}
+	}
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		listener = (context as MainActivityEventListener)
+		localBroadcastManager = LocalBroadcastManager.getInstance(context)
+		val actionReceiver = IntentFilter()
+		actionReceiver.addAction("haveNewEvent")
+		localBroadcastManager.registerReceiver(streamNameReceived, actionReceiver)
+	}
+	
+	override fun onDetach() {
+		super.onDetach()
+		localBroadcastManager.unregisterReceiver(streamNameReceived)
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,8 +3,11 @@ package org.rfcx.incidents.service
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Bundle
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import org.rfcx.incidents.service.AlertNotification.createAlert
@@ -17,8 +20,13 @@ class MessagingService : FirebaseMessagingService() {
 		if (remoteMessage.notification == null) return
 		Log.i("MessagingService", "-- " + remoteMessage.data.toString())
 		if (remoteMessage.data.containsKey("streamName")) {
-			val alertNotification = createAlert(this, getNotificationManager()
-					, remoteMessage.notification!!, remoteMessage.data)
+			val intent = Intent("haveNewEvent")
+			val bundle = Bundle()
+			bundle.putString("streamName", remoteMessage.data["streamName"])
+			intent.putExtras(bundle)
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+			
+			val alertNotification = createAlert(this, getNotificationManager(), remoteMessage.notification!!, remoteMessage.data)
 			notify(createNotificationID(), alertNotification)
 			Log.d("MessagingService", remoteMessage.data.toString())
 		} else {

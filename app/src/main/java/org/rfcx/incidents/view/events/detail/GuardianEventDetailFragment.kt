@@ -105,6 +105,7 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 			if (viewModel.getEventsCount(it) != 0L) {
 				alertItemAdapter.items = viewModel.getAlertsByStream(it)
 				isShowProgressBar(false)
+				viewModel.fetchEvents(it)
 			} else {
 				if (!context.isNetworkAvailable()) {
 					isShowProgressBar(false)
