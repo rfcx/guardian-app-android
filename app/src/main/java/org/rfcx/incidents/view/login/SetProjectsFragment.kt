@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_set_projects.*
+import kotlinx.android.synthetic.main.item_select_subscribe_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.util.*
-import org.rfcx.incidents.util.isNetworkAvailable
 import java.util.*
 
 class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
@@ -23,6 +23,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		@JvmStatic
 		fun newInstance() = SetProjectsFragment()
 	}
+	
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	
 	lateinit var listener: LoginListener
@@ -109,39 +110,47 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 	}
 	
 	override fun onItemClick(item: ProjectsItem, position: Int) {
+		val items = projectsItem ?: return
+		projectsAdapter.subscribingProject = item.project.name
+		projectsAdapter.items = items
+		selectProjectButton.isEnabled = false
+		logoutButton.isEnabled = false
+		
 		if (item.selected) {
 			viewModel.unsubscribeProject(item.project) { status ->
+				projectsAdapter.subscribingProject = null
 				if (!status) {
-					projectsItem?.let { items ->
-						items[position].selected = !items[position].selected
-						projectsAdapter.items = items
-					}
+					setSelectedProject(items, position)
 					showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
 				} else {
-					subscribedProjects.remove(item.project.serverId ?: "")
 					saveSubscribedProject(subscribedProjects)
-					selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
+					subscribedProjects.remove(item.project.serverId ?: "")
+					setSelectedProject(items, position)
 				}
+				logoutButton.isEnabled = true
+				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		} else {
 			viewModel.setProjectsAndSubscribe(item.project) { status ->
+				projectsAdapter.subscribingProject = null
 				if (!status) {
-					projectsItem?.let { items ->
-						items[position].selected = !items[position].selected
-						projectsAdapter.items = items
-					}
+					setSelectedProject(items, position)
 					showToast(getString(R.string.failed_receive_notification, item.project.name))
 				} else {
 					subscribedProjects.add(item.project.serverId ?: "")
 					saveSubscribedProject(subscribedProjects)
 					selectProjectButton.isEnabled = true
+					setSelectedProject(items, position)
 				}
+				logoutButton.isEnabled = true
+				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
 			}
 		}
-		projectsItem?.let { items ->
-			items[position].selected = !items[position].selected
-			projectsAdapter.items = items
-		}
+	}
+	
+	private fun setSelectedProject(items: List<ProjectsItem>, position: Int) {
+		items[position].selected = !items[position].selected
+		projectsAdapter.items = items
 	}
 	
 	private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {

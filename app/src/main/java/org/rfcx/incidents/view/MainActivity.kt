@@ -3,6 +3,7 @@ package org.rfcx.incidents.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -18,8 +19,11 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.service.*
+import org.rfcx.incidents.service.AlertNotification
+import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
+import org.rfcx.incidents.service.NetworkState
+import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
@@ -42,6 +46,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	private var currentFragment: Fragment? = null
+	private var currentLocation: Location? = null
 	
 	private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		if (it.resultCode == RESULT_CODE) {
@@ -258,6 +263,14 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		startActivity(intent)
 	}
 	
+	override fun setCurrentLocation(location: Location) {
+		currentLocation = location
+	}
+	
+	override fun getCurrentLocation(): Location? {
+		return currentLocation
+	}
+	
 	private fun setupFragments() {
 		supportFragmentManager.beginTransaction()
 				.add(contentContainer.id, getProfile(), ProfileFragment.tag)
@@ -375,4 +388,6 @@ interface MainActivityEventListener {
 	fun openDetailResponse(coreId: String)
 	fun openCreateResponse(response: Response)
 	fun openGoogleMap(stream: Stream)
+	fun setCurrentLocation(location: Location)
+	fun getCurrentLocation(): Location?
 }

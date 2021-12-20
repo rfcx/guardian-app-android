@@ -1,8 +1,11 @@
 package org.rfcx.incidents.view.report.create
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -15,13 +18,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.InvestigationType
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.entity.response.EvidenceTypes
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
-import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.*
 import org.rfcx.incidents.util.isNetworkAvailable
-import org.rfcx.incidents.util.isOnAirplaneMode
-import org.rfcx.incidents.util.showToast
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -53,6 +57,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	private var _response: Response? = null
 	private var _images: ArrayList<String> = arrayListOf()
+	private var locationManager: LocationManager? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -259,10 +264,14 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		finish()
 	}
 	
+	@SuppressLint("MissingPermission")
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
 		response.answers = response.saveToAnswers()
+		locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+		val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+		lastLocation?.let { saveLocation(it) }
 		viewModel.saveResponseInLocalDb(response, _images)
 		viewModel.saveTrackingFile(response, this)
 		when {
@@ -287,6 +296,17 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		supportFragmentManager.beginTransaction()
 				.replace(createReportContainer.id, fragment)
 				.commit()
+	}
+	
+	private fun saveLocation(location: Location) {
+		val tracking = Tracking(id = 1)
+		val coordinate = Coordinate(
+				latitude = location.latitude,
+				longitude = location.longitude,
+				altitude = location.altitude
+		)
+		viewModel.saveLocation(tracking, coordinate)
+		Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
 	}
 	
 	override fun onBackPressed() {
