@@ -5,14 +5,15 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/backgroundColor"
-	android:padding="@dimen/margin_padding_normal"
 	tools:context=".view.report.create.InvestigationTimestampFragment">
 	
 	<ScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toTopOf="@id/lineBottomView"
+		android:overScrollMode="never"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
 		app:layout_constraintTop_toTopOf="parent">
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
@@ -104,33 +105,12 @@
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
 	
-	<View
-		android:id="@+id/lineBottomView"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_grey_light"
-		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/backgroundButtonImageView"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_alignParentBottom="true"
-		android:alpha="0.5"
-		android:src="@color/white"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
-	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"
 		style="@style/RangerButton.GreenButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
 		android:enabled="false"
 		android:text="@string/next"
 		app:layout_constraintBottom_toBottomOf="parent" />
