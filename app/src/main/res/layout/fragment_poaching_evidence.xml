@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".view.report.create.EvidenceFragment">
+	tools:context=".view.report.create.PoachingEvidenceFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/siteNameTextView"
@@ -17,13 +17,13 @@
 		tools:text="Site Z" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/whenTextView"
+		android:id="@+id/whatPoachingTextView"
 		style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:text="@string/what_evidence"
+		android:text="@string/what_poaching_evidence"
 		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
 	
 	<ScrollView
@@ -34,18 +34,18 @@
 		android:paddingTop="@dimen/margin_padding_small"
 		android:paddingBottom="@dimen/margin_padding_small"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/whenTextView">
+		app:layout_constraintTop_toBottomOf="@id/whatPoachingTextView">
 		
 		<LinearLayout
-			android:id="@+id/whatEvidenceLinearLayout"
+			android:id="@+id/whatPoachingLinearLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:checkedButton="@+id/whatEvidenceRadioButton"
+			android:checkedButton="@+id/whatPoachingRadioButton"
 			android:orientation="vertical"
 			android:paddingBottom="@dimen/padding_bottom">
 			
 			<CheckBox
-				android:id="@+id/cutDownTreesCheckBox"
+				android:id="@+id/bulletShellsCheckBox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
@@ -55,12 +55,12 @@
 				android:button="@color/transparent"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/cut_down_trees"
+				android:text="@string/bullet_shells"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 			
 			<CheckBox
-				android:id="@+id/clearedAreasCheckBox"
+				android:id="@+id/footprintsCheckBox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
@@ -70,12 +70,12 @@
 				android:button="@color/transparent"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/cleared_areas"
+				android:text="@string/footprints"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 			
 			<CheckBox
-				android:id="@+id/loggingEquipmentCheckBox"
+				android:id="@+id/dogTracksCheckBox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
@@ -83,59 +83,13 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/logging_equipment"
+				android:padding="@dimen/margin_padding_normal"
+				android:text="@string/dog_tracks"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 			
 			<CheckBox
-				android:id="@+id/loggersAtSiteCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/loggers_at_site"
-				android:textColor="@drawable/radio_text_color"
-				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-			
-			<CheckBox
-				android:id="@+id/illegalCampsCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/illegal_camps"
-				android:textColor="@drawable/radio_text_color"
-				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-			
-			<CheckBox
-				android:id="@+id/firesBurnedAreasCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_normal"
-				android:text="@string/fires_burned_areas"
-				android:textColor="@drawable/radio_text_color"
-				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
-			
-			<CheckBox
-				android:id="@+id/otherCheckBox"
+				android:id="@+id/otherSpecifyCheckBox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"

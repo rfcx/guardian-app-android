@@ -18,6 +18,7 @@ enum class Screen(val id: String) {
 	RESPONSE_DETAIL("ResponseDetail"),
 	GUARDIAN_EVENT_DETAIL("GuardianEventDetail"),
 	INVESTIGATION_TIMESTAMP("InvestigationTimestamp"),
+	INVESTIGATION_TYPE("InvestigationType"),
 	EVIDENCE("Evidence"),
 	DAMAGE("Damage"),
 	ACTION("Action"),

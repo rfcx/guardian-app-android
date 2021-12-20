@@ -7,125 +7,79 @@
 	tools:context=".view.report.create.ActionFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/siteNameTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_normal"
+		android:textStyle="bold"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Site Z" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/whatActionTextView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:paddingStart="@dimen/margin_padding_normal"
 		android:text="@string/what_action"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
 	
-	<ScrollView
-		android:id="@+id/scrollView"
+	<RadioGroup
+		android:id="@+id/actionRadioGroup"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:overScrollMode="never"
-		android:paddingTop="@dimen/margin_padding_small"
-		android:paddingBottom="@dimen/margin_padding_small"
-		app:layout_constraintBottom_toBottomOf="parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_padding_normal"
+		
 		app:layout_constraintTop_toBottomOf="@id/whatActionTextView">
 		
-		<LinearLayout
+		<RadioButton
+			android:id="@+id/collectedRadioButton"
 			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:orientation="vertical"
-			android:paddingBottom="@dimen/padding_bottom">
-			
-			<CheckBox
-				android:id="@+id/collectedEvidenceCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/collected_evidence"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/issueWarningCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/issue_a_warning"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/confiscatedEquipmentCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/confiscated_equipment"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/arrestsCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/arrests"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/planningSecurityCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/planning_security"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/otherCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/other_explain_step_6"
-				android:textColor="@drawable/radio_text_color" />
-			
-			<CheckBox
-				android:id="@+id/noneCheckBox"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:background="@drawable/radio_selector"
-				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
-				android:text="@string/common_none"
-				android:textColor="@drawable/radio_text_color"
-				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingEnd="@dimen/margin_padding_normal"
+			android:text="@string/collected_evidence"
+			android:textColor="@drawable/radio_text_color" />
 		
-		</LinearLayout>
-	</ScrollView>
+		<RadioButton
+			android:id="@+id/warningRadioButton"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingEnd="@dimen/margin_padding_normal"
+			android:text="@string/issue_a_warning"
+			android:textColor="@drawable/radio_text_color" />
+		
+		<RadioButton
+			android:id="@+id/confiscatedRadioButton"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingEnd="@dimen/margin_padding_normal"
+			android:text="@string/confiscated_equipment"
+			android:textColor="@drawable/radio_text_color" />
+		
+		<RadioButton
+			android:id="@+id/fineRadioButton"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_padding_small"
+			android:background="@drawable/radio_selector"
+			android:button="@color/transparent"
+			android:paddingStart="@dimen/margin_padding_normal"
+			android:paddingEnd="@dimen/margin_padding_normal"
+			android:text="@string/issue_a_fine"
+			android:textColor="@drawable/radio_text_color" />
+	</RadioGroup>
 	
 	<View
 		android:id="@+id/lineBottomView"
