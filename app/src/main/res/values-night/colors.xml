@@ -7,6 +7,7 @@
 	<color name="backgroundColor">#141525</color>
 	<color name="statusColor">#232436</color>
 	<color name="iconColor">#999999</color>
+	<color name="dialogColor">#232436</color>
 	
 	<!-- Text color -->
 	<color name="text_primary">#ffffff</color>

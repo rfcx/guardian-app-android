@@ -159,8 +159,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
-		
-		menuNewEvents.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {

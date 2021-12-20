@@ -35,4 +35,7 @@
 	<dimen name="sound_record_progress_height">48dp</dimen>
 	<dimen name="map_height">250dp</dimen>
 	<dimen name="mini_progress_loading">24dp</dimen>
+	
+	<dimen name="separate_line_size">2dp</dimen>
+
 </resources>

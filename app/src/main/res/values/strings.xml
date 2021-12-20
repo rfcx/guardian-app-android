@@ -343,4 +343,7 @@
 	<string name="light_theme">Light</string>
 	<string name="system_default">System default</string>
 	<string name="site_name">Site %s</string>
+	<string name="display">Display</string>
+	<string name="theme">Theme</string>
+
 </resources>
