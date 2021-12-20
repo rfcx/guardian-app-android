@@ -19,7 +19,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.entity.response.EvidenceTypes
+import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
@@ -115,7 +115,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			setDisplayHomeAsUpEnabled(true)
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
-			subtitle = streamName
+			title = getString(R.string.create_report_steps)
 		}
 	}
 	
@@ -124,21 +124,23 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		return true
 	}
 	
-	override fun setTitleToolbar(step: Int) {
+	private fun setSubtitleToolbar(text: String) {
 		supportActionBar?.apply {
-			title = getString(R.string.create_report_steps, step)
+			subtitle = text
 		}
 	}
 	
 	override fun handleCheckClicked(step: Int) {
 		passedChecks.add(step)
-		setTitleToolbar(step)
+		setSubtitle(step)
 		
 		when (step) {
 			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
+			StepCreateReport.INVESTIGATION_TYPE.step -> startFragment(InvestigationTypeFragment.newInstance())
 			StepCreateReport.EVIDENCE.step -> startFragment(EvidenceFragment.newInstance())
 			StepCreateReport.SCALE.step -> startFragment(ScaleFragment.newInstance())
-			StepCreateReport.DAMAGE.step -> startFragment(DamageFragment.newInstance())
+			StepCreateReport.POACHING_EVIDENCE.step -> startFragment(PoachingEvidenceFragment.newInstance())
+			StepCreateReport.SCALE_POACHING.step -> startFragment(PoachingScaleFragment.newInstance())
 			StepCreateReport.ACTION.step -> startFragment(ActionFragment.newInstance())
 			StepCreateReport.ASSETS.step -> startFragment(AssetsFragment.newInstance())
 		}
@@ -148,9 +150,37 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		this._response = response
 	}
 	
+	private fun setNumberOnSubtitle(step: Int, isSelectedBoth: Boolean) {
+		when (step) {
+			StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 5)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
+			StepCreateReport.SCALE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 4)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
+			StepCreateReport.POACHING_EVIDENCE.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
+			StepCreateReport.SCALE_POACHING.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
+			StepCreateReport.ACTION.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle_one_step))
+		}
+	}
+	
+	private fun setSubtitle(step: Int) {
+		val response = _response ?: Response()
+		if (response.investigateType.contains(InvestigationType.POACHING.value) && response.investigateType.contains(InvestigationType.LOGGING.value)) {
+			setNumberOnSubtitle(step, true)
+		} else {
+			setNumberOnSubtitle(step, false)
+		}
+		
+		if (step == StepCreateReport.ASSETS.step) {
+			setSubtitleToolbar(getString(R.string.last_step))
+		}
+		if (step == StepCreateReport.INVESTIGATION_TIMESTAMP.step || step == StepCreateReport.INVESTIGATION_TYPE.step) {
+			setSubtitleToolbar("")
+		}
+	}
+	
 	override fun getResponse(): Response? = _response
 	
 	override fun getImages(): ArrayList<String> = _images
+	
+	override fun getSiteName(): String? = streamName
 	
 	override fun setImages(images: ArrayList<String>) {
 		_images = images
@@ -159,6 +189,26 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun setAudio(audioPath: String?) {
 		val response = _response ?: Response()
 		response.audioLocation = audioPath
+		setResponse(response)
+	}
+	
+	override fun setInvestigateType(type: ArrayList<Int>) {
+		val response = _response ?: Response()
+		response.investigateType.clear()
+		response.investigateType.addAll(type)
+		setResponse(response)
+	}
+	
+	override fun setPoachingScale(poachingScale: Int) {
+		val response = _response ?: Response()
+		response.poachingScale = poachingScale
+		setResponse(response)
+	}
+	
+	override fun setPoachingEvidence(poachingEvidence: List<Int>) {
+		val response = _response ?: Response()
+		response.poachingEvidence.clear()
+		response.poachingEvidence.addAll(poachingEvidence)
 		setResponse(response)
 	}
 	
@@ -259,25 +309,47 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	
 	override fun onBackPressed() {
 		when (supportFragmentManager.findFragmentById(R.id.createReportContainer)) {
-			is EvidenceFragment -> {
+			is InvestigationTypeFragment -> {
 				handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
+			}
+			is EvidenceFragment -> {
+				handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+			}
+			is PoachingEvidenceFragment -> {
+				val response = _response ?: Response()
+				if (response.investigateType.contains(InvestigationType.LOGGING.value)) {
+					handleCheckClicked(StepCreateReport.SCALE.step)
+				} else {
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+				}
 			}
 			is ScaleFragment -> {
 				handleCheckClicked(StepCreateReport.EVIDENCE.step)
 			}
-			is DamageFragment -> {
-				handleCheckClicked(StepCreateReport.SCALE.step)
+			is PoachingScaleFragment -> {
+				handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
 			}
 			is ActionFragment -> {
 				val response = _response ?: Response()
-				if (response.evidences.contains(EvidenceTypes.NONE.value)) {
-					handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				if (response.investigateType.contains(InvestigationType.LOGGING.value)) {
+					if (response.investigateType.contains(InvestigationType.POACHING.value)) {
+						handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
+					} else {
+						handleCheckClicked(StepCreateReport.SCALE.step)
+					}
+				} else if (response.investigateType.contains(InvestigationType.POACHING.value)) {
+					handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
 				} else {
-					handleCheckClicked(StepCreateReport.DAMAGE.step)
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 				}
 			}
 			is AssetsFragment -> {
-				handleCheckClicked(StepCreateReport.ACTION.step)
+				val response = _response ?: Response()
+				if (response.investigateType.contains(InvestigationType.OTHER.value) && !response.investigateType.contains(InvestigationType.POACHING.value) && !response.investigateType.contains(InvestigationType.LOGGING.value)) {
+					handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+				} else {
+					handleCheckClicked(StepCreateReport.ACTION.step)
+				}
 			}
 			else -> super.onBackPressed()
 		}
@@ -285,11 +357,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 }
 
 interface CreateReportListener {
-	fun setTitleToolbar(step: Int)
 	fun handleCheckClicked(step: Int)
 	
 	fun getResponse(): Response?
 	fun getImages(): ArrayList<String>
+	fun getSiteName(): String?
 	
 	fun setInvestigationTimestamp(date: Date)
 	fun setEvidence(evidence: List<Int>)
@@ -299,6 +371,9 @@ interface CreateReportListener {
 	fun setNotes(note: String?)
 	fun setImages(images: ArrayList<String>)
 	fun setAudio(audioPath: String?)
+	fun setInvestigateType(type: ArrayList<Int>)
+	fun setPoachingScale(poachingScale: Int)
+	fun setPoachingEvidence(poachingEvidence: List<Int>)
 	
 	fun onSaveDraftButtonClick()
 	fun onSubmitButtonClick()
@@ -306,9 +381,14 @@ interface CreateReportListener {
 
 enum class StepCreateReport(val step: Int) {
 	INVESTIGATION_TIMESTAMP(1),
-	EVIDENCE(2),
-	SCALE(3),
-	DAMAGE(4),
-	ACTION(5),
-	ASSETS(6)
+	INVESTIGATION_TYPE(2),
+	EVIDENCE(3),
+	SCALE(4),
+	POACHING_EVIDENCE(5),
+	SCALE_POACHING(6),
+	ACTION(7),
+	ASSETS(8),
+	
+	
+	DAMAGE(9),
 }

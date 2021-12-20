@@ -8,81 +8,123 @@
 	android:padding="@dimen/margin_padding_normal"
 	tools:context=".view.report.create.InvestigationTimestampFragment">
 	
-	<TextView
-		android:id="@+id/whenTextView"
-		style="@style/RangerText.Body"
+	<ScrollView
+		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/when_investigate"
-		app:layout_constraintTop_toTopOf="parent" />
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toTopOf="@id/lineBottomView"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/siteNameTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:textStyle="bold"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="Site Z" />
+			
+			<TextView
+				android:id="@+id/whenTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/when_investigate"
+				app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
+			
+			<RadioGroup
+				android:id="@+id/radioGroup"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:checkedButton="@+id/radio_button_1"
+				app:layout_constraintTop_toBottomOf="@id/whenTextView">
+				
+				<RadioButton
+					android:id="@+id/todayRadioButton"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:background="@drawable/radio_selector"
+					android:button="@color/transparent"
+					android:paddingStart="@dimen/margin_padding_normal"
+					android:paddingEnd="@dimen/margin_padding_normal"
+					android:text="@string/today"
+					android:textColor="@drawable/radio_text_color" />
+				
+				<RadioButton
+					android:id="@+id/yesterdayRadioButton"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:background="@drawable/radio_selector"
+					android:button="@color/transparent"
+					android:paddingStart="@dimen/margin_padding_normal"
+					android:paddingEnd="@dimen/margin_padding_normal"
+					android:text="@string/yesterday"
+					android:textColor="@drawable/radio_text_color" />
+				
+				<RadioButton
+					android:id="@+id/earlierRadioButton"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:background="@drawable/radio_selector"
+					android:button="@color/transparent"
+					android:paddingStart="@dimen/margin_padding_normal"
+					android:paddingEnd="@dimen/margin_padding_normal"
+					android:text="@string/earlier"
+					android:textColor="@drawable/radio_text_color" />
+			</RadioGroup>
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/whatTimeTextView"
+				style="@style/RangerText.SubTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_large"
+				android:text="@string/what_time"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/radioGroup" />
+			
+			<TimePicker
+				android:id="@+id/timePicker"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:padding="@dimen/margin_padding_normal"
+				android:timePickerMode="spinner"
+				app:layout_constraintTop_toBottomOf="@id/whatTimeTextView" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
 	
-	<RadioGroup
-		android:id="@+id/radioGroup"
+	<View
+		android:id="@+id/lineBottomView"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:checkedButton="@+id/radio_button_1"
-		app:layout_constraintTop_toBottomOf="@id/whenTextView">
-		
-		<RadioButton
-			android:id="@+id/todayRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/today"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/yesterdayRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/yesterday"
-			android:textColor="@drawable/radio_text_color" />
-		
-		<RadioButton
-			android:id="@+id/earlierRadioButton"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginStart="@dimen/margin_padding_small"
-			android:layout_marginTop="@dimen/margin_padding_small"
-			android:layout_marginEnd="@dimen/margin_padding_small"
-			android:background="@drawable/radio_selector"
-			android:button="@color/transparent"
-			android:paddingStart="@dimen/margin_padding_normal"
-			android:paddingEnd="@dimen/margin_padding_normal"
-			android:text="@string/earlier"
-			android:textColor="@drawable/radio_text_color" />
-	</RadioGroup>
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@drawable/bg_grey_light"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/whatTimeTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_large"
-		android:text="@string/what_time"
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/white"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/radioGroup" />
-	
-	<TimePicker
-		android:id="@+id/timePicker"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:timePickerMode="spinner"
-		app:layout_constraintTop_toBottomOf="@id/whatTimeTextView" />
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"

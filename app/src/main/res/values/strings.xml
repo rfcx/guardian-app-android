@@ -252,7 +252,10 @@
 	<string name="guardian_event_detail">Event Detail</string>
 	
 	<!-- CreateReportActivity -->
-	<string name="create_report_steps">Create Report (step %d of 6)</string>
+	<string name="create_report_steps">Report</string>
+	<string name="create_report_subtitle">%d steps remaining</string>
+	<string name="create_report_subtitle_one_step">1 step remaining</string>
+	<string name="last_step">last step</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
@@ -262,17 +265,19 @@
 	<string name="what_time">What time did you investigate?</string>
 	<string name="do_not_future_time">Do not set a future time</string>
 	
+	<!-- InvestigationTypeFragment -->
+	<string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>
+	<string name="logging">Logging</string>
+	<string name="poaching">Poaching</string>
+	
 	<!-- SetWhatEvidenceFragment -->
-	<string name="what_evidence">What evidence of loggers did you encounter? <i>Select all that apply</i></string>
+	<string name="what_evidence">What <b>logging evidence</b> did you encounter? <i>Select all that apply</i></string>
 	<string name="cut_down_trees">Cut down trees</string>
 	<string name="cleared_areas">Cleared areas</string>
 	<string name="logging_equipment">Logging equipment</string>
 	<string name="loggers_at_site">Loggers at Site</string>
 	<string name="illegal_camps">Illegal camps</string>
 	<string name="fires_burned_areas">Fires/burned areas</string>
-	<string name="evidence_of_poaching">Evidence of poaching</string>
-	<string name="other_explain_step_6">Other (explain in step 6)</string>
-	<string name="none_of_the_above">None of the above (specify in Step 6)</string>
 	
 	<!-- HowMuchDamageFragment -->
 	<string name="how_much_damage">How much damage was done to the area?</string>
@@ -282,17 +287,27 @@
 	<string name="large_area_clear_cut">Substantially clear-cut (5+ trucks of wood)</string>
 	
 	<!-- SetWhatScaleFragment -->
-	<string name="what_scale">What was the scale of the logging operation?</string>
+	<string name="what_scale">What was the <b>scale of the logging</b> operation?</string>
 	<string name="small">Small (subsistence, agriculture etc)</string>
 	<string name="large">Large (commercial scale, heavy equipment etc)</string>
 	
+	<!-- PoachingScaleFragment -->
+	<string name="what_scale_poaching">What was the <b>scale of the poaching</b> operation?</string>
+	<string name="small_poaching">Small (individual, informal)</string>
+	<string name="large_poaching">Large (many vehicles, coordinated)</string>
+	
+	<!-- PoachingEvidenceFragment -->
+	<string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
+	<string name="bullet_shells">Bullet shells / gun remains</string>
+	<string name="footprints">Footprints (human)</string>
+	<string name="dog_tracks">Dog tracks</string>
+	
 	<!-- SetWhatActionFragment -->
-	<string name="what_action">What action did you take? <i>Select all that apply</i></string>
+	<string name="what_action">What <b>action</b> was taken?</string>
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="issue_a_warning">Issue a warning</string>
-	<string name="arrests">Arrests</string>
-	<string name="planning_security">Planning to come back w/security enforcement</string>
+	<string name="issue_a_fine">Issue a fine</string>
 	
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>
@@ -327,5 +342,5 @@
 	<string name="dark_theme">Dark</string>
 	<string name="light_theme">Light</string>
 	<string name="system_default">System default</string>
-
+	<string name="site_name">Site %s</string>
 </resources>
