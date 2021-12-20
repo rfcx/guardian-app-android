@@ -140,12 +140,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private val streamNameReceived = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
-			if (intent != null) {
-				val streamName = intent.getStringExtra("streamName")
-				if (streamName != null) {
-					viewModel.loadStreams()
-					setStreamsWithLocalData()
-				}
+			if (intent == null) return
+			val streamName = intent.getStringExtra("streamName")
+			if (streamName != null) {
+				viewModel.loadStreams()
+				setStreamsWithLocalData()
 			}
 		}
 	}
@@ -159,8 +158,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		localBroadcastManager.registerReceiver(streamNameReceived, actionReceiver)
 	}
 	
-	override fun onDestroy() {
-		super.onDestroy()
+	override fun onDetach() {
+		super.onDetach()
 		localBroadcastManager.unregisterReceiver(streamNameReceived)
 	}
 	
