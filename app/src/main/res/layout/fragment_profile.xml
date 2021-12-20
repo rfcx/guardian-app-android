@@ -96,7 +96,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
 				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="@color/grey_light" />
+				android:background="@color/separateLine" />
 			
 			<TextView
 				android:id="@+id/notificationTextView"
@@ -133,7 +133,7 @@
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
-				android:background="@color/grey_light" />
+				android:background="@color/separateLine" />
 			
 			<TextView
 				android:id="@+id/additionalTextView"
@@ -188,7 +188,7 @@
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
-				android:background="@color/grey_light" />
+				android:background="@color/separateLine" />
 			
 			<TextView
 				android:id="@+id/accountTextView"
