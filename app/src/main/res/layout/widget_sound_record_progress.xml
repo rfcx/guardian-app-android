@@ -15,6 +15,7 @@
         android:layout_marginBottom="@dimen/margin_padding_xsmall"
         android:layout_marginEnd="@dimen/margin_padding_small"
         android:background="@drawable/bg_widget_sound_wave"
+        android:backgroundTint="@color/addSoundBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +30,7 @@
         android:contentDescription="@string/app_name"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_close_grey_600_24dp"
-        android:tint="@color/grey"
+        android:tint="@color/addSoundBackground"
         android:visibility="gone"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,3 +75,4 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

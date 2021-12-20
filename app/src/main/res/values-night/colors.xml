@@ -28,6 +28,8 @@
 	<color name="background_button_disable">@color/colorPrimaryDark</color>
 	
 	<color name="divider">#D6D6D6</color>
+	<color name="addSoundBackground">#45485D</color>
+	<color name="addImageBackground">#45485D</color>
 	
 	<color name="transparent">@android:color/transparent</color>
 	
