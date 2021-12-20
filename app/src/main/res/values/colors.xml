@@ -6,6 +6,7 @@
 	
 	<color name="backgroundColor">@color/white</color>
 	<color name="statusColor">#aaa</color>
+	<color name="iconColor">#000000</color>
 	
 	<!-- Text color -->
 	<color name="text_primary">#47525E</color>
