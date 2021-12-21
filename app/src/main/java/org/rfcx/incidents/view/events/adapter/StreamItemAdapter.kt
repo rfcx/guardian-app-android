@@ -12,7 +12,7 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.setFormatLabel
 import java.util.*
 
-class GuardianItemAdapter(private val onClickListener: (StreamItem) -> Unit) : RecyclerView.Adapter<GuardianItemAdapter.GuardianItemViewHolder>() {
+class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : RecyclerView.Adapter<StreamItemAdapter.GuardianItemViewHolder>() {
 	var items: List<StreamItem> = arrayListOf()
 		@SuppressLint("NotifyDataSetChanged")
 		set(value) {

@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.events
 
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -34,6 +35,7 @@ import org.rfcx.incidents.view.events.adapter.StreamItem
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	
+	val streamItems = mutableListOf<StreamItem>()
 	val nearbyStreams = mutableListOf<StreamItem>()
 	val othersStreams = mutableListOf<StreamItem>()
 	
@@ -151,57 +153,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
 	}
 	
-	fun handledStreamsResponse(lastLocation: Location?, list: List<StreamResponse>) {
-		othersStreams.clear()
-		nearbyStreams.clear()
-		
-		val groups = arrayListOf<StreamItem>()
-		list.forEach {
-			var distance: Double? = null
-			lastLocation?.let { loc ->
-				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
-			}
-			groups.add(StreamItem(it.eventsCount, distance, it.name, it.id, alertDb.getStartTimeOfAlerts(it.id)))
-		}
-		groups.sortBy { g -> g.distance }
-		groups.forEach {
-			if (it.distance == null) {
-				othersStreams.add(it)
-			} else {
-				if (it.distance >= 2000) {
-					othersStreams.add(it)
-				} else {
-					nearbyStreams.add(it)
-				}
-			}
-		}
-		othersStreams.sortByDescending { g -> g.eventSize }
-	}
-	
-	fun handledStreams(lastLocation: Location?, streams: List<Stream>) {
-		othersStreams.clear()
-		nearbyStreams.clear()
-		val groups = arrayListOf<StreamItem>()
+	fun handledStreams(streams: List<Stream>) {
+		Log.d("handledStreams","${streams.size}")
+		streamItems.clear()
 		streams.forEach {
-			var distance: Double? = null
-			lastLocation?.let { loc ->
-				distance = LatLng(it.latitude, it.longitude).distanceTo(LatLng(loc.latitude, loc.longitude))
-			}
-			groups.add(StreamItem(getEventsCount(it.serverId).toInt(), distance, it.name, it.serverId, alertDb.getStartTimeOfAlerts(it.serverId)))
+			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), null, it.name, it.serverId, alertDb.getStartTimeOfAlerts(it.serverId)))
 		}
-		groups.sortBy { g -> g.distance }
-		groups.forEach {
-			if (it.distance == null) {
-				othersStreams.add(it)
-			} else {
-				if (it.distance >= 2000) {
-					othersStreams.add(it)
-				} else {
-					nearbyStreams.add(it)
-				}
-			}
-		}
-		othersStreams.sortByDescending { g -> g.eventSize }
+		streamItems.sortByDescending { g -> g.eventSize }
 	}
 	
 	fun distance(lastLocation: Location, loc: Location): String = LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()

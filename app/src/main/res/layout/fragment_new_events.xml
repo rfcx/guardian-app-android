@@ -58,50 +58,14 @@
 				android:layout_height="wrap_content">
 				
 				<LinearLayout
-					android:id="@+id/nearbyLayout"
+					android:id="@+id/streamLayout"
 					android:layout_width="match_parent"
 					android:layout_height="0dp"
 					android:orientation="vertical"
-					android:visibility="gone"
 					app:layout_constraintTop_toTopOf="parent">
 					
-					<androidx.appcompat.widget.AppCompatTextView
-						android:id="@+id/nearbyTextView"
-						style="@style/RangerText.Title"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:gravity="center"
-						android:padding="@dimen/margin_padding_normal"
-						android:text="@string/nearby" />
-					
 					<androidx.recyclerview.widget.RecyclerView
-						android:id="@+id/nearbyRecyclerView"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:background="@color/backgroundColor"
-						android:dividerHeight="1dp"
-						android:overScrollMode="never" />
-				</LinearLayout>
-				
-				<LinearLayout
-					android:id="@+id/othersLayout"
-					android:layout_width="match_parent"
-					android:layout_height="0dp"
-					android:orientation="vertical"
-					android:visibility="gone"
-					app:layout_constraintTop_toBottomOf="@id/nearbyLayout">
-					
-					<androidx.appcompat.widget.AppCompatTextView
-						android:id="@+id/othersTextView"
-						style="@style/RangerText.Title"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:gravity="center"
-						android:padding="@dimen/margin_padding_normal"
-						android:text="@string/others" />
-					
-					<androidx.recyclerview.widget.RecyclerView
-						android:id="@+id/othersRecyclerView"
+						android:id="@+id/streamRecyclerView"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:background="@color/backgroundColor"
