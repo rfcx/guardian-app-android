@@ -345,5 +345,14 @@
 	<string name="site_name">Site %s</string>
 	<string name="display">Display</string>
 	<string name="theme">Theme</string>
-
+	
+	<!-- Date time format -->
+	<string name="is_today">Today, %1s - %2s</string>
+	<string name="is_yesterday_today">Yesterday, %1s - Today, %2s</string>
+	<string name="is_yesterday">Yesterday, %1s - %2s</string>
+	<string name="is_other_today">%1s - Today, %2s</string>
+	<string name="is_other_yesterday">%1s - Yesterday, %2s</string>
+	<string name="is_other_other">%1s - %2s</string>
+	<string name="is_same_date">%1s, %2s - %3s</string>
+	
 </resources>

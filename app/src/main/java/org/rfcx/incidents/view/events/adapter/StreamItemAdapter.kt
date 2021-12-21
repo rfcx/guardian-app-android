@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian.view.*
 import org.rfcx.incidents.R
-import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.setFormatLabel
 import java.util.*
 
 class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : RecyclerView.Adapter<StreamItemAdapter.GuardianItemViewHolder>() {
@@ -38,12 +36,8 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val guardianName = itemView.guardianNameTextView
 		private val timeTextView = itemView.timeTextView
 		private val bellImageView = itemView.bellImageView
-
+		
 		fun bind(item: StreamItem) {
-			val preferences = Preferences.getInstance(itemView.context)
-			val time = preferences.getLong(Preferences.LATEST_CURRENT_LOCATION_TIME, 0)
-			val diff = Date().time - time
-			
 			guardianName.text = item.streamName
 			if (item.eventSize == 0) {
 				timeTextView.visibility = View.GONE
@@ -51,7 +45,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			} else {
 				timeTextView.visibility = View.VISIBLE
 				bellImageView.visibility = View.VISIBLE
-				timeTextView.text = item.eventTime?.let { setTimeNoResponse(itemView.context, it) }
+				timeTextView.text = item.eventTime
 			}
 		}
 		
@@ -95,4 +89,4 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	}
 }
 
-data class StreamItem(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: Date? = null)
+data class StreamItem(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: String? = null)
