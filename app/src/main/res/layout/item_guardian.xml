@@ -23,10 +23,50 @@
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:padding="@dimen/margin_padding_normal"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_normal"
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="Guardian A" />
+	
+	<TextView
+		android:id="@+id/recentTextView"
+		style="@style/RangerText.Caption"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:alpha="0.7"
+		android:background="@drawable/bg_recent_tag"
+		android:ellipsize="end"
+		android:gravity="center_vertical"
+		android:maxLines="1"
+		android:padding="@dimen/margin_padding_xsmall"
+		android:text="@string/recent"
+		android:textColor="@color/white"
+		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+		app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
+		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+		tools:text="Recent" />
+	
+	<TextView
+		android:id="@+id/hotTextView"
+		style="@style/RangerText.Caption"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:alpha="0.7"
+		android:background="@drawable/bg_hot_tag"
+		android:ellipsize="end"
+		android:gravity="center_vertical"
+		android:maxLines="1"
+		android:padding="@dimen/margin_padding_xsmall"
+		android:text="@string/hot"
+		android:textColor="@color/white"
+		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+		app:layout_constraintStart_toEndOf="@id/recentTextView"
+		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+		tools:text="Hot" />
 	
 	<TextView
 		android:id="@+id/incidentIdTextView"
@@ -49,12 +89,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:src="@drawable/ic_notifications"
-		app:tint="@color/iconColor"
 		android:paddingBottom="@dimen/margin_padding_normal"
+		android:src="@drawable/ic_notifications"
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintStart_toStartOf="@id/bgView"
-		app:layout_constraintTop_toTopOf="@id/timeTextView" />
+		app:layout_constraintTop_toTopOf="@id/timeTextView"
+		app:tint="@color/iconColor" />
 	
 	
 	<androidx.appcompat.widget.AppCompatTextView

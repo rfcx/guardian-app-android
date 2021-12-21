@@ -355,4 +355,7 @@
 	<string name="is_other_other">%1s - %2s</string>
 	<string name="is_same_date">%1s, %2s - %3s</string>
 	
+	<string name="recent">Recent</string>
+	<string name="hot">Hot</string>
+
 </resources>

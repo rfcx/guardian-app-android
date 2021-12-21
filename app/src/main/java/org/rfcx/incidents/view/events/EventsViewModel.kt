@@ -190,7 +190,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	fun handledStreams(streams: List<Stream>) {
 		streamItems.clear()
 		streams.forEach {
-			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), null, it.name, it.serverId, getDateTime(it.serverId)))
+			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), null, it.name, it.serverId, getDateTime(it.serverId), getAlerts(it.serverId)))
 		}
 		streamItems.sortByDescending { g -> g.eventSize }
 	}
