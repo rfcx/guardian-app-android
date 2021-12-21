@@ -75,14 +75,38 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:paddingStart="@dimen/margin_padding_normal"
-		android:paddingTop="@dimen/margin_padding_normal"
-		android:paddingEnd="@dimen/margin_padding_normal"
-		android:paddingBottom="@dimen/margin_padding_small"
+		android:padding="@dimen/margin_padding_normal"
 		android:text="#123"
 		app:layout_constraintEnd_toEndOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="#123" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/verifiedImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:src="@drawable/ic_verified_user"
+		app:layout_constraintBottom_toBottomOf="@id/noneTextView"
+		app:layout_constraintEnd_toStartOf="@id/noneTextView"
+		app:layout_constraintTop_toTopOf="@id/noneTextView"
+		app:tint="@color/iconColor" />
+	
+	<TextView
+		android:id="@+id/noneTextView"
+		style="@style/RangerText.Label.Secondary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:maxLines="1"
+		android:paddingTop="@dimen/margin_padding_normal"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_normal"
+		android:text="@string/common_none"
+		android:textColor="@color/text_secondary"
+		app:layout_constraintEnd_toStartOf="@id/incidentIdTextView"
+		app:layout_constraintTop_toTopOf="@id/bgView"
+		tools:text="None" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellImageView"
@@ -95,7 +119,6 @@
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/timeTextView"
 		app:tint="@color/iconColor" />
-	
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/timeTextView"

@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.events.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_guardian.view.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.alert.Alert
-import java.util.*
 
 class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : RecyclerView.Adapter<StreamItemAdapter.GuardianItemViewHolder>() {
 	var items: List<StreamItem> = arrayListOf()
@@ -39,6 +37,9 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val bellImageView = itemView.bellImageView
 		private val recentTextView = itemView.recentTextView
 		private val hotTextView = itemView.hotTextView
+		private val verifiedImageView = itemView.verifiedImageView
+		private val noneTextView = itemView.noneTextView
+		private val incidentIdTextView = itemView.incidentIdTextView
 		
 		fun bind(item: StreamItem) {
 			guardianName.text = item.streamName
@@ -49,43 +50,17 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			if (item.eventSize == 0) {
 				timeTextView.visibility = View.GONE
 				bellImageView.visibility = View.GONE
+				verifiedImageView.visibility = View.VISIBLE
+				noneTextView.visibility = View.VISIBLE
+				incidentIdTextView.visibility = View.GONE
 			} else {
 				timeTextView.visibility = View.VISIBLE
 				bellImageView.visibility = View.VISIBLE
 				timeTextView.text = item.eventTime
+				verifiedImageView.visibility = View.GONE
+				noneTextView.visibility = View.GONE
+				incidentIdTextView.visibility = View.VISIBLE
 			}
-		}
-		
-		private fun setTimeNoResponse(context: Context, eventTime: Date): String {
-			val diffTimeNoResponse: Long = Date().time - eventTime.time
-			val days = diffTimeNoResponse / DAY
-			val hours = ((diffTimeNoResponse - (DAY * days)) / (HOUR))
-			val minutes = (diffTimeNoResponse - (DAY * days) - (HOUR * hours)) / MINUTE
-			
-			val stringBuilder = StringBuilder()
-			if (days != 0L) {
-				stringBuilder.append(days)
-				if (days == 1L) {
-					stringBuilder.append(" ${context.getString(R.string.day)} ")
-				} else {
-					stringBuilder.append(" ${context.getString(R.string.days)} ")
-				}
-			}
-			
-			if (hours != 0L) {
-				stringBuilder.append(hours)
-				if (hours == 1L) {
-					stringBuilder.append(" ${context.getString(R.string.hr)} ")
-				} else {
-					stringBuilder.append(" ${context.getString(R.string.hrs)} ")
-				}
-			}
-			
-			if (minutes != 0L) {
-				stringBuilder.append(minutes)
-				stringBuilder.append(" ${context.getString(R.string.min)} ")
-			}
-			return "$stringBuilder"
 		}
 	}
 	
