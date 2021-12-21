@@ -37,6 +37,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	inner class GuardianItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val guardianName = itemView.guardianNameTextView
 		private val timeTextView = itemView.timeTextView
+		private val bellImageView = itemView.bellImageView
 
 		fun bind(item: StreamItem) {
 			val preferences = Preferences.getInstance(itemView.context)
@@ -46,8 +47,10 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			guardianName.text = item.streamName
 			if (item.eventSize == 0) {
 				timeTextView.visibility = View.GONE
+				bellImageView.visibility = View.GONE
 			} else {
 				timeTextView.visibility = View.VISIBLE
+				bellImageView.visibility = View.VISIBLE
 				timeTextView.text = item.eventTime?.let { setTimeNoResponse(itemView.context, it) }
 			}
 		}
