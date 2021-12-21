@@ -35,29 +35,19 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	}
 	
 	inner class GuardianItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		private val numberImageView = itemView.numberOfAlertsImageView
-		private val numberOfAlerts = itemView.numberOfAlertsTextView
 		private val guardianName = itemView.guardianNameTextView
 		private val timeTextView = itemView.timeTextView
-		private val distance = itemView.distanceTextView
-		
+
 		fun bind(item: StreamItem) {
 			val preferences = Preferences.getInstance(itemView.context)
 			val time = preferences.getLong(Preferences.LATEST_CURRENT_LOCATION_TIME, 0)
 			val diff = Date().time - time
 			
 			guardianName.text = item.streamName
-			distance.visibility = if (item.distance == null || item.distance >= 100000 || diff >= 30 * 60 * 1000) View.GONE else View.VISIBLE
-			distance.text = item.distance?.setFormatLabel()
-			numberOfAlerts.text = if (item.eventSize > 99) itemView.context.getString(R.string.num_more_then_99) else item.eventSize.toString()
-			
 			if (item.eventSize == 0) {
-				numberImageView.setImageResource(R.drawable.bg_circle_green)
 				timeTextView.visibility = View.GONE
 			} else {
-				numberImageView.setImageResource(R.drawable.bg_circle_red)
 				timeTextView.visibility = View.VISIBLE
-				distance.visibility = View.GONE
 				timeTextView.text = item.eventTime?.let { setTimeNoResponse(itemView.context, it) }
 			}
 		}

@@ -61,6 +61,8 @@
 					android:id="@+id/streamLayout"
 					android:layout_width="match_parent"
 					android:layout_height="0dp"
+					android:layout_marginTop="@dimen/margin_padding_small"
+					android:layout_marginBottom="@dimen/margin_padding_small"
 					android:orientation="vertical"
 					app:layout_constraintTop_toTopOf="parent">
 					

@@ -6,70 +6,57 @@
 	android:layout_height="wrap_content"
 	android:background="?attr/selectableItemBackground">
 	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/numberOfAlertsImageView"
-		android:layout_width="@dimen/bg_number_size"
-		android:layout_height="@dimen/bg_number_size"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@id/guardianNameTextView" />
-	
-	<TextView
-		android:id="@+id/numberOfAlertsTextView"
-		style="@style/RangerText.Body"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:textColor="@color/white"
-		android:textSize="@dimen/text_xsmall"
-		app:layout_constraintBottom_toBottomOf="@id/numberOfAlertsImageView"
-		app:layout_constraintEnd_toEndOf="@id/numberOfAlertsImageView"
-		app:layout_constraintStart_toStartOf="@id/numberOfAlertsImageView"
-		app:layout_constraintTop_toTopOf="@id/numberOfAlertsImageView"
-		tools:text="1" />
+	<View
+		android:id="@+id/bgView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_margin="@dimen/margin_padding_small"
+		android:background="@drawable/bg_stream_item"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 	
 	<TextView
 		android:id="@+id/guardianNameTextView"
-		style="@style/RangerText.Body"
-		android:layout_width="0dp"
+		style="@style/RangerText.Subhead"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintEnd_toStartOf="@id/distanceTextView"
-		app:layout_constraintStart_toEndOf="@id/numberOfAlertsImageView"
-		app:layout_constraintTop_toTopOf="parent"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_small"
+		app:layout_constraintStart_toStartOf="@id/bgView"
+		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="Guardian A" />
 	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/distanceTextView"
-		style="@style/RangerText.Body"
+	<TextView
+		android:id="@+id/incidentIdTextView"
+		style="@style/RangerText.Subhead"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintEnd_toStartOf="@id/timeTextView"
-		app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="200m" />
+		android:gravity="center_vertical"
+		android:maxLines="1"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_normal"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_small"
+		app:layout_constraintEnd_toEndOf="@id/bgView"
+		app:layout_constraintTop_toTopOf="@id/bgView"
+		android:text="#123"
+		tools:text="#123" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/timeTextView"
-		style="@style/RangerText.Body"
+		style="@style/RangerText.Label.Secondary"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@id/distanceTextView"
-		app:layout_constraintTop_toTopOf="parent"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toBottomOf="@id/bgView"
+		app:layout_constraintStart_toStartOf="@id/bgView"
+		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
 		tools:text="3 hrs 40 mins" />
-	
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:background="@color/separateLine"
-		app:layout_constraintTop_toBottomOf="@+id/guardianNameTextView" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
