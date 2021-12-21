@@ -11,10 +11,11 @@
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_alert"
-		app:iconTintColor="@color/colorPrimary"
+		app:iconTintColor="@color/color_bottom_icon_tint"
 		app:menuSelected="false"
 		app:title="@string/menu_new_events"
-		app:titleColorSelected="@color/colorPrimary" />
+		app:titleColor="@color/bottom_bar_icon_default_tint"
+		app:titleColorSelected="@color/color_bottom_icon_tint" />
 	
 	<org.rfcx.incidents.widget.BottomNavigationMenuItem
 		android:id="@+id/menuDraftReports"
@@ -23,10 +24,11 @@
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_clipboard_edit_outline"
-		app:iconTintColor="@color/colorPrimary"
+		app:iconTintColor="@color/color_bottom_icon_tint"
 		app:showBadge="true"
 		app:title="@string/menu_draft_reports"
-		app:titleColorSelected="@color/colorPrimary" />
+		app:titleColor="@color/bottom_bar_icon_default_tint"
+		app:titleColorSelected="@color/color_bottom_icon_tint" />
 	
 	<org.rfcx.incidents.widget.BottomNavigationMenuItem
 		android:id="@+id/menuSubmittedReports"
@@ -35,9 +37,10 @@
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_clipboard_check_outline"
-		app:iconTintColor="@color/colorPrimary"
+		app:iconTintColor="@color/color_bottom_icon_tint"
 		app:title="@string/menu_submitted_reports"
-		app:titleColorSelected="@color/colorPrimary" />
+		app:titleColor="@color/bottom_bar_icon_default_tint"
+		app:titleColorSelected="@color/color_bottom_icon_tint" />
 	
 	<org.rfcx.incidents.widget.BottomNavigationMenuItem
 		android:id="@+id/menuProfile"
@@ -46,8 +49,9 @@
 		android:layout_weight="1"
 		android:background="?selectableItemBackgroundBorderless"
 		app:icon="@drawable/ic_menu_profile"
-		app:iconTintColor="@color/colorPrimary"
+		app:iconTintColor="@color/color_bottom_icon_tint"
 		app:title="@string/menu_profile"
-		app:titleColorSelected="@color/colorPrimary" />
+		app:titleColor="@color/bottom_bar_icon_default_tint"
+		app:titleColorSelected="@color/color_bottom_icon_tint" />
 
 </LinearLayout>

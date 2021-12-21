@@ -52,6 +52,7 @@
 	<color name="topBar">#FFFFFF</color>
 	<color name="separateLine">@color/grey_light</color>
 	<color name="bottomBar">#FFFFFF</color>
+	<color name="bottom_bar_icon_default_tint">#969FAA</color>
 	
 	<color name="action_color">#9100e6</color>
 	<color name="evidence_color">#3971e6</color>
