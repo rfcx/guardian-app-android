@@ -37,5 +37,6 @@
 	<dimen name="mini_progress_loading">24dp</dimen>
 	
 	<dimen name="separate_line_size">2dp</dimen>
+	<dimen name="type_icon_size">20dp</dimen>
 
 </resources>

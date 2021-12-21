@@ -40,12 +40,33 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val verifiedImageView = itemView.verifiedImageView
 		private val noneTextView = itemView.noneTextView
 		private val incidentIdTextView = itemView.incidentIdTextView
+		private val otherLayout = itemView.otherLayout
+		private val numOfOtherTextView = itemView.numOfOtherTextView
 		
 		fun bind(item: StreamItem) {
 			guardianName.text = item.streamName
 			val alerts = item.alerts.sortedBy { a -> a.start }
 			recentTextView.visibility = if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
 			hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
+			
+			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
+			
+			if (typeOfAlert.isNotEmpty()) {
+				var number = 0
+				typeOfAlert.forEachIndexed { index, alert ->
+					val type = alert.classification?.value
+					type?.let {
+						if (index < 2) {
+							showIconType(it, itemView, alerts)
+						} else {
+							otherLayout.visibility = View.VISIBLE
+							number += getNumberOfAlertByType(alerts, type).toInt()
+							numOfOtherTextView.text = (number).toString()
+						}
+					}
+				}
+			}
+			
 			
 			if (item.eventSize == 0) {
 				timeTextView.visibility = View.GONE
@@ -64,10 +85,41 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		}
 	}
 	
+	fun showIconType(type: String, itemView: View, alerts: List<Alert>) {
+		val chainsawLayout = itemView.chainsawLayout
+		val peopleLayout = itemView.peopleLayout
+		val gunLayout = itemView.gunLayout
+		val numOfChainsawTextView = itemView.numOfChainsawTextView
+		val numOfPeopleTextView = itemView.numOfPeopleTextView
+		val numOfGunTextView = itemView.numOfGunTextView
+		
+		when (type) {
+			GUNSHOT -> {
+				gunLayout.visibility = View.VISIBLE
+				numOfGunTextView.text = getNumberOfAlertByType(alerts, type)
+			}
+			HUMAN_VOICE -> {
+				peopleLayout.visibility = View.VISIBLE
+				numOfPeopleTextView.text = getNumberOfAlertByType(alerts, type)
+			}
+			CHAINSAW -> {
+				chainsawLayout.visibility = View.VISIBLE
+				numOfChainsawTextView.text = getNumberOfAlertByType(alerts, type)
+			}
+		}
+	}
+	
+	private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
+		return alerts.filter { a -> a.classification?.value == type }.size.toString()
+	}
+	
 	companion object {
 		private const val MINUTE = 60L * 1000L
 		private const val HOUR = 60L * MINUTE
 		private const val DAY = 24L * HOUR
+		private const val GUNSHOT = "gunshot"
+		private const val HUMAN_VOICE = "humanvoice"
+		private const val CHAINSAW = "chainsaw"
 	}
 }
 

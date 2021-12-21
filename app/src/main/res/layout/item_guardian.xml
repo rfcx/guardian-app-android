@@ -132,4 +132,108 @@
 		app:layout_constraintStart_toEndOf="@id/bellImageView"
 		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
 		tools:text="3 hrs 40 mins" />
+	
+	<LinearLayout
+		android:id="@+id/chainsawLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toEndOf="@id/bgView"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_chainsaw"
+			app:tint="@color/iconColor" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfChainsawTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="2" />
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/peopleLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toStartOf="@id/chainsawLayout"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_people"
+			app:tint="@color/iconColor" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfPeopleTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="3" />
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/gunLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toStartOf="@id/peopleLayout"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_gun"
+			app:tint="@color/iconColor" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfGunTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="3" />
+	</LinearLayout>
+	
+	<LinearLayout
+		android:id="@+id/otherLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toStartOf="@id/gunLayout"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+		
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_other"
+			app:tint="@color/iconColor" />
+		
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfOtherTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="6" />
+	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
