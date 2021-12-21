@@ -150,7 +150,8 @@
 				android:paddingBottom="@dimen/margin_padding_xsmall"
 				android:text="@string/display"
 				android:textColor="@color/text_secondary"
-				android:textSize="@dimen/text_small" />
+				android:textSize="@dimen/text_small"
+				android:visibility="gone" />
 			
 			<LinearLayout
 				android:id="@+id/displayLayout"
@@ -161,7 +162,8 @@
 				android:onClick="@{onClickChangeTheme}"
 				android:orientation="vertical"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_normal">
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:visibility="gone">
 				
 				<TextView
 					android:id="@+id/displayTitle"
@@ -185,7 +187,8 @@
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/separate_line_size"
-				android:background="@color/separateLine" />
+				android:background="@color/separateLine"
+				android:visibility="gone" />
 			
 			<TextView
 				android:id="@+id/additionalTextView"

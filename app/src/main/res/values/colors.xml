@@ -6,6 +6,7 @@
 	
 	<color name="backgroundColor">@color/white</color>
 	<color name="statusColor">#aaa</color>
+	<color name="toolbarColor">@color/white</color>
 	<color name="iconColor">#000000</color>
 	<color name="dialogColor">#ffffff</color>
 	
