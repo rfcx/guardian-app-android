@@ -348,7 +348,7 @@
 	
 	<!-- Date time format -->
 	<string name="is_today">Today, %1s - %2s</string>
-	<string name="is_yesterday_today">Yesterday, %1s - Today, %2s</string>
+	<string name="is_yesterday_today">Yesterday %1s - Today %2s</string>
 	<string name="is_yesterday">Yesterday, %1s - %2s</string>
 	<string name="is_other_today">%1s - Today, %2s</string>
 	<string name="is_other_yesterday">%1s - Yesterday, %2s</string>

@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import org.joda.time.Duration
 import org.rfcx.incidents.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 private const val SECOND: Long = 1000
@@ -147,4 +148,42 @@ fun Context.startLocationChange() {
 		return
 	}
 	locationProviderClient.requestLocationUpdates(locationRequest, locationIntent)
+}
+
+fun timeFormat(context: Context, startAt: Date, endAt: Date): String {
+	var text = ""
+	if (isToday(startAt.time)) {
+		if (isToday(endAt.time)) text = context.getString(R.string.is_today, startAt.toTimeString(), endAt.toTimeString())
+	} else if (isYesterday(startAt.time)) {
+		text = if (isToday(endAt.time)) {
+			context.getString(R.string.is_yesterday_today, startAt.toTimeString(), endAt.toTimeString())
+		} else {
+			context.getString(R.string.is_yesterday, startAt.toTimeString(), endAt.toTimeString())
+		}
+	} else {
+		text = if (isToday(endAt.time)) {
+			context.getString(R.string.is_other_today, startAt.toDateShortString(), endAt.toTimeString())
+		} else if (isYesterday(endAt.time)) {
+			context.getString(R.string.is_other_yesterday, startAt.toDateShortString(), endAt.toTimeString())
+		} else if (isSameDate(startAt, endAt)) {
+			context.getString(R.string.is_same_date, startAt.toDateShortString(), startAt.toTimeString(), endAt.toTimeString())
+		} else {
+			context.getString(R.string.is_other_other, startAt.toDateShortString(), endAt.toDateShortString())
+		}
+	}
+	return text
+}
+
+private fun isYesterday(whenInMillis: Long): Boolean {
+	return DateUtils.isToday(whenInMillis + DateUtils.DAY_IN_MILLIS)
+}
+
+private fun isToday(whenInMillis: Long): Boolean {
+	return DateUtils.isToday(whenInMillis)
+}
+
+@SuppressLint("SimpleDateFormat")
+private fun isSameDate(startAt: Date, endAt: Date): Boolean {
+	val sdf = SimpleDateFormat("yyMMdd")
+	return sdf.format(startAt) == sdf.format(endAt)
 }
