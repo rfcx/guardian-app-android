@@ -65,6 +65,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		setupDisplayTheme(this)
 		setStatusBar()
 		
 		val preferences = Preferences.getInstance(this)

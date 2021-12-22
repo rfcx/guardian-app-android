@@ -13,6 +13,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationRequest
@@ -186,4 +187,21 @@ private fun isToday(whenInMillis: Long): Boolean {
 private fun isSameDate(startAt: Date, endAt: Date): Boolean {
 	val sdf = SimpleDateFormat("yyMMdd")
 	return sdf.format(startAt) == sdf.format(endAt)
+}
+
+fun setupDisplayTheme(context: Context) {
+	val preferences = Preferences.getInstance(context)
+	val themeOption = context.resources.getStringArray(R.array.theme_more_than_9)
+	val theme = when (preferences.getString(Preferences.DISPLAY_THEME, themeOption[1])) {
+		themeOption[0] -> {
+			AppCompatDelegate.MODE_NIGHT_NO
+		}
+		themeOption[1] -> {
+			AppCompatDelegate.MODE_NIGHT_YES
+		}
+		else -> {
+			AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+		}
+	}
+	AppCompatDelegate.setDefaultNightMode(theme)
 }
