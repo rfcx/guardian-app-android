@@ -66,7 +66,10 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		
 		responseId?.let {
 			val response = viewModel.getResponseById(it)
-			response?.let { res -> setResponse(res) }
+			response?.let { res ->
+				setResponse(res)
+				streamName = res.streamName
+			}
 		}
 		getImagesFromLocal()
 		setupToolbar()
