@@ -5,13 +5,13 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/backgroundColor"
-	android:padding="@dimen/margin_padding_normal"
 	tools:context=".view.report.create.AssetsFragment">
 	
 	<ScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:padding="@dimen/margin_padding_normal"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
 		
@@ -96,12 +96,38 @@
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
 	
+	
+	<View
+		android:id="@+id/lineBottomView"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@color/separateLine"
+		app:layout_constraintBottom_toTopOf="@id/saveDraftButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/backgroundColor"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
+	
+	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/saveDraftButton"
 		style="@style/RangerButton.GreenButton"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:text="@string/save_draft"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toStartOf="@id/submitButton"
@@ -113,6 +139,8 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:text="@string/report_submit_button_label"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
