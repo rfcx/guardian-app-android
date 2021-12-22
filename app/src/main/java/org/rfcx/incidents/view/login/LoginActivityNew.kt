@@ -3,13 +3,11 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.android.synthetic.main.activity_login_new.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.Preferences.Companion.DISPLAY_THEME
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
@@ -32,7 +30,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
-		setupDisplayTheme(this)
+		setupDisplayTheme()
 		
 		val preferenceHelper = Preferences.getInstance(this)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)

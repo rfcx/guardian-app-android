@@ -40,10 +40,6 @@
 		<variable
 			name="onClickCoordinates"
 			type="android.view.View.OnClickListener" />
-		
-		<variable
-			name="onClickChangeTheme"
-			type="android.view.View.OnClickListener" />
 	
 	</data>
 	
@@ -130,56 +126,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/separate_line_size"
 				android:background="@color/separateLine" />
-			
-			<TextView
-				android:id="@+id/displayTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
-				android:text="@string/display"
-				android:textColor="@color/text_secondary"
-				android:textSize="@dimen/text_small"
-				android:visibility="gone" />
-			
-			<LinearLayout
-				android:id="@+id/displayLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickChangeTheme}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:visibility="gone">
-				
-				<TextView
-					android:id="@+id/displayTitle"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/theme" />
-				
-				<TextView
-					android:id="@+id/themeSelectTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/dark_theme" />
-			</LinearLayout>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/separate_line_size"
-				android:background="@color/separateLine"
-				android:visibility="gone" />
 			
 			<TextView
 				android:id="@+id/additionalTextView"
