@@ -14,28 +14,26 @@ class DateRangeFormat {
 	private val dateShortFormat = "dd MMM"
 	
 	
-	fun dateRangeFormat(context: Context, fromUtc: String, toUtc: String, timezone: TimeZone? = null): String {
+	fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
 		var text = ""
-		val startAt = fromUtc.toIsoString()
-		val endAt = toUtc.toIsoString()
 		
-		if (isToday(startAt.time)) {
-			if (isToday(endAt.time)) text = context.getString(R.string.is_today, startAt.toTimeTextString(timezone), endAt.toTimeTextString(timezone))
-		} else if (isYesterday(startAt.time)) {
-			text = if (isToday(endAt.time)) {
-				context.getString(R.string.is_yesterday_today, startAt.toTimeTextString(timezone), endAt.toTimeTextString(timezone))
+		if (isToday(fromUtc.time)) {
+			if (isToday(toUtc.time)) text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
+		} else if (isYesterday(fromUtc.time)) {
+			text = if (isToday(toUtc.time)) {
+				context.getString(R.string.is_yesterday_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
 			} else {
-				context.getString(R.string.is_yesterday, startAt.toTimeTextString(timezone), endAt.toTimeTextString(timezone))
+				context.getString(R.string.is_yesterday, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
 			}
 		} else {
-			text = if (isToday(endAt.time)) {
-				context.getString(R.string.is_other_today, startAt.toShortDateString(timezone), endAt.toTimeTextString(timezone))
-			} else if (isYesterday(endAt.time)) {
-				context.getString(R.string.is_other_yesterday, startAt.toShortDateString(timezone), endAt.toTimeTextString(timezone))
-			} else if (isSameDate(startAt, endAt)) {
-				context.getString(R.string.is_same_date, startAt.toShortDateString(timezone), startAt.toTimeTextString(timezone), endAt.toTimeTextString(timezone))
+			text = if (isToday(toUtc.time)) {
+				context.getString(R.string.is_other_today, fromUtc.toShortDateString(timezone), toUtc.toTimeTextString(timezone))
+			} else if (isYesterday(toUtc.time)) {
+				context.getString(R.string.is_other_yesterday, fromUtc.toShortDateString(timezone), toUtc.toTimeTextString(timezone))
+			} else if (isSameDate(fromUtc, toUtc)) {
+				context.getString(R.string.is_same_date, fromUtc.toShortDateString(timezone), fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
 			} else {
-				context.getString(R.string.is_other_other, startAt.toShortDateString(timezone), endAt.toShortDateString(timezone))
+				context.getString(R.string.is_other_other, fromUtc.toShortDateString(timezone), toUtc.toShortDateString(timezone))
 			}
 		}
 		return text

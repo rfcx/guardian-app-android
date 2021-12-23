@@ -23,7 +23,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 23, 2, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 23, 7, 15, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "Today, 09:31 - 14:15")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "Today, 09:31 - 14:15")
 	}
 	
 	@Test
@@ -35,7 +35,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("America/New_York") // UTC -5
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "Today, 21:31 - 02:15")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "Today, 21:31 - 02:15")
 	}
 	
 	/* ------------- 2.yesterday - today => Yesterday X - Today Y -----------------------*/
@@ -45,7 +45,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 22, 10, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 23, 7, 25, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "Yesterday 17:31 - Today 14:25")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "Yesterday 17:31 - Today 14:25")
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("America/New_York") // UTC -5
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "Yesterday 05:31 - Today 02:25")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "Yesterday 05:31 - Today 02:25")
 	}
 	
 	/* ------------- 3.yesterday - yesterday => Yesterday, X-Y -----------------------*/
@@ -67,7 +67,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 22, 1, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 22, 7, 45, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "Yesterday, 08:31 - 14:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "Yesterday, 08:31 - 14:45")
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("Asia/Tbilisi") // UTC +4
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "Yesterday, 14:31 - 16:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "Yesterday, 14:31 - 16:45")
 	}
 	
 	/* ------------- 4.other - today => 10 Dec - Today, Y -----------------------*/
@@ -90,7 +90,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 8, 1, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 23, 7, 45, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "08 Dec - Today, 14:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "08 Dec - Today, 14:45")
 	}
 	
 	@Test
@@ -102,7 +102,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("Pacific/Tahiti") // UTC -10
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "07 Dec - Today, 21:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "07 Dec - Today, 21:45")
 	}
 	
 	/* ------------- 5.other - yesterday => 10 Dec - Yesterday, Y -----------------------*/
@@ -113,7 +113,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 10, 10, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 22, 12, 45, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "10 Dec - Yesterday, 19:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "10 Dec - Yesterday, 19:45")
 	}
 	
 	@Test
@@ -125,7 +125,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("Asia/Beirut") // UTC +2
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "10 Dec - Yesterday, 00:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "10 Dec - Yesterday, 00:45")
 	}
 	
 	/* ------------- 6.other - other => 11 Dec - 12 Dec -----------------------*/
@@ -136,7 +136,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 10, 10, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 15, 15, 45, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "10 Dec - 15 Dec")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "10 Dec - 15 Dec")
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("Asia/Beirut") // UTC +2
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "10 Dec - 15 Dec")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "10 Dec - 15 Dec")
 	}
 	
 	/* ------------- 7.other - other => 11 Dec,  X-Y -----------------------*/
@@ -159,7 +159,7 @@ class DateRangeFormatTest {
 		val startAt = Date(Date.UTC(121, 11, 11, 20, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 12, 1, 45, 0))
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString()), "12 Dec, 03:31 - 08:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt), "12 Dec, 03:31 - 08:45")
 	}
 	
 	@Test
@@ -171,6 +171,6 @@ class DateRangeFormatTest {
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("Asia/Beirut") // UTC +2
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt.toIsoString(), endAt.toIsoString(), timeZone), "11 Dec, 03:31 - 04:45")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "11 Dec, 03:31 - 04:45")
 	}
 }

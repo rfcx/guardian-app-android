@@ -148,7 +148,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		val alerts = getAlerts(streamServerId)
 		if (alerts.isEmpty()) return null
 		alerts.sortedBy { a -> a.start }
-		return DateRangeFormat().dateRangeFormat(context, alerts.first().start.toIsoString(), alerts.last().end.toIsoString())
+		return DateRangeFormat().dateRangeFormat(context, alerts.first().start, alerts.last().end)
 	}
 	
 	fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
