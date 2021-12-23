@@ -56,6 +56,10 @@ fun Date.toIsoString(): String {
 	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
+fun String.toIsoString(): Date {
+	return isoSdf.parse(this) // pattern 2008-09-15T15:53:00.000Z
+}
+
 fun Date.toIsoNotZString(): String {
 	return isoSdfNotZ.format(this) // pattern 2008-09-15T15:53:00.000
 }

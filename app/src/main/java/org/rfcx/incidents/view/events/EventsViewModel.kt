@@ -29,6 +29,7 @@ import org.rfcx.incidents.localdb.TrackingDb
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.StreamItem
+import java.util.*
 
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
@@ -147,7 +148,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		val alerts = getAlerts(streamServerId)
 		if (alerts.isEmpty()) return null
 		alerts.sortedBy { a -> a.start }
-		return timeFormat(context, alerts.first().start, alerts.last().end)
+		return DateRangeFormat().dateRangeFormat(context, alerts.first().start.toIsoString(), alerts.last().end.toIsoString())
 	}
 	
 	fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
