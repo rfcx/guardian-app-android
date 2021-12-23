@@ -30,12 +30,12 @@ class DateRangeFormatTest {
 	fun caseStartTodayAndEndTodayWithTimeZone() {
 		// today - today => Today, X-Y
 		
-		val startAt = Date(Date.UTC(121, 11, 23, 2, 31, 0))
+		val startAt = Date(Date.UTC(121, 11, 23, 6, 31, 0))
 		val endAt = Date(Date.UTC(121, 11, 23, 7, 15, 0))
 		
 		val timeZone: TimeZone = TimeZone.getTimeZone("America/New_York") // UTC -5
 		
-		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "Today, 21:31 - 02:15")
+		Assert.assertEquals(DateRangeFormat().dateRangeFormat(context, startAt, endAt, timeZone), "Today, 01:31 - 02:15")
 	}
 	
 	/* ------------- 2.yesterday - today => Yesterday X - Today Y -----------------------*/
