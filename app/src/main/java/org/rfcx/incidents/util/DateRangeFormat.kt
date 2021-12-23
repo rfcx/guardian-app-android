@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-private val timeFormat = "HH:mm"
-private val dateShortFormat = "dd MMM"
+private const val timeFormat = "HH:mm"
+private const val dateShortFormat = "dd MMM"
 
 
 fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
