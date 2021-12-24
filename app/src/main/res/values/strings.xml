@@ -250,6 +250,7 @@
 	<string name="create_report">Create Report</string>
 	<string name="open_in_maps">Open in maps</string>
 	<string name="guardian_event_detail">Event Detail</string>
+	<string name="not_have_events">Don’t have any events</string>
 	
 	<!-- CreateReportActivity -->
 	<string name="create_report_steps">Report</string>
