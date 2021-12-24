@@ -419,7 +419,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				mapView.visibility = View.GONE
 				refreshView.visibility = View.VISIBLE
 				currentLocationButton.visibility = View.GONE
-				isShowNotHaveStreams(viewModel.nearbyStreams.isEmpty() && viewModel.othersStreams.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
 			isShowMapIcon = !isShowMapIcon
