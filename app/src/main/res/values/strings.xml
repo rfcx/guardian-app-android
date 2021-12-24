@@ -261,8 +261,8 @@
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
 	<string name="today">Today</string>
-	<string name="earlier">Earlier...</string>
-	<string name="earlier_date">Earlier... ( %s )</string>
+	<string name="other_date">Other...</string>
+	<string name="edit">Edit</string>
 	<string name="what_time">What time did you investigate?</string>
 	<string name="do_not_future_time">Do not set a future time</string>
 	

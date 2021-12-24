@@ -79,9 +79,23 @@
 					android:button="@color/transparent"
 					android:paddingStart="@dimen/margin_padding_normal"
 					android:paddingEnd="@dimen/margin_padding_normal"
-					android:text="@string/earlier"
+					android:text="@string/other_date"
 					android:textColor="@drawable/radio_text_color" />
 			</RadioGroup>
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/editTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:layout_marginBottom="@dimen/margin_edit_text"
+				android:text="@string/edit"
+				android:textAllCaps="true"
+				android:textColor="@color/text_secondary"
+				android:visibility="gone"
+				app:layout_constraintBottom_toBottomOf="@id/radioGroup"
+				app:layout_constraintEnd_toEndOf="@id/radioGroup" />
 			
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/whatTimeTextView"
