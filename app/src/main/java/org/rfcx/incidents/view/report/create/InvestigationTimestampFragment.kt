@@ -117,6 +117,7 @@ class InvestigationTimestampFragment : Fragment() {
 		}, date.getYear(), date.getMonth(), date.getDay())
 		
 		datePicker.datePicker.maxDate = today.timeInMillis
+		datePicker.setOnCancelListener { radioGroup.clearCheck() }
 		
 		earlierRadioButton.setOnClickListener {
 			datePicker.show()
