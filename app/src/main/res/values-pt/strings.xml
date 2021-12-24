@@ -277,6 +277,6 @@
     <string name="damage">Tamanho do estrago:</string>
     <string name="note">Anotação: %s</string>
     <string name="assets">Material:</string>
-    <string name="issue_a_fine">"Inutilizei o maquinário  "</string>
+    <string name="damaged_machinery">"Inutilizei o maquinário"</string>
 
 </resources>
