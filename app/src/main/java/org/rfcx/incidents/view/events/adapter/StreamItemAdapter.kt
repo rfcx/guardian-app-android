@@ -37,7 +37,6 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val bellImageView = itemView.bellImageView
 		private val recentTextView = itemView.recentTextView
 		private val hotTextView = itemView.hotTextView
-		private val verifiedImageView = itemView.verifiedImageView
 		private val noneTextView = itemView.noneTextView
 		private val incidentIdTextView = itemView.incidentIdTextView
 		private val otherLayout = itemView.otherLayout
@@ -71,14 +70,12 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			if (item.eventSize == 0) {
 				timeTextView.visibility = View.GONE
 				bellImageView.visibility = View.GONE
-				verifiedImageView.visibility = View.VISIBLE
 				noneTextView.visibility = View.VISIBLE
 				incidentIdTextView.visibility = View.GONE
 			} else {
 				timeTextView.visibility = View.VISIBLE
 				bellImageView.visibility = View.VISIBLE
 				timeTextView.text = item.eventTime
-				verifiedImageView.visibility = View.GONE
 				noneTextView.visibility = View.GONE
 				incidentIdTextView.visibility = View.VISIBLE
 			}
