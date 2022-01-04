@@ -244,8 +244,6 @@
     <string name="collected_evidence">Recolhimento de provas/evidências</string>
     <string name="confiscated_equipment">Confisco de equipamento</string>
     <string name="issue_a_warning">Avisar pra não voltar/fazer isso de novo</string>
-    <string name="arrests">Detenção</string>
-    <string name="planning_security">"Planejar retorno com efetivo de segurança  "</string>
     <string name="add_evidence">Adicionar prova/evidência</string>
 	<string name="save_draft">Salvar rascunho</string>
     <string name="add_photos">Fotos (até 5)</string>
@@ -264,7 +262,7 @@
     <string name="nearby">Próximo</string>
     <string name="others">Outros</string>
     <string name="receive_alert_notification">Receba uma notificação de alerta</string>
-    <string name="unsent">"Na fila "</string>
+    <string name="unsent">"Na fila"</string>
     <string name="sending">Enviando</string>
     <string name="sent">Enviado</string>
     <string name="unable_to_submit_on_airplane_mode">Impossível enviar no modo avião</string>
@@ -278,5 +276,7 @@
     <string name="note">Anotação: %s</string>
     <string name="assets">Material:</string>
     <string name="damaged_machinery">"Inutilizei o maquinário"</string>
+	<string name="issue_a_fine">"Inutilizei o maquinário"</string>
+    <string name="other_text">Outros</string>
 
 </resources>
