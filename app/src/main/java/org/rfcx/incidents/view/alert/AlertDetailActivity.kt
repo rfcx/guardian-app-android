@@ -12,16 +12,20 @@ import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.activity_alert_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.alert.AlertDetailViewModel.Companion.maxProgress
+import java.util.*
 
 class AlertDetailActivity : AppCompatActivity() {
 	private val viewModel: AlertDetailViewModel by viewModel()
 	
 	companion object {
 		const val EXTRA_ALERT_ID = "EXTRA_ALERT_ID"
+		private const val SECOND = 1000L
+		
 		fun startActivity(context: Context, alertId: String) {
 			val intent = Intent(context, AlertDetailActivity::class.java)
 			intent.putExtra(EXTRA_ALERT_ID, alertId)
@@ -43,14 +47,22 @@ class AlertDetailActivity : AppCompatActivity() {
 		val token = this.getTokenID()
 		
 		alert?.let {
+			var alertData = it
+			if (alert.end.time - alert.start.time < 5 * SECOND) {
+				alertData = it.setNewTime(Date(alert.start.time - 5 * SECOND), Date(alert.end.time + 5 * SECOND))
+			}
+			if (alert.end.time - alert.start.time > 60 * SECOND) {
+				alertData = it.setNewTime(end = Date(alert.start.time + 60 * SECOND))
+			}
+			
 			spectrogramImageView.setReportImage(
-					url = viewModel.setFormatUrlOfSpectrogram(it),
+					url = viewModel.setFormatUrlOfSpectrogram(alertData),
 					fromServer = true,
 					token = token,
 					progressBar = loadingImageProgressBar
 			)
-			viewModel.setAlert(it)
-			setupView(viewModel.setFormatUrlOfAudio(it))
+			viewModel.setAlert(alertData)
+			setupView(viewModel.setFormatUrlOfAudio(alertData))
 			observePlayer()
 		}
 		
@@ -66,6 +78,10 @@ class AlertDetailActivity : AppCompatActivity() {
 			override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 		})
 	}
+	
+	private fun Alert.setNewTime(start: Date? = null, end: Date? = null): Alert = Alert(id = this.id, serverId = this.serverId, name = this.name, streamId = this.streamId, projectId = this.projectId, createdAt = this.createdAt, start = start
+			?: this.start, end = end
+			?: this.end, classification = this.classification, incident = this.incident)
 	
 	private fun setupView(url: String) {
 		soundProgressSeekBar.max = maxProgress
