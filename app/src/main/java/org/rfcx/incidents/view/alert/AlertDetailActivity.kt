@@ -8,10 +8,13 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
 import kotlinx.android.synthetic.main.activity_alert_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
+import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
@@ -76,6 +79,28 @@ class AlertDetailActivity : AppCompatActivity() {
 			override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 			
 			override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+		})
+		
+		viewModel.classifiedCation.observe(this, { it ->
+			it.success({ confidence ->
+				val classificationAdapter = ClassificationAdapter()
+				classificationAdapter.onDetectionBoxClick = {
+					viewModel.seekPlayerTo(it.beginAt)
+				}
+				classificationAdapter.setClassification(confidence, viewModel.getDuration())
+				
+				val gridLayoutManager = GridLayoutManager(this, viewModel.getDuration().toInt())
+				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+					override fun getSpanSize(position: Int): Int {
+						return classificationAdapter.lists[position].durationSecond()
+					}
+				}
+				classificationRecyclerView.apply {
+					setHasFixedSize(true)
+					layoutManager = gridLayoutManager
+					adapter = classificationAdapter
+				}
+			})
 		})
 	}
 	

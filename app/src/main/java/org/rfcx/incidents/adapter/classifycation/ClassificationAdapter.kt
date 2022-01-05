@@ -12,7 +12,7 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	
 	var lists: ArrayList<Classification> = arrayListOf()
 	var onDetectionBoxClick: ((ClassificationBox) -> Unit)? = null
-	fun setClassification(list: List<Confidence>) {
+	fun setClassification(list: List<Confidence>, max: Long) {
 		val sortedList = list.sortedBy { it.beginsAtOffset }
 		
 		for (i in 0 until list.count()) {
@@ -39,8 +39,8 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 			}
 			
 			if (i == list.count() - 1) {
-				if (current.endsAtOffset != MAX_DURATION) {
-					lists.add(ClassificationEmptyBox(current.endsAtOffset, MAX_DURATION))
+				if (current.endsAtOffset != max) {
+					lists.add(ClassificationEmptyBox(current.endsAtOffset, max))
 				}
 			}
 		}
@@ -110,14 +110,11 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	companion object {
 		const val VIEW_CLASSIFICATION = 1
 		const val VIEW_EMPTY = 2
-		const val MAX_SPAN_COUNT = 90 // max duration is 90 seconds
-		const val MAX_DURATION = 90000L
 	}
-	
 }
 
 open class Classification(open var beginAt: Long, open var endAt: Long) {
-	fun durationSecond(): Int = ((endAt - beginAt) / 1000).toInt()
+	fun durationSecond(): Int = (endAt - beginAt).toInt()
 }
 
 data class ClassificationBox(override var beginAt: Long, override var endAt: Long) : Classification(beginAt, endAt)

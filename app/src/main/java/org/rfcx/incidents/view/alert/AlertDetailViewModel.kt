@@ -23,9 +23,11 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.detections.GetDetections
 import org.rfcx.incidents.data.api.media.MediaUseCase
 import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.alert.DetectionFactory
 import org.rfcx.incidents.entity.alert.Detections
+import org.rfcx.incidents.entity.event.Confidence
 import org.rfcx.incidents.util.toIsoFormatString
 import java.io.File
 import java.io.IOException
@@ -34,21 +36,12 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	var _alert: Alert? = null
 		private set
 	
+	private var _classifiedCation: MutableLiveData<Result<List<Confidence>>> = MutableLiveData()
+	val classifiedCation: LiveData<Result<List<Confidence>>> get() = _classifiedCation
+	
 	fun setAlert(alert: Alert) {
 		_alert = alert
 		getAudio(alert)
-		
-		getDetections.execute(object : DisposableSingleObserver<List<Detections>>() {
-			
-			override fun onError(e: Throwable) {
-				// TODO :: onError
-			}
-			
-			override fun onSuccess(t: List<Detections>) {
-				// TODO :: onSuccess
-			}
-		}, DetectionFactory(alert.streamId, alert.start.time, alert.end.time, listOf(alert.classification?.value
-				?: "")))
 	}
 	
 	private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
@@ -86,7 +79,7 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 		}
 	}
 	
-	fun getDuration(): Long = exoPlayer.duration
+	fun getDuration(): Long = exoPlayer.duration / 1000L
 	
 	override fun onCleared() {
 		super.onCleared()
@@ -166,6 +159,7 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 				saveFile(t, fileName) {
 					if (it) {
 						initPlayer(fileName)
+						getDetections(alert)
 					}
 				}
 			}
@@ -195,6 +189,34 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 		} catch (e: IOException) {
 			e.printStackTrace()
 			callback.invoke(false)
+		}
+	}
+	
+	fun getDetections(alert: Alert) {
+		getDetections.execute(object : DisposableSingleObserver<List<Detections>>() {
+			override fun onSuccess(t: List<Detections>) {
+				val confidence = t.map { checkSpanOfBox(alert, it) }
+				_classifiedCation.value = Result.Success(confidence)
+			}
+			
+			override fun onError(e: Throwable) {
+				e.printStackTrace()
+			}
+		}, DetectionFactory(alert.streamId, alert.start.time, alert.end.time, listOf(alert.classification?.value
+				?: "")))
+	}
+	
+	fun checkSpanOfBox(alert: Alert, detections: Detections): Confidence {
+		val startSpan = (detections.start.time - alert.start.time) / 1000L
+		val endSpan = (detections.start.time - alert.start.time) / 1000L
+		return if (startSpan == endSpan) {
+			if (endSpan == getDuration()) {
+				Confidence(((detections.start.time - alert.start.time) / 1000L) - 1, detections.confidence, (detections.end.time - alert.start.time) / 1000L)
+			} else {
+				Confidence((detections.start.time - alert.start.time) / 1000L, detections.confidence, ((detections.end.time - alert.start.time) / 1000L) + 1)
+			}
+		} else {
+			Confidence((detections.start.time - alert.start.time) / 1000L, detections.confidence, (detections.end.time - alert.start.time) / 1000L)
 		}
 	}
 	
