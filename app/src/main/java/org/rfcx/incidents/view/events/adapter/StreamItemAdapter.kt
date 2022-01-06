@@ -52,23 +52,6 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
 			timeTextView.text = item.eventTime
 			
-			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
-			
-			if (typeOfAlert.isNotEmpty()) {
-				var number = 0
-				typeOfAlert.forEachIndexed { index, alert ->
-					val type = alert.classification?.value
-					type?.let {
-						if (index < 2) {
-							showIconType(it, itemView, alerts)
-						} else {
-							otherLayout.visibility = View.VISIBLE
-							number += getNumberOfAlertByType(alerts, type).toInt()
-							numOfOtherTextView.text = (number).toString()
-						}
-					}
-				}
-			}
 			
 			val hasNoEvents = item.eventSize == 0
 			timeTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
@@ -76,6 +59,21 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
 			incidentIdTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
 			guardianNameTextView.setPadding(16.toPx, 16.toPx, if (hasNoEvents) 16.toPx else 0.toPx, if (hasNoEvents) 16.toPx else 10.toPx)
+			
+			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
+			if (typeOfAlert.isEmpty()) return
+			
+			var number = 0
+			typeOfAlert.forEachIndexed { index, alert ->
+				val type = alert.classification?.value ?: return
+				if (index < 2) {
+					showIconType(type, itemView, alerts)
+				} else {
+					otherLayout.visibility = View.VISIBLE
+					number += getNumberOfAlertByType(alerts, type).toInt()
+					numOfOtherTextView.text = (number).toString()
+				}
+			}
 		}
 	}
 	
