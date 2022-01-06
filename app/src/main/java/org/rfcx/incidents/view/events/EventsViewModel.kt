@@ -26,10 +26,11 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.localdb.StreamDb
 import org.rfcx.incidents.localdb.TrackingDb
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.asLiveData
+import org.rfcx.incidents.util.dateRangeFormat
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.StreamItem
-import java.util.*
 
 
 class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
@@ -145,11 +146,15 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	}
 	
 	private fun getDateTime(streamServerId: String): String? {
-		val alerts = getAlerts(streamServerId)
-		if (alerts.isEmpty()) return null
-		alerts.sortedBy { a -> a.start }
-		return dateRangeFormat(context, alerts.first().start, alerts.last().end)
+		val firstEvent = getFirstEvent(streamServerId)
+		val lastEvent = getLastEvent(streamServerId)
+		
+		if (firstEvent == null || lastEvent == null) return null
+		return dateRangeFormat(context, firstEvent.start, lastEvent.end)
 	}
+	
+	private fun getFirstEvent(streamServerId: String): Alert? = getAlerts(streamServerId).minByOrNull { a -> a.start }
+	private fun getLastEvent(streamServerId: String): Alert? = getAlerts(streamServerId).maxByOrNull { a -> a.start }
 	
 	fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
 		val preferences = Preferences.getInstance(context)
