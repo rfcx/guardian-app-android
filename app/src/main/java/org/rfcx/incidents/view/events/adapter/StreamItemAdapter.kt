@@ -1,6 +1,8 @@
 package org.rfcx.incidents.view.events.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +43,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val incidentIdTextView = itemView.incidentIdTextView
 		private val otherLayout = itemView.otherLayout
 		private val numOfOtherTextView = itemView.numOfOtherTextView
+		private val guardianNameTextView = itemView.guardianNameTextView
 		
 		fun bind(item: StreamItem) {
 			guardianName.text = item.streamName
@@ -72,12 +75,14 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 				bellImageView.visibility = View.GONE
 				noneTextView.visibility = View.VISIBLE
 				incidentIdTextView.visibility = View.GONE
+				guardianNameTextView.setPadding(16.toPx, 16.toPx, 16.toPx, 16.toPx)
 			} else {
 				timeTextView.visibility = View.VISIBLE
 				bellImageView.visibility = View.VISIBLE
 				timeTextView.text = item.eventTime
 				noneTextView.visibility = View.GONE
 				incidentIdTextView.visibility = View.VISIBLE
+				guardianNameTextView.setPadding(16.toPx, 16.toPx, 0.toPx, 8.toPx)
 			}
 		}
 	}
@@ -109,6 +114,12 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
 		return alerts.filter { a -> a.classification?.value == type }.size.toString()
 	}
+	
+	val Number.toPx
+		get() = TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP,
+				this.toFloat(),
+				Resources.getSystem().displayMetrics).toInt()
 	
 	companion object {
 		private const val MINUTE = 60L * 1000L
