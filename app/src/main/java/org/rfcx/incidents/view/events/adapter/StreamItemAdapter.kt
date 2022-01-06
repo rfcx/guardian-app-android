@@ -82,7 +82,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 				timeTextView.text = item.eventTime
 				noneTextView.visibility = View.GONE
 				incidentIdTextView.visibility = View.VISIBLE
-				guardianNameTextView.setPadding(16.toPx, 16.toPx, 0.toPx, 8.toPx)
+				guardianNameTextView.setPadding(16.toPx, 16.toPx, 0.toPx, 10.toPx)
 			}
 		}
 	}
