@@ -307,7 +307,7 @@
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="issue_a_warning">Issue a warning</string>
-	<string name="issue_a_fine">Issue a fine</string>
+	<string name="damaged_machinery">Damaged machinery</string>
 	
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>
