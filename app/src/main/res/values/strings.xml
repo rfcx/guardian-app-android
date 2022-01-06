@@ -244,7 +244,7 @@
 	<string name="sending">Sending</string>
 	<string name="sent">Sent</string>
 	<string name="incident_ref">#%s</string>
-	<string name="not_submitted_reports_yet">You don’t have any submitted reports</string>
+	<string name="not_submitted_reports_yet">You haven’t submitted any reports yet</string>
 	
 	<!-- GuardianEventDetailFragment -->
 	<string name="create_report">Create Report</string>
