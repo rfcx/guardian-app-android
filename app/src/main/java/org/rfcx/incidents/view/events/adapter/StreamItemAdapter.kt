@@ -50,6 +50,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			val alerts = item.alerts.sortedBy { a -> a.start }
 			recentTextView.visibility = if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
 			hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
+			timeTextView.text = item.eventTime
 			
 			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
 			
@@ -69,21 +70,12 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 				}
 			}
 			
-			
-			if (item.eventSize == 0) {
-				timeTextView.visibility = View.GONE
-				bellImageView.visibility = View.GONE
-				noneTextView.visibility = View.VISIBLE
-				incidentIdTextView.visibility = View.GONE
-				guardianNameTextView.setPadding(16.toPx, 16.toPx, 16.toPx, 16.toPx)
-			} else {
-				timeTextView.visibility = View.VISIBLE
-				bellImageView.visibility = View.VISIBLE
-				timeTextView.text = item.eventTime
-				noneTextView.visibility = View.GONE
-				incidentIdTextView.visibility = View.VISIBLE
-				guardianNameTextView.setPadding(16.toPx, 16.toPx, 0.toPx, 10.toPx)
-			}
+			val hasNoEvents = item.eventSize == 0
+			timeTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
+			bellImageView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
+			noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
+			incidentIdTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
+			guardianNameTextView.setPadding(16.toPx, 16.toPx, if (hasNoEvents) 16.toPx else 0.toPx, if (hasNoEvents) 16.toPx else 10.toPx)
 		}
 	}
 	
