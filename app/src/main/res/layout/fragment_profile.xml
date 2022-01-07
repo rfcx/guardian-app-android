@@ -40,10 +40,6 @@
 		<variable
 			name="onClickCoordinates"
 			type="android.view.View.OnClickListener" />
-		
-		<variable
-			name="onClickChangeTheme"
-			type="android.view.View.OnClickListener" />
 	
 	</data>
 	
@@ -57,7 +53,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingTop="@dimen/margin_padding_large"
 			android:paddingBottom="@dimen/fab_height_half">
 			
 			<LinearLayout
@@ -96,12 +91,6 @@
 				</LinearLayout>
 			</LinearLayout>
 			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/separate_line_size"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="@color/separateLine" />
-			
 			<TextView
 				android:id="@+id/notificationTextView"
 				style="@style/RangerText.Title"
@@ -109,7 +98,6 @@
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
 				android:text="@string/notifications"
 				android:textColor="@color/text_secondary"
 				android:textSize="@dimen/text_small" />
@@ -118,7 +106,6 @@
 				android:id="@+id/receiveAlertLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_small"
 				android:background="?attr/selectableItemBackground"
 				android:onClick="@{onClickProject}"
 				android:orientation="vertical"
@@ -141,61 +128,12 @@
 				android:background="@color/separateLine" />
 			
 			<TextView
-				android:id="@+id/displayTextView"
+				android:id="@+id/additionalTextView"
 				style="@style/RangerText.Title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
-				android:text="@string/display"
-				android:textColor="@color/text_secondary"
-				android:textSize="@dimen/text_small" />
-			
-			<LinearLayout
-				android:id="@+id/displayLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickChangeTheme}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_normal">
-				
-				<TextView
-					android:id="@+id/displayTitle"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/theme" />
-				
-				<TextView
-					android:id="@+id/themeSelectTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/dark_theme" />
-			</LinearLayout>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/separate_line_size"
-				android:background="@color/separateLine" />
-			
-			<TextView
-				android:id="@+id/additionalTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:text="@string/profile_aditional_label"
 				android:textAllCaps="true"
 				android:textColor="@color/text_secondary"
@@ -207,7 +145,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
 				android:text="@string/profile_app_version_label"
 				android:textColor="@color/text_secondary" />
@@ -219,7 +157,6 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:text="@{viewModel.appVersion}"
 				android:textColor="@color/text_secondary"
 				tools:text="2.0.0(135)" />
@@ -245,12 +182,10 @@
 			<TextView
 				android:id="@+id/accountTextView"
 				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
 				android:text="@string/account"
 				android:textAllCaps="true"
 				android:textColor="@color/text_secondary"

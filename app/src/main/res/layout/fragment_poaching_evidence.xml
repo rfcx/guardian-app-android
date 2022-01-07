@@ -83,7 +83,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/dog_tracks"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />

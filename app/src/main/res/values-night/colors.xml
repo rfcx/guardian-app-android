@@ -6,12 +6,13 @@
 	
 	<color name="backgroundColor">#141525</color>
 	<color name="statusColor">#232436</color>
-	<color name="iconColor">#999999</color>
+	<color name="toolbarColor">#232436</color>
+	<color name="iconColor">#e6e6e6</color>
 	<color name="dialogColor">#232436</color>
 	
 	<!-- Text color -->
 	<color name="text_primary">#ffffff</color>
-	<color name="text_secondary">#999999</color>
+	<color name="text_secondary">#99a2b0</color>
 	<color name="text_error">#e41a1a</color>
 	<color name="text_white">#000000</color>
 	<color name="text_black">#ffffff</color>
@@ -39,6 +40,8 @@
 	<color name="grey_light">#F0F0F0</color>
 	<color name="grey_default">#98a0a9</color>
 	<color name="grey_active">#5A6978</color>
+	<color name="recent_color">#3971e6</color>
+	<color name="hot_color">#e55e5e</color>
 	
 	<color name="location_status_loading_bg">#ff2c9a46</color>
 	<color name="location_status_failed_bg">#FF0404</color>
@@ -49,6 +52,7 @@
 	<color name="topBar">#232436</color>
 	<color name="separateLine">#45485D</color>
 	<color name="bottomBar">#232436</color>
+	<color name="bottom_bar_icon_default_tint">#e6e6e6</color>
 	
 	<color name="action_color">#9100e6</color>
 	<color name="evidence_color">#3971e6</color>

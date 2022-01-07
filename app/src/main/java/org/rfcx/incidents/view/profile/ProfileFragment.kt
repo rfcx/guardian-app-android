@@ -82,50 +82,6 @@ class ProfileFragment : BaseFragment() {
 	}
 	
 	private fun setOnClickButton() {
-		val preferences = context?.let { it1 -> Preferences.getInstance(it1) }
-		val themeOption = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			this.resources.getStringArray(R.array.theme_more_than_9)
-		} else {
-			this.resources.getStringArray(R.array.theme_less_than_10)
-		}
-		
-		themeSelectTextView.text = preferences?.getString(DISPLAY_THEME, themeOption[1])
-		
-		viewDataBinding.onClickChangeTheme = View.OnClickListener {
-			val builder = context?.let { it1 -> AlertDialog.Builder(it1, R.style.DialogCustom) }
-			val selectedRadioItem =
-					themeOption.indexOf(preferences?.getString(DISPLAY_THEME, themeOption[1]))
-			
-			if (builder != null) {
-				builder.setTitle(getString(R.string.theme))
-				
-				builder.setSingleChoiceItems(themeOption, selectedRadioItem,
-						DialogInterface.OnClickListener { dialog, which ->
-							when (themeOption[which]) {
-								themeOption[0] -> {
-									preferences?.putString(DISPLAY_THEME, themeOption[0])
-									AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-								}
-								themeOption[1] -> {
-									preferences?.putString(DISPLAY_THEME, themeOption[1])
-									AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-								}
-								themeOption[2] -> {
-									preferences?.putString(DISPLAY_THEME, themeOption[2])
-									AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-								}
-							}
-							themeSelectTextView.text = themeOption[which]
-							dialog.dismiss()
-						}
-				)
-				builder.setPositiveButton(getString(R.string.cancel)) { dialog, which ->
-					dialog.dismiss()
-				}
-				builder.show()
-			}
-		}
-		
 		viewDataBinding.onClickProject = View.OnClickListener {
 			context?.let { SubscribeProjectsActivity.startActivity(it) }
 		}

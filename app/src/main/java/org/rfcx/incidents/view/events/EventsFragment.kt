@@ -60,8 +60,8 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
-import org.rfcx.incidents.view.events.adapter.GuardianItemAdapter
 import org.rfcx.incidents.view.events.adapter.StreamItem
+import org.rfcx.incidents.view.events.adapter.StreamItemAdapter
 import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
 import java.util.*
@@ -99,8 +99,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: EventsViewModel by viewModel()
 	private val projectAdapter by lazy { ProjectAdapter(this) }
-	private val nearbyAdapter by lazy { GuardianItemAdapter(this) }
-	private val othersAdapter by lazy { GuardianItemAdapter(this) }
+	private val streamAdapter by lazy { StreamItemAdapter(this) }
 	lateinit var preferences: Preferences
 	
 	private lateinit var mapView: MapView
@@ -231,16 +230,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private fun setStreamsWithLocalData() {
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		val projectServerId = viewModel.getProject(projectId)?.serverId
-		viewModel.handledStreams(lastLocation, viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
+		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
 		setItemOnAdapter()
 	}
 	
 	private fun setItemOnAdapter() {
+		streamLayout.visibility = View.VISIBLE
 		isShowProgressBar(false)
-		setShowListStream()
-		isShowNotHaveStreams(viewModel.nearbyStreams.isEmpty() && viewModel.othersStreams.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-		nearbyAdapter.items = viewModel.nearbyStreams
-		othersAdapter.items = viewModel.othersStreams
+		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+		streamAdapter.items = viewModel.streamItems
 	}
 	
 	override fun onHiddenChanged(hidden: Boolean) {
@@ -260,16 +258,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
-		nearbyRecyclerView.apply {
+		streamRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
-			adapter = nearbyAdapter
-			nearbyAdapter.items = viewModel.nearbyStreams
-		}
-		
-		othersRecyclerView.apply {
-			layoutManager = LinearLayoutManager(context)
-			adapter = othersAdapter
-			othersAdapter.items = viewModel.othersStreams
+			adapter = streamAdapter
+			streamAdapter.items = viewModel.streamItems
 		}
 	}
 	
@@ -315,13 +307,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	override fun onClicked(project: Project) {
 		isShowNotHaveStreams(false)
-		nearbyLayout.visibility = View.GONE
-		othersLayout.visibility = View.GONE
+		streamLayout.visibility = View.GONE
 		expandMoreImageView.rotation = 0F
 		
 		isShowProgressBar()
-		nearbyAdapter.items = listOf()
-		othersAdapter.items = listOf()
+		streamAdapter.items = listOf()
 		
 		listener.showBottomAppBar()
 		projectRecyclerView.visibility = View.GONE
@@ -364,7 +354,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
-				viewModel.handledStreamsResponse(lastLocation, list)
+				viewModel.handledStreams(list.map { s -> s.toStream() })
 				setItemOnAdapter()
 				setAlertFeatures(list.map { s -> s.toStream() })
 				refreshView.isRefreshing = false
@@ -374,7 +364,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
-				isShowNotHaveStreams(viewModel.nearbyStreams.isEmpty() && viewModel.othersStreams.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 			})
 		})
 		
@@ -429,7 +419,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				mapView.visibility = View.GONE
 				refreshView.visibility = View.VISIBLE
 				currentLocationButton.visibility = View.GONE
-				isShowNotHaveStreams(viewModel.nearbyStreams.isEmpty() && viewModel.othersStreams.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
 			isShowMapIcon = !isShowMapIcon
@@ -442,13 +432,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	private fun isShowNotHaveStreams(show: Boolean) {
 		notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
-	}
-	
-	private fun setShowListStream() {
-		nearbyLayout.visibility = if (viewModel.nearbyStreams.isNotEmpty()) View.VISIBLE else View.GONE
-		othersLayout.visibility = if (viewModel.othersStreams.isNotEmpty()) View.VISIBLE else View.GONE
-		nearbyTextView.visibility = if (viewModel.nearbyStreams.isNotEmpty() && viewModel.othersStreams.isNotEmpty()) View.VISIBLE else View.GONE
-		othersTextView.visibility = if (viewModel.nearbyStreams.isNotEmpty() && viewModel.othersStreams.isNotEmpty()) View.VISIBLE else View.GONE
 	}
 	
 	/* ------------------- vv Setup Map vv ------------------- */

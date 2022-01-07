@@ -79,9 +79,23 @@
 					android:button="@color/transparent"
 					android:paddingStart="@dimen/margin_padding_normal"
 					android:paddingEnd="@dimen/margin_padding_normal"
-					android:text="@string/earlier"
+					android:text="@string/other_date"
 					android:textColor="@drawable/radio_text_color" />
 			</RadioGroup>
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/editTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:layout_marginBottom="@dimen/margin_edit_text"
+				android:text="@string/edit"
+				android:textAllCaps="true"
+				android:textColor="@color/text_secondary"
+				android:visibility="gone"
+				app:layout_constraintBottom_toBottomOf="@id/radioGroup"
+				app:layout_constraintEnd_toEndOf="@id/radioGroup" />
 			
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/whatTimeTextView"
@@ -104,6 +118,28 @@
 		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
+	
+	<View
+		android:id="@+id/lineBottomView"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@color/separateLine"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/backgroundColor"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/nextStepButton"
