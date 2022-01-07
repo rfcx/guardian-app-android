@@ -4,14 +4,16 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="@dimen/margin_padding_normal"
+	android:background="@color/backgroundColor"
 	tools:context=".view.report.create.InvestigationTimestampFragment">
 	
 	<ScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toTopOf="@id/lineBottomView"
+		android:overScrollMode="never"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
 		app:layout_constraintTop_toTopOf="parent">
 		
 		<androidx.constraintlayout.widget.ConstraintLayout
@@ -77,9 +79,23 @@
 					android:button="@color/transparent"
 					android:paddingStart="@dimen/margin_padding_normal"
 					android:paddingEnd="@dimen/margin_padding_normal"
-					android:text="@string/earlier"
+					android:text="@string/other_date"
 					android:textColor="@drawable/radio_text_color" />
 			</RadioGroup>
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/editTextView"
+				style="@style/RangerText.Body"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:layout_marginBottom="@dimen/margin_edit_text"
+				android:text="@string/edit"
+				android:textAllCaps="true"
+				android:textColor="@color/text_secondary"
+				android:visibility="gone"
+				app:layout_constraintBottom_toBottomOf="@id/radioGroup"
+				app:layout_constraintEnd_toEndOf="@id/radioGroup" />
 			
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/whatTimeTextView"
@@ -108,7 +124,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_grey_light"
+		android:background="@color/separateLine"
 		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
@@ -119,7 +135,7 @@
 		android:layout_height="0dp"
 		android:layout_alignParentBottom="true"
 		android:alpha="0.5"
-		android:src="@color/white"
+		android:src="@color/backgroundColor"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -130,6 +146,7 @@
 		style="@style/RangerButton.GreenButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
 		android:enabled="false"
 		android:text="@string/next"
 		app:layout_constraintBottom_toBottomOf="parent" />

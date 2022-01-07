@@ -4,6 +4,12 @@
 	<color name="colorPrimaryDark">#ff2c9a46</color>
 	<color name="colorAccent">#ff2c9a46</color>
 	
+	<color name="backgroundColor">@color/white</color>
+	<color name="statusColor">#aaa</color>
+	<color name="toolbarColor">@color/white</color>
+	<color name="iconColor">#000000</color>
+	<color name="dialogColor">#ffffff</color>
+	
 	<!-- Text color -->
 	<color name="text_primary">#47525E</color>
 	<color name="text_secondary">#969FAA</color>
@@ -11,8 +17,20 @@
 	<color name="text_white">#ffffff</color>
 	<color name="text_black">#000000</color>
 	<color name="text_green">#2FB04A</color>
-
+	
+	<color name="text_button_outline_enable">@color/colorPrimary</color>
+	<color name="text_button_outline_disable">#969FAA</color>
+	<color name="text_button_enable">#ffffff</color>
+	<color name="text_button_disable">#ffffff</color>
+	
+	<color name="background_outline_button_enable">@color/colorPrimary</color>
+	<color name="background_outline_button_disable">#969FAA</color>
+	<color name="background_button_enable">@color/colorPrimary</color>
+	<color name="background_button_disable">#969FAA</color>
+	
 	<color name="divider">#D6D6D6</color>
+	<color name="addSoundBackground">@color/grey</color>
+	<color name="addImageBackground">@color/grey_light</color>
 	
 	<color name="transparent">@android:color/transparent</color>
 	
@@ -22,6 +40,8 @@
 	<color name="grey_light">#F0F0F0</color>
 	<color name="grey_default">#98a0a9</color>
 	<color name="grey_active">#5A6978</color>
+	<color name="recent_color">#3971e6</color>
+	<color name="hot_color">#e55e5e</color>
 	
 	<color name="location_status_loading_bg">#ff2c9a46</color>
 	<color name="location_status_failed_bg">#FF0404</color>
@@ -30,8 +50,9 @@
 	<color name="button_facebook_login">#37509f</color>
 	
 	<color name="topBar">#FFFFFF</color>
-	<color name="separateLine">#F0F0F0</color>
+	<color name="separateLine">@color/grey_light</color>
 	<color name="bottomBar">#FFFFFF</color>
+	<color name="bottom_bar_icon_default_tint">#969FAA</color>
 	
 	<color name="action_color">#9100e6</color>
 	<color name="evidence_color">#3971e6</color>

@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
 	tools:context=".view.events.detail.GuardianEventDetailFragment">
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +15,7 @@
 			android:id="@+id/toolbarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="?android:actionBarSize"
+			android:background="@color/toolbarColor"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -55,6 +57,7 @@
 			android:id="@+id/alertsSwipeRefreshView"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
 			app:layout_constraintBottom_toTopOf="@id/createReportButton"
 			app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
 			
@@ -65,6 +68,45 @@
 				android:layout_marginBottom="@dimen/margin_padding_normal"
 				android:overScrollMode="never" />
 		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+		
+		<androidx.appcompat.widget.LinearLayoutCompat
+			android:id="@+id/notHaveEventsLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/margin_padding_normal"
+			android:orientation="vertical"
+			android:visibility="gone"
+			app:layout_constraintBottom_toTopOf="@id/createReportButton"
+			app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
+			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/notHaveEventsImageView"
+				android:layout_width="@dimen/ic_empty_list_size"
+				android:layout_height="@dimen/ic_empty_list_size"
+				android:layout_gravity="center"
+				android:src="@drawable/ic_verified_user"
+				app:layout_constraintBottom_toTopOf="@+id/emptyListTextView"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
+				app:layout_constraintVertical_chainStyle="packed"
+				app:tint="@color/iconColor" />
+			
+			<TextView
+				android:id="@+id/emptyListTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:gravity="center"
+				android:text="@string/not_have_events"
+				app:layout_constraintBottom_toTopOf="@+id/createReportButton"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/notHaveEventsImageView"
+				app:layout_constraintVertical_chainStyle="packed" />
+		
+		</androidx.appcompat.widget.LinearLayoutCompat>
 		
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/createReportButton"

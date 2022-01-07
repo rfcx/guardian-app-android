@@ -17,15 +17,13 @@ import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.entity.response.EvidenceTypes
+import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.*
-import org.rfcx.incidents.util.isNetworkAvailable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -68,7 +66,10 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		
 		responseId?.let {
 			val response = viewModel.getResponseById(it)
-			response?.let { res -> setResponse(res) }
+			response?.let { res ->
+				setResponse(res)
+				streamName = res.streamName
+			}
 		}
 		getImagesFromLocal()
 		setupToolbar()

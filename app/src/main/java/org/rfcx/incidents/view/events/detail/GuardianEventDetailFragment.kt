@@ -125,6 +125,7 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
 				alertItemAdapter.items = list.map { a -> a.toAlert() }
+				notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
 				isShowProgressBar(false)
 				alertsSwipeRefreshView.isRefreshing = false
 			}, {
@@ -161,6 +162,7 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 	
 	override fun onRefresh() {
 		guardianId?.let { viewModel.fetchEvents(it) }
+		notHaveEventsLayout.visibility = View.GONE
 	}
 	
 	private fun isShowProgressBar(show: Boolean = true) {

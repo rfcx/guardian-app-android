@@ -83,7 +83,8 @@
 				android:layout_marginEnd="@dimen/margin_padding_normal"
 				android:background="@drawable/radio_selector"
 				android:button="@color/transparent"
-				android:padding="@dimen/margin_padding_normal"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
 				android:text="@string/dog_tracks"
 				android:textColor="@drawable/radio_text_color"
 				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
@@ -125,7 +126,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_grey_light"
+		android:background="@color/separateLine"
 		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
@@ -136,7 +137,7 @@
 		android:layout_height="0dp"
 		android:layout_alignParentBottom="true"
 		android:alpha="0.5"
-		android:src="@color/white"
+		android:src="@color/backgroundColor"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

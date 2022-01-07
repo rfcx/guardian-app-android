@@ -20,12 +20,20 @@ private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
 private const val dateFormat = "d MMM yyyy, HH:mm"
+private const val dateShortFormat = "dd MMM"
 
 private val outputTimeSdf by lazy {
 	val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
 	sdf.timeZone = TimeZone.getDefault()
 	sdf
 }
+
+private val outputDateShortFormatSdf by lazy {
+	val sdf = SimpleDateFormat(dateShortFormat, Locale.getDefault())
+	sdf.timeZone = TimeZone.getDefault()
+	sdf
+}
+
 private val outputShortDateSdf by lazy {
 	val sdf = SimpleDateFormat(shortDateFormat, Locale.getDefault())
 	sdf.timeZone = TimeZone.getDefault()
@@ -48,12 +56,20 @@ fun Date.toIsoString(): String {
 	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
+fun String.toIsoString(): Date {
+	return isoSdf.parse(this) // pattern 2008-09-15T15:53:00.000Z
+}
+
 fun Date.toIsoNotZString(): String {
 	return isoSdfNotZ.format(this) // pattern 2008-09-15T15:53:00.000
 }
 
 fun Date.toTimeString(): String {
 	return outputTimeSdf.format(this)
+}
+
+fun Date.toDateShortString(): String {
+	return outputDateShortFormatSdf.format(this)
 }
 
 fun Date.toShortDateString(): String {

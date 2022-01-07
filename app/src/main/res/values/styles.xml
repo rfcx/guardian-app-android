@@ -1,16 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 	
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@android:color/black</item>
+		<item name="colorPrimaryDark">@color/backgroundColor</item>
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="android:textSize">@dimen/text_medium</item>
-		<item name="titleTextColor">@android:color/white</item>
+		<item name="titleTextColor">@color/white</item>
+		<item name="android:windowTranslucentStatus">false</item>
+		<item name="android:statusBarColor">@color/statusColor</item>
 	</style>
 	
-	<style name="AppTheme.ForTutorial" parent="Theme.MaterialComponents.Light.NoActionBar">
+	<style name="AppTheme.ForTutorial" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimary</item>
 		<item name="colorAccent">@color/colorAccent</item>
@@ -48,7 +50,7 @@
 	</style>
 	
 	<!-- TextView -->
-	<style name="RangerText" parent="Widget.AppCompat.TextView"/>
+	<style name="RangerText" parent="Widget.AppCompat.TextView" />
 	
 	<style name="RangerText.Headline" parent="RangerText">
 		<item name="android:textColor">@color/text_primary</item>
@@ -109,18 +111,16 @@
 	</style>
 	
 	<!-- Button -->
-	<style name="RangerButton" parent="Widget.AppCompat.Button"/>
+	<style name="RangerButton" parent="Widget.AppCompat.Button" />
 	
 	<style name="RangerButton.GreenButton.Line" parent="RangerButton">
 		<item name="android:background">@drawable/bg_button_green_outline</item>
-		<item name="android:textStyle">bold</item>
 		<item name="android:textColor">@color/color_button_outline_text</item>
 	</style>
 	
 	<style name="RangerButton.GreenButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_color_primary_button</item>
-		<item name="android:textStyle">bold</item>
-		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textColor">@color/color_button_text</item>
 	</style>
 	
 	<style name="RangerButton.FacebookButton" parent="RangerButton">
@@ -142,6 +142,28 @@
 	<style name="Toolbar.TitleText" parent="Widget.MaterialComponents.Toolbar.Primary">
 		<item name="android:textSize">18sp</item>
 		<item name="android:textStyle">bold</item>
+	</style>
+	
+	<!-- Dialog -->
+	<style name="DialogCustom" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:textColorPrimary">@color/text_primary</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="android:background">@color/dialogColor</item>
+		<item name="android:textColorAlertDialogListItem">@color/text_primary</item>
+		<item name="android:textColorSecondary">@color/text_primary</item>
+		<item name="buttonBarPositiveButtonStyle">@style/PositiveButton</item>
+		<item name="buttonBarNegativeButtonStyle">@style/NegativeButton</item>
+	</style>
+	
+	<style name="PositiveButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+		<item name="android:textColor">@color/colorPrimary</item>
+		<item name="lineSpacing">0.5dp</item>
+	</style>
+	
+	<style name="NegativeButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+		<item name="android:textColor">@color/colorPrimary</item>
+		<item name="lineSpacing">0.5dp</item>
 	</style>
 
 </resources>

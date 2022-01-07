@@ -33,14 +33,16 @@
 					android:layout_height="match_parent"
 					android:layout_marginEnd="@dimen/margin_padding_xsmall"
 					android:gravity="center"
-					android:text="@string/menu_new_events" />
+					android:text="@string/menu_new_events"
+					android:textColor="@color/text_secondary" />
 				
 				<androidx.appcompat.widget.AppCompatImageView
 					android:id="@+id/expandMoreImageView"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
-					android:src="@drawable/ic_expand_more" />
+					android:src="@drawable/ic_expand_more"
+					android:tint="@color/text_secondary" />
 			</LinearLayout>
 			
 			<androidx.appcompat.widget.AppCompatImageView
@@ -49,6 +51,7 @@
 				android:layout_height="wrap_content"
 				android:padding="@dimen/margin_padding_normal"
 				android:src="@drawable/ic_map"
+				android:tint="@color/text_secondary"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />

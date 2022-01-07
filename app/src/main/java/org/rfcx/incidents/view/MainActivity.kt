@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -63,6 +65,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		setupDisplayTheme()
+		setStatusBar()
 		
 		val preferences = Preferences.getInstance(this)
 		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
@@ -143,6 +147,13 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		}
 	}
 	
+	private fun setStatusBar() {
+		val window = this.window
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			window.statusBarColor = ContextCompat.getColor(this, R.color.statusColor)
+		}
+	}
+	
 	private fun setupBottomMenu() {
 		menuNewEvents.setOnClickListener {
 			onBottomMenuClick(it)
@@ -159,8 +170,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
-		
-		menuNewEvents.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {

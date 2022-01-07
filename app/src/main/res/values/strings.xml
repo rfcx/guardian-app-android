@@ -250,6 +250,7 @@
 	<string name="create_report">Create Report</string>
 	<string name="open_in_maps">Open in maps</string>
 	<string name="guardian_event_detail">Event Detail</string>
+	<string name="not_have_events">No events since the last incident</string>
 	
 	<!-- CreateReportActivity -->
 	<string name="create_report_steps">Report</string>
@@ -260,10 +261,10 @@
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
 	<string name="today">Today</string>
-	<string name="earlier">Earlier...</string>
-	<string name="earlier_date">Earlier... ( %s )</string>
+	<string name="other_date">Other...</string>
+	<string name="edit">Edit</string>
 	<string name="what_time">What time did you investigate?</string>
-	<string name="do_not_future_time">Do not set a future time</string>
+	<string name="do_not_future_time">Investigation time cannot be in the future</string>
 	
 	<!-- InvestigationTypeFragment -->
 	<string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>
@@ -294,7 +295,7 @@
 	<!-- PoachingScaleFragment -->
 	<string name="what_scale_poaching">What was the <b>scale of the poaching</b> operation?</string>
 	<string name="small_poaching">Small (individual, informal)</string>
-	<string name="large_poaching">Large (many vehicles, coordinated)</string>
+	<string name="large_poaching">Large (group, coordinated)</string>
 	
 	<!-- PoachingEvidenceFragment -->
 	<string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
@@ -338,5 +339,24 @@
 	<string name="hrs">hrs</string>
 	<string name="min">min</string>
 	
+	<!-- Theme App -->
+	<string name="dark_theme">Dark</string>
+	<string name="light_theme">Light</string>
+	<string name="system_default">System default</string>
 	<string name="site_name">Site %s</string>
+	<string name="display">Display</string>
+	<string name="theme">Theme</string>
+	
+	<!-- Date time format -->
+	<string name="is_today">Today, %1s - %2s</string>
+	<string name="is_yesterday_today">Yesterday %1s - Today %2s</string>
+	<string name="is_yesterday">Yesterday, %1s - %2s</string>
+	<string name="is_other_today">%1s - Today, %2s</string>
+	<string name="is_other_yesterday">%1s - Yesterday, %2s</string>
+	<string name="is_other_other">%1s - %2s</string>
+	<string name="is_same_date">%1s, %2s - %3s</string>
+	
+	<string name="recent">Recent</string>
+	<string name="hot">Hot</string>
+
 </resources>

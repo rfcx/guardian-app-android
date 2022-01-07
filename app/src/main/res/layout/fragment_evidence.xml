@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
 	tools:context=".view.report.create.EvidenceFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
@@ -171,7 +172,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:background="@drawable/bg_grey_light"
+		android:background="@color/separateLine"
 		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
@@ -182,7 +183,7 @@
 		android:layout_height="0dp"
 		android:layout_alignParentBottom="true"
 		android:alpha="0.5"
-		android:src="@color/white"
+		android:src="@color/backgroundColor"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

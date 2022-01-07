@@ -34,7 +34,7 @@ class AlertItemAdapter : RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHold
 		private val dateTextView = itemView.dateTextView
 		
 		fun bind(item: Alert) {
-			dateTextView.text = item.createdAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+			dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context)
 			typeTextView.text = item.classification?.title
 		}
 	}
