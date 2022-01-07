@@ -11,12 +11,16 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.GetEvents
 import org.rfcx.incidents.data.api.events.ResponseEvent
+import org.rfcx.incidents.data.api.incident.IncidentRequestFactory
+import org.rfcx.incidents.data.api.incident.IncidentUseCase
+import org.rfcx.incidents.data.api.incident.IncidentsResponse
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
 import org.rfcx.incidents.data.api.project.ProjectResponse
 import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.api.site.GetStreamsUseCase
 import org.rfcx.incidents.data.api.site.StreamResponse
 import org.rfcx.incidents.data.api.site.StreamsRequestFactory
+import org.rfcx.incidents.data.api.site.toStream
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
@@ -33,11 +37,9 @@ import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.StreamItem
 
 
-class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val getIncidents: IncidentUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	
 	val streamItems = mutableListOf<StreamItem>()
-	val nearbyStreams = mutableListOf<StreamItem>()
-	val othersStreams = mutableListOf<StreamItem>()
 	
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
@@ -101,6 +103,22 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		}
 	}
 	
+	fun getIncidents(list: List<Stream>) {
+		if (context.isNetworkAvailable()) {
+			list.forEach { stream ->
+				getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
+					override fun onSuccess(t: List<IncidentsResponse>) {
+						TODO("Not yet implemented")
+					}
+					
+					override fun onError(e: Throwable) {
+						TODO("Not yet implemented")
+					}
+				}, IncidentRequestFactory(keyword = stream.name))
+			}
+		}
+	}
+	
 	fun loadStreams() {
 		if (context.isNetworkAvailable()) {
 			val preferences = Preferences.getInstance(context)
@@ -110,6 +128,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 				getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
 					override fun onSuccess(t: List<StreamResponse>) {
 						loadEvents(t)
+						getIncidents(t.map { it.toStream() })
 						t.forEach { res ->
 							streamDb.insertStream(res)
 						}
