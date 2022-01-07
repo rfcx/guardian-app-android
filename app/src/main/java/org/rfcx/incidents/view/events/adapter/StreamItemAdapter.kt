@@ -59,10 +59,11 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
 			incidentIdTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
 			guardianNameTextView.setPadding(16.toPx, 16.toPx, if (hasNoEvents) 16.toPx else 0.toPx, if (hasNoEvents) 16.toPx else 10.toPx)
+			incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, item.incidentRef.toString())
 			
 			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
 			if (typeOfAlert.isEmpty()) return
-			incidentIdTextView.text = item.incidentRef.toString()
+			
 			var number = 0
 			typeOfAlert.forEachIndexed { index, alert ->
 				val type = alert.classification?.value ?: return

@@ -364,8 +364,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
-				viewModel.handledStreams(list.map { s -> s.toStream() })
-				setItemOnAdapter()
+				setStreamsWithLocalData()
 				setAlertFeatures(list.map { s -> s.toStream() })
 				refreshView.isRefreshing = false
 				isShowProgressBar(false)
