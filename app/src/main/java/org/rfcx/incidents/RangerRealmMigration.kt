@@ -68,6 +68,9 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 17L && newVersion >= 17L) {
 			migrateToV17(c)
 		}
+		if (oldVersion < 18L && newVersion >= 18L) {
+			migrateToV18(c)
+		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -434,6 +437,13 @@ class RangerRealmMigration : RealmMigration {
 					.setRequired(Response.RESPONSE_POACHING_EVIDENCE, false)
 			addRealmListField(Response.RESPONSE_INVESTIGATE_TYPE, Int::class.java)
 					.setRequired(Response.RESPONSE_INVESTIGATE_TYPE, false)
+		}
+	}
+	
+	private fun migrateToV18(realm: DynamicRealm) {
+		val stream = realm.schema.get(Stream.TABLE_NAME)
+		stream?.apply {
+			addField(Stream.STREAM_INCIDENT_REF, Int::class.java)
 		}
 	}
 	

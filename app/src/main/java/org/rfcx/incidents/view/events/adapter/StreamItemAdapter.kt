@@ -62,7 +62,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			
 			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
 			if (typeOfAlert.isEmpty()) return
-			
+			incidentIdTextView.text = item.incidentRef.toString()
 			var number = 0
 			typeOfAlert.forEachIndexed { index, alert ->
 				val type = alert.classification?.value ?: return
@@ -121,4 +121,4 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	}
 }
 
-data class StreamItem(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: String? = null, val alerts: List<Alert>)
+data class StreamItem(val eventSize: Int, val incidentRef: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: String? = null, val alerts: List<Alert>)

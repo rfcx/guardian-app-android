@@ -50,6 +50,9 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	private val _alerts = MutableLiveData<Result<List<ResponseEvent>>>()
 	val getAlertsFromRemote: LiveData<Result<List<ResponseEvent>>> get() = _alerts
 	
+	private val _incidents = MutableLiveData<Result<List<IncidentsResponse>>>()
+	val getIncidentsFromRemote: LiveData<Result<List<IncidentsResponse>>> get() = _incidents
+	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
 	}
@@ -103,19 +106,20 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		}
 	}
 	
-	fun getIncidents(list: List<Stream>) {
+	fun getIncidents(stream: Stream) {
 		if (context.isNetworkAvailable()) {
-			list.forEach { stream ->
-				getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
-					override fun onSuccess(t: List<IncidentsResponse>) {
-						TODO("Not yet implemented")
+			getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
+				override fun onSuccess(t: List<IncidentsResponse>) {
+					t.map { item ->
+						streamDb.saveIncidentRef(item.incidents.items[0].ref, stream.serverId)
 					}
-					
-					override fun onError(e: Throwable) {
-						TODO("Not yet implemented")
-					}
-				}, IncidentRequestFactory(keyword = stream.name))
-			}
+					_incidents.value = Result.Success(t)
+				}
+				
+				override fun onError(e: Throwable) {
+					_incidents.value = Result.Error(e)
+				}
+			}, IncidentRequestFactory(keyword = stream.name))
 		}
 	}
 	
@@ -128,9 +132,9 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 				getStreams.execute(object : DisposableSingleObserver<List<StreamResponse>>() {
 					override fun onSuccess(t: List<StreamResponse>) {
 						loadEvents(t)
-						getIncidents(t.map { it.toStream() })
 						t.forEach { res ->
 							streamDb.insertStream(res)
+							getIncidents(res.toStream())
 						}
 						_streams.value = Result.Success(t)
 					}
@@ -188,7 +192,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	fun handledStreams(streams: List<Stream>) {
 		streamItems.clear()
 		streams.forEach {
-			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), null, it.name, it.serverId, getDateTime(it.serverId), getAlerts(it.serverId)))
+			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), it.incidentRef, null, it.name, it.serverId, getDateTime(it.serverId), getAlerts(it.serverId)))
 		}
 		streamItems.sortByDescending { g -> g.eventSize }
 	}

@@ -23,6 +23,15 @@ class StreamDb(private val realm: Realm) {
 		}
 	}
 	
+	fun saveIncidentRef(ref: Int, serverId: String) {
+		realm.use {
+			it.executeTransaction { realm ->
+				val stream = realm.where(Stream::class.java).equalTo(Stream.STREAM_SERVER_ID, serverId).findFirst()
+				stream?.incidentRef = ref
+			}
+		}
+	}
+	
 	fun getAllResultsAsync(): RealmResults<Stream> {
 		return realm.where(Stream::class.java).findAllAsync()
 	}

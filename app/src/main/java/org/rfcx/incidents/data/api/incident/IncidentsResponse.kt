@@ -2,7 +2,7 @@ package org.rfcx.incidents.data.api.incident
 
 import org.rfcx.incidents.data.api.site.ProjectResponse
 
-data class IncidentsResponse (
+data class IncidentsResponse(
 		var id: String = "",
 		var name: String = "",
 		var latitude: Double = 0.0,
@@ -11,9 +11,13 @@ data class IncidentsResponse (
 		var incidents: IncidentResponse = IncidentResponse()
 )
 
-data class IncidentResponse (
+data class IncidentResponse(
+		var items: List<IncidentItemsResponse> = listOf()
+)
+
+data class IncidentItemsResponse(
 		var id: String = "",
-		var ref: String = "",
+		var ref: Int = 0,
 		var streamId: String = "",
 		var projectId: String = "",
 )

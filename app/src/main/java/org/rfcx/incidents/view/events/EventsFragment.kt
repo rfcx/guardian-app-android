@@ -53,6 +53,7 @@ import kotlinx.android.synthetic.main.fragment_new_events.progressBar
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.incident.IncidentsResponse
 import org.rfcx.incidents.data.api.site.toStream
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.Stream
@@ -338,6 +339,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserver() {
+		
+		viewModel.getIncidentsFromRemote.observe(viewLifecycleOwner, { it ->
+			it.success({ list ->
+				setStreamsWithLocalData()
+			}, {
+			}, {
+			})
+		})
+		
 		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
