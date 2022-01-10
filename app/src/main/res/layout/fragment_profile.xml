@@ -40,6 +40,10 @@
 		<variable
 			name="onClickCoordinates"
 			type="android.view.View.OnClickListener" />
+		
+		<variable
+			name="onClickSystemOptions"
+			type="android.view.View.OnClickListener" />
 	
 	</data>
 	
@@ -132,6 +136,37 @@
 					android:text="@{viewModel.eventSubtitle}" />
 			</LinearLayout>
 			
+			<LinearLayout
+				android:id="@+id/systemOptionsLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickSystemOptions}"
+				android:orientation="vertical"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:visibility="@{viewModel.showSystemOptions ? view.VISIBLE : view.GONE}">
+				
+				<TextView
+					android:id="@+id/systemOptionsTitle"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/system_options"
+					android:textColor="@color/text_secondary" />
+				
+				<TextView
+					android:id="@+id/systemOptionsSubtitle"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/system_options_subtitle" />
+			</LinearLayout>
+			
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/separate_line_size"
@@ -167,6 +202,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
+				android:layout_marginBottom="@dimen/margin_padding_normal"
 				android:text="@{viewModel.appVersion}"
 				android:textColor="@color/text_secondary"
 				tools:text="2.0.0(135)" />

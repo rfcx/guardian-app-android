@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.profile
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +33,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val formatCoordinates = MutableLiveData<String>()
 	val showNotificationByEmail = MutableLiveData<Boolean>()
 	val eventSubtitle = MutableLiveData<String>()
+	val showSystemOptions = MutableLiveData<Boolean>()
 	val preferences = Preferences.getInstance(context)
 	
 	private val _logoutState = MutableLiveData<Boolean>()
@@ -45,6 +47,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 		showNotificationByEmail.value = context.getUserEmail() != ""
+		showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 		updateEventSubtitle()
 	}
 	

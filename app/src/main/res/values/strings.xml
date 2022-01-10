@@ -89,6 +89,8 @@
 	<string name="location_tracking_off_label">Off</string>
 	<string name="guardian_group_label">Projects</string>
 	<string name="receive_alert_notification">Receive alert notification</string>
+	<string name="system_options">System Options</string>
+	<string name="system_options_subtitle">Choose sounds, vibration, and importance</string>
 	<string name="events">Events</string>
 	<string name="no_projects_selected">No projects selected</string>
 	<string name="one_other_project">%1s, %2s, &amp; %d other project</string>
