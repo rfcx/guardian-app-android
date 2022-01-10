@@ -7,11 +7,17 @@ import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -60,6 +66,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_create_report)
+		
 		streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
 		streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
 		responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
@@ -119,6 +126,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 			setDisplayShowHomeEnabled(true)
 			elevation = 0f
 			title = getString(R.string.create_report_steps)
+			subtitle = streamName
 		}
 	}
 	
@@ -127,15 +135,15 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		return true
 	}
 	
-	private fun setSubtitleToolbar(text: String) {
+	private fun setTitleToolbar(text: String) {
 		supportActionBar?.apply {
-			subtitle = text
+			title = if (text.length > getString(R.string.create_report_steps).length) setColorOfTitle(text) else text
 		}
 	}
 	
 	override fun handleCheckClicked(step: Int) {
 		passedChecks.add(step)
-		setSubtitle(step)
+		setTitleText(step)
 		
 		when (step) {
 			StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
@@ -153,29 +161,37 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		this._response = response
 	}
 	
-	private fun setNumberOnSubtitle(step: Int, isSelectedBoth: Boolean) {
+	private fun setNumberOnTitle(step: Int, isSelectedBoth: Boolean) {
 		when (step) {
-			StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 5)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
-			StepCreateReport.SCALE.step -> if (isSelectedBoth) setSubtitleToolbar(getString(R.string.create_report_subtitle, 4)) else setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
-			StepCreateReport.POACHING_EVIDENCE.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 3))
-			StepCreateReport.SCALE_POACHING.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle, 2))
-			StepCreateReport.ACTION.step -> setSubtitleToolbar(getString(R.string.create_report_subtitle_one_step))
+			StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setTitleToolbar(getString(R.string.create_report_title, 5)) else setTitleToolbar(getString(R.string.create_report_title, 3))
+			StepCreateReport.SCALE.step -> if (isSelectedBoth) setTitleToolbar(getString(R.string.create_report_title, 4)) else setTitleToolbar(getString(R.string.create_report_title, 2))
+			StepCreateReport.POACHING_EVIDENCE.step -> setTitleToolbar(getString(R.string.create_report_title, 3))
+			StepCreateReport.SCALE_POACHING.step -> setTitleToolbar(getString(R.string.create_report_title, 2))
+			StepCreateReport.ACTION.step -> setTitleToolbar(getString(R.string.create_report_title_one_step))
 		}
 	}
 	
-	private fun setSubtitle(step: Int) {
+	private fun setColorOfTitle(str: String): SpannableString {
+		val spannableString = SpannableString(str)
+		val gray = ForegroundColorSpan(ContextCompat.getColor(this, R.color.text_secondary))
+		spannableString.setSpan(gray, 7, str.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+		spannableString.setSpan(AbsoluteSizeSpan(resources.getDimensionPixelSize(R.dimen.text_small)), 7, str.length, SPAN_INCLUSIVE_INCLUSIVE)
+		return spannableString
+	}
+	
+	private fun setTitleText(step: Int) {
 		val response = _response ?: Response()
 		if (response.investigateType.contains(InvestigationType.POACHING.value) && response.investigateType.contains(InvestigationType.LOGGING.value)) {
-			setNumberOnSubtitle(step, true)
+			setNumberOnTitle(step, true)
 		} else {
-			setNumberOnSubtitle(step, false)
+			setNumberOnTitle(step, false)
 		}
 		
 		if (step == StepCreateReport.ASSETS.step) {
-			setSubtitleToolbar(getString(R.string.last_step))
+			setTitleToolbar(getString(R.string.last_step))
 		}
 		if (step == StepCreateReport.INVESTIGATION_TIMESTAMP.step || step == StepCreateReport.INVESTIGATION_TYPE.step) {
-			setSubtitleToolbar("")
+			setTitleToolbar(getString(R.string.create_report_steps))
 		}
 	}
 	
