@@ -30,7 +30,6 @@ class ActionFragment : Fragment() {
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		setupResponseActions()
 		
 		nextStepButton.setOnClickListener {

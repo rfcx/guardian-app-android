@@ -256,7 +256,7 @@
 	<string name="create_report_steps">Report</string>
 	<string name="create_report_title">Report %d steps remaining</string>
 	<string name="create_report_title_one_step">Report 1 step remaining</string>
-	<string name="last_step">last step</string>
+	<string name="last_step">Report last step</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>

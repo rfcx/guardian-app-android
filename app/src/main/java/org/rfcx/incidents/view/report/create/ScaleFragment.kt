@@ -30,7 +30,6 @@ class ScaleFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupScale()
-		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			selected?.let { value ->
