@@ -2,10 +2,7 @@ package org.rfcx.incidents.view.report.detail
 
 import android.content.Context
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.response.Actions
-import org.rfcx.incidents.entity.response.DamageScale
-import org.rfcx.incidents.entity.response.EvidenceTypes
-import org.rfcx.incidents.entity.response.LoggingScale
+import org.rfcx.incidents.entity.response.*
 
 data class AnswerItem(val text: String, val color: Int)
 
@@ -75,6 +72,35 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
 		this == Actions.OTHER.value -> {
 			AnswerItem(context.getString(R.string.other_text), R.color.action_color)
 		}
+		
+		// PoachingEvidence
+		this == PoachingEvidence.NONE.value -> {
+			AnswerItem(context.getString(R.string.common_none), R.color.poaching_evidence_color)
+		}
+		this == PoachingEvidence.BULLET_SHELLS.value -> {
+			AnswerItem(context.getString(R.string.bullet_shells), R.color.poaching_evidence_color)
+		}
+		this == PoachingEvidence.FOOTPRINTS.value -> {
+			AnswerItem(context.getString(R.string.footprints), R.color.poaching_evidence_color)
+		}
+		this == PoachingEvidence.DOG_TRACKS.value -> {
+			AnswerItem(context.getString(R.string.dog_tracks), R.color.poaching_evidence_color)
+		}
+		this == PoachingEvidence.OTHER.value -> {
+			AnswerItem(context.getString(R.string.other_text), R.color.poaching_evidence_color)
+		}
+		
+		// PoachingScale
+		this == PoachingScale.NONE.value -> {
+			AnswerItem(context.getString(R.string.poaching_scale) + " " + context.getString(R.string.common_none), R.color.poaching_scale_color)
+		}
+		this == PoachingScale.LARGE.value -> {
+			AnswerItem(context.getString(R.string.poaching_scale) + " " + context.getString(R.string.large_text), R.color.poaching_scale_color)
+		}
+		this == PoachingScale.SMALL.value -> {
+			AnswerItem(context.getString(R.string.poaching_scale) + " " + context.getString(R.string.small_text), R.color.poaching_scale_color)
+		}
+		
 		else -> null
 	}
 }
