@@ -104,7 +104,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 		
 		response?.let { res ->
 			investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
-			responseDetailAdapter.items = getMessageList(res.items)
+			responseDetailAdapter.items = getMessageList(res.answers)
 			noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
 			noteTextView.text = getString(R.string.note, res.note)
 			res.audioLocation?.let { path -> setAudio(path) }
@@ -117,7 +117,6 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-		// todo
 		val sorted: List<Int> = answers.sortedWith(compareBy({ it.toString()[0] == '2' }, { it.toString()[0] == '4' }, { it.toString()[0] == '3' }, { it.toString()[0] == '1' }))
 		val answerItems = arrayListOf<AnswerItem>()
 		sorted.forEach {

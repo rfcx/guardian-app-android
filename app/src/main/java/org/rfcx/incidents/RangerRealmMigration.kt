@@ -71,9 +71,6 @@ class RangerRealmMigration : RealmMigration {
 		if (oldVersion < 18L && newVersion >= 18L) {
 			migrateToV18(c)
 		}
-		if (oldVersion < 19L && newVersion >= 19L) {
-			migrateToV19(c)
-		}
 	}
 	
 	private fun migrateToV3(realm: DynamicRealm) {
@@ -324,8 +321,8 @@ class RangerRealmMigration : RealmMigration {
 					.setRequired(Response.RESPONSE_INVESTIGATED_AT, true)
 			addField(Response.RESPONSE_STARTED_AT, Date::class.java)
 					.setRequired(Response.RESPONSE_STARTED_AT, true)
-			addRealmListField("answers", Int::class.java)
-					.setRequired("answers", false)
+			addRealmListField(Response.RESPONSE_ANSWERS, Int::class.java)
+					.setRequired(Response.RESPONSE_ANSWERS, false)
 			addField(Response.RESPONSE_SUBMITTED_AT, Date::class.java)
 			addRealmListField(Response.RESPONSE_EVIDENCES, Int::class.java)
 					.setRequired(Response.RESPONSE_EVIDENCES, false)
@@ -447,13 +444,6 @@ class RangerRealmMigration : RealmMigration {
 		val stream = realm.schema.get(Stream.TABLE_NAME)
 		stream?.apply {
 			addField(Stream.STREAM_INCIDENT_REF, Int::class.java)
-		}
-	}
-	
-	private fun migrateToV19(realm: DynamicRealm) {
-		val stream = realm.schema.get(Response.TABLE_NAME)
-		stream?.apply {
-			renameField("answers", Response.RESPONSE_ITEMS)
 		}
 	}
 	

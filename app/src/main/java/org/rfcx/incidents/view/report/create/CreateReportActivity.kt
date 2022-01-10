@@ -27,7 +27,7 @@ import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.entity.response.saveToAnswerItem
+import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.*
 import java.util.*
@@ -285,7 +285,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 	override fun onSubmitButtonClick() {
 		val response = _response ?: Response()
 		response.submittedAt = Date()
-		response.items = response.saveToAnswerItem()
+		response.answers = response.saveToAnswers()
 		locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
 		val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 		lastLocation?.let { saveLocation(it) }

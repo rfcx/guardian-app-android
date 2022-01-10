@@ -15,7 +15,7 @@ open class Response(
 		var investigatedAt: Date = Date(),
 		var startedAt: Date = Date(),
 		var submittedAt: Date? = null,
-		var items: RealmList<Int> = RealmList(),
+		var answers: RealmList<Int> = RealmList(),
 		var evidences: RealmList<Int> = RealmList(),
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
@@ -50,7 +50,7 @@ open class Response(
 		const val RESPONSE_INVESTIGATE_TYPE = "investigateType"
 		const val RESPONSE_POACHING_SCALE = "poachingScale"
 		const val RESPONSE_POACHING_EVIDENCE = "poachingEvidence"
-		const val RESPONSE_ITEMS = "items"
+		const val RESPONSE_ANSWERS = "answers"
 	}
 }
 
@@ -105,7 +105,7 @@ fun Response.toCreateResponseRequest(): CreateResponseRequest =
 				this.investigatedAt.toIsoString(),
 				this.startedAt.toIsoString(),
 				this.submittedAt?.toIsoString() ?: "",
-				this.items,
+				this.answers,
 				this.note,
 				this.streamId
 		)
@@ -122,8 +122,7 @@ fun Response.syncLabel() = when (this.syncState) {
 	else -> R.string.sent
 }
 
-fun Response.saveToAnswerItem(): RealmList<Int> {
-	// todo
+fun Response.saveToAnswers(): RealmList<Int> {
 	val answers = RealmList<Int>()
 	answers.addAll(this.evidences)
 	answers.addAll(this.responseActions)
