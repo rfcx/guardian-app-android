@@ -63,11 +63,11 @@ enum class InvestigationType(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
+	DEFAULT(-1), NONE(301), SMALL(303), LARGE(304)
 }
 
 enum class PoachingScale(val value: Int) {
-	DEFAULT(-1), NONE(701), SMALL(702), LARGE(703),
+	DEFAULT(-1), SMALL(701), LARGE(702), NONE(703)
 }
 
 enum class DamageScale(val value: Int) {
@@ -124,12 +124,16 @@ fun Response.syncLabel() = when (this.syncState) {
 
 fun Response.saveToAnswers(): RealmList<Int> {
 	val answers = RealmList<Int>()
-	answers.addAll(this.evidences)
 	answers.addAll(this.responseActions)
-	if (this.damageScale != DamageScale.DEFAULT.value) {
-		answers.add(this.damageScale)
+	answers.addAll(this.investigateType)
+	
+	if (this.investigateType.contains(InvestigationType.POACHING.value)) {
+		answers.addAll(this.poachingEvidence)
+		answers.add(this.poachingScale)
 	}
-	if (this.loggingScale != LoggingScale.DEFAULT.value) {
+	
+	if (this.investigateType.contains(InvestigationType.LOGGING.value)) {
+		answers.addAll(this.evidences)
 		answers.add(this.loggingScale)
 	}
 	return answers
