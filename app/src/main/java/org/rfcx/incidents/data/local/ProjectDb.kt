@@ -38,6 +38,10 @@ class ProjectDb(val realm: Realm) {
 		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()?.id
 	}
 	
+	fun getProjectNameWithCoreId(coreId: String): String? {
+		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()?.name
+	}
+	
 	fun getProjects(): List<Project> {
 		return realm.where(Project::class.java)
 				.sort(Project.PROJECT_NAME, Sort.ASCENDING).findAll()

@@ -89,6 +89,10 @@
 	<string name="location_tracking_off_label">Off</string>
 	<string name="guardian_group_label">Projects</string>
 	<string name="receive_alert_notification">Receive alert notification</string>
+	<string name="events">Events</string>
+	<string name="no_projects_selected">No projects selected</string>
+	<string name="one_other_project">%1s, %2s, &amp; %d other project</string>
+	<string name="other_projects">%1s, %2s, &amp; %d other projects</string>
 	<string name="notifications">Notifications</string>
 	<string name="start_demo">Send a test alert</string>
 	<string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>

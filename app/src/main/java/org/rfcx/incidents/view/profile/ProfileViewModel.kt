@@ -9,6 +9,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ProfileData
+import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.site.GetSiteNameUseCase
 import org.rfcx.incidents.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.incidents.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
@@ -16,9 +17,10 @@ import org.rfcx.incidents.entity.SubscribeRequest
 import org.rfcx.incidents.entity.SubscribeResponse
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.*
+import java.util.*
 import kotlin.random.Random
 
-class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val getSiteName: GetSiteNameUseCase, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase, private val eventDb: EventDb) : ViewModel() {
+class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase, private val eventDb: EventDb, private val projectDb: ProjectDb) : ViewModel() {
 	
 	val notificationReceiving = MutableLiveData<Boolean>()
 	val notificationReceivingByEmail = MutableLiveData<Boolean>()
@@ -29,6 +31,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	val guardianGroup = MutableLiveData<String>()
 	val formatCoordinates = MutableLiveData<String>()
 	val showNotificationByEmail = MutableLiveData<Boolean>()
+	val eventSubtitle = MutableLiveData<String>()
 	val preferences = Preferences.getInstance(context)
 	
 	private val _logoutState = MutableLiveData<Boolean>()
@@ -42,9 +45,11 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 		showNotificationByEmail.value = context.getUserEmail() != ""
+		updateEventSubtitle()
 	}
 	
 	fun resumed() {
+		updateEventSubtitle()
 		getSiteName()
 		formatCoordinates.value = "${context.getCoordinatesFormat()}"
 	}
@@ -136,6 +141,30 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	
 	fun updateSiteName() {
 		guardianGroup.value = Preferences.getInstance(context).getString(Preferences.SELECTED_GUARDIAN_GROUP_FULLNAME)
+	}
+	
+	private fun updateEventSubtitle() {
+		val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProjectNameWithCoreId(id) } ?: listOf()
+		val subtitle = when {
+			subscribedProjects.isEmpty() -> {
+				context.getString(R.string.no_projects_selected)
+			}
+			subscribedProjects.size == 1 -> {
+				subscribedProjects[0]
+			}
+			subscribedProjects.size == 2 -> {
+				"${subscribedProjects[0]}, ${subscribedProjects[1]}"
+			}
+			else -> {
+				if (subscribedProjects.size - 2 > 1) context.getString(R.string.other_projects, subscribedProjects[0], subscribedProjects[2], subscribedProjects.size - 2) else context.getString(R.string.one_other_project, subscribedProjects[0], subscribedProjects[2], 1)
+			}
+		}
+		eventSubtitle.value = subtitle
+	}
+	
+	private fun getSubscribedProject(): ArrayList<String>? {
+		val preferenceHelper = Preferences.getInstance(context)
+		return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
 	}
 	
 	fun randomGuidOfAlert(): Event? {
