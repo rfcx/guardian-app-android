@@ -86,7 +86,7 @@ enum class EvidenceTypes(val value: Int) {
 	LOGGERS_AT_SITE(104),
 	ILLEGAL_CAMPS(105),
 	FIRED_BURNED_AREAS(106),
-	OTHER(107)
+	OTHER(108)
 }
 
 enum class Actions(val value: Int) {
@@ -97,7 +97,8 @@ enum class Actions(val value: Int) {
 	ISSUE_A_FINE(204),
 	ARRESTS(205),
 	PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT(206),
-	OTHER(207)
+	OTHER(207),
+	DAMAGED_MACHINERY(208)
 }
 
 fun Response.toCreateResponseRequest(): CreateResponseRequest =

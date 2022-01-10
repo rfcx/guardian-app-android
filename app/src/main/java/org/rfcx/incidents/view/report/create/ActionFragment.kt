@@ -44,7 +44,7 @@ class ActionFragment : Fragment() {
 				R.id.collectedRadioButton -> selected = Actions.COLLECTED_EVIDENCE.value
 				R.id.warningRadioButton -> selected = Actions.ISSUE_A_WARNING.value
 				R.id.confiscatedRadioButton -> selected = Actions.CONFISCATED_EQUIPMENT.value
-				R.id.fineRadioButton -> selected = Actions.ISSUE_A_FINE.value
+				R.id.damagedMachineryRadioButton -> selected = Actions.DAMAGED_MACHINERY.value
 			}
 		}
 	}
@@ -65,7 +65,7 @@ class ActionFragment : Fragment() {
 					Actions.COLLECTED_EVIDENCE.value -> collectedRadioButton.isChecked = true
 					Actions.ISSUE_A_WARNING.value -> warningRadioButton.isChecked = true
 					Actions.CONFISCATED_EQUIPMENT.value -> confiscatedRadioButton.isChecked = true
-					Actions.ISSUE_A_FINE.value -> fineRadioButton.isChecked = true
+					Actions.DAMAGED_MACHINERY.value -> damagedMachineryRadioButton.isChecked = true
 				}
 			}
 		}
