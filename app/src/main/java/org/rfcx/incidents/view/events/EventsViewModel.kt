@@ -111,7 +111,8 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 			getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
 				override fun onSuccess(t: List<IncidentsResponse>) {
 					t.map { item ->
-						streamDb.saveIncidentRef(item.incidents.items[0].ref, stream.serverId)
+						val streamAddIncidentRef = Stream(stream.id, stream.serverId, stream.name, stream.latitude, stream.longitude, stream.projectServerId, item.incidents.items[0].ref)
+						streamDb.saveIncidentRef(streamAddIncidentRef)
 					}
 					_incidents.value = Result.Success(t)
 				}
