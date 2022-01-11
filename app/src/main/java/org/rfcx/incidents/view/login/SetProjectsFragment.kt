@@ -66,9 +66,11 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 			showToast(getString(R.string.network_not_available))
 		}
 		
+		selectProjectButton.text = getString(R.string.skip)
+		
 		selectProjectButton.setOnClickListener {
 			val preferences = Preferences.getInstance(requireContext())
-			val id = viewModel.getProjectLocalId(subscribedProjects.random())
+			val id = viewModel.getProjectLocalId(if (subscribedProjects.isEmpty()) viewModel.getProjectsFromLocal().map { p -> p.serverId ?: "" }.random() else subscribedProjects.random())
 			preferences.putInt(Preferences.SELECTED_PROJECT, id)
 			listener.handleOpenPage()
 		}
@@ -120,9 +122,10 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 				} else {
 					saveSubscribedProject(subscribedProjects)
 					subscribedProjects.remove(item.project.serverId ?: "")
+					selectProjectButton.isEnabled = true
 					setSelectedProject(items, position)
 				}
-				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
+				selectProjectButton.text = if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
 			}
 		} else {
 			viewModel.setProjectsAndSubscribe(item.project) { status ->
@@ -136,7 +139,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 					selectProjectButton.isEnabled = true
 					setSelectedProject(items, position)
 				}
-				selectProjectButton.isEnabled = subscribedProjects.isNotEmpty()
+				selectProjectButton.text = if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
 			}
 		}
 	}
