@@ -253,7 +253,7 @@
     <string name="menu_new_events">Novas Ocorrências</string>
     <string name="menu_submitted_reports">Relatórios Enviados</string>
     <string name="menu_draft_reports">Rascunhos</string>
-    <string name="what_investigate">Quando ocorreu a sua patrulha</string>
+    <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i> "</string>
     <string name="submit_report">Enviar relatório</string>
     <string name="add_notes_required">Anotação*</string>
 	<string name="select">Selecione</string>
@@ -278,5 +278,31 @@
     <string name="damaged_machinery">"Inutilizei o maquinário"</string>
 	<string name="issue_a_fine">"Inutilizei o maquinário"</string>
     <string name="other_text">Outros</string>
+	<string name="logout">Desligar</string>
+    <string name="not_have_events">Nenhum caso desde a última vez</string>
+    <string name="create_report_subtitle">%d passos faltando</string>
+    <string name="create_report_subtitle_one_step">Falta um passo</string>
+    <string name="last_step">Último passo</string>
+    <string name="other_date">Outro…</string>
+    <string name="edit">Alterar</string>
+    <string name="do_not_future_time">O tempo da patrulha não pode ser no futuro</string>
+    <string name="logging">Madeireira</string>
+    <string name="poaching">Caça ilegal</string>
+    <string name="what_scale_poaching">Qual é o tamanho da operação de caça ilegal?</string>
+    <string name="small_poaching">"Pequena (individual, informal)  "</string>
+    <string name="large_poaching">"Grande (coordenada, grupo)  "</string>
+    <string name="what_poaching_evidence">Que provas de caça ilegal você encontrou? <i>Selecionar tudo o que tiver relação</i></string>
+    <string name="bullet_shells">Cápsulas de balas / projéteis / restos de armas</string>
+    <string name="footprints">"Pegadas humanas  "</string>
+    <string name="dog_tracks">"Marcas de cachorros  "</string>
+    <string name="small_text">Pequena</string>
+    <string name="large_text">Grande</string>
+    <string name="recent">Recente</string>
+    <string name="hot">Forte atividade</string>
+    <string name="is_today">Hoje, %1s - %2s</string>
+    <string name="is_yesterday_today">Ontem %1s - Hoje %2s</string>
+    <string name="is_yesterday">Ontem, %1s - %2s</string>
+    <string name="is_other_today">%1s - Hoje, %2s</string>
+    <string name="is_other_yesterday">%1s - Ontem, %2s</string>
 
 </resources>
