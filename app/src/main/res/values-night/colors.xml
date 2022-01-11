@@ -57,6 +57,9 @@
 	<color name="action_color">#9100e6</color>
 	<color name="evidence_color">#3971e6</color>
 	<color name="logging_color">#187f36</color>
-	<color name="damage_color">#e6b400</color>
+	<color name="damage_color">#674A40</color>
+	<color name="poaching_evidence_color">#e55e5e</color>
+	<color name="poaching_scale_color">#e6b400</color>
+	
 	<color name="tracking_line">#e55e5e</color>
 </resources>
