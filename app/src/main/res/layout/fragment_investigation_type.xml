@@ -7,24 +7,15 @@
 	tools:context=".view.report.create.InvestigationTypeFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/siteNameTextView"
-		style="@style/RangerText.Body"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_normal"
-		android:textStyle="bold"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="Site Z" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/whatInvestigateTextView"
 		style="@style/RangerText.SubTitle"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_normal"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
 		android:text="@string/what_investigate"
-		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
+		app:layout_constraintTop_toTopOf="parent" />
 	
 	<LinearLayout
 		android:id="@+id/typeLinearLayout"

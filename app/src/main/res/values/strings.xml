@@ -254,9 +254,9 @@
 	
 	<!-- CreateReportActivity -->
 	<string name="create_report_steps">Report</string>
-	<string name="create_report_subtitle">%d steps remaining</string>
-	<string name="create_report_subtitle_one_step">1 step remaining</string>
-	<string name="last_step">last step</string>
+	<string name="create_report_title">Report %d steps remaining</string>
+	<string name="create_report_title_one_step">Report 1 step remaining</string>
+	<string name="last_step">Report last step</string>
 	
 	<!-- WhenInvestigateStepFragment -->
 	<string name="when_investigate">When did you investigate?</string>
@@ -308,7 +308,7 @@
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="issue_a_warning">Issue a warning</string>
-	<string name="issue_a_fine">Issue a fine</string>
+	<string name="damaged_machinery">Damaged Machinery</string>
 	
 	<!-- AddEvidenceFragment -->
 	<string name="add_evidence">Add evidence</string>
@@ -324,6 +324,7 @@
 	
 	<string name="answers">Answers:</string>
 	<string name="logging_scale">Logging Scale:</string>
+	<string name="poaching_scale">Poaching Scale:</string>
 	<string name="damage">Damage:</string>
 	<string name="small_text">Small</string>
 	<string name="large_text">Large</string>

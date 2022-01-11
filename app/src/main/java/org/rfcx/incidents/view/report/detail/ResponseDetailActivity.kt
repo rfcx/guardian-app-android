@@ -117,7 +117,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 	}
 	
 	private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-		val sorted: List<Int> = answers.sortedWith(compareBy({ it.toString()[0] == '2' }, { it.toString()[0] == '4' }, { it.toString()[0] == '3' }, { it.toString()[0] == '1' }))
+		val sorted: List<Int> = answers.sortedWith(compareBy({ it.toString()[0] == '2' }, { it.toString()[0] == '7' }, { it.toString()[0] == '6' }, { it.toString()[0] == '3' }, { it.toString()[0] == '1' }))
 		val answerItems = arrayListOf<AnswerItem>()
 		sorted.forEach {
 			it.getAnswerItem(this)?.let { item -> answerItems.add(item) }

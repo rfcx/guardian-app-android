@@ -20,23 +20,13 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 			
-			<androidx.appcompat.widget.AppCompatTextView
-				android:id="@+id/siteNameTextView"
-				style="@style/RangerText.Body"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:textStyle="bold"
-				app:layout_constraintTop_toTopOf="parent"
-				tools:text="Site Z" />
-			
 			<TextView
 				android:id="@+id/whenTextView"
 				style="@style/RangerText.SubTitle"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="@string/when_investigate"
-				app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
+				app:layout_constraintTop_toTopOf="parent" />
 			
 			<RadioGroup
 				android:id="@+id/radioGroup"
