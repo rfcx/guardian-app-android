@@ -55,7 +55,18 @@
 		android:text="@string/no_content_project"
 		android:textAlignment="center"
 		android:visibility="gone"
-		app:layout_constraintBottom_toTopOf="@id/selectProjectButton"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
+	
+	<ProgressBar
+		android:id="@+id/progressLoadProject"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:background="@color/transparent"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
@@ -82,6 +93,32 @@
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 	
 	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/refreshButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/refresh"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@+id/logoutButton" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/logoutButton"
+		style="@style/RangerButton.GreenButton.Line"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/logout"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@+id/selectProjectButton" />
+	
+	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/selectProjectButton"
 		style="@style/RangerButton.GreenButton"
 		android:layout_width="match_parent"
@@ -91,6 +128,7 @@
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:text="@string/select"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
