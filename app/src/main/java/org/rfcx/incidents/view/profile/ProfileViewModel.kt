@@ -165,7 +165,7 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 		eventSubtitle.value = subtitle
 	}
 	
-	private fun getSubscribedProject(): ArrayList<String>? {
+	private fun getSubscribedProject(): List<String>? {
 		val preferenceHelper = Preferences.getInstance(context)
 		return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
 	}
