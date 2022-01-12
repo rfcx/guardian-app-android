@@ -63,8 +63,8 @@
 		
 		<ImageView
 			android:id="@+id/replayButton"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
+			android:layout_width="@dimen/ic_size_60_dp"
+			android:layout_height="@dimen/ic_size_60_dp"
 			android:layout_gravity="center"
 			android:adjustViewBounds="true"
 			android:background="@color/transparent"
@@ -73,6 +73,19 @@
 			android:src="@drawable/ic_replay_black_40dp"
 			android:visibility="invisible"
 			app:tint="@color/colorPrimaryDark" />
+		
+		<ImageView
+			android:id="@+id/canNotLoadImageButton"
+			android:layout_width="@dimen/ic_size_60_dp"
+			android:layout_height="@dimen/ic_size_60_dp"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:background="@color/transparent"
+			android:contentDescription="@string/app_name"
+			android:scaleType="fitXY"
+			android:src="@drawable/ic_not_image"
+			android:visibility="invisible"
+			app:tint="@color/grey" />
 	
 	</FrameLayout>
 	

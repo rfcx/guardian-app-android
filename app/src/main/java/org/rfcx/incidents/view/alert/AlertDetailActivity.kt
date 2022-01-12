@@ -148,8 +148,9 @@ class AlertDetailActivity : AppCompatActivity() {
 		})
 		
 		viewModel.loadAudioError.observe(this, {
-			Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+			canNotLoadImageButton.visibility = View.VISIBLE
 			loadingSoundProgressBar.visibility = View.INVISIBLE
+			soundProgressSeekBar.visibility = View.INVISIBLE
 		})
 	}
 	
