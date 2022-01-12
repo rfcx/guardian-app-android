@@ -11,7 +11,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.data.remote.site.GetSiteNameUseCase
 import org.rfcx.incidents.data.remote.subscribe.SubscribeUseCase
 import org.rfcx.incidents.data.remote.subscribe.unsubscribe.UnsubscribeUseCase
 import org.rfcx.incidents.entity.SubscribeRequest
@@ -147,19 +146,20 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 	}
 	
 	private fun updateEventSubtitle() {
-		val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProjectNameWithCoreId(id) } ?: listOf()
-		val subtitle = when {
-			subscribedProjects.isEmpty() -> {
-				context.getString(R.string.no_projects_selected)
-			}
-			subscribedProjects.size == 1 -> {
-				subscribedProjects[0]
-			}
-			subscribedProjects.size == 2 -> {
-				"${subscribedProjects[0]}, ${subscribedProjects[1]}"
-			}
-			else -> {
-				if (subscribedProjects.size - 2 > 1) context.getString(R.string.other_projects, subscribedProjects[0], subscribedProjects[2], subscribedProjects.size - 2) else context.getString(R.string.one_other_project, subscribedProjects[0], subscribedProjects[2], 1)
+		val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProjectByCoreId(id)?.name }
+				?: listOf()
+		var subtitle = if (subscribedProjects.isEmpty()) context.getString(R.string.no_projects_selected) else ""
+		subscribedProjects.forEachIndexed { index, name ->
+			if (index == 0) {
+				subtitle += name
+			} else if (index == 1) {
+				subtitle += ", $name"
+			} else if (index == 2 && index == subscribedProjects.size - 1) {
+				subtitle += context.getString(R.string.other_project, 1)
+			} else {
+				if (index == subscribedProjects.size - 1) {
+					subtitle += context.getString(R.string.other_projects, subscribedProjects.size - 2)
+				}
 			}
 		}
 		eventSubtitle.value = subtitle
