@@ -72,7 +72,7 @@ class AlertDetailActivity : AppCompatActivity() {
 		soundProgressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 				if (fromUser) {
-					viewModel.seekPlayerTo(progress.toLong() * viewModel.getDuration() / maxProgress)
+					viewModel.seekPlayerTo((progress.toLong() * viewModel.getDuration() / maxProgress) * SECOND)
 				}
 			}
 			
@@ -84,9 +84,6 @@ class AlertDetailActivity : AppCompatActivity() {
 		viewModel.classifiedCation.observe(this, { it ->
 			it.success({ confidence ->
 				val classificationAdapter = ClassificationAdapter()
-				classificationAdapter.onDetectionBoxClick = {
-					viewModel.seekPlayerTo(it.beginAt)
-				}
 				classificationAdapter.setClassification(confidence, viewModel.getDuration())
 				
 				val gridLayoutManager = GridLayoutManager(this, viewModel.getDuration().toInt())
