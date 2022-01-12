@@ -87,9 +87,15 @@ class ProfileFragment : BaseFragment() {
 		}
 		
 		viewDataBinding.onClickSystemOptions = View.OnClickListener {
-			createNotificationChannel()
-			
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				val name = getString(R.string.app_name)
+				val descriptionText = getString(R.string.app_name)
+				val importance = NotificationManager.IMPORTANCE_DEFAULT
+				val mChannel = NotificationChannel(BuildConfig.APPLICATION_ID, name, importance)
+				mChannel.description = descriptionText
+				val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+				notificationManager.createNotificationChannel(mChannel)
+				
 				val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
 					putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
 					putExtra(Settings.EXTRA_CHANNEL_ID, BuildConfig.APPLICATION_ID)
@@ -154,18 +160,6 @@ class ProfileFragment : BaseFragment() {
 				}
 				alertDialog.show()
 			}
-		}
-	}
-	
-	private fun createNotificationChannel() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val name = getString(R.string.app_name)
-			val descriptionText = getString(R.string.app_name)
-			val importance = NotificationManager.IMPORTANCE_DEFAULT
-			val mChannel = NotificationChannel(BuildConfig.APPLICATION_ID, name, importance)
-			mChannel.description = descriptionText
-			val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-			notificationManager.createNotificationChannel(mChannel)
 		}
 	}
 	
