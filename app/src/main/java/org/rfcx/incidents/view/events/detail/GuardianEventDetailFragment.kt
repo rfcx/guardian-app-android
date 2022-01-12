@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.events.detail
 
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.toAlert
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
@@ -75,6 +78,9 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
 				name?.let { name ->
 					guardianId?.let { id ->
 						analytics?.trackCreateResponseEvent()
+						listener.getCurrentLocation()?.let { loc ->
+							saveLocation(loc)
+						}
 						listener.openCreateReportActivity(name, id)
 					}
 				}
@@ -98,6 +104,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
 			if (viewModel.getEventsCount(it) != 0L) {
 				alertItemAdapter.items = viewModel.getAlertsByStream(it)
 				isShowProgressBar(false)
+				viewModel.fetchEvents(it)
 			} else {
 				if (!context.isNetworkAvailable()) {
 					isShowProgressBar(false)
@@ -117,6 +124,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
 		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
 			it.success({ list ->
 				alertItemAdapter.items = list.map { a -> a.toAlert() }
+				notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
 				isShowProgressBar(false)
 				alertsSwipeRefreshView.isRefreshing = false
 			}, {
@@ -144,8 +152,20 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
 		listener.openAlertDetail(alert)
 	}
 	
+	private fun saveLocation(location: Location) {
+		val tracking = Tracking(id = 1)
+		val coordinate = Coordinate(
+				latitude = location.latitude,
+				longitude = location.longitude,
+				altitude = location.altitude
+		)
+		viewModel.saveLocation(tracking, coordinate)
+		Preferences.getInstance(requireContext()).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
+	}
+	
 	override fun onRefresh() {
 		guardianId?.let { viewModel.fetchEvents(it) }
+		notHaveEventsLayout.visibility = View.GONE
 	}
 	
 	private fun isShowProgressBar(show: Boolean = true) {

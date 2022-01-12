@@ -13,12 +13,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import org.joda.time.Duration
 import org.rfcx.incidents.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 private const val SECOND: Long = 1000
@@ -147,4 +149,8 @@ fun Context.startLocationChange() {
 		return
 	}
 	locationProviderClient.requestLocationUpdates(locationRequest, locationIntent)
+}
+
+fun setupDisplayTheme() {
+	AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 }

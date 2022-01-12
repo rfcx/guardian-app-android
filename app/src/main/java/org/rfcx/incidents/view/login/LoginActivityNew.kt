@@ -9,6 +9,7 @@ import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.getUserNickname
+import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
 import org.rfcx.incidents.view.base.BaseActivity
 
@@ -29,6 +30,7 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_login_new)
+		setupDisplayTheme()
 		
 		val preferenceHelper = Preferences.getInstance(this)
 		val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
@@ -88,8 +90,8 @@ class LoginActivityNew : BaseActivity(), LoginListener {
 	}
 	
 	private fun getEventFromIntentIfHave(intent: Intent?): String? {
-		if (intent?.hasExtra("event_guid") == true) {
-			return intent.getStringExtra("event_guid")
+		if (intent?.hasExtra("streamName") == true) {
+			return intent.getStringExtra("streamName")
 		}
 		return null
 	}

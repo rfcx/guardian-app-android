@@ -63,7 +63,8 @@
 		android:padding="@dimen/margin_padding_normal"
 		app:layout_constraintBottom_toBottomOf="@id/reportIdTextView"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@id/reportIdTextView" />
+		app:layout_constraintTop_toTopOf="@id/reportIdTextView"
+		app:tint="@color/iconColor" />
 	
 	<View
 		android:layout_width="match_parent"

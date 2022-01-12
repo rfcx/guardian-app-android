@@ -41,10 +41,20 @@
 		app:layout_constraintEnd_toStartOf="@id/checkBoxImageView"
 		app:layout_constraintTop_toTopOf="parent" />
 	
+	<ProgressBar
+		android:id="@+id/subscribeProgress"
+		android:layout_width="@dimen/mini_progress_loading"
+		android:layout_height="@dimen/mini_progress_loading"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/guardianGroupTextView"
+		app:layout_constraintEnd_toStartOf="@id/checkBoxImageView"
+		app:layout_constraintTop_toTopOf="@id/guardianGroupTextView" />
+	
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
-		android:background="@color/grey"
+		android:background="@color/separateLine"
 		app:layout_constraintTop_toBottomOf="@+id/guardianGroupTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,9 @@ import org.rfcx.incidents.data.api.events.GetEvents
 import org.rfcx.incidents.data.api.events.detections.DetectionsRepository
 import org.rfcx.incidents.data.api.events.detections.DetectionsRepositoryImp
 import org.rfcx.incidents.data.api.events.detections.GetDetections
+import org.rfcx.incidents.data.api.incident.IncidentRepository
+import org.rfcx.incidents.data.api.incident.IncidentRepositoryImp
+import org.rfcx.incidents.data.api.incident.IncidentUseCase
 import org.rfcx.incidents.data.api.media.MediaRepository
 import org.rfcx.incidents.data.api.media.MediaRepositoryImp
 import org.rfcx.incidents.data.api.media.MediaUseCase
@@ -88,9 +91,12 @@ object DataModule {
 		single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class
 		single { GetStreamsUseCase(get(), get(), get()) }
 		
+		single { IncidentRepositoryImp(get()) } bind IncidentRepository::class
+		single { IncidentUseCase(get(), get(), get()) }
+		
 		single { EventsRepositoryImp(get()) } bind EventsRepository::class
 		single { GetEvents(get(), get(), get()) }
-
+		
 		single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
 		single { GetDetections(get(), get(), get()) }
 		
@@ -148,6 +154,7 @@ object DataModule {
 		factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeDetectionsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeMediaService(BuildConfig.DEBUG, androidContext()) }
+		factory { ServiceFactory.makeIncidentsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }

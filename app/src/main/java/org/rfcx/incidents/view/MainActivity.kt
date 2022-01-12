@@ -3,10 +3,13 @@ package org.rfcx.incidents.view
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -19,8 +22,11 @@ import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.service.*
+import org.rfcx.incidents.service.AlertNotification
+import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
+import org.rfcx.incidents.service.NetworkState
+import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
@@ -44,6 +50,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	private val locationPermissions by lazy { LocationPermissions(this) }
 	private val onNetworkReceived by lazy { NetworkReceiver(this) }
 	private var currentFragment: Fragment? = null
+	private var currentLocation: Location? = null
 	
 	private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		if (it.resultCode == RESULT_CODE) {
@@ -60,6 +67,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		setupDisplayTheme()
+		setStatusBar()
 		
 		val preferences = Preferences.getInstance(this)
 		val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
@@ -140,6 +149,13 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		}
 	}
 	
+	private fun setStatusBar() {
+		val window = this.window
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			window.statusBarColor = ContextCompat.getColor(this, R.color.statusColor)
+		}
+	}
+	
 	private fun setupBottomMenu() {
 		menuNewEvents.setOnClickListener {
 			onBottomMenuClick(it)
@@ -156,8 +172,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 		menuProfile.setOnClickListener {
 			onBottomMenuClick(it)
 		}
-		
-		menuNewEvents.performClick()
 	}
 	
 	private fun onBottomMenuClick(menu: View) {
@@ -262,6 +276,14 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	
 	override fun openAlertDetail(alert: Alert) {
 		AlertDetailActivity.startActivity(this, alert.serverId)
+	}
+	
+	override fun setCurrentLocation(location: Location) {
+		currentLocation = location
+	}
+	
+	override fun getCurrentLocation(): Location? {
+		return currentLocation
 	}
 	
 	private fun setupFragments() {
@@ -382,4 +404,6 @@ interface MainActivityEventListener {
 	fun openCreateResponse(response: Response)
 	fun openGoogleMap(stream: Stream)
 	fun openAlertDetail(alert: Alert)
+	fun setCurrentLocation(location: Location)
+	fun getCurrentLocation(): Location?
 }

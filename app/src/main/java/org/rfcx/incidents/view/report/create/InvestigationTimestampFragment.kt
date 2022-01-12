@@ -66,8 +66,9 @@ class InvestigationTimestampFragment : Fragment() {
 			} else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
 				yesterdayRadioButton.isChecked = true
 			} else {
-				earlierRadioButton.text = getString(R.string.earlier_date, "${calendar.getDay()}/${calendar.getMonth() + 1}/${calendar.getYear()}")
+				earlierRadioButton.text = calendar.time.toShortDateString()
 				earlierRadioButton.isChecked = true
+				setShowEdit()
 			}
 		}
 	}
@@ -78,7 +79,7 @@ class InvestigationTimestampFragment : Fragment() {
 				context?.showToast(getString(R.string.do_not_future_time))
 			} else {
 				listener.setInvestigationTimestamp(calendar.time)
-				listener.handleCheckClicked(StepCreateReport.EVIDENCE.step)
+				listener.handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
 			}
 		}
 		
@@ -107,18 +108,30 @@ class InvestigationTimestampFragment : Fragment() {
 	private fun setDatePicker() {
 		val date = Calendar.getInstance()
 		val datePicker = DatePickerDialog(requireContext(), { view, year, monthOfYear, dayOfMonth ->
-			earlierRadioButton.text = getString(R.string.earlier_date, "$dayOfMonth/${monthOfYear + 1}/$year")
 			earlier.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 			earlier.set(Calendar.MONTH, monthOfYear)
 			earlier.set(Calendar.YEAR, year)
 			setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
+			earlierRadioButton.text = calendar.time.toShortDateString()
+			setShowEdit()
 		}, date.getYear(), date.getMonth(), date.getDay())
 		
 		datePicker.datePicker.maxDate = today.timeInMillis
+		datePicker.setOnCancelListener {
+			if (earlierRadioButton.text == requireContext().getString(R.string.other_date)) {
+				radioGroup.clearCheck()
+				nextStepButton.isEnabled = false
+			}
+			setShowEdit()
+		}
 		
 		earlierRadioButton.setOnClickListener {
 			datePicker.show()
 		}
+	}
+	
+	private fun setShowEdit() {
+		editTextView.visibility = if (earlierRadioButton.text == requireContext().getString(R.string.other_date)) View.GONE else View.VISIBLE
 	}
 	
 	private fun setMinutePicker() {

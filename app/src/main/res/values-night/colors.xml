@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="colorPrimary">#2FB04A</color>
+	<color name="colorPrimaryDark">#ff2c9a46</color>
+	<color name="colorAccent">#ff2c9a46</color>
+	
+	<color name="backgroundColor">#141525</color>
+	<color name="statusColor">#232436</color>
+	<color name="toolbarColor">#232436</color>
+	<color name="iconColor">#e6e6e6</color>
+	<color name="dialogColor">#232436</color>
+	
+	<!-- Text color -->
+	<color name="text_primary">#ffffff</color>
+	<color name="text_secondary">#99a2b0</color>
+	<color name="text_error">#e41a1a</color>
+	<color name="text_white">#000000</color>
+	<color name="text_black">#ffffff</color>
+	<color name="text_green">#2FB04A</color>
+	
+	<color name="text_button_outline_enable">#ffffff</color>
+	<color name="text_button_outline_disable">#626685</color>
+	<color name="text_button_enable">#ffffff</color>
+	<color name="text_button_disable">#3dbf63</color>
+	
+	<color name="background_outline_button_enable">#45485d</color>
+	<color name="background_outline_button_disable">#45485d</color>
+	<color name="background_button_enable">@color/colorPrimaryDark</color>
+	<color name="background_button_disable">@color/colorPrimaryDark</color>
+	
+	<color name="divider">#D6D6D6</color>
+	<color name="addSoundBackground">#45485D</color>
+	<color name="addImageBackground">#45485D</color>
+	
+	<color name="transparent">@android:color/transparent</color>
+	
+	<color name="white">#FFF</color>
+	<color name="grey">#D3D9E0</color>
+	<color name="gray_30">#FFD6D6D6</color>
+	<color name="grey_light">#F0F0F0</color>
+	<color name="grey_default">#98a0a9</color>
+	<color name="grey_active">#5A6978</color>
+	<color name="recent_color">#3971e6</color>
+	<color name="hot_color">#e55e5e</color>
+	
+	<color name="location_status_loading_bg">#ff2c9a46</color>
+	<color name="location_status_failed_bg">#FF0404</color>
+	
+	<color name="button_negative">#969faa</color>
+	<color name="button_facebook_login">#37509f</color>
+	
+	<color name="topBar">#232436</color>
+	<color name="separateLine">#45485D</color>
+	<color name="bottomBar">#232436</color>
+	<color name="bottom_bar_icon_default_tint">#e6e6e6</color>
+	
+	<color name="action_color">#9100e6</color>
+	<color name="evidence_color">#3971e6</color>
+	<color name="logging_color">#187f36</color>
+	<color name="damage_color">#674A40</color>
+	<color name="poaching_evidence_color">#e55e5e</color>
+	<color name="poaching_scale_color">#e6b400</color>
+	
+	<color name="tracking_line">#e55e5e</color>
+</resources>

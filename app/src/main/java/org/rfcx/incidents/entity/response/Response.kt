@@ -20,6 +20,9 @@ open class Response(
 		var loggingScale: Int = LoggingScale.DEFAULT.value,
 		var damageScale: Int = DamageScale.DEFAULT.value,
 		var responseActions: RealmList<Int> = RealmList(),
+		var investigateType: RealmList<Int> = RealmList(),
+		var poachingScale: Int = PoachingScale.DEFAULT.value,
+		var poachingEvidence: RealmList<Int> = RealmList(),
 		var note: String? = null,
 		var streamId: String = "",
 		var streamName: String = "",
@@ -44,6 +47,9 @@ open class Response(
 		const val RESPONSE_AUDIO_LOCATION = "audioLocation"
 		const val RESPONSE_INCIDENT_REF = "incidentRef"
 		const val RESPONSE_SYNC_STATE = "syncState"
+		const val RESPONSE_INVESTIGATE_TYPE = "investigateType"
+		const val RESPONSE_POACHING_SCALE = "poachingScale"
+		const val RESPONSE_POACHING_EVIDENCE = "poachingEvidence"
 		const val RESPONSE_ANSWERS = "answers"
 	}
 }
@@ -52,12 +58,24 @@ enum class SyncState(val value: Int) {
 	UNSENT(0), SENDING(1), SENT(2)
 }
 
+enum class InvestigationType(val value: Int) {
+	DEFAULT(-1), LOGGING(501), POACHING(502), OTHER(503)
+}
+
 enum class LoggingScale(val value: Int) {
-	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
+	DEFAULT(-1), NONE(301), SMALL(303), LARGE(304)
+}
+
+enum class PoachingScale(val value: Int) {
+	DEFAULT(-1), SMALL(701), LARGE(702), NONE(703)
 }
 
 enum class DamageScale(val value: Int) {
 	DEFAULT(-1), NO_VISIBLE(401), SMALL(402), MEDIUM(403), LARGE(404)
+}
+
+enum class PoachingEvidence(val value: Int) {
+	DEFAULT(-1), BULLET_SHELLS(601), FOOTPRINTS(602), DOG_TRACKS(603), OTHER(604), NONE(605)
 }
 
 enum class EvidenceTypes(val value: Int) {
@@ -68,7 +86,7 @@ enum class EvidenceTypes(val value: Int) {
 	LOGGERS_AT_SITE(104),
 	ILLEGAL_CAMPS(105),
 	FIRED_BURNED_AREAS(106),
-	EVIDENCE_OF_POACHING(107)
+	OTHER(108)
 }
 
 enum class Actions(val value: Int) {
@@ -79,7 +97,8 @@ enum class Actions(val value: Int) {
 	ISSUE_A_FINE(204),
 	ARRESTS(205),
 	PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT(206),
-	OTHER(207)
+	OTHER(207),
+	DAMAGED_MACHINERY(208)
 }
 
 fun Response.toCreateResponseRequest(): CreateResponseRequest =
@@ -106,12 +125,16 @@ fun Response.syncLabel() = when (this.syncState) {
 
 fun Response.saveToAnswers(): RealmList<Int> {
 	val answers = RealmList<Int>()
-	answers.addAll(this.evidences)
 	answers.addAll(this.responseActions)
-	if (this.damageScale != DamageScale.DEFAULT.value) {
-		answers.add(this.damageScale)
+	answers.addAll(this.investigateType)
+	
+	if (this.investigateType.contains(InvestigationType.POACHING.value)) {
+		answers.addAll(this.poachingEvidence)
+		answers.add(this.poachingScale)
 	}
-	if (this.loggingScale != LoggingScale.DEFAULT.value) {
+	
+	if (this.investigateType.contains(InvestigationType.LOGGING.value)) {
+		answers.addAll(this.evidences)
 		answers.add(this.loggingScale)
 	}
 	return answers

@@ -10,6 +10,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.api.assets.AssetsEndpoint
 import org.rfcx.incidents.data.api.events.EventsEndpoint
 import org.rfcx.incidents.data.api.events.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.api.incident.IncidentEndpoint
 import org.rfcx.incidents.data.api.media.MediaEndpoint
 import org.rfcx.incidents.data.api.project.GetProjectsEndpoint
 import org.rfcx.incidents.data.api.site.GetStreamsEndpoint
@@ -58,6 +59,12 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(MediaEndpoint::class.java)
+	}
+	
+	fun makeIncidentsService(isDebug: Boolean, context: Context): IncidentEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(IncidentEndpoint::class.java)
 	}
 	
 	fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {

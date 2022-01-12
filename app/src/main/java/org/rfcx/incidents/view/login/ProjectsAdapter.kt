@@ -18,6 +18,8 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 			notifyDataSetChanged()
 		}
 	
+	var subscribingProject: String? = null
+	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
 		return ProjectsViewHolder(view)
@@ -36,14 +38,23 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) : RecyclerView.
 		private val textView = itemView.guardianGroupTextView
 		private val checkBoxImageView = itemView.checkBoxImageView
 		private val lockImageView = itemView.lockImageView
+		private val subscribeProgress = itemView.subscribeProgress
 		
 		fun bind(item: ProjectsItem) {
-			setClickable(itemView, item.project.isGuest())
+			subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
+			setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
 			if (item.project.isGuest()) {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
 			} else {
 				textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
 			}
+			
+			if (items.any { p -> subscribingProject == p.project.name }) {
+				checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_secondary))
+			} else {
+				checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_primary))
+			}
+			
 			textView.text = item.project.name
 			lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
 			checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
