@@ -55,7 +55,18 @@
 		android:text="@string/no_content_project"
 		android:textAlignment="center"
 		android:visibility="gone"
-		app:layout_constraintBottom_toTopOf="@id/logoutButton"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
+	
+	<ProgressBar
+		android:id="@+id/progressLoadProject"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:background="@color/transparent"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
@@ -64,9 +75,9 @@
 		android:id="@+id/projectSwipeRefreshView"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_marginTop="@dimen/margin_padding_xlarge"
-		android:layout_marginBottom="@dimen/margin_padding_xlarge"
-		app:layout_constraintBottom_toTopOf="@id/logoutButton"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toTopOf="@id/selectProjectButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
@@ -76,9 +87,23 @@
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/projectView"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
+			android:layout_height="match_parent"
+			android:overScrollMode="never" />
 	
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/refreshButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/refresh"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@+id/logoutButton" />
 	
 	<androidx.appcompat.widget.AppCompatButton
 		android:id="@+id/logoutButton"
@@ -90,6 +115,7 @@
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:text="@string/logout"
+		android:visibility="gone"
 		app:layout_constraintBottom_toTopOf="@+id/selectProjectButton" />
 	
 	<androidx.appcompat.widget.AppCompatButton
@@ -101,8 +127,8 @@
 		android:layout_marginStart="@dimen/margin_padding_large"
 		android:layout_marginEnd="@dimen/margin_padding_large"
 		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:enabled="false"
 		android:text="@string/select"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
