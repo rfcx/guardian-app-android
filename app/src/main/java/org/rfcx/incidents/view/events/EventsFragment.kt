@@ -246,6 +246,9 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
 			viewModel.loadStreams()
+			
+			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+			setProjectTitle(viewModel.getProjectName(projectId))
 		}
 	}
 	
