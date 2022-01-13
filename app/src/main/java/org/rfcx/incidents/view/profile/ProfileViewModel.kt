@@ -17,7 +17,6 @@ import org.rfcx.incidents.entity.SubscribeRequest
 import org.rfcx.incidents.entity.SubscribeResponse
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.*
-import java.util.*
 import kotlin.random.Random
 
 class ProfileViewModel(private val context: Context, private val profileData: ProfileData, private val subscribeUseCase: SubscribeUseCase, private val unsubscribeUseCase: UnsubscribeUseCase, private val eventDb: EventDb, private val projectDb: ProjectDb) : ViewModel() {
@@ -150,16 +149,11 @@ class ProfileViewModel(private val context: Context, private val profileData: Pr
 				?: listOf()
 		var subtitle = if (subscribedProjects.isEmpty()) context.getString(R.string.no_projects_selected) else ""
 		subscribedProjects.forEachIndexed { index, name ->
-			if (index == 0) {
-				subtitle += name
-			} else if (index == 1) {
-				subtitle += ", $name"
-			} else if (index == 2 && index == subscribedProjects.size - 1) {
-				subtitle += context.getString(R.string.other_project, 1)
-			} else {
-				if (index == subscribedProjects.size - 1) {
-					subtitle += context.getString(R.string.other_projects, subscribedProjects.size - 2)
-				}
+			when {
+				index == 0 -> subtitle += name
+				index == 1 -> subtitle += ", $name"
+				index == 2 && index == subscribedProjects.size - 1 -> subtitle += context.getString(R.string.other_project, 1)
+				index == subscribedProjects.size - 1 -> subtitle += context.getString(R.string.other_projects, subscribedProjects.size - 2)
 			}
 		}
 		eventSubtitle.value = subtitle
