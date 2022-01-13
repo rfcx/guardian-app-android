@@ -113,8 +113,8 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 			
 			GlideApp.with(itemView.imageFeedbackImageView)
 					.load(imagePath)
-					.placeholder(R.drawable.bg_grey_light)
-					.error(R.drawable.bg_grey_light)
+					.placeholder(R.drawable.bg_placeholder_image)
+					.error(R.drawable.bg_placeholder_image)
 					.into(itemView.imageFeedbackImageView)
 			
 			itemView.deleteImageFeedbackButton.setOnClickListener {
