@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.profile
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -107,8 +108,14 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 				this.showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
+				val dialog = Dialog(this)
+				dialog.setContentView(R.layout.fragment_loading)
+				dialog.setCancelable(false)
+				dialog.show()
+				
 				if (item.selected) {
 					viewModel.unsubscribeProject(item.project) { status ->
+						dialog.dismiss()
 						if (!status) {
 							projectsItem?.let { items ->
 								items[position].selected = !items[position].selected
@@ -122,6 +129,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
 					}
 				} else {
 					viewModel.setProjectsAndSubscribe(item.project) { status ->
+						dialog.dismiss()
 						if (!status) {
 							projectsItem?.let { items ->
 								items[position].selected = !items[position].selected
