@@ -255,5 +255,6 @@
     <string name="menu_new_events">Novas Ocorrências</string>
     <string name="menu_submitted_reports">Relatórios Enviados</string>
     <string name="menu_draft_reports">Rascunhos</string>
+    <string name="refresh">atualizar</string>
 
 </resources>
