@@ -11,12 +11,16 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.GetEvents
 import org.rfcx.incidents.data.api.events.ResponseEvent
+import org.rfcx.incidents.data.api.incident.IncidentRequestFactory
+import org.rfcx.incidents.data.api.incident.IncidentUseCase
+import org.rfcx.incidents.data.api.incident.IncidentsResponse
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
 import org.rfcx.incidents.data.api.project.ProjectResponse
 import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.api.site.GetStreamsUseCase
 import org.rfcx.incidents.data.api.site.StreamResponse
 import org.rfcx.incidents.data.api.site.StreamsRequestFactory
+import org.rfcx.incidents.data.api.site.toStream
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
@@ -33,11 +37,9 @@ import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.events.adapter.StreamItem
 
 
-class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
+class EventsViewModel(private val context: Context, private val getProjects: GetProjectsUseCase, private val getIncidents: IncidentUseCase, private val projectDb: ProjectDb, private val streamDb: StreamDb, private val trackingDb: TrackingDb, private val alertDb: AlertDb, private val getStreams: GetStreamsUseCase, private val getEvents: GetEvents) : ViewModel() {
 	
 	val streamItems = mutableListOf<StreamItem>()
-	val nearbyStreams = mutableListOf<StreamItem>()
-	val othersStreams = mutableListOf<StreamItem>()
 	
 	private val _projects = MutableLiveData<Result<List<Project>>>()
 	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
@@ -47,6 +49,9 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	private val _alerts = MutableLiveData<Result<List<ResponseEvent>>>()
 	val getAlertsFromRemote: LiveData<Result<List<ResponseEvent>>> get() = _alerts
+	
+	private val _incidents = MutableLiveData<Result<List<IncidentsResponse>>>()
+	val getIncidentsFromRemote: LiveData<Result<List<IncidentsResponse>>> get() = _incidents
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
@@ -101,6 +106,24 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		}
 	}
 	
+	fun getIncidents(stream: Stream) {
+		if (context.isNetworkAvailable()) {
+			getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
+				override fun onSuccess(t: List<IncidentsResponse>) {
+					t.map { item ->
+						val streamAddIncidentRef = Stream(stream.id, stream.serverId, stream.name, stream.latitude, stream.longitude, stream.projectServerId, item.incidents.items[0].ref)
+						streamDb.saveIncidentRef(streamAddIncidentRef)
+					}
+					_incidents.value = Result.Success(t)
+				}
+				
+				override fun onError(e: Throwable) {
+					_incidents.value = Result.Error(e)
+				}
+			}, IncidentRequestFactory(keyword = stream.name))
+		}
+	}
+	
 	fun loadStreams() {
 		if (context.isNetworkAvailable()) {
 			val preferences = Preferences.getInstance(context)
@@ -112,6 +135,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 						loadEvents(t)
 						t.forEach { res ->
 							streamDb.insertStream(res)
+							getIncidents(res.toStream())
 						}
 						_streams.value = Result.Success(t)
 					}
@@ -169,7 +193,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	fun handledStreams(streams: List<Stream>) {
 		streamItems.clear()
 		streams.forEach {
-			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), null, it.name, it.serverId, getDateTime(it.serverId), getAlerts(it.serverId)))
+			streamItems.add(StreamItem(getEventsCount(it.serverId).toInt(), it.incidentRef, null, it.name, it.serverId, getDateTime(it.serverId), getAlerts(it.serverId)))
 		}
 		streamItems.sortByDescending { g -> g.eventSize }
 	}

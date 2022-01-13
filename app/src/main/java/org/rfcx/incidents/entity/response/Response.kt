@@ -63,11 +63,11 @@ enum class InvestigationType(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-	DEFAULT(-1), NONE(301), SMALL(302), LARGE(303),
+	DEFAULT(-1), NONE(301), SMALL(303), LARGE(304)
 }
 
 enum class PoachingScale(val value: Int) {
-	DEFAULT(-1), NONE(701), SMALL(702), LARGE(703),
+	DEFAULT(-1), SMALL(701), LARGE(702), NONE(703)
 }
 
 enum class DamageScale(val value: Int) {
@@ -86,7 +86,7 @@ enum class EvidenceTypes(val value: Int) {
 	LOGGERS_AT_SITE(104),
 	ILLEGAL_CAMPS(105),
 	FIRED_BURNED_AREAS(106),
-	OTHER(107)
+	OTHER(108)
 }
 
 enum class Actions(val value: Int) {
@@ -97,7 +97,8 @@ enum class Actions(val value: Int) {
 	ISSUE_A_FINE(204),
 	ARRESTS(205),
 	PLANNING_TO_COME_BACK_WITH_SECURITY_ENFORCEMENT(206),
-	OTHER(207)
+	OTHER(207),
+	DAMAGED_MACHINERY(208)
 }
 
 fun Response.toCreateResponseRequest(): CreateResponseRequest =
@@ -124,12 +125,16 @@ fun Response.syncLabel() = when (this.syncState) {
 
 fun Response.saveToAnswers(): RealmList<Int> {
 	val answers = RealmList<Int>()
-	answers.addAll(this.evidences)
 	answers.addAll(this.responseActions)
-	if (this.damageScale != DamageScale.DEFAULT.value) {
-		answers.add(this.damageScale)
+	answers.addAll(this.investigateType)
+	
+	if (this.investigateType.contains(InvestigationType.POACHING.value)) {
+		answers.addAll(this.poachingEvidence)
+		answers.add(this.poachingScale)
 	}
-	if (this.loggingScale != LoggingScale.DEFAULT.value) {
+	
+	if (this.investigateType.contains(InvestigationType.LOGGING.value)) {
+		answers.addAll(this.evidences)
 		answers.add(this.loggingScale)
 	}
 	return answers

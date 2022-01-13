@@ -59,6 +59,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 			noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
 			incidentIdTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
 			guardianNameTextView.setPadding(16.toPx, 16.toPx, if (hasNoEvents) 16.toPx else 0.toPx, if (hasNoEvents) 16.toPx else 10.toPx)
+			incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, item.incidentRef.toString())
 			
 			val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
 			if (typeOfAlert.isEmpty()) return
@@ -121,4 +122,4 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 	}
 }
 
-data class StreamItem(val eventSize: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: String? = null, val alerts: List<Alert>)
+data class StreamItem(val eventSize: Int, val incidentRef: Int, val distance: Double?, val streamName: String, val streamId: String, val eventTime: String? = null, val alerts: List<Alert>)

@@ -39,7 +39,6 @@ class EvidenceFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		setOnChange()
 		setupEvidences()
-		siteNameTextView.text = getString(R.string.site_name, listener.getSiteName())
 		
 		nextStepButton.setOnClickListener {
 			setSelect()

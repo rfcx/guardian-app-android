@@ -8,22 +8,13 @@
 	tools:context=".view.report.create.ActionFragment">
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/siteNameTextView"
-		style="@style/RangerText.Body"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_normal"
-		android:textStyle="bold"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="Site Z" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/whatActionTextView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_normal"
 		android:text="@string/what_action"
-		app:layout_constraintTop_toBottomOf="@id/siteNameTextView" />
+		app:layout_constraintTop_toTopOf="parent" />
 	
 	<RadioGroup
 		android:id="@+id/actionRadioGroup"
@@ -70,7 +61,7 @@
 			android:textColor="@drawable/radio_text_color" />
 		
 		<RadioButton
-			android:id="@+id/fineRadioButton"
+			android:id="@+id/damagedMachineryRadioButton"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_marginTop="@dimen/margin_padding_small"
