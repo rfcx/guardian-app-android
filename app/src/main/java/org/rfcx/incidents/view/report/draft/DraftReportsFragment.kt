@@ -52,6 +52,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 		preferences = Preferences.getInstance(requireContext())
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
+		changePageImageView.visibility = View.GONE
 		
 		setObserve()
 		setRecyclerView()
