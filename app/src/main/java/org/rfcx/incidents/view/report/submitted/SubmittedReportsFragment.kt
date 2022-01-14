@@ -30,6 +30,8 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	lateinit var listener: MainActivityEventListener
 	lateinit var preferences: Preferences
+	private var responses: List<Response>? = null
+	private var streams = listOf<String>()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -120,11 +122,21 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 		analytics?.trackScreen(Screen.SUBMITTED_REPORTS)
 	}
 	
+	private fun streamsByProject() {
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val projectCoreId = viewModel.getProjectById(projectId)?.serverId
+		projectCoreId?.let {
+			streams = viewModel.getStreamsByProjectCoreId(it).map { s -> s.serverId }
+		}
+	}
+	
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserve() {
-		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
-			notHaveSubmittedReportsGroupView.visibility = if (responses.isEmpty()) View.VISIBLE else View.GONE
-			reportsAdapter.items = responses.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value }
+		viewModel.getResponses().observe(viewLifecycleOwner, { res ->
+			responses = res
+			notHaveSubmittedReportsGroupView.visibility = if (res.isEmpty()) View.VISIBLE else View.GONE
+			streamsByProject()
+			reportsAdapter.items = res.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 			reportsAdapter.notifyDataSetChanged()
 		})
 		
@@ -159,7 +171,10 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-//				viewModel.loadStreams()
+				streamsByProject()
+				responses?.let {
+					reportsAdapter.items = it.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+				}
 			}
 		}
 		setProjectTitle(project.name)

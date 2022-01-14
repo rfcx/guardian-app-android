@@ -45,9 +45,13 @@ class MainActivityViewModel(private val context: Context, private val responseDb
 		ReviewEventSyncWorker.enqueue()
 	}
 	
+	fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
+	
 	fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
 	
 	fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
+	
+	fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> = streamDb.getStreamsByProjectCoreId(projectCodeId)
 	
 	fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name ?: context.getString(R.string.all_projects)
 	
