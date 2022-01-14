@@ -311,7 +311,7 @@
 	<string name="dog_tracks">Dog tracks</string>
 	
 	<!-- SetWhatActionFragment -->
-	<string name="what_action">What <b>action</b> was taken?</string>
+	<string name="what_action">What <b>action</b> was taken? <i>Select all that apply</i></string>
 	<string name="confiscated_equipment">Confiscated equipment</string>
 	<string name="collected_evidence">Collected evidence</string>
 	<string name="issue_a_warning">Issue a warning</string>
