@@ -251,6 +251,7 @@
     <string name="menu_new_events">Novas Ocorrências</string>
     <string name="menu_submitted_reports">Relatórios Enviados</string>
     <string name="menu_draft_reports">Rascunhos</string>
+    <string name="audio_not_found">Áudio não encontrado</string>
     <string name="refresh">atualizar</string>
     <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i>"</string>
     <string name="submit_report">Enviar relatório</string>

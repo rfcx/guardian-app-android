@@ -74,19 +74,32 @@
 			android:visibility="invisible"
 			app:tint="@color/colorPrimaryDark" />
 		
-		<ImageView
-			android:id="@+id/canNotLoadImageButton"
-			android:layout_width="@dimen/ic_size_60_dp"
-			android:layout_height="@dimen/ic_size_60_dp"
+		<LinearLayout
+			android:id="@+id/canNotLoadImageLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:adjustViewBounds="true"
-			android:background="@color/transparent"
-			android:contentDescription="@string/app_name"
-			android:scaleType="fitXY"
-			android:src="@drawable/ic_not_image"
-			android:visibility="invisible"
-			app:tint="@color/grey" />
-	
+			android:orientation="vertical"
+			android:visibility="gone">
+			
+			<ImageView
+				android:layout_width="@dimen/ic_size_60_dp"
+				android:layout_height="@dimen/ic_size_60_dp"
+				android:layout_gravity="center"
+				android:background="@color/transparent"
+				android:contentDescription="@string/app_name"
+				android:src="@drawable/ic_not_image"
+				app:tint="@color/text_secondary" />
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				style="@style/RangerText.Label.Secondary"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:scaleType="fitXY"
+				android:text="@string/audio_not_found" />
+		</LinearLayout>
 	</FrameLayout>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout

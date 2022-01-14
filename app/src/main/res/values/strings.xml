@@ -368,5 +368,7 @@
 	
 	<string name="recent">Recent</string>
 	<string name="hot">Hot</string>
+	
+	<string name="audio_not_found">Audio not found</string>
 
 </resources>

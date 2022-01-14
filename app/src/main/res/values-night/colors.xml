@@ -62,4 +62,5 @@
 	<color name="poaching_scale_color">#e6b400</color>
 	
 	<color name="tracking_line">#e55e5e</color>
+	<color name="background_placeholder">#141525</color>
 </resources>

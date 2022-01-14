@@ -54,8 +54,8 @@ class AlertDetailActivity : AppCompatActivity() {
 			if (alert.end.time - alert.start.time < 5 * SECOND) {
 				alertData = it.setNewTime(Date(alert.start.time - 5 * SECOND), Date(alert.end.time + 5 * SECOND))
 			}
-			if (alert.end.time - alert.start.time > 60 * SECOND) {
-				alertData = it.setNewTime(end = Date(alert.start.time + 60 * SECOND))
+			if (alert.end.time - alert.start.time > 15 * SECOND) {
+				alertData = it.setNewTime(end = Date(alert.start.time + 15 * SECOND))
 			}
 			
 			spectrogramImageView.setReportImage(
@@ -148,7 +148,7 @@ class AlertDetailActivity : AppCompatActivity() {
 		})
 		
 		viewModel.loadAudioError.observe(this, {
-			canNotLoadImageButton.visibility = View.VISIBLE
+			canNotLoadImageLayout.visibility = View.VISIBLE
 			loadingSoundProgressBar.visibility = View.INVISIBLE
 			soundProgressSeekBar.visibility = View.INVISIBLE
 		})
