@@ -18,7 +18,7 @@
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	
 	<application
-		android:name="org.rfcx.incidents.RangerApplication"
+		android:name=".RangerApplication"
 		android:allowBackup="false"
 		android:icon="${icon}"
 		android:label="@string/app_name"
@@ -41,34 +41,39 @@
 		</provider>
 		
 		<activity
-			android:name="org.rfcx.incidents.view.report.detail.ResponseDetailActivity"
+			android:name=".view.alert.AlertDetailActivity"
+			android:exported="true"
+			android:screenOrientation="portrait" />
+		
+		<activity
+			android:name=".view.report.detail.ResponseDetailActivity"
 			android:exported="true"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.profile.coordinates.CoordinatesActivity"
+			android:name=".view.profile.coordinates.CoordinatesActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.report.create.CreateReportActivity"
+			android:name=".view.report.create.CreateReportActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.profile.editprofile.EditProfileActivity"
+			android:name=".view.profile.editprofile.EditProfileActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.profile.PasswordChangeActivity"
+			android:name=".view.profile.PasswordChangeActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.profile.FeedbackActivity"
+			android:name=".view.profile.FeedbackActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.profile.SubscribeProjectsActivity"
+			android:name=".view.profile.SubscribeProjectsActivity"
 			android:screenOrientation="portrait" />
 		<activity
-			android:name="org.rfcx.incidents.view.MainActivity"
+			android:name=".view.MainActivity"
 			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme" />
 		<activity
-			android:name="org.rfcx.incidents.view.login.LoginActivityNew"
+			android:name=".view.login.LoginActivityNew"
 			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -78,31 +83,32 @@
 		</activity>
 		
 		<service
-			android:name="org.rfcx.incidents.service.LocationTrackerService"
+			android:name=".service.LocationTrackerService"
 			android:exported="false"
 			android:foregroundServiceType="location" />
 		<service
-			android:name="org.rfcx.incidents.service.MessagingService"
+			android:name=".service.MessagingService"
 			android:exported="false">
 			<intent-filter>
 				<action android:name="com.google.firebase.MESSAGING_EVENT" />
 			</intent-filter>
 		</service>
 		
-		<receiver android:name="org.rfcx.incidents.service.BootCompletedReceiver">
+		<receiver android:name=".service.BootCompletedReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
-		<receiver android:name="org.rfcx.incidents.service.NetworkReceiver">
+		<receiver android:name=".service.NetworkReceiver">
 			<intent-filter>
 				<action
 					android:name="android.net.conn.CONNECTIVITY_CHANGE"
 					tools:ignore="BatteryLife" />
 			</intent-filter>
 		</receiver>
-		
-		<receiver android:name="org.rfcx.incidents.util.LocationChangeReceiver" android:exported="false"
+		<receiver
+			android:name=".util.LocationChangeReceiver"
+			android:exported="false"
 			tools:ignore="Instantiatable">
 			<intent-filter>
 				<action android:name="org.rfcx.incidents.LOCATION_CHANGE" />

@@ -21,17 +21,16 @@ import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.service.LocationTrackerService
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
 
-class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	private val viewModel: GuardianEventDetailViewModel by viewModel()
 	lateinit var listener: MainActivityEventListener
-	private val alertItemAdapter by lazy { AlertItemAdapter() }
+	private val alertItemAdapter by lazy { AlertItemAdapter(this) }
 	
 	var name: String? = null
 	var guardianId: String? = null
@@ -147,6 +146,10 @@ class GuardianEventDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshList
 		toolbarLayout.setNavigationOnClickListener {
 			listener.onBackPressed()
 		}
+	}
+	
+	override fun invoke(alert: Alert) {
+		listener.openAlertDetail(alert)
 	}
 	
 	private fun saveLocation(location: Location) {

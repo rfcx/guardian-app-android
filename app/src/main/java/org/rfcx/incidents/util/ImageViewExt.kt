@@ -29,7 +29,7 @@ fun ImageView.setImageProfile(url: String?) {
 }
 
 fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = null, progressBar: ProgressBar) {
-	val placeholder = R.drawable.bg_grey_light
+	val placeholder = R.drawable.bg_placeholder_image
 	if (fromServer) {
 		progressBar.visibility = View.VISIBLE
 		

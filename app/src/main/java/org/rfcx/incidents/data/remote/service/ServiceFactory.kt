@@ -9,7 +9,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.api.assets.AssetsEndpoint
 import org.rfcx.incidents.data.api.events.EventsEndpoint
+import org.rfcx.incidents.data.api.events.detections.DetectionsEndpoint
 import org.rfcx.incidents.data.api.incident.IncidentEndpoint
+import org.rfcx.incidents.data.api.media.MediaEndpoint
 import org.rfcx.incidents.data.api.project.GetProjectsEndpoint
 import org.rfcx.incidents.data.api.site.GetStreamsEndpoint
 import org.rfcx.incidents.data.remote.guardianGroup.GuardianGroupEndpoint
@@ -45,6 +47,18 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetStreamsEndpoint::class.java)
+	}
+	
+	fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(DetectionsEndpoint::class.java)
+	}
+	
+	fun makeMediaService(isDebug: Boolean, context: Context): MediaEndpoint {
+		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+				GsonProvider.getInstance().gson)
+				.create(MediaEndpoint::class.java)
 	}
 	
 	fun makeIncidentsService(isDebug: Boolean, context: Context): IncidentEndpoint {
