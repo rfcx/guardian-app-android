@@ -2,6 +2,8 @@ package org.rfcx.incidents.localdb
 
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
+import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 
@@ -81,4 +83,7 @@ class ResponseDb(val realm: Realm) {
 	fun getAllResultsAsync(): RealmResults<Response> {
 		return realm.where(Response::class.java).findAllAsync()
 	}
+	
+	fun getResponses(): List<Response> = realm.where(Response::class.java).findAll() ?: arrayListOf()
+	
 }

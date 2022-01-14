@@ -51,6 +51,8 @@ class MainActivityViewModel(private val context: Context, private val responseDb
 	
 	fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
 	
+	fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
+	
 	fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> = streamDb.getStreamsByProjectCoreId(projectCodeId)
 	
 	fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name ?: context.getString(R.string.all_projects)

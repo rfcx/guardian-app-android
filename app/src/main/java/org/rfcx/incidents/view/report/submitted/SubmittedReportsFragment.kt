@@ -30,7 +30,6 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	private val projectAdapter by lazy { ProjectAdapter(this) }
 	lateinit var listener: MainActivityEventListener
 	lateinit var preferences: Preferences
-	private var responses: List<Response>? = null
 	private var streams = listOf<String>()
 	
 	override fun onAttach(context: Context) {
@@ -43,6 +42,9 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 		if (!hidden) {
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
+			
+			streamsByProject()
+			reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 		}
 	}
 	
@@ -133,7 +135,6 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { res ->
-			responses = res
 			notHaveSubmittedReportsGroupView.visibility = if (res.isEmpty()) View.VISIBLE else View.GONE
 			streamsByProject()
 			reportsAdapter.items = res.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
@@ -172,9 +173,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 			}
 			else -> {
 				streamsByProject()
-				responses?.let {
-					reportsAdapter.items = it.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-				}
+				reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 			}
 		}
 		setProjectTitle(project.name)
