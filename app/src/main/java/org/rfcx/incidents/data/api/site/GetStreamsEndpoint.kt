@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface GetStreamsEndpoint {
 	@GET("streams")
-	fun getStreams(@Query("limit") limit: Int = 100,
+	fun getStreams(@Query("limit") limit: Int = 20,
 	               @Query("offset") offset: Int = 0,
 	               @Query("with_events_count") withEventsCount: Boolean = true,
 	               @Query("updated_after", encoded = true) updatedAfter: String? = null,

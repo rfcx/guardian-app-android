@@ -10,8 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_submitted_reports.*
-import kotlinx.android.synthetic.main.fragment_submitted_reports.projectRecyclerView
-import kotlinx.android.synthetic.main.fragment_submitted_reports.projectSwipeRefreshView
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
@@ -58,6 +56,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 		setRecyclerView()
 		setObserve()
 		setOnClickListener()
+		changePageImageView.visibility = View.GONE
 		
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
@@ -125,7 +124,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
 			notHaveSubmittedReportsGroupView.visibility = if (responses.isEmpty()) View.VISIBLE else View.GONE
-			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
+			reportsAdapter.items = responses.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value }
 			reportsAdapter.notifyDataSetChanged()
 		})
 		

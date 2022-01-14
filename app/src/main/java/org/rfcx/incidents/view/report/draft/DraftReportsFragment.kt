@@ -53,7 +53,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener {
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
 			notHaveDraftReportsGroupView.visibility = if (responses.isEmpty()) View.VISIBLE else View.GONE
-			reportsAdapter.items = responses.sortedByDescending { r -> r.investigatedAt }
+			reportsAdapter.items = responses.sortedByDescending { r -> r.startedAt }.filter { r -> r.syncState == SyncState.UNSENT.value }
 		})
 	}
 	
