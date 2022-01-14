@@ -34,12 +34,8 @@ class ProjectDb(val realm: Realm) {
 				.equalTo(Project.PROJECT_ID, id).findFirst()
 	}
 	
-	fun getProjectLocalId(coreId: String): Int? {
-		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()?.id
-	}
-	
-	fun getProjectNameWithCoreId(coreId: String): String? {
-		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()?.name
+	fun getProjectByCoreId(coreId: String): Project? {
+		return realm.where(Project::class.java).equalTo(Project.PROJECT_SERVER_ID, coreId).findFirst()
 	}
 	
 	fun getProjects(): List<Project> {

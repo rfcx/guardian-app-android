@@ -71,7 +71,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
 		selectProjectButton.setOnClickListener {
 			val preferences = Preferences.getInstance(requireContext())
 			val projectCoreId = if (subscribedProjects.isEmpty()) viewModel.getProjectsFromLocal().map { p -> p.serverId ?: "" }.random() else subscribedProjects.random()
-			val id = viewModel.getProjectLocalId(projectCoreId)
+			val id = viewModel.getProjectLocalIdByCoreId(projectCoreId)
 			preferences.putInt(Preferences.SELECTED_PROJECT, id)
 			listener.handleOpenPage()
 		}
