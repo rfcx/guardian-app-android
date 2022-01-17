@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -263,7 +264,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
 		streamRecyclerView.apply {
-			layoutManager = LinearLayoutManager(context)
+			val streamsLayoutManager = LinearLayoutManager(context)
+			layoutManager = streamsLayoutManager
 			adapter = streamAdapter
 			streamAdapter.items = viewModel.streamItems
 		}

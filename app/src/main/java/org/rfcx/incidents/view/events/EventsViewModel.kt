@@ -135,7 +135,6 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 						loadEvents(t)
 						t.forEach { res ->
 							streamDb.insertStream(res)
-							getIncidents(res.toStream())
 						}
 						_streams.value = Result.Success(t)
 					}
