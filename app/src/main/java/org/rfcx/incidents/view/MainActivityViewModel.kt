@@ -77,4 +77,13 @@ class MainActivityViewModel(private val context: Context, private val responseDb
 		preferences.putInt(Preferences.SELECTED_PROJECT, id)
 	}
 	
+	fun getStreamIdsInProjectId(): List<String> {
+		val preferences = Preferences.getInstance(context)
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val projectCoreId = getProjectById(projectId)?.serverId
+		projectCoreId?.let {
+			return getStreamsByProjectCoreId(it).map { s -> s.serverId }
+		}
+		return listOf()
+	}
 }

@@ -101,7 +101,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
 			notHaveDraftReportsGroupView.visibility = if (responses.isEmpty()) View.VISIBLE else View.GONE
-			setStreamsOfProject()
+			streams = viewModel.getStreamIdsInProjectId()
 			reportsAdapter.items = responses.sortedByDescending { r -> r.startedAt }.filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
 		})
 	}
@@ -132,21 +132,13 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 		}
 	}
 	
-	private fun setStreamsOfProject() {
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val projectCoreId = viewModel.getProjectById(projectId)?.serverId
-		projectCoreId?.let {
-			streams = viewModel.getStreamsByProjectCoreId(it).map { s -> s.serverId }
-		}
-	}
-	
 	override fun onHiddenChanged(hidden: Boolean) {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
 			
-			setStreamsOfProject()
+			streams = viewModel.getStreamIdsInProjectId()
 			reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }.filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
 			
 		}
@@ -168,7 +160,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-				setStreamsOfProject()
+				streams = viewModel.getStreamIdsInProjectId()
 				reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }.filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
 			}
 		}
