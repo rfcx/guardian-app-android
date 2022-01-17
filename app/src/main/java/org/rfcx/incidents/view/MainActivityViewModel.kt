@@ -21,7 +21,6 @@ import org.rfcx.incidents.service.ReviewEventSyncWorker
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
-import org.rfcx.incidents.util.isNetworkAvailable
 
 class MainActivityViewModel(private val context: Context, private val responseDb: ResponseDb,
                             private val projectDb: ProjectDb,
@@ -55,23 +54,22 @@ class MainActivityViewModel(private val context: Context, private val responseDb
 	
 	fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> = streamDb.getStreamsByProjectCoreId(projectCodeId)
 	
-	fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name ?: context.getString(R.string.all_projects)
+	fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
+			?: context.getString(R.string.all_projects)
 	
 	fun fetchProjects() {
-		if (context.isNetworkAvailable()) {
-			getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
-				override fun onSuccess(t: List<ProjectResponse>) {
-					t.map {
-						projectDb.insertOrUpdate(it)
-					}
-					_projects.value = Result.Success(listOf())
+		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
+			override fun onSuccess(t: List<ProjectResponse>) {
+				t.map {
+					projectDb.insertOrUpdate(it)
 				}
-				
-				override fun onError(e: Throwable) {
-					_projects.value = Result.Error(e)
-				}
-			}, ProjectsRequestFactory())
-		}
+				_projects.value = Result.Success(listOf())
+			}
+			
+			override fun onError(e: Throwable) {
+				_projects.value = Result.Error(e)
+			}
+		}, ProjectsRequestFactory())
 	}
 	
 	fun setProjectSelected(id: Int) {
