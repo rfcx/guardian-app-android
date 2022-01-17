@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -261,11 +262,30 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
+		val streamsLayoutManager = LinearLayoutManager(context)
 		streamRecyclerView.apply {
-			val streamsLayoutManager = LinearLayoutManager(context)
 			layoutManager = streamsLayoutManager
 			adapter = streamAdapter
 			streamAdapter.items = viewModel.streamItems
+			addOnScrollListener(object : RecyclerView.OnScrollListener() {
+				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+					super.onScrolled(recyclerView, dx, dy)
+					val visibleItemCount = streamsLayoutManager.childCount
+					val total = streamsLayoutManager.itemCount
+					val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
+//					val findLastVisibleItemPosition = streamsLayoutManager.findLastVisibleItemPosition()
+					
+					if (!refreshView.isRefreshing) {
+//						if (total <= findLastVisibleItemPosition + 1) viewModel.loadMoreEvents()
+						if ((visibleItemCount + firstVisibleItemPosition) >= total
+								&& firstVisibleItemPosition >= 0
+								&& !viewModel.isLoadMore) {
+							viewModel.loadMoreEvents()
+						}
+					}
+				}
+			})
+			
 		}
 	}
 	

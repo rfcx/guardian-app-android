@@ -20,7 +20,6 @@ import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.api.site.GetStreamsUseCase
 import org.rfcx.incidents.data.api.site.StreamResponse
 import org.rfcx.incidents.data.api.site.StreamsRequestFactory
-import org.rfcx.incidents.data.api.site.toStream
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
@@ -52,6 +51,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	private val _incidents = MutableLiveData<Result<List<IncidentsResponse>>>()
 	val getIncidentsFromRemote: LiveData<Result<List<IncidentsResponse>>> get() = _incidents
+	
+	var isLoadMore = false
+	
+	fun loadMoreEvents() {
+		isLoadMore = true
+		loadStreams()
+	}
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
 		return Transformations.map(streamDb.getAllResultsAsync().asLiveData()) { it }
@@ -106,6 +112,13 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		}
 	}
 	
+	private fun getStreamsCount(): Int {
+		val preferences = Preferences.getInstance(context)
+		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+		val project = projectDb.getProjectById(projectId)
+		return getStreams().filter { s -> s.projectServerId == project?.serverId }.size
+	}
+	
 	fun getIncidents(stream: Stream) {
 		if (context.isNetworkAvailable()) {
 			getIncidents.execute(object : DisposableSingleObserver<List<IncidentsResponse>>() {
@@ -142,7 +155,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 					override fun onError(e: Throwable) {
 						_streams.value = Result.Error(e)
 					}
-				}, StreamsRequestFactory(projects = listOf(serverId)))
+				}, StreamsRequestFactory(projects = listOf(serverId), offset = getStreamsCount()))
 			}
 		}
 	}
