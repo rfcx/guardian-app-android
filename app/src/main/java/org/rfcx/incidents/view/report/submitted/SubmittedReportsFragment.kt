@@ -43,7 +43,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
 			
-			streamsByProject()
+			setStreamsOfProject()
 			reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 		}
 	}
@@ -124,7 +124,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 		analytics?.trackScreen(Screen.SUBMITTED_REPORTS)
 	}
 	
-	private fun streamsByProject() {
+	private fun setStreamsOfProject() {
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		val projectCoreId = viewModel.getProjectById(projectId)?.serverId
 		projectCoreId?.let {
@@ -136,7 +136,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { res ->
 			notHaveSubmittedReportsGroupView.visibility = if (res.isEmpty()) View.VISIBLE else View.GONE
-			streamsByProject()
+			setStreamsOfProject()
 			reportsAdapter.items = res.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 			reportsAdapter.notifyDataSetChanged()
 		})
@@ -172,7 +172,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-				streamsByProject()
+				setStreamsOfProject()
 				reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
 			}
 		}
