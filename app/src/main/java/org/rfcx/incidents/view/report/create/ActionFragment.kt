@@ -50,17 +50,11 @@ class ActionFragment : Fragment() {
 	
 	private fun setSelected() {
 		selected.forEach { id ->
-			if (id == Actions.COLLECTED_EVIDENCE.value) {
-				collectedCheckBox.isChecked = true
-			}
-			if (id == Actions.ISSUE_A_WARNING.value) {
-				warningCheckBox.isChecked = true
-			}
-			if (id == Actions.CONFISCATED_EQUIPMENT.value) {
-				confiscatedCheckBox.isChecked = true
-			}
-			if (id == Actions.DAMAGED_MACHINERY.value) {
-				damagedMachineryCheckBox.isChecked = true
+			when(id) {
+				Actions.COLLECTED_EVIDENCE.value -> collectedCheckBox.isChecked = true
+				Actions.ISSUE_A_WARNING.value -> warningCheckBox.isChecked = true
+				Actions.CONFISCATED_EQUIPMENT.value -> confiscatedCheckBox.isChecked = true
+				Actions.DAMAGED_MACHINERY.value -> damagedMachineryCheckBox.isChecked = true
 			}
 		}
 	}

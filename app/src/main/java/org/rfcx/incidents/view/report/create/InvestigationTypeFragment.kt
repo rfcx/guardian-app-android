@@ -76,14 +76,10 @@ class InvestigationTypeFragment : Fragment() {
 	
 	private fun setSelected() {
 		selected.forEach { id ->
-			if (id == InvestigationType.LOGGING.value) {
-				loggingCheckBox.isChecked = true
-			}
-			if (id == InvestigationType.POACHING.value) {
-				poachingCheckBox.isChecked = true
-			}
-			if (id == InvestigationType.OTHER.value) {
-				otherCheckBox.isChecked = true
+			when(id) {
+				InvestigationType.LOGGING.value -> loggingCheckBox.isChecked = true
+				InvestigationType.POACHING.value -> poachingCheckBox.isChecked = true
+				InvestigationType.OTHER.value -> otherCheckBox.isChecked = true
 			}
 		}
 	}

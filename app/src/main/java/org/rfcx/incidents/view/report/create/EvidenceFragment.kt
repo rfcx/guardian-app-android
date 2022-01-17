@@ -149,29 +149,15 @@ class EvidenceFragment : Fragment() {
 	
 	private fun setSelected() {
 		selected.forEach { id ->
-			if (id == EvidenceTypes.CUT_DOWN_TREES.value) {
-				cutDownTreesCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.CLEARED_AREAS.value) {
-				clearedAreasCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.LOGGING_EQUIPMENT.value) {
-				loggingEquipmentCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.LOGGERS_AT_SITE.value) {
-				loggersAtSiteCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.ILLEGAL_CAMPS.value) {
-				illegalCampsCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.FIRED_BURNED_AREAS.value) {
-				firesBurnedAreasCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.OTHER.value) {
-				otherCheckBox.isChecked = true
-			}
-			if (id == EvidenceTypes.NONE.value) {
-				noneCheckBox.isChecked = true
+			when(id) {
+				EvidenceTypes.CUT_DOWN_TREES.value -> cutDownTreesCheckBox.isChecked = true
+				EvidenceTypes.CLEARED_AREAS.value -> clearedAreasCheckBox.isChecked = true
+				EvidenceTypes.LOGGING_EQUIPMENT.value -> loggingEquipmentCheckBox.isChecked = true
+				EvidenceTypes.LOGGERS_AT_SITE.value -> loggersAtSiteCheckBox.isChecked = true
+				EvidenceTypes.ILLEGAL_CAMPS.value -> illegalCampsCheckBox.isChecked = true
+				EvidenceTypes.FIRED_BURNED_AREAS.value -> firesBurnedAreasCheckBox.isChecked = true
+				EvidenceTypes.OTHER.value -> otherCheckBox.isChecked = true
+				EvidenceTypes.NONE.value -> noneCheckBox.isChecked = true
 			}
 		}
 	}
