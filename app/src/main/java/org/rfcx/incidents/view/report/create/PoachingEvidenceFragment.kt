@@ -111,20 +111,12 @@ class PoachingEvidenceFragment : Fragment() {
 	
 	private fun setSelected() {
 		selected.forEach { id ->
-			if (id == PoachingEvidence.BULLET_SHELLS.value) {
-				bulletShellsCheckBox.isChecked = true
-			}
-			if (id == PoachingEvidence.FOOTPRINTS.value) {
-				footprintsCheckBox.isChecked = true
-			}
-			if (id == PoachingEvidence.DOG_TRACKS.value) {
-				dogTracksCheckBox.isChecked = true
-			}
-			if (id == PoachingEvidence.OTHER.value) {
-				otherSpecifyCheckBox.isChecked = true
-			}
-			if (id == PoachingEvidence.NONE.value) {
-				noneCheckBox.isChecked = true
+			when (id) {
+				PoachingEvidence.BULLET_SHELLS.value -> bulletShellsCheckBox.isChecked = true
+				PoachingEvidence.FOOTPRINTS.value -> footprintsCheckBox.isChecked = true
+				PoachingEvidence.DOG_TRACKS.value -> dogTracksCheckBox.isChecked = true
+				PoachingEvidence.OTHER.value -> otherSpecifyCheckBox.isChecked = true
+				PoachingEvidence.NONE.value -> noneCheckBox.isChecked = true
 			}
 		}
 	}

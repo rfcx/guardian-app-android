@@ -11,12 +11,13 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.Actions
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
+import java.util.*
 
 class ActionFragment : Fragment() {
 	
 	private val analytics by lazy { context?.let { Analytics(it) } }
 	lateinit var listener: CreateReportListener
-	var selected: Int? = null
+	private var selected = ArrayList<Int>()
 	
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -31,44 +32,77 @@ class ActionFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupResponseActions()
+		setOnChange()
 		
 		nextStepButton.setOnClickListener {
-			selected?.let { listener.setAction(listOf(it)) }
-			listener.handleCheckClicked(StepCreateReport.ASSETS.step)
+			setSelect()
 		}
-		
-		actionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-			nextStepButton.isEnabled = true
-			
-			when (checkedId) {
-				R.id.collectedRadioButton -> selected = Actions.COLLECTED_EVIDENCE.value
-				R.id.warningRadioButton -> selected = Actions.ISSUE_A_WARNING.value
-				R.id.confiscatedRadioButton -> selected = Actions.CONFISCATED_EQUIPMENT.value
-				R.id.damagedMachineryRadioButton -> selected = Actions.DAMAGED_MACHINERY.value
+	}
+	
+	private fun setupResponseActions() {
+		val response = listener.getResponse()
+		response?.let { res ->
+			selected.addAll(res.responseActions)
+			nextStepButton.isEnabled = selected.isNotEmpty()
+			setSelected()
+		}
+	}
+	
+	private fun setSelected() {
+		selected.forEach { id ->
+			when(id) {
+				Actions.COLLECTED_EVIDENCE.value -> collectedCheckBox.isChecked = true
+				Actions.ISSUE_A_WARNING.value -> warningCheckBox.isChecked = true
+				Actions.CONFISCATED_EQUIPMENT.value -> confiscatedCheckBox.isChecked = true
+				Actions.DAMAGED_MACHINERY.value -> damagedMachineryCheckBox.isChecked = true
 			}
 		}
+	}
+	
+	private fun setOnChange() {
+		collectedCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		warningCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		confiscatedCheckBox.setOnClickListener {
+			setEnabled()
+		}
+		damagedMachineryCheckBox.setOnClickListener {
+			setEnabled()
+		}
+	}
+	
+	private fun setEnabled() {
+		selected.clear()
+		nextStepButton.isEnabled = collectedCheckBox.isChecked ||
+				warningCheckBox.isChecked || confiscatedCheckBox.isChecked ||
+				damagedMachineryCheckBox.isChecked
+	}
+	
+	private fun setSelect() {
+		selected.clear()
+		if (collectedCheckBox.isChecked) {
+			selected.add(Actions.COLLECTED_EVIDENCE.value)
+		}
+		if (warningCheckBox.isChecked) {
+			selected.add(Actions.ISSUE_A_WARNING.value)
+		}
+		if (confiscatedCheckBox.isChecked) {
+			selected.add(Actions.CONFISCATED_EQUIPMENT.value)
+		}
+		if (damagedMachineryCheckBox.isChecked) {
+			selected.add(Actions.DAMAGED_MACHINERY.value)
+		}
+		listener.setAction(selected)
+		listener.handleCheckClicked(StepCreateReport.ASSETS.step)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_action, container, false)
-	}
-	
-	private fun setupResponseActions() {
-		val response = listener.getResponse()
-		response?.let { res ->
-			val list = res.responseActions
-			nextStepButton.isEnabled = list.isNotEmpty()
-			if (list.isNotEmpty()) {
-				when (list[0]) {
-					Actions.COLLECTED_EVIDENCE.value -> collectedRadioButton.isChecked = true
-					Actions.ISSUE_A_WARNING.value -> warningRadioButton.isChecked = true
-					Actions.CONFISCATED_EQUIPMENT.value -> confiscatedRadioButton.isChecked = true
-					Actions.DAMAGED_MACHINERY.value -> damagedMachineryRadioButton.isChecked = true
-				}
-			}
-		}
 	}
 	
 	companion object {

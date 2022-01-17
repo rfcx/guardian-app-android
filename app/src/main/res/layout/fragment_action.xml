@@ -16,62 +16,75 @@
 		android:text="@string/what_action"
 		app:layout_constraintTop_toTopOf="parent" />
 	
-	<RadioGroup
-		android:id="@+id/actionRadioGroup"
+	<LinearLayout
+		android:id="@+id/whatActionLinearLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_padding_normal"
-		
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:checkedButton="@+id/whatActionRadioButton"
+		android:orientation="vertical"
 		app:layout_constraintTop_toBottomOf="@id/whatActionTextView">
 		
-		<RadioButton
-			android:id="@+id/collectedRadioButton"
+		<CheckBox
+			android:id="@+id/collectedCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/collected_evidence"
-			android:textColor="@drawable/radio_text_color" />
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
-		<RadioButton
-			android:id="@+id/warningRadioButton"
+		<CheckBox
+			android:id="@+id/warningCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/issue_a_warning"
-			android:textColor="@drawable/radio_text_color" />
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
-		<RadioButton
-			android:id="@+id/confiscatedRadioButton"
+		<CheckBox
+			android:id="@+id/confiscatedCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/confiscated_equipment"
-			android:textColor="@drawable/radio_text_color" />
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
 		
-		<RadioButton
-			android:id="@+id/damagedMachineryRadioButton"
+		<CheckBox
+			android:id="@+id/damagedMachineryCheckBox"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_normal"
 			android:layout_marginTop="@dimen/margin_padding_small"
+			android:layout_marginEnd="@dimen/margin_padding_normal"
 			android:background="@drawable/radio_selector"
 			android:button="@color/transparent"
 			android:paddingStart="@dimen/margin_padding_normal"
 			android:paddingEnd="@dimen/margin_padding_normal"
 			android:text="@string/damaged_machinery"
-			android:textColor="@drawable/radio_text_color" />
-	</RadioGroup>
+			android:textColor="@drawable/radio_text_color"
+			app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+	</LinearLayout>
 	
 	<View
 		android:id="@+id/lineBottomView"
