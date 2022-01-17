@@ -18,7 +18,6 @@ class StreamDb(private val realm: Realm) {
 						?.toInt() ?: 0) + 1
 			} else {
 				streamObj.id = stream.id
-				streamObj.incidentRef = if (streamObj.incidentRef == 0) stream.incidentRef else streamObj.incidentRef
 			}
 			it.insertOrUpdate(streamObj)
 		}
