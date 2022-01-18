@@ -143,7 +143,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			if (intent == null) return
 			val streamName = intent.getStringExtra("streamName")
 			if (streamName != null) {
-				viewModel.loadStreams()
+				viewModel.loadStreams(0)
 				setStreamsWithLocalData()
 			}
 		}
@@ -212,7 +212,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		if (!context.isNetworkAvailable()) {
 			isShowProgressBar(false)
 		} else {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 		}
 	}
 	
@@ -245,7 +245,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	override fun onHiddenChanged(hidden: Boolean) {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 			
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
@@ -273,10 +273,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 					val visibleItemCount = streamsLayoutManager.childCount
 					val total = streamsLayoutManager.itemCount
 					val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
-//					val findLastVisibleItemPosition = streamsLayoutManager.findLastVisibleItemPosition()
-					
 					if (!refreshView.isRefreshing) {
-//						if (total <= findLastVisibleItemPosition + 1) viewModel.loadMoreEvents()
 						if ((visibleItemCount + firstVisibleItemPosition) >= total
 								&& firstVisibleItemPosition >= 0
 								&& !viewModel.isLoadMore) {
@@ -352,7 +349,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-				viewModel.loadStreams()
+				viewModel.loadStreams(0)
 			}
 		}
 		
@@ -845,7 +842,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	override fun onRefresh() {
 		if (context.isNetworkAvailable()) {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 		} else {
 			refreshView.isRefreshing = false
 			requireContext().showToast(getString(R.string.no_internet_connection))

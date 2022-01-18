@@ -56,7 +56,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 	
 	fun loadMoreEvents() {
 		isLoadMore = true
-		loadStreams()
+		loadStreams(getStreamsCount())
 	}
 	
 	fun getStreamsFromLocal(): LiveData<List<Stream>> {
@@ -137,7 +137,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 		}
 	}
 	
-	fun loadStreams() {
+	fun loadStreams(offset: Int) {
 		if (context.isNetworkAvailable()) {
 			val preferences = Preferences.getInstance(context)
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
@@ -155,7 +155,7 @@ class EventsViewModel(private val context: Context, private val getProjects: Get
 					override fun onError(e: Throwable) {
 						_streams.value = Result.Error(e)
 					}
-				}, StreamsRequestFactory(projects = listOf(serverId), offset = getStreamsCount()))
+				}, StreamsRequestFactory(projects = listOf(serverId), offset = offset))
 			}
 		}
 	}
