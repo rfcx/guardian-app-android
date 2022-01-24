@@ -113,7 +113,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 		responseId?.let {
 			val images = viewModel.getImagesFromLocal(it)
 			images.forEach { reportImage ->
-				val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_DOMAIN + reportImage.remotePath else "file://${reportImage.localPath}"
+				val path = if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
 				_images.add(path)
 			}
 		}

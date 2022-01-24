@@ -39,7 +39,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		reportImages.forEach {
 			Log.d("setImages", "${it.remotePath}")
 			if (it.remotePath != null) {
-				imagesSource.add(RemoteImageItem(index, if (it.remotePath!!.startsWith(BuildConfig.RANGER_API_DOMAIN)) it.remotePath!! else BuildConfig.RANGER_API_DOMAIN + it.remotePath!!, false))
+				imagesSource.add(RemoteImageItem(index, if (it.remotePath!!.startsWith(BuildConfig.RANGER_API_BASE_URL)) it.remotePath!! else BuildConfig.RANGER_API_BASE_URL + it.remotePath!!, false))
 			} else {
 				imagesSource.add(LocalImageItem(index, it.localPath, it.syncState == ReportImageDb.UNSENT))
 			}
@@ -158,7 +158,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
 		private val progressBar = itemView.progressBarOfImageView
 		
 		fun bind(imagePath: String, canDelete: Boolean) {
-			val fromServer = imagePath.startsWith(BuildConfig.RANGER_API_DOMAIN)
+			val fromServer = imagePath.startsWith(BuildConfig.RANGER_API_BASE_URL)
 			val token = itemView.context.getTokenID()
 			
 			imageReport.setReportImage(

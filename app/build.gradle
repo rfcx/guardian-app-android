@@ -40,17 +40,14 @@ android {
     productFlavors {
         production {
             manifestPlaceholders = [icon: "@mipmap/ic_launcher_app", roundIcon: "@mipmap/ic_launcher_app"]
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
-            buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://device-api.rfcx.org/"'
-            buildConfigField 'String', 'RANGER_API_DOMAIN', '"https://ranger-api.rfcx.org/"'
+            buildConfigField 'String', 'CORE_API_BASE_URL', '"https://api.rfcx.org/"'
+            buildConfigField 'String', 'RANGER_API_BASE_URL', '"https://ranger-api.rfcx.org/"'
         }
         develop {
             applicationIdSuffix ".dev"
             manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
-            buildConfigField 'String', 'RANGER_DOMAIN', '"https://api.rfcx.org/"'
-            buildConfigField 'String', 'DEVICE_API_DOMAIN', '"https://staging-device-api.rfcx.org/"'
-            buildConfigField 'String', 'RANGER_API_DOMAIN', '"https://staging-ranger-api.rfcx.org/"'
-            // Ranger staging domain: "https://staging-api.rfcx.org/" -- 20/2/2020 still no data for testing
+            buildConfigField 'String', 'CORE_API_BASE_URL', '"https://staging-api.rfcx.org/"'
+            buildConfigField 'String', 'RANGER_API_BASE_URL', '"https://staging-ranger-api.rfcx.org/"'
         }
     }
     lintOptions {

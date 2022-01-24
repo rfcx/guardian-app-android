@@ -38,121 +38,121 @@ import java.util.concurrent.TimeUnit
 object ServiceFactory {
 	
 	fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetProjectsEndpoint::class.java)
 	}
 	
 	fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(GetStreamsEndpoint::class.java)
 	}
 	
 	fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(DetectionsEndpoint::class.java)
 	}
 	
 	fun makeMediaService(isDebug: Boolean, context: Context): MediaEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(MediaEndpoint::class.java)
 	}
 	
 	fun makeIncidentsService(isDebug: Boolean, context: Context): IncidentEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(IncidentEndpoint::class.java)
 	}
 	
 	fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(EventsEndpoint::class.java)
 	}
 	
 	fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(CreateResponseEndpoint::class.java)
 	}
 	
 	fun makeAssetsService(isDebug: Boolean, context: Context): AssetsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_API_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(AssetsEndpoint::class.java)
 	}
 	
 	fun makeEventService(isDebug: Boolean, context: Context): EventService {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
 				AuthTokenInterceptor(context)), createDateGson())
 				.create(EventService::class.java)
 	}
 	
 	fun makeClassifiedService(isDebug: Boolean, context: Context): ClassifiedService {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
 				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
 				.create(ClassifiedService::class.java)
 	}
 	
 	fun makeGuardianGroupService(isDebug: Boolean, context: Context): GuardianGroupEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
 				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
 				.create(GuardianGroupEndpoint::class.java)
 	}
 	
 	fun makeInviteCodeService(isDebug: Boolean, context: Context): InviteCodeEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(InviteCodeEndpoint::class.java)
 	}
 	
 	fun makeUserTouchService(isDebug: Boolean, context: Context): UserTouchEndPoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug,
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
 				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
 				.create(UserTouchEndPoint::class.java)
 	}
 	
 	fun makeSetNameService(isDebug: Boolean, context: Context): SetNameEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SetNameEndpoint::class.java)
 	}
 	
 	fun makeSiteNameService(isDebug: Boolean, context: Context): SiteEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SiteEndpoint::class.java)
 	}
 	
 	fun makeShortLinkService(isDebug: Boolean, context: Context): ShortLinkEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(ShortLinkEndpoint::class.java)
 	}
 	
 	fun makePasswordService(isDebug: Boolean, context: Context): PasswordChangeEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(PasswordChangeEndpoint::class.java)
 	}
 	
 	fun makeProfilePhotoService(isDebug: Boolean, context: Context): ProfilePhotoEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(ProfilePhotoEndpoint::class.java)
 	}
 	
 	fun makeSubscribeService(isDebug: Boolean, context: Context): SubscribeEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(SubscribeEndpoint::class.java)
 	}
 	
 	fun makeTermsService(isDebug: Boolean, context: Context): TermsEndpoint {
-		return createRetrofit(BuildConfig.RANGER_DOMAIN, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(TermsEndpoint::class.java)
 	}

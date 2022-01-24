@@ -28,7 +28,7 @@ class ApiManager {
 	init {
 		val retrofit = Retrofit.Builder()
 				.addConverterFactory(GsonConverterFactory.create(createDefaultGson()))
-				.baseUrl(BuildConfig.RANGER_DOMAIN)
+				.baseUrl(BuildConfig.CORE_API_BASE_URL)
 				.client(createClient())
 				.build()
 		

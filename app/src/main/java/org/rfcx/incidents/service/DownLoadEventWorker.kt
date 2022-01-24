@@ -103,7 +103,7 @@ class DownLoadEventWorker(context: Context, workerParams: WorkerParameters) : Wo
 	}
 	
 	private fun createRetrofit(): Retrofit {
-		return Retrofit.Builder().baseUrl(BuildConfig.RANGER_DOMAIN)
+		return Retrofit.Builder().baseUrl(BuildConfig.CORE_API_BASE_URL)
 				.client(OkHttpClient.Builder().apply {
 					connectTimeout(30, TimeUnit.SECONDS)
 					readTimeout(30, TimeUnit.SECONDS)

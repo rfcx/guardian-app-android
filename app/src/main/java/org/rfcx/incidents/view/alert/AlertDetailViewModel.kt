@@ -221,11 +221,11 @@ class AlertDetailViewModel(private val context: Context, private val alertDb: Al
 	}
 	
 	fun setFormatUrlOfSpectrogram(alert: Alert): String {
-		return "${BuildConfig.RANGER_API_DOMAIN}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
+		return "${BuildConfig.RANGER_API_BASE_URL}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
 	}
 	
 	fun setFormatUrlOfAudio(alert: Alert): String {
-		return "${BuildConfig.RANGER_API_DOMAIN}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}__rfull_g1_fmp3.mp3"
+		return "${BuildConfig.RANGER_API_BASE_URL}media/${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}__rfull_g1_fmp3.mp3"
 	}
 	
 	companion object {
