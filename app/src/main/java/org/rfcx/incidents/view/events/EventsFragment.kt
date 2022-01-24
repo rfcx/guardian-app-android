@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -53,7 +54,6 @@ import kotlinx.android.synthetic.main.fragment_new_events.progressBar
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.incident.IncidentsResponse
 import org.rfcx.incidents.data.api.site.toStream
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.Stream
@@ -143,7 +143,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			if (intent == null) return
 			val streamName = intent.getStringExtra("streamName")
 			if (streamName != null) {
-				viewModel.loadStreams()
+				viewModel.loadStreams(0)
 				setStreamsWithLocalData()
 			}
 		}
@@ -212,7 +212,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		if (!context.isNetworkAvailable()) {
 			isShowProgressBar(false)
 		} else {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 		}
 	}
 	
@@ -245,7 +245,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	override fun onHiddenChanged(hidden: Boolean) {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 			
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
@@ -262,10 +262,27 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 		setProjectTitle(viewModel.getProjectName(projectId))
 		
+		val streamsLayoutManager = LinearLayoutManager(context)
 		streamRecyclerView.apply {
-			layoutManager = LinearLayoutManager(context)
+			layoutManager = streamsLayoutManager
 			adapter = streamAdapter
 			streamAdapter.items = viewModel.streamItems
+			addOnScrollListener(object : RecyclerView.OnScrollListener() {
+				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+					super.onScrolled(recyclerView, dx, dy)
+					val visibleItemCount = streamsLayoutManager.childCount
+					val total = streamsLayoutManager.itemCount
+					val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
+					if (!refreshView.isRefreshing) {
+						if ((visibleItemCount + firstVisibleItemPosition) >= total
+								&& firstVisibleItemPosition >= 0
+								&& !viewModel.isLoadMore) {
+							viewModel.loadMoreEvents()
+						}
+					}
+				}
+			})
+			
 		}
 	}
 	
@@ -332,7 +349,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-				viewModel.loadStreams()
+				viewModel.loadStreams(0)
 			}
 		}
 		
@@ -390,6 +407,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
 			setAlertFeatures(streams)
+			setStreamsWithLocalData()
 		})
 		
 		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner, {
@@ -824,7 +842,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	override fun onRefresh() {
 		if (context.isNetworkAvailable()) {
-			viewModel.loadStreams()
+			viewModel.loadStreams(0)
 		} else {
 			refreshView.isRefreshing = false
 			requireContext().showToast(getString(R.string.no_internet_connection))

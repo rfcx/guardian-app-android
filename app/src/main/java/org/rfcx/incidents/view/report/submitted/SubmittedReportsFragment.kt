@@ -42,9 +42,10 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 		if (!hidden) {
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
-			
 			streams = viewModel.getStreamIdsInProjectId()
-			reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+			val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+			reportsAdapter.items = items
+			notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
 		}
 	}
 	
@@ -127,10 +128,11 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserve() {
 		viewModel.getResponses().observe(viewLifecycleOwner, { res ->
-			notHaveSubmittedReportsGroupView.visibility = if (res.isEmpty()) View.VISIBLE else View.GONE
 			streams = viewModel.getStreamIdsInProjectId()
-			reportsAdapter.items = res.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+			val items = res.sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+			reportsAdapter.items = items
 			reportsAdapter.notifyDataSetChanged()
+			notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
 		})
 		
 		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner, { it ->
@@ -165,7 +167,9 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 			}
 			else -> {
 				streams = viewModel.getStreamIdsInProjectId()
-				reportsAdapter.items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+				val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }.filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
+				reportsAdapter.items = items
+				notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
 			}
 		}
 		setProjectTitle(project.name)
