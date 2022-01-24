@@ -1,80 +1,134 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="org.rfcx.ranger.view.login.SetProjectsFragment">
-    
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/alertImageView"
-        android:layout_width="@dimen/alert_size"
-        android:layout_height="@dimen/alert_size"
-        android:layout_marginStart="@dimen/margin_padding_normal"
-        android:layout_marginTop="@dimen/margin_padding_xlarge"
-        android:src="@drawable/ic_menu_alert"
-        android:tint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/setAlertsTextView"
-        style="@style/RangerText.Headline"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_normal"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:layout_marginEnd="@dimen/margin_padding_normal"
-        android:text="@string/set_alerts"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alertImageView" />
-    
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/chooseProjectsDescription"
-        style="@style/RangerText.Label.Secondary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_normal"
-        android:layout_marginTop="@dimen/margin_padding_xsmall"
-        android:layout_marginEnd="@dimen/margin_padding_normal"
-        android:text="@string/choose_which_projects"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setAlertsTextView" />
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/projectsRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_padding_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/submitProjectsButton"
-        app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription"/>
-    
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submitProjectsButton"
-        style="@style/RangerButton.GreenButton"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_margin="@dimen/margin_padding_normal"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:text="@string/next"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    
-    <ProgressBar
-        android:id="@+id/projectsProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/projectsRecycler"
-        app:layout_constraintEnd_toEndOf="@id/projectsRecycler"
-        app:layout_constraintTop_toTopOf="@id/projectsRecycler"
-        app:layout_constraintStart_toStartOf="@id/projectsRecycler" />
-    
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
+	tools:context="org.rfcx.incidents.view.login.SetProjectsFragment">
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/alertImageView"
+		android:layout_width="@dimen/alert_size"
+		android:layout_height="@dimen/alert_size"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:src="@drawable/ic_menu_alert"
+		android:tint="@color/colorPrimary"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/setAlertsTextView"
+		style="@style/RangerText.Headline"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:text="@string/set_alerts"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/alertImageView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/chooseProjectsDescription"
+		style="@style/RangerText.Label.Secondary"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_xsmall"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:text="@string/choose_which_projects"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/setAlertsTextView" />
+	
+	<TextView
+		android:id="@+id/noContentTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_xlarge"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_xlarge"
+		android:text="@string/no_content_project"
+		android:textAlignment="center"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
+	
+	<ProgressBar
+		android:id="@+id/progressLoadProject"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:background="@color/transparent"
+		app:layout_constraintBottom_toTopOf="@id/refreshButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription" />
+	
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		android:id="@+id/projectSwipeRefreshView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toTopOf="@id/selectProjectButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/chooseProjectsDescription"
+		app:layout_constraintVertical_bias="0.0">
+		
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/projectView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:overScrollMode="never" />
+	
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/refreshButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/refresh"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@+id/logoutButton" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/logoutButton"
+		style="@style/RangerButton.GreenButton.Line"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/logout"
+		android:visibility="gone"
+		app:layout_constraintBottom_toTopOf="@+id/selectProjectButton" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/selectProjectButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:layout_marginStart="@dimen/margin_padding_large"
+		android:layout_marginEnd="@dimen/margin_padding_large"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/select"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

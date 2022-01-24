@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
+	tools:context=".view.report.create.EvidenceFragment">
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/whenTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginTop="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:text="@string/what_evidence"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<ScrollView
+		android:id="@+id/scrollView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingBottom="@dimen/margin_padding_small"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/whenTextView">
+		
+		<LinearLayout
+			android:id="@+id/whatEvidenceLinearLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:checkedButton="@+id/whatEvidenceRadioButton"
+			android:orientation="vertical"
+			android:paddingBottom="@dimen/padding_bottom">
+			
+			<CheckBox
+				android:id="@+id/cutDownTreesCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/cut_down_trees"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/clearedAreasCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/cleared_areas"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/loggingEquipmentCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/logging_equipment"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/loggersAtSiteCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/loggers_at_site"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/illegalCampsCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/illegal_camps"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/firesBurnedAreasCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/fires_burned_areas"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/otherCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/other_text"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+			
+			<CheckBox
+				android:id="@+id/noneCheckBox"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:background="@drawable/radio_selector"
+				android:button="@color/transparent"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/common_none"
+				android:textColor="@drawable/radio_text_color"
+				app:layout_constraintTop_toBottomOf="@id/whatActionTextView" />
+		</LinearLayout>
+	</ScrollView>
+	
+	<View
+		android:id="@+id/lineBottomView"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@color/separateLine"
+		app:layout_constraintBottom_toTopOf="@id/nextStepButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/backgroundColor"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/nextStepButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_padding_normal"
+		android:enabled="false"
+		android:text="@string/next"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

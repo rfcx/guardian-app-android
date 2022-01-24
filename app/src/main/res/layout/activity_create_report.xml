@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
+	android:orientation="vertical"
+	tools:context=".view.report.create.CreateReportActivity">
+	
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbarLayout"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		android:background="@color/toolbarColor"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:subtitleTextAppearance="@style/RangerText.SubTitle.Secondary"
+		app:subtitleTextColor="@color/text_secondary"
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+	
+	<FrameLayout
+		android:id="@+id/createReportContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		android:focusable="true"
+		android:focusableInTouchMode="true" />
+
+</LinearLayout>

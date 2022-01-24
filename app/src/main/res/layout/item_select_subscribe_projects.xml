@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="?attr/selectableItemBackground">
+	
+	<TextView
+		android:id="@+id/guardianGroupTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Guardian Group" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/checkBoxImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:src="@drawable/ic_check_box_outline"
+		app:layout_constraintBottom_toBottomOf="@id/guardianGroupTextView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@id/guardianGroupTextView" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/lockImageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingStart="@dimen/margin_padding_normal"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_small"
+		android:src="@drawable/ic_lock"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/checkBoxImageView"
+		app:layout_constraintTop_toTopOf="parent" />
+	
+	<ProgressBar
+		android:id="@+id/subscribeProgress"
+		android:layout_width="@dimen/mini_progress_loading"
+		android:layout_height="@dimen/mini_progress_loading"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/guardianGroupTextView"
+		app:layout_constraintEnd_toStartOf="@id/checkBoxImageView"
+		app:layout_constraintTop_toTopOf="@id/guardianGroupTextView" />
+	
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/separateLine"
+		app:layout_constraintTop_toBottomOf="@+id/guardianGroupTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

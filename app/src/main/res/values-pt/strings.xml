@@ -64,18 +64,14 @@
     <string name="go_to_setting">Definições</string>
 	
 	<!-- message list -->
-    <string name="profile_welcome">Olá, %s!</string>
-    <string name="profile_onduty">Em serviço</string>
-    <string name="profile_nottracking">Não rastreando</string>
-	<string name="error_no_guardian_group_set">Set projeto em configurações</string>
-    <string name="please_set_guardian_group">Por favor projecto conjunto</string>
+	<string name="please_set_guardian_group">Por favor projecto conjunto</string>
     <string name="sent_to">enviar para</string>
 
     <!-- report -->
     <string name="report_title">Relatório</string>
 	<string name="report_what_label">O QUE?</string>
     <string name="report_when_label">QUANDO?</string>
-    <string name="report_submit_button_label">Enviar</string>
+    <string name="report_submit_button_label">Submeter</string>
     <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
     <string name="report_attach_image_label">FOTOS (Opcional)</string>
     <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
@@ -96,8 +92,7 @@
 	<string name="location_tracking_label">Rastreamento de localização</string>
     <string name="location_tracking_on_label">Ligado</string>
     <string name="location_tracking_off_label">Desligado</string>
-    <string name="default_site_label">Local</string>
-    <string name="guardian_group_label">Projetos</string>
+	<string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
     <string name="start_demo">Enviar um alerta de teste</string>
     <string name="notification_will_sent">A notificação será enviada no prazo de 30 segundos para verificar se você pode receber alertas</string>
@@ -125,17 +120,9 @@
     <string name="switch_account">mudar de conta</string>
     
     <!-- Report -->
-    <string name="sync_reports_label">%d relatórios e lista</string>
-    <string name="sync_report_label">%d relatório</string>
-    <string name="sync_checkins_label">%d localizações mais acessadas</string>
-    <string name="sync_waiting_network">esperando pela rede…</string>
-    <string name="sync_starting">Começando o upload…</string>
-    <string name="sync_uploading">Fazendo upload…</string>
-    <string name="sync_complete">Upload completo!</string>
-    <string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
-    <string name="can_not_play_audio">Não é possível reproduzir áudio, tente novamente mais tarde.</string>
-   
-    <!-- Symbols -->
+	<string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
+	
+	<!-- Symbols -->
     <string name="menu_camera">Câmera</string>
     <string name="menu_gallery">Galeria</string>
     
@@ -147,14 +134,11 @@
     <string name="report_detail_title">relatório detalhado</string>
     
     <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
-    <string name="pls_off_air_plane_mode">Por favor, desligue o modo avião</string>
+    <string name="pls_off_air_plane_mode">Por favor desligue o modo avião</string>
     <string name="common_ok">Está bem</string>
     
     <string name="location">Localização</string>
     
-    <string name="menu_status">STATUS</string>
-    <string name="menu_map">MAPA</string>
-    <string name="menu_alert">ALERTA</string>
     <string name="menu_profile">PERFIL</string>
     
     <string name="see_report_detail">veja Detalhe</string>
@@ -163,68 +147,19 @@
     <string name="report_hr_format">%dh</string>
     <string name="report_day_format">%dd</string>
     <string name="report_week_format">%dw</string>
-    <string name="follow_up_later_button">Seguir-se mais tarde</string>
-    <string name="open_map_button">Abrir mapa</string>
-    
-    <string name="common_no">Não</string>
-    <string name="common_yes">Sim</string>
-    
-    <!-- Status -->
-    <string name="status_stat_title">Seu status semanal</string>
-    <string name="status_report_title">Histórico de relatório</string>
-    <string name="status_duty_count_desc">minutos de plantão</string>
-    <string name="status_alert_title">Alertas recentes</string>
-    <string name="status_see_more">Ver mais</string>
-    <string name="status_reported_desc">relatórios enviados</string>
-    <string name="status_reviewed_desc">alerta revisado</string>
-    <string name="format_location">%s, %s</string>
-    <string name="format_image_synced">%s imagem</string>
-    <string name="format_image_unsync">%s imagem (%s ainda não sincronizada)</string>
-    <string name="format_images_synced">%s imagens</string>
-    <string name="format_images_unsync">%s imagens (%s ainda não sincronizadas)</string>
-    <string name="empty_report_text">"Não há relatos nos últimos 7 dias.\nimprensa + para criar uma."</string>
-    <string name="button_later">Mais tarde</string>
-    <string name="button_set_guardian_group">Projetos estabelecem</string>
-    
-    <!-- Override string res from matisse Image picker library -->
-    <string name="album_name_all">Todos os meios</string>
-    <string name="button_preview">visualização</string>
-    <string name="button_apply_default">Aplique</string>
-    <string name="button_apply">Aplicar (%1$d)</string>
-    <string name="button_back">De volta</string>
-    <string name="photo_grid_capture">Câmera</string>
-    <string name="empty_text">Ainda não há meios</string>
-    <string name="button_ok">Está bem</string>
-    <string name="error_over_count_default">Você atingiu o máximo de arquivos selecionáveis</string>
-    <string name="error_over_count">Você só pode selecionar até %1$d arquivos de mídia</string>
-    <string name="error_under_quality">Sob qualidade</string>
-    <string name="error_over_quality">Sobre a qualidade</string>
-    <string name="error_file_type">Tipo de arquivo não suportado</string>
-    <string name="error_type_conflict">Não é possível selecionar imagens e vídeos ao mesmo tempo</string>
-    <string name="error_no_video_activity">Nenhum aplicativo encontrado para suportar visualização de vídeo</string>
-    <string name="error_over_original_size">Não é possível selecionar as imagens maiores que %1$d MB</string>
-    <string name="error_over_original_count">%1$d imagens acima de %2$d MB. O original será desmarcado</string>
-    <string name="button_original">Original</string>
-    <string name="button_sure_default">Está bem</string>
-    <string name="button_sure">Está bem(%1$d)</string>
-    <!-- Override string res from matisse Image picker library -->
+	
+	<!-- Status -->
+	
+	<!-- Override string res from matisse Image picker library -->
+	<string name="button_ok">Está bem</string>
+	<!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">Pelo site</string>
-    <string name="tab_all_alerts">Todos os alertas</string>
-    <string name="yesterday">Ontem</string>
+	<string name="yesterday">Ontem</string>
     
-    <string name="no_internet_connection">Sem Internet, por favor, tente novamente.</string>
-    <string name="warning_set_guardian_group">Projetos não encontrado. Você deve definir um site para receber alertas!</string>
-    <string name="no_incident_occurred_recently">Não há incidente ocorreu recentemente</string>
-    <string name="enjoy_you_day">Aproveite o seu dia :)</string>
-    <string name="see_older">veja mais antiga</string>
-    <string name="not_have_event_more">Não há mais eventos</string>
-    
-    <string name="last_reviewed_by">Última avaliação por</string>
-    <string name="not_have_review">ainda não revistos</string>
-    
-    <!--Event value-->
+    <string name="no_internet_connection">Sem internet. Tente de novo.</string>
+	
+	<!--Event value-->
     <string name="chainsaw">motosserra</string>
     <string name="gunshot">bala</string>
     <string name="vehicle">veículo</string>
@@ -260,28 +195,111 @@
     
     <string name="change_profile_photo">Alterar foto do perfil</string>
     <string name="edit_profile">Editar Perfil</string>
-    <string name="offline_map">Offline Map</string>
-    <string name="download">baixar</string>
-    <string name="delete">excluir (%sMB)</string>
-    <string name="unavailable">INDISPONÍVEL</string>
-    
-    <!--Guardian Group List-->
+	
+	<!--Guardian Group List-->
     <string name="guardian_group_list">Lista de projetos</string>
 	<string name="audio_notes">Notas de áudio</string>
     <string name="photos">Foto</string>
-	<string name="common_none">Nada</string>
+	<string name="common_none">NDA</string>
     
     <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
     <string name="notification_traking_message_format">%d minutos gravado</string>
-    
-    <string name="reject_text">rejeitar</string>
-    <string name="confirm_text">confirme</string>
-    <string name="required">Requeridos!</string>
+	
+	<string name="required">Requeridos!</string>
     <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
     <string name="detected_at">detectado no</string>
     
     <!-- SetProjectsFragment -->
     <string name="set_alerts">Alertas definidos</string>
     <string name="choose_which_projects">Escolha quais os projetos para receber notificações de alerta</string>
+	<string name="not_have_permission">Você não tem permissão para usar este projeto. Peça para o administrador mudar o seu perfil de acesso.</string>
+    <string name="not_have_stream">Sem localidades neste projeto</string>
+    <string name="not_have_draft_reports">"Você não tem nenhum rascunho "</string>
+    <string name="not_submitted_reports_yet">Você ainda não submeteu relatórios</string>
+    <string name="guardian_event_detail">Detalhe da Ocorrência</string>
+    <string name="create_report">Criar Relatório</string>
+    <string name="open_in_maps">Abrir nos Mapas</string>
+    <string name="create_report_steps">Criar Relatório (passo %d de %s)</string>
+    <string name="when_investigate">Quando ocorreu a sua vistoria?</string>
+    <string name="what_time">A que horas você efetuou a patrulha?</string>
+    <string name="today">Hoje</string>
+    <string name="what_evidence">Que evidência de madeireiros encontrou?  <i>Selecione tudo que for relacionado </i></string>
+    <string name="cut_down_trees">Árvores derrubadas</string>
+    <string name="cleared_areas">Limpeza de área</string>
+    <string name="logging_equipment">Serraria Móvel</string>
+    <string name="loggers_at_site">Madeireiros no local</string>
+    <string name="illegal_camps">Acampamento Ilegal</string>
+    <string name="fires_burned_areas">Fogo/Queimadas</string>
+    <string name="how_much_damage">"Qual a extensão do dano na área?  "</string>
+    <string name="no_visible">Não há desmatamento/corte visível</string>
+    <string name="small_trees_cut_down">Pequena - alguns paus derrubados (um caminhão)</string>
+    <string name="medium_trees_cut_down">Moderada - desmatamento (2 a 5 caminhões de madeira)</string>
+    <string name="large_area_clear_cut">Expressiva - limpeza de área (+5 caminhões de madeira)</string>
+    <string name="what_scale">Qual foi a escala da atividade?</string>
+    <string name="small">Pequena (subsistência, agricultura)</string>
+    <string name="large">Grande (escala comercial, equipamento pesado, etc…)</string>
+    <string name="what_action">Que ação tomou? <i>Selecione tudo que for relacionado</i></string>
+    <string name="collected_evidence">Recolhimento de provas/evidências</string>
+    <string name="confiscated_equipment">Confisco de equipamento</string>
+    <string name="issue_a_warning">Avisar pra não voltar/fazer isso de novo</string>
+    <string name="add_evidence">Adicionar prova/evidência</string>
+	<string name="save_draft">Salvar rascunho</string>
+    <string name="add_photos">Fotos (até 5)</string>
+    <string name="add_notes">Anotação</string>
+    <string name="upload_voice_notes">"Gravação de relatório"</string>
+    <string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+    <string name="menu_new_events">Novas Ocorrências</string>
+    <string name="menu_submitted_reports">Relatórios Enviados</string>
+    <string name="menu_draft_reports">Rascunhos</string>
+    <string name="audio_not_found">Áudio não encontrado</string>
+    <string name="refresh">atualizar</string>
+    <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i>"</string>
+    <string name="submit_report">Enviar relatório</string>
+    <string name="add_notes_required">Anotação*</string>
+	<string name="select">Selecione</string>
+    <string name="failed_receive_notification">Falha no recebimento de notificação de %s</string>
+    <string name="failed_unsubscribe_receive_notification">Falha em descadastrar recebimento de notificação de %s</string>
+    <string name="nearby">Próximo</string>
+    <string name="others">Outros</string>
+    <string name="receive_alert_notification">Receba uma notificação de alerta</string>
+    <string name="unsent">"Na fila"</string>
+    <string name="sending">Enviando</string>
+    <string name="sent">Enviado</string>
+    <string name="unable_to_submit_on_airplane_mode">Impossível enviar no modo avião</string>
+    <string name="unable_to_submit_no_internet_connection">Impossível enviar sem conexão</string>
+    <string name="network_not_available">Rede indisponível</string>
+    <string name="no_content_project">"Não há projeto acessível nesta conta Por favor entre em contato com o Administrador ou peça para criar um novo projeto/nova área "</string>
+    <string name="project_could_not_refreshed">O projeto não pôde ser atualizado</string>
+    <string name="answers">Resposta:</string>
+    <string name="logging_scale">Escala de desmatamento:</string>
+    <string name="damage">Tamanho do estrago:</string>
+    <string name="note">Anotação: %s</string>
+    <string name="assets">Material:</string>
+	<string name="damaged_machinery">Estraguei o maquinário (trator, caminhão)</string>
+    <string name="other_text">Outros</string>
+	<string name="logout">Desligar</string>
+    <string name="not_have_events">Nenhum caso desde a última vez</string>
+    <string name="last_step">Último passo</string>
+    <string name="other_date">Outro…</string>
+    <string name="edit">Alterar</string>
+    <string name="do_not_future_time">O tempo da patrulha não pode ser no futuro</string>
+    <string name="logging">Madeireira</string>
+    <string name="poaching">Caça ilegal</string>
+    <string name="what_scale_poaching">Qual é o tamanho da operação de caça ilegal?</string>
+    <string name="small_poaching">"Pequena (individual, informal)  "</string>
+    <string name="large_poaching">"Grande (coordenada, grupo)  "</string>
+    <string name="what_poaching_evidence">Que provas de caça ilegal você encontrou? <i>Selecionar tudo o que tiver relação</i></string>
+    <string name="bullet_shells">Cápsulas de balas / projéteis / restos de armas</string>
+    <string name="footprints">"Pegadas humanas  "</string>
+    <string name="dog_tracks">"Marcas de cachorros  "</string>
+    <string name="small_text">Pequena</string>
+    <string name="large_text">Grande</string>
+    <string name="recent">Recente</string>
+    <string name="hot">Forte atividade</string>
+    <string name="is_today">Hoje, %1s - %2s</string>
+    <string name="is_yesterday_today">Ontem %1s - Hoje %2s</string>
+    <string name="is_yesterday">Ontem, %1s - %2s</string>
+    <string name="is_other_today">%1s - Hoje, %2s</string>
+    <string name="is_other_yesterday">%1s - Ontem, %2s</string>
 
 </resources>

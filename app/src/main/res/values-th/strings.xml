@@ -63,11 +63,7 @@
     <string name="go_to_setting">ตั้งค่า</string>
 	
 	<!-- message list -->
-    <string name="profile_welcome">สวัสดี %s!</string>
-    <string name="profile_onduty">กำลังปฏิบัติหน้าที่</string>
-    <string name="profile_nottracking">ปิดการติดตามตำแหน่ง</string>
-	<string name="error_no_guardian_group_set">ตั้งค่าโปรเจคในเมนูตั้งค่า</string>
-    <string name="please_set_guardian_group">กรุณาตั้งค่าโปรเจค</string>
+	<string name="please_set_guardian_group">กรุณาตั้งค่าโปรเจค</string>
     <string name="sent_to">ส่งไปยัง</string>
 
     <!-- report -->
@@ -94,8 +90,7 @@
 	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
     <string name="location_tracking_on_label">เปิด</string>
     <string name="location_tracking_off_label">ปิด</string>
-    <string name="default_site_label">พื้นที่</string>
-    <string name="guardian_group_label">โปรเจค</string>
+	<string name="guardian_group_label">โปรเจค</string>
     <string name="notifications">การแจ้งเตือน</string>
     <string name="start_demo">ทดสอบส่งการแจ้งเตือน</string>
     <string name="notification_will_sent">การแจ้งเตือนจะถูกส่งภายใน 30 วินาทีเพื่อยืนยันว่าคุณสามารถรับการแจ้งเตือนได้</string>
@@ -122,17 +117,9 @@
     <string name="invalid_invite_code">รหัสเชิญไม่ถูกต้อง</string>
     <string name="switch_account">สลับบัญชี</string>
     <!-- Report -->
-    <string name="sync_reports_label">%d รายงาน</string>
-    <string name="sync_report_label">%d รายงาน</string>
-    <string name="sync_checkins_label">%d เช็คอิน</string>
-    <string name="sync_waiting_network">กำลังรอการเชื่อมต่อ…</string>
-    <string name="sync_starting">เริ่มการอัปโหลด…</string>
-    <string name="sync_uploading">กำลังอัปโหลด…</string>
-    <string name="sync_complete">อัปโหลดเสร็จสมบูรณ์!</string>
-    <string name="empty_list_description">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
-    <string name="can_not_play_audio">ไม่สามารถเล่นเสียงได้โปรดลองอีกครั้งในภายหลัง</string>
-    
-    <!-- Symbols -->
+	<string name="empty_list_description">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
+	
+	<!-- Symbols -->
     <string name="menu_camera">กล้อง</string>
     <string name="menu_gallery">แกลลอรี่</string>
     
@@ -150,9 +137,6 @@
     <string name="location">ตำแหน่ง</string>
     <string name="audio_notes">เสียงที่บันทึก</string>
     
-    <string name="menu_status">สถานะ</string>
-    <string name="menu_map">แผนที่</string>
-    <string name="menu_alert">การแจ้งเตือน</string>
     <string name="menu_profile">โปรไฟล์</string>
     
     <string name="see_report_detail">ดูรายละเอียด</string>
@@ -161,68 +145,19 @@
     <string name="report_hr_format">%dh</string>
     <string name="report_day_format">%dd</string>
     <string name="report_week_format">%dw</string>
-    <string name="follow_up_later_button">ติดตามในภายหลัง</string>
-    <string name="open_map_button">เปิดแผนที่</string>
-    
-    <string name="common_no">ไม่</string>
-    <string name="common_yes">ใช่</string>
-    
-    <!-- Status -->
-    <string name="status_stat_title">สถานะรายสัปดาห์ของคุณ</string>
-    <string name="status_report_title">ประวัติการรายงาน</string>
-    <string name="status_duty_count_desc">นาทีในการปฏิบัติหน้าที่</string>
-    <string name="status_alert_title">การแจ้งเตือนล่าสุด</string>
-    <string name="status_see_more">ดูเพิ่มเติม</string>
-    <string name="status_reported_desc">รายงานที่บันทึก</string>
-    <string name="status_reviewed_desc">การแจ้งเตือนที่รีวิว</string>
-    <string name="format_location">%s, %s</string>
-    <string name="format_image_synced">%s ภาพ</string>
-    <string name="format_image_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
-    <string name="format_images_synced">%s ภาพ</string>
-    <string name="format_images_unsync">%s ภาพ (%s ยังไม่ได้อัปโหลด)</string>
-    <string name="empty_report_text">"ไม่มีรายงานในช่วง 7 วันที่ผ่านมา\nกด + เพื่อสร้างรายงานใหม่"</string>
-    <string name="button_later">ไว้ทีหลัง</string>
-    <string name="button_set_guardian_group">ตั้งค่าโปรเจค</string>
-    
-    <!-- Override string res from matisse Image picker library -->
-    <string name="album_name_all">ไฟล์ทั้งหมด</string>
-    <string name="button_preview">ดูตัวอย่าง</string>
-    <string name="button_apply_default">ใช้</string>
-    <string name="button_apply">ใช้(%1$d)</string>
-    <string name="button_back">กลับ</string>
-    <string name="photo_grid_capture">กล้อง</string>
-    <string name="empty_text">ไม่มีไฟล์</string>
-    <string name="button_ok">ตกลง</string>
-    <string name="error_over_count_default">คุณมีไฟล์ที่สามารถเลือกได้ถึงจำนวนสูงสุดแล้ว</string>
-    <string name="error_over_count">คุณสามารถเลือกไฟล์ได้ถึง %1$d ไฟล์</string>
-    <string name="error_under_quality">คุณภาพต่ำกว่า</string>
-    <string name="error_over_quality">คุณภาพสูงกว่า</string>
-    <string name="error_file_type">ประเภทไฟล์ที่ไม่สนับสนุน</string>
-    <string name="error_type_conflict">ไม่สามารถเลือกภาพและวีดีโอได้ในเวลาเดียวกัน</string>
-    <string name="error_no_video_activity">ไม่พบแอปสำหรับการดูตัวอย่างวีดีโอ</string>
-    <string name="error_over_original_size">ไม่สามารถเลือกภาพที่มีขนาดใหญ่กว่า %1$d MB ได้</string>
-    <string name="error_over_original_count">%1$d ภาพ มีขนาดเกิน %2$d MB</string>
-    <string name="button_original">ไฟล์ต้นฉบับ</string>
-    <string name="button_sure_default">ตกลง</string>
-    <string name="button_sure">ตกลง(%1$d)</string>
-    <!-- Override string res from matisse Image picker library -->
+	
+	<!-- Status -->
+	
+	<!-- Override string res from matisse Image picker library -->
+	<string name="button_ok">ตกลง</string>
+	<!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
-    <string name="tab_group_by_guardians">ตาม Site</string>
-    <string name="tab_all_alerts">การแจ้งเตือนทั้งหมด</string>
-    <string name="yesterday">เมื่อวาน</string>
+	<string name="yesterday">เมื่อวาน</string>
     
     <string name="no_internet_connection">ไม่มีอินเทอร์เน็ตโปรดลองอีกครั้ง</string>
-    <string name="warning_set_guardian_group">ไม่มีโปรเจค กรุณาตั้งค่าSite เพื่อรับการแจ้งเตือน</string>
-    <string name="no_incident_occurred_recently">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
-    <string name="enjoy_you_day">ขอให้มีเวลาที่ดี :)</string>
-    <string name="see_older">ดูแจ้งเตือนก่อนหน้านี้</string>
-    <string name="not_have_event_more">ไม่มีการแจ้งเตือน</string>
-    
-    <string name="last_reviewed_by">รีวิวล่าสุดโดย</string>
-    <string name="not_have_review">ยังไม่ได้รับการรีวิว</string>
-    
-    <!--Event value-->
+	
+	<!--Event value-->
     <string name="chainsaw">เลื่อย</string>
     <string name="gunshot">กระสุนปืน</string>
     <string name="vehicle">ยานพาหนะ</string>
@@ -258,22 +193,16 @@
     
     <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
     <string name="edit_profile">แก้ไขโปรไฟล์</string>
-    <string name="offline_map">แผนที่ออฟไลน์</string>
-    <string name="download">ดาวน์โหลด</string>
-    <string name="delete">ลบแผนที่ (%sMB)</string>
-    <string name="unavailable">ไม่พร้อมใช้งาน</string>
-    
-    <!--Guardian Group List-->
+	
+	<!--Guardian Group List-->
     <string name="guardian_group_list">โปรเจค</string>
 	<string name="photos">ภาพถ่าย</string>
 	<string name="common_none">ไม่มี</string>
     
     <string name="notification_tracking_title">กำลังปฏิบัติหน้าที่และติดตามตำแหน่ง</string>
     <string name="notification_traking_message_format">%d นาทีในการปฏิบัติหน้าที่</string>
-    
-    <string name="reject_text">ปฏิเสธ</string>
-    <string name="confirm_text">ยืนยัน</string>
-    <string name="required">จำเป็นต้องกรอก!</string>
+	
+	<string name="required">จำเป็นต้องกรอก!</string>
     <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
     <string name="detected_at">ตรวจพบที่</string>
     

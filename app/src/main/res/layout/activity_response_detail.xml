@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
+	tools:context=".view.report.detail.ResponseDetailActivity">
+	
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbarLayout"
+		android:layout_width="match_parent"
+		android:layout_height="?android:actionBarSize"
+		android:background="@color/toolbarColor"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+	
+	<androidx.core.widget.NestedScrollView
+		android:id="@+id/guardianListScrollView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/listSteamLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/scheduleImageView"
+				android:layout_width="@dimen/icon_front_text"
+				android:layout_height="@dimen/icon_front_text"
+				android:layout_margin="@dimen/margin_padding_normal"
+				android:src="@drawable/ic_schedule"
+				app:layout_constraintBottom_toBottomOf="@id/investigateAtTextView"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="@id/investigateAtTextView" />
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/investigateAtTextView"
+				style="@style/RangerText.Label"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_small"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				app:layout_constraintStart_toEndOf="@id/scheduleImageView"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="28 0ct 2021, 15:45" />
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/answersTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small"
+				android:text="@string/answers"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/investigateAtTextView" />
+			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/answersRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/backgroundColor"
+				android:dividerHeight="1dp"
+				android:overScrollMode="never"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/answersTextView" />
+			
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/assetsTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_small"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_small"
+				android:text="@string/assets"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/answersRecyclerView" />
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/noteTextView"
+				style="@style/RangerText.Label"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_small"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:text="@string/note"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/assetsTextView" />
+			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/attachImageRecycler"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_padding_normal"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:layout_marginEnd="@dimen/margin_padding_normal"
+				android:clipToPadding="false"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/noteTextView"
+				tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+				tools:listitem="@layout/adapter_report_image"
+				tools:orientation="horizontal" />
+			
+			<org.rfcx.incidents.widget.SoundRecordProgressView
+				android:id="@+id/soundRecordProgressView"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/sound_record_progress_height"
+				android:layout_margin="@dimen/margin_padding_normal"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/attachImageRecycler" />
+			
+			<com.mapbox.mapboxsdk.maps.MapView
+				android:id="@+id/mapBoxView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/map_height"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingEnd="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

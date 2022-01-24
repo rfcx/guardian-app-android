@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/iconImageView"
+		android:layout_width="@dimen/icon_front_text"
+		android:layout_height="@dimen/icon_front_text"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:src="@drawable/ic_verified"
+		app:layout_constraintBottom_toBottomOf="@id/msgTextView"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@id/msgTextView" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/msgTextView"
+		style="@style/RangerText.Label"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:paddingStart="@dimen/margin_padding_small"
+		android:paddingTop="@dimen/margin_padding_small"
+		android:paddingEnd="@dimen/margin_padding_normal"
+		android:paddingBottom="@dimen/margin_padding_small"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/iconImageView"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Cut down tree" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

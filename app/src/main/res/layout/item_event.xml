@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="?attr/selectableItemBackground">
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/numberOfAlertsImageView"
+		android:layout_width="@dimen/number_alerts_site"
+		android:layout_height="@dimen/number_alerts_site"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:src="@drawable/bg_circle_red"
+		app:layout_constraintBottom_toBottomOf="@id/typeTextView"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@id/typeTextView" />
+	
+	<TextView
+		android:id="@+id/typeTextView"
+		style="@style/RangerText.Body"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintStart_toEndOf="@id/numberOfAlertsImageView"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Chainsaw" />
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/dateTextView"
+		style="@style/RangerText.SubTitle.Secondary"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:gravity="end"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/typeTextView"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="2 hrs ago" />
+	
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/separateLine"
+		app:layout_constraintTop_toBottomOf="@+id/typeTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

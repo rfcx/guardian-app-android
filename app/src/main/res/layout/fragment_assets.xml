@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/backgroundColor"
+	tools:context=".view.report.create.AssetsFragment">
+	
+	<ScrollView
+		android:id="@+id/scrollView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:padding="@dimen/margin_padding_normal"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/assetsView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingBottom="@dimen/padding_bottom">
+			
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/addEvidenceTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/add_evidence"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+			
+			<TextView
+				android:id="@+id/attachImageTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:text="@string/add_photos"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/addEvidenceTextView" />
+			
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/attachImageRecycler"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_normal"
+				android:clipToPadding="false"
+				android:visibility="visible"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/attachImageTextView"
+				tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+				tools:listitem="@layout/adapter_report_image"
+				tools:orientation="horizontal" />
+			
+			<TextView
+				android:id="@+id/noteTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_xlarge"
+				android:text="@string/add_notes"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/attachImageRecycler" />
+			
+			<androidx.appcompat.widget.AppCompatEditText
+				android:id="@+id/noteEditText"
+				style="@style/RangerEditText.Background"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:hint="@string/report_note_hint"
+				android:inputType="textMultiLine"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/noteTextView" />
+			
+			<TextView
+				android:id="@+id/reportRecordTextView"
+				style="@style/RangerText.SubTitle.Secondary"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_padding_xlarge"
+				android:text="@string/upload_voice_notes"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/noteEditText" />
+			
+			<org.rfcx.incidents.widget.SoundRecordProgressView
+				android:id="@+id/soundRecordProgressView"
+				android:layout_width="0dp"
+				android:layout_height="48dp"
+				android:layout_marginTop="@dimen/margin_padding_small"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/reportRecordTextView" />
+		
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+	
+	
+	<View
+		android:id="@+id/lineBottomView"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:background="@color/separateLine"
+		app:layout_constraintBottom_toTopOf="@id/saveDraftButton"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/backgroundButtonImageView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_alignParentBottom="true"
+		android:alpha="0.5"
+		android:src="@color/backgroundColor"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/lineBottomView" />
+	
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/saveDraftButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_normal"
+		android:layout_marginEnd="@dimen/margin_padding_small"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/save_draft"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/submitButton"
+		app:layout_constraintStart_toStartOf="parent" />
+	
+	<androidx.appcompat.widget.AppCompatButton
+		android:id="@+id/submitButton"
+		style="@style/RangerButton.GreenButton"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_padding_small"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:text="@string/report_submit_button_label"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/saveDraftButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

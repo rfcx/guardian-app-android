@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:background="@color/backgroundColor">
 	
 	<data>
 		
@@ -10,18 +11,14 @@
 		
 		<variable
 			name="viewModel"
-			type="org.rfcx.ranger.view.profile.ProfileViewModel" />
-		
-		<variable
-			name="onClickLocationTracking"
-			type="android.view.View.OnClickListener" />
+			type="org.rfcx.incidents.view.profile.ProfileViewModel" />
 		
 		<variable
 			name="onClickPassword"
 			type="android.view.View.OnClickListener" />
 		
 		<variable
-			name="onClickGuardingGroup"
+			name="onClickProject"
 			type="android.view.View.OnClickListener" />
 		
 		<variable
@@ -37,10 +34,6 @@
 			type="android.view.View.OnClickListener" />
 		
 		<variable
-			name="onClickAppIntro"
-			type="android.view.View.OnClickListener" />
-		
-		<variable
 			name="onClickProfilePhoto"
 			type="android.view.View.OnClickListener" />
 		
@@ -49,12 +42,9 @@
 			type="android.view.View.OnClickListener" />
 		
 		<variable
-			name="onClickOfflineMap"
+			name="onClickSystemOptions"
 			type="android.view.View.OnClickListener" />
-		
-		<variable
-			name="onClickDeleteOffline"
-			type="android.view.View.OnClickListener" />
+	
 	</data>
 	
 	<ScrollView
@@ -67,7 +57,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingTop="@dimen/margin_padding_large"
 			android:paddingBottom="@dimen/fab_height_half">
 			
 			<LinearLayout
@@ -103,74 +92,7 @@
 						android:layout_marginTop="@dimen/margin_padding_normal"
 						android:text="@{viewModel.userName}"
 						tools:text="Example" />
-					
-					<LinearLayout
-						android:id="@+id/userLocationLayout"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="@dimen/margin_padding_normal"
-						android:layout_marginTop="@dimen/margin_padding_xsmall"
-						android:layout_marginEnd="@dimen/margin_padding_small"
-						android:layout_marginBottom="@dimen/margin_padding_xsmall"
-						android:gravity="center_vertical"
-						tools:ignore="UseCompoundDrawables">
-						
-						<ImageView
-							android:id="@+id/userLocationImageView"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:contentDescription="@string/app_name"
-							android:src="@drawable/ic_point" />
-						
-						<TextView
-							android:id="@+id/userLocationTextView"
-							style="@style/RangerText.Label.Secondary"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:paddingStart="@dimen/margin_padding_small"
-							android:text="@{viewModel.userSite}"
-							android:textColor="@color/text_secondary"
-							tools:text="Tembe" />
-					
-					</LinearLayout>
 				</LinearLayout>
-			</LinearLayout>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="10dp"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="@color/grey_light" />
-			
-			<LinearLayout
-				android:id="@+id/guardianGroupLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickGuardingGroup}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small">
-				
-				<TextView
-					android:id="@+id/guardianGroupTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/guardian_group_label" />
-				
-				<TextView
-					android:id="@+id/siteNameTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@{viewModel.guardianGroup}"
-					tools:text="Osa Conservation" />
-			
 			</LinearLayout>
 			
 			<TextView
@@ -179,307 +101,87 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_xsmall"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
+				android:paddingTop="@dimen/margin_padding_normal"
 				android:text="@string/notifications"
+				android:textColor="@color/text_secondary"
 				android:textSize="@dimen/text_small" />
 			
 			<LinearLayout
-				android:id="@+id/notificationReceiveLayout"
+				android:id="@+id/receiveAlertLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:orientation="horizontal">
-				
-				<TextView
-					android:id="@+id/notificationReceiveTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:text="@string/profile_receive_noti_label" />
-				
-				<androidx.appcompat.widget.SwitchCompat
-					android:id="@+id/notificationReceiveSwitch"
-					style="@style/SwitchCompatStyle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:checked="@{viewModel.notificationReceiving}"
-					android:onCheckedChanged="@{(switch, checked) -> viewModel.onReceiving(checked)}"
-					android:textOff="@string/location_tracking_off_label"
-					android:textOn="@string/location_tracking_on_label"
-					tools:checked="false" />
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/notificationEmailLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:orientation="horizontal"
-				android:visibility="@{viewModel.showNotificationByEmail ? view.VISIBLE : view.GONE}">
-				
-				<LinearLayout
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:gravity="center"
-					android:orientation="vertical">
-					
-					<TextView
-						android:id="@+id/notificationEmailTextView"
-						style="@style/RangerText.SubTitle"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center_vertical"
-						android:text="@string/profile_receive_noti_by_email" />
-					
-					<TextView
-						android:id="@+id/sendToEmailTextView"
-						style="@style/RangerText.SubTitle.Secondary"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:ellipsize="end"
-						android:maxLines="1"
-						android:text="@{viewModel.sendToEmail}"
-						tools:text="sent to retreeo4574@gmail.com" />
-				
-				</LinearLayout>
-				
-				<androidx.appcompat.widget.SwitchCompat
-					android:id="@+id/notificationEmailSwitch"
-					style="@style/SwitchCompatStyle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:checked="@{viewModel.notificationReceivingByEmail}"
-					android:onCheckedChanged="@{(switch, checked) -> viewModel.onReceivingByEmail(checked)}"
-					android:textOff="@string/location_tracking_off_label"
-					android:textOn="@string/location_tracking_on_label"
-					tools:checked="false" />
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/startDemoLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_padding_small"
 				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickStartDemo}"
+				android:onClick="@{onClickProject}"
 				android:orientation="vertical"
 				android:paddingTop="@dimen/margin_padding_normal"
 				android:paddingBottom="@dimen/margin_padding_normal">
 				
 				<TextView
-					android:id="@+id/startDemoTextView"
+					android:id="@+id/eventTitle"
 					style="@style/RangerText.SubTitle"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_padding_normal"
 					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/start_demo" />
+					android:text="@string/events"
+					android:textColor="@color/text_secondary" />
+				
+				<TextView
+					android:id="@+id/eventSubtitle"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@{viewModel.eventSubtitle}" />
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/systemOptionsLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/selectableItemBackground"
+				android:onClick="@{onClickSystemOptions}"
+				android:orientation="vertical"
+				android:paddingTop="@dimen/margin_padding_normal"
+				android:paddingBottom="@dimen/margin_padding_normal"
+				android:visibility="@{viewModel.showSystemOptions ? view.VISIBLE : view.GONE}">
+				
+				<TextView
+					android:id="@+id/systemOptionsTitle"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/system_options"
+					android:textColor="@color/text_secondary" />
+				
+				<TextView
+					android:id="@+id/systemOptionsSubtitle"
+					style="@style/RangerText.SubTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="@dimen/margin_padding_normal"
+					android:layout_marginEnd="@dimen/margin_padding_small"
+					android:text="@string/system_options_subtitle" />
 			</LinearLayout>
 			
 			<View
 				android:layout_width="match_parent"
-				android:layout_height="10dp"
-				android:layout_marginTop="@dimen/margin_padding_small"
-				android:background="@color/grey_light" />
+				android:layout_height="@dimen/separate_line_size"
+				android:background="@color/separateLine" />
 			
 			<TextView
-				android:id="@+id/locationTextView"
+				android:id="@+id/additionalTextView"
 				style="@style/RangerText.Title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_padding_normal"
 				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_xsmall"
-				android:text="@string/location" />
-			
-			<LinearLayout
-				android:id="@+id/locationTrackingLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_normal"
-				android:orientation="horizontal">
-				
-				<TextView
-					android:id="@+id/locationTrackingTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical"
-					android:layout_weight="1"
-					android:text="@string/location_tracking_label"
-					android:textSize="@dimen/text_small" />
-				
-				<FrameLayout
-					android:id="@+id/locationTrackingSwitchLayout"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:clickable="true"
-					android:focusable="true"
-					android:onClick="@{onClickLocationTracking}">
-					
-					<androidx.appcompat.widget.SwitchCompat
-						android:id="@+id/locationTrackingSwitch"
-						style="@style/SwitchCompatStyle"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:checked="@{viewModel.locationTracking}"
-						android:clickable="false"
-						android:focusable="false"
-						android:textOff="@string/location_tracking_off_label"
-						android:textOn="@string/location_tracking_on_label"
-						tools:checked="false" />
-				
-				</FrameLayout>
-			
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/coordinatesLinearLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickCoordinates}"
-				android:orientation="vertical"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small">
-				
-				<TextView
-					android:id="@+id/coordinatesTextViewTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@string/coordinates" />
-				
-				<TextView
-					android:id="@+id/formatCoordinatesTextView"
-					style="@style/RangerText.SubTitle.Secondary"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_padding_normal"
-					android:layout_marginEnd="@dimen/margin_padding_small"
-					android:text="@{viewModel.formatCoordinates}"
-					tools:text="DD" />
-			
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/offlineMapLinearLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingBottom="@dimen/margin_padding_small">
-				
-				<LinearLayout
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:orientation="vertical">
-					
-					<TextView
-						android:id="@+id/offlineMapTextViewTextView"
-						style="@style/RangerText.SubTitle"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="@dimen/margin_padding_normal"
-						android:layout_marginEnd="@dimen/margin_padding_small"
-						android:text="@string/offline_map" />
-					
-					<TextView
-						android:id="@+id/offlineMapTextView"
-						style="@style/RangerText.SubTitle.Secondary"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="@dimen/margin_padding_normal"
-						android:layout_marginEnd="@dimen/margin_padding_small"
-						android:ellipsize="end"
-						android:maxLines="1"
-						android:text="@{viewModel.userSite}"
-						tools:text="Tembe" />
-				</LinearLayout>
-				
-				<androidx.appcompat.widget.AppCompatButton
-					android:id="@+id/downloadButton"
-					style="@style/RangerButton.GreenButton.TextSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="30dp"
-					android:layout_gravity="center"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:onClick="@{onClickOfflineMap}"
-					android:text="@string/download"
-					android:visibility="@{viewModel.getShowDownload ? view.VISIBLE : view.GONE}"
-					tools:visibility="gone" />
-				
-				<androidx.appcompat.widget.AppCompatButton
-					android:id="@+id/deleteButton"
-					style="@style/RangerButton.RedButton.TextSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="30dp"
-					android:layout_gravity="center"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:onClick="@{onClickDeleteOffline}"
-					android:text="@{viewModel.deleteText}"
-					android:visibility="@{viewModel.getShowDelete ? view.VISIBLE : view.GONE}" />
-				
-				<TextView
-					android:id="@+id/unavailableTextView"
-					style="@style/RangerText.Caption"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:text="@string/unavailable"
-					android:visibility="@{viewModel.showUnavailable ? view.VISIBLE: view.GONE}"
-					tools:visibility="gone" />
-				
-				<TextView
-					android:id="@+id/downloadedTextView"
-					style="@style/RangerText.SubTitle"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:text="@{viewModel.downloaded}"
-					android:visibility="@{viewModel.showPercent ? view.VISIBLE : view.GONE}"
-					tools:text="50%" />
-				
-				<ProgressBar
-					android:id="@+id/offlineMapProgress"
-					android:layout_width="@dimen/mini_progress_loading"
-					android:layout_height="@dimen/mini_progress_loading"
-					android:layout_gravity="center"
-					android:layout_marginEnd="@dimen/margin_padding_normal"
-					android:visibility="@{viewModel.getShowLoading ? view.VISIBLE : view.GONE}" />
-			
-			</LinearLayout>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="10dp"
-				android:background="@color/grey_light" />
-			
-			<TextView
-				android:id="@+id/additionalTextView"
-				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
 				android:text="@string/profile_aditional_label"
 				android:textAllCaps="true"
-				android:textColor="@color/text_primary"
+				android:textColor="@color/text_secondary"
 				android:textSize="@dimen/text_small" />
 			
 			<TextView
@@ -488,7 +190,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_small"
+				android:layout_marginTop="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
 				android:text="@string/profile_app_version_label"
 				android:textColor="@color/text_secondary" />
@@ -500,23 +202,10 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/margin_padding_normal"
 				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:layout_marginBottom="@dimen/margin_padding_normal"
 				android:text="@{viewModel.appVersion}"
 				android:textColor="@color/text_secondary"
 				tools:text="2.0.0(135)" />
-			
-			<TextView
-				android:id="@+id/appIntroTextView"
-				style="@style/RangerText.SubTitle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickAppIntro}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/app_intro" />
 			
 			<TextView
 				android:id="@+id/feedbackTextView"
@@ -531,36 +220,21 @@
 				android:paddingBottom="@dimen/margin_padding_normal"
 				android:text="@string/profile_feedback_label" />
 			
-			<TextView
-				android:id="@+id/rateAppTextView"
-				style="@style/RangerText.SubTitle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground"
-				android:onClick="@{onClickRatingApp}"
-				android:paddingStart="@dimen/margin_padding_normal"
-				android:paddingTop="@dimen/margin_padding_normal"
-				android:paddingEnd="@dimen/margin_padding_small"
-				android:paddingBottom="@dimen/margin_padding_normal"
-				android:text="@string/profile_rate_app_label" />
-			
 			<View
 				android:layout_width="match_parent"
-				android:layout_height="10dp"
-				android:background="@color/grey_light" />
+				android:layout_height="@dimen/separate_line_size"
+				android:background="@color/separateLine" />
 			
 			<TextView
 				android:id="@+id/accountTextView"
 				style="@style/RangerText.Title"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/margin_padding_normal"
-				android:layout_marginTop="@dimen/margin_padding_normal"
-				android:layout_marginEnd="@dimen/margin_padding_small"
-				android:layout_marginBottom="@dimen/margin_padding_small"
+				android:paddingStart="@dimen/margin_padding_normal"
+				android:paddingTop="@dimen/margin_padding_normal"
 				android:text="@string/account"
 				android:textAllCaps="true"
-				android:textColor="@color/text_primary"
+				android:textColor="@color/text_secondary"
 				android:textSize="@dimen/text_small" />
 			
 			<TextView
