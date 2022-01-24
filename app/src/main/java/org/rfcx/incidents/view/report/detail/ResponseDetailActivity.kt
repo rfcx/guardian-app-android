@@ -147,6 +147,8 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 					stopPlaying()
 					cancelButton.visibility = View.GONE
 				}
+				SoundRecordState.RECORDING -> {}
+				SoundRecordState.STOPPED_RECORD -> {}
 			}
 		}
 	}

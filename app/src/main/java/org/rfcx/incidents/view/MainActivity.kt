@@ -385,8 +385,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 	}
 	
 	override fun onNetworkStateChange(state: NetworkState) {
-		when (state) {
-			NetworkState.ONLINE -> ResponseSyncWorker.enqueue()
+		if (state == NetworkState.ONLINE) {
+			ResponseSyncWorker.enqueue()
 		}
 	}
 }
