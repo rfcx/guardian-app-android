@@ -44,8 +44,14 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) : Rec
 		private val otherLayout = itemView.otherLayout
 		private val numOfOtherTextView = itemView.numOfOtherTextView
 		private val guardianNameTextView = itemView.guardianNameTextView
+		private val chainsawLayout = itemView.chainsawLayout
+		private val gunLayout = itemView.gunLayout
+		private val peopleLayout = itemView.peopleLayout
 		
 		fun bind(item: StreamItem) {
+			// Reset
+			listOf(chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach { it.visibility = View.GONE }
+			
 			guardianName.text = item.streamName
 			val alerts = item.alerts.sortedBy { a -> a.start }
 			recentTextView.visibility = if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
