@@ -195,11 +195,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectServerId?.let {
 			if (viewModel.isStreamsEmpty(projectServerId)) {
 				isShowProgressBar()
-				loadStreams()
 			} else {
 				setStreamsWithLocalData()
-				loadStreams()
 			}
+			loadStreams()
 		}
 		
 		refreshView.apply {
@@ -360,15 +359,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserver() {
 		
-		viewModel.getIncidentsFromRemote.observe(viewLifecycleOwner, { it ->
-			it.success({ list ->
+		viewModel.getIncidentsFromRemote.observe(viewLifecycleOwner) { it ->
+			it.success({
 				setStreamsWithLocalData()
 			}, {
 			}, {
 			})
-		})
+		}
 		
-		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner, { it ->
+		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner) { it ->
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
 				projectAdapter.items = listOf()
@@ -376,13 +375,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				projectAdapter.notifyDataSetChanged()
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
-				Toast.makeText(context, it.message
-						?: getString(R.string.something_is_wrong), Toast.LENGTH_LONG).show()
+				Toast.makeText(
+					context, it.message
+						?: getString(R.string.something_is_wrong), Toast.LENGTH_LONG
+				).show()
 			}, {
 			})
-		})
+		}
 		
-		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner, { it ->
+		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner) { it ->
 			it.success({ list ->
 				setStreamsWithLocalData()
 				setAlertFeatures(list.map { s -> s.toStream() })
@@ -395,28 +396,28 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowProgressBar()
 				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 			})
-		})
+		}
 		
-		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
-			it.success({ list ->
+		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner) { it ->
+			it.success({
 				setStreamsWithLocalData()
 			}, {
 			}, {
 			})
-		})
+		}
 		
-		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner, { streams ->
+		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner) { streams ->
 			setAlertFeatures(streams)
 			setStreamsWithLocalData()
-		})
+		}
 		
-		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner, {
+		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner) {
 			setAlertFeatures(viewModel.getStreams())
-		})
+		}
 		
-		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner, { trackings ->
+		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner) { trackings ->
 			setTrackingFeatures(trackings)
-		})
+		}
 	}
 	
 	private fun setProjectTitle(str: String) {

@@ -17,7 +17,6 @@ import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.localdb.ResponseDb
 import org.rfcx.incidents.localdb.StreamDb
-import org.rfcx.incidents.service.ReviewEventSyncWorker
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
@@ -37,11 +36,8 @@ class MainActivityViewModel(private val context: Context, private val responseDb
 		return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
 	}
 	
-	val eventGuIdFromNotification = MutableLiveData<String>()
-	
 	init {
 		isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
-		ReviewEventSyncWorker.enqueue()
 	}
 	
 	fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)

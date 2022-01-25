@@ -26,22 +26,10 @@ import org.rfcx.incidents.data.api.site.GetStreamsRepository
 import org.rfcx.incidents.data.api.site.GetStreamsRepositoryImp
 import org.rfcx.incidents.data.api.site.GetStreamsUseCase
 import org.rfcx.incidents.data.local.*
-import org.rfcx.incidents.data.remote.data.alert.EventRepository
-import org.rfcx.incidents.data.remote.data.classified.ClassifiedRepository
-import org.rfcx.incidents.data.remote.domain.alert.EventRepositoryImp
 import org.rfcx.incidents.data.remote.domain.alert.GetEventUseCase
-import org.rfcx.incidents.data.remote.domain.alert.GetEventsUseCase
 import org.rfcx.incidents.data.remote.domain.alert.ReviewEventUseCase
-import org.rfcx.incidents.data.remote.domain.classified.ClassifiedRepositoryImp
-import org.rfcx.incidents.data.remote.domain.classified.GetClassifiedUseCase
 import org.rfcx.incidents.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.incidents.data.remote.domain.executor.ThreadExecutor
-import org.rfcx.incidents.data.remote.guardianGroup.GetGuardianGroups
-import org.rfcx.incidents.data.remote.guardianGroup.GuardianGroupRepository
-import org.rfcx.incidents.data.remote.guardianGroup.GuardianGroupRepositoryImp
-import org.rfcx.incidents.data.remote.invitecode.InviteCodeRepository
-import org.rfcx.incidents.data.remote.invitecode.InviteCodeRepositoryImp
-import org.rfcx.incidents.data.remote.invitecode.SendInviteCodeUseCase
 import org.rfcx.incidents.data.remote.password.PasswordChangeRepository
 import org.rfcx.incidents.data.remote.password.PasswordChangeRepositoryImp
 import org.rfcx.incidents.data.remote.password.PasswordChangeUseCase
@@ -100,19 +88,8 @@ object DataModule {
 		single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
 		single { GetDetections(get(), get(), get()) }
 		
-		single { ClassifiedRepositoryImp(get()) } bind ClassifiedRepository::class
-		single { GetClassifiedUseCase(get(), get(), get()) }
-		
-		single { EventRepositoryImp(get(), get(), get()) } bind EventRepository::class
-		single { GetEventsUseCase(get(), get(), get(), get(), get(), get()) }
 		single { ReviewEventUseCase(get(), get(), get()) }
 		single { GetEventUseCase(get(), get(), get()) }
-		
-		single { GuardianGroupRepositoryImp(get()) } bind GuardianGroupRepository::class
-		single { GetGuardianGroups(get(), get(), get(), get(), get()) }
-		
-		single { InviteCodeRepositoryImp(get()) } bind InviteCodeRepository::class
-		single { SendInviteCodeUseCase(get(), get(), get()) }
 		
 		single { PasswordChangeRepositoryImp(get()) } bind PasswordChangeRepository::class
 		single { PasswordChangeUseCase(get(), get(), get()) }
@@ -158,10 +135,6 @@ object DataModule {
 		factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeClassifiedService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeEventService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeGuardianGroupService(BuildConfig.DEBUG, androidContext()) }
-		factory { ServiceFactory.makeInviteCodeService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
 		factory { ServiceFactory.makeSiteNameService(BuildConfig.DEBUG, androidContext()) }

@@ -14,13 +14,9 @@ import org.rfcx.incidents.data.api.incident.IncidentEndpoint
 import org.rfcx.incidents.data.api.media.MediaEndpoint
 import org.rfcx.incidents.data.api.project.GetProjectsEndpoint
 import org.rfcx.incidents.data.api.site.GetStreamsEndpoint
-import org.rfcx.incidents.data.remote.guardianGroup.GuardianGroupEndpoint
-import org.rfcx.incidents.data.remote.invitecode.InviteCodeEndpoint
 import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
 import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
 import org.rfcx.incidents.data.remote.response.CreateResponseEndpoint
-import org.rfcx.incidents.data.remote.service.rest.ClassifiedService
-import org.rfcx.incidents.data.remote.service.rest.EventService
 import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
 import org.rfcx.incidents.data.remote.shortlink.ShortLinkEndpoint
 import org.rfcx.incidents.data.remote.site.SiteEndpoint
@@ -83,30 +79,6 @@ object ServiceFactory {
 		return createRetrofit(BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
 				GsonProvider.getInstance().gson)
 				.create(AssetsEndpoint::class.java)
-	}
-	
-	fun makeEventService(isDebug: Boolean, context: Context): EventService {
-		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
-				AuthTokenInterceptor(context)), createDateGson())
-				.create(EventService::class.java)
-	}
-	
-	fun makeClassifiedService(isDebug: Boolean, context: Context): ClassifiedService {
-		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
-				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
-				.create(ClassifiedService::class.java)
-	}
-	
-	fun makeGuardianGroupService(isDebug: Boolean, context: Context): GuardianGroupEndpoint {
-		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug,
-				AuthTokenInterceptor(context)), GsonProvider.getInstance().gson)
-				.create(GuardianGroupEndpoint::class.java)
-	}
-	
-	fun makeInviteCodeService(isDebug: Boolean, context: Context): InviteCodeEndpoint {
-		return createRetrofit(BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-				GsonProvider.getInstance().gson)
-				.create(InviteCodeEndpoint::class.java)
 	}
 	
 	fun makeUserTouchService(isDebug: Boolean, context: Context): UserTouchEndPoint {
