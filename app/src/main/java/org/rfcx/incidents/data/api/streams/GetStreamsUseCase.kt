@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.api.site
+package org.rfcx.incidents.data.api.streams
 
 import io.reactivex.Single
 import org.rfcx.incidents.data.remote.domain.SingleUseCase

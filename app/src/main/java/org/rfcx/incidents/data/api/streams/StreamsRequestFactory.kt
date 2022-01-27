@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.api.site
+package org.rfcx.incidents.data.api.streams
 
 data class StreamsRequestFactory(
 		val limit: Int = 10,

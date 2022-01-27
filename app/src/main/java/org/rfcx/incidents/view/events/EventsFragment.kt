@@ -54,11 +54,12 @@ import kotlinx.android.synthetic.main.fragment_new_events.progressBar
 import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.site.toStream
+import org.rfcx.incidents.data.api.streams.toStream
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.toResultOr
 import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.StreamItem
@@ -135,7 +136,6 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	private var queryLayerIds: Array<String> = arrayOf()
 	private var isShowMapIcon = true
 	lateinit var listener: MainActivityEventListener
-	private var tracking = Tracking()
 	private lateinit var localBroadcastManager: LocalBroadcastManager
 	
 	private val streamNameReceived = object : BroadcastReceiver() {
@@ -143,8 +143,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			if (intent == null) return
 			val streamName = intent.getStringExtra("streamName")
 			if (streamName != null) {
-				viewModel.loadStreams(0)
-				setStreamsWithLocalData()
+				viewModel.refreshStreams()
 			}
 		}
 	}
@@ -183,7 +182,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		getLocation()
 		setupToolbar()
-		viewModel.fetchProjects()
+		viewModel.refreshProjects()
 		setOnClickListener()
 		setObserver()
 		setRecyclerView()
@@ -193,25 +192,16 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		val projectServerId = viewModel.getProject(projectId)?.serverId
 		
 		projectServerId?.let {
-			if (viewModel.isStreamsEmpty(projectServerId)) {
-				isShowProgressBar()
+			if (!context.isNetworkAvailable()) {
+				isShowProgressBar(false)
 			} else {
-				setStreamsWithLocalData()
+				viewModel.refreshStreams()
 			}
-			loadStreams()
 		}
 		
 		refreshView.apply {
 			setOnRefreshListener(this@EventsFragment)
 			setColorSchemeResources(R.color.colorPrimary)
-		}
-	}
-	
-	private fun loadStreams() {
-		if (!context.isNetworkAvailable()) {
-			isShowProgressBar(false)
-		} else {
-			viewModel.loadStreams(0)
 		}
 	}
 	
@@ -227,25 +217,25 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		}
 	}
 	
-	private fun setStreamsWithLocalData() {
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val projectServerId = viewModel.getProject(projectId)?.serverId
-		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
-		setItemOnAdapter()
-	}
-	
-	private fun setItemOnAdapter() {
-		streamLayout.visibility = View.VISIBLE
-		isShowProgressBar(false)
-		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-		streamAdapter.items = viewModel.streamItems
-	}
-	
+//	private fun setStreamsWithLocalData() {
+//		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+//		val projectServerId = viewModel.getProject(projectId)?.serverId
+//		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
+//		setItemOnAdapter()
+//	}
+//
+//	private fun setItemOnAdapter() {
+//		streamLayout.visibility = View.VISIBLE
+//		isShowProgressBar(false)
+//		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+//		streamAdapter.items = viewModel.streamItems
+//	}
+//
 	override fun onHiddenChanged(hidden: Boolean) {
 		super.onHiddenChanged(hidden)
 		if (!hidden) {
-			viewModel.loadStreams(0)
-			
+			viewModel.refreshStreams()
+
 			val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
 			setProjectTitle(viewModel.getProjectName(projectId))
 		}
@@ -255,7 +245,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		projectRecyclerView.apply {
 			layoutManager = LinearLayoutManager(context)
 			adapter = projectAdapter
-			projectAdapter.items = viewModel.getProjectsFromLocal()
+			projectAdapter.items = viewModel.getProjects()
 		}
 		
 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
@@ -265,7 +255,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		streamRecyclerView.apply {
 			layoutManager = streamsLayoutManager
 			adapter = streamAdapter
-			streamAdapter.items = viewModel.streamItems
+			// streamAdapter.items = viewModel.streams
 			addOnScrollListener(object : RecyclerView.OnScrollListener() {
 				override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 					super.onScrolled(recyclerView, dx, dy)
@@ -294,16 +284,12 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			setOnRefreshListener {
 				isRefreshing = true
 				when {
-					requireContext().isOnAirplaneMode() -> {
+					requireContext().isOnAirplaneMode() || !requireContext().isNetworkAvailable() -> {
 						isRefreshing = false
 						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
 					}
-					!requireContext().isNetworkAvailable() -> {
-						isRefreshing = false
-						requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
-					}
 					else -> {
-						viewModel.fetchProjects()
+						viewModel.refreshProjects()
 					}
 				}
 			}
@@ -340,38 +326,28 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 		
 		when {
 			requireContext().isOnAirplaneMode() -> {
-				setStreamsWithLocalData()
 				requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
 			}
 			!requireContext().isNetworkAvailable() -> {
-				setStreamsWithLocalData()
 				requireContext().showToast(getString(R.string.no_internet_connection))
 			}
 			else -> {
-				viewModel.loadStreams(0)
+				viewModel.refreshStreams()
 			}
 		}
 		
-		setAlertFeatures(viewModel.getStreams())
+		// setAlertFeatures(viewModel.getStreams())
 		setProjectTitle(project.name)
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")
 	private fun setObserver() {
 		
-		viewModel.getIncidentsFromRemote.observe(viewLifecycleOwner) { it ->
-			it.success({
-				setStreamsWithLocalData()
-			}, {
-			}, {
-			})
-		}
-		
-		viewModel.getProjectsFromRemote.observe(viewLifecycleOwner) { it ->
+		viewModel.projects.observe(viewLifecycleOwner) { it ->
 			it.success({
 				projectSwipeRefreshView.isRefreshing = false
 				projectAdapter.items = listOf()
-				projectAdapter.items = viewModel.getProjectsFromLocal()
+				projectAdapter.items = viewModel.getProjects()
 				projectAdapter.notifyDataSetChanged()
 			}, {
 				projectSwipeRefreshView.isRefreshing = false
@@ -383,9 +359,8 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			})
 		}
 		
-		viewModel.getStreamsFromRemote.observe(viewLifecycleOwner) { it ->
+		viewModel.streams.observe(viewLifecycleOwner) { it ->
 			it.success({ list ->
-				setStreamsWithLocalData()
 				setAlertFeatures(list.map { s -> s.toStream() })
 				refreshView.isRefreshing = false
 				isShowProgressBar(false)
@@ -394,25 +369,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				isShowProgressBar(false)
 			}, {
 				isShowProgressBar()
-				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 			})
-		}
-		
-		viewModel.getAlertsFromRemote.observe(viewLifecycleOwner) { it ->
-			it.success({
-				setStreamsWithLocalData()
-			}, {
-			}, {
-			})
-		}
-		
-		viewModel.getStreamsFromLocal().observe(viewLifecycleOwner) { streams ->
-			setAlertFeatures(streams)
-			setStreamsWithLocalData()
-		}
-		
-		viewModel.getAlertsFromLocal().observe(viewLifecycleOwner) {
-			setAlertFeatures(viewModel.getStreams())
 		}
 		
 		viewModel.getTrackingFromLocal().observe(viewLifecycleOwner) { trackings ->
@@ -450,7 +407,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 				mapView.visibility = View.GONE
 				refreshView.visibility = View.VISIBLE
 				currentLocationButton.visibility = View.GONE
-				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+//				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
 				guardianListScrollView.visibility = View.VISIBLE
 			}
 			isShowMapIcon = !isShowMapIcon
@@ -501,7 +458,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 			
 			val properties = mapOf(
 					Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-					Pair(PROPERTY_MARKER_ALERT_COUNT, viewModel.getEventsCount(it.serverId)),
+					Pair(PROPERTY_MARKER_ALERT_COUNT, "0"), // TODO Replace 0 with event count
 					Pair(PROPERTY_MARKER_ALERT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
 					Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
 			)
@@ -843,7 +800,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
 	
 	override fun onRefresh() {
 		if (context.isNetworkAvailable()) {
-			viewModel.loadStreams(0)
+			viewModel.refreshStreams()
 		} else {
 			refreshView.isRefreshing = false
 			requireContext().showToast(getString(R.string.no_internet_connection))

@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.api.site
+package org.rfcx.incidents.data.api.streams
 
 import io.reactivex.Single
 import retrofit2.http.GET

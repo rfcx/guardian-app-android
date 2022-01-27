@@ -22,39 +22,39 @@ import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
 object UiModule {
-	
-	val mainModule = module {
-		viewModel { MainActivityViewModel(androidContext(),get(), get(), get(), get(), get()) }
-	}
-	
-	val eventsModule = module {
-		viewModel { EventsViewModel(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
-		viewModel { AlertDetailViewModel(androidContext(), get(), get(), get()) }
-		viewModel { GuardianEventDetailViewModel(get(), get(), get(), get()) }
-	}
-	
-	val reportsModule = module {
-		viewModel { CreateReportViewModel(get(), get(), get(), get(), get(), get()) }
-		viewModel { ResponseDetailViewModel(get(), get(), get()) }
-	}
-	
-	val mapModule = module {
-		viewModel { MapViewModel(get(), get(), get(), get(), get()) }
-		viewModel { MapDetailViewModel(get(), get()) }
-		viewModel { ReportViewPagerFragmentViewModel(get()) }
-	}
-	
-	val profileModule = module {
-		viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get(), get()) }
-		viewModel { GuardianGroupViewModel(androidContext(), get(), get()) }
-		viewModel { FeedbackViewModel(androidContext()) }
-		viewModel { PasswordChangeViewModel(get()) }
-		viewModel { EditProfileViewModel(androidContext(), get()) }
-	}
-	
-	var loginModule = module {
-		viewModel { LoginViewModel(androidContext(), get()) }
-		viewModel { SetUserNameViewModel(androidContext(), get()) }
-		viewModel { SetProjectsViewModel(androidContext(), get(), get(), get(), get(), get()) }
-	}
+    
+    val mainModule = module {
+        viewModel { MainActivityViewModel(androidContext(), get(), get(), get(), get(), get()) }
+    }
+    
+    val eventsModule = module {
+        viewModel { EventsViewModel(androidContext(), get(), get(), get(), get()) }
+        viewModel { AlertDetailViewModel(androidContext(), get(), get(), get()) }
+        viewModel { GuardianEventDetailViewModel(get(), get(), get(), get()) }
+    }
+    
+    val reportsModule = module {
+        viewModel { CreateReportViewModel(get(), get(), get(), get(), get(), get()) }
+        viewModel { ResponseDetailViewModel(get(), get(), get()) }
+    }
+    
+    val mapModule = module {
+        viewModel { MapViewModel(get(), get()) }
+        viewModel { MapDetailViewModel(get(), get()) }
+        viewModel { ReportViewPagerFragmentViewModel(get()) }
+    }
+    
+    val profileModule = module {
+        viewModel { ProfileViewModel(androidContext(), get(), get()) }
+        viewModel { GuardianGroupViewModel(androidContext(), get(), get()) }
+        viewModel { FeedbackViewModel(androidContext()) }
+        viewModel { PasswordChangeViewModel(get()) }
+        viewModel { EditProfileViewModel(androidContext(), get()) }
+    }
+    
+    var loginModule = module {
+        viewModel { LoginViewModel(androidContext(), get()) }
+        viewModel { SetUserNameViewModel(androidContext(), get()) }
+        viewModel { SetProjectsViewModel(androidContext(), get(), get()) }
+    }
 }

@@ -2,8 +2,8 @@ package org.rfcx.incidents.localdb
 
 import io.realm.Realm
 import io.realm.RealmResults
-import org.rfcx.incidents.data.api.site.StreamResponse
-import org.rfcx.incidents.data.api.site.toStream
+import org.rfcx.incidents.data.api.streams.StreamResponse
+import org.rfcx.incidents.data.api.streams.toStream
 import org.rfcx.incidents.entity.Stream
 
 class StreamDb(private val realm: Realm) {
