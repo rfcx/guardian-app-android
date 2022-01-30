@@ -2,11 +2,9 @@ package org.rfcx.incidents.view.events.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_event.view.*
-import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 
@@ -20,8 +18,8 @@ class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
-        return AlertItemViewHolder(view)
+        val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return AlertItemViewHolder(binding)
     }
 
     override fun getItemCount(): Int = items.size
@@ -33,9 +31,9 @@ class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :
         }
     }
 
-    inner class AlertItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val typeTextView = itemView.typeTextView
-        private val dateTextView = itemView.dateTextView
+    inner class AlertItemViewHolder(binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val typeTextView = binding.typeTextView
+        private val dateTextView = binding.dateTextView
 
         fun bind(item: Alert) {
             dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context)

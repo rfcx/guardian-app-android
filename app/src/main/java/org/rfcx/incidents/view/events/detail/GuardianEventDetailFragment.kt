@@ -10,19 +10,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_guardian_event_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.events.toAlert
 import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
 class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
+    private var _binding: FragmentGuardianEventDetailBinding? = null
+    private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: GuardianEventDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
@@ -57,9 +63,14 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_guardian_event_detail, container, false)
+    ): View {
+        _binding = FragmentGuardianEventDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,12 +79,12 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
         setObserve()
         isShowProgressBar()
 
-        alertsRecyclerView.apply {
+        binding.alertsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = alertItemAdapter
             alertItemAdapter.items = alerts
 
-            createReportButton.setOnClickListener {
+            binding.createReportButton.setOnClickListener {
                 name?.let { name ->
                     guardianId?.let { id ->
                         analytics?.trackCreateResponseEvent()
@@ -86,7 +97,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             }
         }
 
-        openMapsButton.setOnClickListener {
+        binding.openMapsButton.setOnClickListener {
             guardianId?.let { id ->
                 val stream = viewModel.getStream(id)
                 if (stream != null) {
@@ -95,9 +106,9 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             }
         }
 
-        guardianNameTextView.text = name
-        distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
-        distanceTextView.text = distance?.setFormatLabel()
+        binding.guardianNameTextView.text = name
+        binding.distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
+        binding.distanceTextView.text = distance?.setFormatLabel()
 
         guardianId?.let {
             if (viewModel.getEventsCount(it) != 0L) {
@@ -113,36 +124,36 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             }
         }
 
-        alertsSwipeRefreshView.apply {
+        binding.alertsSwipeRefreshView.apply {
             setOnRefreshListener(this@GuardianEventDetailFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
 
     private fun setObserve() {
-        viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
+        viewModel.getAlertsFromRemote.observe(viewLifecycleOwner) { it ->
             it.success({ list ->
                 alertItemAdapter.items = list.map { a -> a.toAlert() }
-                notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+                binding.notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                 isShowProgressBar(false)
-                alertsSwipeRefreshView.isRefreshing = false
+                binding.alertsSwipeRefreshView.isRefreshing = false
             }, {
-                alertsSwipeRefreshView.isRefreshing = false
+                binding.alertsSwipeRefreshView.isRefreshing = false
             }, {
             })
-        })
+        }
     }
 
     private fun setupToolbar() {
         val activity = (activity as AppCompatActivity?) ?: return
-        activity.setSupportActionBar(toolbarLayout)
+        activity.setSupportActionBar(binding.toolbarLayout)
         activity.supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
             title = getString(R.string.guardian_event_detail)
         }
 
-        toolbarLayout.setNavigationOnClickListener {
+        binding.toolbarLayout.setNavigationOnClickListener {
             listener.onBackPressed()
         }
     }
@@ -165,11 +176,11 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
 
     override fun onRefresh() {
         guardianId?.let { viewModel.fetchEvents(it) }
-        notHaveEventsLayout.visibility = View.GONE
+        binding.notHaveEventsLayout.visibility = View.GONE
     }
 
     private fun isShowProgressBar(show: Boolean = true) {
-        progressBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     companion object {

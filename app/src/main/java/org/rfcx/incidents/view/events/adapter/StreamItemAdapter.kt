@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_guardian.view.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemGuardianBinding
 import org.rfcx.incidents.entity.alert.Alert
 
 class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
@@ -21,8 +21,8 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian, parent, false)
-        return GuardianItemViewHolder(view)
+        val binding = ItemGuardianBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return GuardianItemViewHolder(binding)
     }
 
     override fun getItemCount(): Int = items.size
@@ -34,20 +34,23 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         }
     }
 
-    inner class GuardianItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val guardianName = itemView.guardianNameTextView
-        private val timeTextView = itemView.timeTextView
-        private val bellImageView = itemView.bellImageView
-        private val recentTextView = itemView.recentTextView
-        private val hotTextView = itemView.hotTextView
-        private val noneTextView = itemView.noneTextView
-        private val incidentIdTextView = itemView.incidentIdTextView
-        private val otherLayout = itemView.otherLayout
-        private val numOfOtherTextView = itemView.numOfOtherTextView
-        private val guardianNameTextView = itemView.guardianNameTextView
-        private val chainsawLayout = itemView.chainsawLayout
-        private val gunLayout = itemView.gunLayout
-        private val peopleLayout = itemView.peopleLayout
+    inner class GuardianItemViewHolder(binding: ItemGuardianBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val guardianName = binding.guardianNameTextView
+        private val timeTextView = binding.timeTextView
+        private val bellImageView = binding.bellImageView
+        private val recentTextView = binding.recentTextView
+        private val hotTextView = binding.hotTextView
+        private val noneTextView = binding.noneTextView
+        private val incidentIdTextView = binding.incidentIdTextView
+        private val otherLayout = binding.otherLayout
+        private val numOfOtherTextView = binding.numOfOtherTextView
+        private val guardianNameTextView = binding.guardianNameTextView
+        private val chainsawLayout = binding.chainsawLayout
+        private val numOfChainsawTextView = binding.numOfChainsawTextView
+        private val gunLayout = binding.gunLayout
+        private val numOfGunTextView = binding.numOfGunTextView
+        private val peopleLayout = binding.peopleLayout
+        private val numOfPeopleTextView = binding.numOfPeopleTextView
 
         fun bind(item: StreamItem) {
             // Reset
@@ -80,7 +83,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
             typeOfAlert.forEachIndexed { index, alert ->
                 val type = alert.classification?.value ?: return
                 if (index < 2) {
-                    showIconType(type, itemView, alerts)
+                    showIconType(type, alerts)
                 } else {
                     otherLayout.visibility = View.VISIBLE
                     number += getNumberOfAlertByType(alerts, type).toInt()
@@ -88,34 +91,27 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
                 }
             }
         }
-    }
 
-    fun showIconType(type: String, itemView: View, alerts: List<Alert>) {
-        val chainsawLayout = itemView.chainsawLayout
-        val peopleLayout = itemView.peopleLayout
-        val gunLayout = itemView.gunLayout
-        val numOfChainsawTextView = itemView.numOfChainsawTextView
-        val numOfPeopleTextView = itemView.numOfPeopleTextView
-        val numOfGunTextView = itemView.numOfGunTextView
-
-        when (type) {
-            GUNSHOT -> {
-                gunLayout.visibility = View.VISIBLE
-                numOfGunTextView.text = getNumberOfAlertByType(alerts, type)
-            }
-            HUMAN_VOICE -> {
-                peopleLayout.visibility = View.VISIBLE
-                numOfPeopleTextView.text = getNumberOfAlertByType(alerts, type)
-            }
-            CHAINSAW -> {
-                chainsawLayout.visibility = View.VISIBLE
-                numOfChainsawTextView.text = getNumberOfAlertByType(alerts, type)
+        private fun showIconType(type: String, alerts: List<Alert>) {
+            when (type) {
+                GUNSHOT -> {
+                    gunLayout.visibility = View.VISIBLE
+                    numOfGunTextView.text = getNumberOfAlertByType(alerts, type)
+                }
+                HUMAN_VOICE -> {
+                    peopleLayout.visibility = View.VISIBLE
+                    numOfPeopleTextView.text = getNumberOfAlertByType(alerts, type)
+                }
+                CHAINSAW -> {
+                    chainsawLayout.visibility = View.VISIBLE
+                    numOfChainsawTextView.text = getNumberOfAlertByType(alerts, type)
+                }
             }
         }
-    }
 
-    private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
-        return alerts.filter { a -> a.classification?.value == type }.size.toString()
+        private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
+            return alerts.filter { a -> a.classification?.value == type }.size.toString()
+        }
     }
 
     val Number.toPx
