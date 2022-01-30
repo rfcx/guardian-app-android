@@ -10,19 +10,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.Player
-import kotlinx.android.synthetic.main.activity_alert_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
 import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.databinding.ActivityAlertDetailBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.alert.AlertDetailViewModel.Companion.maxProgress
-import java.util.*
+import java.util.Date
 
 class AlertDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAlertDetailBinding
     private val viewModel: AlertDetailViewModel by viewModel()
 
     companion object {
@@ -40,13 +41,15 @@ class AlertDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alert_detail)
+        binding = ActivityAlertDetailBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         alertId = intent?.getStringExtra(EXTRA_ALERT_ID)
         setupToolbar()
 
         val alert = alertId?.let { viewModel.getAlert(it) }
-        guardianNameTextView.text = alert?.classification?.title
-        timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
+        binding.guardianNameTextView.text = alert?.classification?.title
+        binding.timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
         val token = this.getTokenID()
 
         alert?.let {
@@ -58,18 +61,18 @@ class AlertDetailActivity : AppCompatActivity() {
                 alertData = it.setNewTime(end = Date(alert.start.time + 15 * SECOND))
             }
 
-            spectrogramImageView.setReportImage(
+            binding.spectrogramImageView.setReportImage(
                 url = viewModel.setFormatUrlOfSpectrogram(alertData),
                 fromServer = true,
                 token = token,
-                progressBar = loadingImageProgressBar
+                progressBar = binding.loadingImageProgressBar
             )
             viewModel.setAlert(alertData)
             setupView(viewModel.setFormatUrlOfAudio(alertData))
             observePlayer()
         }
 
-        soundProgressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.soundProgressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     viewModel.seekPlayerTo((progress.toLong() * viewModel.getDuration() / maxProgress) * SECOND)
@@ -81,7 +84,7 @@ class AlertDetailActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        viewModel.classifiedCation.observe(this, { it ->
+        viewModel.classifiedCation.observe(this) { it ->
             it.success({ confidence ->
                 val classificationAdapter = ClassificationAdapter()
                 classificationAdapter.setClassification(confidence, viewModel.getDuration())
@@ -92,13 +95,13 @@ class AlertDetailActivity : AppCompatActivity() {
                         return classificationAdapter.lists[position].durationSecond()
                     }
                 }
-                classificationRecyclerView.apply {
+                binding.classificationRecyclerView.apply {
                     setHasFixedSize(true)
                     layoutManager = gridLayoutManager
                     adapter = classificationAdapter
                 }
             })
-        })
+        }
     }
 
     private fun Alert.setNewTime(start: Date? = null, end: Date? = null): Alert = Alert(
@@ -117,56 +120,56 @@ class AlertDetailActivity : AppCompatActivity() {
     )
 
     private fun setupView(url: String) {
-        soundProgressSeekBar.max = maxProgress
+        binding.soundProgressSeekBar.max = maxProgress
 
-        replayButton.setOnClickListener {
+        binding.replayButton.setOnClickListener {
             viewModel.replaySound(url)
         }
     }
 
     private fun observePlayer() {
-        viewModel.playerError.observe(this, {
+        viewModel.playerError.observe(this) {
             Toast.makeText(this, R.string.can_not_play_audio, Toast.LENGTH_SHORT).show()
-            loadingSoundProgressBar.visibility = View.INVISIBLE
-            replayButton.visibility = View.VISIBLE
-        })
+            binding.loadingSoundProgressBar.visibility = View.INVISIBLE
+            binding.replayButton.visibility = View.VISIBLE
+        }
 
-        viewModel.playerState.observe(this, {
+        viewModel.playerState.observe(this) {
             when (it) {
                 Player.STATE_BUFFERING -> {
-                    replayButton.visibility = View.INVISIBLE
-                    loadingSoundProgressBar.visibility = View.VISIBLE
+                    binding.replayButton.visibility = View.INVISIBLE
+                    binding.loadingSoundProgressBar.visibility = View.VISIBLE
                 }
                 Player.STATE_READY -> {
-                    replayButton.visibility = View.INVISIBLE
-                    loadingSoundProgressBar.visibility = View.INVISIBLE
+                    binding.replayButton.visibility = View.INVISIBLE
+                    binding.loadingSoundProgressBar.visibility = View.INVISIBLE
                 }
                 Player.STATE_IDLE -> {
-                    loadingSoundProgressBar.visibility = View.INVISIBLE
+                    binding.loadingSoundProgressBar.visibility = View.INVISIBLE
                 }
                 Player.STATE_ENDED -> {
-                    replayButton.visibility = View.VISIBLE
+                    binding.replayButton.visibility = View.VISIBLE
                 }
             }
-        })
+        }
 
-        viewModel.playerProgress.observe(this, {
+        viewModel.playerProgress.observe(this) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                soundProgressSeekBar?.setProgress(it, true)
+                binding.soundProgressSeekBar.setProgress(it, true)
             } else {
-                soundProgressSeekBar?.progress = it
+                binding.soundProgressSeekBar.progress = it
             }
-        })
+        }
 
-        viewModel.loadAudioError.observe(this, {
-            canNotLoadImageLayout.visibility = View.VISIBLE
-            loadingSoundProgressBar.visibility = View.INVISIBLE
-            soundProgressSeekBar.visibility = View.INVISIBLE
-        })
+        viewModel.loadAudioError.observe(this) {
+            binding.canNotLoadImageLayout.visibility = View.VISIBLE
+            binding.loadingSoundProgressBar.visibility = View.INVISIBLE
+            binding.soundProgressSeekBar.visibility = View.INVISIBLE
+        }
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbarLayout)
+        setSupportActionBar(binding.toolbarLayout)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)

@@ -44,26 +44,35 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.expressions.Expression
-import com.mapbox.mapboxsdk.style.layers.*
+import com.mapbox.mapboxsdk.style.layers.CircleLayer
+import com.mapbox.mapboxsdk.style.layers.LineLayer
+import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import kotlinx.android.synthetic.main.fragment_new_events.*
-import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.streams.toStream
 import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.databinding.FragmentNewEventsBinding
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
+import org.rfcx.incidents.util.showToast
+import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.StreamItem
 import org.rfcx.incidents.view.events.adapter.StreamItemAdapter
 import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
-import java.util.*
+import java.util.Date
 
 class EventsFragment :
     Fragment(),
@@ -71,7 +80,7 @@ class EventsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-    (StreamItem) -> Unit {
+        (StreamItem) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -99,6 +108,9 @@ class EventsFragment :
         @JvmStatic
         fun newInstance() = EventsFragment()
     }
+
+    private var _binding: FragmentNewEventsBinding? = null
+    private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: EventsViewModel by viewModel()
@@ -174,8 +186,13 @@ class EventsFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_events, container, false)
+        _binding = FragmentNewEventsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -204,14 +221,14 @@ class EventsFragment :
             }
         }
 
-        refreshView.apply {
+        binding.refreshView.apply {
             setOnRefreshListener(this@EventsFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
 
     private fun onClickCurrentLocationButton() {
-        currentLocationButton.setOnClickListener {
+        binding.currentLocationButton.setOnClickListener {
             mapBoxMap?.locationComponent?.isLocationComponentActivated?.let {
                 if (it) {
                     moveCameraToCurrentLocation()
@@ -222,20 +239,6 @@ class EventsFragment :
         }
     }
 
-    // 	private fun setStreamsWithLocalData() {
-// 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-// 		val projectServerId = viewModel.getProject(projectId)?.serverId
-// 		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
-// 		setItemOnAdapter()
-// 	}
-//
-// 	private fun setItemOnAdapter() {
-// 		streamLayout.visibility = View.VISIBLE
-// 		isShowProgressBar(false)
-// 		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-// 		streamAdapter.items = viewModel.streamItems
-// 	}
-//
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
@@ -247,7 +250,7 @@ class EventsFragment :
     }
 
     private fun setRecyclerView() {
-        projectRecyclerView.apply {
+        binding.projectRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectAdapter
             projectAdapter.items = viewModel.getProjects()
@@ -257,7 +260,7 @@ class EventsFragment :
         setProjectTitle(viewModel.getProjectName(projectId))
 
         val streamsLayoutManager = LinearLayoutManager(context)
-        streamRecyclerView.apply {
+        binding.streamRecyclerView.apply {
             layoutManager = streamsLayoutManager
             adapter = streamAdapter
             // streamAdapter.items = viewModel.streams
@@ -267,7 +270,7 @@ class EventsFragment :
                     val visibleItemCount = streamsLayoutManager.childCount
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
-                    if (!refreshView.isRefreshing) {
+                    if (!binding.refreshView.isRefreshing) {
                         if ((visibleItemCount + firstVisibleItemPosition) >= total &&
                             firstVisibleItemPosition >= 0 &&
                             !viewModel.isLoadMore
@@ -281,11 +284,11 @@ class EventsFragment :
     }
 
     private fun setOnClickListener() {
-        projectTitleLayout.setOnClickListener {
+        binding.toolbarLayout.projectTitleLayout.setOnClickListener {
             setOnClickProjectName()
         }
 
-        projectSwipeRefreshView.apply {
+        binding.projectSwipeRefreshView.apply {
             setOnRefreshListener {
                 isRefreshing = true
                 when {
@@ -303,30 +306,30 @@ class EventsFragment :
     }
 
     private fun setOnClickProjectName() {
-        if (projectRecyclerView.visibility == View.VISIBLE) {
-            expandMoreImageView.rotation = 0F
+        if (binding.projectRecyclerView.visibility == View.VISIBLE) {
+            binding.toolbarLayout.expandMoreImageView.rotation = 0F
             listener.showBottomAppBar()
-            projectRecyclerView.visibility = View.GONE
-            projectSwipeRefreshView.visibility = View.GONE
+            binding.projectRecyclerView.visibility = View.GONE
+            binding.projectSwipeRefreshView.visibility = View.GONE
         } else {
-            expandMoreImageView.rotation = 180F
+            binding.toolbarLayout.expandMoreImageView.rotation = 180F
             listener.hideBottomAppBar()
-            projectRecyclerView.visibility = View.VISIBLE
-            projectSwipeRefreshView.visibility = View.VISIBLE
+            binding.projectRecyclerView.visibility = View.VISIBLE
+            binding.projectSwipeRefreshView.visibility = View.VISIBLE
         }
     }
 
     override fun onClicked(project: Project) {
         isShowNotHaveStreams(false)
-        streamLayout.visibility = View.GONE
-        expandMoreImageView.rotation = 0F
+        binding.streamLayout.visibility = View.GONE
+        binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
         isShowProgressBar()
         streamAdapter.items = listOf()
 
         listener.showBottomAppBar()
-        projectRecyclerView.visibility = View.GONE
-        projectSwipeRefreshView.visibility = View.GONE
+        binding.projectRecyclerView.visibility = View.GONE
+        binding.projectSwipeRefreshView.visibility = View.GONE
         viewModel.setProjectSelected(project.id)
 
         when {
@@ -350,12 +353,12 @@ class EventsFragment :
 
         viewModel.projects.observe(viewLifecycleOwner) { it ->
             it.success({
-                projectSwipeRefreshView.isRefreshing = false
+                binding.projectSwipeRefreshView.isRefreshing = false
                 projectAdapter.items = listOf()
                 projectAdapter.items = viewModel.getProjects()
                 projectAdapter.notifyDataSetChanged()
             }, {
-                projectSwipeRefreshView.isRefreshing = false
+                binding.projectSwipeRefreshView.isRefreshing = false
                 Toast.makeText(
                     context,
                     it.message
@@ -369,10 +372,10 @@ class EventsFragment :
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ list ->
                 setAlertFeatures(list.map { s -> s.toStream() })
-                refreshView.isRefreshing = false
+                binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
-                refreshView.isRefreshing = false
+                binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
                 isShowProgressBar()
@@ -385,7 +388,7 @@ class EventsFragment :
     }
 
     private fun setProjectTitle(str: String) {
-        projectTitleTextView.text = str
+        binding.toolbarLayout.projectTitleTextView.text = str
     }
 
     override fun onLockImageClicked() {
@@ -397,36 +400,36 @@ class EventsFragment :
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(binding.toolbarLayout.toolbar)
 
-        changePageImageView.setOnClickListener {
+        binding.toolbarLayout.changePageImageView.setOnClickListener {
             if (isShowMapIcon) {
                 analytics?.trackScreen(Screen.MAP)
                 isShowNotHaveStreams(false)
-                changePageImageView.setImageResource(R.drawable.ic_view_list)
+                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
                 mapView.visibility = View.VISIBLE
-                refreshView.visibility = View.GONE
-                currentLocationButton.visibility = View.VISIBLE
-                guardianListScrollView.visibility = View.GONE
+                binding.refreshView.visibility = View.GONE
+                binding.currentLocationButton.visibility = View.VISIBLE
+                binding.guardianListScrollView.visibility = View.GONE
                 mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
             } else {
-                changePageImageView.setImageResource(R.drawable.ic_map)
+                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
                 mapView.visibility = View.GONE
-                refreshView.visibility = View.VISIBLE
-                currentLocationButton.visibility = View.GONE
+                binding.refreshView.visibility = View.VISIBLE
+                binding.currentLocationButton.visibility = View.GONE
 // 				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-                guardianListScrollView.visibility = View.VISIBLE
+                binding.guardianListScrollView.visibility = View.VISIBLE
             }
             isShowMapIcon = !isShowMapIcon
         }
     }
 
     private fun isShowProgressBar(show: Boolean = true) {
-        progressBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     private fun isShowNotHaveStreams(show: Boolean) {
-        notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
+        binding.notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     /* ------------------- vv Setup Map vv ------------------- */
@@ -641,7 +644,7 @@ class EventsFragment :
         layers.forEachIndexed { i, ly ->
             val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
             val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
-                .toString() != "0"
+                    .toString() != "0"
             ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
             val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
@@ -699,9 +702,9 @@ class EventsFragment :
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        ) != PackageManager.PERMISSION_GRANTED
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return
                 }
@@ -822,7 +825,7 @@ class EventsFragment :
         if (context.isNetworkAvailable()) {
             viewModel.refreshStreams()
         } else {
-            refreshView.isRefreshing = false
+            binding.refreshView.isRefreshing = false
             requireContext().showToast(getString(R.string.no_internet_connection))
         }
     }

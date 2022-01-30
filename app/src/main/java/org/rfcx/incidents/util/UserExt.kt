@@ -5,7 +5,7 @@ import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
-import org.rfcx.incidents.view.login.LoginActivityNew
+import org.rfcx.incidents.view.login.LoginActivity
 import org.rfcx.incidents.view.profile.coordinates.CoordinatesActivity.Companion.DD_FORMAT
 
 fun Context.getTokenID(): String? {
@@ -32,7 +32,7 @@ fun Context?.logout() {
                 bgRealm.deleteAll()
             }, {
                 realm.close()
-                LoginActivityNew.startActivity(this)
+                LoginActivity.startActivity(this)
             }, {
                 realm.close()
             })

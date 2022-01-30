@@ -13,11 +13,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_new_events.*
-import kotlinx.android.synthetic.main.layout_bottom_navigation_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ActivityMainBinding
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.report.Report
@@ -27,7 +25,13 @@ import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
 import org.rfcx.incidents.service.ResponseSyncWorker
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.LocationPermissions
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.logout
+import org.rfcx.incidents.util.saveUserLoginWith
+import org.rfcx.incidents.util.setupDisplayTheme
+import org.rfcx.incidents.util.startLocationChange
 import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
@@ -44,6 +48,7 @@ import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.incidents.widget.BottomNavigationMenuItem
 
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
+    private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
 
     private val locationPermissions by lazy { LocationPermissions(this) }
@@ -57,15 +62,17 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             supportFragmentManager.popBackStack()
 
             when (it.data?.getStringExtra(CreateReportActivity.EXTRA_SCREEN)) {
-                Screen.DRAFT_REPORTS.id -> menuDraftReports.performClick()
-                Screen.SUBMITTED_REPORTS.id -> menuSubmittedReports.performClick()
+                Screen.DRAFT_REPORTS.id -> binding.navMenu.menuDraftReports.performClick()
+                Screen.SUBMITTED_REPORTS.id -> binding.navMenu.menuSubmittedReports.performClick()
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         setupDisplayTheme()
         setStatusBar()
 
@@ -100,14 +107,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     override fun onBackPressed() {
-        projectRecyclerView?.let {
-            if (it.visibility == View.VISIBLE) {
-                showBottomAppBar()
-                it.visibility = View.GONE
-                projectSwipeRefreshView.visibility = View.GONE
-            }
-        }
-
         when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
             is GuardianEventDetailFragment -> {
                 if (supportFragmentManager.backStackEntryCount > 0) {
@@ -156,19 +155,16 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     private fun setupBottomMenu() {
-        menuNewEvents.setOnClickListener {
+        binding.navMenu.menuNewEvents.setOnClickListener {
             onBottomMenuClick(it)
         }
-
-        menuSubmittedReports.setOnClickListener {
+        binding.navMenu.menuSubmittedReports.setOnClickListener {
             onBottomMenuClick(it)
         }
-
-        menuDraftReports.setOnClickListener {
+        binding.navMenu.menuDraftReports.setOnClickListener {
             onBottomMenuClick(it)
         }
-
-        menuProfile.setOnClickListener {
+        binding.navMenu.menuProfile.setOnClickListener {
             onBottomMenuClick(it)
         }
     }
@@ -176,36 +172,36 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun onBottomMenuClick(menu: View) {
         if ((menu as BottomNavigationMenuItem).menuSelected) return
         when (menu.id) {
-            menuNewEvents.id -> {
-                menuNewEvents.menuSelected = true
-                menuSubmittedReports.menuSelected = false
-                menuDraftReports.menuSelected = false
-                menuProfile.menuSelected = false
+            binding.navMenu.menuNewEvents.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = true
+                binding.navMenu.menuSubmittedReports.menuSelected = false
+                binding.navMenu.menuDraftReports.menuSelected = false
+                binding.navMenu.menuProfile.menuSelected = false
 
                 showStatus()
             }
-            menuSubmittedReports.id -> {
-                menuNewEvents.menuSelected = false
-                menuSubmittedReports.menuSelected = true
-                menuDraftReports.menuSelected = false
-                menuProfile.menuSelected = false
+            binding.navMenu.menuSubmittedReports.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = false
+                binding.navMenu.menuSubmittedReports.menuSelected = true
+                binding.navMenu.menuDraftReports.menuSelected = false
+                binding.navMenu.menuProfile.menuSelected = false
 
                 showSubmittedReports()
             }
-            menuDraftReports.id -> {
-                menuNewEvents.menuSelected = false
-                menuSubmittedReports.menuSelected = false
-                menuDraftReports.menuSelected = true
-                menuProfile.menuSelected = false
+            binding.navMenu.menuDraftReports.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = false
+                binding.navMenu.menuSubmittedReports.menuSelected = false
+                binding.navMenu.menuDraftReports.menuSelected = true
+                binding.navMenu.menuProfile.menuSelected = false
 
                 showDraftReports()
             }
 
-            menuProfile.id -> {
-                menuNewEvents.menuSelected = false
-                menuSubmittedReports.menuSelected = false
-                menuDraftReports.menuSelected = false
-                menuProfile.menuSelected = true
+            binding.navMenu.menuProfile.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = false
+                binding.navMenu.menuSubmittedReports.menuSelected = false
+                binding.navMenu.menuDraftReports.menuSelected = false
+                binding.navMenu.menuProfile.menuSelected = true
 
                 showProfile()
             }
@@ -218,12 +214,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     override fun hideBottomAppBar() {
         showAboveAppbar(false)
-        bottomBar.visibility = View.GONE
+        binding.bottomBar.visibility = View.GONE
     }
 
     override fun showBottomAppBar() {
         showAboveAppbar(true)
-        bottomBar.visibility = View.VISIBLE
+        binding.bottomBar.visibility = View.VISIBLE
     }
 
     override fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String) {
@@ -237,11 +233,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun startFragment(fragment: Fragment, tag: String = "") {
         if (tag.isBlank()) {
             supportFragmentManager.beginTransaction()
-                .replace(contentContainer.id, fragment)
+                .replace(binding.contentContainer.id, fragment)
                 .commit()
         } else {
             supportFragmentManager.beginTransaction()
-                .replace(contentContainer.id, fragment, tag)
+                .replace(binding.contentContainer.id, fragment, tag)
                 .addToBackStack(tag)
                 .commit()
         }
@@ -293,13 +289,13 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
-            .add(contentContainer.id, getProfile(), ProfileFragment.tag)
-            .add(contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
-            .add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
-            .add(contentContainer.id, getNewEvents(), EventsFragment.tag)
+            .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
+            .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
+            .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
+            .add(binding.contentContainer.id, getNewEvents(), EventsFragment.tag)
             .commit()
 
-        menuNewEvents.performClick()
+        binding.navMenu.menuNewEvents.performClick()
     }
 
     private fun getNewEvents(): EventsFragment = supportFragmentManager.findFragmentByTag(EventsFragment.tag)
@@ -363,7 +359,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showAboveAppbar(show: Boolean) {
         val contentContainerPaddingBottom =
             if (show) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
-        contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
+        binding.contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
     }
 
     private fun observeMain() {
