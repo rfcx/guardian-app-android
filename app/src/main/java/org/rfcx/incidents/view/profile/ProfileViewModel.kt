@@ -18,7 +18,7 @@ class ProfileViewModel(
     private val profileData: ProfileData,
     private val projectDb: ProjectDb
 ) : ViewModel() {
-    
+
     val notificationReceiving = MutableLiveData<Boolean>()
     val notificationReceivingByEmail = MutableLiveData<Boolean>()
     val appVersion = MutableLiveData<String>()
@@ -29,9 +29,9 @@ class ProfileViewModel(
     val eventSubtitle = MutableLiveData<String>()
     val showSystemOptions = MutableLiveData<Boolean>()
     val preferences = Preferences.getInstance(context)
-    
+
     private val _logoutState = MutableLiveData<Boolean>()
-    
+
     init {
         notificationReceiving.value = profileData.getReceiveNotification()
         notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
@@ -43,12 +43,12 @@ class ProfileViewModel(
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
     }
-    
+
     fun resumed() {
         updateEventSubtitle()
         formatCoordinates.value = "${context.getCoordinatesFormat()}"
     }
-    
+
     fun onLogout() {
         _logoutState.value = true
         if (profileData.getReceiveNotificationByEmail()) {
@@ -67,7 +67,7 @@ class ProfileViewModel(
             context.logout()
         }
     }
-    
+
     private fun updateEventSubtitle() {
         val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProjectByCoreId(id)?.name }
             ?: listOf()
@@ -88,12 +88,12 @@ class ProfileViewModel(
         }
         eventSubtitle.value = subtitle
     }
-    
+
     private fun getSubscribedProject(): List<String>? {
         val preferenceHelper = Preferences.getInstance(context)
         return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
     }
-    
+
     companion object {
         const val DOWNLOAD_CANCEL_STATE = "DOWNLOAD_CANCEL_STATE"
         const val DOWNLOADING_STATE = "DOWNLOADING_STATE"

@@ -8,7 +8,8 @@ import org.rfcx.incidents.entity.site.SiteResponse
 
 class GetSiteNameUseCase(
     private val siteRepository: SiteRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<String, List<SiteResponse>>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: String): Single<List<SiteResponse>> {
         return siteRepository.site(params)

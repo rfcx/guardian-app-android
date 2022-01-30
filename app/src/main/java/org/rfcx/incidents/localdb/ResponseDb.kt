@@ -11,7 +11,7 @@ class ResponseDb(val realm: Realm) {
             .notEqualTo(Response.RESPONSE_SYNC_STATE, SyncState.SENT.value)
             .count()
     }
-    
+
     fun unlockSending() {
         realm.executeTransaction {
             val snapshot = it.where(Response::class.java)
@@ -22,19 +22,19 @@ class ResponseDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun getResponseById(id: Int): Response? {
         val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst()
             ?: return null
         return realm.copyFromRealm(response)
     }
-    
+
     fun getResponseByCoreId(id: String): Response? {
         val response = realm.where(Response::class.java).equalTo(Response.RESPONSE_GUID, id).findFirst()
             ?: return null
         return realm.copyFromRealm(response)
     }
-    
+
     fun save(response: Response): Response {
         var res = response
         realm.executeTransaction {
@@ -46,7 +46,7 @@ class ResponseDb(val realm: Realm) {
         }
         return res
     }
-    
+
     fun lockUnsent(): List<Response> {
         var unsentCopied: List<Response> = listOf()
         realm.executeTransaction {
@@ -59,15 +59,15 @@ class ResponseDb(val realm: Realm) {
         }
         return unsentCopied
     }
-    
+
     fun markUnsent(id: Int) {
         mark(id = id, syncState = SyncState.UNSENT.value)
     }
-    
+
     fun markSent(id: Int, guid: String?, incidentRef: String?) {
         mark(id, guid, SyncState.SENT.value, incidentRef)
     }
-    
+
     private fun mark(id: Int, guid: String? = null, syncState: Int, incidentRef: String? = null) {
         realm.executeTransaction {
             val response = it.where(Response::class.java).equalTo(Response.RESPONSE_ID, id).findFirst()
@@ -78,11 +78,10 @@ class ResponseDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun getAllResultsAsync(): RealmResults<Response> {
         return realm.where(Response::class.java).findAllAsync()
     }
-    
+
     fun getResponses(): List<Response> = realm.where(Response::class.java).findAll() ?: arrayListOf()
-    
 }

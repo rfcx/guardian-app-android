@@ -31,56 +31,57 @@ import java.io.File
 import java.io.IOException
 
 class AssetsFragment : BaseImageFragment() {
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = AssetsFragment()
     }
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     lateinit var listener: CreateReportListener
     private var recordFile: File? = null
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
-    
+
     private val recordPermissions by lazy { RecordingPermissions(requireActivity()) }
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.ASSETS)
     }
-    
+
     override fun didAddImages(imagePaths: List<String>) {}
-    
+
     override fun didRemoveImage(imagePath: String) {}
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_assets, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupImageRecycler()
         view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
-        
+
         saveDraftButton.setOnClickListener {
             saveAssets()
             analytics?.trackSaveDraftResponseEvent()
             listener.onSaveDraftButtonClick()
         }
-        
+
         submitButton.setOnClickListener {
             if (!TextUtils.isEmpty(noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage()
-                    .isNotEmpty()
+                .isNotEmpty()
             ) {
                 saveAssets()
                 analytics?.trackSubmitResponseEvent()
@@ -89,28 +90,28 @@ class AssetsFragment : BaseImageFragment() {
                 showDefaultDialog()
             }
         }
-        
+
         noteEditText.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 v.hideKeyboard()
             }
         }
-        
+
         setupAssets()
         setupRecordSoundProgressView()
         setRequiredNote()
-        
+
         view.setOnClickListener {
             it.hideKeyboard()
         }
     }
-    
+
     private fun setRequiredNote() {
         val res = listener.getResponse()
         res?.let { response ->
             if (response.evidences.contains(EvidenceTypes.NONE.value) || response.responseActions.contains(Actions.OTHER.value)) {
                 submitButton.isEnabled = noteEditText.text?.isNotBlank() ?: false
-                
+
                 val spannableString = SpannableString(getString(R.string.add_notes_required))
                 val red = ForegroundColorSpan(Color.RED)
                 spannableString.setSpan(
@@ -120,12 +121,12 @@ class AssetsFragment : BaseImageFragment() {
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 noteTextView.text = spannableString
-                
+
                 noteEditText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                    
+
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    
+
                     override fun afterTextChanged(s: Editable?) {
                         submitButton.isEnabled = !s.isNullOrBlank()
                     }
@@ -133,7 +134,7 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
     }
-    
+
     private fun setOnFocusEditText() {
         val screenHeight: Int = view?.rootView?.height ?: 0
         val r = Rect()
@@ -151,7 +152,7 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
     }
-    
+
     private fun showDefaultDialog() {
         val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(R.string.submit_report)
@@ -163,18 +164,18 @@ class AssetsFragment : BaseImageFragment() {
             }
             .setPositiveButton(resources.getString(R.string.cancel)) { _, _ -> }
             .show()
-        
+
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
     }
-    
+
     private fun setupAssets() {
         val response = listener.getResponse()
         response?.note?.let { note -> noteEditText.setText(note) }
         response?.audioLocation?.let { path -> setAudio(path) }
-        
+
         val images = listener.getImages()
         if (images.isNotEmpty()) {
             val pathList = mutableListOf<String>()
@@ -185,7 +186,7 @@ class AssetsFragment : BaseImageFragment() {
             didAddImages(pathList)
         }
     }
-    
+
     private fun saveAssets() {
         noteEditText.text?.let {
             if (it.isNotBlank()) {
@@ -195,7 +196,7 @@ class AssetsFragment : BaseImageFragment() {
         listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
         listener.setAudio(recordFile?.canonicalPath)
     }
-    
+
     private fun setupImageRecycler() {
         attachImageRecycler.apply {
             adapter = reportImageAdapter
@@ -204,15 +205,15 @@ class AssetsFragment : BaseImageFragment() {
         }
         reportImageAdapter.setImages(arrayListOf())
     }
-    
+
     private fun setAudio(path: String) {
         recordFile = File(path)
-        
+
         if (recordFile?.exists() == true) {
             soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
         }
     }
-    
+
     private fun setupRecordSoundProgressView() {
         soundRecordProgressView.onStateChangeListener = { state ->
             when (state) {
@@ -236,7 +237,7 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
     }
-    
+
     private fun stopRecording() {
         recorder?.apply {
             try {
@@ -250,7 +251,7 @@ class AssetsFragment : BaseImageFragment() {
         }
         recorder = null
     }
-    
+
     private fun record() {
         if (!recordPermissions.allowed()) {
             soundRecordProgressView.state = SoundRecordState.NONE
@@ -259,7 +260,7 @@ class AssetsFragment : BaseImageFragment() {
             startRecord()
         }
     }
-    
+
     private fun startRecord() {
         recordFile = File.createTempFile("Record${System.currentTimeMillis()}", ".mp3", requireActivity().cacheDir)
         recordFile?.let {
@@ -279,7 +280,7 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
     }
-    
+
     private fun startPlaying() {
         if (recordFile == null) {
             soundRecordProgressView.state = SoundRecordState.NONE
@@ -300,12 +301,12 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
     }
-    
+
     private fun stopPlaying() {
         player?.release()
         player = null
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         stopPlaying()

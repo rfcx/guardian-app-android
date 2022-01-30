@@ -13,44 +13,45 @@ import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 
 class EvidenceFragment : Fragment() {
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = EvidenceFragment()
     }
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_evidence, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setOnChange()
         setupEvidences()
-        
+
         nextStepButton.setOnClickListener {
             setSelect()
         }
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.EVIDENCE)
     }
-    
+
     private fun setupEvidences() {
         val response = listener.getResponse()
         response?.let { res ->
@@ -59,7 +60,7 @@ class EvidenceFragment : Fragment() {
             setSelected()
         }
     }
-    
+
     private fun setOnChange() {
         cutDownTreesCheckBox.setOnClickListener {
             setSelectedNone(false)
@@ -94,7 +95,7 @@ class EvidenceFragment : Fragment() {
             setEnabled()
         }
     }
-    
+
     private fun setSelectedNone(isNone: Boolean) {
         if (isNone) {
             cutDownTreesCheckBox.isChecked = false
@@ -107,16 +108,15 @@ class EvidenceFragment : Fragment() {
         }
         noneCheckBox.isChecked = isNone
     }
-    
-    
+
     private fun setEnabled() {
         selected.clear()
         nextStepButton.isEnabled = cutDownTreesCheckBox.isChecked ||
-                clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
-                loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
-                firesBurnedAreasCheckBox.isChecked || otherCheckBox.isChecked || noneCheckBox.isChecked
+            clearedAreasCheckBox.isChecked || loggingEquipmentCheckBox.isChecked ||
+            loggersAtSiteCheckBox.isChecked || illegalCampsCheckBox.isChecked ||
+            firesBurnedAreasCheckBox.isChecked || otherCheckBox.isChecked || noneCheckBox.isChecked
     }
-    
+
     private fun setSelect() {
         selected.clear()
         if (cutDownTreesCheckBox.isChecked) {
@@ -143,11 +143,11 @@ class EvidenceFragment : Fragment() {
         if (noneCheckBox.isChecked) {
             selected.add(EvidenceTypes.NONE.value)
         }
-        
+
         listener.setEvidence(selected)
         listener.handleCheckClicked(StepCreateReport.SCALE.step)
     }
-    
+
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {

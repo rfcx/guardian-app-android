@@ -8,7 +8,4 @@ class TokenExpireException(context: Context) : Exception() {
         // clear login pref
         Preferences.getInstance(context).clear()
     }
-    
 }
-
-

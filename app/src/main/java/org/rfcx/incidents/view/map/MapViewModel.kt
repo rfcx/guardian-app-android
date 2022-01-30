@@ -16,14 +16,14 @@ class MapViewModel(
     private val reportDb: ReportDb,
     private val locationDb: LocationDb
 ) : ViewModel() {
-    
+
     private val _boundaryCoordinates = MutableLiveData<ArrayList<ArrayList<Point>>>()
     val boundaryCoordinates: LiveData<ArrayList<ArrayList<Point>>> = _boundaryCoordinates
-    
+
     fun getAlerts(): LiveData<List<Event>> {
         return MutableLiveData() // TODO
     }
-    
+
     fun getReports(): LiveData<List<Report>> {
         return Transformations.map(
             reportDb.getAllResultsAsync().asLiveData()
@@ -31,12 +31,12 @@ class MapViewModel(
             it
         }
     }
-    
+
     fun getCheckIns(): LiveData<List<CheckIn>> {
         return Transformations.map(
             locationDb.allForDisplay().asLiveData()
         ) {
-            
+
             if (it.count() <= MAX_AVERAGE_CHECK_IN_FOR_DISPLAY) {
                 it
             } else {
@@ -53,11 +53,11 @@ class MapViewModel(
             }
         }
     }
-    
+
     fun getSiteBounds() {
         // TODO
     }
-    
+
     companion object {
         private const val MAX_AVERAGE_CHECK_IN_FOR_DISPLAY = 120
     }

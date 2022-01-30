@@ -22,25 +22,25 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
             field = value
             notifyDataSetChanged()
         }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmittedReportsAdapter.ReportsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_submitted_reports, parent, false)
         return ReportsViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: SubmittedReportsAdapter.ReportsViewHolder, position: Int) {
         holder.bind(items[position])
     }
-    
+
     override fun getItemCount(): Int = items.size
-    
+
     inner class ReportsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val guardianName = itemView.guardianNameTextView
         private val dateTextView = itemView.dateTextView
         private val reportIdTextView = itemView.reportIdTextView
         private val syncLabelTextView = itemView.syncLabelTextView
         private val actionImageView = itemView.actionImageView
-        
+
         fun bind(report: Response) {
             setClickable(itemView, report.syncState != SyncState.SENT.value)
             actionImageView.setDrawableImage(itemView.context, report.syncImage())
@@ -49,15 +49,15 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
             syncLabelTextView.text = itemView.context.getString(report.syncLabel())
             guardianName.text = report.streamName
             dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
-            
+
             itemView.setOnClickListener {
                 listener.onClickedItem(report)
             }
         }
-        
+
         private fun setClickable(view: View?, clickable: Boolean) {
             if (view == null) return
-            
+
             if (view is ViewGroup) {
                 for (i in 0 until view.childCount) {
                     setClickable(view.getChildAt(i), clickable)

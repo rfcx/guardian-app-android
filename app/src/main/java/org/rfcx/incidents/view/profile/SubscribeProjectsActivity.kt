@@ -19,63 +19,66 @@ import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.login.ProjectsAdapter
 import org.rfcx.incidents.view.login.ProjectsItem
 
-
 class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private val analytics by lazy { Analytics(this) }
     private val viewModel: GuardianGroupViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
     private var subscribedProjects: ArrayList<String> = arrayListOf()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_subscribe_projects)
         setupToolbar()
         setList()
-        
+
         // setup list
         projectsRecycler.apply {
             layoutManager = LinearLayoutManager(this@SubscribeProjectsActivity)
             adapter = projectsAdapter
         }
-        
+
         getSubscribedProject()?.let { projects -> subscribedProjects.addAll(projects) }
-        
+
         projectSwipeRefreshView.apply {
             setOnRefreshListener(this@SubscribeProjectsActivity)
             setColorSchemeResources(R.color.colorPrimary)
         }
-        
-        viewModel.getProjectsFromRemote.observe(this, Observer { it ->
-            it.success({
-                projectSwipeRefreshView.isRefreshing = false
-                setList()
-            }, {
-                projectSwipeRefreshView.isRefreshing = false
-                this@SubscribeProjectsActivity.handleError(it)
-            }, {
-                projectSwipeRefreshView.isRefreshing = true
-            })
-        })
-        
+
+        viewModel.getProjectsFromRemote.observe(
+            this,
+            Observer { it ->
+                it.success({
+                    projectSwipeRefreshView.isRefreshing = false
+                    setList()
+                }, {
+                    projectSwipeRefreshView.isRefreshing = false
+                    this@SubscribeProjectsActivity.handleError(it)
+                }, {
+                    projectSwipeRefreshView.isRefreshing = true
+                })
+            }
+        )
+
         checkStateBeforeFetchProjects()
     }
-    
+
     private fun setList() {
         projectsItem = viewModel.getProjectsFromLocal().map { project ->
             ProjectsItem(
-                project, getSubscribedProject()?.contains(project.serverId)
+                project,
+                getSubscribedProject()?.contains(project.serverId)
                     ?: false
             )
         }
         projectsAdapter.items = projectsItem as List<ProjectsItem>
     }
-    
+
     private fun getSubscribedProject(): ArrayList<String>? {
         val preferenceHelper = Preferences.getInstance(this)
         return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
@@ -85,19 +88,19 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
             title = getString(R.string.receive_alert_notification)
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-    
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, SubscribeProjectsActivity::class.java)
             context.startActivity(intent)
         }
     }
-    
+
     override fun onItemClick(item: ProjectsItem, position: Int) {
         when {
             this.isOnAirplaneMode() -> {
@@ -111,7 +114,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                 dialog.setContentView(R.layout.fragment_loading)
                 dialog.setCancelable(false)
                 dialog.show()
-                
+
                 if (item.selected) {
                     viewModel.unsubscribeProject(item.project) { status ->
                         dialog.dismiss()
@@ -148,21 +151,21 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
             }
         }
     }
-    
+
     private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
         val preferenceHelper = Preferences.getInstance(this)
         preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
         preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
     }
-    
+
     override fun onLockImageClicked() {
         showToast(getString(R.string.not_have_permission))
     }
-    
+
     override fun onRefresh() {
         checkStateBeforeFetchProjects()
     }
-    
+
     private fun checkStateBeforeFetchProjects() {
         when {
             this.isOnAirplaneMode() -> {
@@ -178,11 +181,11 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
             }
         }
     }
-    
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics.trackScreen(Screen.SUBSCRIBE_PROJECTS)

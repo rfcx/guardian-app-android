@@ -9,7 +9,8 @@ import org.rfcx.incidents.entity.alert.Detections
 
 class GetDetections(
     private val repository: DetectionsRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<DetectionFactory, List<Detections>>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: DetectionFactory): Single<List<Detections>> {
         return repository.getDetections(params)

@@ -65,12 +65,17 @@ import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
 import java.util.*
 
-class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, ProjectOnClickListener,
-    SwipeRefreshLayout.OnRefreshListener, (StreamItem) -> Unit {
-    
+class EventsFragment :
+    Fragment(),
+    OnMapReadyCallback,
+    PermissionsListener,
+    ProjectOnClickListener,
+    SwipeRefreshLayout.OnRefreshListener,
+    (StreamItem) -> Unit {
+
     companion object {
         const val tag = "EventsFragment"
-        
+
         private const val COUNT = "count"
         private const val COUNT_EVENTS = "count.events"
         private const val POINT_COUNT = "point_count"
@@ -85,22 +90,22 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         private const val SOURCE_CHECK_IN = "source.checkin"
         private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
         private const val MARKER_CHECK_IN_ID = "marker.checkin"
-        
+
         private const val DEFAULT_MAP_ZOOM = 15.0
         private const val PADDING_BOUNDS = 230
         private const val DURATION_MS = 1300
         private const val THREE_HOURS = 3 * 60 * 60 * 1000
-        
+
         @JvmStatic
         fun newInstance() = EventsFragment()
     }
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: EventsViewModel by viewModel()
     private val projectAdapter by lazy { ProjectAdapter(this) }
     private val streamAdapter by lazy { StreamItemAdapter(this) }
     lateinit var preferences: Preferences
-    
+
     private lateinit var mapView: MapView
     private var mapBoxMap: MapboxMap? = null
     private var locationManager: LocationManager? = null
@@ -110,31 +115,31 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         override fun onLocationChanged(p0: Location) {
             moveCameraToCurrentLocation(p0)
             viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
-            
+
             if (PermissionsManager.areLocationPermissionsGranted(context)) {
                 mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
             }
         }
-        
+
         override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
         override fun onProviderEnabled(p0: String) {}
         override fun onProviderDisabled(p0: String) {}
     }
-    
+
     private var alertSource: GeoJsonSource? = null
     private var alertFeatures: FeatureCollection? = null
-    
+
     private var lineSource: GeoJsonSource? = null
     private var lineFeatures: FeatureCollection? = null
-    
+
     private var checkInSource: GeoJsonSource? = null
     private var checkInFeatures: FeatureCollection? = null
-    
+
     private var queryLayerIds: Array<String> = arrayOf()
     private var isShowMapIcon = true
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
-    
+
     private val streamNameReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
@@ -144,7 +149,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             }
         }
     }
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as MainActivityEventListener)
@@ -153,32 +158,33 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         actionReceiver.addAction("haveNewEvent")
         localBroadcastManager.registerReceiver(streamNameReceived, actionReceiver)
     }
-    
+
     override fun onDetach() {
         super.onDetach()
         localBroadcastManager.unregisterReceiver(streamNameReceived)
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_events, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView = view.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         preferences = Preferences.getInstance(requireContext())
-        
+
         getLocation()
         setupToolbar()
         viewModel.refreshProjects()
@@ -186,10 +192,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         setObserver()
         setRecyclerView()
         onClickCurrentLocationButton()
-        
+
         val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
         val projectServerId = viewModel.getProject(projectId)?.serverId
-        
+
         projectServerId?.let {
             if (!context.isNetworkAvailable()) {
                 isShowProgressBar(false)
@@ -197,13 +203,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 viewModel.refreshStreams()
             }
         }
-        
+
         refreshView.apply {
             setOnRefreshListener(this@EventsFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
-    
+
     private fun onClickCurrentLocationButton() {
         currentLocationButton.setOnClickListener {
             mapBoxMap?.locationComponent?.isLocationComponentActivated?.let {
@@ -215,41 +221,41 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             }
         }
     }
-    
-    //	private fun setStreamsWithLocalData() {
-//		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-//		val projectServerId = viewModel.getProject(projectId)?.serverId
-//		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
-//		setItemOnAdapter()
-//	}
+
+    // 	private fun setStreamsWithLocalData() {
+// 		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+// 		val projectServerId = viewModel.getProject(projectId)?.serverId
+// 		viewModel.handledStreams(viewModel.getStreams().filter { s -> s.projectServerId == projectServerId })
+// 		setItemOnAdapter()
+// 	}
 //
-//	private fun setItemOnAdapter() {
-//		streamLayout.visibility = View.VISIBLE
-//		isShowProgressBar(false)
-//		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-//		streamAdapter.items = viewModel.streamItems
-//	}
+// 	private fun setItemOnAdapter() {
+// 		streamLayout.visibility = View.VISIBLE
+// 		isShowProgressBar(false)
+// 		isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+// 		streamAdapter.items = viewModel.streamItems
+// 	}
 //
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
             viewModel.refreshStreams()
-            
+
             val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
             setProjectTitle(viewModel.getProjectName(projectId))
         }
     }
-    
+
     private fun setRecyclerView() {
         projectRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectAdapter
             projectAdapter.items = viewModel.getProjects()
         }
-        
+
         val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
         setProjectTitle(viewModel.getProjectName(projectId))
-        
+
         val streamsLayoutManager = LinearLayoutManager(context)
         streamRecyclerView.apply {
             layoutManager = streamsLayoutManager
@@ -262,24 +268,23 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
                     if (!refreshView.isRefreshing) {
-                        if ((visibleItemCount + firstVisibleItemPosition) >= total
-                            && firstVisibleItemPosition >= 0
-                            && !viewModel.isLoadMore
+                        if ((visibleItemCount + firstVisibleItemPosition) >= total &&
+                            firstVisibleItemPosition >= 0 &&
+                            !viewModel.isLoadMore
                         ) {
                             viewModel.loadMoreEvents()
                         }
                     }
                 }
             })
-            
         }
     }
-    
+
     private fun setOnClickListener() {
         projectTitleLayout.setOnClickListener {
             setOnClickProjectName()
         }
-        
+
         projectSwipeRefreshView.apply {
             setOnRefreshListener {
                 isRefreshing = true
@@ -296,7 +301,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
-    
+
     private fun setOnClickProjectName() {
         if (projectRecyclerView.visibility == View.VISIBLE) {
             expandMoreImageView.rotation = 0F
@@ -310,20 +315,20 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             projectSwipeRefreshView.visibility = View.VISIBLE
         }
     }
-    
+
     override fun onClicked(project: Project) {
         isShowNotHaveStreams(false)
         streamLayout.visibility = View.GONE
         expandMoreImageView.rotation = 0F
-        
+
         isShowProgressBar()
         streamAdapter.items = listOf()
-        
+
         listener.showBottomAppBar()
         projectRecyclerView.visibility = View.GONE
         projectSwipeRefreshView.visibility = View.GONE
         viewModel.setProjectSelected(project.id)
-        
+
         when {
             requireContext().isOnAirplaneMode() -> {
                 requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
@@ -335,14 +340,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 viewModel.refreshStreams()
             }
         }
-        
+
         // setAlertFeatures(viewModel.getStreams())
         setProjectTitle(project.name)
     }
-    
+
     @SuppressLint("NotifyDataSetChanged")
     private fun setObserver() {
-        
+
         viewModel.projects.observe(viewLifecycleOwner) { it ->
             it.success({
                 projectSwipeRefreshView.isRefreshing = false
@@ -352,13 +357,15 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             }, {
                 projectSwipeRefreshView.isRefreshing = false
                 Toast.makeText(
-                    context, it.message
-                        ?: getString(R.string.something_is_wrong), Toast.LENGTH_LONG
+                    context,
+                    it.message
+                        ?: getString(R.string.something_is_wrong),
+                    Toast.LENGTH_LONG
                 ).show()
             }, {
             })
         }
-        
+
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ list ->
                 setAlertFeatures(list.map { s -> s.toStream() })
@@ -371,27 +378,27 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 isShowProgressBar()
             })
         }
-        
+
         viewModel.getTrackingFromLocal().observe(viewLifecycleOwner) { trackings ->
             setTrackingFeatures(trackings)
         }
     }
-    
+
     private fun setProjectTitle(str: String) {
         projectTitleTextView.text = str
     }
-    
+
     override fun onLockImageClicked() {
         Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
     }
-    
+
     override fun invoke(guardian: StreamItem) {
         listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.streamId)
     }
-    
+
     private fun setupToolbar() {
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
-        
+
         changePageImageView.setOnClickListener {
             if (isShowMapIcon) {
                 analytics?.trackScreen(Screen.MAP)
@@ -407,23 +414,23 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 mapView.visibility = View.GONE
                 refreshView.visibility = View.VISIBLE
                 currentLocationButton.visibility = View.GONE
-//				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+// 				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
                 guardianListScrollView.visibility = View.VISIBLE
             }
             isShowMapIcon = !isShowMapIcon
         }
     }
-    
+
     private fun isShowProgressBar(show: Boolean = true) {
         progressBar.visibility = if (show) View.VISIBLE else View.GONE
     }
-    
+
     private fun isShowNotHaveStreams(show: Boolean) {
         notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
     }
-    
+
     /* ------------------- vv Setup Map vv ------------------- */
-    
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         mapBoxMap = mapboxMap
         mapboxMap.setStyle(Style.OUTDOORS) { style ->
@@ -436,26 +443,26 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             addLineLayer(style)
             alertFeatures?.let { moveCameraToLeavesBounds(it) }
         }
-        
+
         mapboxMap.addOnMapClickListener { latLng ->
             handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
         }
     }
-    
+
     private fun setAlertFeatures(streams: List<Stream>) {
         val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-        
+
         val projectServerId = viewModel.getProject(projectId)?.serverId
         val listOfStream = streams.filter { s -> s.projectServerId == projectServerId }
         val features = listOfStream.map {
             val loc = Location(LocationManager.GPS_PROVIDER)
             loc.latitude = it.latitude
             loc.longitude = it.longitude
-            
+
             val last = Location(LocationManager.GPS_PROVIDER)
             last.latitude = lastLocation?.latitude ?: 0.0
             last.longitude = lastLocation?.longitude ?: 0.0
-            
+
             val properties = mapOf(
                 Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
                 Pair(PROPERTY_MARKER_ALERT_COUNT, "0"), // TODO Replace 0 with event count
@@ -468,24 +475,24 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         alertFeatures?.let { moveCameraToLeavesBounds(it) }
         refreshSource()
     }
-    
+
     private fun setTrackingFeatures(trackingList: List<Tracking>) {
         trackingList.map { tracking ->
             val tracks = tracking.points.filter { t -> System.currentTimeMillis() - t.createdAt.time <= THREE_HOURS }
             val trackingCoordinates = tracks.map { p -> Point.fromLngLat(p.longitude, p.latitude) }
             lineFeatures =
                 FeatureCollection.fromFeatures(arrayOf(Feature.fromGeometry(LineString.fromLngLats(trackingCoordinates))))
-            
+
             // Create point
             val pointFeatures = tracks.map {
                 Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude))
             }
-            
+
             checkInFeatures = FeatureCollection.fromFeatures(pointFeatures)
             refreshSource()
         }
     }
-    
+
     private fun handleClickIcon(screenPoint: PointF): Boolean {
         val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
         var alertFeatures = listOf<Feature>()
@@ -495,7 +502,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 alertFeatures = features
             }
         }
-        
+
         if (alertFeatures.isNotEmpty()) {
             val pinCount =
                 if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
@@ -523,10 +530,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         }
         return false
     }
-    
+
     private fun setupSources(style: Style) {
         alertSource = GeoJsonSource(
-            SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()), GeoJsonOptions()
+            SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()),
+            GeoJsonOptions()
                 .withCluster(true)
                 .withClusterMaxZoom(15)
                 .withClusterRadius(20)
@@ -549,14 +557,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 )
         )
         style.addSource(alertSource!!)
-        
+
         lineSource = GeoJsonSource(SOURCE_LINE)
         style.addSource(lineSource!!)
-        
+
         checkInSource = GeoJsonSource(SOURCE_CHECK_IN, FeatureCollection.fromFeatures(listOf()))
         style.addSource(checkInSource!!)
     }
-    
+
     private fun refreshSource() {
         if (alertSource != null && alertFeatures != null) {
             alertSource!!.setGeoJson(alertFeatures)
@@ -568,7 +576,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             checkInSource!!.setGeoJson(checkInFeatures)
         }
     }
-    
+
     private fun addLineLayer(style: Style) {
         val lineLayer = LineLayer("line-layer", SOURCE_LINE).withProperties(
             PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
@@ -577,13 +585,13 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             PropertyFactory.lineColor(resources.getColor(R.color.tracking_line))
         )
         style.addLayer(lineLayer)
-        
+
         val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
         val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
         if (mBitmap != null) {
             style.addImage(MARKER_CHECK_IN_IMAGE, mBitmap)
         }
-        
+
         val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
             withProperties(
                 PropertyFactory.iconImage(MARKER_CHECK_IN_IMAGE),
@@ -594,14 +602,14 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         }
         style.addLayer(checkInLayer)
     }
-    
+
     private fun addClusteredGeoJsonSource(style: Style) {
         val layers = Array(2) { IntArray(2) }
         layers[0] = intArrayOf(0, Color.parseColor("#2FB04A"))
         layers[1] = intArrayOf(1, Color.parseColor("#e41a1a"))
-        
+
         queryLayerIds = Array(layers.size) { "" }
-        
+
         layers.forEachIndexed { index, layer ->
             queryLayerIds[index] = "cluster-$index"
             val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
@@ -619,7 +627,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             )
             style.addLayer(circles)
         }
-        
+
         val count = SymbolLayer(COUNT, SOURCE_ALERT)
         count.setProperties(
             PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS))),
@@ -629,11 +637,11 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             PropertyFactory.textAllowOverlap(true)
         )
         style.addLayer(count)
-        
+
         layers.forEachIndexed { i, ly ->
             val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
             val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
-                    .toString() != "0"
+                .toString() != "0"
             ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
             val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
@@ -652,7 +660,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             )
             style.addLayer(unClustered)
         }
-        
+
         val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
         eventsSize.setProperties(
             PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
@@ -663,24 +671,24 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
         )
         style.addLayer(eventsSize)
     }
-    
+
     private fun enableLocationComponent(style: Style) {
         val context = context ?: return
         val mapboxMap = mapBoxMap ?: return
-        
+
         // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(context)) {
-            
+
             // Create and customize the LocationComponent's options
             val customLocationComponentOptions = LocationComponentOptions.builder(context)
                 .trackingGesturesManagement(true)
                 .accuracyColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .build()
-            
+
             val locationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
                 .locationComponentOptions(customLocationComponentOptions)
                 .build()
-            
+
             // Get an instance of the LocationComponent and then adjust its settings
             mapboxMap.locationComponent.apply {
                 // Activate the LocationComponent with options
@@ -689,16 +697,16 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
                 if (ActivityCompat.checkSelfPermission(
                         context,
                         Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return
                 }
                 isLocationComponentEnabled = true
-                
+
                 // Set the LocationComponent's render mode
                 renderMode = RenderMode.COMPASS
             }
@@ -707,10 +715,10 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             permissionsManager.requestLocationPermissions(activity)
         }
     }
-    
+
     private fun getLocation() {
         if (!isAdded || isDetached) return
-        
+
         // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(context)) {
             locationManager?.removeUpdates(locationListener)
@@ -733,16 +741,16 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             permissionsManager.requestLocationPermissions(activity)
         }
     }
-    
+
     private fun moveCameraToCurrentLocation(location: Location) {
         lastLocation = location
         moveCameraTo(LatLng(location.latitude, location.longitude))
     }
-    
+
     private fun moveCameraTo(latLng: LatLng, zoom: Double = DEFAULT_MAP_ZOOM) {
         mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
     }
-    
+
     private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
         val latLngList: ArrayList<LatLng> = ArrayList()
         if (featureCollectionToInspect.features() != null) {
@@ -757,49 +765,49 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             }
         }
     }
-    
+
     private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
         val latLngBounds = LatLngBounds.Builder()
             .includes(latLngList)
             .build()
         mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, PADDING_BOUNDS), DURATION_MS)
     }
-    
+
     private fun moveCameraToCurrentLocation() {
         mapBoxMap?.locationComponent?.lastKnownLocation?.let { curLoc ->
             val currentLatLng = LatLng(curLoc.latitude, curLoc.longitude)
             moveCameraTo(currentLatLng, mapBoxMap?.cameraPosition?.zoom ?: DEFAULT_MAP_ZOOM)
         }
     }
-    
+
     override fun onResume() {
         super.onResume()
         mapView.onResume()
         analytics?.trackScreen(Screen.NEW_EVENTS)
     }
-    
+
     override fun onStart() {
         super.onStart()
         mapView.onStart()
     }
-    
+
     override fun onStop() {
         super.onStop()
         mapView.onStop()
     }
-    
+
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
     }
-    
+
     override fun onPause() {
         super.onPause()
         mapView.onPause()
     }
-    
+
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}
-    
+
     override fun onPermissionResult(granted: Boolean) {
         val style = mapBoxMap?.style ?: return
         val context = context ?: return
@@ -809,7 +817,7 @@ class EventsFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Proj
             Toast.makeText(context, R.string.location_permission_msg, Toast.LENGTH_LONG).show()
         }
     }
-    
+
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
             viewModel.refreshStreams()

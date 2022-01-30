@@ -2,14 +2,13 @@ package org.rfcx.incidents.entity
 
 import com.google.gson.annotations.SerializedName
 
-
 data class ErrorResponse(
-    val message: String, //invalid email or password
+    val message: String, // invalid email or password
     val error: Error
 )
 
 data class Error(
-    val status: Int //401
+    val status: Int // 401
 )
 
 data class ErrorResponse2(

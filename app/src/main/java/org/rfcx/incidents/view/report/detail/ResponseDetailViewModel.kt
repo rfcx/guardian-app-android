@@ -14,8 +14,8 @@ class ResponseDetailViewModel(
     private val trackingFileDb: TrackingFileDb
 ) : ViewModel() {
     fun getResponseByCoreId(coreId: String): Response? = responseDb.getResponseByCoreId(coreId)
-    
+
     fun getImagesByCoreId(coreId: String): List<ReportImage> = reportImageDb.getByCoreId(coreId)
-    
+
     fun getTrackingByCoreId(coreId: String): TrackingFile? = trackingFileDb.getByCoreId(coreId)
 }

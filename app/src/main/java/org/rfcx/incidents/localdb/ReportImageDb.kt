@@ -13,11 +13,11 @@ import org.rfcx.incidents.entity.response.Response
  */
 
 class ReportImageDb(val realm: Realm) {
-    
+
     fun unsentCount(): Long {
         return realm.where(ReportImage::class.java).notEqualTo("syncState", SENT).count()
     }
-    
+
     fun save(response: Response, attachImages: List<String>) {
         val imageCreateAt = response.startedAt
         realm.executeTransaction {
@@ -35,7 +35,7 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun saveReportServerIdToImage(serverId: String, reportId: Int) {
         val images = realm.where(ReportImage::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
@@ -49,7 +49,7 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun lockUnsent(): List<ReportImage> {
         var unsentCopied: List<ReportImage> = listOf()
         realm.executeTransaction { it ->
@@ -64,7 +64,7 @@ class ReportImageDb(val realm: Realm) {
         }
         return unsentCopied
     }
-    
+
     fun unlockSending() {
         realm.executeTransaction { it ->
             val snapshot = it.where(ReportImage::class.java).equalTo("syncState", SENDING).findAll().createSnapshot()
@@ -73,11 +73,11 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun markUnsent(id: Int) {
         mark(id = id, syncState = UNSENT)
     }
-    
+
     fun markSent(id: Int, remotePath: String?) {
         realm.executeTransaction {
             val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
@@ -87,7 +87,7 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     private fun mark(id: Int, syncState: Int) {
         realm.executeTransaction {
             val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
@@ -96,7 +96,7 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun deleteAll(reportId: Int) {
         val shouldDelete = realm.where(ReportImage::class.java)
             .equalTo("reportId", reportId)
@@ -106,8 +106,7 @@ class ReportImageDb(val realm: Realm) {
             shouldDelete.deleteAllFromRealm()
         }
     }
-    
-    
+
     fun getSync(reportId: Int): List<ReportImage> {
         return realm.copyFromRealm(
             realm.where(ReportImage::class.java)
@@ -115,37 +114,37 @@ class ReportImageDb(val realm: Realm) {
                 .findAll()
         )
     }
-    
+
     fun getAllResultsAsync(): RealmResults<ReportImage> {
         return realm.where(ReportImage::class.java)
             .findAllAsync()
     }
-    
+
     fun getByReportIdAsync(reportId: Int): RealmResults<ReportImage> {
         return realm.where(ReportImage::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
             .findAllAsync()
     }
-    
+
     fun getByReportId(reportId: Int): List<ReportImage> {
         return realm.where(ReportImage::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
             .findAll()
     }
-    
+
     fun getByCoreId(coreId: String): List<ReportImage> {
         return realm.where(ReportImage::class.java)
             .equalTo(FIELD_REPORT_SERVER_ID, coreId)
             .findAll()
     }
-    
+
     fun deleteImages(id: Int) {
         realm.executeTransaction {
             realm.where(ReportImage::class.java).equalTo(FIELD_REPORT_ID, id)?.findAll()
                 ?.deleteAllFromRealm()
         }
     }
-    
+
     fun deleteUnsent(imagePath: String) {
         val shouldDelete = realm.where(ReportImage::class.java)
             .equalTo("syncState", UNSENT)
@@ -155,7 +154,7 @@ class ReportImageDb(val realm: Realm) {
             shouldDelete.deleteAllFromRealm()
         }
     }
-    
+
     private fun saveGuIDtoImages(guid: String, reportId: Int) {
         val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
         images?.forEach {
@@ -170,7 +169,7 @@ class ReportImageDb(val realm: Realm) {
             }
         }
     }
-    
+
     companion object {
         const val UNSENT = 0
         const val SENDING = 1

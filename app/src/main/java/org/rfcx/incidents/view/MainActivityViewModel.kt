@@ -22,60 +22,64 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
 
 class MainActivityViewModel(
-    private val context: Context, private val responseDb: ResponseDb,
+    private val context: Context,
+    private val responseDb: ResponseDb,
     private val projectDb: ProjectDb,
     private val streamDb: StreamDb,
     private val getProjects: GetProjectsUseCase,
     credentialKeeper: CredentialKeeper
 ) : ViewModel() {
-    
+
     val isRequireToLogin = MutableLiveData<Boolean>()
-    
+
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
-    
+
     fun getResponses(): LiveData<List<Response>> {
         return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
     }
-    
+
     init {
         isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
     }
-    
+
     fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
-    
+
     fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
-    
+
     fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
-    
+
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
-    
+
     fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> =
         streamDb.getStreamsByProjectCoreId(projectCodeId)
-    
+
     fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
         ?: context.getString(R.string.all_projects)
-    
+
     fun fetchProjects() {
-        getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
-            override fun onSuccess(t: List<ProjectResponse>) {
-                t.map {
-                    projectDb.insertOrUpdate(it)
+        getProjects.execute(
+            object : DisposableSingleObserver<List<ProjectResponse>>() {
+                override fun onSuccess(t: List<ProjectResponse>) {
+                    t.map {
+                        projectDb.insertOrUpdate(it)
+                    }
+                    _projects.value = Result.Success(listOf())
                 }
-                _projects.value = Result.Success(listOf())
-            }
-            
-            override fun onError(e: Throwable) {
-                _projects.value = Result.Error(e)
-            }
-        }, ProjectsRequestFactory())
+
+                override fun onError(e: Throwable) {
+                    _projects.value = Result.Error(e)
+                }
+            },
+            ProjectsRequestFactory()
+        )
     }
-    
+
     fun setProjectSelected(id: Int) {
         val preferences = Preferences.getInstance(context)
         preferences.putInt(Preferences.SELECTED_PROJECT, id)
     }
-    
+
     fun getStreamIdsInProjectId(): List<String> {
         val preferences = Preferences.getInstance(context)
         val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)

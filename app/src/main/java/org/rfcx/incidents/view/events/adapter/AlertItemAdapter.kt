@@ -18,25 +18,25 @@ class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :
             field = value
             notifyDataSetChanged()
         }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
         return AlertItemViewHolder(view)
     }
-    
+
     override fun getItemCount(): Int = items.size
-    
+
     override fun onBindViewHolder(holder: AlertItemViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
             onClickListener(items[position])
         }
     }
-    
+
     inner class AlertItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val typeTextView = itemView.typeTextView
         private val dateTextView = itemView.dateTextView
-        
+
         fun bind(item: Alert) {
             dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context)
             typeTextView.text = item.classification?.title

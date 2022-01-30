@@ -21,24 +21,24 @@ import retrofit2.Response
 import java.io.File
 
 class SendReportApi {
-    
+
     val tag = "SendReportApi"
-    
+
     fun sendSync(context: Context, report: Report): Result<SendReportResponse, Exception> {
-        
+
         val response: Response<SendReportResponse>?
         try {
             response = request(context, report).execute()
         } catch (e: Exception) {
             return Err(e)
         }
-        
+
         return responseParser(response)
     }
-    
+
     private fun request(context: Context, report: Report): Call<SendReportResponse> {
         val token = context.getTokenID() ?: throw Exception("Null token")
-        
+
         val authUser = "Bearer $token"
         val audioFileOrNull = if (!report.audioLocation.isNullOrEmpty()) createLocalFilePart(
             "audio",
@@ -46,7 +46,7 @@ class SendReportApi {
             "audio/mpeg"
         ) else null
         val notes = if (!report.notes.isNullOrEmpty()) createPartFromString(report.notes!!) else null
-        
+
         return if (report.guid != null) {
             ApiManager.getInstance().apiRest.updateReport(
                 authUser = authUser,
@@ -74,18 +74,17 @@ class SendReportApi {
             )
         }
     }
-    
+
     private fun createPartFromString(descriptionString: String): RequestBody {
         return descriptionString.toRequestBody(okhttp3.MultipartBody.FORM)
     }
-    
+
     private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
         val file = File(fileUri.path)
         val requestFile = file.asRequestBody(mediaType.toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
-    
-    
+
     interface SendReportCallback : ApiCallback {
         fun onSuccess()
     }

@@ -19,7 +19,6 @@ fun Context.getUserNickname(): String {
     return if (nickname != null && nickname.length > 0) nickname else "Responder"
 }
 
-
 fun Context?.logout() {
     this?.let {
         val preferenceHelper = Preferences.getInstance(it)
@@ -60,7 +59,7 @@ fun Context?.getUserEmail(): String {
     var userID = ""
     val token = this?.getTokenID()
     val withoutSignature = token?.substring(0, token.lastIndexOf('.') + 1)
-    
+
     try {
         val untrusted = Jwts.parser().parseClaimsJwt(withoutSignature)
         userID = untrusted.body["email"] as String
@@ -83,10 +82,10 @@ fun Context?.saveUserLoginWith(): String {
         e.printStackTrace()
         FirebaseCrashlytics.getInstance().log(e.message.toString())
     }
-    
+
     val preferences = this?.let { Preferences.getInstance(it) }
     preferences?.putString(Preferences.LOGIN_WITH, loginWith)
-    
+
     return loginWith
 }
 

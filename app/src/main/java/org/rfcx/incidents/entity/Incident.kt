@@ -4,7 +4,6 @@ import io.realm.RealmModel
 import io.realm.annotations.RealmClass
 import java.util.*
 
-
 @RealmClass
 open class Incident(
     var id: String = "",

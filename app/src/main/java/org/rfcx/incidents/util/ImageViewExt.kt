@@ -15,7 +15,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import org.rfcx.incidents.R
 
-
 fun ImageView.setPath(path: String) {
     val bitmap = BitmapFactory.decodeFile(path)
     setImageBitmap(bitmap)
@@ -32,14 +31,14 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
     val placeholder = R.drawable.bg_placeholder_image
     if (fromServer) {
         progressBar.visibility = View.VISIBLE
-        
+
         val glideUrl = GlideUrl(
             url,
             LazyHeaders.Builder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
         )
-        
+
         Glide.with(this)
             .load(glideUrl)
             .listener(object : RequestListener<Drawable> {
@@ -52,7 +51,7 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
                     progressBar.visibility = View.GONE
                     return false
                 }
-                
+
                 override fun onResourceReady(
                     resource: Drawable?,
                     model: Any?,
@@ -67,13 +66,11 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
             .placeholder(placeholder)
             .error(placeholder)
             .into(this)
-        
     } else {
         Glide.with(this)
             .load(url)
             .placeholder(placeholder)
             .error(placeholder)
             .into(this)
-        
     }
 }

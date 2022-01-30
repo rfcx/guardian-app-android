@@ -8,17 +8,17 @@ import org.rfcx.incidents.RangerRealmMigration
  */
 
 class RealmHelper {
-    
+
     companion object {
         private const val schemaVersion = 18L
-        
+
         fun migrationConfig(): RealmConfiguration {
             return RealmConfiguration.Builder().apply {
                 schemaVersion(schemaVersion)
                 migration(RangerRealmMigration())
             }.build()
         }
-        
+
         fun fallbackConfig(): RealmConfiguration {
             return RealmConfiguration.Builder().apply {
                 schemaVersion(schemaVersion)

@@ -9,7 +9,8 @@ import org.rfcx.incidents.entity.SubscribeResponse
 
 class UnsubscribeUseCase(
     private val unsubscribeRepository: UnsubscribeRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<SubscribeRequest, SubscribeResponse>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: SubscribeRequest): Single<SubscribeResponse> {
         return unsubscribeRepository.sendUnsubscribeBody(params)

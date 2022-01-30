@@ -17,28 +17,33 @@ import org.rfcx.incidents.view.base.BaseFragment
 import org.rfcx.incidents.view.report.getLocalisedValue
 
 class MapDetailBottomSheetFragment : BaseFragment() {
-    
+
     private val viewModel: MapDetailViewModel by viewModel()
     private val analytics by lazy { context?.let { Analytics(it) } }
-    
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_dialog_report_detail, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         val reportId: Int = arguments?.getInt("BUNDLE_REPORT_ID") ?: -1
-        viewModel.getReportDetail(reportId).observe(this@MapDetailBottomSheetFragment, Observer {
-            bindReportView(it)
-        })
-        
-        viewModel.getReportImages(reportId).observe(this@MapDetailBottomSheetFragment, Observer {
-            bindImageState(it)
-        })
+        viewModel.getReportDetail(reportId).observe(
+            this@MapDetailBottomSheetFragment,
+            Observer {
+                bindReportView(it)
+            }
+        )
+
+        viewModel.getReportImages(reportId).observe(
+            this@MapDetailBottomSheetFragment,
+            Observer {
+                bindImageState(it)
+            }
+        )
     }
-    
-    
+
     private fun bindReportView(report: Report?) {
         if (report != null) {
             reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
@@ -58,19 +63,19 @@ class MapDetailBottomSheetFragment : BaseFragment() {
                 }
             )
             reportTimePastedTextView.text = report.reportedAt.toTimeSinceString(context)
-            
+
             seeDetailTextView.setOnClickListener {
                 analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)
             }
         }
     }
-    
+
     private fun bindImageState(state: ImageState) {
         if (state.count == 0) {
             reportImageStateTextView.visibility = View.INVISIBLE
             return
         }
-        
+
         reportImageStateTextView.visibility = View.VISIBLE
         if (state.unsentCount == 0) {
             reportImageStateTextView.text = getString(
@@ -82,7 +87,7 @@ class MapDetailBottomSheetFragment : BaseFragment() {
             )
         }
     }
-    
+
     companion object {
         fun newInstance(reportId: Int): MapDetailBottomSheetFragment {
             return MapDetailBottomSheetFragment().apply {
@@ -91,9 +96,8 @@ class MapDetailBottomSheetFragment : BaseFragment() {
                 }
             }
         }
-        
+
         const val tag = "ReportDetailBottomSheetFragment"
         private const val BUNDLE_REPORT_ID = "BUNDLE_REPORT_ID"
-        
     }
 }

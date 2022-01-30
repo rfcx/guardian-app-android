@@ -169,6 +169,7 @@ repositories {
 }
 
 ktlint {
+    disabledRules = ["no-wildcard-imports"]
     reporters {
         reporter "plain"
         reporter "checkstyle"

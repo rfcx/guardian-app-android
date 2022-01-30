@@ -20,10 +20,10 @@ open class CheckIn(
 ) : RealmObject() {
     fun getLatLng(): String {
         val decimalFormat = DecimalFormat("##.######")
-        
+
         val lat = decimalFormat.format(latitude)
         val lng = decimalFormat.format(longitude)
-        
+
         return "$lat, $lng"
     }
 }

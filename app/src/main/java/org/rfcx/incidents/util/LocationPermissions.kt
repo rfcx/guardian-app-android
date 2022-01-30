@@ -24,14 +24,14 @@ import org.rfcx.incidents.service.LocationTrackerService
  */
 
 class LocationPermissions(private val activity: Activity) {
-    
+
     private var onCompletionCallback: ((Boolean) -> Unit)? = null
-    
+
     fun allowed(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
-    
+
     fun check(onCompletionCallback: (Boolean) -> Unit) {
         this.onCompletionCallback = onCompletionCallback
         if (!allowed()) {
@@ -40,7 +40,7 @@ class LocationPermissions(private val activity: Activity) {
             verifySettings()
         }
     }
-    
+
     private fun request() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.requestPermissions(
@@ -51,7 +51,7 @@ class LocationPermissions(private val activity: Activity) {
             throw Exception("Request permissions not required before API 23 (should never happen)")
         }
     }
-    
+
     fun handleRequestResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -83,16 +83,16 @@ class LocationPermissions(private val activity: Activity) {
             }
         }
     }
-    
+
     private fun verifySettings() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(LocationTrackerService.locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(activity)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-        
+
         task.addOnSuccessListener {
             onCompletionCallback?.invoke(true)
         }
-        
+
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 // Location settings are not satisfied, but this can be fixed by showing the user a dialog
@@ -109,13 +109,13 @@ class LocationPermissions(private val activity: Activity) {
             }
         }
     }
-    
+
     fun handleActivityResult(requestCode: Int, resultCode: Int) {
         if (requestCode == REQUEST_CHECK_LOCATION_SETTINGS) {
             onCompletionCallback?.invoke(resultCode == Activity.RESULT_OK)
         }
     }
-    
+
     companion object {
         private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
         private const val REQUEST_CHECK_LOCATION_SETTINGS = 35

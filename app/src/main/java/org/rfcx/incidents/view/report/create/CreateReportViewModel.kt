@@ -21,13 +21,13 @@ class CreateReportViewModel(
     private val trackingFileDb: TrackingFileDb,
     private val alertDb: AlertDb
 ) : ViewModel() {
-    
+
     fun getImagesFromLocal(id: Int): List<ReportImage> = reportImageDb.getByReportId(id)
-    
+
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)
     }
-    
+
     fun saveResponseInLocalDb(response: Response, images: List<String>?) {
         val res = responseDb.save(response)
         if (!images.isNullOrEmpty()) {
@@ -36,7 +36,7 @@ class CreateReportViewModel(
         }
         voiceDb.save(res)
     }
-    
+
     fun saveTrackingFile(response: Response, context: Context) {
         val track = trackingDb.getFirstTracking()
         track?.let { t ->
@@ -58,6 +58,6 @@ class CreateReportViewModel(
         }
         trackingDb.deleteTracking(1, context)
     }
-    
+
     fun getResponseById(id: Int): Response? = responseDb.getResponseById(id)
 }

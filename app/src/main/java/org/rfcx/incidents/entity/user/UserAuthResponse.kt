@@ -16,8 +16,6 @@ data class UserAuthResponse(
     val defaultSite: String? = null,
     val picture: String?
 ) {
-    
-    val isRanger: Boolean get() = roles.contains("rfcxUser") && defaultSite != null
-    
-}
 
+    val isRanger: Boolean get() = roles.contains("rfcxUser") && defaultSite != null
+}

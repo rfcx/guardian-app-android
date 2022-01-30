@@ -13,7 +13,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-
 object ImageFileUtils {
     fun resizeImage(file: File): Bitmap? {
         var bitmap: Bitmap? = null
@@ -22,7 +21,7 @@ object ImageFileUtils {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        
+
         if (bitmap != null) {
             try {
                 val outputStream = FileOutputStream(file)
@@ -32,14 +31,14 @@ object ImageFileUtils {
                 e.printStackTrace()
             }
         }
-        
+
         return bitmap
     }
-    
+
     private fun resizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
         var width = image.width
         var height = image.height
-        
+
         val bitmapRatio = width.toFloat() / height.toFloat()
         if (bitmapRatio > 1) {
             width = maxSize
@@ -48,15 +47,15 @@ object ImageFileUtils {
             height = maxSize
             width = (height * bitmapRatio).toInt()
         }
-        
+
         return Bitmap.createScaledBitmap(image, width, height, true)
     }
-    
+
     private fun modifyOrientation(path: String): Bitmap {
         val bitmap = BitmapFactory.decodeFile(path)
         val ei = ExifInterface(path)
         val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-        
+
         return when (orientation) {
             ExifInterface.ORIENTATION_ROTATE_90 -> rotate(bitmap, 90f)
             ExifInterface.ORIENTATION_ROTATE_180 -> rotate(bitmap, 180f)
@@ -66,26 +65,26 @@ object ImageFileUtils {
             else -> bitmap
         }
     }
-    
+
     private fun rotate(bitmap: Bitmap, degrees: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(degrees)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
-    
+
     private fun flip(bitmap: Bitmap, horizontal: Boolean, vertical: Boolean): Bitmap {
         val matrix = Matrix()
         matrix.preScale((if (horizontal) -1 else 1).toFloat(), (if (vertical) -1 else 1).toFloat())
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
-    
+
     fun removeFile(file: File) {
         if (file.exists()) {
             Log.i("RFCx Report", "remove file -> ${file.absolutePath}")
             file.deleteOnExit()
         }
     }
-    
+
     fun findRealPath(context: Context, uri: Uri): String? {
         var cursor: Cursor? = null
         try {

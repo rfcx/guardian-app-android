@@ -4,7 +4,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 private val isoSdf by lazy {
     val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
     sdf.timeZone = TimeZone.getTimeZone("UTC")
@@ -113,7 +112,7 @@ private val legacyInputFormatters by lazy {
 @Deprecated(message = "Only used for migrating old dates from Realm.")
 fun legacyDateParser(input: String?): Date? {
     input ?: return null
-    
+
     legacyInputFormatters.forEach {
         try {
             return it.parse(input)

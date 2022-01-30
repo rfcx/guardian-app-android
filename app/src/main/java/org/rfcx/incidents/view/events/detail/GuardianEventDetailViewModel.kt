@@ -23,31 +23,34 @@ class GuardianEventDetailViewModel(
 ) : ViewModel() {
     private val _alerts = MutableLiveData<Result<List<ResponseEvent>>>()
     val getAlertsFromRemote: LiveData<Result<List<ResponseEvent>>> get() = _alerts
-    
+
     fun getEventsCount(streamId: String): Long = alertDb.getAlertCount(streamId)
-    
+
     fun getStream(serverId: String): Stream? = streamDb.getStreamByCoreId(serverId)
-    
+
     fun getAlertsByStream(streamId: String): List<Alert> = alertDb.getAlertsByDescending(streamId)
-    
+
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)
     }
-    
+
     fun fetchEvents(streamId: String) {
         _alerts.value = Result.Loading
-        
-        getEvents.execute(object : DisposableSingleObserver<List<ResponseEvent>>() {
-            override fun onSuccess(t: List<ResponseEvent>) {
-                t.forEach { res ->
-                    alertDb.insertAlert(res)
+
+        getEvents.execute(
+            object : DisposableSingleObserver<List<ResponseEvent>>() {
+                override fun onSuccess(t: List<ResponseEvent>) {
+                    t.forEach { res ->
+                        alertDb.insertAlert(res)
+                    }
+                    _alerts.value = Result.Success(t)
                 }
-                _alerts.value = Result.Success(t)
-            }
-            
-            override fun onError(e: Throwable) {
-                _alerts.value = Result.Error(e)
-            }
-        }, streamId)
+
+                override fun onError(e: Throwable) {
+                    _alerts.value = Result.Error(e)
+                }
+            },
+            streamId
+        )
     }
 }

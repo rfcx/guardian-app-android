@@ -19,21 +19,21 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
             field = value
             notifyDataSetChanged()
         }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_guardian, parent, false)
         return GuardianItemViewHolder(view)
     }
-    
+
     override fun getItemCount(): Int = items.size
-    
+
     override fun onBindViewHolder(holder: GuardianItemViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
             onClickListener(items[position])
         }
     }
-    
+
     inner class GuardianItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val guardianName = itemView.guardianNameTextView
         private val timeTextView = itemView.timeTextView
@@ -48,19 +48,18 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         private val chainsawLayout = itemView.chainsawLayout
         private val gunLayout = itemView.gunLayout
         private val peopleLayout = itemView.peopleLayout
-        
+
         fun bind(item: StreamItem) {
             // Reset
             listOf(chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach { it.visibility = View.GONE }
-            
+
             guardianName.text = item.streamName
             val alerts = item.alerts.sortedBy { a -> a.start }
             recentTextView.visibility =
                 if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
             hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
             timeTextView.text = item.eventTime
-            
-            
+
             val hasNoEvents = item.eventSize == 0
             timeTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
             bellImageView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
@@ -73,10 +72,10 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
                 if (hasNoEvents) 16.toPx else 10.toPx
             )
             incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, item.incidentRef.toString())
-            
+
             val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
             if (typeOfAlert.isEmpty()) return
-            
+
             var number = 0
             typeOfAlert.forEachIndexed { index, alert ->
                 val type = alert.classification?.value ?: return
@@ -90,7 +89,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
             }
         }
     }
-    
+
     fun showIconType(type: String, itemView: View, alerts: List<Alert>) {
         val chainsawLayout = itemView.chainsawLayout
         val peopleLayout = itemView.peopleLayout
@@ -98,7 +97,7 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         val numOfChainsawTextView = itemView.numOfChainsawTextView
         val numOfPeopleTextView = itemView.numOfPeopleTextView
         val numOfGunTextView = itemView.numOfGunTextView
-        
+
         when (type) {
             GUNSHOT -> {
                 gunLayout.visibility = View.VISIBLE
@@ -114,18 +113,18 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
             }
         }
     }
-    
+
     private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
         return alerts.filter { a -> a.classification?.value == type }.size.toString()
     }
-    
+
     val Number.toPx
         get() = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             this.toFloat(),
             Resources.getSystem().displayMetrics
         ).toInt()
-    
+
     companion object {
         private const val MINUTE = 60L * 1000L
         private const val HOUR = 60L * MINUTE

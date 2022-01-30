@@ -8,7 +8,7 @@ import retrofit2.http.POST
 interface CreateResponseEndpoint {
     @POST("responses")
     fun createResponse(@Body body: CreateResponseRequest): Single<CreateResponseRes>
-    
+
     @POST("responses")
     fun createNewResponse(@Body body: CreateResponseRequest): Call<CreateResponseRes>
 }

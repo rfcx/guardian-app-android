@@ -6,7 +6,7 @@ import okhttp3.Response
 import org.rfcx.incidents.util.getTokenID
 
 class AuthTokenInterceptor(val context: Context) : Interceptor {
-    
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
         val request = oldRequest.newBuilder()

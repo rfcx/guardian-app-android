@@ -18,29 +18,29 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
             field = value
             notifyDataSetChanged()
         }
-    
+
     var subscribingProject: String? = null
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
         return ProjectsViewHolder(view)
     }
-    
+
     override fun getItemCount(): Int = items.size
-    
+
     override fun onBindViewHolder(holder: ProjectsAdapter.ProjectsViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
             listener.onItemClick(items[position], position)
         }
     }
-    
+
     inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView = itemView.guardianGroupTextView
         private val checkBoxImageView = itemView.checkBoxImageView
         private val lockImageView = itemView.lockImageView
         private val subscribeProgress = itemView.subscribeProgress
-        
+
         fun bind(item: ProjectsItem) {
             subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE
             setClickable(itemView, item.project.isGuest() || items.any { p -> subscribingProject == p.project.name })
@@ -49,13 +49,13 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
             } else {
                 textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
             }
-            
+
             if (items.any { p -> subscribingProject == p.project.name }) {
                 checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_secondary))
             } else {
                 checkBoxImageView.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_primary))
             }
-            
+
             textView.text = item.project.name
             lockImageView.visibility = if (item.project.isGuest()) View.VISIBLE else View.GONE
             checkBoxImageView.visibility = if (item.project.isGuest()) View.GONE else View.VISIBLE
@@ -69,10 +69,10 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
                 listener.onLockImageClicked()
             }
         }
-        
+
         private fun setClickable(view: View?, clickable: Boolean) {
             if (view == null) return
-            
+
             if (view is ViewGroup) {
                 for (i in 0 until view.childCount) {
                     setClickable(view.getChildAt(i), clickable)

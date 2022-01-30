@@ -12,23 +12,23 @@ import androidx.core.app.ActivityCompat
 import org.rfcx.incidents.R
 
 class CameraPermissions(private val activity: Activity) {
-    
+
     private var onCompletionCallback: ((Boolean) -> Unit)? = null
-    
+
     fun allowed(): Boolean {
         val permissionCameraState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
         val permissionStorageState =
             ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         return permissionCameraState == PackageManager.PERMISSION_GRANTED && permissionStorageState == PackageManager.PERMISSION_GRANTED
     }
-    
+
     fun check(onCompletionCallback: (Boolean) -> Unit) {
         this.onCompletionCallback = onCompletionCallback
         if (!allowed()) {
             request()
         }
     }
-    
+
     private fun request() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.requestPermissions(
@@ -39,7 +39,7 @@ class CameraPermissions(private val activity: Activity) {
             throw Exception("Request permissions not required before API 23 (should never happen)")
         }
     }
-    
+
     fun handleRequestResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS_IMAGE_CAPTURE) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED ||
@@ -77,7 +77,7 @@ class CameraPermissions(private val activity: Activity) {
             }
         }
     }
-    
+
     companion object {
         const val REQUEST_PERMISSIONS_IMAGE_CAPTURE = 4000
     }

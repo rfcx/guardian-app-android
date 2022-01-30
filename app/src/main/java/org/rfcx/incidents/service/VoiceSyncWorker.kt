@@ -22,7 +22,7 @@ class VoiceSyncWorker(private val context: Context, params: WorkerParameters) : 
         val voices = db.lockUnsent()
         var someFailed = false
         Log.d(TAG, "doWork: found ${voices.size} unsent")
-        
+
         for (voice in voices) {
             voice.responseServerId?.let { serverId ->
                 val audioFileOrNull = if (voice.localPath.isNotEmpty()) createLocalFilePart(
@@ -44,26 +44,26 @@ class VoiceSyncWorker(private val context: Context, params: WorkerParameters) : 
                 }
             }
         }
-        
+
         return if (someFailed) Result.retry() else Result.success()
     }
-    
+
     private fun createLocalFilePart(partName: String, fileUri: Uri, mediaType: String): MultipartBody.Part {
         val file = File(fileUri.path)
         val requestFile = file.asRequestBody(mediaType.toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
-    
+
     companion object {
         private const val TAG = "VoiceSyncWorker"
         private const val UNIQUE_WORK_KEY = "VoiceSyncWorkerUniqueKey"
-        
+
         fun enqueue() {
             val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
             val workRequest = OneTimeWorkRequestBuilder<VoiceSyncWorker>().setConstraints(constraints).build()
             WorkManager.getInstance().enqueueUniqueWork(UNIQUE_WORK_KEY, ExistingWorkPolicy.KEEP, workRequest)
         }
-        
+
         fun workInfos(): LiveData<List<WorkInfo>> {
             return WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_KEY)
         }

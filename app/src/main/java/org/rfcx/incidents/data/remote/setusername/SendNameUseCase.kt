@@ -9,7 +9,8 @@ import org.rfcx.incidents.entity.user.SetNameResponse
 
 class SendNameUseCase(
     private val setNameRepository: SetNameRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<SetNameRequest, SetNameResponse>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: SetNameRequest): Single<SetNameResponse> {
         return setNameRepository.sendName(params)

@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.view.View
 
-
 /**
  * Utility class to generate Bitmaps for Symbol.
  * ref: https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/dds/InfoWindowSymbolLayerActivity.java
@@ -30,4 +29,3 @@ object SymbolGenerator {
         return bitmap
     }
 }
-

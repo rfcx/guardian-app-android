@@ -43,33 +43,32 @@ import org.rfcx.incidents.view.report.draft.DraftReportsFragment
 import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
 import org.rfcx.incidents.widget.BottomNavigationMenuItem
 
-
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
     private val mainViewModel: MainActivityViewModel by viewModel()
-    
+
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val onNetworkReceived by lazy { NetworkReceiver(this) }
     private var currentFragment: Fragment? = null
     private var currentLocation: Location? = null
-    
+
     private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_CODE) {
             showBottomAppBar()
             supportFragmentManager.popBackStack()
-            
+
             when (it.data?.getStringExtra(CreateReportActivity.EXTRA_SCREEN)) {
                 Screen.DRAFT_REPORTS.id -> menuDraftReports.performClick()
                 Screen.SUBMITTED_REPORTS.id -> menuSubmittedReports.performClick()
             }
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupDisplayTheme()
         setStatusBar()
-        
+
         val preferences = Preferences.getInstance(this)
         val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
         if (state == DOWNLOADING_STATE) {
@@ -84,22 +83,22 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         getEventFromIntentIfHave(intent)
         this.startLocationChange()
     }
-    
+
     override fun onResume() {
         registerReceiver(onNetworkReceived, IntentFilter(CONNECTIVITY_ACTION))
         super.onResume()
     }
-    
+
     override fun onPause() {
         unregisterReceiver(onNetworkReceived)
         super.onPause()
     }
-    
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         getEventFromIntentIfHave(intent)
     }
-    
+
     override fun onBackPressed() {
         projectRecyclerView?.let {
             if (it.visibility == View.VISIBLE) {
@@ -108,7 +107,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 projectSwipeRefreshView.visibility = View.GONE
             }
         }
-        
+
         when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
             is GuardianEventDetailFragment -> {
                 if (supportFragmentManager.backStackEntryCount > 0) {
@@ -123,11 +122,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             }
         }
     }
-    
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissions.handleRequestResult(requestCode, grantResults)
-        
+
         currentFragment?.let {
             if (it is EventsFragment) {
                 it.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -137,43 +136,43 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             }
         }
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         locationPermissions.handleActivityResult(requestCode, resultCode)
-        
+
         currentFragment?.let {
             if (it is EventsFragment) {
                 it.onActivityResult(requestCode, resultCode, data)
             }
         }
     }
-    
+
     private fun setStatusBar() {
         val window = this.window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusColor)
         }
     }
-    
+
     private fun setupBottomMenu() {
         menuNewEvents.setOnClickListener {
             onBottomMenuClick(it)
         }
-        
+
         menuSubmittedReports.setOnClickListener {
             onBottomMenuClick(it)
         }
-        
+
         menuDraftReports.setOnClickListener {
             onBottomMenuClick(it)
         }
-        
+
         menuProfile.setOnClickListener {
             onBottomMenuClick(it)
         }
     }
-    
+
     private fun onBottomMenuClick(menu: View) {
         if ((menu as BottomNavigationMenuItem).menuSelected) return
         when (menu.id) {
@@ -182,7 +181,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 menuSubmittedReports.menuSelected = false
                 menuDraftReports.menuSelected = false
                 menuProfile.menuSelected = false
-                
+
                 showStatus()
             }
             menuSubmittedReports.id -> {
@@ -190,7 +189,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 menuSubmittedReports.menuSelected = true
                 menuDraftReports.menuSelected = false
                 menuProfile.menuSelected = false
-                
+
                 showSubmittedReports()
             }
             menuDraftReports.id -> {
@@ -198,35 +197,35 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 menuSubmittedReports.menuSelected = false
                 menuDraftReports.menuSelected = true
                 menuProfile.menuSelected = false
-                
+
                 showDraftReports()
             }
-            
+
             menuProfile.id -> {
                 menuNewEvents.menuSelected = false
                 menuSubmittedReports.menuSelected = false
                 menuDraftReports.menuSelected = false
                 menuProfile.menuSelected = true
-                
+
                 showProfile()
             }
         }
     }
-    
+
     override fun showBottomSheet(fragment: Fragment) {}
-    
+
     override fun hideBottomSheet() {}
-    
+
     override fun hideBottomAppBar() {
         showAboveAppbar(false)
         bottomBar.visibility = View.GONE
     }
-    
+
     override fun showBottomAppBar() {
         showAboveAppbar(true)
         bottomBar.visibility = View.VISIBLE
     }
-    
+
     override fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String) {
         hideBottomAppBar()
         startFragment(
@@ -234,7 +233,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             GuardianEventDetailFragment.tag
         )
     }
-    
+
     private fun startFragment(fragment: Fragment, tag: String = "") {
         if (tag.isBlank()) {
             supportFragmentManager.beginTransaction()
@@ -247,31 +246,31 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 .commit()
         }
     }
-    
+
     override fun moveMapIntoReportMarker(report: Report) {
         val mapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
         if (mapFragment is MapFragment) {
             mapFragment.moveToReportMarker(report)
         }
     }
-    
+
     override fun openCreateReportActivity(guardianName: String, guardianId: String) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_NAME, guardianName)
         intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_ID, guardianId)
         getResult.launch(intent)
     }
-    
+
     override fun openDetailResponse(coreId: String) {
         ResponseDetailActivity.startActivity(this, coreId)
     }
-    
+
     override fun openCreateResponse(response: Response) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
         getResult.launch(intent)
     }
-    
+
     override fun openGoogleMap(stream: Stream) {
         val intent = Intent(
             Intent.ACTION_VIEW,
@@ -279,19 +278,19 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         )
         startActivity(intent)
     }
-    
+
     override fun openAlertDetail(alert: Alert) {
         AlertDetailActivity.startActivity(this, alert.serverId)
     }
-    
+
     override fun setCurrentLocation(location: Location) {
         currentLocation = location
     }
-    
+
     override fun getCurrentLocation(): Location? {
         return currentLocation
     }
-    
+
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
             .add(contentContainer.id, getProfile(), ProfileFragment.tag)
@@ -299,24 +298,24 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .add(contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
             .add(contentContainer.id, getNewEvents(), EventsFragment.tag)
             .commit()
-        
+
         menuNewEvents.performClick()
     }
-    
+
     private fun getNewEvents(): EventsFragment = supportFragmentManager.findFragmentByTag(EventsFragment.tag)
-            as EventsFragment? ?: EventsFragment.newInstance()
-    
+        as EventsFragment? ?: EventsFragment.newInstance()
+
     private fun getSubmittedReports(): SubmittedReportsFragment =
         supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag)
-                as SubmittedReportsFragment? ?: SubmittedReportsFragment.newInstance()
-    
+            as SubmittedReportsFragment? ?: SubmittedReportsFragment.newInstance()
+
     private fun getDraftReports(): DraftReportsFragment =
         supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag)
-                as DraftReportsFragment? ?: DraftReportsFragment.newInstance()
-    
+            as DraftReportsFragment? ?: DraftReportsFragment.newInstance()
+
     private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
-            as ProfileFragment? ?: ProfileFragment.newInstance()
-    
+        as ProfileFragment? ?: ProfileFragment.newInstance()
+
     private fun showStatus() {
         showAboveAppbar(true)
         this.currentFragment = getNewEvents()
@@ -327,7 +326,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getProfile())
             .commit()
     }
-    
+
     private fun showDraftReports() {
         showAboveAppbar(true)
         this.currentFragment = getDraftReports()
@@ -338,7 +337,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getProfile())
             .commit()
     }
-    
+
     private fun showSubmittedReports() {
         showAboveAppbar(true)
         this.currentFragment = getSubmittedReports()
@@ -349,7 +348,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getProfile())
             .commit()
     }
-    
+
     private fun showProfile() {
         showAboveAppbar(true)
         this.currentFragment = getProfile()
@@ -360,19 +359,22 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getSubmittedReports())
             .commit()
     }
-    
+
     private fun showAboveAppbar(show: Boolean) {
         val contentContainerPaddingBottom =
             if (show) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
         contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
     }
-    
+
     private fun observeMain() {
-        mainViewModel.isRequireToLogin.observe(this, Observer {
-            if (it) logout()
-        })
+        mainViewModel.isRequireToLogin.observe(
+            this,
+            Observer {
+                if (it) logout()
+            }
+        )
     }
-    
+
     private fun getEventFromIntentIfHave(intent: Intent?) {
         if (intent?.hasExtra(AlertNotification.ALERT_ID_NOTI_INTENT) == true) {
             val streamName: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
@@ -382,7 +384,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             }
         }
     }
-    
+
     companion object {
         fun startActivity(context: Context, eventGuId: String?) {
             val intent = Intent(context, MainActivity::class.java)
@@ -391,7 +393,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             context.startActivity(intent)
         }
     }
-    
+
     override fun onNetworkStateChange(state: NetworkState) {
         if (state == NetworkState.ONLINE) {
             ResponseSyncWorker.enqueue()

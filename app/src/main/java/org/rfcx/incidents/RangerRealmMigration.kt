@@ -18,7 +18,7 @@ import java.util.*
 
 @Suppress("DEPRECATION")
 class RangerRealmMigration : RealmMigration {
-    
+
     override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
         if (oldVersion < 13L && newVersion >= 13L) {
             migrateToV13(c)
@@ -39,7 +39,7 @@ class RangerRealmMigration : RealmMigration {
             migrateToV18(c)
         }
     }
-    
+
     private fun migrateToV13(realm: DynamicRealm) {
         val project = realm.schema.create(Project.TABLE_NAME)
         project.apply {
@@ -51,7 +51,7 @@ class RangerRealmMigration : RealmMigration {
                 .setRequired(Project.PROJECT_PERMISSIONS, true)
         }
     }
-    
+
     private fun migrateToV14(realm: DynamicRealm) {
         val response = realm.schema.create(Response.TABLE_NAME)
         response.apply {
@@ -80,13 +80,13 @@ class RangerRealmMigration : RealmMigration {
             addField(Response.RESPONSE_STREAM_NAME, String::class.java)
                 .setRequired(Response.RESPONSE_STREAM_NAME, true)
         }
-        
+
         val classification = realm.schema.create(Classification.TABLE_NAME)
         classification.apply {
             addField(Classification.CLASSIFICATION_VALUE, String::class.java)
             addField(Classification.CLASSIFICATION_TITLE, String::class.java)
         }
-        
+
         val incident = realm.schema.create(Incident.TABLE_NAME)
         incident.apply {
             addField(Incident.INCIDENT_ID, String::class.java)
@@ -94,7 +94,7 @@ class RangerRealmMigration : RealmMigration {
                 .setRequired(Incident.INCIDENT_CLOSED_AT, false)
             addField(Incident.INCIDENT_CREATED_AT, Date::class.java)
         }
-        
+
         val alert = realm.schema.create(Alert.TABLE_NAME)
         alert.apply {
             addField(Alert.ALERT_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -108,7 +108,7 @@ class RangerRealmMigration : RealmMigration {
             addRealmObjectField(Alert.ALERT_CLASSIFICATION, classification)
             addRealmObjectField(Alert.ALERT_INCIDENT, incident)
         }
-        
+
         val stream = realm.schema.create(Stream.TABLE_NAME)
         stream.apply {
             addField(Stream.STREAM_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -119,13 +119,13 @@ class RangerRealmMigration : RealmMigration {
             addField(Stream.STREAM_PROJECT_SERVER_ID, String::class.java)
         }
     }
-    
+
     private fun migrateToV15(realm: DynamicRealm) {
         val reportImage = realm.schema.get(ReportImage.TABLE_NAME)
         reportImage?.apply {
             addField(ReportImage.FIELD_REPORT_SERVER_ID, String::class.java)
         }
-        
+
         val coordinate = realm.schema.create(Coordinate.TABLE_NAME)
         coordinate.apply {
             addField(Coordinate.COORDINATE_LATITUDE, Double::class.java)
@@ -133,7 +133,7 @@ class RangerRealmMigration : RealmMigration {
             addField(Coordinate.COORDINATE_ALTITUDE, Double::class.java)
             addField(Coordinate.COORDINATE_CREATED_AT, Date::class.java)
         }
-        
+
         val tracking = realm.schema.create(Tracking.TABLE_NAME)
         tracking.apply {
             addField(Tracking.TRACKING_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -142,7 +142,7 @@ class RangerRealmMigration : RealmMigration {
             addField(Tracking.TRACKING_STOP_AT, Date::class.java)
             addRealmListField(Tracking.TRACKING_POINTS, coordinate)
         }
-        
+
         val trackingFile = realm.schema.create(TrackingFile.TABLE_NAME)
         trackingFile.apply {
             addField(TrackingFile.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -156,7 +156,7 @@ class RangerRealmMigration : RealmMigration {
             addField(TrackingFile.FIELD_STREAM_SERVER_ID, String::class.java)
         }
     }
-    
+
     private fun migrateToV16(realm: DynamicRealm) {
         val voice = realm.schema.create(Voice.TABLE_NAME)
         voice.apply {
@@ -168,7 +168,7 @@ class RangerRealmMigration : RealmMigration {
             addField(Voice.FIELD_SYNC_STATE, Int::class.java)
         }
     }
-    
+
     private fun migrateToV17(realm: DynamicRealm) {
         val response = realm.schema.get(Response.TABLE_NAME)
         response?.apply {
@@ -179,18 +179,18 @@ class RangerRealmMigration : RealmMigration {
                 .setRequired(Response.RESPONSE_INVESTIGATE_TYPE, false)
         }
     }
-    
+
     private fun migrateToV18(realm: DynamicRealm) {
         val stream = realm.schema.get(Stream.TABLE_NAME)
         stream?.apply {
             addField(Stream.STREAM_INCIDENT_REF, Int::class.java)
         }
     }
-    
+
     override fun hashCode(): Int {
         return 1
     }
-    
+
     override fun equals(other: Any?): Boolean {
         return other.hashCode() == hashCode()
     }

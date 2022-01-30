@@ -12,32 +12,33 @@ import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.LoggingScale
 
 class ScaleFragment : Fragment() {
-    
+
     lateinit var listener: CreateReportListener
     var selected: Int? = null
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_scale, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupScale()
-        
+
         nextStepButton.setOnClickListener {
             selected?.let { value ->
                 listener.setScale(value)
                 val response = listener.getResponse()
-                
+
                 response?.let {
                     if (it.investigateType.contains(InvestigationType.POACHING.value)) {
                         listener.handleCheckClicked(StepCreateReport.POACHING_EVIDENCE.step)
@@ -47,10 +48,10 @@ class ScaleFragment : Fragment() {
                 }
             }
         }
-        
+
         scaleRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             nextStepButton.isEnabled = true
-            
+
             when (checkedId) {
                 R.id.smallRadioButton -> selected = LoggingScale.SMALL.value
                 R.id.largeRadioButton -> selected = LoggingScale.LARGE.value
@@ -58,7 +59,7 @@ class ScaleFragment : Fragment() {
             }
         }
     }
-    
+
     private fun setupScale() {
         val response = listener.getResponse()
         response?.let { res ->
@@ -71,7 +72,7 @@ class ScaleFragment : Fragment() {
             }
         }
     }
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = ScaleFragment()

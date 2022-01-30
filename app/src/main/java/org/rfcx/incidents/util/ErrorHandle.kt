@@ -10,25 +10,24 @@ import org.rfcx.incidents.entity.ErrorResponse2
 import retrofit2.HttpException
 import java.io.IOException
 
-
 class ApiException(val code: Int? = -1, message: String) : Exception(message)
 class UnauthenticatedException : Exception()
 class NetworkNotConnection : Exception()
 
 fun HttpException?.getErrorFormApi(): Exception {
-    
+
     if (this?.code() == 401) {
         return UnauthenticatedException()
     } else {
         if (this?.response()?.errorBody() == null) {
             return ApiException(this?.code(), "error and missing error body")
         }
-        
+
         val url = this.response().raw().request.url.toString()
         val errString = this.response().errorBody()?.string()
-        
+
         FirebaseCrashlytics.getInstance().log("API failed from $url,code ${this.code()} ===> response $errString")
-        
+
         return try {
             val error: ErrorResponse = GsonProvider.getInstance().gson.fromJson(
                 errString, ErrorResponse::class.java
@@ -50,15 +49,15 @@ fun HttpException?.getErrorFormApi(): Exception {
 fun Throwable.getResultError(): Result.Error {
     this.printStackTrace()
     return when (this) {
-        
+
         is IOException -> {
             Result.Error(NetworkNotConnection())
         }
-        
+
         is HttpException -> {
             Result.Error(this.getErrorFormApi())
         }
-        
+
         else -> {
             Result.Error(this)
         }
@@ -73,21 +72,21 @@ fun Throwable.getResultError(): Result.Error {
 fun Context?.handleError(error: Throwable) {
     when (error) {
         is UnauthenticatedException -> {
-            
+
             this?.let {
                 logout()
             }
             Toast.makeText(this, this?.getString(R.string.login), Toast.LENGTH_SHORT).show()
         }
-        
+
         is NetworkNotConnection -> {
             Toast.makeText(this, this?.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
         }
-        
+
         is ApiException -> {
             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
         }
-        
+
         else -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
     }
 }

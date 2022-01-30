@@ -24,31 +24,31 @@ import java.util.*
 
 class AlertDetailActivity : AppCompatActivity() {
     private val viewModel: AlertDetailViewModel by viewModel()
-    
+
     companion object {
         const val EXTRA_ALERT_ID = "EXTRA_ALERT_ID"
         private const val SECOND = 1000L
-        
+
         fun startActivity(context: Context, alertId: String) {
             val intent = Intent(context, AlertDetailActivity::class.java)
             intent.putExtra(EXTRA_ALERT_ID, alertId)
             context.startActivity(intent)
         }
     }
-    
+
     private var alertId: String? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alert_detail)
         alertId = intent?.getStringExtra(EXTRA_ALERT_ID)
         setupToolbar()
-        
+
         val alert = alertId?.let { viewModel.getAlert(it) }
         guardianNameTextView.text = alert?.classification?.title
         timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
         val token = this.getTokenID()
-        
+
         alert?.let {
             var alertData = it
             if (alert.end.time - alert.start.time < 5 * SECOND) {
@@ -57,7 +57,7 @@ class AlertDetailActivity : AppCompatActivity() {
             if (alert.end.time - alert.start.time > 15 * SECOND) {
                 alertData = it.setNewTime(end = Date(alert.start.time + 15 * SECOND))
             }
-            
+
             spectrogramImageView.setReportImage(
                 url = viewModel.setFormatUrlOfSpectrogram(alertData),
                 fromServer = true,
@@ -68,24 +68,24 @@ class AlertDetailActivity : AppCompatActivity() {
             setupView(viewModel.setFormatUrlOfAudio(alertData))
             observePlayer()
         }
-        
+
         soundProgressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     viewModel.seekPlayerTo((progress.toLong() * viewModel.getDuration() / maxProgress) * SECOND)
                 }
             }
-            
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            
+
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        
+
         viewModel.classifiedCation.observe(this, { it ->
             it.success({ confidence ->
                 val classificationAdapter = ClassificationAdapter()
                 classificationAdapter.setClassification(confidence, viewModel.getDuration())
-                
+
                 val gridLayoutManager = GridLayoutManager(this, viewModel.getDuration().toInt())
                 gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
@@ -100,7 +100,7 @@ class AlertDetailActivity : AppCompatActivity() {
             })
         })
     }
-    
+
     private fun Alert.setNewTime(start: Date? = null, end: Date? = null): Alert = Alert(
         id = this.id,
         serverId = this.serverId,
@@ -115,22 +115,22 @@ class AlertDetailActivity : AppCompatActivity() {
         classification = this.classification,
         incident = this.incident
     )
-    
+
     private fun setupView(url: String) {
         soundProgressSeekBar.max = maxProgress
-        
+
         replayButton.setOnClickListener {
             viewModel.replaySound(url)
         }
     }
-    
+
     private fun observePlayer() {
         viewModel.playerError.observe(this, {
             Toast.makeText(this, R.string.can_not_play_audio, Toast.LENGTH_SHORT).show()
             loadingSoundProgressBar.visibility = View.INVISIBLE
             replayButton.visibility = View.VISIBLE
         })
-        
+
         viewModel.playerState.observe(this, {
             when (it) {
                 Player.STATE_BUFFERING -> {
@@ -149,7 +149,7 @@ class AlertDetailActivity : AppCompatActivity() {
                 }
             }
         })
-        
+
         viewModel.playerProgress.observe(this, {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 soundProgressSeekBar?.setProgress(it, true)
@@ -157,14 +157,14 @@ class AlertDetailActivity : AppCompatActivity() {
                 soundProgressSeekBar?.progress = it
             }
         })
-        
+
         viewModel.loadAudioError.observe(this, {
             canNotLoadImageLayout.visibility = View.VISIBLE
             loadingSoundProgressBar.visibility = View.INVISIBLE
             soundProgressSeekBar.visibility = View.INVISIBLE
         })
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbarLayout)
         supportActionBar?.apply {
@@ -174,7 +174,7 @@ class AlertDetailActivity : AppCompatActivity() {
             title = getString(R.string.guardian_event_detail)
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

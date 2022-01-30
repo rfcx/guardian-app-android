@@ -15,11 +15,11 @@ class ReportDb(val realm: Realm) {
     fun unsentCount(): Long {
         return realm.where(Report::class.java).notEqualTo("syncState", SENT).count()
     }
-    
+
     fun sentCount(): Long {
         return realm.where(Report::class.java).equalTo("syncState", SENT).count()
     }
-    
+
     fun save(report: Report, attachImages: List<String>) {
         val imageCreateAt = report.reportedAt
         realm.executeTransaction {
@@ -27,7 +27,7 @@ class ReportDb(val realm: Realm) {
                 report.id = (it.where(Report::class.java).max("id")?.toInt() ?: 0) + 1
             }
             it.insertOrUpdate(report)
-            
+
             // save attached image to be Report Image
             attachImages.forEach { attachImage ->
                 val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
@@ -37,7 +37,7 @@ class ReportDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun update(report: Report) {
         realm.executeTransaction {
             if (report.id == 0) {
@@ -46,7 +46,7 @@ class ReportDb(val realm: Realm) {
             it.insertOrUpdate(report)
         }
     }
-    
+
     fun lockUnsent(): List<Report> {
         var unsentCopied: List<Report> = listOf()
         realm.executeTransaction {
@@ -58,7 +58,7 @@ class ReportDb(val realm: Realm) {
         }
         return unsentCopied
     }
-    
+
     fun unlockSending() {
         realm.executeTransaction {
             val snapshot = it.where(Report::class.java).equalTo("syncState", SENDING).findAll().createSnapshot()
@@ -67,16 +67,16 @@ class ReportDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun markUnsent(id: Int) {
         mark(id = id, syncState = UNSENT)
     }
-    
+
     fun markSent(id: Int, guid: String) {
         mark(id, guid, SENT)
         saveGuIDtoImages(guid, id)
     }
-    
+
     private fun mark(id: Int, guid: String? = null, syncState: Int) {
         realm.executeTransaction {
             val report = it.where(Report::class.java).equalTo("id", id).findFirst()
@@ -86,43 +86,43 @@ class ReportDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun getReport(guid: String): Report? {
         return realm.where(Report::class.java).equalTo(Report.FIELD_GUID, guid).findFirst()
     }
-    
+
     fun getReport(id: Int): Report? {
         return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirst()
     }
-    
+
     fun getReportAsync(id: Int): Report? {
         return realm.where(Report::class.java).equalTo(Report.FIELD_ID, id).findFirstAsync()
     }
-    
+
     fun getReportImages(reportId: Int): List<ReportImage>? {
         return realm.where(ReportImage::class.java).equalTo(ReportImage.FIELD_REPORT_ID, reportId).findAll()
     }
-    
+
     // Deletes sent reportsLive, returns a list of files that can also be deleted
     fun deleteSent(): List<String> {
         val unsentCount = unsentCount()
         var keepSentReportLeft = KEEP_REPORT_COUNT - unsentCount
         if (keepSentReportLeft < 0) keepSentReportLeft = 0
         Log.d("deleteSent", "$keepSentReportLeft")
-        
+
         val sentCount = sentCount()
         val shouldDeleteCount = sentCount - keepSentReportLeft
         Log.i("deleteSent", "$shouldDeleteCount")
         if (shouldDeleteCount <= 0) return emptyList()
-        
+
         val reports = realm.where(Report::class.java)
             .equalTo("syncState", SENT)
             .sort("id", Sort.ASCENDING)
             .limit(shouldDeleteCount)
             .findAll()
-//		val imageDb = ReportImageDb()
+// 		val imageDb = ReportImageDb()
         reports.forEach {
-            //			imageDb.deleteAll(it.id)
+            // 			imageDb.deleteAll(it.id)
             it.realm.deleteAll()
         }
         val filenames = reports.mapNotNull { it.audioLocation }
@@ -131,7 +131,7 @@ class ReportDb(val realm: Realm) {
         }
         return filenames
     }
-    
+
     fun deleteReport(id: Int) {
         // Delete report also delete reportImage
         realm.executeTransaction {
@@ -140,7 +140,7 @@ class ReportDb(val realm: Realm) {
                 ?.deleteAllFromRealm()
         }
     }
-    
+
     fun getAllAsync(): List<Report> {
         return realm.copyFromRealm(
             realm.where(Report::class.java)
@@ -148,13 +148,13 @@ class ReportDb(val realm: Realm) {
                 .findAllAsync()
         )
     }
-    
+
     fun getAllResultsAsync(sort: Sort = Sort.DESCENDING): RealmResults<Report> {
         return realm.where(Report::class.java)
             .sort("id", sort)
             .findAllAsync()
     }
-    
+
     private fun saveGuIDtoImages(guid: String, reportId: Int) {
         val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
         images?.forEach {
@@ -169,7 +169,7 @@ class ReportDb(val realm: Realm) {
             }
         }
     }
-    
+
     companion object {
         const val UNSENT = 0
         const val SENDING = 1

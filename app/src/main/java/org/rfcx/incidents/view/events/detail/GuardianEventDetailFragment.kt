@@ -22,18 +22,17 @@ import org.rfcx.incidents.util.*
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
-
 class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: GuardianEventDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
     private val alertItemAdapter by lazy { AlertItemAdapter(this) }
-    
+
     var name: String? = null
     var guardianId: String? = null
     var distance: Double? = null
     var alerts = listOf<Alert>()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val arg = arguments ?: return
@@ -43,36 +42,37 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             distance = arg.getDouble(ARG_DISTANCE)
         }
     }
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as MainActivityEventListener)
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.GUARDIAN_EVENT_DETAIL)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_guardian_event_detail, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setObserve()
         isShowProgressBar()
-        
+
         alertsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = alertItemAdapter
             alertItemAdapter.items = alerts
-            
+
             createReportButton.setOnClickListener {
                 name?.let { name ->
                     guardianId?.let { id ->
@@ -85,7 +85,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
                 }
             }
         }
-        
+
         openMapsButton.setOnClickListener {
             guardianId?.let { id ->
                 val stream = viewModel.getStream(id)
@@ -94,11 +94,11 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
                 }
             }
         }
-        
+
         guardianNameTextView.text = name
         distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
         distanceTextView.text = distance?.setFormatLabel()
-        
+
         guardianId?.let {
             if (viewModel.getEventsCount(it) != 0L) {
                 alertItemAdapter.items = viewModel.getAlertsByStream(it)
@@ -112,13 +112,13 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
                 }
             }
         }
-        
+
         alertsSwipeRefreshView.apply {
             setOnRefreshListener(this@GuardianEventDetailFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
-    
+
     private fun setObserve() {
         viewModel.getAlertsFromRemote.observe(viewLifecycleOwner, { it ->
             it.success({ list ->
@@ -132,7 +132,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             })
         })
     }
-    
+
     private fun setupToolbar() {
         val activity = (activity as AppCompatActivity?) ?: return
         activity.setSupportActionBar(toolbarLayout)
@@ -141,16 +141,16 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             setDisplayShowHomeEnabled(true)
             title = getString(R.string.guardian_event_detail)
         }
-        
+
         toolbarLayout.setNavigationOnClickListener {
             listener.onBackPressed()
         }
     }
-    
+
     override fun invoke(alert: Alert) {
         listener.openAlertDetail(alert)
     }
-    
+
     private fun saveLocation(location: Location) {
         val tracking = Tracking(id = 1)
         val coordinate = Coordinate(
@@ -162,22 +162,22 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
         Preferences.getInstance(requireContext())
             .putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
     }
-    
+
     override fun onRefresh() {
         guardianId?.let { viewModel.fetchEvents(it) }
         notHaveEventsLayout.visibility = View.GONE
     }
-    
+
     private fun isShowProgressBar(show: Boolean = true) {
         progressBar.visibility = if (show) View.VISIBLE else View.GONE
     }
-    
+
     companion object {
         const val tag = "GuardianEventDetailFragment"
         private const val ARG_NAME = "ARG_NAME"
         private const val ARG_DISTANCE = "ARG_DISTANCE"
         private const val ARG_GUARDIAN_ID = "ARG_GUARDIAN_ID"
-        
+
         @JvmStatic
         fun newInstance(name: String, distance: Double?, guardianId: String): GuardianEventDetailFragment {
             return GuardianEventDetailFragment().apply {

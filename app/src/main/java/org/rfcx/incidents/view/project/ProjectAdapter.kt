@@ -19,22 +19,22 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
             field = value
             notifyDataSetChanged()
         }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectSelectViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_project, parent, false)
         return ProjectSelectViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: ProjectSelectViewHolder, position: Int) {
         holder.bind(items[position])
-        
+
         if (selectedPosition == position) {
             holder.itemView.checkImageView.visibility = View.VISIBLE
         } else {
             holder.itemView.checkImageView.visibility = View.GONE
         }
-        
+
         holder.itemView.setOnClickListener {
             if (items[position].permissions != Permissions.GUEST.value) {
                 selectedPosition = position
@@ -43,40 +43,40 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
             }
         }
     }
-    
+
     override fun getItemCount(): Int = items.size
-    
+
     inner class ProjectSelectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val locationGroupTextView = itemView.locationGroupTextView
         private val lockImageView = itemView.lockImageView
-        
+
         fun bind(project: Project) {
             locationGroupTextView.text = project.name
             lockImageView.visibility =
                 if (project.isGuest()) View.VISIBLE else View.GONE
             setClickable(itemView, project.isGuest())
-            
+
             if (project.isGuest()) {
                 locationGroupTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
             } else {
                 locationGroupTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
             }
-            
+
             lockImageView.setColorFilter(
                 ContextCompat.getColor(
                     itemView.context,
                     R.color.text_secondary
                 )
             )
-            
+
             lockImageView.setOnClickListener {
                 listener.onLockImageClicked()
             }
         }
-        
+
         private fun setClickable(view: View?, clickable: Boolean) {
             if (view == null) return
-            
+
             if (view is ViewGroup) {
                 for (i in 0 until view.childCount) {
                     setClickable(view.getChildAt(i), clickable)

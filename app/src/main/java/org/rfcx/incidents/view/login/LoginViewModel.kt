@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.login
 
-
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,40 +24,40 @@ import org.rfcx.incidents.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) :
     ViewModel() {
-    
+
     private val auth0 by lazy {
         val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
-        //auth0.isLoggingEnabled = true
+        // auth0.isLoggingEnabled = true
         auth0.isOIDCConformant = true
         auth0
     }
-    
+
     private val authentication by lazy {
         AuthenticationAPIClient(auth0)
     }
-    
+
     private var _userAuth: MutableLiveData<UserAuthResponse?> = MutableLiveData()
     val userAuth: LiveData<UserAuthResponse?>
         get() = _userAuth
-    
+
     private var _loginFailure: MutableLiveData<String?> = MutableLiveData()
     val loginFailure: LiveData<String?>
         get() = _loginFailure
-    
+
     private var _resetPassword: MutableLiveData<String?> = MutableLiveData()
     val resetPassword: LiveData<String?>
         get() = _resetPassword
-    
+
     private var _statusUserTouch: MutableLiveData<Boolean> = MutableLiveData()
     val statusUserTouch: LiveData<Boolean>
         get() = _statusUserTouch
-    
+
     init {
         _userAuth.postValue(null)
         _loginFailure.postValue(null)
         _statusUserTouch.postValue(null)
     }
-    
+
     fun resetPassword(email: String) {
         authentication
             .resetPassword(email, "Username-Password-Authentication")
@@ -66,13 +65,13 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
                 override fun onSuccess(payload: Void?) {
                     _resetPassword.postValue(SUCCESS)
                 }
-                
+
                 override fun onFailure(error: AuthenticationException?) {
                     _resetPassword.postValue(error?.message)
                 }
             })
     }
-    
+
     fun login(email: String, password: String) {
         authentication
             .login(email, password, "Username-Password-Authentication")
@@ -86,13 +85,13 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
                         }
                         is Ok -> {
                             _userAuth.postValue(result.value)
-                            
+
                             val preferences = Preferences.getInstance(context)
                             preferences.putString(Preferences.LOGIN_WITH, "email")
                         }
                     }
                 }
-                
+
                 override fun onFailure(exception: AuthenticationException) {
                     exception.printStackTrace()
                     FirebaseCrashlytics.getInstance().log(exception.message.toString())
@@ -104,20 +103,22 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
                 }
             })
     }
-    
+
     fun checkUserDetail(userAuthResponse: UserAuthResponse) {
         CredentialKeeper(context).save(userAuthResponse)
-        
-        checkUserTouchUseCase.execute(object : DisposableSingleObserver<Boolean>() {
-            override fun onSuccess(t: Boolean) {
-                _statusUserTouch.postValue(true)
-            }
-            
-            override fun onError(e: Throwable) {
-                FirebaseCrashlytics.getInstance().log(e.message.toString())
-                _loginFailure.postValue(e.localizedMessage)
-            }
-        }, null)
+
+        checkUserTouchUseCase.execute(
+            object : DisposableSingleObserver<Boolean>() {
+                override fun onSuccess(t: Boolean) {
+                    _statusUserTouch.postValue(true)
+                }
+
+                override fun onError(e: Throwable) {
+                    FirebaseCrashlytics.getInstance().log(e.message.toString())
+                    _loginFailure.postValue(e.localizedMessage)
+                }
+            },
+            null
+        )
     }
 }
-

@@ -13,7 +13,7 @@ open class ReportImage(
     var reportServerId: String? = null,
     var guid: String? = null,
     @Expose(serialize = false)
-    var localPath: String = "",   // path of image on device
+    var localPath: String = "", // path of image on device
     @Expose(serialize = false)
     var createAt: Date = Date(), // 2015-05-13 12:53:55
     var syncState: Int = 0,

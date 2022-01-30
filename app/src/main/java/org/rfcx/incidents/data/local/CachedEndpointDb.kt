@@ -5,13 +5,13 @@ import org.rfcx.incidents.entity.CachedEndpoint
 import java.util.*
 
 class CachedEndpointDb(val realm: Realm) {
-    
+
     fun updateCachedEndpoint(endpoint: String) {
         realm.executeTransaction {
             it.copyToRealmOrUpdate(CachedEndpoint(endpoint, Date()))
         }
     }
-    
+
     fun hasCachedEndpoint(endpoint: String, hours: Double = 1.0): Boolean {
         val cachedEndpoint = realm.where(CachedEndpoint::class.java).equalTo(
             CachedEndpoint.FIELD_ENDPOINT, endpoint

@@ -20,7 +20,7 @@ class VoiceDb(val realm: Realm) {
         }
         return unsentCopied
     }
-    
+
     fun saveReportServerId(serverId: String, reportId: Int) {
         val voices = realm.where(Voice::class.java)
             .equalTo(Voice.FIELD_RESPONSE_ID, reportId)
@@ -34,15 +34,15 @@ class VoiceDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun markSent(id: Int, remotePath: String?) {
         mark(id = id, syncState = SyncState.SENT.value, remotePath)
     }
-    
+
     fun markUnsent(id: Int) {
         mark(id = id, syncState = SyncState.UNSENT.value, null)
     }
-    
+
     private fun mark(id: Int, syncState: Int, remotePath: String?) {
         realm.executeTransaction {
             val report = it.where(Voice::class.java).equalTo(Voice.FIELD_ID, id).findFirst()
@@ -52,11 +52,11 @@ class VoiceDb(val realm: Realm) {
             }
         }
     }
-    
+
     fun unsentCount(): Long {
         return realm.where(Voice::class.java).notEqualTo(Voice.FIELD_SYNC_STATE, SyncState.SENT.value).count()
     }
-    
+
     fun save(response: Response) {
         realm.executeTransaction {
             response.audioLocation?.let { localPath ->

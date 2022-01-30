@@ -14,7 +14,7 @@ import org.rfcx.incidents.view.base.BaseActivity
 
 // TODO change class name
 class LoginActivityNew : BaseActivity(), LoginListener {
-    
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, LoginActivityNew::class.java)
@@ -23,15 +23,15 @@ class LoginActivityNew : BaseActivity(), LoginListener {
             context.startActivity(intent)
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_new)
         setupDisplayTheme()
-        
+
         val preferenceHelper = Preferences.getInstance(this)
         val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
-        
+
         if (CredentialKeeper(this).hasValidCredentials() && selectedProject != -1 && getUserNickname().substring(
                 0,
                 1
@@ -42,11 +42,11 @@ class LoginActivityNew : BaseActivity(), LoginListener {
             openLoginFragment()
         }
     }
-    
+
     override fun handleOpenPage() {
         val preferenceHelper = Preferences.getInstance(this)
         val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
-        
+
         when {
             getUserNickname().substring(0, 1) == "+" -> {
                 openSetUserNameFragmentFragment()
@@ -59,26 +59,25 @@ class LoginActivityNew : BaseActivity(), LoginListener {
             }
         }
     }
-    
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         getEventFromIntentIfHave(intent)
     }
-    
+
     override fun openMain() {
         MainActivity.startActivity(this@LoginActivityNew, getEventFromIntentIfHave(intent))
         finish()
     }
-    
+
     override fun openSetUserNameFragmentFragment() {
         supportFragmentManager.beginTransaction()
             .replace(
                 loginContainer.id, SetUserNameFragment(),
                 "SetUserNameFragment"
             ).commit()
-        
     }
-    
+
     override fun openSetProjectsFragment() {
         supportFragmentManager.beginTransaction()
             .replace(
@@ -86,16 +85,15 @@ class LoginActivityNew : BaseActivity(), LoginListener {
                 "SetProjectsFragment"
             ).commit()
     }
-    
+
     override fun openLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(
                 loginContainer.id, LoginFragment(),
                 "LoginFragment"
             ).commit()
-        
     }
-    
+
     private fun getEventFromIntentIfHave(intent: Intent?): String? {
         if (intent?.hasExtra("streamName") == true) {
             return intent.getStringExtra("streamName")

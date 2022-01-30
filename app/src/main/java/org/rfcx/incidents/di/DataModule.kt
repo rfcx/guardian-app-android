@@ -59,56 +59,55 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.RealmHelper
 
 object DataModule {
-    
+
     val dataModule = module {
-        
+
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
-        
+
         single { GetProjectsRepositoryImp(get()) } bind GetProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
-        
+
         single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
-        
+
         single { EventsRepositoryImp(get()) } bind EventsRepository::class
         single { GetEvents(get(), get(), get()) }
-        
+
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
         single { GetDetections(get(), get(), get()) }
-        
+
         single { PasswordChangeRepositoryImp(get()) } bind PasswordChangeRepository::class
         single { PasswordChangeUseCase(get(), get(), get()) }
-        
+
         single { UserTouchRepositoryImp(get()) } bind UserTouchRepository::class
         single { CheckUserTouchUseCase(get(), get(), get()) }
-        
+
         single { SetNameRepositoryImp(get()) } bind SetNameRepository::class
         single { SendNameUseCase(get(), get(), get()) }
-        
+
         single { SiteRepositoryImp(get()) } bind SiteRepository::class
         single { GetSiteNameUseCase(get(), get(), get()) }
-        
+
         single { CreateResponseRepositoryImp(get()) } bind CreateResponseRepository::class
         single { CreateResponse(get(), get(), get()) }
-        
+
         single { ProfilePhotoRepositoryImp(get()) } bind ProfilePhotoRepository::class
         single { ProfilePhotoUseCase(get(), get(), get()) }
-        
+
         single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
         single { SubscribeUseCase(get(), get(), get()) }
-        
+
         single { UnsubscribeRepositoryImp(get()) } bind UnsubscribeRepository::class
         single { UnsubscribeUseCase(get(), get(), get()) }
-        
+
         single { MediaRepositoryImp(get()) } bind MediaRepository::class
         single { MediaUseCase(get(), get(), get()) }
-        
+
         single { TermsRepositoryImp(get()) } bind TermsRepository::class
         single { TermsUseCase(get(), get(), get()) }
-        
     }
-    
+
     val remoteModule = module {
         factory { ServiceFactory.makeProjectsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
@@ -125,7 +124,7 @@ object DataModule {
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeTermsService(BuildConfig.DEBUG, androidContext()) }
     }
-    
+
     val localModule = module {
         factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
         factory { CachedEndpointDb(get()) }

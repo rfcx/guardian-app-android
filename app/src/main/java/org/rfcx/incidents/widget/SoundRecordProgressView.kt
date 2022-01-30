@@ -19,9 +19,11 @@ import org.rfcx.incidents.R
 
 @SuppressLint("ClickableViewAccessibility")
 class SoundRecordProgressView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    
+
     var state: SoundRecordState = SoundRecordState.NONE
         set(value) {
             field = value
@@ -29,18 +31,18 @@ class SoundRecordProgressView @JvmOverloads constructor(
         }
     var isDisableEdit = false
     var onStateChangeListener: OnStateChangeListener? = null
-    
+
     private var soundWaveViewAdapter = SoundWaveViewAdapter()
     private val animateHandler = Handler()
     private lateinit var _recyclerView: NoneTouchableRecycler
     private var cancelButton: ImageButton
     private var desTextView: TextView
     private var actionButton: ImageButton
-    
+
     private val onScroll = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            
+
             val totalItemCount = (recyclerView.layoutManager as LinearLayoutManager).itemCount
             val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
             if (lastVisibleItem + 2 > totalItemCount) {
@@ -48,38 +50,39 @@ class SoundRecordProgressView @JvmOverloads constructor(
             }
         }
     }
-    
+
     private val runnable = object : Runnable {
         override fun run() {
             _recyclerView.smoothScrollBy(4, 0)
             animateHandler.postDelayed(this, 100)
         }
     }
-    
+
     init {
         View.inflate(context, R.layout.widget_sound_record_progress, this)
         _recyclerView = findViewById(R.id.recyclerView)
         _recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         _recyclerView.adapter = soundWaveViewAdapter
         _recyclerView.addOnScrollListener(onScroll)
-        
+
         cancelButton = findViewById(R.id.cancelButton)
         actionButton = findViewById(R.id.actionButton)
         desTextView = findViewById(R.id.tabToRecText)
-        
-        actionButton.setOnTouchListener(OnTouchListener { _, p1 ->
-            
-            if (p1?.action == MotionEvent.ACTION_DOWN && state == SoundRecordState.NONE) {
-                state = SoundRecordState.RECORDING
-                return@OnTouchListener true
-                
-            } else if (p1?.action == MotionEvent.ACTION_UP && state == SoundRecordState.RECORDING) {
-                state = SoundRecordState.STOPPED_RECORD
-                return@OnTouchListener true
+
+        actionButton.setOnTouchListener(
+            OnTouchListener { _, p1 ->
+
+                if (p1?.action == MotionEvent.ACTION_DOWN && state == SoundRecordState.NONE) {
+                    state = SoundRecordState.RECORDING
+                    return@OnTouchListener true
+                } else if (p1?.action == MotionEvent.ACTION_UP && state == SoundRecordState.RECORDING) {
+                    state = SoundRecordState.STOPPED_RECORD
+                    return@OnTouchListener true
+                }
+                false
             }
-            false
-        })
-        
+        )
+
         actionButton.setOnClickListener {
             when (state) {
                 SoundRecordState.STOPPED_RECORD -> {
@@ -91,32 +94,31 @@ class SoundRecordProgressView @JvmOverloads constructor(
                 else -> {}
             }
         }
-        
+
         cancelButton.setOnClickListener {
             state = SoundRecordState.NONE
         }
-        
     }
-    
+
     private fun startAnimate() {
         animateHandler.postDelayed(runnable, 100)
     }
-    
+
     private fun stopAnimate() {
         animateHandler.removeCallbacks(runnable)
     }
-    
+
     private fun resetAnimate() {
         animateHandler.removeCallbacks(runnable)
         soundWaveViewAdapter.reset()
         (_recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0, 0)
     }
-    
+
     override fun onDetachedFromWindow() {
         animateHandler.removeCallbacks(runnable)
         super.onDetachedFromWindow()
     }
-    
+
     private fun onStateChange() {
         Log.d("onStateChange", state.name)
         when (state) {
@@ -148,7 +150,7 @@ class SoundRecordProgressView @JvmOverloads constructor(
                 resetAnimate()
                 startAnimate()
             }
-            
+
             SoundRecordState.STOP_PLAYING -> {
                 desTextView.visibility = View.GONE
                 if (!isDisableEdit) {
@@ -160,14 +162,13 @@ class SoundRecordProgressView @JvmOverloads constructor(
                 stopAnimate()
             }
         }
-        
+
         onStateChangeListener?.invoke(state)
     }
-    
+
     fun disableEdit() {
         isDisableEdit = true
     }
-    
 }
 
 enum class SoundRecordState {
@@ -175,15 +176,15 @@ enum class SoundRecordState {
 }
 
 class SoundWaveViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    
+
     private val sources = ArrayList<Any?>()
-    
+
     init {
         addMoreView()
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        
+
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             VIEW_TYPE_START -> {
@@ -192,18 +193,16 @@ class SoundWaveViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             else -> SoundWaveView(inflater.inflate(R.layout.item_widget_sound_progress_visualizer_view, parent, false))
         }
     }
-    
+
     override fun getItemCount(): Int = sources.count()
-    
-    
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    
     }
-    
+
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) VIEW_TYPE_START else VIEW_TYPE_SOUND
     }
-    
+
     fun addMoreView() {
         var i = 0
         while (i < 20) {
@@ -212,22 +211,21 @@ class SoundWaveViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
         notifyDataSetChanged()
     }
-    
+
     fun reset() {
         sources.clear()
         addMoreView()
         notifyDataSetChanged()
     }
-    
+
     private inner class SoundWaveView(itemView: View) : RecyclerView.ViewHolder(itemView)
-    
+
     private inner class StartView(itemView: View) : RecyclerView.ViewHolder(itemView)
-    
+
     companion object {
         private const val VIEW_TYPE_START = 1
         private const val VIEW_TYPE_SOUND = 2
     }
 }
-
 
 typealias OnStateChangeListener = (SoundRecordState) -> Unit

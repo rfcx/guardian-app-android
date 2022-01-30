@@ -28,26 +28,27 @@ import org.rfcx.incidents.view.profile.coordinates.CoordinatesActivity
 import org.rfcx.incidents.view.profile.editprofile.EditProfileActivity
 
 class ProfileFragment : BaseFragment() {
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val profileViewModel: ProfileViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
     private lateinit var viewDataBinding: FragmentProfileBinding
-    
+
     private val dialog: AlertDialog by lazy {
         AlertDialog.Builder(context)
             .setView(layoutInflater.inflate(R.layout.custom_loading_alert_dialog, null))
             .setCancelable(false)
             .create()
     }
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as MainActivityEventListener)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         viewDataBinding = DataBindingUtil.inflate(
@@ -57,12 +58,12 @@ class ProfileFragment : BaseFragment() {
         viewDataBinding.lifecycleOwner = this
         return viewDataBinding.root
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         handleShowSnackbarResult(requestCode, resultCode, data)
     }
-    
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
@@ -70,24 +71,24 @@ class ProfileFragment : BaseFragment() {
             profileViewModel.resumed()
         }
     }
-    
+
     override fun onResume() {
         super.onResume()
         profileViewModel.resumed()
     }
-    
+
     @SuppressLint("DefaultLocale")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.viewModel = profileViewModel
         setOnClickButton()
     }
-    
+
     private fun setOnClickButton() {
         viewDataBinding.onClickProject = View.OnClickListener {
             context?.let { SubscribeProjectsActivity.startActivity(it) }
         }
-        
+
         viewDataBinding.onClickSystemOptions = View.OnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val name = getString(R.string.app_name)
@@ -97,7 +98,7 @@ class ProfileFragment : BaseFragment() {
                 mChannel.description = descriptionText
                 val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(mChannel)
-                
+
                 val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
                     putExtra(Settings.EXTRA_CHANNEL_ID, BuildConfig.APPLICATION_ID)
@@ -105,7 +106,7 @@ class ProfileFragment : BaseFragment() {
                 startActivity(intent)
             }
         }
-        
+
         viewDataBinding.onClickRatingApp = View.OnClickListener {
             analytics?.trackRateAppEvent()
             val appPackageName = activity?.packageName
@@ -119,46 +120,46 @@ class ProfileFragment : BaseFragment() {
                 startActivity(exceptionIntent)
             }
         }
-        
+
         viewDataBinding.onClickFeedback = View.OnClickListener {
             analytics?.trackFeedbackStartEvent()
             val intent = Intent(activity, FeedbackActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE)
         }
-        
+
         viewDataBinding.onClickPassword = View.OnClickListener {
             context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
         }
-        
+
         viewDataBinding.onClickProfilePhoto = View.OnClickListener {
             context?.let { it1 -> EditProfileActivity.startActivity(it1) }
         }
-        
+
         viewDataBinding.onClickCoordinates = View.OnClickListener {
             context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
         }
     }
-    
+
     override fun onPause() {
         super.onPause()
         dialog.dismiss()
     }
-    
+
     private fun handleShowSnackbarResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         if (requestCode != REQUEST_CODE || resultCode != RESULT_CODE || intentData == null) return
-        
+
         view?.let {
             Snackbar.make(it, R.string.feedback_submitted, Snackbar.LENGTH_SHORT)
                 .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                 .setAnchorView(R.id.bottomBar).show() // TODO :: Check it work or not?
         }
     }
-    
+
     companion object {
         fun newInstance(): ProfileFragment {
             return ProfileFragment()
         }
-        
+
         const val tag = "ProfileFragment"
         const val RESULT_CODE = 12
         const val REQUEST_CODE = 11

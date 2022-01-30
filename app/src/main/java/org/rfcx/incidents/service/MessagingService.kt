@@ -12,11 +12,10 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import org.rfcx.incidents.service.AlertNotification.createAlert
 
-
 class MessagingService : FirebaseMessagingService() {
-    
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        
+
         if (remoteMessage.notification == null) return
         Log.i("MessagingService", "-- " + remoteMessage.data.toString())
         if (remoteMessage.data.containsKey("streamName")) {
@@ -25,7 +24,7 @@ class MessagingService : FirebaseMessagingService() {
             bundle.putString("streamName", remoteMessage.data["streamName"])
             intent.putExtras(bundle)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-            
+
             val alertNotification =
                 createAlert(this, getNotificationManager(), remoteMessage.notification!!, remoteMessage.data)
             notify(createNotificationID(), alertNotification)
@@ -43,22 +42,21 @@ class MessagingService : FirebaseMessagingService() {
                 }
             }
         }
-        
+
         // Broadcast message to refresh
-//		val intent = Intent(MainActivity.INTENT_FILTER_MESSAGE_BROADCAST)
-//		applicationContext.sendBroadcast(intent)
+// 		val intent = Intent(MainActivity.INTENT_FILTER_MESSAGE_BROADCAST)
+// 		applicationContext.sendBroadcast(intent)
     }
-    
-    
+
     private fun notify(id: Int, notification: Notification) {
         Log.w("MessagingService", "notify")
         getNotificationManager().notify(id, notification)
     }
-    
+
     private fun getNotificationManager(): NotificationManager {
         return getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
-    
+
     private fun createNotificationID(): Int {
         return System.currentTimeMillis().toInt()
     }

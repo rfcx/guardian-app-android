@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ServiceFactory {
-    
+
     fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -35,7 +35,7 @@ object ServiceFactory {
         )
             .create(GetProjectsEndpoint::class.java)
     }
-    
+
     fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -43,7 +43,7 @@ object ServiceFactory {
         )
             .create(GetStreamsEndpoint::class.java)
     }
-    
+
     fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -51,7 +51,7 @@ object ServiceFactory {
         )
             .create(DetectionsEndpoint::class.java)
     }
-    
+
     fun makeMediaService(isDebug: Boolean, context: Context): MediaEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -59,7 +59,7 @@ object ServiceFactory {
         )
             .create(MediaEndpoint::class.java)
     }
-    
+
     fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -67,7 +67,7 @@ object ServiceFactory {
         )
             .create(EventsEndpoint::class.java)
     }
-    
+
     fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -75,7 +75,7 @@ object ServiceFactory {
         )
             .create(CreateResponseEndpoint::class.java)
     }
-    
+
     fun makeAssetsService(isDebug: Boolean, context: Context): AssetsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -83,17 +83,19 @@ object ServiceFactory {
         )
             .create(AssetsEndpoint::class.java)
     }
-    
+
     fun makeUserTouchService(isDebug: Boolean, context: Context): UserTouchEndPoint {
         return createRetrofit(
-            BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(
+            BuildConfig.CORE_API_BASE_URL,
+            createAuthTokenOkHttpClient(
                 isDebug,
                 AuthTokenInterceptor(context)
-            ), GsonProvider.getInstance().gson
+            ),
+            GsonProvider.getInstance().gson
         )
             .create(UserTouchEndPoint::class.java)
     }
-    
+
     fun makeSetNameService(isDebug: Boolean, context: Context): SetNameEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -101,7 +103,7 @@ object ServiceFactory {
         )
             .create(SetNameEndpoint::class.java)
     }
-    
+
     fun makeSiteNameService(isDebug: Boolean, context: Context): SiteEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -109,7 +111,7 @@ object ServiceFactory {
         )
             .create(SiteEndpoint::class.java)
     }
-    
+
     fun makePasswordService(isDebug: Boolean, context: Context): PasswordChangeEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -117,7 +119,7 @@ object ServiceFactory {
         )
             .create(PasswordChangeEndpoint::class.java)
     }
-    
+
     fun makeProfilePhotoService(isDebug: Boolean, context: Context): ProfilePhotoEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -125,7 +127,7 @@ object ServiceFactory {
         )
             .create(ProfilePhotoEndpoint::class.java)
     }
-    
+
     fun makeSubscribeService(isDebug: Boolean, context: Context): SubscribeEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -133,7 +135,7 @@ object ServiceFactory {
         )
             .create(SubscribeEndpoint::class.java)
     }
-    
+
     fun makeTermsService(isDebug: Boolean, context: Context): TermsEndpoint {
         return createRetrofit(
             BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
@@ -141,7 +143,7 @@ object ServiceFactory {
         )
             .create(TermsEndpoint::class.java)
     }
-    
+
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -149,7 +151,7 @@ object ServiceFactory {
             .client(okHttpClient)
             .build()
     }
-    
+
     /**
      * OkHttp Client for auto add Auth header
      */
@@ -161,7 +163,7 @@ object ServiceFactory {
             .addInterceptor(tokenInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
-        
+
         if (isDebug) {
             okHttpClient
                 .addNetworkInterceptor(StethoInterceptor())
@@ -169,14 +171,14 @@ object ServiceFactory {
         }
         return okHttpClient.build()
     }
-    
+
     private fun createDefaultOkHttpClient(
         isDebug: Boolean
     ): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
-        
+
         if (isDebug) {
             okHttpClient
                 .addNetworkInterceptor(StethoInterceptor())

@@ -9,7 +9,8 @@ import org.rfcx.incidents.entity.ProfilePhotoResponse
 
 class ProfilePhotoUseCase(
     private val profilePhotoRepository: ProfilePhotoRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<MultipartBody.Part, ProfilePhotoResponse>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: MultipartBody.Part): Single<ProfilePhotoResponse> {
         return profilePhotoRepository.sendProfilePhoto(params)

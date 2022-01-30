@@ -36,15 +36,15 @@ class FeedbackActivity : AppCompatActivity() {
     private var pathListArray: List<String>? = null
     private var menuAll: Menu? = null
     private val analytics by lazy { Analytics(this) }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
-        
+
         setupToolbar()
         setTextFrom()
         setupFeedbackImages()
-        
+
         feedbackEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0 != null) {
@@ -53,28 +53,28 @@ class FeedbackActivity : AppCompatActivity() {
                     }
                 }
             }
-            
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 Log.d("", "beforeTextChanged")
             }
-            
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 setEnableSendFeedbackView()
             }
         })
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics.trackScreen(Screen.FEEDBACK)
     }
-    
+
     private fun setupFeedbackImages() {
         feedbackRecycler.apply {
             layoutManager = LinearLayoutManager(this@FeedbackActivity)
             adapter = feedbackImageAdapter
         }
-        
+
         feedbackImageAdapter.onFeedbackImageAdapterClickListener = object : OnFeedbackImageAdapterClickListener {
             override fun pathListArray(path: ArrayList<BaseListItem>) {
                 val pathList = mutableListOf<String>()
@@ -84,18 +84,18 @@ class FeedbackActivity : AppCompatActivity() {
                 }
                 pathListArray = pathList
             }
-            
+
             override fun onDeleteImageClick(position: Int) {
                 feedbackImageAdapter.removeAt(position)
             }
         }
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         handleGalleryResult(requestCode, resultCode, data)
     }
-    
+
     @SuppressLint("ResourceAsColor")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuAll = menu
@@ -104,7 +104,7 @@ class FeedbackActivity : AppCompatActivity() {
         setEnableSendFeedbackView(false)
         return super.onCreateOptionsMenu(menu)
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         R.id.attachView
         when (item.itemId) {
@@ -114,12 +114,12 @@ class FeedbackActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
     private fun setEnableSendFeedbackView(start: Boolean = true) {
         menuAll?.findItem(R.id.sendFeedbackView)?.isEnabled = start
         val itemSend = menuAll?.findItem(R.id.sendFeedbackView)?.icon
         val wrapDrawable = itemSend?.let { DrawableCompat.wrap(it) }
-        
+
         if (wrapDrawable != null) {
             if (start) DrawableCompat.setTint(
                 wrapDrawable,
@@ -127,7 +127,7 @@ class FeedbackActivity : AppCompatActivity() {
             ) else DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(this, android.R.color.darker_gray))
         }
     }
-    
+
     private fun openGallery() {
         if (!galleryPermissions.allowed()) {
             imageFile = null
@@ -136,7 +136,7 @@ class FeedbackActivity : AppCompatActivity() {
             startOpenGallery()
         }
     }
-    
+
     private fun startOpenGallery() {
         if (feedbackImageAdapter.getImageCount() < FeedbackImageAdapter.MAX_IMAGE_SIZE) {
             val remainingImage = FeedbackImageAdapter.MAX_IMAGE_SIZE - feedbackImageAdapter.getImageCount()
@@ -153,10 +153,10 @@ class FeedbackActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.maximum_number_of_attachments, Toast.LENGTH_LONG).show()
         }
     }
-    
+
     private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
-        
+
         val pathList = mutableListOf<String>()
         val results = Matisse.obtainResult(intentData)
         results.forEach {
@@ -167,45 +167,48 @@ class FeedbackActivity : AppCompatActivity() {
         }
         feedbackImageAdapter.addImages(pathList)
     }
-    
+
     private fun sendFeedback() {
         val sendFeedbackView = findViewById<View>(R.id.sendFeedbackView)
         val contextView = findViewById<View>(R.id.content)
-        
+
         feedbackGroupView.visibility = View.GONE
         feedbackProgressBar.visibility = View.VISIBLE
-        
+
         setEnableSendFeedbackView(false)
         sendFeedbackView.hideKeyboard()
-        
+
         val feedbackInput = feedbackEditText.text.toString()
         feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput, contextView)
-        
-        feedbackViewModel.statusToSaveData.observe(this, Observer {
-            if (it == "Success") {
-                analytics.trackFeedbackSentEvent()
-                val intent = Intent()
-                setResult(ProfileFragment.RESULT_CODE, intent)
-                finish()
-            } else if (it == "Fail") {
-                setEnableSendFeedbackView()
-                feedbackGroupView.visibility = View.VISIBLE
-                feedbackProgressBar.visibility = View.INVISIBLE
+
+        feedbackViewModel.statusToSaveData.observe(
+            this,
+            Observer {
+                if (it == "Success") {
+                    analytics.trackFeedbackSentEvent()
+                    val intent = Intent()
+                    setResult(ProfileFragment.RESULT_CODE, intent)
+                    finish()
+                } else if (it == "Fail") {
+                    setEnableSendFeedbackView()
+                    feedbackGroupView.visibility = View.VISIBLE
+                    feedbackProgressBar.visibility = View.INVISIBLE
+                }
             }
-        })
+        )
     }
-    
+
     private fun View.hideKeyboard() = this.let {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
-    
+
     @SuppressLint("SetTextI18n")
     fun setTextFrom() {
         val fromWho = feedbackViewModel.from()
         fromEmailTextView.text = "${getString(R.string.from)} $fromWho"
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
@@ -215,12 +218,12 @@ class FeedbackActivity : AppCompatActivity() {
             title = getString(R.string.profile_send_feedback)
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-    
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, FeedbackActivity::class.java)
@@ -228,4 +231,3 @@ class FeedbackActivity : AppCompatActivity() {
         }
     }
 }
-

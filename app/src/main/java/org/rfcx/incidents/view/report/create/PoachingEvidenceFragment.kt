@@ -12,33 +12,34 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.response.PoachingEvidence
 
 class PoachingEvidenceFragment : Fragment() {
-    
+
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_poaching_evidence, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setOnChange()
         setupPoachingEvidence()
-        
+
         nextStepButton.setOnClickListener {
             setSelect()
         }
     }
-    
+
     private fun setupPoachingEvidence() {
         val response = listener.getResponse()
         response?.let { res ->
@@ -47,7 +48,7 @@ class PoachingEvidenceFragment : Fragment() {
             setSelected()
         }
     }
-    
+
     private fun setOnChange() {
         bulletShellsCheckBox.setOnClickListener {
             setSelectedNone(false)
@@ -70,14 +71,14 @@ class PoachingEvidenceFragment : Fragment() {
             setEnabled()
         }
     }
-    
+
     private fun setEnabled() {
         selected.clear()
         nextStepButton.isEnabled = bulletShellsCheckBox.isChecked ||
-                footprintsCheckBox.isChecked || dogTracksCheckBox.isChecked ||
-                otherSpecifyCheckBox.isChecked || noneCheckBox.isChecked
+            footprintsCheckBox.isChecked || dogTracksCheckBox.isChecked ||
+            otherSpecifyCheckBox.isChecked || noneCheckBox.isChecked
     }
-    
+
     private fun setSelect() {
         selected.clear()
         if (bulletShellsCheckBox.isChecked) {
@@ -98,7 +99,7 @@ class PoachingEvidenceFragment : Fragment() {
         listener.setPoachingEvidence(selected)
         listener.handleCheckClicked(StepCreateReport.SCALE_POACHING.step)
     }
-    
+
     private fun setSelectedNone(isNone: Boolean) {
         if (isNone) {
             bulletShellsCheckBox.isChecked = false
@@ -109,7 +110,7 @@ class PoachingEvidenceFragment : Fragment() {
         }
         noneCheckBox.isChecked = isNone
     }
-    
+
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {
@@ -121,7 +122,7 @@ class PoachingEvidenceFragment : Fragment() {
             }
         }
     }
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = PoachingEvidenceFragment()

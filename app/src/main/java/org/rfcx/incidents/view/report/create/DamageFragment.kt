@@ -14,29 +14,30 @@ import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 
 class DamageFragment : Fragment() {
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     lateinit var listener: CreateReportListener
     var selected: Int? = null
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.DAMAGE)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_damage, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         nextStepButton.setOnClickListener {
@@ -63,37 +64,37 @@ class DamageFragment : Fragment() {
         }
         setupDamageScale()
     }
-    
+
     private fun setupDamageScale() {
         val response = listener.getResponse()
         response?.let { res ->
             selected = res.damageScale
             nextStepButton.isEnabled = res.damageScale != DamageScale.DEFAULT.value
-            
+
             if (selected == DamageScale.LARGE.value) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
             if (selected == DamageScale.MEDIUM.value) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
             if (selected == DamageScale.SMALL.value) smallNumberImageView.setBackgroundSelected() else smallNumberImageView.setBackgroundNoSelect()
             if (selected == DamageScale.NO_VISIBLE.value) noVisibleImageView.setBackgroundSelected() else noVisibleImageView.setBackgroundNoSelect()
         }
     }
-    
+
     private fun setOnSelect(selected: View) {
         nextStepButton.isEnabled = true
-        
+
         if (selected == largeAreaImageView) largeAreaImageView.setBackgroundSelected() else largeAreaImageView.setBackgroundNoSelect()
         if (selected == mediumTreesImageView) mediumTreesImageView.setBackgroundSelected() else mediumTreesImageView.setBackgroundNoSelect()
         if (selected == smallNumberImageView) smallNumberImageView.setBackgroundSelected() else smallNumberImageView.setBackgroundNoSelect()
         if (selected == noVisibleImageView) noVisibleImageView.setBackgroundSelected() else noVisibleImageView.setBackgroundNoSelect()
     }
-    
+
     private fun ImageView.setBackgroundSelected() {
         this.setBackgroundResource(R.drawable.bg_selected)
     }
-    
+
     private fun ImageView.setBackgroundNoSelect() {
         this.setBackgroundResource(R.drawable.bg_circle_white)
     }
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = DamageFragment()

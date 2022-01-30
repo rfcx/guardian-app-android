@@ -36,7 +36,7 @@ import kotlin.concurrent.fixedRateTimer
  * Save Ranger location to local db.
  */
 class LocationTrackerService : Service() {
-    
+
     companion object {
         val locationRequest = LocationRequest().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -44,18 +44,18 @@ class LocationTrackerService : Service() {
         const val NOTIFICATION_LOCATION_ID = 22
         const val NOTIFICATION_LOCATION_NAME = "Track Ranger location"
         const val NOTIFICATION_LOCATION_CHANNEL_ID = "Location"
-        
+
         private const val FIVE_MINUTES = 5L * 60L * 1000L
         private const val LOCATION_INTERVAL = 1000L * 20L // 20 seconds
-        private const val LOCATION_DISTANCE = 0f// 0 meter
+        private const val LOCATION_DISTANCE = 0f // 0 meter
         private const val TAG = "LocationTrackerService"
     }
-    
+
     private val realm by lazy { Realm.getInstance(RealmHelper.migrationConfig()) }
     private val trackingDb by lazy { TrackingDb(realm) }
-    
+
     private val binder = LocationTrackerServiceBinder()
-    
+
     private var mLocationManager: LocationManager? = null
     private var isLocationAvailability: Boolean = true
     private var trackingStatTimer: Timer? = null
@@ -65,13 +65,13 @@ class LocationTrackerService : Service() {
     private val analytics by lazy { Analytics(this) }
     private var satelliteCount = 0
     private var tracking = Tracking()
-    
+
     fun calculateTime(newTime: Date, lastTime: Date): Long {
         val differenceTime1 = newTime.time - lastTime.time
         lastUpdated = newTime
         return TimeUnit.MILLISECONDS.toSeconds(differenceTime1)
     }
-    
+
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             val myProcess = RunningAppProcessInfo()
@@ -90,7 +90,7 @@ class LocationTrackerService : Service() {
                 )
             }
         }
-        
+
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
             if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
                 getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
@@ -98,17 +98,16 @@ class LocationTrackerService : Service() {
                 getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
             }
         }
-        
+
         override fun onProviderEnabled(provider: String) {
             getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
         }
-        
+
         override fun onProviderDisabled(provider: String) {
             getNotificationManager().notify(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(false))
         }
-        
     }
-    
+
     private val gnssStatusCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         object : GnssStatus.Callback() {
             override fun onSatelliteStatusChanged(status: GnssStatus) {
@@ -120,7 +119,7 @@ class LocationTrackerService : Service() {
     } else {
         null
     }
-    
+
     @Deprecated("For old version")
     @SuppressLint("MissingPermission")
     private val gpsStatusListener = GpsStatus.Listener { event ->
@@ -142,12 +141,11 @@ class LocationTrackerService : Service() {
             satelliteCount = satCount
         }
     }
-    
-    
+
     override fun onBind(p0: Intent?): IBinder? {
         return binder
     }
-    
+
     override fun onCreate() {
         super.onCreate()
         // check login first
@@ -155,7 +153,7 @@ class LocationTrackerService : Service() {
             startTracker()
         }
     }
-    
+
     private fun startTracker() {
         val check = ActivityCompat.checkSelfPermission(
             this,
@@ -164,11 +162,11 @@ class LocationTrackerService : Service() {
         if (!check) {
             this.stopSelf()
         }
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
-        
+
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             mLocationManager?.requestLocationUpdates(
@@ -177,7 +175,7 @@ class LocationTrackerService : Service() {
                 LOCATION_DISTANCE,
                 locationListener
             )
-            
+
             // Get satellite count
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 if (gnssStatusCallback != null) {
@@ -186,9 +184,9 @@ class LocationTrackerService : Service() {
             } else {
                 mLocationManager?.addGpsStatusListener(gpsStatusListener)
             }
-            
+
             startForeground(NOTIFICATION_LOCATION_ID, createLocationTrackerNotification(true))
-            
+
             trackingStatTimer?.cancel()
             trackingStatTimer = fixedRateTimer("timer", false, FIVE_MINUTES, FIVE_MINUTES) {
                 getNotificationManager().notify(
@@ -196,10 +194,10 @@ class LocationTrackerService : Service() {
                     createLocationTrackerNotification(isLocationAvailability)
                 )
             }
-            
+
             // Tracking last know location timer
             trackingWorkTimer?.cancel()
-            
+
             // Tracking satellite
             trackingSatelliteTimer?.cancel()
             trackingSatelliteTimer = fixedRateTimer("satellite_timer", false, FIVE_MINUTES, FIVE_MINUTES) {
@@ -210,13 +208,12 @@ class LocationTrackerService : Service() {
         } catch (ex: IllegalArgumentException) {
             ex.printStackTrace()
         }
-        
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         mLocationManager?.removeUpdates(locationListener)
-        
+
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 if (gnssStatusCallback != null) {
@@ -228,21 +225,21 @@ class LocationTrackerService : Service() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        
+
         // set end time of tracking service
         clearTimer()
     }
-    
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         return START_NOT_STICKY
     }
-    
+
     inner class LocationTrackerServiceBinder : Binder() {
         val trackerService: LocationTrackerService
             get() = this@LocationTrackerService
     }
-    
+
     private fun createLocationTrackerNotification(isLocationAvailability: Boolean): Notification {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
@@ -259,7 +256,7 @@ class LocationTrackerService : Service() {
             priority = NotificationCompat.PRIORITY_HIGH
         }.build()
     }
-    
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
@@ -274,11 +271,11 @@ class LocationTrackerService : Service() {
         }
         getNotificationManager().createNotificationChannel(channel)
     }
-    
+
     private fun getNotificationManager(): NotificationManager {
         return getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
-    
+
     private fun saveLocation(location: Location) {
         tracking.id = 1
         val coordinate = Coordinate(
@@ -289,7 +286,7 @@ class LocationTrackerService : Service() {
         trackingDb.insertOrUpdate(tracking, coordinate)
         Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
     }
-    
+
     private fun clearTimer() {
         trackingStatTimer?.cancel()
         trackingSatelliteTimer?.cancel()

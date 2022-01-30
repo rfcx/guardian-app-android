@@ -33,15 +33,15 @@ import org.rfcx.incidents.util.*
 import java.util.*
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
-    
+
     companion object {
         const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
         const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
         const val EXTRA_RESPONSE_ID = "EXTRA_RESPONSE_ID"
-        
+
         const val RESULT_CODE = 20
         const val EXTRA_SCREEN = "EXTRA_SCREEN"
-        
+
         fun startActivity(context: Context, guardianName: String, guardianId: String, responseId: Int?) {
             val intent = Intent(context, CreateReportActivity::class.java)
             intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
@@ -50,26 +50,26 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             context.startActivity(intent)
         }
     }
-    
+
     private val viewModel: CreateReportViewModel by viewModel()
-    
+
     private var passedChecks = ArrayList<Int>()
     private var streamName: String? = null
     private var streamId: String? = null
     private var responseId: Int? = null
-    
+
     private var _response: Response? = null
     private var _images: ArrayList<String> = arrayListOf()
     private var locationManager: LocationManager? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_report)
-        
+
         streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
         streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
         responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
-        
+
         responseId?.let {
             val response = viewModel.getResponseById(it)
             response?.let { res ->
@@ -80,7 +80,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         getImagesFromLocal()
         setupToolbar()
         handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
-        
+
         createReportContainer.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -91,7 +91,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             }
         })
     }
-    
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
@@ -107,7 +107,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         }
         return super.dispatchTouchEvent(event)
     }
-    
+
     private fun getImagesFromLocal() {
         responseId?.let {
             val images = viewModel.getImagesFromLocal(it)
@@ -118,7 +118,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             }
         }
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbarLayout)
         supportActionBar?.apply {
@@ -129,22 +129,22 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             subtitle = streamName
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-    
+
     private fun setTitleToolbar(text: String) {
         supportActionBar?.apply {
             title = if (text.length > getString(R.string.create_report_steps).length) setColorOfTitle(text) else text
         }
     }
-    
+
     override fun handleCheckClicked(step: Int) {
         passedChecks.add(step)
         setTitleText(step)
-        
+
         when (step) {
             StepCreateReport.INVESTIGATION_TIMESTAMP.step -> startFragment(InvestigationTimestampFragment.newInstance())
             StepCreateReport.INVESTIGATION_TYPE.step -> startFragment(InvestigationTypeFragment.newInstance())
@@ -156,11 +156,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             StepCreateReport.ASSETS.step -> startFragment(AssetsFragment.newInstance())
         }
     }
-    
+
     private fun setResponse(response: Response) {
         this._response = response
     }
-    
+
     private fun setNumberOnTitle(step: Int, isSelectedBoth: Boolean) {
         when (step) {
             StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setTitleToolbar(
@@ -180,7 +180,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             StepCreateReport.ACTION.step -> setTitleToolbar(getString(R.string.create_report_title_one_step))
         }
     }
-    
+
     private fun setColorOfTitle(str: String): SpannableString {
         val spannableString = SpannableString(str)
         val gray = ForegroundColorSpan(ContextCompat.getColor(this, R.color.text_secondary))
@@ -193,7 +193,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         )
         return spannableString
     }
-    
+
     private fun setTitleText(step: Int) {
         val response = _response ?: Response()
         if (response.investigateType.contains(InvestigationType.POACHING.value) && response.investigateType.contains(
@@ -204,7 +204,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         } else {
             setNumberOnTitle(step, false)
         }
-        
+
         if (step == StepCreateReport.ASSETS.step) {
             setTitleToolbar(getString(R.string.last_step))
         }
@@ -212,43 +212,43 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             setTitleToolbar(getString(R.string.create_report_steps))
         }
     }
-    
+
     override fun getResponse(): Response? = _response
-    
+
     override fun getImages(): ArrayList<String> = _images
-    
+
     override fun getSiteName(): String? = streamName
-    
+
     override fun setImages(images: ArrayList<String>) {
         _images = images
     }
-    
+
     override fun setAudio(audioPath: String?) {
         val response = _response ?: Response()
         response.audioLocation = audioPath
         setResponse(response)
     }
-    
+
     override fun setInvestigateType(type: ArrayList<Int>) {
         val response = _response ?: Response()
         response.investigateType.clear()
         response.investigateType.addAll(type)
         setResponse(response)
     }
-    
+
     override fun setPoachingScale(poachingScale: Int) {
         val response = _response ?: Response()
         response.poachingScale = poachingScale
         setResponse(response)
     }
-    
+
     override fun setPoachingEvidence(poachingEvidence: List<Int>) {
         val response = _response ?: Response()
         response.poachingEvidence.clear()
         response.poachingEvidence.addAll(poachingEvidence)
         setResponse(response)
     }
-    
+
     override fun setInvestigationTimestamp(date: Date) {
         val response = _response ?: Response()
         response.investigatedAt = date
@@ -256,49 +256,49 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         response.streamName = streamName ?: response.streamName
         setResponse(response)
     }
-    
+
     override fun setEvidence(evidence: List<Int>) {
         val response = _response ?: Response()
         response.evidences.clear()
         response.evidences.addAll(evidence)
         setResponse(response)
     }
-    
+
     override fun setScale(scale: Int) {
         val response = _response ?: Response()
         response.loggingScale = scale
         setResponse(response)
     }
-    
+
     override fun setDamage(damage: Int) {
         val response = _response ?: Response()
         response.damageScale = damage
         setResponse(response)
     }
-    
+
     override fun setAction(action: List<Int>) {
         val response = _response ?: Response()
         response.responseActions.clear()
         response.responseActions.addAll(action)
         setResponse(response)
     }
-    
+
     override fun setNotes(note: String?) {
         val response = _response ?: Response()
         response.note = note
         setResponse(response)
     }
-    
+
     override fun onSaveDraftButtonClick() {
         val response = _response ?: Response()
         viewModel.saveResponseInLocalDb(response, _images)
-        
+
         val intent = Intent()
         intent.putExtra(EXTRA_SCREEN, Screen.DRAFT_REPORTS.id)
         setResult(RESULT_CODE, intent)
         finish()
     }
-    
+
     @SuppressLint("MissingPermission")
     override fun onSubmitButtonClick() {
         val response = _response ?: Response()
@@ -320,19 +320,19 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
                 ResponseSyncWorker.enqueue()
             }
         }
-        
+
         val intent = Intent()
         intent.putExtra(EXTRA_SCREEN, Screen.SUBMITTED_REPORTS.id)
         setResult(RESULT_CODE, intent)
         finish()
     }
-    
+
     private fun startFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(createReportContainer.id, fragment)
             .commit()
     }
-    
+
     private fun saveLocation(location: Location) {
         val tracking = Tracking(id = 1)
         val coordinate = Coordinate(
@@ -343,7 +343,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         viewModel.saveLocation(tracking, coordinate)
         Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
     }
-    
+
     override fun onBackPressed() {
         when (supportFragmentManager.findFragmentById(R.id.createReportContainer)) {
             is InvestigationTypeFragment -> {
@@ -398,11 +398,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
 interface CreateReportListener {
     fun handleCheckClicked(step: Int)
-    
+
     fun getResponse(): Response?
     fun getImages(): ArrayList<String>
     fun getSiteName(): String?
-    
+
     fun setInvestigationTimestamp(date: Date)
     fun setEvidence(evidence: List<Int>)
     fun setScale(scale: Int)
@@ -414,7 +414,7 @@ interface CreateReportListener {
     fun setInvestigateType(type: ArrayList<Int>)
     fun setPoachingScale(poachingScale: Int)
     fun setPoachingEvidence(poachingEvidence: List<Int>)
-    
+
     fun onSaveDraftButtonClick()
     fun onSubmitButtonClick()
 }
@@ -428,7 +428,6 @@ enum class StepCreateReport(val step: Int) {
     SCALE_POACHING(6),
     ACTION(7),
     ASSETS(8),
-    
-    
+
     DAMAGE(9),
 }

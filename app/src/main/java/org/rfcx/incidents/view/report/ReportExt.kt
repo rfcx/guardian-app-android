@@ -7,7 +7,6 @@ import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.util.toTimeSinceStringAlternative
 import java.util.*
 
-
 fun Report.getImageResource(): Int = when (value) {
     Event.chainsaw -> R.drawable.ic_chainsaw
     Event.vehicle -> R.drawable.ic_vehicle

@@ -15,13 +15,13 @@ import org.rfcx.incidents.entity.user.UserAuthResponse
  */
 
 class CredentialVerifier(val context: Context) {
-    
+
     fun verify(credentials: Credentials): Result<UserAuthResponse, String> {
         val token = credentials.idToken
         if (token == null) {
             return Err(getString(R.string.an_error_occurred))
         }
-        
+
         // Parsing JWT Token
         val metaDataKey = getString(R.string.auth0_metadata_key)
         val userMetaDataKey = getString(R.string.auth0_user_metadata_key)
@@ -31,32 +31,32 @@ class CredentialVerifier(val context: Context) {
             if (untrusted.body[metaDataKey] == null) {
                 return Err(getString(R.string.an_error_occurred))
             }
-            
+
             val metadata = untrusted.body[metaDataKey]
             if (metadata == null || !(metadata is HashMap<*, *>)) {
                 return Err(getString(R.string.an_error_occurred))
             }
-            
+
             var name: String?
             name = if (untrusted.body["given_name"] != null) {
                 untrusted.body["given_name"] as String?
             } else {
                 untrusted.body["nickname"] as String?
             }
-            
+
             val guid: String? = metadata["guid"] as String?
             val email: String? = untrusted.body["email"] as String?
             val picture: String? = untrusted.body["picture"] as String?
             val nickname: String? = name
             val defaultSite: String? = metadata["defaultSite"] as String?
-            
+
             var accessibleSites: Set<String> = setOf()
             val accessibleSitesRaw = metadata["accessibleSites"]
             if (accessibleSitesRaw != null && accessibleSitesRaw is ArrayList<*> && accessibleSitesRaw.size > 0 && accessibleSitesRaw[0] is String) {
                 accessibleSites =
                     HashSet<String>(accessibleSitesRaw as ArrayList<String>) // TODO: is there a better way to do this @anuphap @jingjoeh
             }
-            
+
             var roles: Set<String> = setOf()
             val authorization = metadata["authorization"]
             if (authorization != null && authorization is HashMap<*, *>) {
@@ -65,7 +65,7 @@ class CredentialVerifier(val context: Context) {
                     roles = HashSet<String>(rolesRaw as ArrayList<String>)
                 }
             }
-            
+
             when {
                 guid.isNullOrEmpty() -> {
                     return Err(getString(R.string.an_error_occurred))
@@ -93,7 +93,6 @@ class CredentialVerifier(val context: Context) {
         }
         return Err(getString(R.string.an_error_occurred))
     }
-    
+
     private fun getString(resId: Int): String = context.getString(resId)
-    
 }

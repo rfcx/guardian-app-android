@@ -10,4 +10,3 @@ interface SetNameEndpoint {
     @POST("v1/users/auth0/update-user/public")
     fun sendGivenName(@Body body: SetNameRequest): Single<SetNameResponse>
 }
-

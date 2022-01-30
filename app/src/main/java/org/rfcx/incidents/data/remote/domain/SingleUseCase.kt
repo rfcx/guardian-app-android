@@ -15,14 +15,14 @@ abstract class SingleUseCase<in Params, T> constructor(
     private val threadExecutor: ThreadExecutor,
     private val postExecutionThread: PostExecutionThread
 ) {
-    
+
     private val disposables = CompositeDisposable()
-    
+
     /**
      * Builds a [Single] which will be used when the current [SingleUseCase] is executed.
      */
     abstract fun buildUseCaseObservable(params: Params): Single<T>
-    
+
     /**
      * Executes the current use case.
      */
@@ -32,19 +32,18 @@ abstract class SingleUseCase<in Params, T> constructor(
             .observeOn(postExecutionThread.scheduler) as Single<T>
         addDisposable(single.subscribeWith(singleObserver))
     }
-    
+
     /**
      * Dispose from current [CompositeDisposable].
      */
     fun dispose() {
         if (!disposables.isDisposed) disposables.dispose()
     }
-    
+
     /**
      * Dispose from current [CompositeDisposable].
      */
     private fun addDisposable(disposable: Disposable) {
         disposables.add(disposable)
     }
-    
 }

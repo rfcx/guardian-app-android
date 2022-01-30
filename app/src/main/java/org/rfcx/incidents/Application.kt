@@ -25,9 +25,8 @@ import org.rfcx.incidents.util.RealmHelper
 import org.rfcx.incidents.util.removeLocationUpdates
 import org.rfcx.incidents.util.startLocationChange
 
-
 class Application : MultiDexApplication(), LifecycleObserver {
-    
+
     private val onAirplaneModeCallback: (Boolean) -> Unit = { isOnAirplaneMode ->
         if (isOnAirplaneMode) {
             this.removeLocationUpdates()
@@ -35,22 +34,22 @@ class Application : MultiDexApplication(), LifecycleObserver {
             this.startLocationChange()
         }
     }
-    
+
     private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
-    
+
     override fun onCreate() {
         super.onCreate()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-        
+
         MultiDex.install(this)
         Realm.init(this)
         JodaTimeAndroid.init(this)
-        
+
         setUpRealm()
         setupKoin()
         ReportCleanupWorker.enqueuePeriodically()
         registerReceiver(airplaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
-        
+
         if (BuildConfig.USE_STETHO) {
             Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -60,19 +59,19 @@ class Application : MultiDexApplication(), LifecycleObserver {
             )
         }
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onAppInForeground() {
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
             this.startLocationChange()
         }
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onAppInBackground() {
         this.removeLocationUpdates()
     }
-    
+
     private fun setUpRealm() {
         var realmNeedsMigration = false
         try {
@@ -83,7 +82,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             Log.e("RealmMigration", "${e.message}")
             realmNeedsMigration = true
         }
-        
+
         // Falback for release (delete realm on error)
         if (realmNeedsMigration && !BuildConfig.DEBUG) {
             try {
@@ -93,8 +92,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             }
         }
     }
-    
-    
+
     private val listModules: ArrayList<Module> by lazy {
         arrayListOf(
             UiModule.mainModule,
@@ -108,7 +106,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             DataModule.dataModule
         )
     }
-    
+
     private fun setupKoin() {
         startKoin {
             androidContext(this@Application)

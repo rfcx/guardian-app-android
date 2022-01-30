@@ -9,7 +9,8 @@ import org.rfcx.incidents.entity.terms.TermsResponse
 
 class TermsUseCase(
     private val termsRepository: TermsRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<TermsRequest, TermsResponse>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: TermsRequest): Single<TermsResponse> {
         return termsRepository.sendBodyPayload(params)

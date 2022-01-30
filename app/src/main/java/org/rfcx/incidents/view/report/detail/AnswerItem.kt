@@ -27,7 +27,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
                 R.color.logging_color
             )
         }
-        
+
         // DamageScale
         this == DamageScale.NO_VISIBLE.value -> {
             AnswerItem(
@@ -53,7 +53,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
                 R.color.damage_color
             )
         }
-        
+
         // EvidenceTypes
         this == EvidenceTypes.NONE.value -> {
             AnswerItem(context.getString(R.string.common_none), R.color.evidence_color)
@@ -79,7 +79,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
         this == EvidenceTypes.OTHER.value -> {
             AnswerItem(context.getString(R.string.other_text), R.color.evidence_color)
         }
-        
+
         // Actions
         this == Actions.NONE.value -> {
             AnswerItem(context.getString(R.string.common_none), R.color.action_color)
@@ -99,7 +99,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
         this == Actions.DAMAGED_MACHINERY.value -> {
             AnswerItem(context.getString(R.string.damaged_machinery), R.color.action_color)
         }
-        
+
         // PoachingEvidence
         this == PoachingEvidence.NONE.value -> {
             AnswerItem(context.getString(R.string.common_none), R.color.poaching_evidence_color)
@@ -116,7 +116,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
         this == PoachingEvidence.OTHER.value -> {
             AnswerItem(context.getString(R.string.other_text), R.color.poaching_evidence_color)
         }
-        
+
         // PoachingScale
         this == PoachingScale.NONE.value -> {
             AnswerItem(
@@ -136,7 +136,7 @@ fun Int.getAnswerItem(context: Context): AnswerItem? {
                 R.color.poaching_scale_color
             )
         }
-        
+
         else -> null
     }
 }

@@ -29,14 +29,14 @@ private const val DAY = 24 * HOUR
 private const val WEEK = 7 * DAY
 
 fun Date.toTimeSinceString(context: Context?): String {
-    
+
     if (context == null) return "-"
     val long = this.millisecondsSince()
     val minAgo = MINUTE
     val hourAgo = HOUR
     val dayAgo = DAY
     val weekAgo = WEEK
-    
+
     return when {
         long < minAgo -> context.getString(R.string.report_time_second)
         long < hourAgo -> {
@@ -73,7 +73,7 @@ fun Date.toTimeSinceStringAlternative(context: Context): String {
 fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
     val niceDateStr =
         DateUtils.getRelativeTimeSpanString(this.time, Calendar.getInstance().timeInMillis, MINUTE_IN_MILLIS)
-    
+
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
     } else if (niceDateStr.toString() == "Yesterday") {
@@ -139,11 +139,11 @@ fun Context.removeLocationUpdates() {
 fun Context.startLocationChange() {
     val interval = 3L * 60L * 1000L
     val maxWaitTime = 5L * 60L * 1000L
-    
+
     val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
     val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-    
+
     val locationRequest =
         LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(interval)
             .setMaxWaitTime(maxWaitTime)
@@ -151,9 +151,9 @@ fun Context.startLocationChange() {
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
     ) {
         return
     }

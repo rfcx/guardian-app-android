@@ -20,42 +20,44 @@ class SetProjectsViewModel(
 ) : ViewModel() {
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val projects: LiveData<Result<List<Project>>> get() = _projects
-    
+
     init {
         fetchProjects()
     }
-    
+
     fun fetchProjects() {
-        getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
-            override fun onSuccess(t: List<ProjectResponse>) {
-                t.map {
-                    projectDb.insertOrUpdate(it)
+        getProjects.execute(
+            object : DisposableSingleObserver<List<ProjectResponse>>() {
+                override fun onSuccess(t: List<ProjectResponse>) {
+                    t.map {
+                        projectDb.insertOrUpdate(it)
+                    }
+                    _projects.value = Result.Success(listOf())
                 }
-                _projects.value = Result.Success(listOf())
-            }
-            
-            override fun onError(e: Throwable) {
-                _projects.value = Result.Error(e)
-            }
-        }, ProjectsRequestFactory())
+
+                override fun onError(e: Throwable) {
+                    _projects.value = Result.Error(e)
+                }
+            },
+            ProjectsRequestFactory()
+        )
     }
-    
+
     fun getProjectsFromLocal(): List<Project> {
         return projectDb.getProjects()
     }
-    
+
     fun getProjectLocalIdByCoreId(coreId: String): Int = projectDb.getProjectByCoreId(coreId)?.id ?: -1
-    
+
     fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
         if (project.serverId == null) return callback(false)
         CloudMessaging.subscribeIfRequired(project.serverId!!) { status -> callback(status) }
         CloudMessaging.setProject(context, project.serverId!!)
     }
-    
+
     fun unsubscribeProject(project: Project, callback: (Boolean) -> Unit) {
         if (project.serverId == null) return callback(false)
-        
+
         CloudMessaging.unsubscribe(project.serverId!!) { status -> callback(status) }
     }
-    
 }

@@ -45,38 +45,37 @@ import org.rfcx.incidents.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
 
-
 class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
-    
+
     companion object {
         const val EXTRA_RESPONSE_CORE_ID = "EXTRA_RESPONSE_CORE_ID"
         private const val SOURCE_LINE = "source.line"
         private const val SOURCE_CHECK_IN = "source.checkin"
         private const val MARKER_CHECK_IN_ID = "marker.checkin"
         private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
-        
+
         fun startActivity(context: Context, responseCoreId: String) {
             val intent = Intent(context, ResponseDetailActivity::class.java)
             intent.putExtra(EXTRA_RESPONSE_CORE_ID, responseCoreId)
             context.startActivity(intent)
         }
     }
-    
+
     private val analytics by lazy { Analytics(this) }
     private val viewModel: ResponseDetailViewModel by viewModel()
     private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
     private val reportImageAdapter by lazy { ReportImageAdapter() }
-    
+
     private var responseCoreId: String? = null
     private var response: Response? = null
     private var recordFile: File? = null
     private var player: MediaPlayer? = null
-    
+
     private lateinit var mapView: MapView
     private lateinit var mapBoxMap: MapboxMap
     private var lineSource: GeoJsonSource? = null
     private var checkInSource: GeoJsonSource? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_token))
@@ -85,23 +84,23 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         response = responseCoreId?.let { viewModel.getResponseByCoreId(it) }
         setupToolbar()
         setupRecordSoundProgressView()
-        
+
         answersRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = responseDetailAdapter
         }
-        
+
         attachImageRecycler.apply {
             adapter = reportImageAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
-        
+
         // Setup Mapbox
         mapView = findViewById(R.id.mapBoxView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        
+
         response?.let { res ->
             investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
             responseDetailAdapter.items = getMessageList(res.answers)
@@ -119,14 +118,16 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    
+
     private fun getMessageList(answers: List<Int>): List<AnswerItem> {
         val sorted: List<Int> = answers.sortedWith(
-            compareBy({ it.toString()[0] == '2' },
+            compareBy(
+                { it.toString()[0] == '2' },
                 { it.toString()[0] == '7' },
                 { it.toString()[0] == '6' },
                 { it.toString()[0] == '3' },
-                { it.toString()[0] == '1' })
+                { it.toString()[0] == '1' }
+            )
         )
         val answerItems = arrayListOf<AnswerItem>()
         sorted.forEach {
@@ -134,15 +135,15 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         return answerItems
     }
-    
+
     private fun setAudio(path: String) {
         recordFile = File(path)
-        
+
         if (recordFile?.exists() == true) {
             soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
         }
     }
-    
+
     private fun setupRecordSoundProgressView() {
         soundRecordProgressView.onStateChangeListener = { state ->
             when (state) {
@@ -162,7 +163,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    
+
     private fun startPlaying() {
         if (recordFile == null) {
             soundRecordProgressView.state = SoundRecordState.NONE
@@ -183,12 +184,12 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    
+
     private fun stopPlaying() {
         player?.release()
         player = null
     }
-    
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         mapBoxMap = mapboxMap
         mapboxMap.uiSettings.apply {
@@ -196,10 +197,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             isAttributionEnabled = false
             isLogoEnabled = false
         }
-        
+
         mapboxMap.setStyle(Style.OUTDOORS) { style ->
             setupSources(style)
-            
+
             response?.let { res ->
                 res.guid?.let { id ->
                     val track = viewModel.getTrackingByCoreId(id)
@@ -213,7 +214,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                         addLineLayer(style)
                         lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
-                        
+
                         val lastLocation = feature?.geometry() as LineString
                         val pointFeatures = lastLocation.coordinates().map {
                             Feature.fromGeometry(Point.fromLngLat(it.longitude(), it.latitude()))
@@ -227,7 +228,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    
+
     private fun moveCameraToLeavesBounds(features: List<Point>) {
         val latLngList: ArrayList<LatLng> = ArrayList()
         for (singleClusterFeature in features) {
@@ -239,26 +240,26 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             moveCamera(latLngList[0])
         }
     }
-    
+
     private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
         val latLngBounds = LatLngBounds.Builder()
             .includes(latLngList)
             .build()
         mapBoxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
     }
-    
+
     private fun moveCamera(loc: LatLng) {
         mapBoxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 10.0))
     }
-    
+
     private fun setupSources(style: Style) {
         lineSource = GeoJsonSource(SOURCE_LINE)
         lineSource?.let { style.addSource(it) }
-        
+
         checkInSource = GeoJsonSource(SOURCE_CHECK_IN)
         checkInSource?.let { style.addSource(it) }
     }
-    
+
     private fun addLineLayer(style: Style) {
         val lineLayer = LineLayer("line-layer", SOURCE_LINE).withProperties(
             PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
@@ -267,11 +268,11 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             PropertyFactory.lineColor(Expression.get("color"))
         )
         style.addLayer(lineLayer)
-        
+
         val drawable = ResourcesCompat.getDrawable(resources, R.drawable.bg_circle_tracking, null)
         val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable)
         mBitmap?.let { style.addImage(MARKER_CHECK_IN_IMAGE, it) }
-        
+
         val checkInLayer = SymbolLayer(MARKER_CHECK_IN_ID, SOURCE_CHECK_IN).apply {
             withProperties(
                 PropertyFactory.iconImage(MARKER_CHECK_IN_IMAGE),
@@ -282,7 +283,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         style.addLayer(checkInLayer)
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbarLayout)
         supportActionBar?.apply {
@@ -292,39 +293,39 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             title = "#" + response?.incidentRef + " " + response?.streamName
         }
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         stopPlaying()
         mapView.onDestroy()
     }
-    
+
     override fun onResume() {
         super.onResume()
         mapView.onResume()
         analytics.trackScreen(Screen.RESPONSE_DETAIL)
     }
-    
+
     override fun onStart() {
         super.onStart()
         mapView.onStart()
     }
-    
+
     override fun onStop() {
         super.onStop()
         mapView.onStop()
     }
-    
+
     override fun onPause() {
         super.onPause()
         mapView.onPause()
     }
-    
+
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

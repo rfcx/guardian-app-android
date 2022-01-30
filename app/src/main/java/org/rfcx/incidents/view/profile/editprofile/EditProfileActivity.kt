@@ -30,43 +30,46 @@ class EditProfileActivity : AppCompatActivity() {
     private var newImageProfilePath: String = ""
     private var menuAll: Menu? = null
     private val editProfileViewModel: EditProfileViewModel by viewModel()
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         handleGalleryResult(requestCode, resultCode, data)
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
-        
+
         setupToolbar()
-        
+
         userProfileImageView.setImageProfile(this.getUserProfile())
-        
+
         userProfileImageView.setOnClickListener {
             openGallery()
         }
-        
+
         changeProfilePhotoTextView.setOnClickListener {
             openGallery()
         }
-        
-        editProfileViewModel.status.observe(this, Observer { it ->
-            it.success({ str ->
-                loadingChangeProfileProgress.visibility = View.INVISIBLE
-                finish()
-            }, {
-                loadingChangeProfileProgress.visibility = View.INVISIBLE
-                this.handleError(it)
-                setEnableChangeProfileView()
-            }, {
-                setEnableChangeProfileView()
-                loadingChangeProfileProgress.visibility = View.VISIBLE
-            })
-        })
+
+        editProfileViewModel.status.observe(
+            this,
+            Observer { it ->
+                it.success({ str ->
+                    loadingChangeProfileProgress.visibility = View.INVISIBLE
+                    finish()
+                }, {
+                    loadingChangeProfileProgress.visibility = View.INVISIBLE
+                    this.handleError(it)
+                    setEnableChangeProfileView()
+                }, {
+                    setEnableChangeProfileView()
+                    loadingChangeProfileProgress.visibility = View.VISIBLE
+                })
+            }
+        )
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.profile_image, menu)
@@ -74,7 +77,7 @@ class EditProfileActivity : AppCompatActivity() {
         setEnableChangeProfileView()
         return super.onCreateOptionsMenu(menu)
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         R.id.attachView
         when (item.itemId) {
@@ -83,16 +86,16 @@ class EditProfileActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
     private fun sendProfileImage() {
         editProfileViewModel.updateProfilePhoto(path = newImageProfilePath)
     }
-    
+
     private fun setEnableChangeProfileView(start: Boolean = false) {
         menuAll?.findItem(R.id.changeProfilePhotoView)?.isEnabled = start
         val itemSend = menuAll?.findItem(R.id.changeProfilePhotoView)?.icon
         val wrapDrawable = itemSend?.let { DrawableCompat.wrap(it) }
-        
+
         if (wrapDrawable != null) {
             if (start) DrawableCompat.setTint(
                 wrapDrawable,
@@ -100,7 +103,7 @@ class EditProfileActivity : AppCompatActivity() {
             ) else DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(this, android.R.color.darker_gray))
         }
     }
-    
+
     private fun openGallery() {
         if (!galleryPermissions.allowed()) {
             newImageProfilePath = ""
@@ -109,7 +112,7 @@ class EditProfileActivity : AppCompatActivity() {
             startOpenGallery()
         }
     }
-    
+
     private fun startOpenGallery() {
         Matisse.from(this)
             .choose(MimeType.ofImage())
@@ -121,22 +124,22 @@ class EditProfileActivity : AppCompatActivity() {
             .theme(R.style.Matisse_Dracula)
             .forResult(ReportUtils.REQUEST_GALLERY)
     }
-    
+
     private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
         val results = Matisse.obtainResult(intentData)
-        
+
         results.forEach {
             val imagePath = ImageFileUtils.findRealPath(this, it)
-            
+
             setEnableChangeProfileView(true)
             newImageProfilePath = imagePath.toString()
-            
+
             Glide.with(this).load(Uri.fromFile(File(imagePath))).apply(RequestOptions.circleCropTransform())
                 .into(userProfileImageView)
         }
     }
-    
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
@@ -146,12 +149,12 @@ class EditProfileActivity : AppCompatActivity() {
             title = getString(R.string.edit_profile)
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-    
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, EditProfileActivity::class.java)

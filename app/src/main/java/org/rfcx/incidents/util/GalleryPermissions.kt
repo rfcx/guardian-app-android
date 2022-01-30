@@ -13,19 +13,19 @@ import org.rfcx.incidents.R
 
 class GalleryPermissions(val activity: Activity) {
     private var onCompletionCallback: ((Boolean) -> Unit)? = null
-    
+
     fun allowed(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
-    
+
     fun check(onCompletionCallback: (Boolean) -> Unit) {
         this.onCompletionCallback = onCompletionCallback
         if (!allowed()) {
             request()
         }
     }
-    
+
     private fun request() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.requestPermissions(
@@ -36,7 +36,7 @@ class GalleryPermissions(val activity: Activity) {
             throw Exception("Request permissions not required before API 23 (should never happen)")
         }
     }
-    
+
     fun handleRequestResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS_READ_STORAGE) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
@@ -68,7 +68,7 @@ class GalleryPermissions(val activity: Activity) {
             }
         }
     }
-    
+
     companion object {
         const val REQUEST_PERMISSIONS_READ_STORAGE = 5000
     }

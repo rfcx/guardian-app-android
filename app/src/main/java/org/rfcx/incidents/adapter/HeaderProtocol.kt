@@ -10,7 +10,7 @@ interface HeaderProtocol {
     fun isEnableTracking(): Boolean
     fun getNetworkState(): NetworkState
     fun getSyncInfo(): SyncInfo?
-    
+
     fun onLocationTrackingChange(on: Boolean)
     fun onPressCancelSync()
 }

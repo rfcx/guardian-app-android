@@ -15,25 +15,25 @@ class ResponseDetailAdapter : RecyclerView.Adapter<ResponseDetailAdapter.Respons
             field = value
             notifyDataSetChanged()
         }
-    
+
     inner class ResponseDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val msgTextView = itemView.msgTextView
         private val iconImageView = itemView.iconImageView
-        
+
         fun bind(item: AnswerItem) {
             msgTextView.text = item.text
             iconImageView.setColorFilter(itemView.resources.getColor(item.color))
         }
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResponseDetailViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_response_detail, parent, false)
         return ResponseDetailViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: ResponseDetailViewHolder, position: Int) {
         holder.bind(items[position])
     }
-    
+
     override fun getItemCount(): Int = items.size
 }

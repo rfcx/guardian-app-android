@@ -9,8 +9,7 @@ import org.rfcx.incidents.data.remote.domain.executor.PostExecutionThread
  * which will fatchCategory actions on the Android UI thread
  */
 class UiThread : PostExecutionThread {
-    
+
     override val scheduler: Scheduler
         get() = AndroidSchedulers.mainThread()
-    
 }

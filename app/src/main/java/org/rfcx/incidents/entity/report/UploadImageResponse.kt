@@ -2,7 +2,6 @@ package org.rfcx.incidents.entity.report
 
 import com.google.gson.annotations.SerializedName
 
-
 data class UploadImageResponse(
     @SerializedName("guid")
     val guid: String?,

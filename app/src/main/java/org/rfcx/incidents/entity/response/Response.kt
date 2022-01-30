@@ -127,12 +127,12 @@ fun Response.saveToAnswers(): RealmList<Int> {
     val answers = RealmList<Int>()
     answers.addAll(this.responseActions)
     answers.addAll(this.investigateType)
-    
+
     if (this.investigateType.contains(InvestigationType.POACHING.value)) {
         answers.addAll(this.poachingEvidence)
         answers.add(this.poachingScale)
     }
-    
+
     if (this.investigateType.contains(InvestigationType.LOGGING.value)) {
         answers.addAll(this.evidences)
         answers.add(this.loggingScale)

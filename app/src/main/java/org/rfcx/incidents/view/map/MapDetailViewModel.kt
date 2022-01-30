@@ -13,14 +13,14 @@ import org.rfcx.incidents.localdb.ReportImageDb.Companion.SENT
 import org.rfcx.incidents.util.asLiveData
 
 class MapDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {
-    
+
     private var _report: Report? = null
-    
+
     private var _reportLive = MutableLiveData<Report>()
-    
+
     private val report: LiveData<Report?>
         get() = _reportLive
-    
+
     fun getReportDetail(reportId: Int): LiveData<Report?> {
         _report = reportDb.getReportAsync(reportId)
         _report?.addChangeListener<Report> { t ->
@@ -30,10 +30,10 @@ class MapDetailViewModel(private val reportDb: ReportDb, private val reportImage
         } ?: run {
             _reportLive.value = null
         }
-        
+
         return report
     }
-    
+
     fun getReportImages(reportId: Int): LiveData<ImageState> {
         return Transformations.map<RealmResults<ReportImage>, ImageState>(
             reportImageDb.getByReportIdAsync(reportId).asLiveData()
@@ -41,7 +41,7 @@ class MapDetailViewModel(private val reportDb: ReportDb, private val reportImage
             ImageState(it.count(), it.filter { it.syncState != SENT }.count())
         }
     }
-    
+
     override fun onCleared() {
         super.onCleared()
         _report?.removeAllChangeListeners()

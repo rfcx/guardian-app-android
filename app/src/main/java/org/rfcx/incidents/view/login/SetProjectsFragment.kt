@@ -21,53 +21,54 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
         @JvmStatic
         fun newInstance() = SetProjectsFragment()
     }
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
-    
+
     lateinit var listener: LoginListener
     private val viewModel: SetProjectsViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
     private var subscribedProjects: ArrayList<String> = arrayListOf()
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as LoginListener)
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.SUBSCRIBE_PROJECTS)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_set_projects, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         projectView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectsAdapter
         }
-        
+
         projectSwipeRefreshView.apply {
             setOnRefreshListener(this@SetProjectsFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
-        
+
         if (requireActivity().isNetworkAvailable()) {
             setObserver()
         } else {
             showToast(getString(R.string.network_not_available))
         }
-        
+
         selectProjectButton.text = getString(R.string.skip)
-        
+
         selectProjectButton.setOnClickListener {
             val preferences = Preferences.getInstance(requireContext())
             val projectCoreId =
@@ -77,11 +78,11 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             preferences.putInt(Preferences.SELECTED_PROJECT, id)
             listener.handleOpenPage()
         }
-        
+
         logoutButton.setOnClickListener {
             requireContext().logout()
         }
-        
+
         refreshButton.setOnClickListener {
             progressLoadProject.visibility = View.VISIBLE
             noContentTextView.visibility = View.GONE
@@ -89,7 +90,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             viewModel.fetchProjects()
         }
     }
-    
+
     private fun setObserver() {
         viewModel.projects.observe(viewLifecycleOwner, {
             it.success({
@@ -107,7 +108,8 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                 }
                 projectsItem = viewModel.getProjectsFromLocal().map { project ->
                     ProjectsItem(
-                        project, getSubscribedProject()?.contains(project.serverId)
+                        project,
+                        getSubscribedProject()?.contains(project.serverId)
                             ?: false
                     )
                 }
@@ -124,21 +126,21 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             })
         })
     }
-    
+
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
-    
+
     override fun onRefresh() {
         viewModel.fetchProjects()
     }
-    
+
     override fun onItemClick(item: ProjectsItem, position: Int) {
         val items = projectsItem ?: return
         projectsAdapter.subscribingProject = item.project.name
         projectsAdapter.items = items
         selectProjectButton.isEnabled = false
-        
+
         if (item.selected) {
             viewModel.unsubscribeProject(item.project) { status ->
                 projectsAdapter.subscribingProject = null
@@ -171,23 +173,23 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             }
         }
     }
-    
+
     private fun setSelectedProject(items: List<ProjectsItem>, position: Int) {
         items[position].selected = !items[position].selected
         projectsAdapter.items = items
     }
-    
+
     private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
         val preferenceHelper = Preferences.getInstance(requireContext())
         preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
         preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
     }
-    
+
     private fun getSubscribedProject(): ArrayList<String>? {
         val preferenceHelper = Preferences.getInstance(requireContext())
         return preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
     }
-    
+
     override fun onLockImageClicked() {
         showToast(getString(R.string.not_have_permission))
     }

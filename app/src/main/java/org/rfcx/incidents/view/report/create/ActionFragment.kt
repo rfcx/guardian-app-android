@@ -13,31 +13,31 @@ import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 
 class ActionFragment : Fragment() {
-    
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = (context as CreateReportListener)
     }
-    
+
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.ACTION)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupResponseActions()
         setOnChange()
-        
+
         nextStepButton.setOnClickListener {
             setSelect()
         }
     }
-    
+
     private fun setupResponseActions() {
         val response = listener.getResponse()
         response?.let { res ->
@@ -46,7 +46,7 @@ class ActionFragment : Fragment() {
             setSelected()
         }
     }
-    
+
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {
@@ -57,7 +57,7 @@ class ActionFragment : Fragment() {
             }
         }
     }
-    
+
     private fun setOnChange() {
         collectedCheckBox.setOnClickListener {
             setEnabled()
@@ -72,14 +72,14 @@ class ActionFragment : Fragment() {
             setEnabled()
         }
     }
-    
+
     private fun setEnabled() {
         selected.clear()
         nextStepButton.isEnabled = collectedCheckBox.isChecked ||
-                warningCheckBox.isChecked || confiscatedCheckBox.isChecked ||
-                damagedMachineryCheckBox.isChecked
+            warningCheckBox.isChecked || confiscatedCheckBox.isChecked ||
+            damagedMachineryCheckBox.isChecked
     }
-    
+
     private fun setSelect() {
         selected.clear()
         if (collectedCheckBox.isChecked) {
@@ -97,15 +97,16 @@ class ActionFragment : Fragment() {
         listener.setAction(selected)
         listener.handleCheckClicked(StepCreateReport.ASSETS.step)
     }
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_action, container, false)
     }
-    
+
     companion object {
         @JvmStatic
         fun newInstance() = ActionFragment()

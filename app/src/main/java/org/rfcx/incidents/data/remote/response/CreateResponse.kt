@@ -7,7 +7,8 @@ import org.rfcx.incidents.data.remote.domain.executor.ThreadExecutor
 
 class CreateResponse(
     private val repository: CreateResponseRepository,
-    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+    threadExecutor: ThreadExecutor,
+    postExecutionThread: PostExecutionThread
 ) : SingleUseCase<CreateResponseRequest, CreateResponseRes>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: CreateResponseRequest): Single<CreateResponseRes> {
         return repository.createResponseRequest(params)
