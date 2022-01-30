@@ -8,9 +8,9 @@ class ProfileData(private val preferences: Preferences) {
     fun getUserNickname(): String {
         val nickname = preferences.getString(Preferences.NICKNAME)
         return if (nickname != null && nickname.isNotEmpty()) nickname.replaceFirstChar {
-	        if (it.isLowerCase()) it.titlecase(
-		        Locale.getDefault()
-	        ) else it.toString()
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
         } else "Responder"
     }
     

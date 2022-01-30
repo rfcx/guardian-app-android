@@ -5,5 +5,5 @@ import org.rfcx.incidents.entity.terms.TermsRequest
 import org.rfcx.incidents.entity.terms.TermsResponse
 
 interface TermsRepository {
-	fun sendBodyPayload(sendBody: TermsRequest): Single<TermsResponse>
+    fun sendBodyPayload(sendBody: TermsRequest): Single<TermsResponse>
 }

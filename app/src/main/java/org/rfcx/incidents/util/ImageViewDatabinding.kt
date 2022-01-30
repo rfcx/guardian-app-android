@@ -17,7 +17,7 @@ object ImageViewDatabinding {
     fun setImageDrawable(view: ImageView, drawable: Drawable) {
         view.setImageDrawable(drawable)
     }
-
+    
     @BindingAdapter("android:src")
     @JvmStatic
     fun setImageResource(imageView: ImageView, @DrawableRes resource: Int) {
@@ -28,8 +28,8 @@ object ImageViewDatabinding {
     @JvmStatic
     fun setProfile(imageView: ImageView, context: Context) {
         Glide.with(imageView.context).load(context.getUserProfile())
-                .placeholder(R.drawable.bg_circle_grey)
-                .apply(RequestOptions.circleCropTransform())
-                .into(imageView)
+            .placeholder(R.drawable.bg_circle_grey)
+            .apply(RequestOptions.circleCropTransform())
+            .into(imageView)
     }
 }

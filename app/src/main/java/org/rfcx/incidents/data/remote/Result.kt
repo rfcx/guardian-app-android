@@ -21,36 +21,36 @@ package org.rfcx.incidents.data.remote
  * @param <T>
  */
 sealed class Result<out R> {
-	
-	data class Success<out T>(val data: T) : Result<T>()
-	data class Error(val throwable: Throwable) : Result<Nothing>()
-	object Loading : Result<Nothing>()
-	
-	override fun toString(): String {
-		return when (this) {
-			is Success<*> -> "Success[data=$data]"
-			is Error -> "Error[exception=$throwable]"
-			Loading -> "Loading"
-		}
-	}
+    
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val throwable: Throwable) : Result<Nothing>()
+    object Loading : Result<Nothing>()
+    
+    override fun toString(): String {
+        return when (this) {
+            is Success<*> -> "Success[data=$data]"
+            is Error -> "Error[exception=$throwable]"
+            Loading -> "Loading"
+        }
+    }
 }
 
 inline fun <T> Result<T>.success(
-		success: (T) -> Unit,
-		noinline fail: ((Throwable) -> Unit)? = null,
-		noinline loading: (() -> Unit)? = null
-		) {
-	when (this) {
-		is Result.Success<T> -> {
-			success.invoke(data)
-		}
-		is Result.Error -> {
-			fail?.invoke(throwable)
-		}
-		is Result.Loading -> {
-			loading?.invoke()
-		}
-	}
+    success: (T) -> Unit,
+    noinline fail: ((Throwable) -> Unit)? = null,
+    noinline loading: (() -> Unit)? = null
+) {
+    when (this) {
+        is Result.Success<T> -> {
+            success.invoke(data)
+        }
+        is Result.Error -> {
+            fail?.invoke(throwable)
+        }
+        is Result.Loading -> {
+            loading?.invoke()
+        }
+    }
 }
 
 

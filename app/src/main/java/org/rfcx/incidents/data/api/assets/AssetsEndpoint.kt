@@ -9,7 +9,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface AssetsEndpoint {
-	@Multipart
-	@POST("responses/{id}/assets")
-	fun uploadAssets(@Path("id") id: String, @Part file: MultipartBody.Part): Call<ResponseBody>
+    @Multipart
+    @POST("responses/{id}/assets")
+    fun uploadAssets(@Path("id") id: String, @Part file: MultipartBody.Part): Call<ResponseBody>
 }

@@ -6,7 +6,7 @@ import org.rfcx.incidents.entity.SubscribeRequest
 import org.rfcx.incidents.entity.SubscribeResponse
 
 class UnsubscribeRepositoryImp(private val subscribeEndpoint: SubscribeEndpoint) : UnsubscribeRepository {
-	override fun sendUnsubscribeBody(sendBody: SubscribeRequest): Single<SubscribeResponse> {
-		return subscribeEndpoint.sendGroupsUnsubscribe(sendBody)
-	}
+    override fun sendUnsubscribeBody(sendBody: SubscribeRequest): Single<SubscribeResponse> {
+        return subscribeEndpoint.sendGroupsUnsubscribe(sendBody)
+    }
 }

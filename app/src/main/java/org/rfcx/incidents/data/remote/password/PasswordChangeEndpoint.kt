@@ -7,6 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface PasswordChangeEndpoint {
-	@POST("v1/users/password-change")
-	fun sendNewPassword(@Body password: PasswordRequest): Single<PasswordResponse>
+    @POST("v1/users/password-change")
+    fun sendNewPassword(@Body password: PasswordRequest): Single<PasswordResponse>
 }

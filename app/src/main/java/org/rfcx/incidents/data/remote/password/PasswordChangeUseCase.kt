@@ -7,10 +7,11 @@ import org.rfcx.incidents.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.incidents.entity.PasswordRequest
 import org.rfcx.incidents.entity.PasswordResponse
 
-class PasswordChangeUseCase(private val passwordChangeRepository: PasswordChangeRepository,
-                            threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
+class PasswordChangeUseCase(
+    private val passwordChangeRepository: PasswordChangeRepository,
+    threadExecutor: ThreadExecutor, postExecutionThread: PostExecutionThread
 ) : SingleUseCase<PasswordRequest, PasswordResponse>(threadExecutor, postExecutionThread) {
-	override fun buildUseCaseObservable(params: PasswordRequest): Single<PasswordResponse> {
-		return passwordChangeRepository.newPassword(params)
-	}
+    override fun buildUseCaseObservable(params: PasswordRequest): Single<PasswordResponse> {
+        return passwordChangeRepository.newPassword(params)
+    }
 }

@@ -8,31 +8,31 @@ import io.realm.RealmObject
 import io.realm.RealmResults
 
 class RealmLiveData<T : RealmModel>(private val realmResults: RealmResults<T>) : LiveData<RealmResults<T>>() {
-	
-	private val listener = RealmChangeListener<RealmResults<T>> { results -> value = results }
-	
-	override fun onActive() {
-		realmResults.addChangeListener(listener)
-	}
-	
-	override fun onInactive() {
-		realmResults.removeChangeListener(listener)
-	}
+    
+    private val listener = RealmChangeListener<RealmResults<T>> { results -> value = results }
+    
+    override fun onActive() {
+        realmResults.addChangeListener(listener)
+    }
+    
+    override fun onInactive() {
+        realmResults.removeChangeListener(listener)
+    }
 }
 
 class LiveDataRealmObject<T : RealmObject>(private val result: T) : LiveData<T>() {
-	
-	private val listener = RealmChangeListener<T> { t ->
-		if (t.isValid)
-			value = t
-		
-	}
-	
-	override fun onActive() {
-		result.addChangeListener(listener)
-	}
-	
-	override fun onInactive() {
-		result.removeChangeListener(listener)
-	}
+    
+    private val listener = RealmChangeListener<T> { t ->
+        if (t.isValid)
+            value = t
+        
+    }
+    
+    override fun onActive() {
+        result.addChangeListener(listener)
+    }
+    
+    override fun onInactive() {
+        result.removeChangeListener(listener)
+    }
 }

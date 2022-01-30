@@ -10,26 +10,26 @@ import androidx.fragment.app.DialogFragment
 import org.rfcx.incidents.R
 
 class LoadingDialogFragment : DialogFragment() {
-	
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_loading, container, false)
-	}
-	
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-	}
-	
-	fun dismissDialog() {
-		try {
-			dismiss()
-		} catch (e: Exception) {
-			e.printStackTrace()
-			dismissAllowingStateLoss()
-		}
-	}
-	
-	companion object {
-		fun newInstance() = LoadingDialogFragment()
-	}
+    
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_loading, container, false)
+    }
+    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+    
+    fun dismissDialog() {
+        try {
+            dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            dismissAllowingStateLoss()
+        }
+    }
+    
+    companion object {
+        fun newInstance() = LoadingDialogFragment()
+    }
 }

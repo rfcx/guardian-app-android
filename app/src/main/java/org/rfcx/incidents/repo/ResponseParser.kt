@@ -14,39 +14,44 @@ class ResponseParserException(message: String) : Exception(message)
 class ResponseUnauthenticatedException : Exception()
 
 fun <T> responseParser(response: Response<T>?): Result<T, Exception> {
-
+    
     if (response == null) {
         val exception = ResponseParserException("responseParser: response is null")
         return Err(exception)
     }
-
+    
     if (response.isSuccessful) {
         val body = response.body()
         if (body != null) {
             return Ok(body)
-        }
-        else {
+        } else {
             return Err(ResponseParserException("responseParser: isSuccessful but body is null"))
         }
     }
-
+    
     if (response.code() == 401) {
         return Err(ResponseUnauthenticatedException())
     }
-
+    
     if (response.errorBody() == null) {
         return Err(ResponseParserException("error and missing error body"))
     }
-
+    
     try {
-        val error: ErrorResponse = GsonProvider.getInstance().gson.fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+        val error: ErrorResponse =
+            GsonProvider.getInstance().gson.fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
         return Err(ResponseParserException("error: ${error.message}"))
     } catch (e: Exception) {
         return Err(ResponseParserException("error: ${response.errorBody()}"))
     }
 }
 
-fun responseErrorHandler(error: Exception, callback: ApiCallback, context: Context, exceptionMessagePrefix: String = "") {
+fun responseErrorHandler(
+    error: Exception,
+    callback: ApiCallback,
+    context: Context,
+    exceptionMessagePrefix: String = ""
+) {
     when (error) {
         is ResponseUnauthenticatedException -> {
             FirebaseCrashlytics.getInstance().log(error.message.toString())

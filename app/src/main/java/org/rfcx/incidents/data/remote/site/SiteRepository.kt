@@ -4,5 +4,5 @@ import io.reactivex.Single
 import org.rfcx.incidents.entity.site.SiteResponse
 
 interface SiteRepository {
-	fun site(id: String): Single<List<SiteResponse>>
+    fun site(id: String): Single<List<SiteResponse>>
 }

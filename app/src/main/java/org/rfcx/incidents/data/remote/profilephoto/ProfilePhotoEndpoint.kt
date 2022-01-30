@@ -8,7 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 
 interface ProfilePhotoEndpoint {
-	@POST("v1/users/avatar-change")
-	@Multipart
-	fun sendImageProfile(@Part() imageFile: MultipartBody.Part): Single<ProfilePhotoResponse>
+    @POST("v1/users/avatar-change")
+    @Multipart
+    fun sendImageProfile(@Part() imageFile: MultipartBody.Part): Single<ProfilePhotoResponse>
 }

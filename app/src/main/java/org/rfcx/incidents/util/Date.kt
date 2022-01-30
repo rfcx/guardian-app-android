@@ -6,21 +6,21 @@ import java.util.*
 
 
 private val isoSdf by lazy {
-	val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-	sdf.timeZone = TimeZone.getTimeZone("UTC")
-	sdf
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf
 }
 
 private val isoFormat by lazy {
-	val sdf = SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'", Locale.US)
-	sdf.timeZone = TimeZone.getTimeZone("UTC")
-	sdf
+    val sdf = SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'", Locale.US)
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf
 }
 
 private val isoSdfNotZ by lazy {
-	val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
-	sdf.timeZone = TimeZone.getTimeZone("UTC")
-	sdf
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf
 }
 private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
@@ -29,98 +29,101 @@ private const val dateFormat = "d MMM yyyy, HH:mm"
 private const val dateShortFormat = "dd MMM"
 
 private val outputTimeSdf by lazy {
-	val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
-	sdf.timeZone = TimeZone.getDefault()
-	sdf
+    val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
 }
 
 private val outputDateShortFormatSdf by lazy {
-	val sdf = SimpleDateFormat(dateShortFormat, Locale.getDefault())
-	sdf.timeZone = TimeZone.getDefault()
-	sdf
+    val sdf = SimpleDateFormat(dateShortFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
 }
 
 private val outputShortDateSdf by lazy {
-	val sdf = SimpleDateFormat(shortDateFormat, Locale.getDefault())
-	sdf.timeZone = TimeZone.getDefault()
-	sdf
+    val sdf = SimpleDateFormat(shortDateFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
 }
 private val outputStandardDateSdf by lazy {
-	val sdf = SimpleDateFormat(standardDateFormat, Locale.getDefault())
-	sdf.timeZone = TimeZone.getDefault()
-	sdf
+    val sdf = SimpleDateFormat(standardDateFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
 }
 private val outputDateSdf by lazy {
-	val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-	sdf.timeZone = TimeZone.getDefault()
-	sdf
+    val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
 }
 
 fun Date.toIsoString(): String {
-	return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
+    return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
 fun Date.toIsoFormatString(): String {
-	return isoFormat.format(this) // pattern 20211128T153441279Z
+    return isoFormat.format(this) // pattern 20211128T153441279Z
 }
 
 fun String.toIsoString(): Date {
-	return isoSdf.parse(this) // pattern 2008-09-15T15:53:00.000Z
+    return isoSdf.parse(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
 fun Date.toIsoNotZString(): String {
-	return isoSdfNotZ.format(this) // pattern 2008-09-15T15:53:00.000
+    return isoSdfNotZ.format(this) // pattern 2008-09-15T15:53:00.000
 }
 
 fun Date.toTimeString(): String {
-	return outputTimeSdf.format(this)
+    return outputTimeSdf.format(this)
 }
 
 fun Date.toDateShortString(): String {
-	return outputDateShortFormatSdf.format(this)
+    return outputDateShortFormatSdf.format(this)
 }
 
 fun Date.toShortDateString(): String {
-	return outputShortDateSdf.format(this)
+    return outputShortDateSdf.format(this)
 }
 
 fun Date.toFullDateTimeString(): String {
-	return outputStandardDateSdf.format(this)
+    return outputStandardDateSdf.format(this)
 }
 
 fun Date.toDateTimeString(): String {
-	return outputDateSdf.format(this)
+    return outputDateSdf.format(this)
 }
 
 fun Date.millisecondsSince(): Long {
-	return Date().time - this.time
+    return Date().time - this.time
 }
 
 fun Date.dateForShortLink(): String {
-	val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-	val simpleDateFormat = SimpleDateFormat(pattern)
-	return simpleDateFormat.format(this)
+    val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+    val simpleDateFormat = SimpleDateFormat(pattern)
+    return simpleDateFormat.format(this)
 }
 
-private val legacyInputFormatters by lazy { arrayListOf(
-	isoSdf,
-	SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
-	SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()))
+private val legacyInputFormatters by lazy {
+    arrayListOf(
+        isoSdf,
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
+        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    )
 }
 
 @Deprecated(message = "Only used for migrating old dates from Realm.")
 fun legacyDateParser(input: String?): Date? {
-	input ?: return null
-	
-	legacyInputFormatters.forEach {
-		try {
-			return it.parse(input)
-		} catch (e: ParseException) { }
-	}
-	return null // not found format matching
+    input ?: return null
+    
+    legacyInputFormatters.forEach {
+        try {
+            return it.parse(input)
+        } catch (e: ParseException) {
+        }
+    }
+    return null // not found format matching
 }
 
 fun dateParser(input: String?): Date? {
-	input ?: return null
-	return outputStandardDateSdf.parse(input)
+    input ?: return null
+    return outputStandardDateSdf.parse(input)
 }

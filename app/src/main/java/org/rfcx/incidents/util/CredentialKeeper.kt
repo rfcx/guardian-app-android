@@ -8,13 +8,13 @@ import org.rfcx.incidents.entity.user.UserAuthResponse
  */
 
 class CredentialKeeper(val context: Context) {
-
+    
     fun save(user: UserAuthResponse) {
         val preferences = Preferences.getInstance(context)
         // Required
         preferences.putString(Preferences.USER_GUID, user.guid)
         preferences.putString(Preferences.ID_TOKEN, user.idToken)
-
+        
         // Optional
         if (user.accessToken != null) {
             preferences.putString(Preferences.ACCESS_TOKEN, user.accessToken)
@@ -37,12 +37,12 @@ class CredentialKeeper(val context: Context) {
             preferences.putString(Preferences.DEFAULT_SITE, user.defaultSite)
         }
     }
-
+    
     fun clear() {
         val preferences = Preferences.getInstance(context)
         preferences.clear()
     }
-
+    
     fun hasValidCredentials(): Boolean {
         val preferences = Preferences.getInstance(context)
         return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty()

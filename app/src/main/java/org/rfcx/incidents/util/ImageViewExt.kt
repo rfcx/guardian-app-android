@@ -17,63 +17,63 @@ import org.rfcx.incidents.R
 
 
 fun ImageView.setPath(path: String) {
-	val bitmap = BitmapFactory.decodeFile(path)
-	setImageBitmap(bitmap)
+    val bitmap = BitmapFactory.decodeFile(path)
+    setImageBitmap(bitmap)
 }
 
 fun ImageView.setImageProfile(url: String?) {
-	Glide.with(this.context).load(url)
-			.placeholder(R.drawable.bg_circle_grey)
-			.apply(RequestOptions.circleCropTransform())
-			.into(this)
+    Glide.with(this.context).load(url)
+        .placeholder(R.drawable.bg_circle_grey)
+        .apply(RequestOptions.circleCropTransform())
+        .into(this)
 }
 
 fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = null, progressBar: ProgressBar) {
-	val placeholder = R.drawable.bg_placeholder_image
-	if (fromServer) {
-		progressBar.visibility = View.VISIBLE
-		
-		val glideUrl = GlideUrl(
-				url,
-				LazyHeaders.Builder()
-						.addHeader("Authorization", "Bearer $token")
-						.build()
-		)
-		
-		Glide.with(this)
-				.load(glideUrl)
-				.listener(object : RequestListener<Drawable> {
-					override fun onLoadFailed(
-							e: GlideException?,
-							model: Any?,
-							target: Target<Drawable>?,
-							isFirstResource: Boolean
-					): Boolean {
-						progressBar.visibility = View.GONE
-						return false
-					}
-					
-					override fun onResourceReady(
-							resource: Drawable?,
-							model: Any?,
-							target: Target<Drawable>?,
-							dataSource: DataSource?,
-							isFirstResource: Boolean
-					): Boolean {
-						progressBar.visibility = View.GONE
-						return false
-					}
-				})
-				.placeholder(placeholder)
-				.error(placeholder)
-				.into(this)
-		
-	} else {
-		Glide.with(this)
-				.load(url)
-				.placeholder(placeholder)
-				.error(placeholder)
-				.into(this)
-		
-	}
+    val placeholder = R.drawable.bg_placeholder_image
+    if (fromServer) {
+        progressBar.visibility = View.VISIBLE
+        
+        val glideUrl = GlideUrl(
+            url,
+            LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer $token")
+                .build()
+        )
+        
+        Glide.with(this)
+            .load(glideUrl)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progressBar.visibility = View.GONE
+                    return false
+                }
+                
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progressBar.visibility = View.GONE
+                    return false
+                }
+            })
+            .placeholder(placeholder)
+            .error(placeholder)
+            .into(this)
+        
+    } else {
+        Glide.with(this)
+            .load(url)
+            .placeholder(placeholder)
+            .error(placeholder)
+            .into(this)
+        
+    }
 }

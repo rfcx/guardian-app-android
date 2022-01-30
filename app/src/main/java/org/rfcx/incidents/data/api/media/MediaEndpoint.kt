@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MediaEndpoint {
-	@GET("media/{filename}")
-	fun filename(@Path("filename") filename: String): Single<ResponseBody>
+    @GET("media/{filename}")
+    fun filename(@Path("filename") filename: String): Single<ResponseBody>
 }

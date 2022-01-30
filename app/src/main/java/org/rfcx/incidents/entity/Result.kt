@@ -5,7 +5,7 @@ package org.rfcx.incidents.entity
  */
 sealed class Result<out V, out E> {
     companion object {
-
+        
         /**
          * Invokes a [function] and wraps it in a [Result], returning an [Err]
          * if an [Exception] was thrown, otherwise [Ok].

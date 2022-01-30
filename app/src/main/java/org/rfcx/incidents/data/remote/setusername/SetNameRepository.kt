@@ -5,5 +5,5 @@ import org.rfcx.incidents.entity.user.SetNameRequest
 import org.rfcx.incidents.entity.user.SetNameResponse
 
 interface SetNameRepository {
-	fun sendName(sendBody: SetNameRequest): Single<SetNameResponse>
+    fun sendName(sendBody: SetNameRequest): Single<SetNameResponse>
 }

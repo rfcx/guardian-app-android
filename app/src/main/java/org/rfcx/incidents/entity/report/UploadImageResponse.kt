@@ -1,4 +1,5 @@
 package org.rfcx.incidents.entity.report
+
 import com.google.gson.annotations.SerializedName
 
 

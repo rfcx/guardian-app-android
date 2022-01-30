@@ -5,7 +5,7 @@ import org.rfcx.incidents.entity.user.SetNameRequest
 import org.rfcx.incidents.entity.user.SetNameResponse
 
 class SetNameRepositoryImp(private val setNameEndpoint: SetNameEndpoint) : SetNameRepository {
-	override fun sendName(sendBody: SetNameRequest): Single<SetNameResponse> {
-		return setNameEndpoint.sendGivenName(sendBody)
-	}
+    override fun sendName(sendBody: SetNameRequest): Single<SetNameResponse> {
+        return setNameEndpoint.sendGivenName(sendBody)
+    }
 }

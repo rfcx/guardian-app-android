@@ -5,5 +5,5 @@ import org.rfcx.incidents.entity.PasswordRequest
 import org.rfcx.incidents.entity.PasswordResponse
 
 interface PasswordChangeRepository {
-	fun newPassword(sendBody: PasswordRequest): Single<PasswordResponse>
+    fun newPassword(sendBody: PasswordRequest): Single<PasswordResponse>
 }
