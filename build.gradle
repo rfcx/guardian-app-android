@@ -34,3 +34,10 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ktlint {
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+    }
+}
