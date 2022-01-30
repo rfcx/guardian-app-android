@@ -13,15 +13,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentLoginBinding
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isValidEmail
 import org.rfcx.incidents.view.base.BaseFragment
 
 class LoginFragment : BaseFragment() {
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: LoginListener
     private val loginViewModel: LoginViewModel by viewModel()
 
@@ -33,7 +35,13 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,10 +57,10 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun initView() {
-        signInButton.setOnClickListener {
+        binding.signInButton.setOnClickListener {
             analytics?.trackLoginEvent("email")
-            val email = loginEmailEditText.text.toString()
-            val password = loginPasswordEditText.text.toString()
+            val email = binding.loginEmailEditText.text.toString()
+            val password = binding.loginPasswordEditText.text.toString()
             it.hideKeyboard()
 
             if (validateInput(email, password)) {
@@ -61,7 +69,7 @@ class LoginFragment : BaseFragment() {
             }
         }
 
-        forgotYourPasswordTextView.setOnClickListener {
+        binding.forgotYourPasswordTextView.setOnClickListener {
             alertDialogResetPassword()
         }
     }
@@ -115,8 +123,8 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun loading(start: Boolean = true) {
-        loginGroupView.visibility = if (start) View.GONE else View.VISIBLE
-        loginProgressBar.visibility = if (start) View.VISIBLE else View.GONE
+        binding.loginGroupView.visibility = if (start) View.GONE else View.VISIBLE
+        binding.loginProgressBar.visibility = if (start) View.VISIBLE else View.GONE
     }
 
     private fun setupObserver() {
@@ -132,7 +140,7 @@ class LoginFragment : BaseFragment() {
         loginViewModel.loginFailure.observe(
             viewLifecycleOwner,
             Observer { errorMessage ->
-                if (errorMessage != null && errorMessage.isNotEmpty()) {
+                if ((errorMessage != null) && errorMessage.isNotEmpty()) {
                     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
                 }
                 loading(false)
@@ -166,10 +174,10 @@ class LoginFragment : BaseFragment() {
 
     private fun validateInput(email: String?, password: String?): Boolean {
         if (email.isNullOrEmpty()) {
-            loginEmailEditText.error = getString(R.string.pls_fill_email)
+            binding.loginEmailEditText.error = getString(R.string.pls_fill_email)
             return false
         } else if (password.isNullOrEmpty()) {
-            loginPasswordEditText.error = getString(R.string.pls_fill_password)
+            binding.loginPasswordEditText.error = getString(R.string.pls_fill_password)
             return false
         }
         return true

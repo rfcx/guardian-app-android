@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_select_subscribe_projects.view.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemSelectSubscribeProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.project.isGuest
@@ -22,8 +22,8 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
     var subscribingProject: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAdapter.ProjectsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_select_subscribe_projects, parent, false)
-        return ProjectsViewHolder(view)
+        val binding = ItemSelectSubscribeProjectsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProjectsViewHolder(binding)
     }
 
     override fun getItemCount(): Int = items.size
@@ -35,11 +35,11 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
         }
     }
 
-    inner class ProjectsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textView = itemView.guardianGroupTextView
-        private val checkBoxImageView = itemView.checkBoxImageView
-        private val lockImageView = itemView.lockImageView
-        private val subscribeProgress = itemView.subscribeProgress
+    inner class ProjectsViewHolder(binding: ItemSelectSubscribeProjectsBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val textView = binding.guardianGroupTextView
+        private val checkBoxImageView = binding.checkBoxImageView
+        private val lockImageView = binding.lockImageView
+        private val subscribeProgress = binding.subscribeProgress
 
         fun bind(item: ProjectsItem) {
             subscribeProgress.visibility = if (subscribingProject == item.project.name) View.VISIBLE else View.GONE

@@ -5,60 +5,63 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import kotlinx.android.synthetic.main.activity_subscribe_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.databinding.ActivitySubscribeProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.entity.project.Project
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.handleError
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.login.ProjectsAdapter
 import org.rfcx.incidents.view.login.ProjectsItem
 
 class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private val analytics by lazy { Analytics(this) }
+    lateinit var binding: ActivitySubscribeProjectsBinding
     private val viewModel: GuardianGroupViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
     private var subscribedProjects: ArrayList<String> = arrayListOf()
+    private val analytics by lazy { Analytics(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_subscribe_projects)
+        binding = ActivitySubscribeProjectsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupToolbar()
         setList()
 
         // setup list
-        projectsRecycler.apply {
+        binding.projectsRecycler.apply {
             layoutManager = LinearLayoutManager(this@SubscribeProjectsActivity)
             adapter = projectsAdapter
         }
 
         getSubscribedProject()?.let { projects -> subscribedProjects.addAll(projects) }
 
-        projectSwipeRefreshView.apply {
+        binding.projectSwipeRefreshView.apply {
             setOnRefreshListener(this@SubscribeProjectsActivity)
             setColorSchemeResources(R.color.colorPrimary)
         }
 
-        viewModel.getProjectsFromRemote.observe(
-            this,
-            Observer { it ->
-                it.success({
-                    projectSwipeRefreshView.isRefreshing = false
-                    setList()
-                }, {
-                    projectSwipeRefreshView.isRefreshing = false
-                    this@SubscribeProjectsActivity.handleError(it)
-                }, {
-                    projectSwipeRefreshView.isRefreshing = true
-                })
-            }
-        )
+        viewModel.getProjectsFromRemote.observe(this) { it ->
+            it.success({
+                binding.projectSwipeRefreshView.isRefreshing = false
+                setList()
+            }, {
+                binding.projectSwipeRefreshView.isRefreshing = false
+                this@SubscribeProjectsActivity.handleError(it)
+            }, {
+                binding.projectSwipeRefreshView.isRefreshing = true
+            })
+        }
 
         checkStateBeforeFetchProjects()
     }
@@ -80,7 +83,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
@@ -169,11 +172,11 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
     private fun checkStateBeforeFetchProjects() {
         when {
             this.isOnAirplaneMode() -> {
-                projectSwipeRefreshView.isRefreshing = false
+                binding.projectSwipeRefreshView.isRefreshing = false
                 this.showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
             }
             !this.isNetworkAvailable() -> {
-                projectSwipeRefreshView.isRefreshing = false
+                binding.projectSwipeRefreshView.isRefreshing = false
                 this.showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
             }
             else -> {

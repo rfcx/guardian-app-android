@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -24,8 +23,6 @@ import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.base.BaseFragment
-import org.rfcx.incidents.view.profile.coordinates.CoordinatesActivity
-import org.rfcx.incidents.view.profile.editprofile.EditProfileActivity
 
 class ProfileFragment : BaseFragment() {
 
@@ -50,7 +47,7 @@ class ProfileFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewDataBinding = DataBindingUtil.inflate(
             layoutInflater, R.layout.fragment_profile,
             container, false
@@ -107,36 +104,10 @@ class ProfileFragment : BaseFragment() {
             }
         }
 
-        viewDataBinding.onClickRatingApp = View.OnClickListener {
-            analytics?.trackRateAppEvent()
-            val appPackageName = activity?.packageName
-            try {
-                val playStoreUri: Uri = Uri.parse("market://details?id=$appPackageName")
-                val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
-                startActivity(playStoreIntent)
-            } catch (exp: Exception) {
-                val exceptionUri: Uri = Uri.parse("http://play.google.com/store/apps/details?id=$appPackageName")
-                val exceptionIntent = Intent(Intent.ACTION_VIEW, exceptionUri)
-                startActivity(exceptionIntent)
-            }
-        }
-
         viewDataBinding.onClickFeedback = View.OnClickListener {
             analytics?.trackFeedbackStartEvent()
             val intent = Intent(activity, FeedbackActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE)
-        }
-
-        viewDataBinding.onClickPassword = View.OnClickListener {
-            context?.let { it1 -> PasswordChangeActivity.startActivity(it1) }
-        }
-
-        viewDataBinding.onClickProfilePhoto = View.OnClickListener {
-            context?.let { it1 -> EditProfileActivity.startActivity(it1) }
-        }
-
-        viewDataBinding.onClickCoordinates = View.OnClickListener {
-            context?.let { it1 -> CoordinatesActivity.startActivity(it1) }
         }
     }
 

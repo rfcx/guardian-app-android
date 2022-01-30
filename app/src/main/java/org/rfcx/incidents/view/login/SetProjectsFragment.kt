@@ -9,26 +9,33 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_set_projects.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.databinding.FragmentSetProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.logout
 
 class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+
     companion object {
         @JvmStatic
         fun newInstance() = SetProjectsFragment()
     }
 
-    private val analytics by lazy { context?.let { Analytics(it) } }
-
+    private var _binding: FragmentSetProjectsBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: LoginListener
     private val viewModel: SetProjectsViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
     private var subscribedProjects: ArrayList<String> = arrayListOf()
+
+    private val analytics by lazy { context?.let { Analytics(it) } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,19 +51,20 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_set_projects, container, false)
+    ): View {
+        _binding = FragmentSetProjectsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        projectView.apply {
+        binding.projectView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectsAdapter
         }
 
-        projectSwipeRefreshView.apply {
+        binding.projectSwipeRefreshView.apply {
             setOnRefreshListener(this@SetProjectsFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
@@ -67,9 +75,9 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             showToast(getString(R.string.network_not_available))
         }
 
-        selectProjectButton.text = getString(R.string.skip)
+        binding.selectProjectButton.text = getString(R.string.skip)
 
-        selectProjectButton.setOnClickListener {
+        binding.selectProjectButton.setOnClickListener {
             val preferences = Preferences.getInstance(requireContext())
             val projectCoreId =
                 if (subscribedProjects.isEmpty()) viewModel.getProjectsFromLocal().map { p -> p.serverId ?: "" }
@@ -79,32 +87,32 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             listener.handleOpenPage()
         }
 
-        logoutButton.setOnClickListener {
+        binding.logoutButton.setOnClickListener {
             requireContext().logout()
         }
 
-        refreshButton.setOnClickListener {
-            progressLoadProject.visibility = View.VISIBLE
-            noContentTextView.visibility = View.GONE
-            refreshButton.isEnabled = false
+        binding.refreshButton.setOnClickListener {
+            binding.progressLoadProject.visibility = View.VISIBLE
+            binding.noContentTextView.visibility = View.GONE
+            binding.refreshButton.isEnabled = false
             viewModel.fetchProjects()
         }
     }
 
     private fun setObserver() {
-        viewModel.projects.observe(viewLifecycleOwner, {
+        viewModel.projects.observe(viewLifecycleOwner) {
             it.success({
-                projectSwipeRefreshView.isRefreshing = false
+                binding.projectSwipeRefreshView.isRefreshing = false
                 if (viewModel.getProjectsFromLocal().isEmpty()) {
-                    noContentTextView.visibility = View.VISIBLE
-                    refreshButton.visibility = View.VISIBLE
-                    logoutButton.visibility = View.VISIBLE
-                    selectProjectButton.visibility = View.GONE
+                    binding.noContentTextView.visibility = View.VISIBLE
+                    binding.refreshButton.visibility = View.VISIBLE
+                    binding.logoutButton.visibility = View.VISIBLE
+                    binding.selectProjectButton.visibility = View.GONE
                 } else {
-                    noContentTextView.visibility = View.GONE
-                    refreshButton.visibility = View.GONE
-                    logoutButton.visibility = View.GONE
-                    selectProjectButton.visibility = View.VISIBLE
+                    binding.noContentTextView.visibility = View.GONE
+                    binding.refreshButton.visibility = View.GONE
+                    binding.logoutButton.visibility = View.GONE
+                    binding.selectProjectButton.visibility = View.VISIBLE
                 }
                 projectsItem = viewModel.getProjectsFromLocal().map { project ->
                     ProjectsItem(
@@ -113,18 +121,18 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                             ?: false
                     )
                 }
-                refreshButton.isEnabled = true
-                progressLoadProject.visibility = View.GONE
+                binding.refreshButton.isEnabled = true
+                binding.progressLoadProject.visibility = View.GONE
                 projectsItem?.let { items -> projectsAdapter.items = items }
             }, {
-                refreshButton.isEnabled = true
-                progressLoadProject.visibility = View.GONE
-                projectSwipeRefreshView.isRefreshing = false
+                binding.refreshButton.isEnabled = true
+                binding.progressLoadProject.visibility = View.GONE
+                binding.projectSwipeRefreshView.isRefreshing = false
                 Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
             }, {
-                projectSwipeRefreshView.isRefreshing = true
+                binding.projectSwipeRefreshView.isRefreshing = true
             })
-        })
+        }
     }
 
     private fun showToast(message: String) {
@@ -139,7 +147,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
         val items = projectsItem ?: return
         projectsAdapter.subscribingProject = item.project.name
         projectsAdapter.items = items
-        selectProjectButton.isEnabled = false
+        binding.selectProjectButton.isEnabled = false
 
         if (item.selected) {
             viewModel.unsubscribeProject(item.project) { status ->
@@ -150,10 +158,10 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                 } else {
                     saveSubscribedProject(subscribedProjects)
                     subscribedProjects.remove(item.project.serverId ?: "")
-                    selectProjectButton.isEnabled = true
+                    binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)
                 }
-                selectProjectButton.text =
+                binding.selectProjectButton.text =
                     if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
             }
         } else {
@@ -165,10 +173,10 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                 } else {
                     subscribedProjects.add(item.project.serverId ?: "")
                     saveSubscribedProject(subscribedProjects)
-                    selectProjectButton.isEnabled = true
+                    binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)
                 }
-                selectProjectButton.text =
+                binding.selectProjectButton.text =
                     if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
             }
         }

@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_project.view.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemProjectBinding
 import org.rfcx.incidents.entity.project.Permissions
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.project.isGuest
@@ -21,20 +21,12 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectSelectViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_project, parent, false)
-        return ProjectSelectViewHolder(view)
+        val binding = ItemProjectBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProjectSelectViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProjectSelectViewHolder, position: Int) {
-        holder.bind(items[position])
-
-        if (selectedPosition == position) {
-            holder.itemView.checkImageView.visibility = View.VISIBLE
-        } else {
-            holder.itemView.checkImageView.visibility = View.GONE
-        }
-
+        holder.bind(items[position], selectedPosition == position)
         holder.itemView.setOnClickListener {
             if (items[position].permissions != Permissions.GUEST.value) {
                 selectedPosition = position
@@ -46,14 +38,16 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 
     override fun getItemCount(): Int = items.size
 
-    inner class ProjectSelectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val locationGroupTextView = itemView.locationGroupTextView
-        private val lockImageView = itemView.lockImageView
+    inner class ProjectSelectViewHolder(binding: ItemProjectBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val locationGroupTextView = binding.locationGroupTextView
+        private val lockImageView = binding.lockImageView
+        private val checkImageView = binding.checkImageView
 
-        fun bind(project: Project) {
+        fun bind(project: Project, isChecked: Boolean) {
             locationGroupTextView.text = project.name
             lockImageView.visibility =
                 if (project.isGuest()) View.VISIBLE else View.GONE
+            checkImageView.visibility = if (isChecked) View.VISIBLE else View.GONE
             setClickable(itemView, project.isGuest())
 
             if (project.isGuest()) {

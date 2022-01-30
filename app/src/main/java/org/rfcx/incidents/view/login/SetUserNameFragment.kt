@@ -9,15 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_set_user_name.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentSetUserNameBinding
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.view.base.BaseFragment
 
 class SetUserNameFragment : BaseFragment() {
+    private var _binding: FragmentSetUserNameBinding? = null
+    private val binding get() = _binding!!
 
     lateinit var listener: LoginListener
     private val setUserNameViewModel: SetUserNameViewModel by viewModel()
@@ -28,8 +29,9 @@ class SetUserNameFragment : BaseFragment() {
         listener = (context as LoginListener)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_set_user_name, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSetUserNameBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,11 +45,11 @@ class SetUserNameFragment : BaseFragment() {
     }
 
     private fun initView() {
-        inputNameEditText.addTextChangedListener(object : TextWatcher {
+        binding.inputNameEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0 != null) {
                     if (p0.isEmpty()) {
-                        submitButton.isEnabled = false
+                        binding.submitButton.isEnabled = false
                     }
                 }
             }
@@ -55,28 +57,27 @@ class SetUserNameFragment : BaseFragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                submitButton.isEnabled = true
+                binding.submitButton.isEnabled = true
             }
         })
 
-        submitButton.setOnClickListener {
+        binding.submitButton.setOnClickListener {
             it.hideKeyboard()
-            submitButton.isEnabled = false
-            setNameProgressBar.visibility = View.VISIBLE
-            val name = inputNameEditText.text.toString()
+            binding.submitButton.isEnabled = false
+            binding.setNameProgressBar.visibility = View.VISIBLE
+            val name = binding.inputNameEditText.text.toString()
             setUserNameViewModel.sendName(name)
 
             setUserNameViewModel.status.observe(
-                this,
-                Observer { status ->
-                    if (status) {
-                        analytics?.trackSetUsernameEvent()
-                        listener.handleOpenPage()
-                    } else {
-                        Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
-                    }
+                viewLifecycleOwner
+            ) { status ->
+                if (status) {
+                    analytics?.trackSetUsernameEvent()
+                    listener.handleOpenPage()
+                } else {
+                    Toast.makeText(context, R.string.something_is_wrong, Toast.LENGTH_LONG).show()
                 }
-            )
+            }
         }
     }
 

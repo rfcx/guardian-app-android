@@ -2,15 +2,14 @@ package org.rfcx.incidents.view.profile
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.adapter_feedback_image.view.*
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
+import org.rfcx.incidents.databinding.AdapterFeedbackImageBinding
 import org.rfcx.incidents.util.GlideApp
 
 class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(FeedbackImageAdapterDiffUtil()) {
@@ -85,8 +84,8 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_feedback_image, parent, false)
-        return FeedbackImageAdapterViewHolder(view, onFeedbackImageAdapterClickListener)
+        val binding = AdapterFeedbackImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FeedbackImageAdapterViewHolder(binding, onFeedbackImageAdapterClickListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -106,21 +105,21 @@ class FeedbackImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(
     }
 
     inner class FeedbackImageAdapterViewHolder(
-        itemView: View,
+        val binding: AdapterFeedbackImageBinding,
         private val onFeedbackImageAdapterClickListener: OnFeedbackImageAdapterClickListener?
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(imagePath: String) {
 
             val text: List<String>? = imagePath.split("/")
-            itemView.nameImageTextView.text = text?.get(text.size - 1) ?: ""
+            binding.nameImageTextView.text = text?.get(text.size - 1) ?: ""
 
-            GlideApp.with(itemView.imageFeedbackImageView)
+            GlideApp.with(binding.imageFeedbackImageView)
                 .load(imagePath)
                 .placeholder(R.drawable.bg_placeholder_image)
                 .error(R.drawable.bg_placeholder_image)
-                .into(itemView.imageFeedbackImageView)
+                .into(binding.imageFeedbackImageView)
 
-            itemView.deleteImageFeedbackButton.setOnClickListener {
+            binding.deleteImageFeedbackButton.setOnClickListener {
                 onFeedbackImageAdapterClickListener?.onDeleteImageClick(adapterPosition)
             }
         }

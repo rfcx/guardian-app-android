@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_dialog_report_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentDialogReportDetailBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.util.Analytics
@@ -17,12 +16,19 @@ import org.rfcx.incidents.view.base.BaseFragment
 import org.rfcx.incidents.view.report.getLocalisedValue
 
 class MapDetailBottomSheetFragment : BaseFragment() {
-
+    private var _binding: FragmentDialogReportDetailBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: MapDetailViewModel by viewModel()
     private val analytics by lazy { context?.let { Analytics(it) } }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_dialog_report_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentDialogReportDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,30 +36,28 @@ class MapDetailBottomSheetFragment : BaseFragment() {
 
         val reportId: Int = arguments?.getInt("BUNDLE_REPORT_ID") ?: -1
         viewModel.getReportDetail(reportId).observe(
-            this@MapDetailBottomSheetFragment,
-            Observer {
-                bindReportView(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            bindReportView(it)
+        }
 
         viewModel.getReportImages(reportId).observe(
-            this@MapDetailBottomSheetFragment,
-            Observer {
-                bindImageState(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            bindImageState(it)
+        }
     }
 
     private fun bindReportView(report: Report?) {
         if (report != null) {
-            reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
+            binding.reportTypeNameTextView.text = context?.let { report.getLocalisedValue(it) }
             val latLon = StringBuilder(
                 report.latitude.limitDecimalPlace(6)
             )
                 .append(",")
                 .append(report.longitude.limitDecimalPlace(6))
-            reportLocationTextView.text = latLon
-            reportTypeImageView.setImageResource(
+            binding.reportLocationTextView.text = latLon
+            binding.reportTypeImageView.setImageResource(
                 when (report.value) {
                     Event.vehicle -> R.drawable.ic_vehicle
                     Event.trespasser -> R.drawable.ic_people
@@ -62,9 +66,9 @@ class MapDetailBottomSheetFragment : BaseFragment() {
                     else -> R.drawable.ic_pin_huge
                 }
             )
-            reportTimePastedTextView.text = report.reportedAt.toTimeSinceString(context)
+            binding.reportTimePastedTextView.text = report.reportedAt.toTimeSinceString(context)
 
-            seeDetailTextView.setOnClickListener {
+            binding.seeDetailTextView.setOnClickListener {
                 analytics?.trackSeeReportDetailEvent(report.id.toString(), report.value)
             }
         }
@@ -72,17 +76,17 @@ class MapDetailBottomSheetFragment : BaseFragment() {
 
     private fun bindImageState(state: ImageState) {
         if (state.count == 0) {
-            reportImageStateTextView.visibility = View.INVISIBLE
+            binding.reportImageStateTextView.visibility = View.INVISIBLE
             return
         }
 
-        reportImageStateTextView.visibility = View.VISIBLE
+        binding.reportImageStateTextView.visibility = View.VISIBLE
         if (state.unsentCount == 0) {
-            reportImageStateTextView.text = getString(
+            binding.reportImageStateTextView.text = getString(
                 R.string.images_sync_format, state.count
             )
         } else {
-            reportImageStateTextView.text = getString(
+            binding.reportImageStateTextView.text = getString(
                 R.string.images_unsync_format, state.count, state.unsentCount
             )
         }

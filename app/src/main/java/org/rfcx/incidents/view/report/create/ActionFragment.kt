@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_action.*
-import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentActionBinding
 import org.rfcx.incidents.entity.response.Actions
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 
 class ActionFragment : Fragment() {
-
-    private val analytics by lazy { context?.let { Analytics(it) } }
+    private var _binding: FragmentActionBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
+    private val analytics by lazy { context?.let { Analytics(it) } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,7 +33,7 @@ class ActionFragment : Fragment() {
         setupResponseActions()
         setOnChange()
 
-        nextStepButton.setOnClickListener {
+        binding.nextStepButton.setOnClickListener {
             setSelect()
         }
     }
@@ -42,7 +42,7 @@ class ActionFragment : Fragment() {
         val response = listener.getResponse()
         response?.let { res ->
             selected.addAll(res.responseActions)
-            nextStepButton.isEnabled = selected.isNotEmpty()
+            binding.nextStepButton.isEnabled = selected.isNotEmpty()
             setSelected()
         }
     }
@@ -50,48 +50,48 @@ class ActionFragment : Fragment() {
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {
-                Actions.COLLECTED_EVIDENCE.value -> collectedCheckBox.isChecked = true
-                Actions.ISSUE_A_WARNING.value -> warningCheckBox.isChecked = true
-                Actions.CONFISCATED_EQUIPMENT.value -> confiscatedCheckBox.isChecked = true
-                Actions.DAMAGED_MACHINERY.value -> damagedMachineryCheckBox.isChecked = true
+                Actions.COLLECTED_EVIDENCE.value -> binding.collectedCheckBox.isChecked = true
+                Actions.ISSUE_A_WARNING.value -> binding.warningCheckBox.isChecked = true
+                Actions.CONFISCATED_EQUIPMENT.value -> binding.confiscatedCheckBox.isChecked = true
+                Actions.DAMAGED_MACHINERY.value -> binding.damagedMachineryCheckBox.isChecked = true
             }
         }
     }
 
     private fun setOnChange() {
-        collectedCheckBox.setOnClickListener {
+        binding.collectedCheckBox.setOnClickListener {
             setEnabled()
         }
-        warningCheckBox.setOnClickListener {
+        binding.warningCheckBox.setOnClickListener {
             setEnabled()
         }
-        confiscatedCheckBox.setOnClickListener {
+        binding.confiscatedCheckBox.setOnClickListener {
             setEnabled()
         }
-        damagedMachineryCheckBox.setOnClickListener {
+        binding.damagedMachineryCheckBox.setOnClickListener {
             setEnabled()
         }
     }
 
     private fun setEnabled() {
         selected.clear()
-        nextStepButton.isEnabled = collectedCheckBox.isChecked ||
-            warningCheckBox.isChecked || confiscatedCheckBox.isChecked ||
-            damagedMachineryCheckBox.isChecked
+        binding.nextStepButton.isEnabled = binding.collectedCheckBox.isChecked ||
+            binding.warningCheckBox.isChecked || binding.confiscatedCheckBox.isChecked ||
+            binding.damagedMachineryCheckBox.isChecked
     }
 
     private fun setSelect() {
         selected.clear()
-        if (collectedCheckBox.isChecked) {
+        if (binding.collectedCheckBox.isChecked) {
             selected.add(Actions.COLLECTED_EVIDENCE.value)
         }
-        if (warningCheckBox.isChecked) {
+        if (binding.warningCheckBox.isChecked) {
             selected.add(Actions.ISSUE_A_WARNING.value)
         }
-        if (confiscatedCheckBox.isChecked) {
+        if (binding.confiscatedCheckBox.isChecked) {
             selected.add(Actions.CONFISCATED_EQUIPMENT.value)
         }
-        if (damagedMachineryCheckBox.isChecked) {
+        if (binding.damagedMachineryCheckBox.isChecked) {
             selected.add(Actions.DAMAGED_MACHINERY.value)
         }
         listener.setAction(selected)
@@ -102,9 +102,14 @@ class ActionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_action, container, false)
+    ): View {
+        _binding = FragmentActionBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

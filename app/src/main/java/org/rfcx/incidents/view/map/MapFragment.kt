@@ -21,7 +21,6 @@ import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -37,27 +36,56 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
-import com.mapbox.mapboxsdk.style.expressions.Expression.*
-import com.mapbox.mapboxsdk.style.layers.*
+import com.mapbox.mapboxsdk.style.expressions.Expression.all
+import com.mapbox.mapboxsdk.style.expressions.Expression.eq
+import com.mapbox.mapboxsdk.style.expressions.Expression.get
+import com.mapbox.mapboxsdk.style.expressions.Expression.gte
+import com.mapbox.mapboxsdk.style.expressions.Expression.literal
+import com.mapbox.mapboxsdk.style.expressions.Expression.lt
+import com.mapbox.mapboxsdk.style.expressions.Expression.neq
+import com.mapbox.mapboxsdk.style.expressions.Expression.toNumber
+import com.mapbox.mapboxsdk.style.expressions.Expression.toString
+import com.mapbox.mapboxsdk.style.layers.CircleLayer
+import com.mapbox.mapboxsdk.style.layers.LineLayer
+import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleBlur
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textColor
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textIgnorePlacement
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textSize
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.android.synthetic.main.layout_map_window_info.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentMapBinding
+import org.rfcx.incidents.databinding.LayoutMapWindowInfoBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.CheckIn
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.service.AirplaneModeReceiver
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.LocationPermissions
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.SymbolGenerator
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
+import org.rfcx.incidents.util.toFullDateTimeString
+import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.base.BaseFragment
 
 class MapFragment : BaseFragment(), OnMapReadyCallback {
-
+    private var _binding: FragmentMapBinding? = null
+    private val binding get() = _binding!!
     private val mapViewModel: MapViewModel by viewModel()
     private val locationPermissions by lazy { activity?.let { LocationPermissions(it) } }
     private var locationManager: LocationManager? = null
@@ -105,8 +133,14 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
     private val airplaneModeReceiver = AirplaneModeReceiver(onAirplaneModeCallback)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_map, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -510,22 +544,23 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
                 // Create window info
                 val inflater = LayoutInflater.from(activity)
                 pointFeatures.forEach {
-                    val bubbleLayout = inflater.inflate(R.layout.layout_map_window_info, null) as BubbleLayout
+
+                    val bubbleLayoutBinding = LayoutMapWindowInfoBinding.inflate(inflater, null, false)
 
                     val id = it.getStringProperty(PROPERTY_MARKER_CHECKIN_ID)
 
                     val title = it.getStringProperty(PROPERTY_MARKER_TITLE)
-                    bubbleLayout.infoWindowTitle.text = title
+                    bubbleLayoutBinding.infoWindowTitle.text = title
 
                     val caption = it.getStringProperty(PROPERTY_MARKER_CAPTION)
-                    bubbleLayout.infoWindowDescription.text = caption
+                    bubbleLayoutBinding.infoWindowDescription.text = caption
 
                     val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    bubbleLayout.measure(measureSpec, measureSpec)
-                    val measuredWidth = bubbleLayout.measuredWidth
-                    bubbleLayout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
+                    bubbleLayoutBinding.root.measure(measureSpec, measureSpec)
+                    val measuredWidth = bubbleLayoutBinding.root.measuredWidth
+                    bubbleLayoutBinding.root.arrowPosition = (measuredWidth / 2 - 5).toFloat()
 
-                    val bitmap = SymbolGenerator.generate(bubbleLayout)
+                    val bitmap = SymbolGenerator.generate(bubbleLayoutBinding.root)
                     windowInfoImages[id] = bitmap
                 }
 
@@ -541,7 +576,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun setupSwitchMapMode() {
-        switchButton.setOnClickListener {
+        binding.switchButton.setOnClickListener {
             currentStyle = if (currentStyle == Style.OUTDOORS) {
                 Style.SATELLITE
             } else {
@@ -604,7 +639,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         if (!isAdded || isDetached) return
-        layoutAlertAirplaneMode?.visibility = View.GONE
+        binding.layoutAlertAirplaneMode.visibility = View.GONE
 
         locationManager?.removeUpdates(locationListener)
         locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
@@ -624,9 +659,9 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
 
         if (!context.isNetworkAvailable()) {
             listAllOfflineMapRegion()
-            switchButton.visibility = View.GONE
+            binding.switchButton.visibility = View.GONE
         } else {
-            switchButton.visibility = View.VISIBLE
+            binding.switchButton.visibility = View.VISIBLE
         }
     }
 
@@ -690,8 +725,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun showLocationMessageError(msg: String) {
-        tvAlertTitle.text = msg
-        layoutAlertAirplaneMode.visibility = View.VISIBLE
+        binding.tvAlertTitle.text = msg
+        binding.layoutAlertAirplaneMode.visibility = View.VISIBLE
     }
 
     companion object {

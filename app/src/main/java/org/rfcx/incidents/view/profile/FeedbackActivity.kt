@@ -17,18 +17,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import kotlinx.android.synthetic.main.activity_feedback.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.databinding.ActivityFeedbackBinding
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.GalleryPermissions
+import org.rfcx.incidents.util.GlideV4ImageEngine
+import org.rfcx.incidents.util.ImageFileUtils
+import org.rfcx.incidents.util.ReportUtils
+import org.rfcx.incidents.util.Screen
 import java.io.File
 
 class FeedbackActivity : AppCompatActivity() {
+    lateinit var binding: ActivityFeedbackBinding
     private val feedbackViewModel: FeedbackViewModel by viewModel()
     private var imageFile: File? = null
     private val galleryPermissions by lazy { GalleryPermissions(this) }
@@ -39,13 +44,14 @@ class FeedbackActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_feedback)
+        binding = ActivityFeedbackBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupToolbar()
         setTextFrom()
         setupFeedbackImages()
 
-        feedbackEditText.addTextChangedListener(object : TextWatcher {
+        binding.feedbackEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0 != null) {
                     if (p0.isEmpty()) {
@@ -70,7 +76,7 @@ class FeedbackActivity : AppCompatActivity() {
     }
 
     private fun setupFeedbackImages() {
-        feedbackRecycler.apply {
+        binding.feedbackRecycler.apply {
             layoutManager = LinearLayoutManager(this@FeedbackActivity)
             adapter = feedbackImageAdapter
         }
@@ -172,30 +178,29 @@ class FeedbackActivity : AppCompatActivity() {
         val sendFeedbackView = findViewById<View>(R.id.sendFeedbackView)
         val contextView = findViewById<View>(R.id.content)
 
-        feedbackGroupView.visibility = View.GONE
-        feedbackProgressBar.visibility = View.VISIBLE
+        binding.feedbackGroupView.visibility = View.GONE
+        binding.feedbackProgressBar.visibility = View.VISIBLE
 
         setEnableSendFeedbackView(false)
         sendFeedbackView.hideKeyboard()
 
-        val feedbackInput = feedbackEditText.text.toString()
+        val feedbackInput = binding.feedbackEditText.text.toString()
         feedbackViewModel.saveDataInFirestore(pathListArray, feedbackInput, contextView)
 
         feedbackViewModel.statusToSaveData.observe(
-            this,
-            Observer {
-                if (it == "Success") {
-                    analytics.trackFeedbackSentEvent()
-                    val intent = Intent()
-                    setResult(ProfileFragment.RESULT_CODE, intent)
-                    finish()
-                } else if (it == "Fail") {
-                    setEnableSendFeedbackView()
-                    feedbackGroupView.visibility = View.VISIBLE
-                    feedbackProgressBar.visibility = View.INVISIBLE
-                }
+            this
+        ) {
+            if (it == "Success") {
+                analytics.trackFeedbackSentEvent()
+                val intent = Intent()
+                setResult(ProfileFragment.RESULT_CODE, intent)
+                finish()
+            } else if (it == "Fail") {
+                setEnableSendFeedbackView()
+                binding.feedbackGroupView.visibility = View.VISIBLE
+                binding.feedbackProgressBar.visibility = View.INVISIBLE
             }
-        )
+        }
     }
 
     private fun View.hideKeyboard() = this.let {
@@ -206,11 +211,11 @@ class FeedbackActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun setTextFrom() {
         val fromWho = feedbackViewModel.from()
-        fromEmailTextView.text = "${getString(R.string.from)} $fromWho"
+        binding.fromEmailTextView.text = "${getString(R.string.from)} $fromWho"
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
