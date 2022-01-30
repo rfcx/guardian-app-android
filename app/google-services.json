@@ -1,75 +1,107 @@
 {
   "project_info": {
-    "project_number": "443412271144",
-    "firebase_url": "https://rfcx-ranger.firebaseio.com",
-    "project_id": "rfcx-ranger",
-    "storage_bucket": "rfcx-ranger.appspot.com"
+	"project_number": "443412271144",
+	"firebase_url": "https://rfcx-ranger.firebaseio.com",
+	"project_id": "rfcx-ranger",
+	"storage_bucket": "rfcx-ranger.appspot.com"
   },
   "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443412271144:android:6a6390e527b4a6b8efe51d",
-        "android_client_info": {
-          "package_name": "org.rfcx.incidents"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
-        },
-        {
-          "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443412271144:android:aa35c1aca358e2ffefe51d",
-        "android_client_info": {
-          "package_name": "org.rfcx.incidents.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
-        },
-        {
-          "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    }
+	{
+	  "client_info": {
+		"mobilesdk_app_id": "1:443412271144:android:6a6390e527b4a6b8efe51d",
+		"android_client_info": {
+		  "package_name": "org.rfcx.incidents"
+		}
+	  },
+	  "oauth_client": [
+		{
+		  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+		  "client_type": 3
+		}
+	  ],
+	  "api_key": [
+		{
+		  "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
+		},
+		{
+		  "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+		}
+	  ],
+	  "services": {
+		"appinvite_service": {
+		  "other_platform_oauth_client": [
+			{
+			  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+			  "client_type": 3
+			}
+		  ]
+		}
+	  }
+	},
+	{
+	  "client_info": {
+		"mobilesdk_app_id": "1:443412271144:android:c2823d13f758ac81efe51d",
+		"android_client_info": {
+		  "package_name": "org.rfcx.incidents.staging"
+		}
+	  },
+	  "oauth_client": [
+		{
+		  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+		  "client_type": 3
+		}
+	  ],
+	  "api_key": [
+		{
+		  "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
+		},
+		{
+		  "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+		}
+	  ],
+	  "services": {
+		"appinvite_service": {
+		  "other_platform_oauth_client": [
+			{
+			  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+			  "client_type": 3
+			}
+		  ]
+		}
+	  }
+	},
+	{
+	  "client_info": {
+		"mobilesdk_app_id": "1:443412271144:android:aa35c1aca358e2ffefe51d",
+		"android_client_info": {
+		  "package_name": "org.rfcx.incidents.dev"
+		}
+	  },
+	  "oauth_client": [
+		{
+		  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+		  "client_type": 3
+		}
+	  ],
+	  "api_key": [
+		{
+		  "current_key": "AIzaSyAuSjZkgTgD-pMtrZqzUjTcqBtBaWv6IUM"
+		},
+		{
+		  "current_key": "AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s"
+		}
+	  ],
+	  "services": {
+		"appinvite_service": {
+		  "other_platform_oauth_client": [
+			{
+			  "client_id": "443412271144-u2rg4ja3r7njkaajdkvkepcl3bh3uajn.apps.googleusercontent.com",
+			  "client_type": 3
+			}
+		  ]
+		}
+	  }
+	}
   ],
   "configuration_version": "1"
 }
