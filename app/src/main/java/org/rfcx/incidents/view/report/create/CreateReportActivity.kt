@@ -19,18 +19,22 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_create_report.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ActivityCreateReportBinding
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
-import org.rfcx.incidents.util.*
-import java.util.*
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
+import org.rfcx.incidents.util.showToast
+import java.util.Date
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
@@ -51,6 +55,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         }
     }
 
+    lateinit var binding: ActivityCreateReportBinding
     private val viewModel: CreateReportViewModel by viewModel()
 
     private var passedChecks = ArrayList<Int>()
@@ -64,7 +69,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_report)
+        binding = ActivityCreateReportBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
         streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
@@ -81,7 +87,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         setupToolbar()
         handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 
-        createReportContainer.setOnTouchListener(object : View.OnTouchListener {
+        binding.createReportContainer.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 if (currentFocus != null) {
@@ -120,7 +126,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbarLayout)
+        setSupportActionBar(binding.toolbarLayout)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
@@ -329,7 +335,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     private fun startFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(createReportContainer.id, fragment)
+            .replace(binding.createReportContainer.id, fragment)
             .commit()
     }
 

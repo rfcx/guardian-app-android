@@ -15,9 +15,7 @@ import org.rfcx.incidents.view.map.MapViewModel
 import org.rfcx.incidents.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.GuardianGroupViewModel
-import org.rfcx.incidents.view.profile.PasswordChangeViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
-import org.rfcx.incidents.view.profile.editprofile.EditProfileViewModel
 import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
@@ -48,8 +46,6 @@ object UiModule {
         viewModel { ProfileViewModel(androidContext(), get(), get()) }
         viewModel { GuardianGroupViewModel(androidContext(), get(), get()) }
         viewModel { FeedbackViewModel(androidContext()) }
-        viewModel { PasswordChangeViewModel(get()) }
-        viewModel { EditProfileViewModel(androidContext(), get()) }
     }
 
     var loginModule = module {

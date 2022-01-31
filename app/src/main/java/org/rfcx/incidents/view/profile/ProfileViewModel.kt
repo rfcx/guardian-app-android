@@ -9,7 +9,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.getCoordinatesFormat
 import org.rfcx.incidents.util.getUserEmail
 import org.rfcx.incidents.util.logout
 
@@ -24,7 +23,6 @@ class ProfileViewModel(
     val appVersion = MutableLiveData<String>()
     val userName = MutableLiveData<String>()
     val sendToEmail = MutableLiveData<String>()
-    val formatCoordinates = MutableLiveData<String>()
     val showNotificationByEmail = MutableLiveData<Boolean>()
     val eventSubtitle = MutableLiveData<String>()
     val showSystemOptions = MutableLiveData<Boolean>()
@@ -38,7 +36,6 @@ class ProfileViewModel(
         appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
         userName.value = profileData.getUserNickname()
         sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
-        formatCoordinates.value = "${context.getCoordinatesFormat()}"
         showNotificationByEmail.value = context.getUserEmail() != ""
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
@@ -46,7 +43,6 @@ class ProfileViewModel(
 
     fun resumed() {
         updateEventSubtitle()
-        formatCoordinates.value = "${context.getCoordinatesFormat()}"
     }
 
     fun onLogout() {
