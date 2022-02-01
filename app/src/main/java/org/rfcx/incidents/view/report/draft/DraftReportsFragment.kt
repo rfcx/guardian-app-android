@@ -8,20 +8,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_draft_reports.*
-import kotlinx.android.synthetic.main.toolbar_project.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentDraftReportsBinding
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
+import org.rfcx.incidents.util.showToast
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
+    private var _binding: FragmentDraftReportsBinding? = null
+    private val binding get() = _binding!!
+
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: MainActivityViewModel by viewModel()
     private val reportsAdapter by lazy { DraftReportsAdapter(this) }
@@ -46,8 +53,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_draft_reports, container, false)
+        _binding = FragmentDraftReportsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,7 +62,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
         preferences = Preferences.getInstance(requireContext())
         val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
         setProjectTitle(viewModel.getProjectName(projectId))
-        changePageImageView.visibility = View.GONE
+        binding.toolbarLayout.changePageImageView.visibility = View.GONE
 
         setObserve()
         setRecyclerView()
@@ -63,24 +70,24 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     }
 
     private fun setRecyclerView() {
-        projectRecyclerView.apply {
+        binding.projectRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectAdapter
             projectAdapter.items = viewModel.getProjectsFromLocal()
         }
 
-        draftReportsRecyclerView.apply {
+        binding.draftReportsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = reportsAdapter
         }
     }
 
     private fun setOnClickListener() {
-        projectTitleLayout.setOnClickListener {
+        binding.toolbarLayout.projectTitleLayout.setOnClickListener {
             setOnClickProjectName()
         }
 
-        projectSwipeRefreshView.apply {
+        binding.projectSwipeRefreshView.apply {
             setOnRefreshListener {
                 isRefreshing = true
                 when {
@@ -106,22 +113,22 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             streams = viewModel.getStreamIdsInProjectId()
             val items = responses.sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
-            notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             reportsAdapter.items = items
         })
     }
 
     private fun setOnClickProjectName() {
-        if (projectRecyclerView.visibility == View.VISIBLE) {
-            expandMoreImageView.rotation = 0F
+        if (binding.projectRecyclerView.visibility == View.VISIBLE) {
+            binding.toolbarLayout.expandMoreImageView.rotation = 0F
             listener.showBottomAppBar()
-            projectRecyclerView.visibility = View.GONE
-            projectSwipeRefreshView.visibility = View.GONE
+            binding.projectRecyclerView.visibility = View.GONE
+            binding.projectSwipeRefreshView.visibility = View.GONE
         } else {
-            expandMoreImageView.rotation = 180F
+            binding.toolbarLayout.expandMoreImageView.rotation = 180F
             listener.hideBottomAppBar()
-            projectRecyclerView.visibility = View.VISIBLE
-            projectSwipeRefreshView.visibility = View.VISIBLE
+            binding.projectRecyclerView.visibility = View.VISIBLE
+            binding.projectSwipeRefreshView.visibility = View.VISIBLE
         }
     }
 
@@ -147,16 +154,16 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
             reportsAdapter.items = items
-            notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
     override fun onClicked(project: Project) {
-        expandMoreImageView.rotation = 0F
+        binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
         listener.showBottomAppBar()
-        projectRecyclerView.visibility = View.GONE
-        projectSwipeRefreshView.visibility = View.GONE
+        binding.projectRecyclerView.visibility = View.GONE
+        binding.projectSwipeRefreshView.visibility = View.GONE
         viewModel.setProjectSelected(project.id)
 
         when {
@@ -171,7 +178,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                     .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
                 reportsAdapter.items = items
-                notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+                binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }
         setProjectTitle(project.name)
@@ -182,7 +189,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     }
 
     private fun setProjectTitle(str: String) {
-        projectTitleTextView.text = str
+        binding.toolbarLayout.projectTitleTextView.text = str
     }
 
     companion object {

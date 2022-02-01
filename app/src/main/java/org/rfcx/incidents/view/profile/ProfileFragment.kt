@@ -109,6 +109,10 @@ class ProfileFragment : BaseFragment() {
             val intent = Intent(activity, FeedbackActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE)
         }
+
+        viewDataBinding.onClickLogout = View.OnClickListener {
+            profileViewModel.onLogout()
+        }
     }
 
     override fun onPause() {

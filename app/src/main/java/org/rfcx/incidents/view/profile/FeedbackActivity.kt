@@ -20,13 +20,13 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
 import org.rfcx.incidents.databinding.ActivityFeedbackBinding
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.GalleryPermissions
-import org.rfcx.incidents.util.GlideV4ImageEngine
 import org.rfcx.incidents.util.ImageFileUtils
 import org.rfcx.incidents.util.ReportUtils
 import org.rfcx.incidents.util.Screen
@@ -152,7 +152,7 @@ class FeedbackActivity : AppCompatActivity() {
                 .maxSelectable(remainingImage)
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 .thumbnailScale(0.85f)
-                .imageEngine(GlideV4ImageEngine())
+                .imageEngine(GlideEngine())
                 .theme(R.style.Matisse_Dracula)
                 .forResult(ReportUtils.REQUEST_GALLERY)
         } else {

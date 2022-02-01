@@ -1,16 +1,13 @@
 package org.rfcx.incidents.view.report.create.image
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.adapter_report_image.view.*
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
@@ -37,7 +34,6 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
         imagesSource = arrayListOf()
         var index = 0
         reportImages.forEach {
-            Log.d("setImages", "${it.remotePath}")
             if (it.remotePath != null) {
                 imagesSource.add(
                     RemoteImageItem(
@@ -129,22 +125,12 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             VIEW_TYPE_IMAGE -> {
-                val itemView = DataBindingUtil.inflate<AdapterReportImageBinding>(
-                    inflater,
-                    R.layout.adapter_report_image,
-                    parent,
-                    false
-                )
-                ReportImageAdapterViewHolder(itemView, onReportImageAdapterClickListener)
+                val binding = AdapterReportImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ReportImageAdapterViewHolder(binding, onReportImageAdapterClickListener)
             }
             VIEW_TYPE_ADD_IMAGE -> {
-                val itemView = DataBindingUtil.inflate<ItemAddImageReportBinding>(
-                    inflater,
-                    R.layout.item_add_image_report,
-                    parent,
-                    false
-                )
-                AddImageViewHolder(itemView, onReportImageAdapterClickListener)
+                val binding = ItemAddImageReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                AddImageViewHolder(binding, onReportImageAdapterClickListener)
             }
             else -> throw IllegalAccessException("View type $viewType not found.")
         }
@@ -173,8 +159,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
         val binding: AdapterReportImageBinding,
         private val onReportImageAdapterClickListener: OnReportImageAdapterClickListener?
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val imageReport = itemView.imageReport
-        private val progressBar = itemView.progressBarOfImageView
+        private val imageReport = binding.imageReport
+        private val progressBar = binding.progressBarOfImageView
 
         fun bind(imagePath: String, canDelete: Boolean) {
             val fromServer = imagePath.startsWith(BuildConfig.RANGER_API_BASE_URL)

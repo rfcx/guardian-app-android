@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_draft_reports.view.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemDraftReportsBinding
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.setDrawableImage
@@ -23,8 +23,8 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DraftReportsAdapter.ReportsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_draft_reports, parent, false)
-        return ReportsViewHolder(view)
+        val binding = ItemDraftReportsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ReportsViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DraftReportsAdapter.ReportsViewHolder, position: Int) {
@@ -33,11 +33,11 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
 
     override fun getItemCount(): Int = items.size
 
-    inner class ReportsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ReportsViewHolder(binding: ItemDraftReportsBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        private val guardianName = itemView.guardianNameTextView
-        private val dateTextView = itemView.dateTextView
-        private val actionImageView = itemView.actionImageView
+        private val guardianName = binding.guardianNameTextView
+        private val dateTextView = binding.dateTextView
+        private val actionImageView = binding.actionImageView
 
         fun bind(report: Response) {
             actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)

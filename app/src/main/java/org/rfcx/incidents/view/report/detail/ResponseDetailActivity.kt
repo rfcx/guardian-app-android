@@ -28,14 +28,9 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import kotlinx.android.synthetic.main.activity_response_detail.*
-import kotlinx.android.synthetic.main.activity_response_detail.attachImageRecycler
-import kotlinx.android.synthetic.main.activity_response_detail.noteTextView
-import kotlinx.android.synthetic.main.activity_response_detail.soundRecordProgressView
-import kotlinx.android.synthetic.main.fragment_assets.*
-import kotlinx.android.synthetic.main.widget_sound_record_progress.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ActivityResponseDetailBinding
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
@@ -61,6 +56,8 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    lateinit var binding: ActivityResponseDetailBinding
+
     private val analytics by lazy { Analytics(this) }
     private val viewModel: ResponseDetailViewModel by viewModel()
     private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
@@ -79,18 +76,20 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_token))
-        setContentView(R.layout.activity_response_detail)
+        binding = ActivityResponseDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         responseCoreId = intent?.getStringExtra(EXTRA_RESPONSE_CORE_ID)
         response = responseCoreId?.let { viewModel.getResponseByCoreId(it) }
         setupToolbar()
         setupRecordSoundProgressView()
 
-        answersRecyclerView.apply {
+        binding.answersRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = responseDetailAdapter
         }
 
-        attachImageRecycler.apply {
+        binding.attachImageRecycler.apply {
             adapter = reportImageAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
@@ -102,15 +101,15 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         response?.let { res ->
-            investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
+            binding.investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
             responseDetailAdapter.items = getMessageList(res.answers)
-            noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
-            noteTextView.text = getString(R.string.note, res.note)
+            binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
+            binding.noteTextView.text = getString(R.string.note, res.note)
             res.audioLocation?.let { path -> setAudio(path) }
-            soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
+            binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {
                 reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
-                assetsTextView.visibility =
+                binding.assetsTextView.visibility =
                     if (viewModel.getImagesByCoreId(it).isEmpty() && res.note == null && viewModel.getTrackingByCoreId(
                             it
                         ) == null
@@ -140,12 +139,12 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         recordFile = File(path)
 
         if (recordFile?.exists() == true) {
-            soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+            binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
         }
     }
 
     private fun setupRecordSoundProgressView() {
-        soundRecordProgressView.onStateChangeListener = { state ->
+        binding.soundRecordProgressView.onStateChangeListener = { state ->
             when (state) {
                 SoundRecordState.NONE -> {
                     recordFile?.deleteOnExit()
@@ -156,17 +155,18 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 SoundRecordState.STOP_PLAYING -> {
                     stopPlaying()
-                    cancelButton.visibility = View.GONE
                 }
-                SoundRecordState.RECORDING -> {}
-                SoundRecordState.STOPPED_RECORD -> {}
+                SoundRecordState.RECORDING -> {
+                }
+                SoundRecordState.STOPPED_RECORD -> {
+                }
             }
         }
     }
 
     private fun startPlaying() {
         if (recordFile == null) {
-            soundRecordProgressView.state = SoundRecordState.NONE
+            binding.soundRecordProgressView.state = SoundRecordState.NONE
             return
         }
         player = MediaPlayer().apply {
@@ -175,11 +175,11 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 prepare()
                 start()
                 setOnCompletionListener {
-                    soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+                    binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
                 }
             } catch (e: IOException) {
-                soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-                Snackbar.make(assetsView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+                binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+                Snackbar.make(binding.guardianListScrollView, R.string.error_common, Snackbar.LENGTH_LONG).show()
                 e.printStackTrace()
             }
         }
@@ -285,7 +285,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbarLayout)
+        setSupportActionBar(binding.toolbarLayout)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)

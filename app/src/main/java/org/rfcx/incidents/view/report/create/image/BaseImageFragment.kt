@@ -5,13 +5,20 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import kotlinx.android.synthetic.main.buttom_sheet_attach_image_layout.view.*
+import com.zhihu.matisse.engine.impl.GlideEngine
 import org.rfcx.incidents.R
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.databinding.ButtomSheetAttachImageLayoutBinding
+import org.rfcx.incidents.util.CameraPermissions
+import org.rfcx.incidents.util.GalleryPermissions
+import org.rfcx.incidents.util.ImageFileUtils
+import org.rfcx.incidents.util.ReportUtils
 import org.rfcx.incidents.view.base.BaseFragment
 import java.io.File
 
@@ -20,6 +27,8 @@ import java.io.File
  */
 
 abstract class BaseImageFragment : BaseFragment() {
+    private var _binding: ButtomSheetAttachImageLayoutBinding? = null
+    private val binding get() = _binding!!
 
     protected abstract fun didAddImages(imagePaths: List<String>)
     protected abstract fun didRemoveImage(imagePath: String)
@@ -36,6 +45,11 @@ abstract class BaseImageFragment : BaseFragment() {
 
         setupAttachImageDialog()
         setupReportImages()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = ButtomSheetAttachImageLayoutBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -63,17 +77,16 @@ abstract class BaseImageFragment : BaseFragment() {
     }
 
     private fun setupAttachImageDialog() {
-        val bottomSheetView = layoutInflater.inflate(R.layout.buttom_sheet_attach_image_layout, null)
 
-        bottomSheetView.menuGallery.setOnClickListener {
+        binding.menuGallery.setOnClickListener {
             openGallery()
         }
 
-        bottomSheetView.menuTakePhoto.setOnClickListener {
+        binding.menuTakePhoto.setOnClickListener {
             takePhoto()
         }
         attachImageDialog = BottomSheetDialog(requireContext())
-        attachImageDialog.setContentView(bottomSheetView)
+        attachImageDialog.setContentView(binding.root)
     }
 
     private fun dismissImagePickerOptionsDialog() {
@@ -135,7 +148,7 @@ abstract class BaseImageFragment : BaseFragment() {
             .maxSelectable(remainingImage)
             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .thumbnailScale(0.85f)
-            .imageEngine(GlideV4ImageEngine())
+            .imageEngine(GlideEngine())
             .theme(R.style.Matisse_Dracula)
             .forResult(ReportUtils.REQUEST_GALLERY)
     }

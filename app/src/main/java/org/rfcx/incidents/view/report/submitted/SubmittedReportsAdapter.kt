@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_submitted_reports.view.*
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemSubmittedReportsBinding
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.response.syncImage
@@ -24,8 +24,8 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmittedReportsAdapter.ReportsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_submitted_reports, parent, false)
-        return ReportsViewHolder(view)
+        val binding = ItemSubmittedReportsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ReportsViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SubmittedReportsAdapter.ReportsViewHolder, position: Int) {
@@ -34,12 +34,12 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
 
     override fun getItemCount(): Int = items.size
 
-    inner class ReportsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val guardianName = itemView.guardianNameTextView
-        private val dateTextView = itemView.dateTextView
-        private val reportIdTextView = itemView.reportIdTextView
-        private val syncLabelTextView = itemView.syncLabelTextView
-        private val actionImageView = itemView.actionImageView
+    inner class ReportsViewHolder(binding: ItemSubmittedReportsBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val guardianName = binding.guardianNameTextView
+        private val dateTextView = binding.dateTextView
+        private val reportIdTextView = binding.reportIdTextView
+        private val syncLabelTextView = binding.syncLabelTextView
+        private val actionImageView = binding.actionImageView
 
         fun bind(report: Response) {
             setClickable(itemView, report.syncState != SyncState.SENT.value)
