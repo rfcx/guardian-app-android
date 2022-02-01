@@ -11,14 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_investigation_timestamp.*
 import org.rfcx.incidents.R
-import org.rfcx.incidents.util.*
+import org.rfcx.incidents.databinding.FragmentInvestigationTimestampBinding
+import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.getDay
+import org.rfcx.incidents.util.getMonth
+import org.rfcx.incidents.util.getYear
+import org.rfcx.incidents.util.showToast
+import org.rfcx.incidents.util.toShortDateString
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Calendar
 
 class InvestigationTimestampFragment : Fragment() {
-    private val analytics by lazy { context?.let { Analytics(it) } }
+    private var _binding: FragmentInvestigationTimestampBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: CreateReportListener
     private var minutePicker: NumberPicker? = null
 
@@ -29,6 +36,8 @@ class InvestigationTimestampFragment : Fragment() {
     private val yesterday = Calendar.getInstance().also {
         it.add(Calendar.DATE, -1)
     }
+
+    private val analytics by lazy { context?.let { Analytics(it) } }
 
     override fun onResume() {
         super.onResume()
@@ -44,15 +53,20 @@ class InvestigationTimestampFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_investigation_timestamp, container, false)
+    ): View {
+        _binding = FragmentInvestigationTimestampBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInvestigatedAt()
-        timePicker.setIs24HourView(true)
+        binding.timePicker.setIs24HourView(true)
         setMinutePicker()
         setDatePicker()
         setupOnListener()
@@ -62,22 +76,22 @@ class InvestigationTimestampFragment : Fragment() {
         val response = listener.getResponse()
         response?.let { res ->
             calendar.time = res.investigatedAt
-            nextStepButton.isEnabled = true
+            binding.nextStepButton.isEnabled = true
 
             if (DateUtils.isToday(res.investigatedAt.time)) {
-                todayRadioButton.isChecked = true
+                binding.todayRadioButton.isChecked = true
             } else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
-                yesterdayRadioButton.isChecked = true
+                binding.yesterdayRadioButton.isChecked = true
             } else {
-                earlierRadioButton.text = calendar.time.toShortDateString()
-                earlierRadioButton.isChecked = true
+                binding.earlierRadioButton.text = calendar.time.toShortDateString()
+                binding.earlierRadioButton.isChecked = true
                 setShowEdit()
             }
         }
     }
 
     private fun setupOnListener() {
-        nextStepButton.setOnClickListener {
+        binding.nextStepButton.setOnClickListener {
             if (calendar.time > today.time) {
                 context?.showToast(getString(R.string.do_not_future_time))
             } else {
@@ -86,13 +100,13 @@ class InvestigationTimestampFragment : Fragment() {
             }
         }
 
-        timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
+        binding.timePicker.setOnTimeChangedListener { view, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute * TIME_PICKER_INTERVAL)
         }
 
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            nextStepButton.isEnabled = true
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            binding.nextStepButton.isEnabled = true
 
             when (checkedId) {
                 R.id.todayRadioButton -> {
@@ -115,80 +129,79 @@ class InvestigationTimestampFragment : Fragment() {
             earlier.set(Calendar.MONTH, monthOfYear)
             earlier.set(Calendar.YEAR, year)
             setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
-            earlierRadioButton.text = calendar.time.toShortDateString()
+            binding.earlierRadioButton.text = calendar.time.toShortDateString()
             setShowEdit()
         }, date.getYear(), date.getMonth(), date.getDay())
 
-                    datePicker.datePicker.maxDate = today.timeInMillis
-                    datePicker.setOnCancelListener {
-                        if (earlierRadioButton.text == requireContext().getString(R.string.other_date)) {
-                            radioGroup.clearCheck()
-                            nextStepButton.isEnabled = false
-                        }
-                        setShowEdit()
-                    }
-
-                    earlierRadioButton.setOnClickListener {
-                        datePicker.show()
-                    }
-                }
-
-                private fun setShowEdit() {
-                    editTextView.visibility =
-                        if (earlierRadioButton.text == requireContext().getString(R.string.other_date)) View.GONE else View.VISIBLE
-                }
-
-                private fun setMinutePicker() {
-                    val numValues = 60 / TIME_PICKER_INTERVAL
-                    val displayedValues = arrayOfNulls<String>(numValues)
-                    for (i in 0 until numValues) {
-                        displayedValues[i] = DecimalFormat("00").format(i * TIME_PICKER_INTERVAL)
-                    }
-
-                    val minute =
-                        timePicker?.findViewById<NumberPicker>(Resources.getSystem().getIdentifier("minute", "id", "android"))
-                    if (minute != null) {
-                        minutePicker = minute.also {
-                            it.minValue = 0
-                            it.maxValue = numValues - 1
-                            it.displayedValues = displayedValues
-                        }
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        timePicker?.hour = calendar.get(Calendar.HOUR_OF_DAY)
-                        timePicker?.minute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
-                    } else {
-                        timePicker?.currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-                        timePicker?.currentMinute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
-                    }
-                }
-
-                private fun setCalendar(hour: Int, minute: Int, dayOfMonth: Int, monthOfYear: Int, year: Int) {
-                    calendar.set(Calendar.YEAR, year)
-                    calendar.set(Calendar.HOUR_OF_DAY, hour)
-                    calendar.set(Calendar.MINUTE, minute)
-                    calendar.set(Calendar.MONTH, monthOfYear)
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                }
-
-                private fun getMinute(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    timePicker.minute * TIME_PICKER_INTERVAL
-                } else {
-                    timePicker.currentMinute * TIME_PICKER_INTERVAL
-                }
-
-                private fun getHour(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    timePicker.hour
-                } else {
-                    timePicker.currentHour
-                }
-
-                companion object {
-                    const val TIME_PICKER_INTERVAL = 15
-
-                    @JvmStatic
-                    fun newInstance() = InvestigationTimestampFragment()
-                }
+        datePicker.datePicker.maxDate = today.timeInMillis
+        datePicker.setOnCancelListener {
+            if (binding.earlierRadioButton.text == requireContext().getString(R.string.other_date)) {
+                binding.radioGroup.clearCheck()
+                binding.nextStepButton.isEnabled = false
             }
-            
+            setShowEdit()
+        }
+
+        binding.earlierRadioButton.setOnClickListener {
+            datePicker.show()
+        }
+    }
+
+    private fun setShowEdit() {
+        binding.editTextView.visibility =
+            if (binding.earlierRadioButton.text == requireContext().getString(R.string.other_date)) View.GONE else View.VISIBLE
+    }
+
+    private fun setMinutePicker() {
+        val numValues = 60 / TIME_PICKER_INTERVAL
+        val displayedValues = arrayOfNulls<String>(numValues)
+        for (i in 0 until numValues) {
+            displayedValues[i] = DecimalFormat("00").format(i * TIME_PICKER_INTERVAL)
+        }
+
+        val minute =
+            binding.timePicker.findViewById<NumberPicker>(Resources.getSystem().getIdentifier("minute", "id", "android"))
+        if (minute != null) {
+            minutePicker = minute.also {
+                it.minValue = 0
+                it.maxValue = numValues - 1
+                it.displayedValues = displayedValues
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            binding.timePicker.hour = calendar.get(Calendar.HOUR_OF_DAY)
+            binding.timePicker.minute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
+        } else {
+            binding.timePicker.currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+            binding.timePicker.currentMinute = calendar.get(Calendar.MINUTE) / TIME_PICKER_INTERVAL
+        }
+    }
+
+    private fun setCalendar(hour: Int, minute: Int, dayOfMonth: Int, monthOfYear: Int, year: Int) {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.HOUR_OF_DAY, hour)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.MONTH, monthOfYear)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+    }
+
+    private fun getMinute(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        binding.timePicker.minute * TIME_PICKER_INTERVAL
+    } else {
+        binding.timePicker.currentMinute * TIME_PICKER_INTERVAL
+    }
+
+    private fun getHour(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        binding.timePicker.hour
+    } else {
+        binding.timePicker.currentHour
+    }
+
+    companion object {
+        const val TIME_PICKER_INTERVAL = 15
+
+        @JvmStatic
+        fun newInstance() = InvestigationTimestampFragment()
+    }
+}

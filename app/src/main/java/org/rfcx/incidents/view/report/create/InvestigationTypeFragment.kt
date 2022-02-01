@@ -6,16 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_investigation_type.*
-import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentInvestigationTypeBinding
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 
 class InvestigationTypeFragment : Fragment() {
-    private val analytics by lazy { context?.let { Analytics(it) } }
+    private var _binding: FragmentInvestigationTypeBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
+    private val analytics by lazy { context?.let { Analytics(it) } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -31,8 +32,14 @@ class InvestigationTypeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_investigation_type, container, false)
+    ): View {
+        _binding = FragmentInvestigationTypeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,15 +47,15 @@ class InvestigationTypeFragment : Fragment() {
         setOnChange()
         setupInvestigateType()
 
-        nextStepButton.setOnClickListener {
+        binding.nextStepButton.setOnClickListener {
             selected.clear()
-            if (loggingCheckBox.isChecked) {
+            if (binding.loggingCheckBox.isChecked) {
                 selected.add(InvestigationType.LOGGING.value)
             }
-            if (poachingCheckBox.isChecked) {
+            if (binding.poachingCheckBox.isChecked) {
                 selected.add(InvestigationType.POACHING.value)
             }
-            if (otherCheckBox.isChecked) {
+            if (binding.otherCheckBox.isChecked) {
                 selected.add(InvestigationType.OTHER.value)
             }
             listener.setInvestigateType(selected)
@@ -71,7 +78,7 @@ class InvestigationTypeFragment : Fragment() {
         val response = listener.getResponse()
         response?.let { res ->
             selected.addAll(res.investigateType)
-            nextStepButton.isEnabled = selected.isNotEmpty()
+            binding.nextStepButton.isEnabled = selected.isNotEmpty()
             setSelected()
         }
     }
@@ -79,29 +86,29 @@ class InvestigationTypeFragment : Fragment() {
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {
-                InvestigationType.LOGGING.value -> loggingCheckBox.isChecked = true
-                InvestigationType.POACHING.value -> poachingCheckBox.isChecked = true
-                InvestigationType.OTHER.value -> otherCheckBox.isChecked = true
+                InvestigationType.LOGGING.value -> binding.loggingCheckBox.isChecked = true
+                InvestigationType.POACHING.value -> binding.poachingCheckBox.isChecked = true
+                InvestigationType.OTHER.value -> binding.otherCheckBox.isChecked = true
             }
         }
     }
 
     private fun setOnChange() {
-        loggingCheckBox.setOnClickListener {
+        binding.loggingCheckBox.setOnClickListener {
             setEnabled()
         }
-        poachingCheckBox.setOnClickListener {
+        binding.poachingCheckBox.setOnClickListener {
             setEnabled()
         }
-        otherCheckBox.setOnClickListener {
+        binding.otherCheckBox.setOnClickListener {
             setEnabled()
         }
     }
 
     private fun setEnabled() {
         selected.clear()
-        nextStepButton.isEnabled = loggingCheckBox.isChecked ||
-            poachingCheckBox.isChecked || otherCheckBox.isChecked
+        binding.nextStepButton.isEnabled = binding.loggingCheckBox.isChecked ||
+            binding.poachingCheckBox.isChecked || binding.otherCheckBox.isChecked
     }
 
     companion object {

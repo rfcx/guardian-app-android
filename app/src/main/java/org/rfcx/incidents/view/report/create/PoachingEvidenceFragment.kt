@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_evidence.nextStepButton
-import kotlinx.android.synthetic.main.fragment_poaching_evidence.*
-import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.FragmentPoachingEvidenceBinding
 import org.rfcx.incidents.entity.response.PoachingEvidence
 
 class PoachingEvidenceFragment : Fragment() {
-
+    private var _binding: FragmentPoachingEvidenceBinding? = null
+    private val binding get() = _binding!!
     lateinit var listener: CreateReportListener
     private var selected = ArrayList<Int>()
 
@@ -25,9 +24,14 @@ class PoachingEvidenceFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_poaching_evidence, container, false)
+    ): View {
+        _binding = FragmentPoachingEvidenceBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +39,7 @@ class PoachingEvidenceFragment : Fragment() {
         setOnChange()
         setupPoachingEvidence()
 
-        nextStepButton.setOnClickListener {
+        binding.nextStepButton.setOnClickListener {
             setSelect()
         }
     }
@@ -44,29 +48,29 @@ class PoachingEvidenceFragment : Fragment() {
         val response = listener.getResponse()
         response?.let { res ->
             selected.addAll(res.poachingEvidence)
-            nextStepButton.isEnabled = selected.isNotEmpty()
+            binding.nextStepButton.isEnabled = selected.isNotEmpty()
             setSelected()
         }
     }
 
     private fun setOnChange() {
-        bulletShellsCheckBox.setOnClickListener {
+        binding.bulletShellsCheckBox.setOnClickListener {
             setSelectedNone(false)
             setEnabled()
         }
-        footprintsCheckBox.setOnClickListener {
+        binding.footprintsCheckBox.setOnClickListener {
             setSelectedNone(false)
             setEnabled()
         }
-        dogTracksCheckBox.setOnClickListener {
+        binding.dogTracksCheckBox.setOnClickListener {
             setSelectedNone(false)
             setEnabled()
         }
-        otherSpecifyCheckBox.setOnClickListener {
+        binding.otherSpecifyCheckBox.setOnClickListener {
             setSelectedNone(false)
             setEnabled()
         }
-        noneCheckBox.setOnClickListener {
+        binding.noneCheckBox.setOnClickListener {
             setSelectedNone(true)
             setEnabled()
         }
@@ -74,26 +78,26 @@ class PoachingEvidenceFragment : Fragment() {
 
     private fun setEnabled() {
         selected.clear()
-        nextStepButton.isEnabled = bulletShellsCheckBox.isChecked ||
-            footprintsCheckBox.isChecked || dogTracksCheckBox.isChecked ||
-            otherSpecifyCheckBox.isChecked || noneCheckBox.isChecked
+        binding.nextStepButton.isEnabled = binding.bulletShellsCheckBox.isChecked ||
+            binding.footprintsCheckBox.isChecked || binding.dogTracksCheckBox.isChecked ||
+            binding.otherSpecifyCheckBox.isChecked || binding.noneCheckBox.isChecked
     }
 
     private fun setSelect() {
         selected.clear()
-        if (bulletShellsCheckBox.isChecked) {
+        if (binding.bulletShellsCheckBox.isChecked) {
             selected.add(PoachingEvidence.BULLET_SHELLS.value)
         }
-        if (footprintsCheckBox.isChecked) {
+        if (binding.footprintsCheckBox.isChecked) {
             selected.add(PoachingEvidence.FOOTPRINTS.value)
         }
-        if (dogTracksCheckBox.isChecked) {
+        if (binding.dogTracksCheckBox.isChecked) {
             selected.add(PoachingEvidence.DOG_TRACKS.value)
         }
-        if (otherSpecifyCheckBox.isChecked) {
+        if (binding.otherSpecifyCheckBox.isChecked) {
             selected.add(PoachingEvidence.OTHER.value)
         }
-        if (noneCheckBox.isChecked) {
+        if (binding.noneCheckBox.isChecked) {
             selected.add(PoachingEvidence.NONE.value)
         }
         listener.setPoachingEvidence(selected)
@@ -102,23 +106,23 @@ class PoachingEvidenceFragment : Fragment() {
 
     private fun setSelectedNone(isNone: Boolean) {
         if (isNone) {
-            bulletShellsCheckBox.isChecked = false
-            footprintsCheckBox.isChecked = false
-            dogTracksCheckBox.isChecked = false
-            otherSpecifyCheckBox.isChecked = false
-            otherSpecifyCheckBox.isChecked = false
+            binding.bulletShellsCheckBox.isChecked = false
+            binding.footprintsCheckBox.isChecked = false
+            binding.dogTracksCheckBox.isChecked = false
+            binding.otherSpecifyCheckBox.isChecked = false
+            binding.otherSpecifyCheckBox.isChecked = false
         }
-        noneCheckBox.isChecked = isNone
+        binding.noneCheckBox.isChecked = isNone
     }
 
     private fun setSelected() {
         selected.forEach { id ->
             when (id) {
-                PoachingEvidence.BULLET_SHELLS.value -> bulletShellsCheckBox.isChecked = true
-                PoachingEvidence.FOOTPRINTS.value -> footprintsCheckBox.isChecked = true
-                PoachingEvidence.DOG_TRACKS.value -> dogTracksCheckBox.isChecked = true
-                PoachingEvidence.OTHER.value -> otherSpecifyCheckBox.isChecked = true
-                PoachingEvidence.NONE.value -> noneCheckBox.isChecked = true
+                PoachingEvidence.BULLET_SHELLS.value -> binding.bulletShellsCheckBox.isChecked = true
+                PoachingEvidence.FOOTPRINTS.value -> binding.footprintsCheckBox.isChecked = true
+                PoachingEvidence.DOG_TRACKS.value -> binding.dogTracksCheckBox.isChecked = true
+                PoachingEvidence.OTHER.value -> binding.otherSpecifyCheckBox.isChecked = true
+                PoachingEvidence.NONE.value -> binding.noneCheckBox.isChecked = true
             }
         }
     }
