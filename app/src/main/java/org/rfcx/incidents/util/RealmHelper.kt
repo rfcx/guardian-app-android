@@ -16,14 +16,14 @@ class RealmHelper {
             return RealmConfiguration.Builder().apply {
                 schemaVersion(schemaVersion)
                 migration(RangerRealmMigration())
-            }.build()
+            }.allowWritesOnUiThread(true).build()
         }
 
         fun fallbackConfig(): RealmConfiguration {
             return RealmConfiguration.Builder().apply {
                 schemaVersion(schemaVersion)
                 deleteRealmIfMigrationNeeded()
-            }.build()
+            }.allowWritesOnUiThread(true).build()
         }
     }
 }
