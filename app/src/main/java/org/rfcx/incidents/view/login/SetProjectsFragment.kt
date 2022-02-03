@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.databinding.FragmentSetProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
@@ -33,7 +34,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
     private val viewModel: SetProjectsViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
-    private var subscribedProjects: ArrayList<String> = arrayListOf()
+    private var subscribedProjectIds: ArrayList<String> = arrayListOf()
 
     private val analytics by lazy { context?.let { Analytics(it) } }
 
@@ -78,12 +79,16 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
         binding.selectProjectButton.text = getString(R.string.skip)
 
         binding.selectProjectButton.setOnClickListener {
+            // TODO move to ViewModel and rewrite to avoid array of strings
             val preferences = Preferences.getInstance(requireContext())
-            val projectCoreId =
-                if (subscribedProjects.isEmpty()) viewModel.getProjectsFromLocal().map { p -> p.serverId ?: "" }
-                    .random() else subscribedProjects.random()
-            val id = viewModel.getProjectLocalIdByCoreId(projectCoreId)
-            preferences.putInt(Preferences.SELECTED_PROJECT, id)
+            val projects = viewModel.projects.value
+            if (projects != null && projects is Result.Success) {
+                val projectIdString =
+                    if (!subscribedProjectIds.isEmpty()) subscribedProjectIds.random()
+                    else projects.data.map { p -> p.serverId ?: "" }.random()
+                val selectedProject = projects.data.find { p -> p.serverId == projectIdString }
+                preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject?.id ?: -1)
+            }
             listener.handleOpenPage()
         }
 
@@ -100,10 +105,10 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
     }
 
     private fun setObserver() {
-        viewModel.projects.observe(viewLifecycleOwner) {
-            it.success({
+        viewModel.projects.observe(viewLifecycleOwner) { result ->
+            result.success({ projects ->
                 binding.projectSwipeRefreshView.isRefreshing = false
-                if (viewModel.getProjectsFromLocal().isEmpty()) {
+                if (projects.isEmpty()) {
                     binding.noContentTextView.visibility = View.VISIBLE
                     binding.refreshButton.visibility = View.VISIBLE
                     binding.logoutButton.visibility = View.VISIBLE
@@ -114,7 +119,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     binding.logoutButton.visibility = View.GONE
                     binding.selectProjectButton.visibility = View.VISIBLE
                 }
-                projectsItem = viewModel.getProjectsFromLocal().map { project ->
+                projectsItem = projects.map { project ->
                     ProjectsItem(
                         project,
                         getSubscribedProject()?.contains(project.serverId)
@@ -156,13 +161,13 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     setSelectedProject(items, position)
                     showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
                 } else {
-                    saveSubscribedProject(subscribedProjects)
-                    subscribedProjects.remove(item.project.serverId ?: "")
+                    saveSubscribedProject(subscribedProjectIds)
+                    subscribedProjectIds.remove(item.project.serverId ?: "")
                     binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)
                 }
                 binding.selectProjectButton.text =
-                    if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
+                    if (subscribedProjectIds.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
             }
         } else {
             viewModel.setProjectsAndSubscribe(item.project) { status ->
@@ -171,13 +176,13 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     setSelectedProject(items, position)
                     showToast(getString(R.string.failed_receive_notification, item.project.name))
                 } else {
-                    subscribedProjects.add(item.project.serverId ?: "")
-                    saveSubscribedProject(subscribedProjects)
+                    subscribedProjectIds.add(item.project.serverId ?: "")
+                    saveSubscribedProject(subscribedProjectIds)
                     binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)
                 }
                 binding.selectProjectButton.text =
-                    if (subscribedProjects.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
+                    if (subscribedProjectIds.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
             }
         }
     }

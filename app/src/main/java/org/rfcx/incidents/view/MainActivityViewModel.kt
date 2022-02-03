@@ -7,9 +7,8 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.project.GetProjectsOptions
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
-import org.rfcx.incidents.data.api.project.ProjectResponse
-import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.entity.Stream
@@ -26,7 +25,7 @@ class MainActivityViewModel(
     private val responseDb: ResponseDb,
     private val projectDb: ProjectDb,
     private val streamDb: StreamDb,
-    private val getProjects: GetProjectsUseCase,
+    private val getProjectsUseCase: GetProjectsUseCase,
     credentialKeeper: CredentialKeeper
 ) : ViewModel() {
 
@@ -58,20 +57,17 @@ class MainActivityViewModel(
         ?: context.getString(R.string.all_projects)
 
     fun fetchProjects() {
-        getProjects.execute(
-            object : DisposableSingleObserver<List<ProjectResponse>>() {
-                override fun onSuccess(t: List<ProjectResponse>) {
-                    t.map {
-                        projectDb.insertOrUpdate(it)
-                    }
-                    _projects.value = Result.Success(listOf())
+        getProjectsUseCase.execute(
+            object : DisposableSingleObserver<List<Project>>() {
+                override fun onSuccess(t: List<Project>) {
+                    _projects.value = Result.Success(t)
                 }
 
                 override fun onError(e: Throwable) {
                     _projects.value = Result.Error(e)
                 }
             },
-            ProjectsRequestFactory()
+            GetProjectsOptions()
         )
     }
 

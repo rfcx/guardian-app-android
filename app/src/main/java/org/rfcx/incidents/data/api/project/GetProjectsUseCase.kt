@@ -4,13 +4,17 @@ import io.reactivex.Single
 import org.rfcx.incidents.data.remote.domain.SingleUseCase
 import org.rfcx.incidents.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.incidents.data.remote.domain.executor.ThreadExecutor
+import org.rfcx.incidents.entity.project.Project
 
 class GetProjectsUseCase(
-    private val repository: GetProjectsRepository,
+    private val repository: ProjectsRepository,
     threadExecutor: ThreadExecutor,
     postExecutionThread: PostExecutionThread
-) : SingleUseCase<ProjectsRequestFactory, List<ProjectResponse>>(threadExecutor, postExecutionThread) {
-    override fun buildUseCaseObservable(params: ProjectsRequestFactory): Single<List<ProjectResponse>> {
-        return repository.getProjects(params)
+) : SingleUseCase<GetProjectsOptions, List<Project>>(threadExecutor, postExecutionThread) {
+
+    override fun buildUseCaseObservable(options: GetProjectsOptions): Single<List<Project>> {
+        return repository.getProjects(options)
     }
 }
+
+

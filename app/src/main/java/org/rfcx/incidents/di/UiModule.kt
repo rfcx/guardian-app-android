@@ -14,8 +14,8 @@ import org.rfcx.incidents.view.map.MapDetailViewModel
 import org.rfcx.incidents.view.map.MapViewModel
 import org.rfcx.incidents.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
-import org.rfcx.incidents.view.profile.GuardianGroupViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
+import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
 import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
@@ -26,7 +26,7 @@ object UiModule {
     }
 
     val eventsModule = module {
-        viewModel { EventsViewModel(androidContext(), get(), get(), get(), get()) }
+        viewModel { EventsViewModel(androidContext(), get(), get(), get()) }
         viewModel { AlertDetailViewModel(androidContext(), get(), get(), get()) }
         viewModel { GuardianEventDetailViewModel(get(), get(), get(), get()) }
     }
@@ -44,13 +44,13 @@ object UiModule {
 
     val profileModule = module {
         viewModel { ProfileViewModel(androidContext(), get(), get()) }
-        viewModel { GuardianGroupViewModel(androidContext(), get(), get()) }
+        viewModel { SubscribeProjectsViewModel(androidContext(), get()) }
         viewModel { FeedbackViewModel(androidContext()) }
     }
 
     var loginModule = module {
         viewModel { LoginViewModel(androidContext(), get()) }
         viewModel { SetUserNameViewModel(androidContext(), get()) }
-        viewModel { SetProjectsViewModel(androidContext(), get(), get()) }
+        viewModel { SetProjectsViewModel(androidContext(), get()) }
     }
 }

@@ -3,18 +3,16 @@ package org.rfcx.incidents.view.events
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.R
+import org.rfcx.incidents.data.api.project.GetProjectsOptions
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
-import org.rfcx.incidents.data.api.project.ProjectResponse
-import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.api.streams.GetStreamsUseCase
 import org.rfcx.incidents.data.api.streams.StreamResponse
-import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
@@ -25,8 +23,7 @@ import org.rfcx.incidents.util.isNetworkAvailable
 
 class EventsViewModel(
     private val context: Context,
-    private val getProjects: GetProjectsUseCase,
-    private val projectDb: ProjectDb,
+    private val getProjectsUseCase: GetProjectsUseCase,
     private val trackingDb: TrackingDb,
     private val getStreams: GetStreamsUseCase
 ) : ViewModel() {
@@ -34,51 +31,75 @@ class EventsViewModel(
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val projects: LiveData<Result<List<Project>>> get() = _projects
 
+    private val _selectedProjectId = MutableLiveData<Int>()
+    val selectedProject = MediatorLiveData<Result<Project>>()
+
     private val _streams = MutableLiveData<Result<List<StreamResponse>>>()
     val streams: LiveData<Result<List<StreamResponse>>> get() = _streams
 
-    var isLoadMore = false
+    var isLoadingMore = false
 
-    fun loadMoreEvents() {
-        isLoadMore = true
+    init {
+        selectedProject.addSource(_projects) { result ->
+            when (result) {
+                is Result.Loading -> Result.Loading
+                is Result.Error -> Result.Error(result.throwable)
+                is Result.Success -> {
+                    val project = result.data.find { project -> project.id == _selectedProjectId.value }
+                    if (project != null) {
+                        Result.Success(project)
+                    } else {
+                        Result.Error(Error())
+                    }
+                }
+            }
+        }
+        selectedProject.addSource(_selectedProjectId) { result ->
+            val projects = _projects.value
+            when (projects) {
+                is Result.Loading -> Result.Loading
+                is Result.Error -> Result.Error(projects.throwable)
+                is Result.Success -> {
+                    val project = projects.data.find { project -> project.id == result }
+                    if (project != null) {
+                        Result.Success(project)
+                    } else {
+                        Result.Error(Error())
+                    }
+                }
+                else -> Result.Error(Error())
+            }
+        }
+        _selectedProjectId.value = Preferences.getInstance(context).getInt(Preferences.SELECTED_PROJECT, -1)
     }
 
-    fun getTrackingFromLocal(): LiveData<List<Tracking>> {
-        return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }
+    fun selectProject(id: Int) {
+        val preferences = Preferences.getInstance(context)
+        preferences.putInt(Preferences.SELECTED_PROJECT, id)
+        _selectedProjectId.value = id
     }
 
     fun refreshProjects() {
-        if (context.isNetworkAvailable()) {
-            getProjects.execute(
-                object : DisposableSingleObserver<List<ProjectResponse>>() {
-                    override fun onSuccess(t: List<ProjectResponse>) {
-                        t.map {
-                            projectDb.insertOrUpdate(it)
-                        }
-                        _projects.value = Result.Success(listOf())
-                    }
+        if (!context.isNetworkAvailable()) return
 
-                    override fun onError(e: Throwable) {
-                        _projects.value = Result.Error(e)
-                    }
-                },
-                ProjectsRequestFactory()
-            )
-        }
-    }
+        getProjectsUseCase.execute(
+            object : DisposableSingleObserver<List<Project>>() {
+                override fun onSuccess(t: List<Project>) {
+                    _projects.value = Result.Success(t)
+                }
 
-    fun getProjects(): List<Project> {
-        return projectDb.getProjects()
-    }
-
-    fun getProjectName(id: Int): String = getProject(id)?.name
-        ?: context.getString(R.string.all_projects)
-
-    fun getProject(id: Int): Project? {
-        return projectDb.getProjectById(id)
+                override fun onError(e: Throwable) {
+                    _projects.value = Result.Error(e)
+                }
+            },
+            GetProjectsOptions()
+        )
     }
 
     fun refreshStreams() {
+    }
+
+    fun loadMoreStreams() {
     }
 
     fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
@@ -86,11 +107,10 @@ class EventsViewModel(
         preferences.putLong(Preferences.LATEST_CURRENT_LOCATION_TIME, time)
     }
 
-    fun setProjectSelected(id: Int) {
-        val preferences = Preferences.getInstance(context)
-        preferences.putInt(Preferences.SELECTED_PROJECT, id)
-    }
-
     fun distance(lastLocation: Location, loc: Location): String =
         LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()
+
+    fun getTrackingFromLocal(): LiveData<List<Tracking>> {
+        return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }
+    }
 }

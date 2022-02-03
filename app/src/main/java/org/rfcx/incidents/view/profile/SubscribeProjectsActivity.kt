@@ -12,7 +12,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.databinding.ActivitySubscribeProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
-import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.Screen
@@ -25,7 +24,7 @@ import org.rfcx.incidents.view.login.ProjectsItem
 
 class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     lateinit var binding: ActivitySubscribeProjectsBinding
-    private val viewModel: GuardianGroupViewModel by viewModel()
+    private val viewModel: SubscribeProjectsViewModel by viewModel()
     private val projectsAdapter by lazy { ProjectsAdapter(this) }
     private var projectsItem: List<ProjectsItem>? = null
     private var subscribedProjects: ArrayList<String> = arrayListOf()
@@ -36,7 +35,6 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
         binding = ActivitySubscribeProjectsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupToolbar()
-        setList()
 
         // setup list
         binding.projectsRecycler.apply {
@@ -51,10 +49,17 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
             setColorSchemeResources(R.color.colorPrimary)
         }
 
-        viewModel.getProjectsFromRemote.observe(this) { it ->
-            it.success({
+        viewModel.projects.observe(this) { result ->
+            result.success({ projects ->
                 binding.projectSwipeRefreshView.isRefreshing = false
-                setList()
+                projectsItem = projects.map { project ->
+                    ProjectsItem(
+                        project,
+                        getSubscribedProject()?.contains(project.serverId)
+                            ?: false
+                    )
+                }
+                projectsAdapter.items = projectsItem as List<ProjectsItem>
             }, {
                 binding.projectSwipeRefreshView.isRefreshing = false
                 this@SubscribeProjectsActivity.handleError(it)
@@ -64,17 +69,6 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
         }
 
         checkStateBeforeFetchProjects()
-    }
-
-    private fun setList() {
-        projectsItem = viewModel.getProjectsFromLocal().map { project ->
-            ProjectsItem(
-                project,
-                getSubscribedProject()?.contains(project.serverId)
-                    ?: false
-            )
-        }
-        projectsAdapter.items = projectsItem as List<ProjectsItem>
     }
 
     private fun getSubscribedProject(): ArrayList<String>? {
@@ -193,8 +187,4 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
         super.onResume()
         analytics.trackScreen(Screen.SUBSCRIBE_PROJECTS)
     }
-}
-
-interface OnItemClickListener {
-    fun onItemClick(project: Project)
 }

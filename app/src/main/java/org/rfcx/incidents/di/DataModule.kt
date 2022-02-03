@@ -16,13 +16,17 @@ import org.rfcx.incidents.data.api.events.GetEvents
 import org.rfcx.incidents.data.api.media.MediaRepository
 import org.rfcx.incidents.data.api.media.MediaRepositoryImp
 import org.rfcx.incidents.data.api.media.MediaUseCase
-import org.rfcx.incidents.data.api.project.GetProjectsRepository
-import org.rfcx.incidents.data.api.project.GetProjectsRepositoryImp
 import org.rfcx.incidents.data.api.project.GetProjectsUseCase
+import org.rfcx.incidents.data.api.project.ProjectsRepository
+import org.rfcx.incidents.data.api.project.ProjectsRepositoryImp
 import org.rfcx.incidents.data.api.streams.GetStreamsRepository
 import org.rfcx.incidents.data.api.streams.GetStreamsRepositoryImp
 import org.rfcx.incidents.data.api.streams.GetStreamsUseCase
-import org.rfcx.incidents.data.local.*
+import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.CachedEndpointDb
+import org.rfcx.incidents.data.local.ProfileData
+import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.local.WeeklySummaryData
 import org.rfcx.incidents.data.remote.domain.executor.PostExecutionThread
 import org.rfcx.incidents.data.remote.domain.executor.ThreadExecutor
 import org.rfcx.incidents.data.remote.password.PasswordChangeRepository
@@ -53,7 +57,14 @@ import org.rfcx.incidents.data.remote.terms.TermsUseCase
 import org.rfcx.incidents.data.remote.usertouch.CheckUserTouchUseCase
 import org.rfcx.incidents.data.remote.usertouch.UserTouchRepository
 import org.rfcx.incidents.data.remote.usertouch.UserTouchRepositoryImp
-import org.rfcx.incidents.localdb.*
+import org.rfcx.incidents.localdb.LocationDb
+import org.rfcx.incidents.localdb.ReportDb
+import org.rfcx.incidents.localdb.ReportImageDb
+import org.rfcx.incidents.localdb.ResponseDb
+import org.rfcx.incidents.localdb.StreamDb
+import org.rfcx.incidents.localdb.TrackingDb
+import org.rfcx.incidents.localdb.TrackingFileDb
+import org.rfcx.incidents.localdb.VoiceDb
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.RealmHelper
@@ -65,7 +76,7 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { GetProjectsRepositoryImp(get()) } bind GetProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
         single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class

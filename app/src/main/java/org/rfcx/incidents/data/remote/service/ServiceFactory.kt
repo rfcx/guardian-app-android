@@ -10,7 +10,7 @@ import org.rfcx.incidents.data.api.assets.AssetsEndpoint
 import org.rfcx.incidents.data.api.detections.DetectionsEndpoint
 import org.rfcx.incidents.data.api.events.EventsEndpoint
 import org.rfcx.incidents.data.api.media.MediaEndpoint
-import org.rfcx.incidents.data.api.project.GetProjectsEndpoint
+import org.rfcx.incidents.data.api.project.ProjectsEndpoint
 import org.rfcx.incidents.data.api.streams.GetStreamsEndpoint
 import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
 import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
@@ -28,12 +28,12 @@ import java.util.concurrent.TimeUnit
 
 object ServiceFactory {
 
-    fun makeProjectsService(isDebug: Boolean, context: Context): GetProjectsEndpoint {
+    fun makeProjectsService(isDebug: Boolean, context: Context): ProjectsEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
             GsonProvider.getInstance().gson
         )
-            .create(GetProjectsEndpoint::class.java)
+            .create(ProjectsEndpoint::class.java)
     }
 
     fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {

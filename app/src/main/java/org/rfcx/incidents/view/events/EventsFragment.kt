@@ -55,6 +55,7 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.api.streams.toStream
+import org.rfcx.incidents.data.remote.Result
 import org.rfcx.incidents.data.remote.success
 import org.rfcx.incidents.databinding.FragmentNewEventsBinding
 import org.rfcx.incidents.entity.Stream
@@ -185,7 +186,7 @@ class EventsFragment :
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentNewEventsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -204,27 +205,17 @@ class EventsFragment :
 
         getLocation()
         setupToolbar()
-        viewModel.refreshProjects()
         setOnClickListener()
         setObserver()
         setRecyclerView()
         onClickCurrentLocationButton()
 
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-        val projectServerId = viewModel.getProject(projectId)?.serverId
-
-        projectServerId?.let {
-            if (!context.isNetworkAvailable()) {
-                isShowProgressBar(false)
-            } else {
-                viewModel.refreshStreams()
-            }
-        }
-
         binding.refreshView.apply {
             setOnRefreshListener(this@EventsFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
+
+        viewModel.refreshProjects()
     }
 
     private fun onClickCurrentLocationButton() {
@@ -239,44 +230,24 @@ class EventsFragment :
         }
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            viewModel.refreshStreams()
-
-            val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-            setProjectTitle(viewModel.getProjectName(projectId))
-        }
-    }
-
     private fun setRecyclerView() {
         binding.projectRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = projectAdapter
-            projectAdapter.items = viewModel.getProjects()
         }
-
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-        setProjectTitle(viewModel.getProjectName(projectId))
 
         val streamsLayoutManager = LinearLayoutManager(context)
         binding.streamRecyclerView.apply {
             layoutManager = streamsLayoutManager
             adapter = streamAdapter
-            // streamAdapter.items = viewModel.streams
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val visibleItemCount = streamsLayoutManager.childCount
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
-                    if (!binding.refreshView.isRefreshing) {
-                        if ((visibleItemCount + firstVisibleItemPosition) >= total &&
-                            firstVisibleItemPosition >= 0 &&
-                            !viewModel.isLoadMore
-                        ) {
-                            viewModel.loadMoreEvents()
-                        }
+                    if (!binding.refreshView.isRefreshing && (visibleItemCount + firstVisibleItemPosition) >= total && firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore) {
+                        viewModel.loadMoreStreams()
                     }
                 }
             })
@@ -285,7 +256,7 @@ class EventsFragment :
 
     private fun setOnClickListener() {
         binding.toolbarLayout.projectTitleLayout.setOnClickListener {
-            setOnClickProjectName()
+            projectNameSelected()
         }
 
         binding.projectSwipeRefreshView.apply {
@@ -305,7 +276,7 @@ class EventsFragment :
         }
     }
 
-    private fun setOnClickProjectName() {
+    private fun projectNameSelected() {
         if (binding.projectRecyclerView.visibility == View.VISIBLE) {
             binding.toolbarLayout.expandMoreImageView.rotation = 0F
             listener.showBottomAppBar()
@@ -330,7 +301,6 @@ class EventsFragment :
         listener.showBottomAppBar()
         binding.projectRecyclerView.visibility = View.GONE
         binding.projectSwipeRefreshView.visibility = View.GONE
-        viewModel.setProjectSelected(project.id)
 
         when {
             requireContext().isOnAirplaneMode() -> {
@@ -343,19 +313,22 @@ class EventsFragment :
                 viewModel.refreshStreams()
             }
         }
-
-        // setAlertFeatures(viewModel.getStreams())
-        setProjectTitle(project.name)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setObserver() {
 
-        viewModel.projects.observe(viewLifecycleOwner) { it ->
-            it.success({
+        viewModel.selectedProject.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> binding.toolbarLayout.projectTitleTextView.text = result.data.name
+                else -> binding.toolbarLayout.projectTitleTextView.text = ""
+            }
+        }
+
+        viewModel.projects.observe(viewLifecycleOwner) { result ->
+            result.success({ projects ->
                 binding.projectSwipeRefreshView.isRefreshing = false
-                projectAdapter.items = listOf()
-                projectAdapter.items = viewModel.getProjects()
+                projectAdapter.items = projects
                 projectAdapter.notifyDataSetChanged()
             }, {
                 binding.projectSwipeRefreshView.isRefreshing = false
@@ -385,10 +358,6 @@ class EventsFragment :
         viewModel.getTrackingFromLocal().observe(viewLifecycleOwner) { trackings ->
             setTrackingFeatures(trackings)
         }
-    }
-
-    private fun setProjectTitle(str: String) {
-        binding.toolbarLayout.projectTitleTextView.text = str
     }
 
     override fun onLockImageClicked() {
@@ -453,10 +422,9 @@ class EventsFragment :
     }
 
     private fun setAlertFeatures(streams: List<Stream>) {
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-
-        val projectServerId = viewModel.getProject(projectId)?.serverId
-        val listOfStream = streams.filter { s -> s.projectServerId == projectServerId }
+        val projectResult = viewModel.selectedProject.value
+        val projectId = if (projectResult is Result.Success) projectResult.data.serverId else -1
+        val listOfStream = streams.filter { s -> s.projectServerId == projectId }
         val features = listOfStream.map {
             val loc = Location(LocationManager.GPS_PROVIDER)
             loc.latitude = it.latitude
@@ -783,6 +751,13 @@ class EventsFragment :
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            viewModel.refreshStreams()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         mapView.onResume()
@@ -792,6 +767,12 @@ class EventsFragment :
     override fun onStart() {
         super.onStart()
         mapView.onStart()
+
+        // if (!context.isNetworkAvailable()) {
+        //     isShowProgressBar(false)
+        // } else {
+        //     viewModel.refreshStreams()
+        // }
     }
 
     override fun onStop() {
