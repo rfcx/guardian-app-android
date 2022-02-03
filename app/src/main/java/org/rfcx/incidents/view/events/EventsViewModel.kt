@@ -24,8 +24,8 @@ import org.rfcx.incidents.util.isNetworkAvailable
 class EventsViewModel(
     private val context: Context,
     private val getProjectsUseCase: GetProjectsUseCase,
-    private val trackingDb: TrackingDb,
-    private val getStreams: GetStreamsUseCase
+    private val getStreamsUseCase: GetStreamsUseCase,
+    private val trackingDb: TrackingDb
 ) : ViewModel() {
 
     private val _projects = MutableLiveData<Result<List<Project>>>()

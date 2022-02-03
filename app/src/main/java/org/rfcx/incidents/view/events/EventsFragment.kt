@@ -343,8 +343,10 @@ class EventsFragment :
         }
 
         viewModel.streams.observe(viewLifecycleOwner) { it ->
-            it.success({ list ->
-                setAlertFeatures(list.map { s -> s.toStream() })
+            it.success({ streams ->
+                // streamAdapter.items = streams
+                streamAdapter.notifyDataSetChanged()
+                setAlertFeatures(streams.map { s -> s.toStream() })
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {

@@ -12,7 +12,7 @@ class ProjectsRepositoryImp(
 ) : ProjectsRepository {
 
     override fun getProjects(options: GetProjectsOptions): Single<List<Project>> {
-        if (options.forceRefresh || cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
+        if (options.forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
             return refreshFromAPI()
         }
         return getFromLocalDB()
@@ -23,6 +23,7 @@ class ProjectsRepositoryImp(
             rawProjects.forEach {
                 projectDb.insertOrUpdate(it)
             }
+            cachedEndpointDb.updateCachedEndpoint("GetProjects")
         }.to { getFromLocalDB() }
     }
 
