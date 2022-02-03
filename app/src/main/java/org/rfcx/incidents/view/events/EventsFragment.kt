@@ -268,7 +268,7 @@ class EventsFragment :
                         requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
                     }
                     else -> {
-                        viewModel.refreshProjects()
+                        viewModel.refreshProjects(true)
                     }
                 }
             }

@@ -76,7 +76,7 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { ProjectsRepositoryImp(get(), get(), get()) } bind ProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
         single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class

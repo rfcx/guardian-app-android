@@ -79,7 +79,7 @@ class EventsViewModel(
         _selectedProjectId.value = id
     }
 
-    fun refreshProjects() {
+    fun refreshProjects(force: Boolean = false) {
         if (!context.isNetworkAvailable()) return
 
         getProjectsUseCase.execute(
@@ -92,7 +92,7 @@ class EventsViewModel(
                     _projects.value = Result.Error(e)
                 }
             },
-            GetProjectsOptions()
+            GetProjectsOptions(force)
         )
     }
 
