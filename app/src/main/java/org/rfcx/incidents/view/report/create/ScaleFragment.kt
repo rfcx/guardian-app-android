@@ -27,7 +27,7 @@ class ScaleFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentScaleBinding.inflate(inflater, container, false)
         return binding.root
     }
