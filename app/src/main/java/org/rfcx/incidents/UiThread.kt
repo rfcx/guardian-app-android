@@ -2,7 +2,7 @@ package org.rfcx.incidents
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import org.rfcx.incidents.data.remote.domain.executor.PostExecutionThread
+import org.rfcx.incidents.domain.executor.PostExecutionThread
 
 /**
  * MainThread (UI Thread) implementation based on a [Scheduler]

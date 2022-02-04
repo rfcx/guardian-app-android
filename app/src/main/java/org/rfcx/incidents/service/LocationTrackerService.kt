@@ -21,7 +21,7 @@ import io.realm.Realm
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.localdb.TrackingDb
+import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.RealmHelper

@@ -20,10 +20,10 @@ import okio.buffer
 import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.detections.GetDetections
-import org.rfcx.incidents.data.api.media.MediaUseCase
+import org.rfcx.incidents.data.remote.detections.GetDetections
+import org.rfcx.incidents.data.remote.media.MediaUseCase
 import org.rfcx.incidents.data.local.AlertDb
-import org.rfcx.incidents.data.remote.Result
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.alert.DetectionFactory
 import org.rfcx.incidents.entity.alert.Detections

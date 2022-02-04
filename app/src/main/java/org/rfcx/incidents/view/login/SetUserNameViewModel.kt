@@ -11,7 +11,7 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.setusername.SendNameUseCase
+import org.rfcx.incidents.domain.SendNameUseCase
 import org.rfcx.incidents.entity.Err
 import org.rfcx.incidents.entity.Ok
 import org.rfcx.incidents.entity.user.SetNameRequest

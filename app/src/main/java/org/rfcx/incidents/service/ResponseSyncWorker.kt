@@ -8,12 +8,12 @@ import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.local.AlertDb
-import org.rfcx.incidents.data.remote.service.ServiceFactory
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.entity.response.toCreateResponseRequest
-import org.rfcx.incidents.localdb.ReportImageDb
-import org.rfcx.incidents.localdb.ResponseDb
-import org.rfcx.incidents.localdb.TrackingFileDb
-import org.rfcx.incidents.localdb.VoiceDb
+import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.TrackingFileDb
+import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.util.RealmHelper
 
 /**

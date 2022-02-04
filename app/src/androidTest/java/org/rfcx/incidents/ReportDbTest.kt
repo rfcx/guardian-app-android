@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.rfcx.incidents.entity.report.Report
-import org.rfcx.incidents.localdb.ReportDb
+import org.rfcx.incidents.data.local.ReportDb
 import java.util.*
 
 class ReportDbTest {

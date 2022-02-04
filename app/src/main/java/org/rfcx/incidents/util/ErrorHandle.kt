@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.Result
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.ErrorResponse
 import org.rfcx.incidents.entity.ErrorResponse2
 import retrofit2.HttpException

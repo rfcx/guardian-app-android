@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.events.toAlert
-import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.data.remote.events.toAlert
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate

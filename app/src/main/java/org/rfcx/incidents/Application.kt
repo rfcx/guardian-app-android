@@ -17,13 +17,13 @@ import net.danlew.android.joda.JodaTimeAndroid
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
-import org.rfcx.incidents.di.DataModule
-import org.rfcx.incidents.di.UiModule
+import org.rfcx.incidents.domain.DataModule
 import org.rfcx.incidents.service.AirplaneModeReceiver
 import org.rfcx.incidents.service.ReportCleanupWorker
 import org.rfcx.incidents.util.RealmHelper
 import org.rfcx.incidents.util.removeLocationUpdates
 import org.rfcx.incidents.util.startLocationChange
+import org.rfcx.incidents.view.UiModule
 
 class Application : MultiDexApplication(), LifecycleObserver {
 

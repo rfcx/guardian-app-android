@@ -8,8 +8,8 @@ import com.mapbox.geojson.Point
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.CheckIn
 import org.rfcx.incidents.entity.report.Report
-import org.rfcx.incidents.localdb.LocationDb
-import org.rfcx.incidents.localdb.ReportDb
+import org.rfcx.incidents.data.local.LocationDb
+import org.rfcx.incidents.data.local.ReportDb
 import org.rfcx.incidents.util.asLiveData
 
 class MapViewModel(

@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.Player
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
-import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivityAlertDetailBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID

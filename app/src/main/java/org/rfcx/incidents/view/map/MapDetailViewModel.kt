@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import io.realm.RealmResults
 import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.report.ReportImage
-import org.rfcx.incidents.localdb.ReportDb
-import org.rfcx.incidents.localdb.ReportImageDb
-import org.rfcx.incidents.localdb.ReportImageDb.Companion.SENT
+import org.rfcx.incidents.data.local.ReportDb
+import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.ReportImageDb.Companion.SENT
 import org.rfcx.incidents.util.asLiveData
 
 class MapDetailViewModel(private val reportDb: ReportDb, private val reportImageDb: ReportImageDb) : ViewModel() {

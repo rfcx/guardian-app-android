@@ -9,8 +9,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.remote.service.ServiceFactory
-import org.rfcx.incidents.localdb.ReportImageDb
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
+import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.util.RealmHelper
 import java.io.File
 

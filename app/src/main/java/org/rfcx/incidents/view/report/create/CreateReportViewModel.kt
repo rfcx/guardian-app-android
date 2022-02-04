@@ -3,13 +3,17 @@ package org.rfcx.incidents.view.report.create
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.TrackingFileDb
+import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.location.toListDoubleArray
 import org.rfcx.incidents.entity.report.ReportImage
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.localdb.*
 import org.rfcx.incidents.util.GeoJsonUtils
 import java.util.*
 

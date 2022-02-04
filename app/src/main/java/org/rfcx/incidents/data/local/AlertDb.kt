@@ -4,8 +4,8 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.kotlin.deleteFromRealm
-import org.rfcx.incidents.data.api.events.ResponseEvent
-import org.rfcx.incidents.data.api.events.toAlert
+import org.rfcx.incidents.data.remote.events.ResponseEvent
+import org.rfcx.incidents.data.remote.events.toAlert
 import org.rfcx.incidents.entity.alert.Alert
 
 class AlertDb(private val realm: Realm) {

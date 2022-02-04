@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.work.*
 import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
-import org.rfcx.incidents.localdb.ReportImageDb
-import org.rfcx.incidents.localdb.ResponseDb
-import org.rfcx.incidents.localdb.TrackingFileDb
+import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.util.RealmHelper
 import java.util.concurrent.TimeUnit
 

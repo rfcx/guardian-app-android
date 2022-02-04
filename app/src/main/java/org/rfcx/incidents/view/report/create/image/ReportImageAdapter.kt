@@ -14,7 +14,7 @@ import org.rfcx.incidents.adapter.entity.BaseListItem
 import org.rfcx.incidents.databinding.AdapterReportImageBinding
 import org.rfcx.incidents.databinding.ItemAddImageReportBinding
 import org.rfcx.incidents.entity.report.ReportImage
-import org.rfcx.incidents.localdb.ReportImageDb
+import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 

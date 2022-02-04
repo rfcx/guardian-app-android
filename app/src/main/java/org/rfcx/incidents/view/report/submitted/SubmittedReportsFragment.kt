@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentSubmittedReportsBinding
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response

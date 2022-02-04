@@ -54,9 +54,9 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.streams.toStream
-import org.rfcx.incidents.data.remote.Result
-import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.data.remote.streams.toStream
+import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentNewEventsBinding
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Tracking

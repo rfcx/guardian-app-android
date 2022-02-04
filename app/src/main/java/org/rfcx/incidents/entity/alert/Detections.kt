@@ -1,6 +1,6 @@
 package org.rfcx.incidents.entity.alert
 
-import org.rfcx.incidents.data.api.events.ClassificationRequest
+import org.rfcx.incidents.data.remote.events.ClassificationRequest
 import java.util.*
 
 data class Detections(

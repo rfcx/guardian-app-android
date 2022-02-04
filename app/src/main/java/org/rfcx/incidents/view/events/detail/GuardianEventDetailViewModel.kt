@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.data.api.events.GetEvents
-import org.rfcx.incidents.data.api.events.ResponseEvent
+import org.rfcx.incidents.data.remote.events.GetEvents
+import org.rfcx.incidents.data.remote.events.ResponseEvent
 import org.rfcx.incidents.data.local.AlertDb
-import org.rfcx.incidents.data.remote.Result
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.localdb.StreamDb
-import org.rfcx.incidents.localdb.TrackingDb
+import org.rfcx.incidents.data.local.StreamDb
+import org.rfcx.incidents.data.local.TrackingDb
 
 class GuardianEventDetailViewModel(
     private val alertDb: AlertDb,

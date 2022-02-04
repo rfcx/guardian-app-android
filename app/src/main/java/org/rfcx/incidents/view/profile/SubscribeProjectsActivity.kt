@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.success
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivitySubscribeProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.util.Analytics

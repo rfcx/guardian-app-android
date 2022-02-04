@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.*
 import io.realm.Realm
-import org.rfcx.incidents.localdb.LocationDb
+import org.rfcx.incidents.data.local.LocationDb
 import org.rfcx.incidents.util.RealmHelper
 import java.util.concurrent.TimeUnit
 

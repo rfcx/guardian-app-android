@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.data.api.project.GetProjectsOptions
-import org.rfcx.incidents.data.api.project.GetProjectsUseCase
-import org.rfcx.incidents.data.remote.Result
+import org.rfcx.incidents.data.GetProjectsOptions
+import org.rfcx.incidents.domain.GetProjectsUseCase
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.CloudMessaging
 

@@ -2,9 +2,9 @@ package org.rfcx.incidents.data.local
 
 import io.realm.Realm
 import io.realm.Sort
-import org.rfcx.incidents.data.api.project.ProjectResponse
-import org.rfcx.incidents.data.api.project.permissionsLabel
-import org.rfcx.incidents.data.api.project.toProject
+import org.rfcx.incidents.data.remote.project.ProjectResponse
+import org.rfcx.incidents.data.remote.project.permissionsLabel
+import org.rfcx.incidents.data.remote.project.toProject
 import org.rfcx.incidents.entity.project.Project
 
 class ProjectDb(val realm: Realm) {

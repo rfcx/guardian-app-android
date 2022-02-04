@@ -13,7 +13,7 @@ import com.auth0.android.result.Credentials
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.usertouch.CheckUserTouchUseCase
+import org.rfcx.incidents.domain.CheckUserTouchUseCase
 import org.rfcx.incidents.entity.Err
 import org.rfcx.incidents.entity.Ok
 import org.rfcx.incidents.entity.user.UserAuthResponse

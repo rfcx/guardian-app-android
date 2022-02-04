@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.report.ReportImage
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.localdb.ReportImageDb
-import org.rfcx.incidents.localdb.ResponseDb
-import org.rfcx.incidents.localdb.TrackingFileDb
+import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.TrackingFileDb
 
 class ResponseDetailViewModel(
     private val responseDb: ResponseDb,
