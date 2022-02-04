@@ -56,24 +56,12 @@ fun StreamResponse.toStream(): Stream = Stream(
     incidentRef = incidents.items[0].ref
 )
 
-fun IncidentResponse.toIncident(): Incident = Incident(
-    id = this.id,
-    closedAt = this.closeAt,
-    createdAt = this.createdAt
-)
-
-fun ClassificationResponse.toClassification(): Classification = Classification(
-    value = this.value,
-    title = this.title
-)
-
-
-fun StreamResponse.toAlerts(): List<Alert> {
-    val alerts = arrayListOf<Alert>()
+fun StreamResponse.toEvent(): Alert {
+    val events = arrayListOf<Alert>()
 
     this.incidents.items.forEach { incident ->
         incident.events.forEach { event ->
-            alerts.add(
+            events.add(
                 Alert(
                     serverId = event.id,
                     start = event.start,
@@ -89,5 +77,16 @@ fun StreamResponse.toAlerts(): List<Alert> {
         }
     }
 
-    return alerts
+    return events[0]
 }
+
+fun IncidentResponse.toIncident(): Incident = Incident(
+    id = this.id,
+    closedAt = this.closeAt,
+    createdAt = this.createdAt
+)
+
+fun ClassificationResponse.toClassification(): Classification = Classification(
+    value = this.value,
+    title = this.title
+)

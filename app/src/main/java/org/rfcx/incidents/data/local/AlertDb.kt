@@ -25,6 +25,21 @@ class AlertDb(private val realm: Realm) {
         }
     }
 
+    fun insertAlert(alertObj: Alert) {
+        realm.executeTransaction {
+            val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_SERVER_ID, alertObj.id).findFirst()
+
+            if (alert == null) {
+                val id = (
+                    it.where(Alert::class.java).max(Alert.ALERT_ID)
+                        ?.toInt() ?: 0
+                    ) + 1
+                alertObj.id = id
+                it.insert(alertObj)
+            }
+        }
+    }
+
     fun getAlertCount(streamId: String): Long =
         realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).count()
 

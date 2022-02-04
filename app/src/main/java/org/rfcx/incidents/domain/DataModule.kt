@@ -61,7 +61,7 @@ object DataModule {
         single { GetProjectsUseCase(get(), get(), get()) }
         single { GetProjectUseCaseImpl(get()) } bind GetProjectUseCase::class
 
-        single { StreamsRepositoryImp(get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImp(get()) } bind EventsRepository::class
