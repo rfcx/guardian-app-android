@@ -7,7 +7,8 @@ import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.entity.Stream
 
 class StreamDb(private val realm: Realm) {
-    fun insertStream(response: StreamResponse) {
+
+    fun insertOrUpdate(response: StreamResponse) {
         realm.executeTransaction {
             val stream = it.where(Stream::class.java)
                 .equalTo(Stream.STREAM_SERVER_ID, response.id)
@@ -25,12 +26,12 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
-    fun getAllResultsAsync(): RealmResults<Stream> {
+    fun getAllAsync(): RealmResults<Stream> {
         return realm.where(Stream::class.java).findAllAsync()
     }
 
-    fun getStreams(): List<Stream> {
-        return realm.where(Stream::class.java).findAll() ?: arrayListOf()
+    fun getAll(): List<Stream> {
+        return realm.where(Stream::class.java).findAll()
     }
 
     fun getStreamByCoreId(serverId: String): Stream? =

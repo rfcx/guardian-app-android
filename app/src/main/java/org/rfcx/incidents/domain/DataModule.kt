@@ -9,24 +9,24 @@ import org.rfcx.incidents.JobExecutor
 import org.rfcx.incidents.UiThread
 import org.rfcx.incidents.data.DetectionsRepositoryImp
 import org.rfcx.incidents.data.EventsRepositoryImp
-import org.rfcx.incidents.data.GetStreamsRepositoryImp
 import org.rfcx.incidents.data.MediaRepositoryImp
 import org.rfcx.incidents.data.PasswordChangeRepositoryImp
 import org.rfcx.incidents.data.ProfilePhotoRepositoryImp
 import org.rfcx.incidents.data.ProjectsRepositoryImp
 import org.rfcx.incidents.data.SetNameRepositoryImp
+import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UnsubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
 import org.rfcx.incidents.data.interfaces.EventsRepository
-import org.rfcx.incidents.data.interfaces.GetStreamsRepository
 import org.rfcx.incidents.data.interfaces.MediaRepository
 import org.rfcx.incidents.data.interfaces.PasswordChangeRepository
 import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.interfaces.SetNameRepository
+import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UnsubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
@@ -60,7 +60,7 @@ object DataModule {
         single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { GetStreamsRepositoryImp(get()) } bind GetStreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImp(get()) } bind EventsRepository::class

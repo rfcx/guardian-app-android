@@ -7,15 +7,15 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.interfaces.GetProjectsOptions
-import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.domain.GetProjectsParams
+import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.data.local.ResponseDb
-import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
@@ -42,7 +42,7 @@ class MainActivityViewModel(
         isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
     }
 
-    fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
+    private fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
 
     fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
 
@@ -50,7 +50,7 @@ class MainActivityViewModel(
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
-    fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> =
+    private fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> =
         streamDb.getStreamsByProjectCoreId(projectCodeId)
 
     fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
@@ -67,7 +67,7 @@ class MainActivityViewModel(
                     _projects.value = Result.Error(e)
                 }
             },
-            GetProjectsOptions()
+            GetProjectsParams()
         )
     }
 

@@ -4,7 +4,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface GetStreamsEndpoint {
+interface Endpoint {
     @GET("streams")
     fun getStreams(
         @Query("limit") limit: Int = 10,

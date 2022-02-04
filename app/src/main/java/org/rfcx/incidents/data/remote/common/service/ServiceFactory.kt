@@ -15,7 +15,7 @@ import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.data.remote.response.CreateResponseEndpoint
 import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
-import org.rfcx.incidents.data.remote.streams.GetStreamsEndpoint
+import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
 import org.rfcx.incidents.util.GsonProvider
@@ -34,12 +34,12 @@ object ServiceFactory {
             .create(ProjectsEndpoint::class.java)
     }
 
-    fun makeStreamsService(isDebug: Boolean, context: Context): GetStreamsEndpoint {
+    fun makeStreamsService(isDebug: Boolean, context: Context): Endpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
             GsonProvider.getInstance().gson
         )
-            .create(GetStreamsEndpoint::class.java)
+            .create(Endpoint::class.java)
     }
 
     fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {

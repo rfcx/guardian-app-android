@@ -3,11 +3,10 @@ package org.rfcx.incidents.data
 import android.os.Looper
 import android.util.Log
 import io.reactivex.Single
-import org.rfcx.incidents.data.interfaces.GetProjectsOptions
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
-import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.project.Project
 
@@ -18,8 +17,8 @@ class ProjectsRepositoryImp(
     private val postExecutionThread: PostExecutionThread
 ) : ProjectsRepository {
 
-    override fun getProjects(options: GetProjectsOptions): Single<List<Project>> {
-        if (options.forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
+    override fun getProjects(forceRefresh: Boolean): Single<List<Project>> {
+        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
             Log.d("ProjectsRepo", "API")
             return refreshFromAPI()
         }
