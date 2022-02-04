@@ -1,4 +1,4 @@
-package org.rfcx.incidents.domain
+package org.rfcx.incidents.domain.base
 
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.remote.common.Result

@@ -20,8 +20,8 @@ import okio.buffer
 import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.detections.GetDetections
-import org.rfcx.incidents.data.remote.media.MediaUseCase
+import org.rfcx.incidents.domain.GetDetectionsUseCase
+import org.rfcx.incidents.domain.MediaUseCase
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.alert.Alert
@@ -36,7 +36,7 @@ class AlertDetailViewModel(
     private val context: Context,
     private val alertDb: AlertDb,
     private val mediaUseCase: MediaUseCase,
-    private val getDetections: GetDetections
+    private val getDetectionsUseCase: GetDetectionsUseCase
 ) : ViewModel() {
     var _alert: Alert? = null
         private set
@@ -202,7 +202,7 @@ class AlertDetailViewModel(
     }
 
     fun getDetections(alert: Alert) {
-        getDetections.execute(
+        getDetectionsUseCase.execute(
             object : DisposableSingleObserver<List<Detections>>() {
                 override fun onSuccess(t: List<Detections>) {
                     val confidence = t.map { checkSpanOfBox(alert, it) }

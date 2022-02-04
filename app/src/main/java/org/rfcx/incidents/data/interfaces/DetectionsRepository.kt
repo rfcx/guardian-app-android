@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.remote.detections
+package org.rfcx.incidents.data.interfaces
 
 import io.reactivex.Single
 import org.rfcx.incidents.entity.alert.DetectionFactory

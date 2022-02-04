@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.remote.media
+package org.rfcx.incidents.data.interfaces
 
 import io.reactivex.Single
 import okhttp3.ResponseBody

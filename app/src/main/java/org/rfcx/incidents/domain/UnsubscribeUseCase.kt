@@ -1,7 +1,8 @@
 package org.rfcx.incidents.domain
 
 import io.reactivex.Single
-import org.rfcx.incidents.data.UnsubscribeRepository
+import org.rfcx.incidents.data.interfaces.UnsubscribeRepository
+import org.rfcx.incidents.domain.base.SingleUseCase
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.entity.SubscribeRequest

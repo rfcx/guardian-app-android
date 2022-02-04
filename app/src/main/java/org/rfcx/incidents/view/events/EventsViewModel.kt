@@ -9,9 +9,9 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.data.GetProjectsOptions
+import org.rfcx.incidents.data.interfaces.GetProjectsOptions
 import org.rfcx.incidents.domain.GetProjectsUseCase
-import org.rfcx.incidents.data.remote.streams.GetStreamsUseCase
+import org.rfcx.incidents.domain.GetStreamsUseCase
 import org.rfcx.incidents.data.remote.streams.StreamResponse
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.location.Tracking

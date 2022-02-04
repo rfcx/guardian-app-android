@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.GetProjectsOptions
+import org.rfcx.incidents.data.interfaces.GetProjectsOptions
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.common.Result

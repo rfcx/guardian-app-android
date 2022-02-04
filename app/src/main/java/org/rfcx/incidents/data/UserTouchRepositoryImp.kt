@@ -1,6 +1,7 @@
 package org.rfcx.incidents.data
 
 import io.reactivex.Single
+import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
 
 class UserTouchRepositoryImp(private val userTouchEndPoint: UserTouchEndPoint) : UserTouchRepository {

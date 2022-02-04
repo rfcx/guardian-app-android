@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.data.remote.events.GetEvents
+import org.rfcx.incidents.domain.GetEventsUseCase
 import org.rfcx.incidents.data.remote.events.ResponseEvent
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.remote.common.Result
@@ -19,7 +19,7 @@ class GuardianEventDetailViewModel(
     private val alertDb: AlertDb,
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
-    private val getEvents: GetEvents
+    private val getEventsUseCase: GetEventsUseCase
 ) : ViewModel() {
     private val _alerts = MutableLiveData<Result<List<ResponseEvent>>>()
     val getAlertsFromRemote: LiveData<Result<List<ResponseEvent>>> get() = _alerts
@@ -37,7 +37,7 @@ class GuardianEventDetailViewModel(
     fun fetchEvents(streamId: String) {
         _alerts.value = Result.Loading
 
-        getEvents.execute(
+        getEventsUseCase.execute(
             object : DisposableSingleObserver<List<ResponseEvent>>() {
                 override fun onSuccess(t: List<ResponseEvent>) {
                     t.forEach { res ->

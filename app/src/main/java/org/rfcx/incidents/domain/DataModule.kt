@@ -7,22 +7,29 @@ import org.koin.dsl.module
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.JobExecutor
 import org.rfcx.incidents.UiThread
-import org.rfcx.incidents.data.CreateResponseRepository
-import org.rfcx.incidents.data.CreateResponseRepositoryImp
-import org.rfcx.incidents.data.PasswordChangeRepository
+import org.rfcx.incidents.data.DetectionsRepositoryImp
+import org.rfcx.incidents.data.EventsRepositoryImp
+import org.rfcx.incidents.data.GetStreamsRepositoryImp
+import org.rfcx.incidents.data.MediaRepositoryImp
 import org.rfcx.incidents.data.PasswordChangeRepositoryImp
-import org.rfcx.incidents.data.ProfilePhotoRepository
 import org.rfcx.incidents.data.ProfilePhotoRepositoryImp
-import org.rfcx.incidents.data.ProjectsRepository
 import org.rfcx.incidents.data.ProjectsRepositoryImp
-import org.rfcx.incidents.data.SetNameRepository
 import org.rfcx.incidents.data.SetNameRepositoryImp
-import org.rfcx.incidents.data.SubscribeRepository
 import org.rfcx.incidents.data.SubscribeRepositoryImp
-import org.rfcx.incidents.data.UnsubscribeRepository
 import org.rfcx.incidents.data.UnsubscribeRepositoryImp
-import org.rfcx.incidents.data.UserTouchRepository
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.interfaces.CreateResponseRepository
+import org.rfcx.incidents.data.interfaces.DetectionsRepository
+import org.rfcx.incidents.data.interfaces.EventsRepository
+import org.rfcx.incidents.data.interfaces.GetStreamsRepository
+import org.rfcx.incidents.data.interfaces.MediaRepository
+import org.rfcx.incidents.data.interfaces.PasswordChangeRepository
+import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
+import org.rfcx.incidents.data.interfaces.ProjectsRepository
+import org.rfcx.incidents.data.interfaces.SetNameRepository
+import org.rfcx.incidents.data.interfaces.SubscribeRepository
+import org.rfcx.incidents.data.interfaces.UnsubscribeRepository
+import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.LocationDb
@@ -37,18 +44,6 @@ import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.WeeklySummaryData
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
-import org.rfcx.incidents.data.remote.detections.DetectionsRepository
-import org.rfcx.incidents.data.remote.detections.DetectionsRepositoryImp
-import org.rfcx.incidents.data.remote.detections.GetDetections
-import org.rfcx.incidents.data.remote.events.EventsRepository
-import org.rfcx.incidents.data.remote.events.EventsRepositoryImp
-import org.rfcx.incidents.data.remote.events.GetEvents
-import org.rfcx.incidents.data.remote.media.MediaRepository
-import org.rfcx.incidents.data.remote.media.MediaRepositoryImp
-import org.rfcx.incidents.data.remote.media.MediaUseCase
-import org.rfcx.incidents.data.remote.streams.GetStreamsRepository
-import org.rfcx.incidents.data.remote.streams.GetStreamsRepositoryImp
-import org.rfcx.incidents.data.remote.streams.GetStreamsUseCase
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.util.CredentialKeeper
@@ -69,10 +64,10 @@ object DataModule {
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImp(get()) } bind EventsRepository::class
-        single { GetEvents(get(), get(), get()) }
+        single { GetEventsUseCase(get(), get(), get()) }
 
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
-        single { GetDetections(get(), get(), get()) }
+        single { GetDetectionsUseCase(get(), get(), get()) }
 
         single { PasswordChangeRepositoryImp(get()) } bind PasswordChangeRepository::class
         single { PasswordChangeUseCase(get(), get(), get()) }
@@ -83,7 +78,7 @@ object DataModule {
         single { SetNameRepositoryImp(get()) } bind SetNameRepository::class
         single { SendNameUseCase(get(), get(), get()) }
 
-        single { CreateResponseRepositoryImp(get()) } bind CreateResponseRepository::class
+        single { org.rfcx.incidents.data.CreateResponseRepositoryImpl(get()) } bind CreateResponseRepository::class
         single { CreateResponseUseCase(get(), get(), get()) }
 
         single { ProfilePhotoRepositoryImp(get()) } bind ProfilePhotoRepository::class

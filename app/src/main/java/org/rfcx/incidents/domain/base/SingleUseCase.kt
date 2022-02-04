@@ -1,4 +1,4 @@
-package org.rfcx.incidents.domain
+package org.rfcx.incidents.domain.base
 
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable

@@ -1,13 +1,14 @@
-package org.rfcx.incidents.data.remote.detections
+package org.rfcx.incidents.domain
 
 import io.reactivex.Single
-import org.rfcx.incidents.domain.SingleUseCase
+import org.rfcx.incidents.data.interfaces.DetectionsRepository
+import org.rfcx.incidents.domain.base.SingleUseCase
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.entity.alert.DetectionFactory
 import org.rfcx.incidents.entity.alert.Detections
 
-class GetDetections(
+class GetDetectionsUseCase(
     private val repository: DetectionsRepository,
     threadExecutor: ThreadExecutor,
     postExecutionThread: PostExecutionThread

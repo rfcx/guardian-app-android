@@ -3,6 +3,8 @@ package org.rfcx.incidents.data
 import android.os.Looper
 import android.util.Log
 import io.reactivex.Single
+import org.rfcx.incidents.data.interfaces.GetProjectsOptions
+import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.ProjectDb
