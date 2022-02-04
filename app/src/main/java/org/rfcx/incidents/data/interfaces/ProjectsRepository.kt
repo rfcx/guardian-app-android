@@ -5,4 +5,5 @@ import org.rfcx.incidents.entity.project.Project
 
 interface ProjectsRepository {
     fun getProjects(forceRefresh: Boolean): Single<List<Project>>
+    fun getProjectFromLocal(id: Int): Project?
 }

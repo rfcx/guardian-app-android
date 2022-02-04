@@ -54,7 +54,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentNewEventsBinding
@@ -158,7 +157,7 @@ class EventsFragment :
             if (intent == null) return
             val streamName = intent.getStringExtra("streamName")
             if (streamName != null) {
-                viewModel.refreshStreams()
+                viewModel.refreshStreams(viewModel.getSelectProjectId(), false)
             }
         }
     }
@@ -216,6 +215,7 @@ class EventsFragment :
         }
 
         viewModel.refreshProjects()
+        viewModel.refreshStreams(viewModel.getSelectProjectId())
     }
 
     private fun onClickCurrentLocationButton() {
@@ -291,6 +291,8 @@ class EventsFragment :
     }
 
     override fun onClicked(project: Project) {
+        viewModel.selectProject(project.id)
+
         isShowNotHaveStreams(false)
         binding.streamLayout.visibility = View.GONE
         binding.toolbarLayout.expandMoreImageView.rotation = 0F
@@ -310,7 +312,7 @@ class EventsFragment :
                 requireContext().showToast(getString(R.string.no_internet_connection))
             }
             else -> {
-                viewModel.refreshStreams()
+                viewModel.refreshStreams(viewModel.getSelectProjectId(), true)
             }
         }
     }
@@ -345,8 +347,8 @@ class EventsFragment :
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
                 // streamAdapter.items = streams
-                streamAdapter.notifyDataSetChanged()
-                setAlertFeatures(streams.map { s -> s.toStream() })
+                // streamAdapter.notifyDataSetChanged()
+                setAlertFeatures(streams)
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
@@ -756,7 +758,7 @@ class EventsFragment :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            viewModel.refreshStreams()
+            viewModel.refreshStreams(viewModel.getSelectProjectId(), false)
         }
     }
 
@@ -806,7 +808,7 @@ class EventsFragment :
 
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
-            viewModel.refreshStreams()
+            viewModel.refreshStreams(viewModel.getSelectProjectId(), true)
         } else {
             binding.refreshView.isRefreshing = false
             requireContext().showToast(getString(R.string.no_internet_connection))

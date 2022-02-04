@@ -26,6 +26,10 @@ class ProjectsRepositoryImp(
         return getFromLocalDB()
     }
 
+    override fun getProjectFromLocal(id: Int): Project? {
+        return projectDb.getProjectById(id)
+    }
+
     private fun refreshFromAPI(): Single<List<Project>> {
         Log.d("ProjectsRepo", "OUTSIDE: " + if (Looper.myLooper() == Looper.getMainLooper()) "MAIN THREAD" else "NOT MAIN!")
         return endpoint.getProjects().observeOn(postExecutionThread.scheduler).flatMap { rawProjects ->
