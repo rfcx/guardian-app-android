@@ -4,8 +4,7 @@ import org.rfcx.incidents.entity.Classification
 import org.rfcx.incidents.entity.Incident
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
-import org.rfcx.incidents.entity.event.Event
-import java.util.*
+import java.util.Date
 
 data class StreamResponse(
     var id: String = "",

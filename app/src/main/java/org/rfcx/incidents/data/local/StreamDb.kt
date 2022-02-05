@@ -10,18 +10,11 @@ class StreamDb(private val realm: Realm) {
 
     fun insertOrUpdate(response: StreamResponse) {
         realm.executeTransaction {
-            val stream = it.where(Stream::class.java)
+            val existingStream = it.where(Stream::class.java)
                 .equalTo(Stream.STREAM_SERVER_ID, response.id)
                 .findFirst()
             val streamObj = response.toStream()
-            if (stream == null) {
-                streamObj.id = (
-                    it.where(Stream::class.java).max(Stream.STREAM_ID)
-                        ?.toInt() ?: 0
-                    ) + 1
-            } else {
-                streamObj.id = stream.id
-            }
+            streamObj.id = existingStream?.id ?: ((it.where(Stream::class.java).max(Stream.STREAM_ID)?.toInt() ?: 0) + 1)
             it.insertOrUpdate(streamObj)
         }
     }
