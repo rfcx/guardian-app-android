@@ -426,8 +426,8 @@ class EventsFragment :
 
     private fun setAlertFeatures(streams: List<Stream>) {
         val projectResult = viewModel.selectedProject.value
-        val projectId = if (projectResult is Result.Success) projectResult.data.serverId else -1
-        val listOfStream = streams.filter { s -> s.projectServerId == projectId }
+        val projectId = if (projectResult is Result.Success) projectResult.data.id else ""
+        val listOfStream = streams.filter { s -> s.projectId == projectId }
         val features = listOfStream.map {
             val loc = Location(LocationManager.GPS_PROVIDER)
             loc.latitude = it.latitude

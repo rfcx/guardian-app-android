@@ -84,10 +84,11 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
             val projects = viewModel.projects.value
             if (projects != null && projects is Result.Success) {
                 val projectIdString =
-                    if (!subscribedProjectIds.isEmpty()) subscribedProjectIds.random()
-                    else projects.data.map { p -> p.serverId ?: "" }.random()
-                val selectedProject = projects.data.find { p -> p.serverId == projectIdString }
-                preferences.putInt(Preferences.SELECTED_PROJECT, selectedProject?.id ?: -1)
+                    if (subscribedProjectIds.isNotEmpty()) subscribedProjectIds.random()
+                    else projects.data.map { p -> p.id }.random()
+                projects.data.find { p -> p.id == projectIdString }?.let {
+                    preferences.putString(Preferences.SELECTED_PROJECT, it.id)
+                }
             }
             listener.handleOpenPage()
         }
@@ -122,7 +123,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                 projectsItem = projects.map { project ->
                     ProjectsItem(
                         project,
-                        getSubscribedProject()?.contains(project.serverId)
+                        getSubscribedProject()?.contains(project.id)
                             ?: false
                     )
                 }
@@ -162,7 +163,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
                 } else {
                     saveSubscribedProject(subscribedProjectIds)
-                    subscribedProjectIds.remove(item.project.serverId ?: "")
+                    subscribedProjectIds.remove(item.project.id)
                     binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)
                 }
@@ -176,7 +177,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     setSelectedProject(items, position)
                     showToast(getString(R.string.failed_receive_notification, item.project.name))
                 } else {
-                    subscribedProjectIds.add(item.project.serverId ?: "")
+                    subscribedProjectIds.add(item.project.id)
                     saveSubscribedProject(subscribedProjectIds)
                     binding.selectProjectButton.isEnabled = true
                     setSelectedProject(items, position)

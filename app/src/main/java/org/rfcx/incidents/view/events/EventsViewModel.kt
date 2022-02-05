@@ -30,7 +30,7 @@ class EventsViewModel(
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val projects: LiveData<Result<List<Project>>> get() = _projects
 
-    private val _selectedProjectId = MutableLiveData<Int>()
+    private val _selectedProjectId = MutableLiveData<String>()
     val selectedProject = MediatorLiveData<Result<Project>>()
 
     private val _streams = MutableLiveData<Result<List<Stream>>>()
@@ -48,20 +48,20 @@ class EventsViewModel(
         streams.addSource(_streams) { result -> streams.value = result }
         // When the projects or selected project id change, reload the selected project
         selectedProject.addSource(_projects) { result ->
-            selectedProject.value = findProject(_selectedProjectId.value ?: -1, result)
+            selectedProject.value = findProject(_selectedProjectId.value ?: "", result)
         }
         selectedProject.addSource(_selectedProjectId) { id ->
             projects.value?.let { result -> selectedProject.value = findProject(id, result) }
         }
-        _selectedProjectId.value = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+        _selectedProjectId.value = preferences.getString(Preferences.SELECTED_PROJECT, "")
     }
 
-    fun selectProject(id: Int) {
-        preferences.putInt(Preferences.SELECTED_PROJECT, id)
+    fun selectProject(id: String) {
+        preferences.putString(Preferences.SELECTED_PROJECT, id)
         _selectedProjectId.value = id
     }
 
-    private fun findProject(id: Int, result: Result<List<Project>>) = when (result) {
+    private fun findProject(id: String, result: Result<List<Project>>) = when (result) {
         is Result.Loading -> Result.Loading
         is Result.Error -> Result.Error(result.throwable)
         is Result.Success -> result.data.find { project -> project.id == id }?.let { Result.Success(it) } ?: Result.Error(Error("Not found"))
@@ -83,7 +83,7 @@ class EventsViewModel(
     }
 
     fun refreshStreams(force: Boolean = false, more: Boolean = false) {
-        val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.serverId else null } ?: return
+        val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
         getStreamsUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {

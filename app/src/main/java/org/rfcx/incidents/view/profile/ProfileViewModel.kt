@@ -65,7 +65,7 @@ class ProfileViewModel(
     }
 
     private fun updateEventSubtitle() {
-        val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProjectByCoreId(id)?.name }
+        val subscribedProjects = getSubscribedProject()?.map { id -> projectDb.getProject(id)?.name }
             ?: listOf()
         var subtitle = if (subscribedProjects.isEmpty()) context.getString(R.string.no_projects_selected) else ""
         subscribedProjects.forEachIndexed { index, name ->

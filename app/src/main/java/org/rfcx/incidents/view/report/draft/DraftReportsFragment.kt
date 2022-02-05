@@ -65,7 +65,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         preferences = Preferences.getInstance(requireContext())
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
         setProjectTitle(viewModel.getProjectName(projectId))
         binding.toolbarLayout.changePageImageView.visibility = View.GONE
 
@@ -152,7 +152,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+            val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
             setProjectTitle(viewModel.getProjectName(projectId))
 
             streams = viewModel.getStreamIdsInProjectId()

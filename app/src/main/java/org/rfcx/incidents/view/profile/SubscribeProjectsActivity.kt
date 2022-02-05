@@ -55,7 +55,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                 projectsItem = projects.map { project ->
                     ProjectsItem(
                         project,
-                        getSubscribedProject()?.contains(project.serverId)
+                        getSubscribedProject()?.contains(project.id)
                             ?: false
                     )
                 }
@@ -122,7 +122,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                             }
                             showToast(getString(R.string.failed_unsubscribe_receive_notification, item.project.name))
                         } else {
-                            subscribedProjects.remove(item.project.serverId ?: "")
+                            subscribedProjects.remove(item.project.id)
                             saveSubscribedProject(subscribedProjects)
                         }
                     }
@@ -136,7 +136,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                             }
                             showToast(getString(R.string.failed_receive_notification, item.project.name))
                         } else {
-                            subscribedProjects.add(item.project.serverId ?: "")
+                            subscribedProjects.add(item.project.id)
                             saveSubscribedProject(subscribedProjects)
                         }
                     }

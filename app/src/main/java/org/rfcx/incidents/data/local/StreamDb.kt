@@ -31,7 +31,7 @@ class StreamDb(private val realm: Realm) {
         realm.where(Stream::class.java).equalTo(Stream.STREAM_SERVER_ID, serverId).findFirst()
 
     fun getStreamsByProject(projectId: String): List<Stream> =
-        realm.where(Stream::class.java).equalTo(Stream.STREAM_PROJECT_SERVER_ID, projectId).findAll()
+        realm.where(Stream::class.java).equalTo(Stream.STREAM_PROJECT_ID, projectId).findAll()
 
     fun saveIncidentRef(streamObj: Stream) {
         realm.executeTransaction {

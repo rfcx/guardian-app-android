@@ -35,13 +35,11 @@ class SubscribeProjectsViewModel(
     }
 
     fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
-        if (project.serverId == null) return callback(false)
-        CloudMessaging.subscribeIfRequired(project.serverId!!) { status -> callback(status) }
-        CloudMessaging.setProject(context, project.serverId!!)
+        CloudMessaging.subscribeIfRequired(project.id) { status -> callback(status) }
+        CloudMessaging.setProject(context, project.id)
     }
 
     fun unsubscribeProject(project: Project, callback: (Boolean) -> Unit) {
-        if (project.serverId == null) return callback(false)
-        CloudMessaging.unsubscribe(project.serverId!!) { status -> callback(status) }
+        CloudMessaging.unsubscribe(project.id) { status -> callback(status) }
     }
 }

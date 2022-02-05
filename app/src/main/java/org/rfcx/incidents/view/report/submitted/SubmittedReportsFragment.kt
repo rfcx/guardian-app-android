@@ -47,7 +47,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+            val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
             setProjectTitle(viewModel.getProjectName(projectId))
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
@@ -79,7 +79,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
         setOnClickListener()
         binding.toolbarLayout.changePageImageView.visibility = View.GONE
 
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
         setProjectTitle(viewModel.getProjectName(projectId))
     }
 

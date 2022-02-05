@@ -51,7 +51,7 @@ fun StreamResponse.toStream(): Stream = Stream(
     name = name,
     latitude = latitude,
     longitude = longitude,
-    projectServerId = project.id,
+    projectId = project.id,
     incidentRef = incidents.items[0].ref
 )
 

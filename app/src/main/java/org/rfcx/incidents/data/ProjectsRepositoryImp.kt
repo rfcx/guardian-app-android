@@ -26,8 +26,8 @@ class ProjectsRepositoryImp(
         return getFromLocalDB()
     }
 
-    override fun getProjectFromLocal(id: Int): Project? {
-        return projectDb.getProjectById(id)
+    override fun getProject(id: String): Project? {
+        return projectDb.getProject(id)
     }
 
     private fun refreshFromAPI(): Single<List<Project>> {

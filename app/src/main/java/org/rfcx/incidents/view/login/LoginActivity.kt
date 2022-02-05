@@ -31,13 +31,9 @@ class LoginActivity : BaseActivity(), LoginListener {
         setupDisplayTheme()
 
         val preferenceHelper = Preferences.getInstance(this)
-        val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
+        val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
 
-        if (CredentialKeeper(this).hasValidCredentials() && selectedProject != -1 && getUserNickname().substring(
-                0,
-                1
-            ) != "+"
-        ) {
+        if (CredentialKeeper(this).hasValidCredentials() && selectedProject != "" && getUserNickname().substring(0, 1) != "+") {
             openMain()
         } else {
             openLoginFragment()
@@ -46,13 +42,13 @@ class LoginActivity : BaseActivity(), LoginListener {
 
     override fun handleOpenPage() {
         val preferenceHelper = Preferences.getInstance(this)
-        val selectedProject = preferenceHelper.getInt(Preferences.SELECTED_PROJECT, -1)
+        val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
 
         when {
             getUserNickname().substring(0, 1) == "+" -> {
                 openSetUserNameFragmentFragment()
             }
-            selectedProject == -1 -> {
+            selectedProject == "" -> {
                 openSetProjectsFragment()
             }
             else -> {

@@ -24,8 +24,8 @@ fun ProjectResponse.permissionsLabel(): String {
 
 fun ProjectResponse.toProject(): Project {
     return Project(
+        id = this.id,
         name = this.name,
-        serverId = this.id,
         permissions = this.permissionsLabel()
     )
 }

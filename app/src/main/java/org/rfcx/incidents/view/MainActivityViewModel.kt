@@ -13,7 +13,6 @@ import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
-import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.CredentialKeeper
@@ -42,16 +41,13 @@ class MainActivityViewModel(
         isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
     }
 
-    private fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
+    private fun getProjectById(id: String): Project? = projectDb.getProject(id)
 
     fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
-    private fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> =
-        streamDb.getStreamsByProject(projectCodeId)
-
-    fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
+    fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
 
     fun fetchProjects() {
@@ -69,18 +65,14 @@ class MainActivityViewModel(
         )
     }
 
-    fun setProjectSelected(id: Int) {
+    fun setProjectSelected(id: String) {
         val preferences = Preferences.getInstance(context)
-        preferences.putInt(Preferences.SELECTED_PROJECT, id)
+        preferences.putString(Preferences.SELECTED_PROJECT, id)
     }
 
     fun getStreamIdsInProjectId(): List<String> {
         val preferences = Preferences.getInstance(context)
-        val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-        val projectCoreId = getProjectById(projectId)?.serverId
-        projectCoreId?.let {
-            return getStreamsByProjectCoreId(it).map { s -> s.serverId }
-        }
-        return listOf()
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+        return streamDb.getStreamsByProject(projectId).map { s -> s.serverId }
     }
 }
