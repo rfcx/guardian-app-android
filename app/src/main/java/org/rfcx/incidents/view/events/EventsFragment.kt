@@ -13,6 +13,7 @@ import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,8 +69,7 @@ import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.util.showToast
 import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.view.MainActivityEventListener
-import org.rfcx.incidents.view.events.adapter.StreamItem
-import org.rfcx.incidents.view.events.adapter.StreamItemAdapter
+import org.rfcx.incidents.view.events.adapter.StreamAdapter
 import org.rfcx.incidents.view.project.ProjectAdapter
 import org.rfcx.incidents.view.project.ProjectOnClickListener
 import java.util.Date
@@ -80,7 +80,7 @@ class EventsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-        (StreamItem) -> Unit {
+        (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -115,7 +115,7 @@ class EventsFragment :
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: EventsViewModel by viewModel()
     private val projectAdapter by lazy { ProjectAdapter(this) }
-    private val streamAdapter by lazy { StreamItemAdapter(this) }
+    private val streamAdapter by lazy { StreamAdapter(this) }
     lateinit var preferences: Preferences
 
     private lateinit var mapView: MapView
@@ -298,7 +298,6 @@ class EventsFragment :
         binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
         isShowProgressBar()
-        streamAdapter.items = listOf()
 
         listener.showBottomAppBar()
         binding.projectRecyclerView.visibility = View.GONE
@@ -343,15 +342,18 @@ class EventsFragment :
 
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
-                // streamAdapter.items = streams
-                // streamAdapter.notifyDataSetChanged()
+                Log.d("EventsFragment", "streams observer: loaded ${streams.size} items")
+                streamAdapter.items = streams
+                streamAdapter.notifyDataSetChanged()
                 setAlertFeatures(streams)
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
+                Log.d("EventsFragment", "streams observer: failed: ${it.message}")
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
+                Log.d("EventsFragment", "streams observer: loading")
                 isShowProgressBar()
             })
         }
@@ -365,8 +367,8 @@ class EventsFragment :
         Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
     }
 
-    override fun invoke(stream: StreamItem) {
-        listener.openEventDetail(stream.streamId, stream.distance)
+    override fun invoke(stream: Stream) {
+        listener.openEventDetail(stream.serverId, null) //, stream.distance)
     }
 
     private fun setupToolbar() {

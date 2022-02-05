@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.events.adapter
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -8,33 +7,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
-import org.rfcx.incidents.databinding.ItemGuardianBinding
+import org.rfcx.incidents.databinding.ItemStreamBinding
+import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
 
-class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
-    RecyclerView.Adapter<StreamItemAdapter.GuardianItemViewHolder>() {
-    var items: List<StreamItem> = arrayListOf()
-        @SuppressLint("NotifyDataSetChanged")
+class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
+    RecyclerView.Adapter<StreamAdapter.StreamViewHolder>() {
+    var items: List<Stream> = arrayListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuardianItemViewHolder {
-        val binding = ItemGuardianBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return GuardianItemViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StreamViewHolder {
+        val binding = ItemStreamBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return StreamViewHolder(binding)
     }
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: GuardianItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StreamViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
             onClickListener(items[position])
         }
     }
 
-    inner class GuardianItemViewHolder(binding: ItemGuardianBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class StreamViewHolder(binding: ItemStreamBinding) : RecyclerView.ViewHolder(binding.root) {
         private val guardianName = binding.guardianNameTextView
         private val timeTextView = binding.timeTextView
         private val bellImageView = binding.bellImageView
@@ -52,18 +51,18 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         private val peopleLayout = binding.peopleLayout
         private val numOfPeopleTextView = binding.numOfPeopleTextView
 
-        fun bind(item: StreamItem) {
+        fun bind(stream: Stream) {
             // Reset
             listOf(chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach { it.visibility = View.GONE }
 
-            guardianName.text = item.streamName
-            val alerts = item.alerts.sortedBy { a -> a.start }
-            recentTextView.visibility =
-                if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
-            hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
-            timeTextView.text = item.eventTime
+            guardianName.text = stream.name
+            // val alerts = stream.alerts.sortedBy { a -> a.start }
+            // recentTextView.visibility =
+            //     if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
+            // hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
+            // timeTextView.text = stream.eventTime
 
-            val hasNoEvents = item.eventSize == 0
+            val hasNoEvents = true // stream.eventSize == 0
             timeTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
             bellImageView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
             noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
@@ -74,22 +73,22 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
                 if (hasNoEvents) 16.toPx else 0.toPx,
                 if (hasNoEvents) 16.toPx else 10.toPx
             )
-            incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, item.incidentRef.toString())
+            incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, stream.incidentRef.toString())
 
-            val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
-            if (typeOfAlert.isEmpty()) return
-
-            var number = 0
-            typeOfAlert.forEachIndexed { index, alert ->
-                val type = alert.classification?.value ?: return
-                if (index < 2) {
-                    showIconType(type, alerts)
-                } else {
-                    otherLayout.visibility = View.VISIBLE
-                    number += getNumberOfAlertByType(alerts, type).toInt()
-                    numOfOtherTextView.text = (number).toString()
-                }
-            }
+            // val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
+            // if (typeOfAlert.isEmpty()) return
+            //
+            // var number = 0
+            // typeOfAlert.forEachIndexed { index, alert ->
+            //     val type = alert.classification?.value ?: return
+            //     if (index < 2) {
+            //         showIconType(type, alerts)
+            //     } else {
+            //         otherLayout.visibility = View.VISIBLE
+            //         number += getNumberOfAlertByType(alerts, type).toInt()
+            //         numOfOtherTextView.text = (number).toString()
+            //     }
+            // }
         }
 
         private fun showIconType(type: String, alerts: List<Alert>) {
@@ -130,13 +129,3 @@ class StreamItemAdapter(private val onClickListener: (StreamItem) -> Unit) :
         private const val CHAINSAW = "chainsaw"
     }
 }
-
-data class StreamItem(
-    val eventSize: Int,
-    val incidentRef: Int,
-    val distance: Double?,
-    val streamName: String,
-    val streamId: String,
-    val eventTime: String? = null,
-    val alerts: List<Alert>
-)
