@@ -18,7 +18,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ActivityMainBinding
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
-import org.rfcx.incidents.entity.report.Report
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.service.AlertNotification
 import org.rfcx.incidents.service.NetworkReceiver
@@ -36,7 +35,6 @@ import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
 import org.rfcx.incidents.view.events.detail.EventDetailFragment
-import org.rfcx.incidents.view.map.MapFragment
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
@@ -243,13 +241,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
     }
 
-    override fun moveMapIntoReportMarker(report: Report) {
-        val mapFragment = supportFragmentManager.findFragmentByTag(MapFragment.tag)
-        if (mapFragment is MapFragment) {
-            mapFragment.moveToReportMarker(report)
-        }
-    }
-
     override fun openCreateReportActivity(streamId: String) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_STREAM_ID, streamId)
@@ -402,7 +393,6 @@ interface MainActivityEventListener {
     fun showBottomAppBar()
     fun onBackPressed()
     fun openEventDetail(name: String, distance: Double?)
-    fun moveMapIntoReportMarker(report: Report)
     fun openCreateReportActivity(streamId: String)
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
