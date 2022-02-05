@@ -2,13 +2,23 @@ package org.rfcx.incidents.service
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.location.*
+import android.location.GnssStatus
+import android.location.GpsStatus
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.location.LocationProvider
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
@@ -18,15 +28,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
 import io.realm.Realm
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.RealmHelper
 import org.rfcx.incidents.view.MainActivity
-import java.util.*
+import java.util.Date
+import java.util.Timer
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.fixedRateTimer
 
@@ -51,7 +62,7 @@ class LocationTrackerService : Service() {
         private const val TAG = "LocationTrackerService"
     }
 
-    private val realm by lazy { Realm.getInstance(RealmHelper.migrationConfig()) }
+    private val realm by lazy { Realm.getInstance(AppRealm.configuration()) }
     private val trackingDb by lazy { TrackingDb(realm) }
 
     private val binder = LocationTrackerServiceBinder()

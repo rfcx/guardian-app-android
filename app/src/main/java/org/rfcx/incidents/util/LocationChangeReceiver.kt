@@ -7,12 +7,13 @@ import android.content.Intent
 import android.location.Location
 import com.google.android.gms.location.LocationResult
 import io.realm.Realm
+import org.rfcx.incidents.AppRealm
+import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.data.local.TrackingDb
 
 class LocationChangeReceiver : BroadcastReceiver() {
-    private val realm by lazy { Realm.getInstance(RealmHelper.migrationConfig()) }
+    private val realm by lazy { Realm.getInstance(AppRealm.configuration()) }
     private val trackingDb by lazy { TrackingDb(realm) }
     private var tracking = Tracking()
 

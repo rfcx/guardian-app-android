@@ -2,10 +2,14 @@ package org.rfcx.incidents.service
 
 import android.content.Context
 import android.util.Log
-import androidx.work.*
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import io.realm.Realm
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.data.local.LocationDb
-import org.rfcx.incidents.util.RealmHelper
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,7 +19,7 @@ class LocationCleanupWorker(context: Context, params: WorkerParameters) : Worker
 
     override fun doWork(): Result {
         // Delete locations older than 72 hours
-        val count = LocationDb(Realm.getInstance(RealmHelper.migrationConfig())).deleteSynced()
+        val count = LocationDb(Realm.getInstance(AppRealm.configuration())).deleteSynced()
         Log.d(TAG, "doWork: $count for deletion")
 
         return Result.success()

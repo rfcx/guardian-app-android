@@ -3,18 +3,25 @@ package org.rfcx.incidents.service
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.local.AlertDb
-import org.rfcx.incidents.data.remote.common.service.ServiceFactory
-import org.rfcx.incidents.entity.response.toCreateResponseRequest
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
-import org.rfcx.incidents.util.RealmHelper
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
+import org.rfcx.incidents.entity.response.toCreateResponseRequest
 
 /**
  * Background task for syncing data to the server
@@ -26,11 +33,12 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
         Log.d(TAG, "doWork")
 
         val eventService = ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, context)
-        val db = ResponseDb(Realm.getInstance(RealmHelper.migrationConfig()))
-        val alertDb = AlertDb(Realm.getInstance(RealmHelper.migrationConfig()))
-        val reportImageDb = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
-        val trackingFileDb = TrackingFileDb(Realm.getInstance(RealmHelper.migrationConfig()))
-        val voiceDb = VoiceDb(Realm.getInstance(RealmHelper.migrationConfig()))
+        val realm = Realm.getInstance(AppRealm.configuration())
+        val db = ResponseDb(realm)
+        val alertDb = AlertDb(realm)
+        val reportImageDb = ReportImageDb(realm)
+        val trackingFileDb = TrackingFileDb(realm)
+        val voiceDb = VoiceDb(realm)
 
         val responses = db.lockUnsent()
         Log.d(TAG, "doWork: found ${responses.size} unsent")

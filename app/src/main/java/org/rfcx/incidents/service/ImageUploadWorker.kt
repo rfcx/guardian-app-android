@@ -2,16 +2,23 @@ package org.rfcx.incidents.service
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import io.realm.Realm
 import me.echodev.resizer.Resizer
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.data.local.ReportImageDb
-import org.rfcx.incidents.util.RealmHelper
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import java.io.File
 
 /**
@@ -22,7 +29,7 @@ class ImageUploadWorker(private val context: Context, params: WorkerParameters) 
 
     override fun doWork(): Result {
         val api = ServiceFactory.makeAssetsService(BuildConfig.DEBUG, context)
-        val db = ReportImageDb(Realm.getInstance(RealmHelper.migrationConfig()))
+        val db = ReportImageDb(Realm.getInstance(AppRealm.configuration()))
         val images = db.lockUnsent()
 
         var someFailed = false

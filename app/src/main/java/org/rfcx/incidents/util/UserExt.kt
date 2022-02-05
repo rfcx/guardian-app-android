@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.view.login.LoginActivity
 
 fun Context.getTokenID(): String? {
@@ -18,13 +19,11 @@ fun Context.getUserNickname(): String {
 
 fun Context?.logout() {
     this?.let {
-        val preferenceHelper = Preferences.getInstance(it)
-        val projectCoreIds = preferenceHelper.getArrayList(Preferences.SUBSCRIBED_PROJECTS)
-        projectCoreIds?.forEach { coreId ->
-            CloudMessaging.unsubscribe(coreId)
+        Preferences.getInstance(it).getArrayList(Preferences.SUBSCRIBED_PROJECTS)?.forEach { projectId ->
+            CloudMessaging.unsubscribe(projectId)
         }
         this.removeLocationUpdates()
-        Realm.getInstance(RealmHelper.migrationConfig()).use { realm ->
+        Realm.getInstance(AppRealm.configuration()).use { realm ->
             realm.executeTransactionAsync({ bgRealm ->
                 bgRealm.deleteAll()
             }, {

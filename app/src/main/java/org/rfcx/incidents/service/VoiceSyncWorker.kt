@@ -4,21 +4,28 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import io.realm.Realm
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.data.local.VoiceDb
-import org.rfcx.incidents.util.RealmHelper
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import java.io.File
 
 class VoiceSyncWorker(private val context: Context, params: WorkerParameters) : Worker(context, params) {
     override fun doWork(): Result {
         val assetsService = ServiceFactory.makeAssetsService(BuildConfig.DEBUG, context)
-        val db = VoiceDb(Realm.getInstance(RealmHelper.migrationConfig()))
+        val db = VoiceDb(Realm.getInstance(AppRealm.configuration()))
         val voices = db.lockUnsent()
         var someFailed = false
         Log.d(TAG, "doWork: found ${voices.size} unsent")

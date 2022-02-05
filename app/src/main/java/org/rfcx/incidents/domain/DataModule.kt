@@ -4,6 +4,7 @@ import io.realm.Realm
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.JobExecutor
 import org.rfcx.incidents.UiThread
@@ -46,7 +47,6 @@ import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.RealmHelper
 
 object DataModule {
 
@@ -108,7 +108,7 @@ object DataModule {
     }
 
     val localModule = module {
-        factory<Realm> { Realm.getInstance(RealmHelper.migrationConfig()) }
+        factory<Realm> { Realm.getInstance(AppRealm.configuration()) }
         factory { CachedEndpointDb(get()) }
         factory { ProjectDb(get()) }
         factory { LocationDb(get()) }

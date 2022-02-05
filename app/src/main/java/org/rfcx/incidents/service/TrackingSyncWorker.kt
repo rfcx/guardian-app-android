@@ -2,16 +2,23 @@ package org.rfcx.companion.service
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import io.realm.Realm
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.data.local.TrackingFileDb
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.util.FileUtils.getMimeType
-import org.rfcx.incidents.util.RealmHelper
 import java.io.File
 
 class TrackingSyncWorker(val context: Context, params: WorkerParameters) :
@@ -19,7 +26,7 @@ class TrackingSyncWorker(val context: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
 
-        val db = TrackingFileDb(Realm.getInstance(RealmHelper.migrationConfig()))
+        val db = TrackingFileDb(Realm.getInstance(AppRealm.configuration()))
         val api = ServiceFactory.makeAssetsService(BuildConfig.DEBUG, context)
         val tracking = db.lockUnsent()
         var someFailed = false
