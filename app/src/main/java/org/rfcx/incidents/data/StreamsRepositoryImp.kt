@@ -25,7 +25,7 @@ class StreamsRepositoryImp(
     }
 
     private fun refreshFromAPI(projectId: String): Single<List<Stream>> {
-        return endpoint.getStreams().observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
+        return endpoint.getStreams(projects = listOf(projectId)).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
             rawStreams.forEach {
                 streamDb.insertOrUpdate(it)
                 eventDb.insertAlert(it.toEvent())
