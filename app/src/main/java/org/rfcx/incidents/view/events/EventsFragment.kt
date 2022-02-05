@@ -152,6 +152,7 @@ class EventsFragment :
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
+    // TODO Should not be using stream name
     private val streamNameReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
@@ -215,7 +216,6 @@ class EventsFragment :
         }
 
         viewModel.refreshProjects()
-        viewModel.refreshStreams()
     }
 
     private fun onClickCurrentLocationButton() {
@@ -310,9 +310,6 @@ class EventsFragment :
             }
             !requireContext().isNetworkAvailable() -> {
                 requireContext().showToast(getString(R.string.no_internet_connection))
-            }
-            else -> {
-                viewModel.refreshStreams()
             }
         }
     }
