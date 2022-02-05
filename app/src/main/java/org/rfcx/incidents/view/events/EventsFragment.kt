@@ -126,7 +126,7 @@ class EventsFragment :
     private val locationListener = object : android.location.LocationListener {
         override fun onLocationChanged(p0: Location) {
             moveCameraToCurrentLocation(p0)
-            viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
+            viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
 
             if (PermissionsManager.areLocationPermissionsGranted(context)) {
                 mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
@@ -701,7 +701,7 @@ class EventsFragment :
                 lastLocation?.let {
                     listener.setCurrentLocation(it)
                     moveCameraToCurrentLocation(it)
-                    viewModel.saveLastTimeToKnowTheCurrentLocation(requireContext(), Date().time)
+                    viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
                 }
                 mapBoxMap?.style?.let { enableLocationComponent(it) }
             } catch (ex: SecurityException) {

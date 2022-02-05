@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.events
 
-import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -22,7 +21,7 @@ import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.asLiveData
 
 class EventsViewModel(
-    private val context: Context,
+    private val preferences: Preferences,
     private val getProjectsUseCase: GetProjectsUseCase,
     private val getStreamsUseCase: GetStreamsUseCase,
     private val trackingDb: TrackingDb
@@ -54,11 +53,10 @@ class EventsViewModel(
         selectedProject.addSource(_selectedProjectId) { id ->
             projects.value?.let { result -> selectedProject.value = findProject(id, result) }
         }
-        _selectedProjectId.value = Preferences.getInstance(context).getInt(Preferences.SELECTED_PROJECT, -1)
+        _selectedProjectId.value = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
     }
 
     fun selectProject(id: Int) {
-        val preferences = Preferences.getInstance(context)
         preferences.putInt(Preferences.SELECTED_PROJECT, id)
         _selectedProjectId.value = id
     }
@@ -100,8 +98,7 @@ class EventsViewModel(
         )
     }
 
-    fun saveLastTimeToKnowTheCurrentLocation(context: Context, time: Long) {
-        val preferences = Preferences.getInstance(context)
+    fun saveLastTimeToKnowTheCurrentLocation(time: Long) {
         preferences.putLong(Preferences.LATEST_CURRENT_LOCATION_TIME, time)
     }
 
