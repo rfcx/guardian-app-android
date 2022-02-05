@@ -1,4 +1,4 @@
-package org.rfcx.incidents
+package org.rfcx.incidents.domain
 
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import java.util.concurrent.LinkedBlockingQueue

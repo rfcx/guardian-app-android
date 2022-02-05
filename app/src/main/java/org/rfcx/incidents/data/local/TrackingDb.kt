@@ -5,7 +5,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import java.util.*
 
 class TrackingDb(private val realm: Realm) {

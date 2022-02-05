@@ -19,7 +19,7 @@ import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.setFormatLabel

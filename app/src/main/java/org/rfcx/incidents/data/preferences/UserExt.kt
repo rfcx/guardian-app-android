@@ -4,7 +4,8 @@ import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import io.realm.Realm
-import org.rfcx.incidents.AppRealm
+import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.view.login.LoginActivity
 
 fun Context.getTokenID(): String? {

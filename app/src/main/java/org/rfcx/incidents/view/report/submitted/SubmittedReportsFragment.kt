@@ -11,21 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentSubmittedReportsBinding
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
-import org.rfcx.incidents.util.showToast
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
-import org.rfcx.incidents.view.project.ProjectAdapter
-import org.rfcx.incidents.view.project.ProjectOnClickListener
+import org.rfcx.incidents.view.events.adapter.ProjectAdapter
+import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
 
 class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, ProjectOnClickListener {
     private var _binding: FragmentSubmittedReportsBinding? = null
@@ -107,11 +106,19 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
                 when {
                     requireContext().isOnAirplaneMode() -> {
                         isRefreshing = false
-                        requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     !requireContext().isNetworkAvailable() -> {
                         isRefreshing = false
-                        requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection))
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     else -> {
                         viewModel.fetchProjects()
@@ -181,10 +188,10 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
 
         when {
             requireContext().isOnAirplaneMode() -> {
-                requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
+                Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_LONG).show()
             }
             !requireContext().isNetworkAvailable() -> {
-                requireContext().showToast(getString(R.string.no_internet_connection))
+                Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
             }
             else -> {
                 streams = viewModel.getStreamIdsInProjectId()

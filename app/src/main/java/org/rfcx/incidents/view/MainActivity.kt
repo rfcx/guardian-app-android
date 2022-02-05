@@ -25,15 +25,15 @@ import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.LocationPermissions
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.logout
 import org.rfcx.incidents.util.saveUserLoginWith
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.util.startLocationChange
-import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
+import org.rfcx.incidents.view.events.detail.AlertDetailActivity
 import org.rfcx.incidents.view.events.detail.EventDetailFragment
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE

@@ -55,6 +55,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentNewEventsBinding
@@ -62,16 +63,14 @@ import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
-import org.rfcx.incidents.util.showToast
 import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.view.MainActivityEventListener
+import org.rfcx.incidents.view.events.adapter.ProjectAdapter
+import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
 import org.rfcx.incidents.view.events.adapter.StreamAdapter
-import org.rfcx.incidents.view.project.ProjectAdapter
-import org.rfcx.incidents.view.project.ProjectOnClickListener
 import java.util.Date
 
 class EventsFragment :
@@ -265,7 +264,11 @@ class EventsFragment :
                 when {
                     requireContext().isOnAirplaneMode() || !requireContext().isNetworkAvailable() -> {
                         isRefreshing = false
-                        requireContext().showToast(getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode))
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     else -> {
                         viewModel.refreshProjects(true)
@@ -305,10 +308,10 @@ class EventsFragment :
 
         when {
             requireContext().isOnAirplaneMode() -> {
-                requireContext().showToast(getString(R.string.pls_off_air_plane_mode))
+                Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_LONG).show()
             }
             !requireContext().isNetworkAvailable() -> {
-                requireContext().showToast(getString(R.string.no_internet_connection))
+                Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -808,7 +811,7 @@ class EventsFragment :
             viewModel.refreshStreams(force = true)
         } else {
             binding.refreshView.isRefreshing = false
-            requireContext().showToast(getString(R.string.no_internet_connection))
+            Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
         }
     }
 }

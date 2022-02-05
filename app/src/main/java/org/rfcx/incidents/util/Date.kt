@@ -1,8 +1,15 @@
 package org.rfcx.incidents.util
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.text.format.DateUtils
+import org.rfcx.incidents.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 private val isoSdf by lazy {
     val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
@@ -16,25 +23,13 @@ private val isoFormat by lazy {
     sdf
 }
 
-private val isoSdfNotZ by lazy {
-    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US)
-    sdf.timeZone = TimeZone.getTimeZone("UTC")
-    sdf
-}
 private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
 private const val dateFormat = "d MMM yyyy, HH:mm"
-private const val dateShortFormat = "dd MMM"
 
 private val outputTimeSdf by lazy {
     val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
-    sdf.timeZone = TimeZone.getDefault()
-    sdf
-}
-
-private val outputDateShortFormatSdf by lazy {
-    val sdf = SimpleDateFormat(dateShortFormat, Locale.getDefault())
     sdf.timeZone = TimeZone.getDefault()
     sdf
 }
@@ -63,20 +58,8 @@ fun Date.toIsoFormatString(): String {
     return isoFormat.format(this) // pattern 20211128T153441279Z
 }
 
-fun String.toIsoString(): Date {
-    return isoSdf.parse(this) // pattern 2008-09-15T15:53:00.000Z
-}
-
-fun Date.toIsoNotZString(): String {
-    return isoSdfNotZ.format(this) // pattern 2008-09-15T15:53:00.000
-}
-
 fun Date.toTimeString(): String {
     return outputTimeSdf.format(this)
-}
-
-fun Date.toDateShortString(): String {
-    return outputDateShortFormatSdf.format(this)
 }
 
 fun Date.toShortDateString(): String {
@@ -93,12 +76,6 @@ fun Date.toDateTimeString(): String {
 
 fun Date.millisecondsSince(): Long {
     return Date().time - this.time
-}
-
-fun Date.dateForShortLink(): String {
-    val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-    val simpleDateFormat = SimpleDateFormat(pattern)
-    return simpleDateFormat.format(this)
 }
 
 private val legacyInputFormatters by lazy {
@@ -122,7 +99,27 @@ fun legacyDateParser(input: String?): Date? {
     return null // not found format matching
 }
 
-fun dateParser(input: String?): Date? {
-    input ?: return null
-    return outputStandardDateSdf.parse(input)
+// TODO Moved from Common, is it still needed?
+private const val SECOND: Long = 1000
+private const val MINUTE = 60 * SECOND
+private const val HOUR = 60 * MINUTE
+private const val DAY = 24 * HOUR
+private const val WEEK = 7 * DAY
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
+    val niceDateStr =
+        DateUtils.getRelativeTimeSpanString(this.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+
+    return if (niceDateStr.toString() == "0 minutes ago") {
+        context.getString(R.string.report_time_second)
+    } else if (niceDateStr.toString() == "Yesterday") {
+        "${context.getString(R.string.yesterday)} ${this.toTimeString()}"
+    } else if (!niceDateStr.toString().contains("ago")) {
+        this.toDateTimeString()
+    } else if (niceDateStr.toString().contains("days ago")) {
+        this.toDateTimeString()
+    } else {
+        niceDateStr.toString()
+    }
 }

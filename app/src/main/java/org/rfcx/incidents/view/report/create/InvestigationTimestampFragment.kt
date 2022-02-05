@@ -10,15 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentInvestigationTimestampBinding
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
-import org.rfcx.incidents.util.getDay
-import org.rfcx.incidents.util.getMonth
-import org.rfcx.incidents.util.getYear
-import org.rfcx.incidents.util.showToast
 import org.rfcx.incidents.util.toShortDateString
 import java.text.DecimalFormat
 import java.util.Calendar
@@ -80,7 +77,10 @@ class InvestigationTimestampFragment : Fragment() {
 
             if (DateUtils.isToday(res.investigatedAt.time)) {
                 binding.todayRadioButton.isChecked = true
-            } else if (calendar.getDay() == yesterday.getDay() && calendar.getMonth() == yesterday.getMonth() && calendar.getYear() == yesterday.getYear()) {
+            } else if (calendar.get(Calendar.DAY_OF_MONTH) == yesterday.get(Calendar.DAY_OF_MONTH) && calendar.get(Calendar.MONTH) == yesterday.get(Calendar.MONTH) && calendar.get(
+                    Calendar.YEAR
+                ) == yesterday.get(Calendar.YEAR)
+            ) {
                 binding.yesterdayRadioButton.isChecked = true
             } else {
                 binding.earlierRadioButton.text = calendar.time.toShortDateString()
@@ -93,7 +93,7 @@ class InvestigationTimestampFragment : Fragment() {
     private fun setupOnListener() {
         binding.nextStepButton.setOnClickListener {
             if (calendar.time > today.time) {
-                context?.showToast(getString(R.string.do_not_future_time))
+                Toast.makeText(context, getString(R.string.do_not_future_time), Toast.LENGTH_LONG).show()
             } else {
                 listener.setInvestigationTimestamp(calendar.time)
                 listener.handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
@@ -110,13 +110,13 @@ class InvestigationTimestampFragment : Fragment() {
 
             when (checkedId) {
                 R.id.todayRadioButton -> {
-                    setCalendar(getHour(), getMinute(), today.getDay(), today.getMonth(), today.getYear())
+                    setCalendar(getHour(), getMinute(), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH), today.get(Calendar.YEAR))
                 }
                 R.id.yesterdayRadioButton -> {
-                    setCalendar(getHour(), getMinute(), yesterday.getDay(), yesterday.getMonth(), yesterday.getYear())
+                    setCalendar(getHour(), getMinute(), yesterday.get(Calendar.DAY_OF_MONTH), yesterday.get(Calendar.MONTH), yesterday.get(Calendar.YEAR))
                 }
                 R.id.earlierRadioButton -> {
-                    setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
+                    setCalendar(getHour(), getMinute(), earlier.get(Calendar.DAY_OF_MONTH), earlier.get(Calendar.MONTH), earlier.get(Calendar.YEAR))
                 }
             }
         }
@@ -128,10 +128,10 @@ class InvestigationTimestampFragment : Fragment() {
             earlier.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             earlier.set(Calendar.MONTH, monthOfYear)
             earlier.set(Calendar.YEAR, year)
-            setCalendar(getHour(), getMinute(), earlier.getDay(), earlier.getMonth(), earlier.getYear())
+            setCalendar(getHour(), getMinute(), earlier.get(Calendar.DAY_OF_MONTH), earlier.get(Calendar.MONTH), earlier.get(Calendar.YEAR))
             binding.earlierRadioButton.text = calendar.time.toShortDateString()
             setShowEdit()
-        }, date.getYear(), date.getMonth(), date.getDay())
+        }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
 
         datePicker.datePicker.maxDate = today.timeInMillis
         datePicker.setOnCancelListener {

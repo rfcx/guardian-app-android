@@ -3,8 +3,8 @@ package org.rfcx.incidents.view
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.rfcx.incidents.view.alert.AlertDetailViewModel
 import org.rfcx.incidents.view.events.EventsViewModel
+import org.rfcx.incidents.view.events.detail.AlertDetailViewModel
 import org.rfcx.incidents.view.events.detail.EventDetailViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel

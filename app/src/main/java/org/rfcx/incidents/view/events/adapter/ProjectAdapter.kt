@@ -1,4 +1,4 @@
-package org.rfcx.incidents.view.project
+package org.rfcx.incidents.view.events.adapter
 
 import android.view.LayoutInflater
 import android.view.View

@@ -4,10 +4,7 @@ import io.realm.Realm
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.JobExecutor
-import org.rfcx.incidents.UiThread
 import org.rfcx.incidents.data.DetectionsRepositoryImp
 import org.rfcx.incidents.data.EventsRepositoryImp
 import org.rfcx.incidents.data.MediaRepositoryImp
@@ -42,11 +39,13 @@ import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
-import org.rfcx.incidents.util.CredentialKeeper
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.view.UiThread
 
 object DataModule {
 

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
-import org.rfcx.incidents.util.CredentialKeeper
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity

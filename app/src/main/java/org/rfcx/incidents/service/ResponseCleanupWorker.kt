@@ -9,10 +9,10 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.TrackingFileDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import java.util.concurrent.TimeUnit
 
 /**
@@ -55,7 +55,7 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
     }
 
     companion object {
-        private const val TAG = "ReportCleanupWorker"
+        private const val TAG = "ResponseCleanupWorker"
         private const val UNIQUE_WORK_KEY = "ReportCleanupWorkerUniqueKey"
 
         fun enqueuePeriodically() {

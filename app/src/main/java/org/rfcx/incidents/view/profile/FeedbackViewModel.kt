@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import org.rfcx.incidents.R
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.getUserId
 import org.rfcx.incidents.util.getUserNickname
 import java.io.File

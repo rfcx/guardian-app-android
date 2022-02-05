@@ -28,13 +28,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationRequest
 import io.realm.Realm
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.view.MainActivity
 import java.util.Date
 import java.util.Timer

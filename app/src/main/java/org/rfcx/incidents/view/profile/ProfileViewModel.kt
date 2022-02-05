@@ -8,7 +8,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.logout
 
 class ProfileViewModel(

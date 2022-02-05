@@ -1,4 +1,4 @@
-package org.rfcx.incidents.view.alert
+package org.rfcx.incidents.view.events.detail
 
 import android.content.Context
 import android.content.Intent
@@ -19,7 +19,7 @@ import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
-import org.rfcx.incidents.view.alert.AlertDetailViewModel.Companion.maxProgress
+import org.rfcx.incidents.view.events.detail.AlertDetailViewModel.Companion.maxProgress
 import java.util.Date
 
 class AlertDetailActivity : AppCompatActivity() {

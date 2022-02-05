@@ -8,8 +8,8 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.data.local.LocationDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import java.util.concurrent.TimeUnit
 
 /**

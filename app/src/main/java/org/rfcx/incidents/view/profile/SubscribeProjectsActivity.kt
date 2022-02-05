@@ -13,7 +13,7 @@ import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivitySubscribeProjectsBinding
 import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.handleError
 import org.rfcx.incidents.util.isNetworkAvailable

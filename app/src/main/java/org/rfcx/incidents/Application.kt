@@ -14,6 +14,7 @@ import net.danlew.android.joda.JodaTimeAndroid
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.domain.DataModule
 import org.rfcx.incidents.service.AirplaneModeReceiver
 import org.rfcx.incidents.service.ResponseCleanupWorker

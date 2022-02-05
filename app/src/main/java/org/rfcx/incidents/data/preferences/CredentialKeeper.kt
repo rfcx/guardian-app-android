@@ -1,4 +1,4 @@
-package org.rfcx.incidents.util
+package org.rfcx.incidents.data.preferences
 
 import android.content.Context
 import org.rfcx.incidents.entity.user.UserAuthResponse

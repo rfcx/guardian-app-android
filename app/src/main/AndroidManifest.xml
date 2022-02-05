@@ -41,7 +41,7 @@
         </provider>
 
         <activity
-            android:name=".view.alert.AlertDetailActivity"
+            android:name=".view.events.detail.AlertDetailActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
 

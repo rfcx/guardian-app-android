@@ -16,9 +16,9 @@ import org.rfcx.incidents.entity.Err
 import org.rfcx.incidents.entity.Ok
 import org.rfcx.incidents.entity.user.SetNameRequest
 import org.rfcx.incidents.entity.user.SetNameResponse
-import org.rfcx.incidents.util.CredentialKeeper
-import org.rfcx.incidents.util.CredentialVerifier
-import org.rfcx.incidents.util.Preferences
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.getUserId
 
 class SetUserNameViewModel(private val context: Context, private val sendNameUseCase: SendNameUseCase) : ViewModel() {

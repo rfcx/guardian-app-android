@@ -7,8 +7,9 @@ import android.content.Intent
 import android.location.Location
 import com.google.android.gms.location.LocationResult
 import io.realm.Realm
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 

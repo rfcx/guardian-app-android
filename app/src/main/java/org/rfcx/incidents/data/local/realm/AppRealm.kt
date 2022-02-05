@@ -1,4 +1,4 @@
-package org.rfcx.incidents
+package org.rfcx.incidents.data.local.realm
 
 import android.content.Context
 import android.util.Log
@@ -7,6 +7,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
+import org.rfcx.incidents.BuildConfig
 
 class AppRealm {
 

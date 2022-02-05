@@ -15,9 +15,9 @@ import me.echodev.resizer.Resizer
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import java.io.File
 

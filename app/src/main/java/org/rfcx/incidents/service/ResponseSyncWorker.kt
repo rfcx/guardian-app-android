@@ -13,13 +13,13 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
-import org.rfcx.incidents.AppRealm
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
+import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.entity.response.toCreateResponseRequest
 

@@ -15,12 +15,14 @@ import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityCreateReportBinding
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
@@ -28,11 +30,9 @@ import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
-import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
-import org.rfcx.incidents.util.showToast
 import java.util.Date
 
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
@@ -314,10 +314,14 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         viewModel.saveTrackingFile(response, this)
         when {
             this.isOnAirplaneMode() -> {
-                this.showToast(getString(R.string.unable_to_submit_on_airplane_mode) + " " + getString(R.string.pls_off_air_plane_mode))
+                Toast.makeText(
+                    this,
+                    getString(R.string.unable_to_submit_on_airplane_mode) + " " + getString(R.string.pls_off_air_plane_mode),
+                    Toast.LENGTH_LONG
+                ).show()
             }
             !this.isNetworkAvailable() -> {
-                this.showToast(getString(R.string.unable_to_submit_no_internet_connection))
+                Toast.makeText(this, getString(R.string.unable_to_submit_no_internet_connection), Toast.LENGTH_LONG).show()
             }
             else -> {
                 ResponseSyncWorker.enqueue()

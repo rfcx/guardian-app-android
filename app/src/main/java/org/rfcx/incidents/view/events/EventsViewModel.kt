@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
@@ -17,8 +18,7 @@ import org.rfcx.incidents.domain.GetStreamsUseCase
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.project.Project
-import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.asLiveData
+import org.rfcx.incidents.data.preferences.Preferences
 
 class EventsViewModel(
     private val preferences: Preferences,
