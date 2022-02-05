@@ -34,13 +34,13 @@ object UiModule {
 
     val profileModule = module {
         viewModel { ProfileViewModel(androidContext(), get(), get()) }
-        viewModel { SubscribeProjectsViewModel(androidContext(), get()) }
+        viewModel { SubscribeProjectsViewModel(get()) }
         viewModel { FeedbackViewModel(androidContext()) }
     }
 
     var loginModule = module {
         viewModel { LoginViewModel(androidContext(), get()) }
         viewModel { SetUserNameViewModel(androidContext(), get()) }
-        viewModel { SetProjectsViewModel(androidContext(), get()) }
+        viewModel { SetProjectsViewModel(get()) }
     }
 }

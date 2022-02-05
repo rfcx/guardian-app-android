@@ -9,21 +9,16 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.getUserEmail
 import org.rfcx.incidents.util.logout
 
 class ProfileViewModel(
     private val context: Context,
-    private val profileData: ProfileData,
+    profileData: ProfileData,
     private val projectDb: ProjectDb
 ) : ViewModel() {
 
-    val notificationReceiving = MutableLiveData<Boolean>()
-    val notificationReceivingByEmail = MutableLiveData<Boolean>()
     val appVersion = MutableLiveData<String>()
     val userName = MutableLiveData<String>()
-    val sendToEmail = MutableLiveData<String>()
-    val showNotificationByEmail = MutableLiveData<Boolean>()
     val eventSubtitle = MutableLiveData<String>()
     val showSystemOptions = MutableLiveData<Boolean>()
     val preferences = Preferences.getInstance(context)
@@ -31,12 +26,8 @@ class ProfileViewModel(
     private val _logoutState = MutableLiveData<Boolean>()
 
     init {
-        notificationReceiving.value = profileData.getReceiveNotification()
-        notificationReceivingByEmail.value = profileData.getReceiveNotificationByEmail()
         appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
         userName.value = profileData.getUserNickname()
-        sendToEmail.value = "${context.getString(R.string.sent_to)} ${context.getUserEmail()}"
-        showNotificationByEmail.value = context.getUserEmail() != ""
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
     }
@@ -47,21 +38,7 @@ class ProfileViewModel(
 
     fun onLogout() {
         _logoutState.value = true
-        if (profileData.getReceiveNotificationByEmail()) {
-            // TODO Unsubscribe
-//            unsubscribeUseCase.execute(object : DisposableSingleObserver<SubscribeResponse>() {
-//                override fun onSuccess(t: SubscribeResponse) {
-//                    _logoutState.value = false
-            context.logout()
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                    _logoutState.value = false
-//                }
-//            }, SubscribeRequest(listOf("XYZ"))) // TODO Replace with unsubscribe from projects
-        } else {
-            context.logout()
-        }
+        context.logout()
     }
 
     private fun updateEventSubtitle() {

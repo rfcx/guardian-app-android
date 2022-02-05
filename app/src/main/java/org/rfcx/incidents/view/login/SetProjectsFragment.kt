@@ -156,7 +156,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
         binding.selectProjectButton.isEnabled = false
 
         if (item.selected) {
-            viewModel.unsubscribeProject(item.project) { status ->
+            viewModel.unsubscribe(item.project) { status ->
                 projectsAdapter.subscribingProject = null
                 if (!status) {
                     setSelectedProject(items, position)
@@ -171,7 +171,7 @@ class SetProjectsFragment : Fragment(), OnProjectsItemClickListener, SwipeRefres
                     if (subscribedProjectIds.isNotEmpty()) getString(R.string.continue_text) else getString(R.string.skip)
             }
         } else {
-            viewModel.setProjectsAndSubscribe(item.project) { status ->
+            viewModel.subscribe(item.project) { status ->
                 projectsAdapter.subscribingProject = null
                 if (!status) {
                     setSelectedProject(items, position)

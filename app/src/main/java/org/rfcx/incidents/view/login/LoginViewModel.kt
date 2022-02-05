@@ -19,7 +19,6 @@ import org.rfcx.incidents.entity.Ok
 import org.rfcx.incidents.entity.user.UserAuthResponse
 import org.rfcx.incidents.util.CredentialKeeper
 import org.rfcx.incidents.util.CredentialVerifier
-import org.rfcx.incidents.util.Preferences
 import org.rfcx.incidents.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) :
@@ -85,9 +84,6 @@ class LoginViewModel(private val context: Context, private val checkUserTouchUse
                         }
                         is Ok -> {
                             _userAuth.postValue(result.value)
-
-                            val preferences = Preferences.getInstance(context)
-                            preferences.putString(Preferences.LOGIN_WITH, "email")
                         }
                     }
                 }

@@ -31,11 +31,6 @@ class CredentialKeeper(val context: Context) {
         if (user.picture != null) {
             preferences.putString(Preferences.IMAGE_PROFILE, user.picture)
         }
-        preferences.putStringSet(Preferences.ROLES, user.roles)
-        preferences.putStringSet(Preferences.ACCESSIBLE_SITES, user.accessibleSites)
-        if (user.defaultSite != null) {
-            preferences.putString(Preferences.DEFAULT_SITE, user.defaultSite)
-        }
     }
 
     fun clear() {
@@ -46,10 +41,5 @@ class CredentialKeeper(val context: Context) {
     fun hasValidCredentials(): Boolean {
         val preferences = Preferences.getInstance(context)
         return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty()
-    }
-
-    fun isRanger(): Boolean {
-        val preferences = Preferences.getInstance(context)
-        return preferences.getStringSet(Preferences.ROLES).contains("rfcxUser")
     }
 }

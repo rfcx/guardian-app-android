@@ -113,7 +113,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                 dialog.show()
 
                 if (item.selected) {
-                    viewModel.unsubscribeProject(item.project) { status ->
+                    viewModel.unsubscribe(item.project) { status ->
                         dialog.dismiss()
                         if (!status) {
                             projectsItem?.let { items ->
@@ -127,7 +127,7 @@ class SubscribeProjectsActivity : BaseActivity(), OnProjectsItemClickListener, S
                         }
                     }
                 } else {
-                    viewModel.setProjectsAndSubscribe(item.project) { status ->
+                    viewModel.subscribe(item.project) { status ->
                         dialog.dismiss()
                         if (!status) {
                             projectsItem?.let { items ->

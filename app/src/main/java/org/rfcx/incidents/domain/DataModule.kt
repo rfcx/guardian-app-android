@@ -41,7 +41,6 @@ import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
-import org.rfcx.incidents.data.local.WeeklySummaryData
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
@@ -120,7 +119,6 @@ object DataModule {
         factory { StreamDb(get()) }
         factory { TrackingDb(get()) }
         factory { TrackingFileDb(get()) }
-        factory { WeeklySummaryData(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }

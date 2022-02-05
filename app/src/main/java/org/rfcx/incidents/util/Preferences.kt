@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Date
 
 class Preferences(context: Context) {
 
@@ -20,38 +20,25 @@ class Preferences(context: Context) {
                 INSTANCE ?: Preferences(context).also { INSTANCE = it }
             }
 
-        private const val PREFERENCES_NAME = "Rfcx.Ranger"
-        const val PREFIX = "org.rfcx.ranger:"
+        private const val PREFERENCES_NAME = "default"
 
-        const val ID_TOKEN = "${PREFIX}ID_TOKEN"
-        const val ACCESS_TOKEN = "${PREFIX}ACCESS_TOKEN"
-        const val REFRESH_TOKEN = "${PREFIX}REFRESH_TOKEN"
-        const val USER_GUID = "${PREFIX}USER_GUID"
-        const val EMAIL = "${PREFIX}EMAIL"
-        const val NICKNAME = "${PREFIX}NICKNAME"
-        const val ROLES = "${PREFIX}ROLES"
-        const val ACCESSIBLE_SITES = "${PREFIX}ACCESSIBLE_SITES"
-        const val DEFAULT_SITE = "${PREFIX}SITE"
-        const val SHOULD_RECEIVE_EVENT_NOTIFICATIONS = "${PREFIX}SHOULD_RECEIVE_EVENT_NOTIFICATIONS"
-        const val SELECTED_PROJECT_CORE_ID = "${PREFIX}SELECTED_PROJECT_CORE_ID"
-        const val SELECTED_GUARDIAN_GROUP = "${PREFIX}SELECTED_GUARDIAN_GROUP"
-        const val SELECTED_GUARDIAN_GROUP_FULLNAME = "${PREFIX}SELECTED_GUARDIAN_GROUP_FULLNAME"
-        const val SITE_FULLNAME = "${PREFIX}SITE_FULLNAME"
-        const val SITE_TIMEZONE = "${PREFIX}SITE_TIMEZONE"
-        const val LOGIN_WITH = "${PREFIX}LOGIN_WITH"
-        const val LAST_STATUS_SYNCING = "${PREFIX}LAST_STATUS_SYNCING"
-        const val EVENT_ONLINE_TOTAL = "${PREFIX}EVENT_ONLINE_TOTAL"
-        const val IMAGE_PROFILE = "${PREFIX}IMAGE_PROFILE"
-        const val EMAIL_SUBSCRIBE = "${PREFIX}EMAIL_SUBSCRIBE"
-        const val COORDINATES_FORMAT = "${PREFIX}COORDINATES_FORMAT"
-        const val OFFLINE_MAP_STATE = "${PREFIX}OFFLINE_MAP_STATE"
+        // User
+        const val ID_TOKEN = "ID_TOKEN"
+        const val ACCESS_TOKEN = "ACCESS_TOKEN"
+        const val REFRESH_TOKEN = "REFRESH_TOKEN"
+        const val USER_GUID = "USER_GUID"
+        const val EMAIL = "EMAIL"
+        const val NICKNAME = "NICKNAME"
+        const val IMAGE_PROFILE = "IMAGE_PROFILE"
 
-        /*-- New design --*/
-        const val SELECTED_PROJECT = "${PREFIX}SELECTED_PROJECT"
-        const val LATEST_GET_LOCATION_TIME = "${PREFIX}LATEST_GET_LOCATION_TIME"
-        const val LATEST_CURRENT_LOCATION_TIME = "${PREFIX}LATEST_CURRENT_LOCATION_TIME"
-        const val SUBSCRIBED_PROJECTS = "${PREFIX}SUBSCRIBED_PROJECTS"
-        const val DISPLAY_THEME = "${PREFIX}DISPLAY_THEME"
+        // UI state
+        const val SELECTED_PROJECT = "SELECTED_PROJECT"
+        const val OFFLINE_MAP_STATE = "OFFLINE_MAP_STATE"
+
+        // Caching
+        const val LATEST_GET_LOCATION_TIME = "LATEST_GET_LOCATION_TIME"
+        const val LATEST_CURRENT_LOCATION_TIME = "LATEST_CURRENT_LOCATION_TIME"
+        const val SUBSCRIBED_PROJECTS = "SUBSCRIBED_PROJECTS"
     }
 
     init {

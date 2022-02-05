@@ -1,7 +1,7 @@
 package org.rfcx.incidents.data.local
 
 import org.rfcx.incidents.util.Preferences
-import java.util.*
+import java.util.Locale
 
 class ProfileData(private val preferences: Preferences) {
 
@@ -12,17 +12,5 @@ class ProfileData(private val preferences: Preferences) {
                 Locale.getDefault()
             ) else it.toString()
         } else "Responder"
-    }
-
-    fun getReceiveNotification(): Boolean {
-        return preferences.getBoolean(Preferences.SHOULD_RECEIVE_EVENT_NOTIFICATIONS, true)
-    }
-
-    fun getReceiveNotificationByEmail(): Boolean {
-        return preferences.getBoolean(Preferences.EMAIL_SUBSCRIBE, false)
-    }
-
-    fun updateReceivingNotificationByEmail(received: Boolean) {
-        preferences.putBoolean(Preferences.EMAIL_SUBSCRIBE, received)
     }
 }

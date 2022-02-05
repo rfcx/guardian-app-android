@@ -80,9 +80,6 @@ fun Context?.saveUserLoginWith(): String {
         FirebaseCrashlytics.getInstance().log(e.message.toString())
     }
 
-    val preferences = this?.let { Preferences.getInstance(it) }
-    preferences?.putString(Preferences.LOGIN_WITH, loginWith)
-
     return loginWith
 }
 

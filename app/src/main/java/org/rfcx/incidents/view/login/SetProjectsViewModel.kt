@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.login
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,6 @@ import org.rfcx.incidents.entity.project.Project
 import org.rfcx.incidents.util.CloudMessaging
 
 class SetProjectsViewModel(
-    private val context: Context,
     private val getProjectsUseCase: GetProjectsUseCase
 ) : ViewModel() {
     private val _projects = MutableLiveData<Result<List<Project>>>()
@@ -37,15 +35,11 @@ class SetProjectsViewModel(
         )
     }
 
-    fun setProjectsAndSubscribe(project: Project, callback: (Boolean) -> Unit) {
-        if (project.id == null) return callback(false)
+    fun subscribe(project: Project, callback: (Boolean) -> Unit) {
         CloudMessaging.subscribeIfRequired(project.id) { status -> callback(status) }
-        CloudMessaging.setProject(context, project.id)
     }
 
-    fun unsubscribeProject(project: Project, callback: (Boolean) -> Unit) {
-        if (project.id == null) return callback(false)
-
+    fun unsubscribe(project: Project, callback: (Boolean) -> Unit) {
         CloudMessaging.unsubscribe(project.id) { status -> callback(status) }
     }
 }
