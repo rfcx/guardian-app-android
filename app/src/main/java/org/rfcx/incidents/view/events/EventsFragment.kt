@@ -157,7 +157,7 @@ class EventsFragment :
             if (intent == null) return
             val streamName = intent.getStringExtra("streamName")
             if (streamName != null) {
-                viewModel.refreshStreams(viewModel.getSelectProjectId(), false)
+                viewModel.refreshStreams()
             }
         }
     }
@@ -215,7 +215,7 @@ class EventsFragment :
         }
 
         viewModel.refreshProjects()
-        viewModel.refreshStreams(viewModel.getSelectProjectId())
+        viewModel.refreshStreams()
     }
 
     private fun onClickCurrentLocationButton() {
@@ -247,7 +247,7 @@ class EventsFragment :
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
                     if (!binding.refreshView.isRefreshing && (visibleItemCount + firstVisibleItemPosition) >= total && firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore) {
-                        viewModel.loadMoreStreams()
+                        viewModel.refreshStreams(more = true)
                     }
                 }
             })
@@ -312,7 +312,7 @@ class EventsFragment :
                 requireContext().showToast(getString(R.string.no_internet_connection))
             }
             else -> {
-                viewModel.refreshStreams(viewModel.getSelectProjectId(), true)
+                viewModel.refreshStreams()
             }
         }
     }
@@ -756,7 +756,7 @@ class EventsFragment :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            viewModel.refreshStreams(viewModel.getSelectProjectId(), false)
+            viewModel.refreshStreams()
         }
     }
 
@@ -806,7 +806,7 @@ class EventsFragment :
 
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
-            viewModel.refreshStreams(viewModel.getSelectProjectId(), true)
+            viewModel.refreshStreams(force = true)
         } else {
             binding.refreshView.isRefreshing = false
             requireContext().showToast(getString(R.string.no_internet_connection))

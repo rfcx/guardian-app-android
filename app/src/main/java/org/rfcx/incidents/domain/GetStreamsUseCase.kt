@@ -20,5 +20,6 @@ class GetStreamsUseCase(
 
 data class GetStreamsParams(
     val projectId: String,
-    val forceRefresh: Boolean = false
+    val forceRefresh: Boolean = false,
+    val more: Boolean = false
 )
