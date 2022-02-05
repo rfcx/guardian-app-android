@@ -35,7 +35,6 @@ import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.LocationDb
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.data.local.ReportDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
@@ -115,7 +114,6 @@ object DataModule {
         factory { CachedEndpointDb(get()) }
         factory { ProjectDb(get()) }
         factory { LocationDb(get()) }
-        factory { ReportDb(get()) }
         factory { ResponseDb(get()) }
         factory { ReportImageDb(get()) }
         factory { VoiceDb(get()) }

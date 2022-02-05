@@ -54,7 +54,7 @@ class ResponseDb(val realm: Realm) {
                 .isNotNull(Response.RESPONSE_SUBMITTED_AT).findAll().createSnapshot()
             unsentCopied = unsent.toList()
             unsent.forEach { response ->
-                response.syncState = ReportDb.SENDING
+                response.syncState = SyncState.SENDING.value
             }
         }
         return unsentCopied

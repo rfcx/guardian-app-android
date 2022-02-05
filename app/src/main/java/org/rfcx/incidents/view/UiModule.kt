@@ -9,9 +9,6 @@ import org.rfcx.incidents.view.events.detail.EventDetailViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
 import org.rfcx.incidents.view.login.SetUserNameViewModel
-import org.rfcx.incidents.view.map.MapDetailViewModel
-import org.rfcx.incidents.view.map.MapViewModel
-import org.rfcx.incidents.view.map.ReportViewPagerFragmentViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
 import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
@@ -33,12 +30,6 @@ object UiModule {
     val reportsModule = module {
         viewModel { CreateReportViewModel(get(), get(), get(), get(), get(), get(), get()) }
         viewModel { ResponseDetailViewModel(get(), get(), get()) }
-    }
-
-    val mapModule = module {
-        viewModel { MapViewModel(get(), get()) }
-        viewModel { MapDetailViewModel(get(), get()) }
-        viewModel { ReportViewPagerFragmentViewModel(get()) }
     }
 
     val profileModule = module {

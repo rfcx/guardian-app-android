@@ -88,7 +88,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             try {
                 val realm = Realm.getInstance(RealmHelper.fallbackConfig())
                 realm.close()
-            } catch (e: RealmMigrationNeededException) {
+            } catch (_: RealmMigrationNeededException) {
             }
         }
     }
@@ -98,7 +98,6 @@ class Application : MultiDexApplication(), LifecycleObserver {
             UiModule.mainModule,
             UiModule.eventsModule,
             UiModule.reportsModule,
-            UiModule.mapModule,
             UiModule.profileModule,
             UiModule.loginModule,
             DataModule.localModule,
