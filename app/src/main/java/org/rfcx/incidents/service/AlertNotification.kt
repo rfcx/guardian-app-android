@@ -26,7 +26,7 @@ object AlertNotification {
 
         val intent = Intent(context, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra(ALERT_ID_NOTI_INTENT, getStreamName(data))
+        intent.putExtra(INTENT_KEY_STREAM_ID, data["streamId"]) // TODO Test that the streamId exists
 
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -53,12 +53,8 @@ object AlertNotification {
         return notificationBuilder.build()
     }
 
-    private fun getStreamName(data: Map<String, String>): String? {
-        return data["streamName"]
-    }
-
     const val NOTIFICATION_CHANNEL_ID = "Ranger Alert"
     const val NOTIFICATION_CHANNEL_NAME = "Alert"
     const val NOTIFICATION_CHANNEL_DESCRIPTION = "Alert"
-    const val ALERT_ID_NOTI_INTENT = "ALERT_ID_NOTI_INTENT"
+    const val INTENT_KEY_STREAM_ID = "INTENT_KEY_STREAM_ID"
 }

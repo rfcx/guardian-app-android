@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.domain.GetEventsUseCase
-import org.rfcx.incidents.data.remote.events.ResponseEvent
 import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.StreamDb
+import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.data.remote.events.ResponseEvent
+import org.rfcx.incidents.domain.GetEventsUseCase
 import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.data.local.StreamDb
-import org.rfcx.incidents.data.local.TrackingDb
 
-class GuardianEventDetailViewModel(
+class EventDetailViewModel(
     private val alertDb: AlertDb,
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
@@ -26,7 +26,7 @@ class GuardianEventDetailViewModel(
 
     fun getEventsCount(streamId: String): Long = alertDb.getAlertCount(streamId)
 
-    fun getStream(serverId: String): Stream? = streamDb.getStreamByCoreId(serverId)
+    fun getStream(serverId: String): Stream? = streamDb.getStream(serverId)
 
     fun getAlertsByStream(streamId: String): List<Alert> = alertDb.getAlertsByDescending(streamId)
 

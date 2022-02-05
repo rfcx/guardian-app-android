@@ -35,7 +35,7 @@ import org.rfcx.incidents.util.startLocationChange
 import org.rfcx.incidents.view.alert.AlertDetailActivity
 import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.EventsFragment
-import org.rfcx.incidents.view.events.detail.GuardianEventDetailFragment
+import org.rfcx.incidents.view.events.detail.EventDetailFragment
 import org.rfcx.incidents.view.map.MapFragment
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
@@ -108,7 +108,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     override fun onBackPressed() {
         when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
-            is GuardianEventDetailFragment -> {
+            is EventDetailFragment -> {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
@@ -222,11 +222,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.bottomBar.visibility = View.VISIBLE
     }
 
-    override fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String) {
+    override fun openEventDetail(streamId: String, distance: Double?) {
         hideBottomAppBar()
         startFragment(
-            GuardianEventDetailFragment.newInstance(name, distance, guardianId),
-            GuardianEventDetailFragment.tag
+            EventDetailFragment.newInstance(streamId, distance),
+            EventDetailFragment.tag
         )
     }
 
@@ -250,10 +250,9 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
     }
 
-    override fun openCreateReportActivity(guardianName: String, guardianId: String) {
+    override fun openCreateReportActivity(streamId: String) {
         val intent = Intent(this, CreateReportActivity::class.java)
-        intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_NAME, guardianName)
-        intent.putExtra(CreateReportActivity.EXTRA_GUARDIAN_ID, guardianId)
+        intent.putExtra(CreateReportActivity.EXTRA_STREAM_ID, streamId)
         getResult.launch(intent)
     }
 
@@ -372,11 +371,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     private fun getEventFromIntentIfHave(intent: Intent?) {
-        if (intent?.hasExtra(AlertNotification.ALERT_ID_NOTI_INTENT) == true) {
-            val streamName: String? = intent.getStringExtra(AlertNotification.ALERT_ID_NOTI_INTENT)
-            streamName?.let { name ->
-                val stream = mainViewModel.getStreamByName(name)
-                stream?.serverId?.let { openGuardianEventDetail(name, null, it) }
+        if (intent?.hasExtra(AlertNotification.INTENT_KEY_STREAM_ID) == true) {
+            val streamId = intent.getStringExtra(AlertNotification.INTENT_KEY_STREAM_ID)
+            if (streamId != null) {
+                openEventDetail(streamId, null)
             }
         }
     }
@@ -385,7 +383,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         fun startActivity(context: Context, eventGuId: String?) {
             val intent = Intent(context, MainActivity::class.java)
             if (eventGuId != null)
-                intent.putExtra(AlertNotification.ALERT_ID_NOTI_INTENT, eventGuId)
+                intent.putExtra(AlertNotification.INTENT_KEY_STREAM_ID, eventGuId)
             context.startActivity(intent)
         }
     }
@@ -403,9 +401,9 @@ interface MainActivityEventListener {
     fun hideBottomAppBar()
     fun showBottomAppBar()
     fun onBackPressed()
-    fun openGuardianEventDetail(name: String, distance: Double?, guardianId: String)
+    fun openEventDetail(name: String, distance: Double?)
     fun moveMapIntoReportMarker(report: Report)
-    fun openCreateReportActivity(guardianName: String, guardianId: String)
+    fun openCreateReportActivity(streamId: String)
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
     fun openGoogleMap(stream: Stream)

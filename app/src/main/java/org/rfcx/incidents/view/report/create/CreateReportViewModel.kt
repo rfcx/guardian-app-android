@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
+import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.location.TrackingFile
@@ -15,7 +17,7 @@ import org.rfcx.incidents.entity.location.toListDoubleArray
 import org.rfcx.incidents.entity.report.ReportImage
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.GeoJsonUtils
-import java.util.*
+import java.util.Date
 
 class CreateReportViewModel(
     private val responseDb: ResponseDb,
@@ -23,8 +25,13 @@ class CreateReportViewModel(
     private val reportImageDb: ReportImageDb,
     private val trackingDb: TrackingDb,
     private val trackingFileDb: TrackingFileDb,
-    private val alertDb: AlertDb
+    private val alertDb: AlertDb,
+    private val streamDb: StreamDb
 ) : ViewModel() {
+
+    fun getStream(id: String): Stream? {
+        return streamDb.getStream(id)
+    }
 
     fun getImagesFromLocal(id: Int): List<ReportImage> = reportImageDb.getByReportId(id)
 

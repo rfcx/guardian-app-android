@@ -44,14 +44,12 @@ class MainActivityViewModel(
 
     private fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
 
-    fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
-
     fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
     private fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> =
-        streamDb.getStreamsByProjectCoreId(projectCodeId)
+        streamDb.getStreamsByProject(projectCodeId)
 
     fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
         ?: context.getString(R.string.all_projects)

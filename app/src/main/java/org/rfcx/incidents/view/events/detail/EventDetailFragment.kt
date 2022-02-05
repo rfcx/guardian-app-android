@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.events.toAlert
 import org.rfcx.incidents.data.remote.common.success
+import org.rfcx.incidents.data.remote.events.toAlert
 import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
 import org.rfcx.incidents.entity.alert.Alert
 import org.rfcx.incidents.entity.location.Coordinate
@@ -26,24 +26,22 @@ import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
-class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
+class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentGuardianEventDetailBinding? = null
     private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
-    private val viewModel: GuardianEventDetailViewModel by viewModel()
+    private val viewModel: EventDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
     private val alertItemAdapter by lazy { AlertItemAdapter(this) }
 
-    var name: String? = null
-    var guardianId: String? = null
+    lateinit var streamId: String
     var distance: Double? = null
     var alerts = listOf<Alert>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val arg = arguments ?: return
-        name = arg.getString(ARG_NAME)
-        guardianId = arg.getString(ARG_GUARDIAN_ID)
+        streamId = arg.getString(ARG_STREAM_ID) ?: throw Error("Stream not set")
         if (arg.get(ARG_DISTANCE) != null) {
             distance = arg.getDouble(ARG_DISTANCE)
         }
@@ -85,32 +83,27 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
             alertItemAdapter.items = alerts
 
             binding.createReportButton.setOnClickListener {
-                name?.let { name ->
-                    guardianId?.let { id ->
-                        analytics?.trackCreateResponseEvent()
-                        listener.getCurrentLocation()?.let { loc ->
-                            saveLocation(loc)
-                        }
-                        listener.openCreateReportActivity(name, id)
-                    }
+                analytics?.trackCreateResponseEvent()
+                listener.getCurrentLocation()?.let { loc ->
+                    saveLocation(loc)
                 }
+                listener.openCreateReportActivity(streamId)
             }
         }
 
         binding.openMapsButton.setOnClickListener {
-            guardianId?.let { id ->
-                val stream = viewModel.getStream(id)
-                if (stream != null) {
-                    listener.openGoogleMap(stream)
-                }
+            viewModel.getStream(streamId)?.let { stream ->
+                listener.openGoogleMap(stream)
             }
         }
 
-        binding.guardianNameTextView.text = name
+        viewModel.getStream(streamId)?.let { stream ->
+            binding.guardianNameTextView.text = stream.name
+        }
         binding.distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
         binding.distanceTextView.text = distance?.setFormatLabel()
 
-        guardianId?.let {
+        streamId.let {
             if (viewModel.getEventsCount(it) != 0L) {
                 alertItemAdapter.items = viewModel.getAlertsByStream(it)
                 isShowProgressBar(false)
@@ -125,7 +118,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
         }
 
         binding.alertsSwipeRefreshView.apply {
-            setOnRefreshListener(this@GuardianEventDetailFragment)
+            setOnRefreshListener(this@EventDetailFragment)
             setColorSchemeResources(R.color.colorPrimary)
         }
     }
@@ -175,7 +168,7 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
     }
 
     override fun onRefresh() {
-        guardianId?.let { viewModel.fetchEvents(it) }
+        streamId.let { viewModel.fetchEvents(it) }
         binding.notHaveEventsLayout.visibility = View.GONE
     }
 
@@ -184,17 +177,15 @@ class GuardianEventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLay
     }
 
     companion object {
-        const val tag = "GuardianEventDetailFragment"
-        private const val ARG_NAME = "ARG_NAME"
+        const val tag = "EventDetailFragment"
         private const val ARG_DISTANCE = "ARG_DISTANCE"
-        private const val ARG_GUARDIAN_ID = "ARG_GUARDIAN_ID"
+        private const val ARG_STREAM_ID = "ARG_STREAM_ID"
 
         @JvmStatic
-        fun newInstance(name: String, distance: Double?, guardianId: String): GuardianEventDetailFragment {
-            return GuardianEventDetailFragment().apply {
+        fun newInstance(streamId: String, distance: Double?): EventDetailFragment {
+            return EventDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_NAME, name)
-                    putString(ARG_GUARDIAN_ID, guardianId)
+                    putString(ARG_STREAM_ID, streamId)
                     if (distance != null) putDouble(ARG_DISTANCE, distance)
                 }
             }

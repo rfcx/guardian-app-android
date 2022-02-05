@@ -18,24 +18,28 @@ class StreamsRepositoryImp(
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {
     override fun get(projectId: String, forceRefresh: Boolean): Single<List<Stream>> {
-        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
-            return refreshFromAPI()
+        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(projectId))) {
+            return refreshFromAPI(projectId)
         }
-        return getFromLocalDB()
+        return getFromLocalDB(projectId)
     }
 
-    private fun refreshFromAPI(): Single<List<Stream>> {
+    private fun refreshFromAPI(projectId: String): Single<List<Stream>> {
         return endpoint.getStreams().observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
             rawStreams.forEach {
                 streamDb.insertOrUpdate(it)
                 eventDb.insertAlert(it.toEvent())
             }
-            cachedEndpointDb.updateCachedEndpoint("GetProjects")
-            getFromLocalDB()
+            cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
+            getFromLocalDB(projectId)
         }
     }
 
-    private fun getFromLocalDB(): Single<List<Stream>> {
-        return Single.just(streamDb.getAll())
+    private fun getFromLocalDB(projectId: String): Single<List<Stream>> {
+        return Single.just(streamDb.getStreamsByProject(projectId))
+    }
+
+    private fun cacheKey(projectId: String): String {
+        return "GetStreams-${projectId}"
     }
 }

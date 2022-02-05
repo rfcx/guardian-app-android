@@ -13,7 +13,6 @@ import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -39,17 +38,15 @@ import java.util.Date
 class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     companion object {
-        const val EXTRA_GUARDIAN_NAME = "EXTRA_GUARDIAN_NAME"
-        const val EXTRA_GUARDIAN_ID = "EXTRA_GUARDIAN_ID"
+        const val EXTRA_STREAM_ID = "EXTRA_STREAM_ID"
         const val EXTRA_RESPONSE_ID = "EXTRA_RESPONSE_ID"
 
         const val RESULT_CODE = 20
         const val EXTRA_SCREEN = "EXTRA_SCREEN"
 
-        fun startActivity(context: Context, guardianName: String, guardianId: String, responseId: Int?) {
+        fun startActivity(context: Context, streamId: String, responseId: Int?) {
             val intent = Intent(context, CreateReportActivity::class.java)
-            intent.putExtra(EXTRA_GUARDIAN_NAME, guardianName)
-            intent.putExtra(EXTRA_GUARDIAN_ID, guardianId)
+            intent.putExtra(EXTRA_STREAM_ID, streamId)
             intent.putExtra(EXTRA_RESPONSE_ID, responseId)
             context.startActivity(intent)
         }
@@ -59,8 +56,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     private val viewModel: CreateReportViewModel by viewModel()
 
     private var passedChecks = ArrayList<Int>()
+    lateinit var streamId: String
     private var streamName: String? = null
-    private var streamId: String? = null
     private var responseId: Int? = null
 
     private var _response: Response? = null
@@ -72,30 +69,30 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         binding = ActivityCreateReportBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        streamName = intent?.getStringExtra(EXTRA_GUARDIAN_NAME)
-        streamId = intent?.getStringExtra(EXTRA_GUARDIAN_ID)
+        streamId = intent?.getStringExtra(EXTRA_STREAM_ID) ?: throw Error("Stream not set")
         responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
 
         responseId?.let {
             val response = viewModel.getResponseById(it)
             response?.let { res ->
                 setResponse(res)
-                streamName = res.streamName
             }
         }
+
+        // TODO stream id should already be on the ViewModel
+        streamName = viewModel.getStream(streamId)?.name ?: "Unknown"
+
         getImagesFromLocal()
         setupToolbar()
         handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 
-        binding.createReportContainer.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                if (currentFocus != null) {
-                    imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-                }
-                return true
+        binding.createReportContainer.setOnTouchListener { v, event ->
+            val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            if (currentFocus != null) {
+                imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             }
-        })
+            true
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -258,7 +255,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     override fun setInvestigationTimestamp(date: Date) {
         val response = _response ?: Response()
         response.investigatedAt = date
-        response.streamId = streamId ?: response.streamId
+        response.streamId = streamId
         response.streamName = streamName ?: response.streamName
         setResponse(response)
     }

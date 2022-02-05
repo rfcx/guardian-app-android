@@ -368,8 +368,8 @@ class EventsFragment :
         Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
     }
 
-    override fun invoke(guardian: StreamItem) {
-        listener.openGuardianEventDetail(guardian.streamName, guardian.distance, guardian.streamId)
+    override fun invoke(stream: StreamItem) {
+        listener.openEventDetail(stream.streamId, stream.distance)
     }
 
     private fun setupToolbar() {
@@ -486,20 +486,18 @@ class EventsFragment :
                 val features = clusterLeavesFeatureCollection?.features()
                 if (clusterLeavesFeatureCollection != null) {
                     if (features?.groupBy { it }?.size == 1) {
-                        val name = features[0].getProperty(PROPERTY_MARKER_ALERT_SITE).asString
                         val distance = features[0].getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
                         val streamId = features[0].getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-                        listener.openGuardianEventDetail(name, distance.toDouble(), streamId)
+                        listener.openEventDetail(streamId, distance.toDouble())
                     } else {
                         moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
                     }
                 }
             } else {
                 val selectedFeature = alertFeatures[0]
-                val name = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_SITE).asString
                 val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
                 val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
-                listener.openGuardianEventDetail(name, if (distance.isBlank()) null else distance.toDouble(), streamId)
+                listener.openEventDetail(streamId, if (distance.isBlank()) null else distance.toDouble())
             }
             return true
         }
