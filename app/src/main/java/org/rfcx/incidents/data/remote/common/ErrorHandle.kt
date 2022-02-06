@@ -1,12 +1,10 @@
-package org.rfcx.incidents.util
+package org.rfcx.incidents.data.remote.common
 
 import android.content.Context
 import android.widget.Toast
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.entity.ErrorResponse
-import org.rfcx.incidents.entity.ErrorResponse2
+import org.rfcx.incidents.util.logout
 import retrofit2.HttpException
 import java.io.IOException
 

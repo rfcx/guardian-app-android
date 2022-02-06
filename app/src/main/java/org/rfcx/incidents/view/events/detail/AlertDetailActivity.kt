@@ -15,7 +15,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivityAlertDetailBinding
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.event.Alert
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo

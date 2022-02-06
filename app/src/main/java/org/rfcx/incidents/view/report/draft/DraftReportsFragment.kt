@@ -12,7 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.FragmentDraftReportsBinding
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.Analytics

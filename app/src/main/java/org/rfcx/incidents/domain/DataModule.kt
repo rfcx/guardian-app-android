@@ -6,7 +6,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.DetectionsRepositoryImp
-import org.rfcx.incidents.data.EventsRepositoryImp
 import org.rfcx.incidents.data.MediaRepositoryImp
 import org.rfcx.incidents.data.PasswordChangeRepositoryImp
 import org.rfcx.incidents.data.ProfilePhotoRepositoryImp
@@ -14,11 +13,9 @@ import org.rfcx.incidents.data.ProjectsRepositoryImp
 import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
-import org.rfcx.incidents.data.UnsubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
-import org.rfcx.incidents.data.interfaces.EventsRepository
 import org.rfcx.incidents.data.interfaces.MediaRepository
 import org.rfcx.incidents.data.interfaces.PasswordChangeRepository
 import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
@@ -26,7 +23,6 @@ import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
-import org.rfcx.incidents.data.interfaces.UnsubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -40,11 +36,11 @@ import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
-import org.rfcx.incidents.data.preferences.CredentialKeeper
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -59,9 +55,6 @@ object DataModule {
 
         single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
-
-        single { EventsRepositoryImp(get()) } bind EventsRepository::class
-        single { GetEventsUseCase(get(), get(), get()) }
 
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
         single { GetDetectionsUseCase(get(), get(), get()) }
@@ -84,9 +77,6 @@ object DataModule {
         single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
         single { SubscribeUseCase(get(), get(), get()) }
 
-        single { UnsubscribeRepositoryImp(get()) } bind UnsubscribeRepository::class
-        single { UnsubscribeUseCase(get(), get(), get()) }
-
         single { MediaRepositoryImp(get()) } bind MediaRepository::class
         single { MediaUseCase(get(), get(), get()) }
     }
@@ -96,7 +86,6 @@ object DataModule {
         factory { ServiceFactory.makeStreamsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeDetectionsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeMediaService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makeEventsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }

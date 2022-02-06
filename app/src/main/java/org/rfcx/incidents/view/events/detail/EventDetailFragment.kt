@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
-import org.rfcx.incidents.data.remote.events.toAlert
 import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.event.Alert
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.setFormatLabel
@@ -126,7 +125,7 @@ class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRe
     private fun setObserve() {
         viewModel.getAlertsFromRemote.observe(viewLifecycleOwner) { it ->
             it.success({ list ->
-                alertItemAdapter.items = list.map { a -> a.toAlert() }
+                alertItemAdapter.items = list
                 binding.notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                 isShowProgressBar(false)
                 binding.alertsSwipeRefreshView.isRefreshing = false

@@ -1,8 +1,8 @@
 package org.rfcx.incidents.data.remote.subscribe
 
 import io.reactivex.Single
-import org.rfcx.incidents.entity.SubscribeRequest
-import org.rfcx.incidents.entity.SubscribeResponse
+import org.rfcx.incidents.entity.user.SubscribeRequest
+import org.rfcx.incidents.entity.user.SubscribeResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 

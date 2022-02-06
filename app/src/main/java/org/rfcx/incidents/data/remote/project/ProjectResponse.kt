@@ -1,7 +1,7 @@
 package org.rfcx.incidents.data.remote.project
 
-import org.rfcx.incidents.entity.project.Permissions
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Permissions
+import org.rfcx.incidents.entity.stream.Project
 
 data class ProjectResponse(
     var id: String = "",

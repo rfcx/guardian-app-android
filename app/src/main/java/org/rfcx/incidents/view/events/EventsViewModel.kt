@@ -15,9 +15,9 @@ import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.GetStreamsUseCase
-import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.data.preferences.Preferences
 
 class EventsViewModel(

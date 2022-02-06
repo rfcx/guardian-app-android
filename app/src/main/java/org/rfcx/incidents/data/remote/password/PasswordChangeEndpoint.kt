@@ -1,8 +1,8 @@
 package org.rfcx.incidents.data.remote.password
 
 import io.reactivex.Single
-import org.rfcx.incidents.entity.PasswordRequest
-import org.rfcx.incidents.entity.PasswordResponse
+import org.rfcx.incidents.entity.user.PasswordRequest
+import org.rfcx.incidents.entity.user.PasswordResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 

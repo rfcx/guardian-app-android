@@ -7,7 +7,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.CloudMessaging
 
 class SubscribeProjectsViewModel(

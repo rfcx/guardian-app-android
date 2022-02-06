@@ -7,9 +7,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemProjectBinding
-import org.rfcx.incidents.entity.project.Permissions
-import org.rfcx.incidents.entity.project.Project
-import org.rfcx.incidents.entity.project.isGuest
+import org.rfcx.incidents.entity.stream.Permissions
+import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.entity.stream.isGuest
 
 class ProjectAdapter(private val listener: ProjectOnClickListener) :
     RecyclerView.Adapter<ProjectAdapter.ProjectSelectViewHolder>() {

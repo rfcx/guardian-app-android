@@ -4,7 +4,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.rfcx.incidents.data.remote.streams.StreamResponse
 import org.rfcx.incidents.data.remote.streams.toStream
-import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.stream.Stream
 
 class StreamDb(private val realm: Realm) {
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.databinding.ItemEventBinding
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.event.Alert
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 
 class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :

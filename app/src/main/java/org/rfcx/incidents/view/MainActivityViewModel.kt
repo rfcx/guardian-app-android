@@ -14,7 +14,7 @@ import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences

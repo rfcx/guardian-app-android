@@ -59,9 +59,9 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentNewEventsBinding
-import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable

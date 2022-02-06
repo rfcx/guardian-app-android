@@ -9,13 +9,13 @@ import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
-import org.rfcx.incidents.entity.Stream
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.location.toListDoubleArray
-import org.rfcx.incidents.entity.report.ReportImage
+import org.rfcx.incidents.entity.response.ReportImage
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.GeoJsonUtils
 import java.util.Date
 

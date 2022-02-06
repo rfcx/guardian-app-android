@@ -3,9 +3,9 @@ package org.rfcx.incidents.data.local
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
-import org.rfcx.incidents.entity.report.ReportImage
-import org.rfcx.incidents.entity.report.ReportImage.Companion.FIELD_REPORT_ID
-import org.rfcx.incidents.entity.report.ReportImage.Companion.FIELD_REPORT_SERVER_ID
+import org.rfcx.incidents.entity.response.ReportImage
+import org.rfcx.incidents.entity.response.ReportImage.Companion.FIELD_REPORT_ID
+import org.rfcx.incidents.entity.response.ReportImage.Companion.FIELD_REPORT_SERVER_ID
 import org.rfcx.incidents.entity.response.Response
 
 /**

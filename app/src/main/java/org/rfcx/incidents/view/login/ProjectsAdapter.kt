@@ -7,9 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemSelectSubscribeProjectsBinding
-import org.rfcx.incidents.entity.OnProjectsItemClickListener
-import org.rfcx.incidents.entity.project.Project
-import org.rfcx.incidents.entity.project.isGuest
+import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.entity.stream.isGuest
 
 class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
     RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
@@ -81,6 +80,11 @@ class ProjectsAdapter(val listener: OnProjectsItemClickListener) :
             view.isClickable = clickable
         }
     }
+}
+
+interface OnProjectsItemClickListener {
+    fun onItemClick(item: ProjectsItem, position: Int)
+    fun onLockImageClicked()
 }
 
 data class ProjectsItem(val project: Project, var selected: Boolean)

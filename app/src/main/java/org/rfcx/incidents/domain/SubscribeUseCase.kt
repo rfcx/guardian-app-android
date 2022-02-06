@@ -5,8 +5,8 @@ import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.domain.base.SingleUseCase
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
-import org.rfcx.incidents.entity.SubscribeRequest
-import org.rfcx.incidents.entity.SubscribeResponse
+import org.rfcx.incidents.entity.user.SubscribeRequest
+import org.rfcx.incidents.entity.user.SubscribeResponse
 
 class SubscribeUseCase(
     private val subscribeRepository: SubscribeRepository,
@@ -14,6 +14,6 @@ class SubscribeUseCase(
     postExecutionThread: PostExecutionThread
 ) : SingleUseCase<SubscribeRequest, SubscribeResponse>(threadExecutor, postExecutionThread) {
     override fun buildUseCaseObservable(params: SubscribeRequest): Single<SubscribeResponse> {
-        return subscribeRepository.sendBody(params)
+        return subscribeRepository.subscribe(params)
     }
 }

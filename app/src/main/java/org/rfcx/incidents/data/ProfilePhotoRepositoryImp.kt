@@ -4,7 +4,7 @@ import io.reactivex.Single
 import okhttp3.MultipartBody
 import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
 import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
-import org.rfcx.incidents.entity.ProfilePhotoResponse
+import org.rfcx.incidents.entity.user.ProfilePhotoResponse
 
 class ProfilePhotoRepositoryImp(private val profilePhotoEndpoint: ProfilePhotoEndpoint) : ProfilePhotoRepository {
     override fun sendProfilePhoto(sendBody: MultipartBody.Part): Single<ProfilePhotoResponse> {

@@ -4,26 +4,9 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.kotlin.deleteFromRealm
-import org.rfcx.incidents.data.remote.events.ResponseEvent
-import org.rfcx.incidents.data.remote.events.toAlert
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.event.Alert
 
 class AlertDb(private val realm: Realm) {
-    fun insertAlert(response: ResponseEvent) {
-        realm.executeTransaction {
-            val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_SERVER_ID, response.id).findFirst()
-
-            if (alert == null) {
-                val alertObj = response.toAlert()
-                val id = (
-                    it.where(Alert::class.java).max(Alert.ALERT_ID)
-                        ?.toInt() ?: 0
-                    ) + 1
-                alertObj.id = id
-                it.insert(alertObj)
-            }
-        }
-    }
 
     fun insertAlert(alertObj: Alert) {
         realm.executeTransaction {

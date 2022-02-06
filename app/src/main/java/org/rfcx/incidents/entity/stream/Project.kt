@@ -1,4 +1,4 @@
-package org.rfcx.incidents.entity.project
+package org.rfcx.incidents.entity.stream
 
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey

@@ -7,8 +7,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
+import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
-import org.rfcx.incidents.data.remote.events.EventsEndpoint
 import org.rfcx.incidents.data.remote.media.MediaEndpoint
 import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
 import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
@@ -18,7 +18,6 @@ import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
-import org.rfcx.incidents.util.GsonProvider
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -56,14 +55,6 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(MediaEndpoint::class.java)
-    }
-
-    fun makeEventsService(isDebug: Boolean, context: Context): EventsEndpoint {
-        return createRetrofit(
-            BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-            GsonProvider.getInstance().gson
-        )
-            .create(EventsEndpoint::class.java)
     }
 
     fun makeCreateResponseService(isDebug: Boolean, context: Context): CreateResponseEndpoint {

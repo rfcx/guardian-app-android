@@ -4,10 +4,8 @@ import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.Err
-import org.rfcx.incidents.entity.ErrorResponse
 import org.rfcx.incidents.entity.Ok
 import org.rfcx.incidents.entity.Result
-import org.rfcx.incidents.util.GsonProvider
 import retrofit2.Response
 
 class ResponseParserException(message: String) : Exception(message)

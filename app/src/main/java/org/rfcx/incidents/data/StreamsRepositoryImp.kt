@@ -7,7 +7,7 @@ import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.domain.executor.PostExecutionThread
-import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.stream.Stream
 
 class StreamsRepositoryImp(
     private val endpoint: Endpoint,

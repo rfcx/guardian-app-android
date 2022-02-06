@@ -16,8 +16,8 @@ import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ActivityMainBinding
-import org.rfcx.incidents.entity.Stream
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.entity.event.Alert
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.service.AlertNotification
 import org.rfcx.incidents.service.NetworkReceiver

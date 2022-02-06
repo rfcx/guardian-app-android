@@ -1,7 +1,7 @@
 package org.rfcx.incidents.data.remote.detections
 
 import io.reactivex.Single
-import org.rfcx.incidents.entity.alert.Detections
+import org.rfcx.incidents.entity.event.Detections
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

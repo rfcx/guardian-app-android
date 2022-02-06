@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
-import org.rfcx.incidents.entity.Stream
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.entity.event.Alert
 
 class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
     RecyclerView.Adapter<StreamAdapter.StreamViewHolder>() {

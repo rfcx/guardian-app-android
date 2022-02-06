@@ -4,7 +4,7 @@ import io.realm.Realm
 import io.realm.Sort
 import org.rfcx.incidents.data.remote.project.ProjectResponse
 import org.rfcx.incidents.data.remote.project.toProject
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.entity.stream.Project
 
 class ProjectDb(val realm: Realm) {
 

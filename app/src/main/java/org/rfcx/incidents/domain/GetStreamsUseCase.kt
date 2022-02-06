@@ -5,7 +5,7 @@ import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.domain.base.SingleUseCase
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
-import org.rfcx.incidents.entity.Stream
+import org.rfcx.incidents.entity.stream.Stream
 
 class GetStreamsUseCase(
     private val repository: StreamsRepository,

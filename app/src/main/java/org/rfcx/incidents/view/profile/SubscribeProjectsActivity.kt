@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.handleError
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivitySubscribeProjectsBinding
-import org.rfcx.incidents.entity.OnProjectsItemClickListener
 import org.rfcx.incidents.util.Analytics
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
-import org.rfcx.incidents.util.handleError
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.base.BaseActivity
+import org.rfcx.incidents.view.login.OnProjectsItemClickListener
 import org.rfcx.incidents.view.login.ProjectsAdapter
 import org.rfcx.incidents.view.login.ProjectsItem
 

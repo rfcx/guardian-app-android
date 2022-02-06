@@ -1,12 +1,12 @@
 package org.rfcx.incidents.view.report.detail
 
 import androidx.lifecycle.ViewModel
-import org.rfcx.incidents.entity.location.TrackingFile
-import org.rfcx.incidents.entity.report.ReportImage
-import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.TrackingFileDb
+import org.rfcx.incidents.entity.location.TrackingFile
+import org.rfcx.incidents.entity.response.ReportImage
+import org.rfcx.incidents.entity.response.Response
 
 class ResponseDetailViewModel(
     private val responseDb: ResponseDb,

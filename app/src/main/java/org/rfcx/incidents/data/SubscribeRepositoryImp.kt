@@ -3,11 +3,15 @@ package org.rfcx.incidents.data
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
-import org.rfcx.incidents.entity.SubscribeRequest
-import org.rfcx.incidents.entity.SubscribeResponse
+import org.rfcx.incidents.entity.user.SubscribeRequest
+import org.rfcx.incidents.entity.user.SubscribeResponse
 
 class SubscribeRepositoryImp(private val subscribeEndpoint: SubscribeEndpoint) : SubscribeRepository {
-    override fun sendBody(sendBody: SubscribeRequest): Single<SubscribeResponse> {
-        return subscribeEndpoint.sendGroups(sendBody)
+    override fun subscribe(request: SubscribeRequest): Single<SubscribeResponse> {
+        return subscribeEndpoint.sendGroups(request)
+    }
+
+    override fun unsubscribe(request: SubscribeRequest): Single<SubscribeResponse> {
+        return subscribeEndpoint.sendGroupsUnsubscribe(request)
     }
 }

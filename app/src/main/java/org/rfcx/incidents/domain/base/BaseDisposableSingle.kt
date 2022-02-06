@@ -2,7 +2,7 @@ package org.rfcx.incidents.domain.base
 
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.util.getResultError
+import org.rfcx.incidents.data.remote.common.getResultError
 
 abstract class BaseDisposableSingle<T> : DisposableSingleObserver<T>() {
 

@@ -1,9 +1,9 @@
 package org.rfcx.incidents.data.remote.streams
 
-import org.rfcx.incidents.entity.Classification
 import org.rfcx.incidents.entity.Incident
-import org.rfcx.incidents.entity.Stream
-import org.rfcx.incidents.entity.alert.Alert
+import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Classification
+import org.rfcx.incidents.entity.stream.Stream
 import java.util.Date
 
 data class StreamResponse(
