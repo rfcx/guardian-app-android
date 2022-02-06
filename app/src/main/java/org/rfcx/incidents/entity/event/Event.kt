@@ -18,15 +18,15 @@ open class Event(
     var classification: Classification? = null,
 ) : RealmModel {
     companion object {
-        const val TABLE_NAME = "Alert"
-        const val ALERT_ID = "id"
-        const val ALERT_NAME = "name"
-        const val ALERT_STREAM_ID = "streamId"
-        const val ALERT_PROJECT_ID = "projectId"
-        const val ALERT_CREATED_AT = "createdAt"
-        const val ALERT_START = "start"
-        const val ALERT_END = "end"
-        const val ALERT_CLASSIFICATION = "classification"
-        const val ALERT_INCIDENT = "incident"
+        const val TABLE_NAME = "Event"
+        const val EVENT_ID = "id"
+        const val EVENT_NAME = "name"
+        const val EVENT_STREAM_ID = "streamId"
+        const val EVENT_PROJECT_ID = "projectId"
+        const val EVENT_CREATED_AT = "createdAt"
+        const val EVENT_START = "start"
+        const val EVENT_END = "end"
+        const val EVENT_CLASSIFICATION = "classification"
+        const val EVENT_INCIDENT = "incident"
     }
 }

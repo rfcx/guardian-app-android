@@ -2,7 +2,7 @@ package org.rfcx.incidents.data
 
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.StreamsRepository
-import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
@@ -12,7 +12,7 @@ import org.rfcx.incidents.entity.stream.Stream
 class StreamsRepositoryImp(
     private val endpoint: Endpoint,
     private val streamDb: StreamDb,
-    private val eventDb: AlertDb,
+    private val eventDb: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {

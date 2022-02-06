@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
-import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.remote.common.Result
@@ -15,7 +15,7 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Stream
 
 class EventDetailViewModel(
-    private val alertDb: AlertDb,
+    private val eventDb: EventDb,
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
     private val getEventsUseCase: GetEventsUseCase
@@ -23,11 +23,11 @@ class EventDetailViewModel(
     private val _alerts = MutableLiveData<Result<List<Event>>>()
     val getAlertsFromRemote: LiveData<Result<List<Event>>> get() = _alerts
 
-    fun getEventsCount(streamId: String): Long = alertDb.getAlertCount(streamId)
+    fun getEventsCount(streamId: String): Long = eventDb.getEventCount(streamId)
 
     fun getStream(serverId: String): Stream? = streamDb.getStream(serverId)
 
-    fun getAlertsByStream(streamId: String): List<Event> = alertDb.getAlertsByDescending(streamId)
+    fun getAlertsByStream(streamId: String): List<Event> = eventDb.getEventsByDescending(streamId)
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)
@@ -40,7 +40,7 @@ class EventDetailViewModel(
             object : DisposableSingleObserver<List<Event>>() {
                 override fun onSuccess(t: List<Event>) {
                     t.forEach { res ->
-                        alertDb.insertAlert(res)
+                        eventDb.insertEvent(res)
                     }
                     _alerts.value = Result.Success(t)
                 }

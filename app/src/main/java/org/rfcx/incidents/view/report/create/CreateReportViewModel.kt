@@ -2,7 +2,7 @@ package org.rfcx.incidents.view.report.create
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
@@ -25,7 +25,7 @@ class CreateReportViewModel(
     private val reportImageDb: ReportImageDb,
     private val trackingDb: TrackingDb,
     private val trackingFileDb: TrackingFileDb,
-    private val alertDb: AlertDb,
+    private val eventDb: EventDb,
     private val streamDb: StreamDb
 ) : ViewModel() {
 
@@ -51,7 +51,7 @@ class CreateReportViewModel(
     fun saveTrackingFile(response: Response, context: Context) {
         val track = trackingDb.getFirstTracking()
         track?.let { t ->
-            val alerts = alertDb.getAlerts(response.streamId)
+            val alerts = eventDb.getEvents(response.streamId)
             var point = t.points.toListDoubleArray()
             if (alerts.isNotEmpty()) {
                 point = t.points.filter { p -> p.createdAt >= alerts[0].start }.toListDoubleArray()

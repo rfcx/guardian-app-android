@@ -20,7 +20,7 @@ import okio.buffer
 import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.local.AlertDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetDetectionsUseCase
 import org.rfcx.incidents.domain.MediaUseCase
@@ -34,7 +34,7 @@ import java.io.IOException
 
 class AlertDetailViewModel(
     private val context: Context,
-    private val alertDb: AlertDb,
+    private val eventDb: EventDb,
     private val mediaUseCase: MediaUseCase,
     private val getDetectionsUseCase: GetDetectionsUseCase
 ) : ViewModel() {
@@ -155,7 +155,7 @@ class AlertDetailViewModel(
         _playerState.value = Player.STATE_BUFFERING
     }
 
-    fun getAlert(coreId: String): Event? = alertDb.getAlert(coreId)
+    fun getAlert(coreId: String): Event? = eventDb.getEvent(coreId)
 
     private fun getAudio(event: Event) {
         val fileName =
