@@ -55,16 +55,17 @@ fun StreamResponse.toStream(): Stream = Stream(
     lastIncident = incidents.items.firstOrNull()?.toIncident()
 )
 
-fun StreamResponse.toEvent(): Event {
+fun StreamResponse.toEvents(): List<Event> {
     val events = arrayListOf<Event>()
 
     this.incidents.items.forEach { incident ->
         incident.events.forEach { event ->
             events.add(
                 Event(
+                    id = event.id,
                     start = event.start,
                     end = event.end,
-                    name = "????",
+                    name = event.id,
                     streamId = this.id,
                     projectId = this.project.id,
                     createdAt = event.createdAt,
@@ -74,7 +75,7 @@ fun StreamResponse.toEvent(): Event {
         }
     }
 
-    return events[0]
+    return events
 }
 
 fun IncidentResponse.toIncident(): Incident = Incident(

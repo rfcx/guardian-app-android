@@ -2,10 +2,11 @@ package org.rfcx.incidents.data
 
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.StreamsRepository
-import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
+import org.rfcx.incidents.data.remote.streams.toEvents
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -25,9 +26,11 @@ class StreamsRepositoryImp(
 
     private fun refreshFromAPI(projectId: String): Single<List<Stream>> {
         return endpoint.getStreams(projects = listOf(projectId)).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
-            rawStreams.forEach {
-                streamDb.insertOrUpdate(it)
-                // eventDb.insertAlert(it.toEvent())
+            rawStreams.forEach { streamRes ->
+                streamDb.insertOrUpdate(streamRes)
+                streamRes.toEvents().forEach { event ->
+                    eventDb.insertEvent(event)
+                }
             }
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
             getFromLocalDB(projectId)

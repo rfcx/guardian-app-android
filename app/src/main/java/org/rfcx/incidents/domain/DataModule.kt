@@ -16,6 +16,7 @@ import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
+import org.rfcx.incidents.data.interfaces.EventsRepository
 import org.rfcx.incidents.data.interfaces.MediaRepository
 import org.rfcx.incidents.data.interfaces.PasswordChangeRepository
 import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
@@ -37,6 +38,7 @@ import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.EventsRepositoryImpl
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
@@ -55,7 +57,8 @@ object DataModule {
         single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
-        single { GetEventsUseCase(get(), get()) }
+        single { EventsRepositoryImpl(get()) } bind EventsRepository::class
+        single { GetEventsUseCase(get(), get(), get()) }
 
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
         single { GetDetectionsUseCase(get(), get(), get()) }
