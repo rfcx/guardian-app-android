@@ -3,9 +3,9 @@ package org.rfcx.incidents.data.local
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
-import org.rfcx.incidents.entity.response.ReportImage
-import org.rfcx.incidents.entity.response.ReportImage.Companion.FIELD_REPORT_ID
-import org.rfcx.incidents.entity.response.ReportImage.Companion.FIELD_REPORT_SERVER_ID
+import org.rfcx.incidents.entity.response.ImageAsset
+import org.rfcx.incidents.entity.response.ImageAsset.Companion.FIELD_REPORT_ID
+import org.rfcx.incidents.entity.response.ImageAsset.Companion.FIELD_REPORT_SERVER_ID
 import org.rfcx.incidents.entity.response.Response
 
 /**
@@ -15,7 +15,7 @@ import org.rfcx.incidents.entity.response.Response
 class ReportImageDb(val realm: Realm) {
 
     fun unsentCount(): Long {
-        return realm.where(ReportImage::class.java).notEqualTo("syncState", SENT).count()
+        return realm.where(ImageAsset::class.java).notEqualTo("syncState", SENT).count()
     }
 
     fun save(response: Response, attachImages: List<String>) {
@@ -23,8 +23,8 @@ class ReportImageDb(val realm: Realm) {
         realm.executeTransaction {
             // save attached image to be Report Image
             attachImages.forEach { attachImage ->
-                val imageId = (it.where(ReportImage::class.java).max("id")?.toInt() ?: 0) + 1
-                val reportImage = ReportImage(
+                val imageId = (it.where(ImageAsset::class.java).max("id")?.toInt() ?: 0) + 1
+                val reportImage = ImageAsset(
                     imageId,
                     guid = null,
                     reportId = response.id,
@@ -37,7 +37,7 @@ class ReportImageDb(val realm: Realm) {
     }
 
     fun saveReportServerIdToImage(serverId: String, reportId: Int) {
-        val images = realm.where(ReportImage::class.java)
+        val images = realm.where(ImageAsset::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
             .findAll()
         realm.executeTransaction { transaction ->
@@ -50,10 +50,10 @@ class ReportImageDb(val realm: Realm) {
         }
     }
 
-    fun lockUnsent(): List<ReportImage> {
-        var unsentCopied: List<ReportImage> = listOf()
+    fun lockUnsent(): List<ImageAsset> {
+        var unsentCopied: List<ImageAsset> = listOf()
         realm.executeTransaction { it ->
-            val unsent = it.where(ReportImage::class.java)
+            val unsent = it.where(ImageAsset::class.java)
                 .equalTo("syncState", UNSENT)
                 .isNotNull(FIELD_REPORT_SERVER_ID)
                 .findAll().createSnapshot()
@@ -67,7 +67,7 @@ class ReportImageDb(val realm: Realm) {
 
     fun unlockSending() {
         realm.executeTransaction { it ->
-            val snapshot = it.where(ReportImage::class.java).equalTo("syncState", SENDING).findAll().createSnapshot()
+            val snapshot = it.where(ImageAsset::class.java).equalTo("syncState", SENDING).findAll().createSnapshot()
             snapshot.forEach {
                 it.syncState = UNSENT
             }
@@ -80,7 +80,7 @@ class ReportImageDb(val realm: Realm) {
 
     fun markSent(id: Int, remotePath: String?) {
         realm.executeTransaction {
-            val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
+            val report = it.where(ImageAsset::class.java).equalTo("id", id).findFirst()
             if (report != null) {
                 report.syncState = SENT
                 report.remotePath = remotePath
@@ -90,7 +90,7 @@ class ReportImageDb(val realm: Realm) {
 
     private fun mark(id: Int, syncState: Int) {
         realm.executeTransaction {
-            val report = it.where(ReportImage::class.java).equalTo("id", id).findFirst()
+            val report = it.where(ImageAsset::class.java).equalTo("id", id).findFirst()
             if (report != null) {
                 report.syncState = syncState
             }
@@ -98,7 +98,7 @@ class ReportImageDb(val realm: Realm) {
     }
 
     fun deleteAll(reportId: Int) {
-        val shouldDelete = realm.where(ReportImage::class.java)
+        val shouldDelete = realm.where(ImageAsset::class.java)
             .equalTo("reportId", reportId)
             .findAll()
         Log.d("ReportImageDb", "shouldDelete ${shouldDelete.count()}")
@@ -107,46 +107,46 @@ class ReportImageDb(val realm: Realm) {
         }
     }
 
-    fun getSync(reportId: Int): List<ReportImage> {
+    fun getSync(reportId: Int): List<ImageAsset> {
         return realm.copyFromRealm(
-            realm.where(ReportImage::class.java)
+            realm.where(ImageAsset::class.java)
                 .equalTo("reportId", reportId)
                 .findAll()
         )
     }
 
-    fun getAllResultsAsync(): RealmResults<ReportImage> {
-        return realm.where(ReportImage::class.java)
+    fun getAllResultsAsync(): RealmResults<ImageAsset> {
+        return realm.where(ImageAsset::class.java)
             .findAllAsync()
     }
 
-    fun getByReportIdAsync(reportId: Int): RealmResults<ReportImage> {
-        return realm.where(ReportImage::class.java)
+    fun getByReportIdAsync(reportId: Int): RealmResults<ImageAsset> {
+        return realm.where(ImageAsset::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
             .findAllAsync()
     }
 
-    fun getByReportId(reportId: Int): List<ReportImage> {
-        return realm.where(ReportImage::class.java)
+    fun getByReportId(reportId: Int): List<ImageAsset> {
+        return realm.where(ImageAsset::class.java)
             .equalTo(FIELD_REPORT_ID, reportId)
             .findAll()
     }
 
-    fun getByCoreId(coreId: String): List<ReportImage> {
-        return realm.where(ReportImage::class.java)
+    fun getByCoreId(coreId: String): List<ImageAsset> {
+        return realm.where(ImageAsset::class.java)
             .equalTo(FIELD_REPORT_SERVER_ID, coreId)
             .findAll()
     }
 
     fun deleteImages(id: Int) {
         realm.executeTransaction {
-            realm.where(ReportImage::class.java).equalTo(FIELD_REPORT_ID, id)?.findAll()
+            realm.where(ImageAsset::class.java).equalTo(FIELD_REPORT_ID, id)?.findAll()
                 ?.deleteAllFromRealm()
         }
     }
 
     fun deleteUnsent(imagePath: String) {
-        val shouldDelete = realm.where(ReportImage::class.java)
+        val shouldDelete = realm.where(ImageAsset::class.java)
             .equalTo("syncState", UNSENT)
             .equalTo("localPath", imagePath)
             .findAll()
@@ -156,7 +156,7 @@ class ReportImageDb(val realm: Realm) {
     }
 
     private fun saveGuIDtoImages(guid: String, reportId: Int) {
-        val images = realm.where(ReportImage::class.java).equalTo("reportId", reportId).findAll()
+        val images = realm.where(ImageAsset::class.java).equalTo("reportId", reportId).findAll()
         images?.forEach {
             Log.i("saveGuIDtoImages", it.localPath)
         }

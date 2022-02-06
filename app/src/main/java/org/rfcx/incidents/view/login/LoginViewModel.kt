@@ -13,12 +13,12 @@ import com.auth0.android.result.Credentials
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.domain.CheckUserTouchUseCase
-import org.rfcx.incidents.entity.Err
-import org.rfcx.incidents.entity.Ok
-import org.rfcx.incidents.entity.user.UserAuthResponse
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.remote.common.CredentialVerifier
+import org.rfcx.incidents.domain.CheckUserTouchUseCase
+import org.rfcx.incidents.entity.common.Err
+import org.rfcx.incidents.entity.common.Ok
+import org.rfcx.incidents.entity.user.UserAuthResponse
 import org.rfcx.incidents.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(private val context: Context, private val checkUserTouchUseCase: CheckUserTouchUseCase) :

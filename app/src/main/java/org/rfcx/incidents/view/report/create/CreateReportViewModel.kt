@@ -13,7 +13,7 @@ import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.location.toListDoubleArray
-import org.rfcx.incidents.entity.response.ReportImage
+import org.rfcx.incidents.entity.response.ImageAsset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.GeoJsonUtils
@@ -33,7 +33,7 @@ class CreateReportViewModel(
         return streamDb.getStream(id)
     }
 
-    fun getImagesFromLocal(id: Int): List<ReportImage> = reportImageDb.getByReportId(id)
+    fun getImagesFromLocal(id: Int): List<ImageAsset> = reportImageDb.getByReportId(id)
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)

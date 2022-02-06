@@ -14,7 +14,7 @@ import org.rfcx.incidents.adapter.entity.BaseListItem
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.databinding.AdapterReportImageBinding
 import org.rfcx.incidents.databinding.ItemAddImageReportBinding
-import org.rfcx.incidents.entity.response.ReportImage
+import org.rfcx.incidents.entity.response.ImageAsset
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 
@@ -30,7 +30,7 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
     private var context: Context? = null
     private var imagesSource = arrayListOf<BaseListItem>()
 
-    fun setImages(reportImages: List<ReportImage>, showAddImage: Boolean = true) {
+    fun setImages(reportImages: List<ImageAsset>, showAddImage: Boolean = true) {
         imagesSource = arrayListOf()
         var index = 0
         reportImages.forEach {

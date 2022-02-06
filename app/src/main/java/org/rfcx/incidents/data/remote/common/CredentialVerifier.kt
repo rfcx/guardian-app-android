@@ -5,9 +5,9 @@ import com.auth0.android.result.Credentials
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.jsonwebtoken.Jwts
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.Err
-import org.rfcx.incidents.entity.Ok
-import org.rfcx.incidents.entity.Result
+import org.rfcx.incidents.entity.common.Err
+import org.rfcx.incidents.entity.common.Ok
+import org.rfcx.incidents.entity.common.Result
 import org.rfcx.incidents.entity.user.UserAuthResponse
 
 /**

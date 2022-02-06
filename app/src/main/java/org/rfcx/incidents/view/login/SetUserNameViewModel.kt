@@ -11,14 +11,14 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.domain.SendNameUseCase
-import org.rfcx.incidents.entity.Err
-import org.rfcx.incidents.entity.Ok
+import org.rfcx.incidents.entity.common.Err
+import org.rfcx.incidents.entity.common.Ok
 import org.rfcx.incidents.entity.user.SetNameRequest
 import org.rfcx.incidents.entity.user.SetNameResponse
-import org.rfcx.incidents.data.preferences.CredentialKeeper
-import org.rfcx.incidents.data.remote.common.CredentialVerifier
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.getUserId
 
 class SetUserNameViewModel(private val context: Context, private val sendNameUseCase: SendNameUseCase) : ViewModel() {

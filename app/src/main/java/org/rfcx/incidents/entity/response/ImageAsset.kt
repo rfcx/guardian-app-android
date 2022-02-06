@@ -5,7 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.util.Date
 
-open class ReportImage(
+open class ImageAsset(
     @PrimaryKey
     var id: Int = 0,
     @Expose(serialize = false)

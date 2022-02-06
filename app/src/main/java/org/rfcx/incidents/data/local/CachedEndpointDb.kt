@@ -1,8 +1,8 @@
 package org.rfcx.incidents.data.local
 
 import io.realm.Realm
-import org.rfcx.incidents.entity.CachedEndpoint
-import java.util.*
+import org.rfcx.incidents.entity.common.CachedEndpoint
+import java.util.Date
 
 class CachedEndpointDb(val realm: Realm) {
 
