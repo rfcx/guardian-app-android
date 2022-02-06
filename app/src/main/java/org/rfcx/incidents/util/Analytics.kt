@@ -102,25 +102,25 @@ class Analytics(context: Context) {
         trackEvent("see_report_detail", bundle)
     }
 
-    fun trackSeeAlertDetailEvent(alertId: String, alertName: String) {
+    fun trackSeeAlertDetailEvent(eventId: String, eventName: String) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, alertId)
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, alertName)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, eventId)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, eventName)
         trackEvent("see_alert_detail", bundle)
     }
 
-    fun trackReviewAlertEvent(alertId: String, alertName: String, review: String) {
+    fun trackReviewAlertEvent(eventId: String, eventName: String, review: String) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, alertId)
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, alertName)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, eventId)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, eventName)
         bundle.putString(FirebaseAnalytics.Param.VALUE, review)
         trackEvent("review_alert_detail", bundle)
     }
 
-    fun trackFollowAlertEvent(alertId: String, alertName: String) {
+    fun trackFollowAlertEvent(eventId: String, eventName: String) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, alertId)
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, alertName)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, eventId)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, eventName)
         trackEvent("follow_alert_detail", bundle)
     }
 

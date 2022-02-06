@@ -23,7 +23,7 @@
 		mapbox:ignore="VectorDrawableCompat" />
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/layoutAlertAirplaneMode"
+		android:id="@+id/layoutEventAirplaneMode"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:background="@android:color/white"
@@ -31,7 +31,7 @@
 		app:layout_constraintTop_toTopOf="parent">
 		
 		<TextView
-			android:id="@+id/tvAlertTitle"
+			android:id="@+id/tvEventTitle"
 			style="@style/RangerText.Label"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
 			android:layout_height="1dp"
 			android:layout_marginTop="@dimen/margin_padding_small"
 			android:background="@color/gray_30"
-			app:layout_constraintBottom_toBottomOf="@+id/layoutAlertAirplaneMode" />
+			app:layout_constraintBottom_toBottomOf="@+id/layoutEventAirplaneMode" />
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

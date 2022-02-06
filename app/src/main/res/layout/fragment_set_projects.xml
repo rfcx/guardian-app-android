@@ -7,9 +7,9 @@
 	tools:context="org.rfcx.incidents.view.login.SetProjectsFragment">
 	
 	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/alertImageView"
-		android:layout_width="@dimen/alert_size"
-		android:layout_height="@dimen/alert_size"
+		android:id="@+id/eventImageView"
+		android:layout_width="@dimen/event_size"
+		android:layout_height="@dimen/event_size"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:layout_marginTop="@dimen/margin_padding_xlarge"
 		android:src="@drawable/ic_menu_alert"
@@ -18,7 +18,7 @@
 		app:layout_constraintTop_toTopOf="parent" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/setAlertsTextView"
+		android:id="@+id/setEventsTextView"
 		style="@style/RangerText.Headline"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
 		android:text="@string/set_alerts"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/alertImageView" />
+		app:layout_constraintTop_toBottomOf="@+id/eventImageView" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/chooseProjectsDescription"
@@ -41,7 +41,7 @@
 		android:text="@string/choose_which_projects"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/setAlertsTextView" />
+		app:layout_constraintTop_toBottomOf="@+id/setEventsTextView" />
 	
 	<TextView
 		android:id="@+id/noContentTextView"

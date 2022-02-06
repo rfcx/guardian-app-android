@@ -32,9 +32,9 @@ import org.rfcx.incidents.util.saveUserLoginWith
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.util.startLocationChange
 import org.rfcx.incidents.view.base.BaseActivity
-import org.rfcx.incidents.view.events.EventsFragment
-import org.rfcx.incidents.view.events.detail.AlertDetailActivity
-import org.rfcx.incidents.view.events.detail.EventDetailFragment
+import org.rfcx.incidents.view.events.StreamsFragment
+import org.rfcx.incidents.view.events.detail.EventActivity
+import org.rfcx.incidents.view.events.detail.StreamDetailFragment
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
@@ -107,7 +107,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     override fun onBackPressed() {
         when (supportFragmentManager.findFragmentById(R.id.contentContainer)) {
-            is EventDetailFragment -> {
+            is StreamDetailFragment -> {
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
@@ -126,7 +126,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         locationPermissions.handleRequestResult(requestCode, grantResults)
 
         currentFragment?.let {
-            if (it is EventsFragment) {
+            if (it is StreamsFragment) {
                 it.onRequestPermissionsResult(requestCode, permissions, grantResults)
                 if (PermissionsManager.areLocationPermissionsGranted(this)) {
                     this.startLocationChange()
@@ -140,7 +140,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         locationPermissions.handleActivityResult(requestCode, resultCode)
 
         currentFragment?.let {
-            if (it is EventsFragment) {
+            if (it is StreamsFragment) {
                 it.onActivityResult(requestCode, resultCode, data)
             }
         }
@@ -221,11 +221,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.bottomBar.visibility = View.VISIBLE
     }
 
-    override fun openEventDetail(streamId: String, distance: Double?) {
+    override fun openStreamDetail(streamId: String, distance: Double?) {
         hideBottomAppBar()
         startFragment(
-            EventDetailFragment.newInstance(streamId, distance),
-            EventDetailFragment.tag
+            StreamDetailFragment.newInstance(streamId, distance),
+            StreamDetailFragment.tag
         )
     }
 
@@ -266,8 +266,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         startActivity(intent)
     }
 
-    override fun openAlertDetail(event: Event) {
-        AlertDetailActivity.startActivity(this, event.id)
+    override fun openEvent(event: Event) {
+        EventActivity.startActivity(this, event.id)
     }
 
     override fun setCurrentLocation(location: Location) {
@@ -283,14 +283,14 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
             .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
             .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
-            .add(binding.contentContainer.id, getNewEvents(), EventsFragment.tag)
+            .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
             .commit()
 
         binding.navMenu.menuNewEvents.performClick()
     }
 
-    private fun getNewEvents(): EventsFragment = supportFragmentManager.findFragmentByTag(EventsFragment.tag)
-        as EventsFragment? ?: EventsFragment.newInstance()
+    private fun getNewEvents(): StreamsFragment = supportFragmentManager.findFragmentByTag(StreamsFragment.tag)
+        as StreamsFragment? ?: StreamsFragment.newInstance()
 
     private fun getSubmittedReports(): SubmittedReportsFragment =
         supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag)
@@ -366,7 +366,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         if (intent?.hasExtra(EventNotification.INTENT_KEY_STREAM_ID) == true) {
             val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
             if (streamId != null) {
-                openEventDetail(streamId, null)
+                openStreamDetail(streamId, null)
             }
         }
     }
@@ -393,12 +393,12 @@ interface MainActivityEventListener {
     fun hideBottomAppBar()
     fun showBottomAppBar()
     fun onBackPressed()
-    fun openEventDetail(name: String, distance: Double?)
+    fun openStreamDetail(name: String, distance: Double?)
     fun openCreateReportActivity(streamId: String)
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
     fun openGoogleMap(stream: Stream)
-    fun openAlertDetail(event: Event)
+    fun openEvent(event: Event)
     fun setCurrentLocation(location: Location)
     fun getCurrentLocation(): Location?
 }

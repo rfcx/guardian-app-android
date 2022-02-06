@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@color/backgroundColor"
-             tools:context=".view.events.detail.EventDetailFragment">
+             tools:context=".view.events.detail.StreamDetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/alertsSwipeRefreshView"
+            android:id="@+id/eventsSwipeRefreshView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/margin_padding_normal"
@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/alertsRecyclerView"
+                android:id="@+id/eventsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:overScrollMode="never"/>

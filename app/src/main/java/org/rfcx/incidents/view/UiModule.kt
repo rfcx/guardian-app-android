@@ -3,9 +3,9 @@ package org.rfcx.incidents.view
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.rfcx.incidents.view.events.EventsViewModel
-import org.rfcx.incidents.view.events.detail.AlertDetailViewModel
-import org.rfcx.incidents.view.events.detail.EventDetailViewModel
+import org.rfcx.incidents.view.events.StreamsViewModel
+import org.rfcx.incidents.view.events.detail.EventViewModel
+import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
 import org.rfcx.incidents.view.login.SetUserNameViewModel
@@ -22,9 +22,9 @@ object UiModule {
     }
 
     val eventsModule = module {
-        viewModel { EventsViewModel(get(), get(), get(), get()) }
-        viewModel { AlertDetailViewModel(androidContext(), get(), get(), get()) }
-        viewModel { EventDetailViewModel(get(), get(), get(), get()) }
+        viewModel { StreamsViewModel(get(), get(), get(), get()) }
+        viewModel { EventViewModel(androidContext(), get(), get(), get()) }
+        viewModel { StreamDetailViewModel(get(), get(), get(), get()) }
     }
 
     val reportsModule = module {
