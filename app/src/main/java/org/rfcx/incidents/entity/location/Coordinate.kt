@@ -9,15 +9,7 @@ open class Coordinate(
     var longitude: Double = 0.0,
     var altitude: Double = 0.0,
     var createdAt: Date = Date()
-) : RealmObject() {
-    companion object {
-        const val TABLE_NAME = "Coordinate"
-        const val COORDINATE_LATITUDE = "latitude"
-        const val COORDINATE_LONGITUDE = "longitude"
-        const val COORDINATE_ALTITUDE = "altitude"
-        const val COORDINATE_CREATED_AT = "createdAt"
-    }
-}
+) : RealmObject()
 
 fun List<Coordinate>.toListDoubleArray(): List<DoubleArray> {
     return this.map { doubleArrayOf(it.longitude, it.latitude) }
