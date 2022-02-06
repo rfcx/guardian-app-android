@@ -56,6 +56,8 @@ object DataModule {
         single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
+        single { GetEventsUseCase(get(), get()) }
+
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
         single { GetDetectionsUseCase(get(), get(), get()) }
 

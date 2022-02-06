@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
-import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
+import org.rfcx.incidents.databinding.FragmentGuardianStreamDetailBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
@@ -26,7 +26,7 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 
 class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRefreshListener {
-    private var _binding: FragmentGuardianEventDetailBinding? = null
+    private var _binding: FragmentGuardianStreamDetailBinding? = null
     private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: StreamDetailViewModel by viewModel()
@@ -61,7 +61,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGuardianEventDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentGuardianStreamDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 

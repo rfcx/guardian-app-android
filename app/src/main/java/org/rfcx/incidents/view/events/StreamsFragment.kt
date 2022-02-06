@@ -58,7 +58,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
-import org.rfcx.incidents.databinding.FragmentNewEventsBinding
+import org.rfcx.incidents.databinding.FragmentStreamsBinding
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
@@ -108,7 +108,7 @@ class StreamsFragment :
         fun newInstance() = StreamsFragment()
     }
 
-    private var _binding: FragmentNewEventsBinding? = null
+    private var _binding: FragmentStreamsBinding? = null
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
@@ -186,7 +186,7 @@ class StreamsFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewEventsBinding.inflate(inflater, container, false)
+        _binding = FragmentStreamsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
