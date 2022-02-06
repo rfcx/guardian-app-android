@@ -15,17 +15,17 @@ import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityMainBinding
-import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.AlertNotification
 import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.LocationPermissions
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.logout
 import org.rfcx.incidents.util.saveUserLoginWith
@@ -265,8 +265,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         startActivity(intent)
     }
 
-    override fun openAlertDetail(alert: Alert) {
-        AlertDetailActivity.startActivity(this, alert.serverId)
+    override fun openAlertDetail(event: Event) {
+        AlertDetailActivity.startActivity(this, event.id)
     }
 
     override fun setCurrentLocation(location: Location) {
@@ -397,7 +397,7 @@ interface MainActivityEventListener {
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
     fun openGoogleMap(stream: Stream)
-    fun openAlertDetail(alert: Alert)
+    fun openAlertDetail(event: Event)
     fun setCurrentLocation(location: Location)
     fun getCurrentLocation(): Location?
 }

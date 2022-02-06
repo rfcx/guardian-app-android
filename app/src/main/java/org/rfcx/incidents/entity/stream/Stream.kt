@@ -13,7 +13,7 @@ open class Stream(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var projectId: String = "",
-    var incidentRef: Int = 0
+    var lastIncident: Incident? = null
 ) : RealmModel {
     companion object {
         const val TABLE_NAME = "Stream"
@@ -23,6 +23,6 @@ open class Stream(
         const val STREAM_LATITUDE = "latitude"
         const val STREAM_LONGITUDE = "longitude"
         const val STREAM_PROJECT_ID = "projectId"
-        const val STREAM_INCIDENT_REF = "incidentRef"
+        const val STREAM_INCIDENT = "incident"
     }
 }

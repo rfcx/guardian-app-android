@@ -1,16 +1,17 @@
 package org.rfcx.incidents.entity.event
 
-import io.realm.RealmModel
+import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 
-@RealmClass
-open class Classification(
-    var value: String = "",
+@RealmClass(embedded = true)
+open class Classification : RealmObject {
+    var value: String = ""
     var title: String = ""
-) : RealmModel {
-    companion object {
-        const val TABLE_NAME = "Classification"
-        const val CLASSIFICATION_VALUE = "value"
-        const val CLASSIFICATION_TITLE = "title"
+
+    constructor(value: String, title: String) {
+        this.value = value
+        this.title = title
     }
+
+    constructor()
 }

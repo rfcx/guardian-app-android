@@ -1,8 +1,8 @@
 package org.rfcx.incidents.data.remote.streams
 
-import org.rfcx.incidents.entity.Incident
-import org.rfcx.incidents.entity.event.Alert
 import org.rfcx.incidents.entity.event.Classification
+import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 import java.util.Date
 
@@ -52,17 +52,16 @@ fun StreamResponse.toStream(): Stream = Stream(
     latitude = latitude,
     longitude = longitude,
     projectId = project.id,
-    incidentRef = incidents.items[0].ref
+    lastIncident = incidents.items.firstOrNull()?.toIncident()
 )
 
-fun StreamResponse.toEvent(): Alert {
-    val events = arrayListOf<Alert>()
+fun StreamResponse.toEvent(): Event {
+    val events = arrayListOf<Event>()
 
     this.incidents.items.forEach { incident ->
         incident.events.forEach { event ->
             events.add(
-                Alert(
-                    serverId = event.id,
+                Event(
                     start = event.start,
                     end = event.end,
                     name = "????",
@@ -70,7 +69,6 @@ fun StreamResponse.toEvent(): Alert {
                     projectId = this.project.id,
                     createdAt = event.createdAt,
                     classification = event.classification.toClassification(),
-                    incident = incident.toIncident()
                 )
             )
         }

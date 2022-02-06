@@ -4,47 +4,38 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.kotlin.deleteFromRealm
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Event
 
 class AlertDb(private val realm: Realm) {
 
-    fun insertAlert(alertObj: Alert) {
+    fun insertAlert(eventObj: Event) {
         realm.executeTransaction {
-            val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_SERVER_ID, alertObj.id).findFirst()
-
-            if (alert == null) {
-                val id = (
-                    it.where(Alert::class.java).max(Alert.ALERT_ID)
-                        ?.toInt() ?: 0
-                    ) + 1
-                alertObj.id = id
-                it.insert(alertObj)
-            }
+            it.insertOrUpdate(eventObj)
         }
     }
 
     fun getAlertCount(streamId: String): Long =
-        realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).count()
+        realm.where(Event::class.java).equalTo(Event.ALERT_STREAM_ID, streamId).count()
 
-    fun getAlerts(streamId: String): List<Alert> =
-        realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.ASCENDING)
+    fun getAlerts(streamId: String): List<Event> =
+        realm.where(Event::class.java).equalTo(Event.ALERT_STREAM_ID, streamId).sort(Event.ALERT_START, Sort.ASCENDING)
             .findAll()
 
-    fun getAlert(coreId: String): Alert? =
-        realm.where(Alert::class.java).equalTo(Alert.ALERT_SERVER_ID, coreId).findFirst()
+    fun getAlert(id: String): Event? =
+        realm.where(Event::class.java).equalTo(Event.ALERT_ID, id).findFirst()
 
-    fun getAlertsByDescending(streamId: String): List<Alert> =
-        realm.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, streamId).sort(Alert.ALERT_START, Sort.DESCENDING)
+    fun getAlertsByDescending(streamId: String): List<Event> =
+        realm.where(Event::class.java).equalTo(Event.ALERT_STREAM_ID, streamId).sort(Event.ALERT_START, Sort.DESCENDING)
             .findAll()
 
-    fun getAllResultsAsync(): RealmResults<Alert> {
-        return realm.where(Alert::class.java).sort(Alert.ALERT_START, Sort.DESCENDING).findAllAsync()
+    fun getAllResultsAsync(): RealmResults<Event> {
+        return realm.where(Event::class.java).sort(Event.ALERT_START, Sort.DESCENDING).findAllAsync()
     }
 
     fun deleteAlertsByStreamId(id: String) {
         realm.executeTransaction {
-            val alert = it.where(Alert::class.java).equalTo(Alert.ALERT_STREAM_ID, id).findAll()
-            alert?.forEach { a ->
+            val events = it.where(Event::class.java).equalTo(Event.ALERT_STREAM_ID, id).findAll()
+            events?.forEach { a ->
                 a.deleteFromRealm()
             }
         }

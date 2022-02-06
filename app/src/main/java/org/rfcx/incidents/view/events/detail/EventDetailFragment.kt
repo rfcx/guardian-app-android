@@ -15,7 +15,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentGuardianEventDetailBinding
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
@@ -25,7 +25,7 @@ import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
 
-class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRefreshListener {
+class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentGuardianEventDetailBinding? = null
     private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
@@ -35,7 +35,7 @@ class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRe
 
     lateinit var streamId: String
     var distance: Double? = null
-    var alerts = listOf<Alert>()
+    var events = listOf<Event>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,7 @@ class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRe
         binding.alertsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = alertItemAdapter
-            alertItemAdapter.items = alerts
+            alertItemAdapter.items = events
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
@@ -150,8 +150,8 @@ class EventDetailFragment : Fragment(), (Alert) -> Unit, SwipeRefreshLayout.OnRe
         }
     }
 
-    override fun invoke(alert: Alert) {
-        listener.openAlertDetail(alert)
+    override fun invoke(event: Event) {
+        listener.openAlertDetail(event)
     }
 
     private fun saveLocation(location: Location) {

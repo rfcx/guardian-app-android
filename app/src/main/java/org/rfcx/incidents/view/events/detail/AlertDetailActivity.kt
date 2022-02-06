@@ -15,7 +15,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivityAlertDetailBinding
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -104,9 +104,8 @@ class AlertDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun Alert.setNewTime(start: Date? = null, end: Date? = null): Alert = Alert(
+    private fun Event.setNewTime(start: Date? = null, end: Date? = null): Event = Event(
         id = this.id,
-        serverId = this.serverId,
         name = this.name,
         streamId = this.streamId,
         projectId = this.projectId,
@@ -116,7 +115,6 @@ class AlertDetailActivity : AppCompatActivity() {
         end = end
             ?: this.end,
         classification = this.classification,
-        incident = this.incident
     )
 
     private fun setupView(url: String) {

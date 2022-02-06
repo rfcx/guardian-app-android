@@ -24,10 +24,10 @@ import org.rfcx.incidents.data.local.AlertDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetDetectionsUseCase
 import org.rfcx.incidents.domain.MediaUseCase
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Confidence
 import org.rfcx.incidents.entity.event.DetectionFactory
 import org.rfcx.incidents.entity.event.Detections
-import org.rfcx.incidents.entity.event.Confidence
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toIsoFormatString
 import java.io.File
 import java.io.IOException
@@ -38,15 +38,15 @@ class AlertDetailViewModel(
     private val mediaUseCase: MediaUseCase,
     private val getDetectionsUseCase: GetDetectionsUseCase
 ) : ViewModel() {
-    var _alert: Alert? = null
+    var _event: Event? = null
         private set
 
     private var _classifiedCation: MutableLiveData<Result<List<Confidence>>> = MutableLiveData()
     val classifiedCation: LiveData<Result<List<Confidence>>> get() = _classifiedCation
 
-    fun setAlert(alert: Alert) {
-        _alert = alert
-        getAudio(alert)
+    fun setAlert(event: Event) {
+        _event = event
+        getAudio(event)
     }
 
     private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
@@ -138,7 +138,7 @@ class AlertDetailViewModel(
     }
 
     private fun initPlayer(audioUrl: String) {
-        if (_alert == null) return
+        if (_event == null) return
 
         val descriptorFactory =
             DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
@@ -155,18 +155,18 @@ class AlertDetailViewModel(
         _playerState.value = Player.STATE_BUFFERING
     }
 
-    fun getAlert(coreId: String): Alert? = alertDb.getAlert(coreId)
+    fun getAlert(coreId: String): Event? = alertDb.getAlert(coreId)
 
-    private fun getAudio(alert: Alert) {
+    private fun getAudio(event: Event) {
         val fileName =
-            alert.streamId + "_t" + alert.start.toIsoFormatString() + "." + alert.end.toIsoFormatString() + "_rfull_g1_fmp3.mp3"
+            event.streamId + "_t" + event.start.toIsoFormatString() + "." + event.end.toIsoFormatString() + "_rfull_g1_fmp3.mp3"
         mediaUseCase.execute(
             object : DisposableSingleObserver<ResponseBody>() {
                 override fun onSuccess(t: ResponseBody) {
                     saveFile(t, fileName) {
                         if (it) {
                             initPlayer(fileName)
-                            getDetections(alert)
+                            getDetections(event)
                         }
                     }
                 }
@@ -201,11 +201,11 @@ class AlertDetailViewModel(
         }
     }
 
-    fun getDetections(alert: Alert) {
+    fun getDetections(event: Event) {
         getDetectionsUseCase.execute(
             object : DisposableSingleObserver<List<Detections>>() {
                 override fun onSuccess(t: List<Detections>) {
-                    val confidence = t.map { checkSpanOfBox(alert, it) }
+                    val confidence = t.map { checkSpanOfBox(event, it) }
                     _classifiedCation.value = Result.Success(confidence)
                 }
 
@@ -214,48 +214,48 @@ class AlertDetailViewModel(
                 }
             },
             DetectionFactory(
-                alert.streamId, alert.start.time, alert.end.time,
+                event.streamId, event.start.time, event.end.time,
                 listOf(
-                    alert.classification?.value
+                    event.classification?.value
                         ?: ""
                 )
             )
         )
     }
 
-    fun checkSpanOfBox(alert: Alert, detections: Detections): Confidence {
-        val startSpan = (detections.start.time - alert.start.time) / 1000L
-        val endSpan = (detections.start.time - alert.start.time) / 1000L
+    fun checkSpanOfBox(event: Event, detections: Detections): Confidence {
+        val startSpan = (detections.start.time - event.start.time) / 1000L
+        val endSpan = (detections.start.time - event.start.time) / 1000L
         return if (startSpan == endSpan) {
             if (endSpan == getDuration()) {
                 Confidence(
-                    ((detections.start.time - alert.start.time) / 1000L) - 1,
+                    ((detections.start.time - event.start.time) / 1000L) - 1,
                     detections.confidence,
-                    (detections.end.time - alert.start.time) / 1000L
+                    (detections.end.time - event.start.time) / 1000L
                 )
             } else {
                 Confidence(
-                    (detections.start.time - alert.start.time) / 1000L,
+                    (detections.start.time - event.start.time) / 1000L,
                     detections.confidence,
-                    ((detections.end.time - alert.start.time) / 1000L) + 1
+                    ((detections.end.time - event.start.time) / 1000L) + 1
                 )
             }
         } else {
             Confidence(
-                (detections.start.time - alert.start.time) / 1000L,
+                (detections.start.time - event.start.time) / 1000L,
                 detections.confidence,
-                (detections.end.time - alert.start.time) / 1000L
+                (detections.end.time - event.start.time) / 1000L
             )
         }
     }
 
-    fun setFormatUrlOfSpectrogram(alert: Alert): String {
-        val filename = "${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
+    fun setFormatUrlOfSpectrogram(event: Event): String {
+        val filename = "${event.streamId}_t${event.start.toIsoFormatString()}.${event.end.toIsoFormatString()}_rfull_g1_fspec_d600.512_wdolph_z120.png"
         return "${BuildConfig.RANGER_API_BASE_URL}media/$filename"
     }
 
-    fun setFormatUrlOfAudio(alert: Alert): String {
-        val filename = "${alert.streamId}_t${alert.start.toIsoFormatString()}.${alert.end.toIsoFormatString()}_rfull_g1_fmp3.mp3"
+    fun setFormatUrlOfAudio(event: Event): String {
+        val filename = "${event.streamId}_t${event.start.toIsoFormatString()}.${event.end.toIsoFormatString()}_rfull_g1_fmp3.mp3"
         return "${BuildConfig.RANGER_API_BASE_URL}media/$filename"
     }
 

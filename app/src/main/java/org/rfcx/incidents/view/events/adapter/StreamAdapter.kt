@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.entity.event.Alert
 
 class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
     RecyclerView.Adapter<StreamAdapter.StreamViewHolder>() {
@@ -73,7 +73,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 if (hasNoEvents) 16.toPx else 0.toPx,
                 if (hasNoEvents) 16.toPx else 10.toPx
             )
-            incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, stream.incidentRef.toString())
+            incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
             // val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
             // if (typeOfAlert.isEmpty()) return
@@ -91,25 +91,25 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             // }
         }
 
-        private fun showIconType(type: String, alerts: List<Alert>) {
+        private fun showIconType(type: String, events: List<Event>) {
             when (type) {
                 GUNSHOT -> {
                     gunLayout.visibility = View.VISIBLE
-                    numOfGunTextView.text = getNumberOfAlertByType(alerts, type)
+                    numOfGunTextView.text = getNumberOfAlertByType(events, type)
                 }
                 HUMAN_VOICE -> {
                     peopleLayout.visibility = View.VISIBLE
-                    numOfPeopleTextView.text = getNumberOfAlertByType(alerts, type)
+                    numOfPeopleTextView.text = getNumberOfAlertByType(events, type)
                 }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
-                    numOfChainsawTextView.text = getNumberOfAlertByType(alerts, type)
+                    numOfChainsawTextView.text = getNumberOfAlertByType(events, type)
                 }
             }
         }
 
-        private fun getNumberOfAlertByType(alerts: List<Alert>, type: String): String {
-            return alerts.filter { a -> a.classification?.value == type }.size.toString()
+        private fun getNumberOfAlertByType(events: List<Event>, type: String): String {
+            return events.filter { a -> a.classification?.value == type }.size.toString()
         }
     }
 

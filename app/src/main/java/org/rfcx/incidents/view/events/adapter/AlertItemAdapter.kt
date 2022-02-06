@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.databinding.ItemEventBinding
-import org.rfcx.incidents.entity.event.Alert
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 
-class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :
+class AlertItemAdapter(private val onClickListener: (Event) -> Unit) :
     RecyclerView.Adapter<AlertItemAdapter.AlertItemViewHolder>() {
-    var items: List<Alert> = arrayListOf()
+    var items: List<Event> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -35,7 +35,7 @@ class AlertItemAdapter(private val onClickListener: (Alert) -> Unit) :
         private val typeTextView = binding.typeTextView
         private val dateTextView = binding.dateTextView
 
-        fun bind(item: Alert) {
+        fun bind(item: Event) {
             dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context)
             typeTextView.text = item.classification?.title
         }
