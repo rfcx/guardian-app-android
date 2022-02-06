@@ -95,20 +95,20 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             when (type) {
                 GUNSHOT -> {
                     gunLayout.visibility = View.VISIBLE
-                    numOfGunTextView.text = getNumberOfAlertByType(events, type)
+                    numOfGunTextView.text = getNumberOfEventByType(events, type)
                 }
                 HUMAN_VOICE -> {
                     peopleLayout.visibility = View.VISIBLE
-                    numOfPeopleTextView.text = getNumberOfAlertByType(events, type)
+                    numOfPeopleTextView.text = getNumberOfEventByType(events, type)
                 }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
-                    numOfChainsawTextView.text = getNumberOfAlertByType(events, type)
+                    numOfChainsawTextView.text = getNumberOfEventByType(events, type)
                 }
             }
         }
 
-        private fun getNumberOfAlertByType(events: List<Event>, type: String): String {
+        private fun getNumberOfEventByType(events: List<Event>, type: String): String {
             return events.filter { a -> a.classification?.value == type }.size.toString()
         }
     }

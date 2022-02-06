@@ -51,10 +51,10 @@ class CreateReportViewModel(
     fun saveTrackingFile(response: Response, context: Context) {
         val track = trackingDb.getFirstTracking()
         track?.let { t ->
-            val alerts = eventDb.getEvents(response.streamId)
+            val events = eventDb.getEvents(response.streamId)
             var point = t.points.toListDoubleArray()
-            if (alerts.isNotEmpty()) {
-                point = t.points.filter { p -> p.createdAt >= alerts[0].start }.toListDoubleArray()
+            if (events.isNotEmpty()) {
+                point = t.points.filter { p -> p.createdAt >= events[0].start }.toListDoubleArray()
             }
             val trackingFile = TrackingFile(
                 responseId = response.id,

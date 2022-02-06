@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import org.rfcx.incidents.service.AlertNotification.createAlert
+import org.rfcx.incidents.service.EventNotification.createEvent
 
 class MessagingService : FirebaseMessagingService() {
 
@@ -25,9 +25,9 @@ class MessagingService : FirebaseMessagingService() {
             intent.putExtras(bundle)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 
-            val alertNotification =
-                createAlert(this, getNotificationManager(), remoteMessage.notification!!, remoteMessage.data)
-            notify(createNotificationID(), alertNotification)
+            val eventNotification =
+                createEvent(this, getNotificationManager(), remoteMessage.notification!!, remoteMessage.data)
+            notify(createNotificationID(), eventNotification)
             Log.d("MessagingService", remoteMessage.data.toString())
         } else {
             // Play a sound

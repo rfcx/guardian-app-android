@@ -20,7 +20,7 @@ import org.rfcx.incidents.databinding.ActivityMainBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.service.AlertNotification
+import org.rfcx.incidents.service.EventNotification
 import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
@@ -363,8 +363,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     private fun getEventFromIntentIfHave(intent: Intent?) {
-        if (intent?.hasExtra(AlertNotification.INTENT_KEY_STREAM_ID) == true) {
-            val streamId = intent.getStringExtra(AlertNotification.INTENT_KEY_STREAM_ID)
+        if (intent?.hasExtra(EventNotification.INTENT_KEY_STREAM_ID) == true) {
+            val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
             if (streamId != null) {
                 openEventDetail(streamId, null)
             }
@@ -375,7 +375,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         fun startActivity(context: Context, eventGuId: String?) {
             val intent = Intent(context, MainActivity::class.java)
             if (eventGuId != null)
-                intent.putExtra(AlertNotification.INTENT_KEY_STREAM_ID, eventGuId)
+                intent.putExtra(EventNotification.INTENT_KEY_STREAM_ID, eventGuId)
             context.startActivity(intent)
         }
     }

@@ -27,7 +27,7 @@ class EventDetailViewModel(
 
     fun getStream(serverId: String): Stream? = streamDb.getStream(serverId)
 
-    fun getAlertsByStream(streamId: String): List<Event> = eventDb.getEventsByDescending(streamId)
+    fun getEventsByStream(streamId: String): List<Event> = eventDb.getEventsByDescending(streamId)
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)

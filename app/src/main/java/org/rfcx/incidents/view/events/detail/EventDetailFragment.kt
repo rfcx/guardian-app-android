@@ -23,7 +23,7 @@ import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
-import org.rfcx.incidents.view.events.adapter.AlertItemAdapter
+import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 
 class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentGuardianEventDetailBinding? = null
@@ -31,7 +31,7 @@ class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRe
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: EventDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
-    private val alertItemAdapter by lazy { AlertItemAdapter(this) }
+    private val eventItemAdapter by lazy { EventItemAdapter(this) }
 
     lateinit var streamId: String
     var distance: Double? = null
@@ -78,8 +78,8 @@ class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRe
 
         binding.alertsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = alertItemAdapter
-            alertItemAdapter.items = events
+            adapter = eventItemAdapter
+            eventItemAdapter.items = events
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
@@ -104,7 +104,7 @@ class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRe
 
         streamId.let {
             if (viewModel.getEventsCount(it) != 0L) {
-                alertItemAdapter.items = viewModel.getAlertsByStream(it)
+                eventItemAdapter.items = viewModel.getEventsByStream(it)
                 isShowProgressBar(false)
                 viewModel.fetchEvents(it)
             } else {
@@ -125,7 +125,7 @@ class EventDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRe
     private fun setObserve() {
         viewModel.getAlertsFromRemote.observe(viewLifecycleOwner) { it ->
             it.success({ list ->
-                alertItemAdapter.items = list
+                eventItemAdapter.items = list
                 binding.notHaveEventsLayout.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                 isShowProgressBar(false)
                 binding.alertsSwipeRefreshView.isRefreshing = false

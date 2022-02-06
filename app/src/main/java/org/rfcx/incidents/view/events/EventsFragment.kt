@@ -87,12 +87,12 @@ class EventsFragment :
         private const val COUNT = "count"
         private const val COUNT_EVENTS = "count.events"
         private const val POINT_COUNT = "point_count"
-        private const val SOURCE_ALERT = "source.alert"
+        private const val SOURCE_EVENT = "source.event"
         private const val SOURCE_LINE = "source.line"
-        private const val PROPERTY_MARKER_ALERT_SITE = "alert.site"
-        private const val PROPERTY_MARKER_ALERT_DISTANCE = "alert.distance"
-        private const val PROPERTY_MARKER_ALERT_STREAM_ID = "alert.stream.id"
-        private const val PROPERTY_MARKER_ALERT_COUNT = "alert.count"
+        private const val PROPERTY_MARKER_EVENT_SITE = "event.site"
+        private const val PROPERTY_MARKER_EVENT_DISTANCE = "event.distance"
+        private const val PROPERTY_MARKER_EVENT_STREAM_ID = "event.stream.id"
+        private const val PROPERTY_MARKER_EVENT_COUNT = "event.count"
         private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
         private const val PROPERTY_CLUSTER_COUNT_EVENTS = "cluster.count.events"
         private const val SOURCE_CHECK_IN = "source.checkin"
@@ -137,8 +137,8 @@ class EventsFragment :
         override fun onProviderDisabled(p0: String) {}
     }
 
-    private var alertSource: GeoJsonSource? = null
-    private var alertFeatures: FeatureCollection? = null
+    private var eventSource: GeoJsonSource? = null
+    private var eventFeatures: FeatureCollection? = null
 
     private var lineSource: GeoJsonSource? = null
     private var lineFeatures: FeatureCollection? = null
@@ -348,7 +348,7 @@ class EventsFragment :
                 Log.d("EventsFragment", "streams observer: loaded ${streams.size} items")
                 streamAdapter.items = streams
                 streamAdapter.notifyDataSetChanged()
-                setAlertFeatures(streams)
+                setEventFeatures(streams)
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
@@ -419,7 +419,7 @@ class EventsFragment :
             refreshSource()
             addClusteredGeoJsonSource(style)
             addLineLayer(style)
-            alertFeatures?.let { moveCameraToLeavesBounds(it) }
+            eventFeatures?.let { moveCameraToLeavesBounds(it) }
         }
 
         mapboxMap.addOnMapClickListener { latLng ->
@@ -427,7 +427,7 @@ class EventsFragment :
         }
     }
 
-    private fun setAlertFeatures(streams: List<Stream>) {
+    private fun setEventFeatures(streams: List<Stream>) {
         val projectResult = viewModel.selectedProject.value
         val projectId = if (projectResult is Result.Success) projectResult.data.id else ""
         val listOfStream = streams.filter { s -> s.projectId == projectId }
@@ -441,15 +441,15 @@ class EventsFragment :
             last.longitude = lastLocation?.longitude ?: 0.0
 
             val properties = mapOf(
-                Pair(PROPERTY_MARKER_ALERT_SITE, it.name),
-                Pair(PROPERTY_MARKER_ALERT_COUNT, "0"), // TODO Replace 0 with event count
-                Pair(PROPERTY_MARKER_ALERT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
-                Pair(PROPERTY_MARKER_ALERT_STREAM_ID, it.serverId)
+                Pair(PROPERTY_MARKER_EVENT_SITE, it.name),
+                Pair(PROPERTY_MARKER_EVENT_COUNT, "0"), // TODO Replace 0 with event count
+                Pair(PROPERTY_MARKER_EVENT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
+                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.serverId)
             )
             Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
         }
-        alertFeatures = FeatureCollection.fromFeatures(features)
-        alertFeatures?.let { moveCameraToLeavesBounds(it) }
+        eventFeatures = FeatureCollection.fromFeatures(features)
+        eventFeatures?.let { moveCameraToLeavesBounds(it) }
         refreshSource()
     }
 
@@ -472,33 +472,33 @@ class EventsFragment :
 
     private fun handleClickIcon(screenPoint: PointF): Boolean {
         val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
-        var alertFeatures = listOf<Feature>()
+        var eventFeatures = listOf<Feature>()
         queryLayerIds.forEach {
             val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
             if (features.isNotEmpty()) {
-                alertFeatures = features
+                eventFeatures = features
             }
         }
 
-        if (alertFeatures.isNotEmpty()) {
+        if (eventFeatures.isNotEmpty()) {
             val pinCount =
-                if (alertFeatures[0].getProperty(POINT_COUNT) != null) alertFeatures[0].getProperty(POINT_COUNT).asInt else 0
+                if (eventFeatures[0].getProperty(POINT_COUNT) != null) eventFeatures[0].getProperty(POINT_COUNT).asInt else 0
             if (pinCount > 1) {
-                val clusterLeavesFeatureCollection = alertSource?.getClusterLeaves(alertFeatures[0], 8000, 0)
+                val clusterLeavesFeatureCollection = eventSource?.getClusterLeaves(eventFeatures[0], 8000, 0)
                 val features = clusterLeavesFeatureCollection?.features()
                 if (clusterLeavesFeatureCollection != null) {
                     if (features?.groupBy { it }?.size == 1) {
-                        val distance = features[0].getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
-                        val streamId = features[0].getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
+                        val distance = features[0].getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
+                        val streamId = features[0].getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
                         listener.openEventDetail(streamId, distance.toDouble())
                     } else {
                         moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
                     }
                 }
             } else {
-                val selectedFeature = alertFeatures[0]
-                val distance = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_DISTANCE).asString
-                val streamId = selectedFeature.getProperty(PROPERTY_MARKER_ALERT_STREAM_ID).asString
+                val selectedFeature = eventFeatures[0]
+                val distance = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
+                val streamId = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
                 listener.openEventDetail(streamId, if (distance.isBlank()) null else distance.toDouble())
             }
             return true
@@ -507,8 +507,8 @@ class EventsFragment :
     }
 
     private fun setupSources(style: Style) {
-        alertSource = GeoJsonSource(
-            SOURCE_ALERT, FeatureCollection.fromFeatures(listOf()),
+        eventSource = GeoJsonSource(
+            SOURCE_EVENT, FeatureCollection.fromFeatures(listOf()),
             GeoJsonOptions()
                 .withCluster(true)
                 .withClusterMaxZoom(15)
@@ -519,7 +519,7 @@ class EventsFragment :
                     Expression.switchCase(
                         Expression.any(
                             Expression.eq(
-                                Expression.get(PROPERTY_MARKER_ALERT_COUNT), "0"
+                                Expression.get(PROPERTY_MARKER_EVENT_COUNT), "0"
                             )
                         ),
                         Expression.literal(0),
@@ -528,10 +528,10 @@ class EventsFragment :
                 ).withClusterProperty(
                     PROPERTY_CLUSTER_COUNT_EVENTS,
                     Expression.sum(Expression.accumulated(), Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS)),
-                    Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+                    Expression.toNumber(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
                 )
         )
-        style.addSource(alertSource!!)
+        style.addSource(eventSource!!)
 
         lineSource = GeoJsonSource(SOURCE_LINE)
         style.addSource(lineSource!!)
@@ -541,8 +541,8 @@ class EventsFragment :
     }
 
     private fun refreshSource() {
-        if (alertSource != null && alertFeatures != null) {
-            alertSource!!.setGeoJson(alertFeatures)
+        if (eventSource != null && eventFeatures != null) {
+            eventSource!!.setGeoJson(eventFeatures)
         }
         if (lineSource != null && lineFeatures != null) {
             lineSource!!.setGeoJson(lineFeatures)
@@ -587,7 +587,7 @@ class EventsFragment :
 
         layers.forEachIndexed { index, layer ->
             queryLayerIds[index] = "cluster-$index"
-            val circles = CircleLayer(queryLayerIds[index], SOURCE_ALERT)
+            val circles = CircleLayer(queryLayerIds[index], SOURCE_EVENT)
             circles.setProperties(PropertyFactory.circleColor(layer[1]), PropertyFactory.circleRadius(14f))
             val type = Expression.toNumber(Expression.get(PROPERTY_CLUSTER_TYPE))
             circles.setFilter(
@@ -603,7 +603,7 @@ class EventsFragment :
             style.addLayer(circles)
         }
 
-        val count = SymbolLayer(COUNT, SOURCE_ALERT)
+        val count = SymbolLayer(COUNT, SOURCE_EVENT)
         count.setProperties(
             PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_CLUSTER_COUNT_EVENTS))),
             PropertyFactory.textSize(12f),
@@ -614,12 +614,12 @@ class EventsFragment :
         style.addLayer(count)
 
         layers.forEachIndexed { i, ly ->
-            val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_ALERT)
-            val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+            val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_EVENT)
+            val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
                     .toString() != "0"
             ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
-            val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_ALERT_COUNT))
+            val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
             unClustered.setFilter(
                 if (i == 0) {
                     Expression.all(
@@ -636,9 +636,9 @@ class EventsFragment :
             style.addLayer(unClustered)
         }
 
-        val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_ALERT)
+        val eventsSize = SymbolLayer(COUNT_EVENTS, SOURCE_EVENT)
         eventsSize.setProperties(
-            PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_ALERT_COUNT))),
+            PropertyFactory.textField(Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT))),
             PropertyFactory.textSize(12f),
             PropertyFactory.textColor(Color.WHITE),
             PropertyFactory.textIgnorePlacement(true),

@@ -44,7 +44,7 @@ class AlertDetailViewModel(
     private var _classifiedCation: MutableLiveData<Result<List<Confidence>>> = MutableLiveData()
     val classifiedCation: LiveData<Result<List<Confidence>>> get() = _classifiedCation
 
-    fun setAlert(event: Event) {
+    fun setEvent(event: Event) {
         _event = event
         getAudio(event)
     }
@@ -155,7 +155,7 @@ class AlertDetailViewModel(
         _playerState.value = Player.STATE_BUFFERING
     }
 
-    fun getAlert(coreId: String): Event? = eventDb.getEvent(coreId)
+    fun getEvent(coreId: String): Event? = eventDb.getEvent(coreId)
 
     private fun getAudio(event: Event) {
         val fileName =

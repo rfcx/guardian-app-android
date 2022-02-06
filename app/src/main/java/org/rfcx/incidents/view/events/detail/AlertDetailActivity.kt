@@ -27,48 +27,48 @@ class AlertDetailActivity : AppCompatActivity() {
     private val viewModel: AlertDetailViewModel by viewModel()
 
     companion object {
-        const val EXTRA_ALERT_ID = "EXTRA_ALERT_ID"
+        const val EXTRA_EVENT_ID = "EXTRA_EVENT_ID"
         private const val SECOND = 1000L
 
-        fun startActivity(context: Context, alertId: String) {
+        fun startActivity(context: Context, eventId: String) {
             val intent = Intent(context, AlertDetailActivity::class.java)
-            intent.putExtra(EXTRA_ALERT_ID, alertId)
+            intent.putExtra(EXTRA_EVENT_ID, eventId)
             context.startActivity(intent)
         }
     }
 
-    private var alertId: String? = null
+    private var eventId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlertDetailBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        alertId = intent?.getStringExtra(EXTRA_ALERT_ID)
+        eventId = intent?.getStringExtra(EXTRA_EVENT_ID)
         setupToolbar()
 
-        val alert = alertId?.let { viewModel.getAlert(it) }
-        binding.guardianNameTextView.text = alert?.classification?.title
-        binding.timeTextView.text = alert?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
+        val event = eventId?.let { viewModel.getEvent(it) }
+        binding.guardianNameTextView.text = event?.classification?.title
+        binding.timeTextView.text = event?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
         val token = this.getTokenID()
 
-        alert?.let {
-            var alertData = it
-            if (alert.end.time - alert.start.time < 5 * SECOND) {
-                alertData = it.setNewTime(Date(alert.start.time - 5 * SECOND), Date(alert.end.time + 5 * SECOND))
+        event?.let {
+            var eventData = it
+            if (event.end.time - event.start.time < 5 * SECOND) {
+                eventData = it.setNewTime(Date(event.start.time - 5 * SECOND), Date(event.end.time + 5 * SECOND))
             }
-            if (alert.end.time - alert.start.time > 15 * SECOND) {
-                alertData = it.setNewTime(end = Date(alert.start.time + 15 * SECOND))
+            if (event.end.time - event.start.time > 15 * SECOND) {
+                eventData = it.setNewTime(end = Date(event.start.time + 15 * SECOND))
             }
 
             binding.spectrogramImageView.setReportImage(
-                url = viewModel.setFormatUrlOfSpectrogram(alertData),
+                url = viewModel.setFormatUrlOfSpectrogram(eventData),
                 fromServer = true,
                 token = token,
                 progressBar = binding.loadingImageProgressBar
             )
-            viewModel.setAlert(alertData)
-            setupView(viewModel.setFormatUrlOfAudio(alertData))
+            viewModel.setEvent(eventData)
+            setupView(viewModel.setFormatUrlOfAudio(eventData))
             observePlayer()
         }
 

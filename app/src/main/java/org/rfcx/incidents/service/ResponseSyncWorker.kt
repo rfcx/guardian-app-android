@@ -35,7 +35,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
         val eventService = ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, context)
         val realm = Realm.getInstance(AppRealm.configuration())
         val db = ResponseDb(realm)
-        val alertDb = EventDb(realm)
+        val eventDb = EventDb(realm)
         val reportImageDb = ReportImageDb(realm)
         val trackingFileDb = TrackingFileDb(realm)
         val voiceDb = VoiceDb(realm)
@@ -58,7 +58,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
                     reportImageDb.saveReportServerIdToImage(id, response.id)
                     voiceDb.saveReportServerId(id, response.id)
                 }
-                alertDb.deleteEventsByStreamId(response.streamId)
+                eventDb.deleteEventsByStreamId(response.streamId)
             } else {
                 someFailed = true
                 db.markUnsent(response.id)
