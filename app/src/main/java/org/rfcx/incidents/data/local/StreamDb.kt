@@ -11,7 +11,8 @@ class StreamDb(private val realm: Realm) {
     fun insertOrUpdate(response: StreamResponse) {
         val stream = response.toStream()
         stream.lastIncident?.let {
-            stream.lastIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst()
+            val existIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst() ?: return@let
+            stream.lastIncident = existIncident
         }
         realm.executeTransaction {
             it.insertOrUpdate(stream)
