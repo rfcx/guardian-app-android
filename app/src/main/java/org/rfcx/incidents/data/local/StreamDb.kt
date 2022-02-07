@@ -1,18 +1,15 @@
 package org.rfcx.incidents.data.local
 
 import io.realm.Realm
-import org.rfcx.incidents.data.remote.streams.StreamResponse
-import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 
 class StreamDb(private val realm: Realm) {
 
-    fun insertOrUpdate(response: StreamResponse) {
-        val stream = response.toStream()
+    fun insertOrUpdate(stream: Stream) {
         stream.lastIncident?.let {
-            val existIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst() ?: return@let
-            stream.lastIncident = existIncident
+            val existingIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst() ?: return@let
+            stream.lastIncident = existingIncident
         }
         realm.executeTransaction {
             it.insertOrUpdate(stream)
@@ -20,8 +17,8 @@ class StreamDb(private val realm: Realm) {
     }
 
     fun get(id: String): Stream? =
-        realm.where(Stream::class.java).equalTo(Stream.STREAM_ID, id).findFirst()
+        realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()
 
     fun getByProject(projectId: String): List<Stream> =
-        realm.where(Stream::class.java).equalTo(Stream.STREAM_PROJECT_ID, projectId).findAll()
+        realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
 }

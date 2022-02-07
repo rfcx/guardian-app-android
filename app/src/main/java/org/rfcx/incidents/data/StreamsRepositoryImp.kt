@@ -7,6 +7,7 @@ import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.streams.toEvent
+import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
@@ -27,8 +28,10 @@ class StreamsRepositoryImp(
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
         return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
-            rawStreams.forEach { streamRes ->
-                streamDb.insertOrUpdate(streamRes)
+            rawStreams.forEachIndexed { index, streamRes ->
+                val stream = streamRes.toStream()
+                stream.order = offset + index
+                streamDb.insertOrUpdate(stream)
                 streamRes.lastIncident()?.events?.forEach { event ->
                     eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                 }

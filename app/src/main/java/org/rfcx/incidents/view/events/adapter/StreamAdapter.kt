@@ -63,8 +63,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             // Stream level
             guardianName.text = stream.name
             stream.tags?.let { tags ->
-                if (tags.contains("recent")) recentTextView.visibility = View.VISIBLE
-                if (tags.contains("hot")) hotTextView.visibility = View.VISIBLE
+                if (tags.contains(Stream.TAG_RECENT)) recentTextView.visibility = View.VISIBLE
+                if (tags.contains(Stream.TAG_HOT)) hotTextView.visibility = View.VISIBLE
             }
 
             // Incident level
