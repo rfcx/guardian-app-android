@@ -104,11 +104,11 @@ class EventActivity : AppCompatActivity() {
         }
     }
 
+    // TODO Remove this function, creates confusion to have 2 events
     private fun Event.setNewTime(start: Date? = null, end: Date? = null): Event = Event(
         id = this.id,
         name = this.name,
         streamId = this.streamId,
-        projectId = this.projectId,
         createdAt = this.createdAt,
         start = start
             ?: this.start,

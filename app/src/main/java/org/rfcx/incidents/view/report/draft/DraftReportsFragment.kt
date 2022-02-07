@@ -12,9 +12,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.FragmentDraftReportsBinding
-import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
@@ -29,7 +29,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
-    private val viewModel: MainActivityViewModel by viewModel()
+    private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
     private val reportsAdapter by lazy { DraftReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
 
@@ -121,13 +121,13 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     }
 
     private fun setObserve() {
-        viewModel.getResponses().observe(viewLifecycleOwner, { responses ->
+        viewModel.getResponses().observe(viewLifecycleOwner) { responses ->
             streams = viewModel.getStreamIdsInProjectId()
             val items = responses.sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             reportsAdapter.items = items
-        })
+        }
     }
 
     private fun setOnClickProjectName() {

@@ -6,6 +6,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.DetectionsRepositoryImp
+import org.rfcx.incidents.data.EventsRepositoryImpl
 import org.rfcx.incidents.data.MediaRepositoryImp
 import org.rfcx.incidents.data.PasswordChangeRepositoryImp
 import org.rfcx.incidents.data.ProfilePhotoRepositoryImp
@@ -38,7 +39,6 @@ import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
-import org.rfcx.incidents.data.remote.EventsRepositoryImpl
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor

@@ -30,7 +30,7 @@ class CreateReportViewModel(
 ) : ViewModel() {
 
     fun getStream(id: String): Stream? {
-        return streamDb.getStream(id)
+        return streamDb.get(id)
     }
 
     fun getImagesFromLocal(id: Int): List<ImageAsset> = reportImageDb.getByReportId(id)

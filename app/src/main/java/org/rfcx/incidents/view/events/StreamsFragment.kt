@@ -59,9 +59,9 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentStreamsBinding
-import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
@@ -371,7 +371,7 @@ class StreamsFragment :
     }
 
     override fun invoke(stream: Stream) {
-        listener.openStreamDetail(stream.serverId, null) //, stream.distance)
+        listener.openStreamDetail(stream.id, null) //, stream.distance)
     }
 
     private fun setupToolbar() {
@@ -428,23 +428,12 @@ class StreamsFragment :
     }
 
     private fun setEventFeatures(streams: List<Stream>) {
-        val projectResult = viewModel.selectedProject.value
-        val projectId = if (projectResult is Result.Success) projectResult.data.id else ""
-        val listOfStream = streams.filter { s -> s.projectId == projectId }
-        val features = listOfStream.map {
-            val loc = Location(LocationManager.GPS_PROVIDER)
-            loc.latitude = it.latitude
-            loc.longitude = it.longitude
-
-            val last = Location(LocationManager.GPS_PROVIDER)
-            last.latitude = lastLocation?.latitude ?: 0.0
-            last.longitude = lastLocation?.longitude ?: 0.0
-
+        val features = streams.map {
             val properties = mapOf(
                 Pair(PROPERTY_MARKER_EVENT_SITE, it.name),
-                Pair(PROPERTY_MARKER_EVENT_COUNT, "0"), // TODO Replace 0 with event count
-                Pair(PROPERTY_MARKER_EVENT_DISTANCE, if (lastLocation != null) viewModel.distance(last, loc) else ""),
-                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.serverId)
+                Pair(PROPERTY_MARKER_EVENT_COUNT, (it.lastIncident?.events?.size ?: 0).toString()),
+                Pair(PROPERTY_MARKER_EVENT_DISTANCE, distanceLabel(lastLocation, it)),
+                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.id)
             )
             Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
         }
@@ -815,3 +804,11 @@ class StreamsFragment :
         }
     }
 }
+
+fun distanceLabel(origin: Location?, destination: Stream): String {
+    if (origin == null) return ""
+    return LatLng(origin.latitude, origin.longitude).distanceTo(LatLng(destination.latitude, destination.longitude)).toString()
+}
+
+
+

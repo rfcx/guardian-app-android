@@ -22,7 +22,6 @@ class AppRealm {
             try {
                 val realm = Realm.getInstance(configuration())
                 realm.close()
-                Realm.setDefaultConfiguration(configuration())
             } catch (e: RealmMigrationNeededException) {
                 Log.e(Companion::class.java.name, "Realm migrations failed unexpectedly: ${e.message}")
                 realmNeedsFallback = true
@@ -37,6 +36,8 @@ class AppRealm {
                 } catch (_: RealmMigrationNeededException) {
                 }
             }
+
+            Realm.setDefaultConfiguration(configuration())
         }
 
         fun configuration(): RealmConfiguration {

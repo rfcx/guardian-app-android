@@ -25,7 +25,7 @@ class StreamDetailViewModel(
 
     fun getEventsCount(streamId: String): Long = eventDb.getEventCount(streamId)
 
-    fun getStream(serverId: String): Stream? = streamDb.getStream(serverId)
+    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
 
     fun getEventsByStream(streamId: String): List<Event> = eventDb.getEventsByDescending(streamId)
 
@@ -39,9 +39,6 @@ class StreamDetailViewModel(
         getEventsUseCase.execute(
             object : DisposableSingleObserver<List<Event>>() {
                 override fun onSuccess(t: List<Event>) {
-                    t.forEach { res ->
-                        eventDb.insertEvent(res)
-                    }
                     _events.value = Result.Success(t)
                 }
 

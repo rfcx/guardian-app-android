@@ -14,9 +14,9 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentSubmittedReportsBinding
-import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
@@ -31,7 +31,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
-    private val viewModel: MainActivityViewModel by viewModel()
+    private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
     private val reportsAdapter by lazy { SubmittedReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
     lateinit var listener: MainActivityEventListener

@@ -10,6 +10,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.dateRangeFormat
 
 class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
     RecyclerView.Adapter<StreamAdapter.StreamViewHolder>() {
@@ -53,42 +54,43 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
 
         fun bind(stream: Stream) {
             // Reset
-            listOf(chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach { it.visibility = View.GONE }
+            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach {
+                it.visibility = View.GONE
+            }
+            noneTextView.visibility = View.VISIBLE
 
+            // Stream level
             guardianName.text = stream.name
-            // val alerts = stream.alerts.sortedBy { a -> a.start }
-            // recentTextView.visibility =
-            //     if (alerts.isNotEmpty() && System.currentTimeMillis() - alerts.last().start.time <= 6 * HOUR) View.VISIBLE else View.GONE
-            // hotTextView.visibility = if (alerts.size > 10) View.VISIBLE else View.GONE
-            // timeTextView.text = stream.eventTime
+            stream.tags?.let { tags ->
+                if (tags.contains("recent")) recentTextView.visibility = View.VISIBLE
+                if (tags.contains("hot")) hotTextView.visibility = View.VISIBLE
+            }
 
-            val hasNoEvents = true // stream.eventSize == 0
-            timeTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
-            bellImageView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
-            noneTextView.visibility = if (hasNoEvents) View.VISIBLE else View.GONE
-            incidentIdTextView.visibility = if (hasNoEvents) View.GONE else View.VISIBLE
-            guardianNameTextView.setPadding(
-                16.toPx,
-                16.toPx,
-                if (hasNoEvents) 16.toPx else 0.toPx,
-                if (hasNoEvents) 16.toPx else 10.toPx
-            )
+            // Incident level
+            val incident = stream.lastIncident ?: return
+            noneTextView.visibility = View.GONE
+            incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
-            // val typeOfAlert = alerts.distinctBy { a -> a.classification?.value }
-            // if (typeOfAlert.isEmpty()) return
-            //
-            // var number = 0
-            // typeOfAlert.forEachIndexed { index, alert ->
-            //     val type = alert.classification?.value ?: return
-            //     if (index < 2) {
-            //         showIconType(type, alerts)
-            //     } else {
-            //         otherLayout.visibility = View.VISIBLE
-            //         number += getNumberOfAlertByType(alerts, type).toInt()
-            //         numOfOtherTextView.text = (number).toString()
-            //     }
-            // }
+            val events = incident.events
+            if (events == null || events.size == 0) return
+            timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end)
+            timeTextView.visibility = View.VISIBLE
+            bellImageView.visibility = View.VISIBLE
+            val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
+            if (eventsDistinctType.isEmpty()) return
+
+            var number = 0
+            eventsDistinctType.forEachIndexed { index, event ->
+                val type = event.classification?.value ?: return
+                if (index < 2) {
+                    showIconType(type, events)
+                } else {
+                    otherLayout.visibility = View.VISIBLE
+                    number += getNumberOfEventByType(events, type).toInt()
+                    numOfOtherTextView.text = (number).toString()
+                }
+            }
         }
 
         private fun showIconType(type: String, events: List<Event>) {

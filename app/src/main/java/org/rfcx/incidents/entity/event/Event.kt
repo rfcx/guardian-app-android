@@ -3,6 +3,7 @@ package org.rfcx.incidents.entity.event
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import org.rfcx.incidents.entity.stream.Incident
 import java.util.Date
 
 @RealmClass
@@ -11,11 +12,11 @@ open class Event(
     var id: String = "",
     var name: String = "",
     var streamId: String = "",
-    var projectId: String = "",
     var createdAt: Date = Date(),
     var start: Date = Date(),
     var end: Date = Date(),
     var classification: Classification? = null,
+    var incident: Incident? = null
 ) : RealmModel {
     companion object {
         const val TABLE_NAME = "Event"

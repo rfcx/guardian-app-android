@@ -5,12 +5,20 @@ import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.kotlin.deleteFromRealm
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.Incident
 
 class EventDb(private val realm: Realm) {
 
-    fun insertEvent(eventObj: Event) {
+    fun insertOrUpdate(event: Event, attachedToIncidentId: String) {
         realm.executeTransaction {
-            it.insertOrUpdate(eventObj)
+            event.incident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, attachedToIncidentId).findFirst()
+            it.insertOrUpdate(event)
+        }
+    }
+
+    fun insertOrUpdate(event: Event) {
+        realm.executeTransaction {
+            it.insertOrUpdate(event)
         }
     }
 

@@ -6,7 +6,7 @@ import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
-import org.rfcx.incidents.data.remote.streams.toEvents
+import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -28,8 +28,8 @@ class StreamsRepositoryImp(
         return endpoint.getStreams(projects = listOf(projectId)).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
             rawStreams.forEach { streamRes ->
                 streamDb.insertOrUpdate(streamRes)
-                streamRes.toEvents().forEach { event ->
-                    eventDb.insertEvent(event)
+                streamRes.lastIncident()?.events?.forEach { event ->
+                    eventDb.insertOrUpdate(event.toEvent(), streamRes.lastIncident()!!.id)
                 }
             }
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
@@ -38,7 +38,7 @@ class StreamsRepositoryImp(
     }
 
     private fun getFromLocalDB(projectId: String): Single<List<Stream>> {
-        return Single.just(streamDb.getStreamsByProject(projectId))
+        return Single.just(streamDb.getByProject(projectId))
     }
 
     private fun cacheKey(projectId: String): String {

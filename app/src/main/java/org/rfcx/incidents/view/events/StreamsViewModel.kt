@@ -1,24 +1,22 @@
 package org.rfcx.incidents.view.events
 
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.realm.asLiveData
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.GetStreamsUseCase
-import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
-import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.entity.stream.Stream
 
 class StreamsViewModel(
     private val preferences: Preferences,
@@ -101,9 +99,6 @@ class StreamsViewModel(
     fun saveLastTimeToKnowTheCurrentLocation(time: Long) {
         preferences.putLong(Preferences.LATEST_CURRENT_LOCATION_TIME, time)
     }
-
-    fun distance(lastLocation: Location, loc: Location): String =
-        LatLng(loc.latitude, loc.longitude).distanceTo(LatLng(lastLocation.latitude, lastLocation.longitude)).toString()
 
     fun getTrackingFromLocal(): LiveData<List<Tracking>> {
         return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }

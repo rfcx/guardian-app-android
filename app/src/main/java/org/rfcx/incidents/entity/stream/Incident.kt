@@ -1,7 +1,8 @@
 package org.rfcx.incidents.entity.stream
 
-import io.realm.RealmList
 import io.realm.RealmModel
+import io.realm.RealmResults
+import io.realm.annotations.LinkingObjects
 import io.realm.annotations.RealmClass
 import org.rfcx.incidents.entity.event.Event
 import java.util.Date
@@ -12,9 +13,10 @@ open class Incident(
     var ref: String = "",
     var closedAt: Date? = null,
     var createdAt: Date = Date(),
-    var events: RealmList<Event>? = null
+    @LinkingObjects("incident") val events: RealmResults<Event>? = null
 ) : RealmModel {
     companion object {
         const val TABLE_NAME = "Incident"
+        const val FIELD_ID = "id"
     }
 }

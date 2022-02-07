@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.remote.streams
 
+import io.realm.RealmList
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Incident
@@ -7,13 +8,17 @@ import org.rfcx.incidents.entity.stream.Stream
 import java.util.Date
 
 data class StreamResponse(
-    var id: String = "",
-    var name: String = "",
+    var id: String,
+    var name: String,
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
-    var incidents: IncidentListResponse = IncidentListResponse(),
-    var project: ProjectResponse = ProjectResponse()
-)
+    var project: ProjectResponse = ProjectResponse(),
+    var timezone: String,
+    var tags: List<String>,
+    var incidents: IncidentListResponse = IncidentListResponse()
+) {
+    fun lastIncident(): IncidentResponse? = incidents.items.firstOrNull()
+}
 
 data class IncidentListResponse(
     var total: Int = 0,
@@ -21,19 +26,21 @@ data class IncidentListResponse(
 )
 
 data class IncidentResponse(
-    var id: String = "",
+    var id: String,
     var ref: Int = 0,
-    var closeAt: Date,
+    var closedAt: Date?,
     var createdAt: Date,
+    var updatedAt: Date,
+    var firstEventId: String,
     var events: List<EventResponse> = listOf()
 )
 
 data class EventResponse(
-    var id: String = "",
+    var id: String,
     var start: Date,
     var end: Date,
     var createdAt: Date,
-    var classification: ClassificationResponse = ClassificationResponse()
+    var classification: ClassificationResponse
 )
 
 data class ClassificationResponse(
@@ -47,44 +54,38 @@ data class ProjectResponse(
 )
 
 fun StreamResponse.toStream(): Stream = Stream(
-    serverId = id,
+    id = id,
     name = name,
     latitude = latitude,
     longitude = longitude,
+    timezone = timezone,
     projectId = project.id,
-    lastIncident = incidents.items.firstOrNull()?.toIncident()
+    tags = realmList(tags),
+    lastIncident = lastIncident()?.toIncident()
 )
 
-fun StreamResponse.toEvents(): List<Event> {
-    val events = arrayListOf<Event>()
-
-    this.incidents.items.forEach { incident ->
-        incident.events.forEach { event ->
-            events.add(
-                Event(
-                    id = event.id,
-                    start = event.start,
-                    end = event.end,
-                    name = event.id,
-                    streamId = this.id,
-                    projectId = this.project.id,
-                    createdAt = event.createdAt,
-                    classification = event.classification.toClassification(),
-                )
-            )
-        }
-    }
-
-    return events
-}
-
-fun IncidentResponse.toIncident(): Incident = Incident(
+private fun IncidentResponse.toIncident(): Incident = Incident(
     id = this.id,
-    closedAt = this.closeAt,
+    closedAt = this.closedAt,
     createdAt = this.createdAt
 )
 
-fun ClassificationResponse.toClassification(): Classification = Classification(
+fun EventResponse.toEvent(): Event = Event(
+    id = this.id,
+    start = this.start,
+    end = this.end,
+    name = this.id,
+    createdAt = this.createdAt,
+    classification = this.classification.toClassification()
+)
+
+private fun ClassificationResponse.toClassification(): Classification = Classification(
     value = this.value,
     title = this.title
 )
+
+fun <T> realmList(list: List<T>): RealmList<T> {
+    val result = RealmList<T>()
+    list.forEach { result.add(it) }
+    return result
+}
