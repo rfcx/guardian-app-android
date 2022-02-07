@@ -24,6 +24,7 @@ import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.EventItemAdapter
+import java.util.TimeZone
 
 class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentGuardianStreamDetailBinding? = null
@@ -80,6 +81,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
             layoutManager = LinearLayoutManager(context)
             adapter = eventItemAdapter
             eventItemAdapter.items = events
+            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezone)
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()

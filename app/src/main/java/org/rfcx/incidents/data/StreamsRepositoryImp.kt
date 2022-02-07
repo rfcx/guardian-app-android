@@ -30,7 +30,7 @@ class StreamsRepositoryImp(
             rawStreams.forEach { streamRes ->
                 streamDb.insertOrUpdate(streamRes)
                 streamRes.lastIncident()?.events?.forEach { event ->
-                    eventDb.insertOrUpdate(event.toEvent(), streamRes.lastIncident()!!.id)
+                    eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                 }
             }
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))

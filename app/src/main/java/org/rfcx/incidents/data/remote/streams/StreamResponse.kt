@@ -71,9 +71,10 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     createdAt = this.createdAt
 )
 
-fun EventResponse.toEvent(): Event = Event(
+fun EventResponse.toEvent(streamId: String): Event = Event(
     id = this.id,
     start = this.start,
+    streamId = streamId,
     end = this.end,
     name = this.id,
     createdAt = this.createdAt,

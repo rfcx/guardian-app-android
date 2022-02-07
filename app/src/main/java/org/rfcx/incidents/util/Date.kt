@@ -78,6 +78,25 @@ fun Date.millisecondsSince(): Long {
     return Date().time - this.time
 }
 
+fun Date.toDateWithTimeZone(timeZone: TimeZone): Date {
+    val dateString = this.toIsoString()
+    val tempSdf = isoSdf
+    tempSdf.timeZone = timeZone
+    return tempSdf.parse(dateString)
+}
+
+fun Date.toTimeWithTimeZone(timeZone: TimeZone): String {
+    val tempSdf = outputTimeSdf
+    tempSdf.timeZone = timeZone
+    return tempSdf.format(this)
+}
+
+fun Date.toStringWithTimeZone(timeZone: TimeZone): String {
+    val tempSdf = outputDateSdf
+    tempSdf.timeZone = timeZone
+    return tempSdf.format(this)
+}
+
 private val legacyInputFormatters by lazy {
     arrayListOf(
         isoSdf,
@@ -107,18 +126,18 @@ private const val DAY = 24 * HOUR
 private const val WEEK = 7 * DAY
 
 @SuppressLint("SimpleDateFormat")
-fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context): String {
+fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZone = TimeZone.getDefault()): String {
     val niceDateStr =
-        DateUtils.getRelativeTimeSpanString(this.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        DateUtils.getRelativeTimeSpanString(this.toDateWithTimeZone(timeZone).time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
 
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
     } else if (niceDateStr.toString() == "Yesterday") {
-        "${context.getString(R.string.yesterday)} ${this.toTimeString()}"
+        "${context.getString(R.string.yesterday)} ${this.toTimeWithTimeZone(timeZone)}"
     } else if (!niceDateStr.toString().contains("ago")) {
-        this.toDateTimeString()
+        this.toStringWithTimeZone(timeZone)
     } else if (niceDateStr.toString().contains("days ago")) {
-        this.toDateTimeString()
+        this.toStringWithTimeZone(timeZone)
     } else {
         niceDateStr.toString()
     }

@@ -21,6 +21,7 @@ import okio.sink
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.EventDb
+import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetDetectionsUseCase
 import org.rfcx.incidents.domain.MediaUseCase
@@ -28,12 +29,14 @@ import org.rfcx.incidents.entity.event.Confidence
 import org.rfcx.incidents.entity.event.DetectionFactory
 import org.rfcx.incidents.entity.event.Detections
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.toIsoFormatString
 import java.io.File
 import java.io.IOException
 
 class EventViewModel(
     private val context: Context,
+    private val streamDb: StreamDb,
     private val eventDb: EventDb,
     private val mediaUseCase: MediaUseCase,
     private val getDetectionsUseCase: GetDetectionsUseCase
@@ -48,6 +51,8 @@ class EventViewModel(
         _event = event
         getAudio(event)
     }
+
+    fun getStream(streamId: String): Stream? = streamDb.get(streamId)
 
     private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
     private var _playerState: MutableLiveData<Int> = MutableLiveData()

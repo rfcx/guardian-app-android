@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import java.util.TimeZone
 
 class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
     RecyclerView.Adapter<EventItemAdapter.EventItemViewHolder>() {
@@ -16,6 +17,8 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
             field = value
             notifyDataSetChanged()
         }
+
+    var timeZone: TimeZone = TimeZone.getDefault()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventItemViewHolder {
         val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -36,7 +39,7 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
         private val dateTextView = binding.dateTextView
 
         fun bind(item: Event) {
-            dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+            dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context, timeZone)
             typeTextView.text = item.classification?.title
         }
     }

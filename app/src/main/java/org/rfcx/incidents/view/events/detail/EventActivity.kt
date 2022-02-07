@@ -21,6 +21,7 @@ import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.events.detail.EventViewModel.Companion.maxProgress
 import java.util.Date
+import java.util.TimeZone
 
 class EventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEventBinding
@@ -49,7 +50,9 @@ class EventActivity : AppCompatActivity() {
 
         val event = eventId?.let { viewModel.getEvent(it) }
         binding.guardianNameTextView.text = event?.classification?.title
-        binding.timeTextView.text = event?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this)
+        val timezoneString = event?.streamId?.let { viewModel.getStream(it) }?.timezone
+        val timezone = if (timezoneString == null) TimeZone.getDefault() else TimeZone.getTimeZone(timezoneString)
+        binding.timeTextView.text = event?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this, timezone)
         val token = this.getTokenID()
 
         event?.let {
