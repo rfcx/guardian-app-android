@@ -43,7 +43,10 @@ class LocationPermissions(private val activity: Activity) {
 
     private fun request() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSIONS_REQUEST_CODE)
+            activity.requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE
+            )
         } else {
             throw Exception("Request permissions not required before API 23 (should never happen)")
         }
@@ -52,21 +55,25 @@ class LocationPermissions(private val activity: Activity) {
     fun handleRequestResult(requestCode: Int, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
+                val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
                 if (!shouldProvideRationale) {
                     val dialogBuilder: AlertDialog.Builder =
-                            AlertDialog.Builder(activity).apply {
-                                setTitle(null)
-                                setMessage(R.string.location_permission_msg)
-                                setPositiveButton(R.string.go_to_setting) { _, _ ->
-                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                            Uri.parse("package:${activity.packageName}"))
-                                    intent.addCategory(Intent.CATEGORY_DEFAULT)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    activity.startActivity(intent)
-                                }
+                        AlertDialog.Builder(activity).apply {
+                            setTitle(null)
+                            setMessage(R.string.location_permission_msg)
+                            setPositiveButton(R.string.go_to_setting) { _, _ ->
+                                val intent = Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:${activity.packageName}")
+                                )
+                                intent.addCategory(Intent.CATEGORY_DEFAULT)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                activity.startActivity(intent)
                             }
+                        }
                     dialogBuilder.create().show()
                 } else {
                     onCompletionCallback?.invoke(false)

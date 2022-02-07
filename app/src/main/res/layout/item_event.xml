@@ -7,9 +7,9 @@
 	android:background="?attr/selectableItemBackground">
 	
 	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/numberOfAlertsImageView"
-		android:layout_width="@dimen/number_alerts_site"
-		android:layout_height="@dimen/number_alerts_site"
+		android:id="@+id/numberOfEventsImageView"
+		android:layout_width="@dimen/number_Events_site"
+		android:layout_height="@dimen/number_Events_site"
 		android:layout_marginStart="@dimen/margin_padding_normal"
 		android:src="@drawable/bg_circle_red"
 		app:layout_constraintBottom_toBottomOf="@id/typeTextView"
@@ -23,7 +23,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toEndOf="@id/numberOfAlertsImageView"
+		app:layout_constraintStart_toEndOf="@id/numberOfEventsImageView"
 		app:layout_constraintTop_toTopOf="parent"
 		tools:text="Chainsaw" />
 	

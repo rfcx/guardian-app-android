@@ -6,22 +6,22 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface CreateResponseEndpoint {
-	@POST("responses")
-	fun createResponse(@Body body: CreateResponseRequest): Single<CreateResponseRes>
-	
-	@POST("responses")
-	fun createNewResponse(@Body body: CreateResponseRequest): Call<CreateResponseRes>
+    @POST("responses")
+    fun createResponse(@Body body: CreateResponseRequest): Single<CreateResponseRes>
+
+    @POST("responses")
+    fun createNewResponse(@Body body: CreateResponseRequest): Call<CreateResponseRes>
 }
 
 data class CreateResponseRequest(
-		val investigatedAt: String,
-		val startedAt: String,
-		val submittedAt: String,
-		val answers: List<Int>,
-		val note: String?,
-		val streamId: String
+    val investigatedAt: String,
+    val startedAt: String,
+    val submittedAt: String,
+    val answers: List<Int>,
+    val note: String?,
+    val streamId: String
 )
 
 open class CreateResponseRes(
-		val incidentRef: String
+    val incidentRef: String
 )

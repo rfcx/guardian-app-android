@@ -7,79 +7,70 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.api.project.GetProjectsUseCase
-import org.rfcx.incidents.data.api.project.ProjectResponse
-import org.rfcx.incidents.data.api.project.ProjectsRequestFactory
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.data.remote.Result
-import org.rfcx.incidents.entity.Stream
-import org.rfcx.incidents.entity.project.Project
+import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.StreamDb
+import org.rfcx.incidents.data.local.realm.asLiveData
+import org.rfcx.incidents.data.preferences.CredentialKeeper
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.domain.GetProjectsParams
+import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.localdb.ResponseDb
-import org.rfcx.incidents.localdb.StreamDb
-import org.rfcx.incidents.util.CredentialKeeper
-import org.rfcx.incidents.util.Preferences
-import org.rfcx.incidents.util.asLiveData
+import org.rfcx.incidents.entity.stream.Project
 
-class MainActivityViewModel(private val context: Context, private val responseDb: ResponseDb,
-                            private val projectDb: ProjectDb,
-                            private val streamDb: StreamDb,
-                            private val getProjects: GetProjectsUseCase,
-                            credentialKeeper: CredentialKeeper) : ViewModel() {
-	
-	val isRequireToLogin = MutableLiveData<Boolean>()
-	
-	private val _projects = MutableLiveData<Result<List<Project>>>()
-	val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
-	
-	fun getResponses(): LiveData<List<Response>> {
-		return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
-	}
-	
-	init {
-		isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
-	}
-	
-	fun getProjectById(id: Int): Project? = projectDb.getProjectById(id)
-	
-	fun getStreamByName(name: String): Stream? = streamDb.getStreamByName(name)
-	
-	fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
-	
-	fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
-	
-	fun getStreamsByProjectCoreId(projectCodeId: String): List<Stream> = streamDb.getStreamsByProjectCoreId(projectCodeId)
-	
-	fun getProjectName(id: Int): String = projectDb.getProjectById(id)?.name
-			?: context.getString(R.string.all_projects)
-	
-	fun fetchProjects() {
-		getProjects.execute(object : DisposableSingleObserver<List<ProjectResponse>>() {
-			override fun onSuccess(t: List<ProjectResponse>) {
-				t.map {
-					projectDb.insertOrUpdate(it)
-				}
-				_projects.value = Result.Success(listOf())
-			}
-			
-			override fun onError(e: Throwable) {
-				_projects.value = Result.Error(e)
-			}
-		}, ProjectsRequestFactory())
-	}
-	
-	fun setProjectSelected(id: Int) {
-		val preferences = Preferences.getInstance(context)
-		preferences.putInt(Preferences.SELECTED_PROJECT, id)
-	}
-	
-	fun getStreamIdsInProjectId(): List<String> {
-		val preferences = Preferences.getInstance(context)
-		val projectId = preferences.getInt(Preferences.SELECTED_PROJECT, -1)
-		val projectCoreId = getProjectById(projectId)?.serverId
-		projectCoreId?.let {
-			return getStreamsByProjectCoreId(it).map { s -> s.serverId }
-		}
-		return listOf()
-	}
+class MainActivityViewModel(
+    private val context: Context,
+    private val responseDb: ResponseDb,
+    private val projectDb: ProjectDb,
+    private val streamDb: StreamDb,
+    private val getProjectsUseCase: GetProjectsUseCase,
+    credentialKeeper: CredentialKeeper
+) : ViewModel() {
+
+    val isRequireToLogin = MutableLiveData<Boolean>()
+
+    private val _projects = MutableLiveData<Result<List<Project>>>()
+    val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
+
+    fun getResponses(): LiveData<List<Response>> {
+        return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
+    }
+
+    init {
+        isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
+    }
+
+    fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
+
+    fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
+
+    fun getProjectName(id: String): String = projectDb.getProject(id)?.name
+        ?: context.getString(R.string.all_projects)
+
+    fun fetchProjects() {
+        getProjectsUseCase.execute(
+            object : DisposableSingleObserver<List<Project>>() {
+                override fun onSuccess(t: List<Project>) {
+                    _projects.value = Result.Success(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    _projects.value = Result.Error(e)
+                }
+            },
+            GetProjectsParams()
+        )
+    }
+
+    fun setProjectSelected(id: String) {
+        val preferences = Preferences.getInstance(context)
+        preferences.putString(Preferences.SELECTED_PROJECT, id)
+    }
+
+    fun getStreamIdsInProjectId(): List<String> {
+        val preferences = Preferences.getInstance(context)
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+        return streamDb.getByProject(projectId).map { s -> s.id }
+    }
 }

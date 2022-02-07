@@ -15,17 +15,21 @@ object ReportUtils {
     fun createReportImageFile(): File {
         val directoryName = "RFCx-Ranger"
         val imageFileName = "IMG_${Date().time}"
-        val directory = File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).absolutePath, directoryName)
+        val directory = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES
+            ).absolutePath,
+            directoryName
+        )
 
         if (!directory.exists()) {
             directory.mkdir()
         }
 
         return File.createTempFile(
-                imageFileName, /* prefix */
-                ".jpg", /* suffix */
-                directory /* directory */
+            imageFileName, /* prefix */
+            ".jpg", /* suffix */
+            directory /* directory */
         )
     }
 }
