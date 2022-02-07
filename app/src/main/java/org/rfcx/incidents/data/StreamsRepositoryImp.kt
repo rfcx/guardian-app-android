@@ -7,6 +7,7 @@ import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.streams.toEvent
+import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -17,15 +18,15 @@ class StreamsRepositoryImp(
     private val cachedEndpointDb: CachedEndpointDb,
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {
-    override fun get(projectId: String, forceRefresh: Boolean): Single<List<Stream>> {
-        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(projectId))) {
-            return refreshFromAPI(projectId)
+    override fun get(params: GetStreamsParams): Single<List<Stream>> {
+        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
+            return refreshFromAPI(params.projectId, params.offset)
         }
-        return getFromLocalDB(projectId)
+        return getFromLocalDB(params.projectId)
     }
 
-    private fun refreshFromAPI(projectId: String): Single<List<Stream>> {
-        return endpoint.getStreams(projects = listOf(projectId)).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
+    private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
+        return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
             rawStreams.forEach { streamRes ->
                 streamDb.insertOrUpdate(streamRes)
                 streamRes.lastIncident()?.events?.forEach { event ->

@@ -14,12 +14,12 @@ class GetStreamsUseCase(
 ) : SingleUseCase<GetStreamsParams, List<Stream>>(threadExecutor, postExecutionThread) {
 
     override fun buildUseCaseObservable(params: GetStreamsParams): Single<List<Stream>> {
-        return repository.get(params.projectId, params.forceRefresh)
+        return repository.get(params)
     }
 }
 
 data class GetStreamsParams(
     val projectId: String,
     val forceRefresh: Boolean = false,
-    val more: Boolean = false
+    val offset: Int = 0
 )

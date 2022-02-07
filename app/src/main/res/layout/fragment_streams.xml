@@ -1,143 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/backgroundColor"
-	tools:context=".view.events.StreamsFragment">
-	
-	<include
-		android:id="@+id/toolbarLayout"
-		layout="@layout/toolbar_project" />
-	
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/guidelineVertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		app:layout_constraintGuide_percent="0.9" />
-	
-	<com.mapbox.mapboxsdk.maps.MapView
-		android:id="@+id/mapView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="gone"
-		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
-	
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/currentLocationButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_padding_large"
-		android:src="@drawable/ic_current_location"
-		android:visibility="gone"
-		app:backgroundTint="@color/white"
-		app:fabCustomSize="@dimen/zoom_loc_size"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="@id/guidelineVertical"
-		app:layout_constraintStart_toStartOf="@id/guidelineVertical"
-		app:tint="@color/colorPrimary" />
-	
-	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-		android:id="@+id/refreshView"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
-		
-		<androidx.core.widget.NestedScrollView
-			android:id="@+id/guardianListScrollView"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:overScrollMode="never">
-			
-			<androidx.constraintlayout.widget.ConstraintLayout
-				android:id="@+id/listSteamLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-				
-				<LinearLayout
-					android:id="@+id/streamLayout"
-					android:layout_width="match_parent"
-					android:layout_height="0dp"
-					android:orientation="vertical"
-					android:paddingTop="@dimen/margin_padding_small"
-					android:paddingBottom="@dimen/margin_padding_small"
-					app:layout_constraintTop_toTopOf="parent">
-					
-					<androidx.recyclerview.widget.RecyclerView
-						android:id="@+id/streamRecyclerView"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:background="@color/backgroundColor"
-						android:dividerHeight="1dp"
-						android:overScrollMode="never" />
-				</LinearLayout>
-			</androidx.constraintlayout.widget.ConstraintLayout>
-		</androidx.core.widget.NestedScrollView>
-	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-	
-	<androidx.constraintlayout.widget.Group
-		android:id="@+id/notHaveStreamsGroupView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		app:constraint_referenced_ids="notHaveStreamsImageView, emptyListTextView" />
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/notHaveStreamsImageView"
-		android:layout_width="@dimen/ic_empty_list_size"
-		android:layout_height="@dimen/ic_empty_list_size"
-		android:src="@drawable/ic_pin_drop"
-		app:layout_constraintBottom_toTopOf="@+id/emptyListTextView"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_chainStyle="packed"
-		app:tint="@color/iconColor" />
-	
-	<TextView
-		android:id="@+id/emptyListTextView"
-		style="@style/RangerText.SubTitle.Secondary"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_padding_small"
-		android:gravity="center"
-		android:text="@string/not_have_stream"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/notHaveStreamsImageView"
-		app:layout_constraintVertical_chainStyle="packed" />
-	
-	<ProgressBar
-		android:id="@+id/progressBar"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@color/transparent"
-		android:visibility="gone"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
-	
-	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-		android:id="@+id/projectSwipeRefreshView"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:visibility="gone"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
-		
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/projectRecyclerView"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/backgroundColor"
-			android:dividerHeight="1dp"
-			android:visibility="gone" />
-	
-	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context=".view.events.StreamsFragment">
+
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar_project" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/currentLocationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_padding_large"
+        android:src="@drawable/ic_current_location"
+        android:visibility="gone"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="@dimen/zoom_loc_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="@id/guidelineVertical"
+        app:tint="@color/colorPrimary" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/listSteamLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/streamLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/margin_padding_small"
+                android:paddingBottom="@dimen/margin_padding_small"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/streamRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/backgroundColor"
+                    android:dividerHeight="1dp"
+                    android:overScrollMode="never" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/notHaveStreamsGroupView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="notHaveStreamsImageView, emptyListTextView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/notHaveStreamsImageView"
+        android:layout_width="@dimen/ic_empty_list_size"
+        android:layout_height="@dimen/ic_empty_list_size"
+        android:src="@drawable/ic_pin_drop"
+        app:layout_constraintBottom_toTopOf="@+id/emptyListTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/iconColor" />
+
+    <TextView
+        android:id="@+id/emptyListTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:gravity="center"
+        android:text="@string/not_have_stream"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notHaveStreamsImageView"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/projectSwipeRefreshView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/projectRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundColor"
+            android:dividerHeight="1dp"
+            android:visibility="gone" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

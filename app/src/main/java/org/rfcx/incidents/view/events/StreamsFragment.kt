@@ -249,7 +249,7 @@ class StreamsFragment :
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
                     if (!binding.refreshView.isRefreshing && (visibleItemCount + firstVisibleItemPosition) >= total && firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore) {
-                        viewModel.refreshStreams(more = true)
+                        viewModel.refreshStreams(force = true, total)
                     }
                 }
             })
@@ -389,15 +389,13 @@ class StreamsFragment :
                 mapView.visibility = View.VISIBLE
                 binding.refreshView.visibility = View.GONE
                 binding.currentLocationButton.visibility = View.VISIBLE
-                binding.guardianListScrollView.visibility = View.GONE
                 mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
             } else {
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
                 mapView.visibility = View.GONE
                 binding.refreshView.visibility = View.VISIBLE
                 binding.currentLocationButton.visibility = View.GONE
-// 				isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
-                binding.guardianListScrollView.visibility = View.VISIBLE
+				// isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
             }
             isShowMapIcon = !isShowMapIcon
         }

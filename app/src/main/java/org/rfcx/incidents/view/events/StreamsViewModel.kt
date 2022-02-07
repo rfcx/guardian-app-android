@@ -80,19 +80,22 @@ class StreamsViewModel(
         )
     }
 
-    fun refreshStreams(force: Boolean = false, more: Boolean = false) {
+    fun refreshStreams(force: Boolean = false, offset: Int = 0) {
+        isLoadingMore = true
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
         getStreamsUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
+                    isLoadingMore = false
                     _streams.value = Result.Success(t)
                 }
 
                 override fun onError(e: Throwable) {
+                    isLoadingMore = false
                     _streams.value = Result.Error(e)
                 }
             },
-            GetStreamsParams(projectId, force, more)
+            GetStreamsParams(projectId, force, offset)
         )
     }
 
