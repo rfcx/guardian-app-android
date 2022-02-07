@@ -30,7 +30,7 @@ sealed class Result<out R> {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
             is Error -> "Error[exception=$throwable]"
-            Loading -> "Loading"
+            is Loading -> "Loading"
         }
     }
 }

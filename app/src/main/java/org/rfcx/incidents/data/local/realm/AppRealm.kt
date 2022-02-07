@@ -24,13 +24,13 @@ class AppRealm {
                 realm.close()
                 Realm.setDefaultConfiguration(configuration())
             } catch (e: RealmMigrationNeededException) {
-                Log.e(this.javaClass.name, "Realm migrations failed unexpectedly: ${e.message}")
+                Log.e(Companion::class.java.name, "Realm migrations failed unexpectedly: ${e.message}")
                 realmNeedsFallback = true
             }
 
             // Fallback for release (delete realm on error)
             if (realmNeedsFallback && !BuildConfig.DEBUG) {
-                Log.e(this.javaClass.name, "Falling back to complete Realm delete")
+                Log.e(Companion::class.java.name, "Falling back to complete Realm delete")
                 try {
                     val realm = Realm.getInstance(fallbackConfiguration())
                     realm.close()
