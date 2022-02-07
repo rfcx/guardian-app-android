@@ -349,6 +349,7 @@ class StreamsFragment :
                 streamAdapter.items = streams
                 streamAdapter.notifyDataSetChanged()
                 setEventFeatures(streams)
+                binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
