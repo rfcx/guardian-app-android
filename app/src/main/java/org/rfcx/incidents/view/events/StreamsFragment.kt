@@ -202,6 +202,9 @@ class StreamsFragment :
         mapView.getMapAsync(this)
         preferences = Preferences.getInstance(requireContext())
 
+        // Show loading indicator for first time
+        isShowProgressBar()
+
         getLocation()
         setupToolbar()
         setOnClickListener()

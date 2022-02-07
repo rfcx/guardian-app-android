@@ -82,7 +82,6 @@ class StreamsViewModel(
 
     fun refreshStreams(force: Boolean = false, more: Boolean = false) {
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
-        _streams.value = Result.Loading
         getStreamsUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
