@@ -73,7 +73,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
-            val events = incident.events
+            val events = incident.events?.sort(Event.EVENT_START)
             if (events == null || events.size == 0) return
             timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone))
             timeTextView.visibility = View.VISIBLE

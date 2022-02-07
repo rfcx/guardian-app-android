@@ -5,17 +5,17 @@ import android.content.Context
 import android.text.format.DateUtils
 import org.rfcx.incidents.R
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 
 private const val timeFormat = "HH:mm"
 private const val dateShortFormat = "dd MMM"
 
 fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
-    var text = ""
+    val text: String
 
-    if (isToday(fromUtc.time)) {
-        if (isToday(toUtc.time)) text =
-            context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
+    if (isToday(fromUtc.time) && isToday(toUtc.time)) {
+        text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
     } else if (isYesterday(fromUtc.time)) {
         text = if (isToday(toUtc.time)) {
             context.getString(
