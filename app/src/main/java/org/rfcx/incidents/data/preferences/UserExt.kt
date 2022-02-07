@@ -87,4 +87,3 @@ fun Context?.getUserProfile(): String? {
     val preferences = this?.let { Preferences.getInstance(it) }
     return preferences?.getString(Preferences.IMAGE_PROFILE)
 }
-

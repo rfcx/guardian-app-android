@@ -77,20 +77,28 @@ class DamageFragment : Fragment() {
             selected = res.damageScale
             binding.nextStepButton.isEnabled = res.damageScale != DamageScale.DEFAULT.value
 
-            if (selected == DamageScale.LARGE.value) binding.largeAreaImageView.setBackgroundSelected() else binding.largeAreaImageView.setBackgroundNoSelect()
-            if (selected == DamageScale.MEDIUM.value) binding.mediumTreesImageView.setBackgroundSelected() else binding.mediumTreesImageView.setBackgroundNoSelect()
-            if (selected == DamageScale.SMALL.value) binding.smallNumberImageView.setBackgroundSelected() else binding.smallNumberImageView.setBackgroundNoSelect()
-            if (selected == DamageScale.NO_VISIBLE.value) binding.noVisibleImageView.setBackgroundSelected() else binding.noVisibleImageView.setBackgroundNoSelect()
+            if (selected == DamageScale.LARGE.value) binding.largeAreaImageView.setBackgroundSelected()
+            else binding.largeAreaImageView.setBackgroundNoSelect()
+            if (selected == DamageScale.MEDIUM.value) binding.mediumTreesImageView.setBackgroundSelected()
+            else binding.mediumTreesImageView.setBackgroundNoSelect()
+            if (selected == DamageScale.SMALL.value) binding.smallNumberImageView.setBackgroundSelected()
+            else binding.smallNumberImageView.setBackgroundNoSelect()
+            if (selected == DamageScale.NO_VISIBLE.value) binding.noVisibleImageView.setBackgroundSelected()
+            else binding.noVisibleImageView.setBackgroundNoSelect()
         }
     }
 
     private fun setOnSelect(selected: View) {
         binding.nextStepButton.isEnabled = true
 
-        if (selected == binding.largeAreaImageView) binding.largeAreaImageView.setBackgroundSelected() else binding.largeAreaImageView.setBackgroundNoSelect()
-        if (selected == binding.mediumTreesImageView) binding.mediumTreesImageView.setBackgroundSelected() else binding.mediumTreesImageView.setBackgroundNoSelect()
-        if (selected == binding.smallNumberImageView) binding.smallNumberImageView.setBackgroundSelected() else binding.smallNumberImageView.setBackgroundNoSelect()
-        if (selected == binding.noVisibleImageView) binding.noVisibleImageView.setBackgroundSelected() else binding.noVisibleImageView.setBackgroundNoSelect()
+        if (selected == binding.largeAreaImageView) binding.largeAreaImageView.setBackgroundSelected()
+        else binding.largeAreaImageView.setBackgroundNoSelect()
+        if (selected == binding.mediumTreesImageView) binding.mediumTreesImageView.setBackgroundSelected()
+        else binding.mediumTreesImageView.setBackgroundNoSelect()
+        if (selected == binding.smallNumberImageView) binding.smallNumberImageView.setBackgroundSelected()
+        else binding.smallNumberImageView.setBackgroundNoSelect()
+        if (selected == binding.noVisibleImageView) binding.noVisibleImageView.setBackgroundSelected()
+        else binding.noVisibleImageView.setBackgroundNoSelect()
     }
 
     private fun ImageView.setBackgroundSelected() {

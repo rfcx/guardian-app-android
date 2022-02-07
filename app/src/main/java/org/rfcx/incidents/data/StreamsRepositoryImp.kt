@@ -46,6 +46,6 @@ class StreamsRepositoryImp(
     }
 
     private fun cacheKey(projectId: String): String {
-        return "GetStreams-${projectId}"
+        return "GetStreams-$projectId"
     }
 }

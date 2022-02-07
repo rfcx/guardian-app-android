@@ -79,7 +79,7 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-        (Stream) -> Unit {
+    (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -248,7 +248,10 @@ class StreamsFragment :
                     val visibleItemCount = streamsLayoutManager.childCount
                     val total = streamsLayoutManager.itemCount
                     val firstVisibleItemPosition = streamsLayoutManager.findFirstVisibleItemPosition()
-                    if (!binding.refreshView.isRefreshing && (visibleItemCount + firstVisibleItemPosition) >= total && firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore) {
+                    if (!binding.refreshView.isRefreshing &&
+                        (visibleItemCount + firstVisibleItemPosition) >= total &&
+                        firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
+                    ) {
                         viewModel.refreshStreams(force = true, total)
                     }
                 }
@@ -375,7 +378,7 @@ class StreamsFragment :
     }
 
     override fun invoke(stream: Stream) {
-        listener.openStreamDetail(stream.id, null) //, stream.distance)
+        listener.openStreamDetail(stream.id, null) // , stream.distance)
     }
 
     private fun setupToolbar() {
@@ -395,7 +398,7 @@ class StreamsFragment :
                 mapView.visibility = View.GONE
                 binding.refreshView.visibility = View.VISIBLE
                 binding.currentLocationButton.visibility = View.GONE
-				// isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
+                // isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
             }
             isShowMapIcon = !isShowMapIcon
         }
@@ -607,7 +610,7 @@ class StreamsFragment :
         layers.forEachIndexed { i, ly ->
             val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_EVENT)
             val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
-                    .toString() != "0"
+                .toString() != "0"
             ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
             val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
@@ -665,9 +668,9 @@ class StreamsFragment :
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
+                            context,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return
                 }
@@ -811,6 +814,3 @@ fun distanceLabel(origin: Location?, destination: Stream): String {
     if (origin == null) return ""
     return LatLng(origin.latitude, origin.longitude).distanceTo(LatLng(destination.latitude, destination.longitude)).toString()
 }
-
-
-

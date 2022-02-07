@@ -2,7 +2,6 @@ package org.rfcx.incidents.data
 
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.EventsRepository
-import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.entity.event.Event
 

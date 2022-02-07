@@ -74,7 +74,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         setupDisplayTheme()
         setStatusBar()
 
-        //TODO: move preferences to viewmodel
+        // TODO: move preferences to viewmodel
         val preferences = Preferences.getInstance(this)
         val state = preferences.getString(Preferences.OFFLINE_MAP_STATE)
         if (state == DOWNLOADING_STATE) {
