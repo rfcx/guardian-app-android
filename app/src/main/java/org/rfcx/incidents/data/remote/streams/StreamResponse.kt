@@ -66,6 +66,7 @@ fun StreamResponse.toStream(): Stream = Stream(
 
 private fun IncidentResponse.toIncident(): Incident = Incident(
     id = this.id,
+    ref = this.ref.toString(),
     closedAt = this.closedAt,
     createdAt = this.createdAt
 )
