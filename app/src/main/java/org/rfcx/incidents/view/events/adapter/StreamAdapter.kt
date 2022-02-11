@@ -49,12 +49,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
         private val numOfGunTextView = binding.numOfGunTextView
-        private val peopleLayout = binding.peopleLayout
-        private val numOfPeopleTextView = binding.numOfPeopleTextView
 
         fun bind(stream: Stream) {
             // Reset
-            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach {
+            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, otherLayout).forEach {
                 it.visibility = View.GONE
             }
             noneTextView.visibility = View.VISIBLE
@@ -105,10 +103,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     gunLayout.visibility = View.VISIBLE
                     numOfGunTextView.text = getNumberOfEventByType(events, type)
                 }
-                HUMAN_VOICE -> {
-                    peopleLayout.visibility = View.VISIBLE
-                    numOfPeopleTextView.text = getNumberOfEventByType(events, type)
-                }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
                     numOfChainsawTextView.text = getNumberOfEventByType(events, type)
@@ -137,7 +131,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private const val HOUR = 60L * MINUTE
         private const val DAY = 24L * HOUR
         private const val GUNSHOT = "gunshot"
-        private const val HUMAN_VOICE = "humanvoice"
         private const val CHAINSAW = "chainsaw"
     }
 }
