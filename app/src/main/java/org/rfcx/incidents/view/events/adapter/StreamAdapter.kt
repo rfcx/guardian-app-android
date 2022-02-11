@@ -45,6 +45,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val incidentIdTextView = binding.incidentIdTextView
         private val otherLayout = binding.otherLayout
         private val numOfOtherTextView = binding.numOfOtherTextView
+        private val guardianNameTextView = binding.guardianNameTextView
         private val chainsawLayout = binding.chainsawLayout
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
@@ -71,6 +72,12 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
             val events = incident.events?.sort(Event.EVENT_START)
+            guardianNameTextView.setPadding(
+                16.toPx,
+                16.toPx,
+                if (events?.size == 0) 16.toPx else 0.toPx,
+                if (events?.size == 0) 16.toPx else 10.toPx
+            )
             if (events == null || events.size == 0) return
             timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone))
             timeTextView.visibility = View.VISIBLE
