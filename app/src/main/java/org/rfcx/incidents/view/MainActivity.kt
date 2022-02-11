@@ -255,6 +255,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     override fun openCreateResponse(response: Response) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
+        intent.putExtra(CreateReportActivity.EXTRA_STREAM_ID, response.streamId)
         getResult.launch(intent)
     }
 
