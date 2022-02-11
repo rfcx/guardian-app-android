@@ -6,8 +6,6 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zhihu.matisse.Matisse
@@ -27,9 +25,6 @@ import java.io.File
  */
 
 abstract class BaseImageFragment : BaseFragment() {
-    private var _binding: ButtomSheetAttachImageLayoutBinding? = null
-    private val binding get() = _binding!!
-
     protected abstract fun didAddImages(imagePaths: List<String>)
     protected abstract fun didRemoveImage(imagePath: String)
 
@@ -45,11 +40,6 @@ abstract class BaseImageFragment : BaseFragment() {
 
         setupAttachImageDialog()
         setupReportImages()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = ButtomSheetAttachImageLayoutBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,7 +67,7 @@ abstract class BaseImageFragment : BaseFragment() {
     }
 
     private fun setupAttachImageDialog() {
-
+        val binding = ButtomSheetAttachImageLayoutBinding.inflate(LayoutInflater.from(context), null, false)
         binding.menuGallery.setOnClickListener {
             openGallery()
         }
