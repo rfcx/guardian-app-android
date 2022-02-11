@@ -43,29 +43,29 @@
         <activity
             android:name=".view.events.detail.EventActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".view.report.detail.ResponseDetailActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.report.create.CreateReportActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.profile.FeedbackActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.profile.SubscribeProjectsActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".view.login.LoginActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
