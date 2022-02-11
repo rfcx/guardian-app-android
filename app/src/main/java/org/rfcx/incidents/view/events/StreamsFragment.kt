@@ -156,7 +156,7 @@ class StreamsFragment :
             if (intent == null) return
             val streamName = intent.getStringExtra("streamName")
             if (streamName != null) {
-                viewModel.refreshStreams()
+                viewModel.refreshStreams(force = true)
             }
         }
     }
