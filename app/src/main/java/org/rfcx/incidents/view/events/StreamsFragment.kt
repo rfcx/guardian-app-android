@@ -356,6 +356,7 @@ class StreamsFragment :
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
+                isShowNotHaveStreams(streams.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
             }, {
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
@@ -394,7 +395,6 @@ class StreamsFragment :
                 mapView.visibility = View.GONE
                 binding.refreshView.visibility = View.VISIBLE
                 binding.currentLocationButton.visibility = View.GONE
-                // isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
             }
             isShowMapIcon = !isShowMapIcon
         }
