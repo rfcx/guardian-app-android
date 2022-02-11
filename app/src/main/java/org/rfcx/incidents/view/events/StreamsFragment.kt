@@ -13,7 +13,6 @@ import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -351,7 +350,6 @@ class StreamsFragment :
 
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
-                Log.d("EventsFragment", "streams observer: loaded ${streams.size} items")
                 streamAdapter.items = streams
                 streamAdapter.notifyDataSetChanged()
                 setEventFeatures(streams)
@@ -359,11 +357,9 @@ class StreamsFragment :
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
-                Log.d("EventsFragment", "streams observer: failed: ${it.message}")
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
-                Log.d("EventsFragment", "streams observer: loading")
                 isShowProgressBar()
             })
         }

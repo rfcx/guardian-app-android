@@ -45,7 +45,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val incidentIdTextView = binding.incidentIdTextView
         private val otherLayout = binding.otherLayout
         private val numOfOtherTextView = binding.numOfOtherTextView
-        private val guardianNameTextView = binding.guardianNameTextView
         private val chainsawLayout = binding.chainsawLayout
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
@@ -80,9 +79,15 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             bellImageView.visibility = View.VISIBLE
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
             if (eventsDistinctType.isEmpty()) return
-
             var number = 0
-            eventsDistinctType.forEachIndexed { index, event ->
+            val eventsSorted = eventsDistinctType.sortedWith(
+                compareBy(
+                    { it.classification?.value != GUNSHOT && it.classification?.value != CHAINSAW },
+                    { it.classification?.value == GUNSHOT },
+                    { it.classification?.value == CHAINSAW })
+            )
+
+            eventsSorted.forEachIndexed { index, event ->
                 val type = event.classification?.value ?: return
                 if (index < 2) {
                     showIconType(type, events)
@@ -107,6 +112,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
                     numOfChainsawTextView.text = getNumberOfEventByType(events, type)
+                }
+                else -> {
+                    otherLayout.visibility = View.VISIBLE
+                    numOfOtherTextView.text = getNumberOfEventByType(events, type)
                 }
             }
         }
