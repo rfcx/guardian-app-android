@@ -140,9 +140,6 @@ dependencies {
 
     implementation "com.squareup.okio:okio:2.4.0"
 
-    //Joda-datetime
-    implementation 'net.danlew:android.joda:2.10.3'
-
     // MapBox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
