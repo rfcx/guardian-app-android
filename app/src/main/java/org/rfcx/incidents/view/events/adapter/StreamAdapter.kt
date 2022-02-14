@@ -89,7 +89,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 compareBy(
                     { it.classification?.value != GUNSHOT && it.classification?.value != CHAINSAW },
                     { it.classification?.value == GUNSHOT },
-                    { it.classification?.value == CHAINSAW })
+                    { it.classification?.value == CHAINSAW }
+                )
             )
 
             eventsSorted.forEachIndexed { index, event ->
