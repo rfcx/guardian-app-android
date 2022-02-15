@@ -85,6 +85,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
             if (eventsDistinctType.isEmpty()) return
             var number = 0
+
+            // sorted by "chainsaw" first, and "gunshot" next, and then other values (for show icon of events)
             val eventsSorted = eventsDistinctType.sortedWith(
                 compareBy(
                     { it.classification?.value != GUNSHOT && it.classification?.value != CHAINSAW },
