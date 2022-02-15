@@ -150,12 +150,11 @@ class StreamsFragment :
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
-    // TODO Should not be using stream name
-    private val streamNameReceived = object : BroadcastReceiver() {
+    private val streamIdReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
-            val streamName = intent.getStringExtra("streamName")
-            if (streamName != null) {
+            val streamId = intent.getStringExtra("streamId")
+            if (streamId != null) {
                 viewModel.refreshStreams(force = true)
             }
         }
@@ -167,12 +166,12 @@ class StreamsFragment :
         localBroadcastManager = LocalBroadcastManager.getInstance(context)
         val actionReceiver = IntentFilter()
         actionReceiver.addAction("haveNewEvent")
-        localBroadcastManager.registerReceiver(streamNameReceived, actionReceiver)
+        localBroadcastManager.registerReceiver(streamIdReceived, actionReceiver)
     }
 
     override fun onDetach() {
         super.onDetach()
-        localBroadcastManager.unregisterReceiver(streamNameReceived)
+        localBroadcastManager.unregisterReceiver(streamIdReceived)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

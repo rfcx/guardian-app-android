@@ -373,10 +373,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     companion object {
-        fun startActivity(context: Context, eventGuId: String?) {
+        fun startActivity(context: Context, streamId: String?) {
             val intent = Intent(context, MainActivity::class.java)
-            if (eventGuId != null)
-                intent.putExtra(EventNotification.INTENT_KEY_STREAM_ID, eventGuId)
+            if (streamId != null)
+                intent.putExtra(EventNotification.INTENT_KEY_STREAM_ID, streamId)
             context.startActivity(intent)
         }
     }

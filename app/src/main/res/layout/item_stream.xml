@@ -25,7 +25,6 @@
 		android:maxLines="1"
 		android:paddingStart="@dimen/margin_padding_normal"
 		android:paddingTop="@dimen/margin_padding_normal"
-		android:paddingBottom="@dimen/margin_padding_normal"
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="Guardian A" />
@@ -41,6 +40,7 @@
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
+        android:layout_marginTop="@dimen/margin_10_dp"
 		android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
@@ -64,7 +64,8 @@
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:paddingStart="@dimen/tag_padding"
+        android:layout_marginTop="@dimen/margin_10_dp"
+        android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
 		android:paddingBottom="@dimen/margin_padding_xsmall"
@@ -127,11 +128,21 @@
 		android:paddingStart="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/margin_padding_normal"
 		android:paddingBottom="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_10_dp"
 		app:layout_constraintBottom_toBottomOf="@id/bgView"
 		app:layout_constraintStart_toEndOf="@id/bellImageView"
 		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
 		tools:text="3 hrs 40 mins" />
-	
+
+    <View
+        android:id="@+id/lineBottomView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/bellImageView"
+        app:layout_constraintTop_toBottomOf="@id/guardianNameTextView" />
+
 	<LinearLayout
 		android:id="@+id/chainsawLayout"
 		android:layout_width="wrap_content"
