@@ -63,7 +63,7 @@ enum class InvestigationType(val value: Int) {
 }
 
 enum class LoggingScale(val value: Int) {
-    DEFAULT(-1), NONE(301), SMALL(303), LARGE(304)
+    DEFAULT(-1), NONE(301), SMALL(302), LARGE(303)
 }
 
 enum class PoachingScale(val value: Int) {
