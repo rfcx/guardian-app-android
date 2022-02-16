@@ -13,7 +13,6 @@ import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -151,13 +150,12 @@ class StreamsFragment :
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
-    // TODO Should not be using stream name
-    private val streamNameReceived = object : BroadcastReceiver() {
+    private val streamIdReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
-            val streamName = intent.getStringExtra("streamName")
-            if (streamName != null) {
-                viewModel.refreshStreams()
+            val streamId = intent.getStringExtra("streamId")
+            if (streamId != null) {
+                viewModel.refreshStreams(force = true)
             }
         }
     }
@@ -168,12 +166,12 @@ class StreamsFragment :
         localBroadcastManager = LocalBroadcastManager.getInstance(context)
         val actionReceiver = IntentFilter()
         actionReceiver.addAction("haveNewEvent")
-        localBroadcastManager.registerReceiver(streamNameReceived, actionReceiver)
+        localBroadcastManager.registerReceiver(streamIdReceived, actionReceiver)
     }
 
     override fun onDetach() {
         super.onDetach()
-        localBroadcastManager.unregisterReceiver(streamNameReceived)
+        localBroadcastManager.unregisterReceiver(streamIdReceived)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -351,19 +349,17 @@ class StreamsFragment :
 
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
-                Log.d("EventsFragment", "streams observer: loaded ${streams.size} items")
                 streamAdapter.items = streams
                 streamAdapter.notifyDataSetChanged()
                 setEventFeatures(streams)
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
+                isShowNotHaveStreams(streams.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
             }, {
-                Log.d("EventsFragment", "streams observer: failed: ${it.message}")
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
-                Log.d("EventsFragment", "streams observer: loading")
                 isShowProgressBar()
             })
         }
@@ -398,7 +394,6 @@ class StreamsFragment :
                 mapView.visibility = View.GONE
                 binding.refreshView.visibility = View.VISIBLE
                 binding.currentLocationButton.visibility = View.GONE
-                // isShowNotHaveStreams(viewModel.streamItems.isEmpty() && mapView.visibility == View.GONE && progressBar.visibility == View.GONE)
             }
             isShowMapIcon = !isShowMapIcon
         }

@@ -25,7 +25,6 @@
 		android:maxLines="1"
 		android:paddingStart="@dimen/margin_padding_normal"
 		android:paddingTop="@dimen/margin_padding_normal"
-		android:paddingBottom="@dimen/margin_padding_small"
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="Guardian A" />
@@ -36,12 +35,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/tag_margin_top"
 		android:alpha="0.8"
 		android:background="@drawable/bg_recent_tag"
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
+        android:layout_marginTop="@dimen/margin_10_dp"
 		android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
@@ -60,13 +59,13 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/margin_padding_small"
-		android:layout_marginTop="@dimen/tag_margin_top"
 		android:alpha="0.8"
 		android:background="@drawable/bg_hot_tag"
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-		android:paddingStart="@dimen/tag_padding"
+        android:layout_marginTop="@dimen/margin_10_dp"
+        android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
 		android:paddingBottom="@dimen/margin_padding_xsmall"
@@ -129,11 +128,21 @@
 		android:paddingStart="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/margin_padding_normal"
 		android:paddingBottom="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_10_dp"
 		app:layout_constraintBottom_toBottomOf="@id/bgView"
 		app:layout_constraintStart_toEndOf="@id/bellImageView"
 		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
 		tools:text="3 hrs 40 mins" />
-	
+
+    <View
+        android:id="@+id/lineBottomView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/bellImageView"
+        app:layout_constraintTop_toBottomOf="@id/guardianNameTextView" />
+
 	<LinearLayout
 		android:id="@+id/chainsawLayout"
 		android:layout_width="wrap_content"
@@ -161,32 +170,6 @@
 	</LinearLayout>
 	
 	<LinearLayout
-		android:id="@+id/peopleLayout"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:layout_marginBottom="@dimen/margin_padding_normal"
-		android:visibility="gone"
-		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
-		app:layout_constraintEnd_toStartOf="@id/chainsawLayout"
-		app:layout_constraintTop_toTopOf="@id/timeTextView">
-		
-		<androidx.appcompat.widget.AppCompatImageView
-			android:layout_width="@dimen/type_icon_size"
-			android:layout_height="@dimen/type_icon_size"
-			android:src="@drawable/ic_people"
-			app:tint="@color/iconColor" />
-		
-		<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/numOfPeopleTextView"
-			style="@style/RangerText.Label.Secondary"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_padding_xsmall"
-			android:text="3" />
-	</LinearLayout>
-	
-	<LinearLayout
 		android:id="@+id/gunLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -194,7 +177,7 @@
 		android:layout_marginBottom="@dimen/margin_padding_normal"
 		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
-		app:layout_constraintEnd_toStartOf="@id/peopleLayout"
+		app:layout_constraintEnd_toStartOf="@id/chainsawLayout"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
 		
 		<androidx.appcompat.widget.AppCompatImageView
@@ -226,7 +209,7 @@
 		<androidx.appcompat.widget.AppCompatImageView
 			android:layout_width="@dimen/type_icon_size"
 			android:layout_height="@dimen/type_icon_size"
-			android:src="@drawable/ic_other"
+			android:src="@drawable/ic_report"
 			app:tint="@color/iconColor" />
 		
 		<androidx.appcompat.widget.AppCompatTextView

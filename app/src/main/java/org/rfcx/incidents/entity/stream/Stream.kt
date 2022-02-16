@@ -24,6 +24,6 @@ open class Stream(
         const val FIELD_PROJECT_ID = "projectId"
         const val FIELD_ORDER = "order"
         const val TAG_HOT = "hot"
-        const val TAG_RECENT = "new"
+        const val TAG_RECENT = "recent"
     }
 }

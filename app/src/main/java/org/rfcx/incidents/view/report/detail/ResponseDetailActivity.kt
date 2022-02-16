@@ -103,6 +103,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         response?.let { res ->
             binding.investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
             responseDetailAdapter.items = getMessageList(res.answers)
+            binding.answersTextView.visibility = if (res.answers.size == 0) View.VISIBLE else View.GONE
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
             binding.noteTextView.text = getString(R.string.note, res.note)
             res.audioLocation?.let { path -> setAudio(path) }

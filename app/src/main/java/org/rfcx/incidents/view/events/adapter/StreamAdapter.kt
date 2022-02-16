@@ -45,17 +45,15 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val incidentIdTextView = binding.incidentIdTextView
         private val otherLayout = binding.otherLayout
         private val numOfOtherTextView = binding.numOfOtherTextView
-        private val guardianNameTextView = binding.guardianNameTextView
+        private val lineBottomView = binding.lineBottomView
         private val chainsawLayout = binding.chainsawLayout
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
         private val numOfGunTextView = binding.numOfGunTextView
-        private val peopleLayout = binding.peopleLayout
-        private val numOfPeopleTextView = binding.numOfPeopleTextView
 
         fun bind(stream: Stream) {
             // Reset
-            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, peopleLayout, otherLayout).forEach {
+            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, otherLayout).forEach {
                 it.visibility = View.GONE
             }
             noneTextView.visibility = View.VISIBLE
@@ -74,15 +72,25 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
             val events = incident.events?.sort(Event.EVENT_START)
+            lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
             timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone))
             timeTextView.visibility = View.VISIBLE
             bellImageView.visibility = View.VISIBLE
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
             if (eventsDistinctType.isEmpty()) return
-
             var number = 0
-            eventsDistinctType.forEachIndexed { index, event ->
+
+            // sorted by "chainsaw" first, and "gunshot" next, and then other values (for show icon of events)
+            val eventsSorted = eventsDistinctType.sortedWith(
+                compareBy(
+                    { it.classification?.value != GUNSHOT && it.classification?.value != CHAINSAW },
+                    { it.classification?.value == GUNSHOT },
+                    { it.classification?.value == CHAINSAW }
+                )
+            )
+
+            eventsSorted.forEachIndexed { index, event ->
                 val type = event.classification?.value ?: return
                 if (index < 2) {
                     showIconType(type, events)
@@ -100,13 +108,13 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     gunLayout.visibility = View.VISIBLE
                     numOfGunTextView.text = getNumberOfEventByType(events, type)
                 }
-                HUMAN_VOICE -> {
-                    peopleLayout.visibility = View.VISIBLE
-                    numOfPeopleTextView.text = getNumberOfEventByType(events, type)
-                }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
                     numOfChainsawTextView.text = getNumberOfEventByType(events, type)
+                }
+                else -> {
+                    otherLayout.visibility = View.VISIBLE
+                    numOfOtherTextView.text = getNumberOfEventByType(events, type)
                 }
             }
         }
@@ -128,7 +136,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private const val HOUR = 60L * MINUTE
         private const val DAY = 24L * HOUR
         private const val GUNSHOT = "gunshot"
-        private const val HUMAN_VOICE = "humanvoice"
         private const val CHAINSAW = "chainsaw"
     }
 }

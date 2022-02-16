@@ -255,6 +255,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     override fun openCreateResponse(response: Response) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_RESPONSE_ID, response.id)
+        intent.putExtra(CreateReportActivity.EXTRA_STREAM_ID, response.streamId)
         getResult.launch(intent)
     }
 
@@ -372,10 +373,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     companion object {
-        fun startActivity(context: Context, eventGuId: String?) {
+        fun startActivity(context: Context, streamId: String?) {
             val intent = Intent(context, MainActivity::class.java)
-            if (eventGuId != null)
-                intent.putExtra(EventNotification.INTENT_KEY_STREAM_ID, eventGuId)
+            if (streamId != null)
+                intent.putExtra(EventNotification.INTENT_KEY_STREAM_ID, streamId)
             context.startActivity(intent)
         }
     }
