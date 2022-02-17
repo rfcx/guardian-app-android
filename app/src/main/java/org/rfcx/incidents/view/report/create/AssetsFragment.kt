@@ -42,7 +42,7 @@ class AssetsFragment : BaseImageFragment() {
     }
 
     private var _binding: FragmentAssetsBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     lateinit var listener: CreateReportListener
     private var recordFile: File? = null
@@ -72,7 +72,7 @@ class AssetsFragment : BaseImageFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAssetsBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root!!
     }
 
     override fun onDestroyView() {
@@ -85,15 +85,15 @@ class AssetsFragment : BaseImageFragment() {
         setupImageRecycler()
         view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
 
-        binding.saveDraftButton.setOnClickListener {
+        binding?.saveDraftButton?.setOnClickListener {
             saveAssets()
             analytics?.trackSaveDraftResponseEvent()
             listener.onSaveDraftButtonClick()
         }
 
-        binding.submitButton.setOnClickListener {
-            if (!TextUtils.isEmpty(binding.noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage()
-                .isNotEmpty()
+        binding?.submitButton?.setOnClickListener {
+            if (!TextUtils.isEmpty(binding?.noteEditText?.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage()
+                    .isNotEmpty()
             ) {
                 saveAssets()
                 analytics?.trackSubmitResponseEvent()
@@ -103,7 +103,7 @@ class AssetsFragment : BaseImageFragment() {
             }
         }
 
-        binding.noteEditText.setOnFocusChangeListener { v, hasFocus ->
+        binding?.noteEditText?.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 v.hideKeyboard()
             }
@@ -122,7 +122,7 @@ class AssetsFragment : BaseImageFragment() {
         val res = listener.getResponse()
         res?.let { response ->
             if (response.evidences.contains(EvidenceTypes.NONE.value) || response.responseActions.contains(Actions.OTHER.value)) {
-                binding.submitButton.isEnabled = binding.noteEditText.text?.isNotBlank() ?: false
+                binding?.submitButton?.isEnabled = binding?.noteEditText?.text?.isNotBlank() ?: false
 
                 val spannableString = SpannableString(getString(R.string.add_notes_required))
                 val red = ForegroundColorSpan(Color.RED)
@@ -132,15 +132,15 @@ class AssetsFragment : BaseImageFragment() {
                     getString(R.string.add_notes_required).length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                binding.noteTextView.text = spannableString
+                binding?.noteTextView?.text = spannableString
 
-                binding.noteEditText.addTextChangedListener(object : TextWatcher {
+                binding?.noteEditText?.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
                     override fun afterTextChanged(s: Editable?) {
-                        binding.submitButton.isEnabled = !s.isNullOrBlank()
+                        binding?.submitButton?.isEnabled = !s.isNullOrBlank()
                     }
                 })
             }
@@ -153,11 +153,11 @@ class AssetsFragment : BaseImageFragment() {
         view?.getWindowVisibleDisplayFrame(r)
         val keypadHeight: Int = screenHeight - r.bottom
         if (keypadHeight > screenHeight * 0.15) {
-            binding.saveDraftButton.visibility = View.GONE
-            binding.submitButton.visibility = View.GONE
+            binding?.saveDraftButton?.visibility = View.GONE
+            binding?.submitButton?.visibility = View.GONE
         } else {
-            binding.saveDraftButton.visibility = View.VISIBLE
-            binding.submitButton.visibility = View.VISIBLE
+            binding?.saveDraftButton?.visibility = View.VISIBLE
+            binding?.submitButton?.visibility = View.VISIBLE
         }
     }
 
@@ -182,7 +182,7 @@ class AssetsFragment : BaseImageFragment() {
 
     private fun setupAssets() {
         val response = listener.getResponse()
-        response?.note?.let { note -> binding.noteEditText.setText(note) }
+        response?.note?.let { note -> binding?.noteEditText?.setText(note) }
         response?.audioLocation?.let { path -> setAudio(path) }
 
         val images = listener.getImages()
@@ -197,7 +197,7 @@ class AssetsFragment : BaseImageFragment() {
     }
 
     private fun saveAssets() {
-        binding.noteEditText.text?.let {
+        binding?.noteEditText?.text?.let {
             if (it.isNotBlank()) {
                 listener.setNotes(it.toString())
             }
@@ -207,7 +207,7 @@ class AssetsFragment : BaseImageFragment() {
     }
 
     private fun setupImageRecycler() {
-        binding.attachImageRecycler.apply {
+        binding?.attachImageRecycler?.apply {
             adapter = reportImageAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
@@ -219,12 +219,12 @@ class AssetsFragment : BaseImageFragment() {
         recordFile = File(path)
 
         if (recordFile?.exists() == true) {
-            binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+            binding?.soundRecordProgressView?.state = SoundRecordState.STOP_PLAYING
         }
     }
 
     private fun setupRecordSoundProgressView() {
-        binding.soundRecordProgressView.onStateChangeListener = { state ->
+        binding?.soundRecordProgressView?.onStateChangeListener = { state ->
             when (state) {
                 SoundRecordState.NONE -> {
                     recordFile?.deleteOnExit()
@@ -254,8 +254,8 @@ class AssetsFragment : BaseImageFragment() {
                 release()
             } catch (e: Exception) {
                 e.printStackTrace()
-                binding.soundRecordProgressView.state = SoundRecordState.NONE
-                Snackbar.make(binding.assetsView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+                binding?.soundRecordProgressView?.state = SoundRecordState.NONE
+                Snackbar.make(binding?.assetsView!!, R.string.error_common, Snackbar.LENGTH_LONG).show()
             }
         }
         recorder = null
@@ -263,7 +263,7 @@ class AssetsFragment : BaseImageFragment() {
 
     private fun record() {
         if (!recordPermissions.allowed()) {
-            binding.soundRecordProgressView.state = SoundRecordState.NONE
+            binding?.soundRecordProgressView?.state = SoundRecordState.NONE
             recordPermissions.check { }
         } else {
             startRecord()
@@ -282,8 +282,8 @@ class AssetsFragment : BaseImageFragment() {
                     prepare()
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    binding.soundRecordProgressView.state = SoundRecordState.NONE
-                    Snackbar.make(binding.assetsView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+                    binding?.soundRecordProgressView?.state = SoundRecordState.NONE
+                    Snackbar.make(binding?.assetsView!!, R.string.error_common, Snackbar.LENGTH_LONG).show()
                 }
                 start()
             }
@@ -292,7 +292,7 @@ class AssetsFragment : BaseImageFragment() {
 
     private fun startPlaying() {
         if (recordFile == null) {
-            binding.soundRecordProgressView.state = SoundRecordState.NONE
+            binding?.soundRecordProgressView?.state = SoundRecordState.NONE
             return
         }
         player = MediaPlayer().apply {
@@ -301,11 +301,11 @@ class AssetsFragment : BaseImageFragment() {
                 prepare()
                 start()
                 setOnCompletionListener {
-                    binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
+                    binding?.soundRecordProgressView?.state = SoundRecordState.STOP_PLAYING
                 }
             } catch (e: IOException) {
-                binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-                Snackbar.make(binding.assetsView, R.string.error_common, Snackbar.LENGTH_LONG).show()
+                binding?.soundRecordProgressView?.state = SoundRecordState.STOP_PLAYING
+                Snackbar.make(binding?.assetsView!!, R.string.error_common, Snackbar.LENGTH_LONG).show()
                 e.printStackTrace()
             }
         }
