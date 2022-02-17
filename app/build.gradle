@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId 'org.rfcx.incidents'
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 12
+        versionCode 13
         versionName '1.0.1'
         minSdkVersion 19
         targetSdkVersion 30
