@@ -26,7 +26,7 @@ private val isoFormat by lazy {
 private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
-private const val dateFormat = "d MMM yyyy, HH:mm"
+private const val dateFormat = "d MMM yyyy, HH:mm (zzz)"
 
 private val outputTimeSdf by lazy {
     val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
