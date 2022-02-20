@@ -61,6 +61,7 @@ import org.rfcx.incidents.databinding.FragmentStreamsBinding
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.service.EventNotification
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
@@ -153,7 +154,7 @@ class StreamsFragment :
     private val streamIdReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
-            val streamId = intent.getStringExtra("streamId")
+            val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
             if (streamId != null) {
                 viewModel.refreshStreams(force = true)
             }

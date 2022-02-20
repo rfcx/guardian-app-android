@@ -21,7 +21,7 @@ class MessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.containsKey("streamName")) {
             val intent = Intent("haveNewEvent")
             val bundle = Bundle()
-            bundle.putString("streamName", remoteMessage.data["streamName"])
+            bundle.putString(EventNotification.INTENT_KEY_STREAM_ID, remoteMessage.data["streamId"])
             intent.putExtras(bundle)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 
