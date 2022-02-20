@@ -16,6 +16,7 @@ open class Stream(
     var projectId: String = "",
     var tags: RealmList<String>? = null,
     var lastIncident: Incident? = null,
+    var guardianType: String? = null,
     var order: Int = Int.MAX_VALUE
 ) : RealmModel {
     companion object {
