@@ -32,6 +32,7 @@ class StreamsRepositoryImp(
                 val stream = streamRes.toStream()
                 stream.order = offset + index
                 streamDb.insertOrUpdate(stream)
+                eventDb.deleteEventsByStreamId(streamRes.id)
                 streamRes.lastIncident()?.events?.forEach { event ->
                     eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                 }
