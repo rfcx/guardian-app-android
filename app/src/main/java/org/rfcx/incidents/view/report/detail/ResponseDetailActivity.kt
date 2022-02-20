@@ -109,6 +109,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             res.audioLocation?.let { path -> setAudio(path) }
             binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {
+                binding.attachImageRecycler.visibility = if (viewModel.getImagesByCoreId(it).isNotEmpty()) View.VISIBLE else View.GONE
                 reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
                 binding.assetsTextView.visibility =
                     if (viewModel.getImagesByCoreId(it).isEmpty() && res.note == null && viewModel.getTrackingByCoreId(
