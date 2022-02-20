@@ -358,13 +358,13 @@
 	<string name="theme">Theme</string>
 	
 	<!-- Date time format -->
-	<string name="is_today">Today, %1s - %2s</string>
-	<string name="is_yesterday_today">Yesterday %1s - Today %2s</string>
-	<string name="is_yesterday">Yesterday, %1s - %2s</string>
-	<string name="is_other_today">%1s - Today, %2s</string>
-	<string name="is_other_yesterday">%1s - Yesterday, %2s</string>
-	<string name="is_other_other">%1s - %2s</string>
-	<string name="is_same_date">%1s, %2s - %3s</string>
+	<string name="is_today">Today, %1s - %2s %3s</string>
+	<string name="is_yesterday_today">Yesterday %1s - Today %2s %3s</string>
+	<string name="is_yesterday">Yesterday, %1s - %2s %3s</string>
+	<string name="is_other_today">%1s - Today, %2s %3s</string>
+	<string name="is_other_yesterday">%1s - Yesterday, %2s %3s</string>
+	<string name="is_other_other">%1s - %2s %3s</string>
+	<string name="is_same_date">%1s, %2s - %3s %3s</string>
 	
 	<string name="recent">Recent</string>
 	<string name="hot">Hot</string>

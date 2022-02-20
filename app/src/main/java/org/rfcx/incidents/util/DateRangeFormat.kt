@@ -10,24 +10,27 @@ import java.util.TimeZone
 
 private const val timeFormat = "HH:mm"
 private const val dateShortFormat = "dd MMM"
+private const val timeZoneFormat = "(zzz)"
 
 fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
     val text: String
 
     if (isToday(fromUtc.time) && isToday(toUtc.time)) {
-        text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone))
+        text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone), toUtc.toTimeZoneString(timezone))
     } else if (isYesterday(fromUtc.time)) {
         text = if (isToday(toUtc.time)) {
             context.getString(
                 R.string.is_yesterday_today,
                 fromUtc.toTimeTextString(timezone),
-                toUtc.toTimeTextString(timezone)
+                toUtc.toTimeTextString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         } else {
             context.getString(
                 R.string.is_yesterday,
                 fromUtc.toTimeTextString(timezone),
-                toUtc.toTimeTextString(timezone)
+                toUtc.toTimeTextString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         }
     } else {
@@ -35,26 +38,30 @@ fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: Time
             context.getString(
                 R.string.is_other_today,
                 fromUtc.toShortDateString(timezone),
-                toUtc.toTimeTextString(timezone)
+                toUtc.toTimeTextString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         } else if (isYesterday(toUtc.time)) {
             context.getString(
                 R.string.is_other_yesterday,
                 fromUtc.toShortDateString(timezone),
-                toUtc.toTimeTextString(timezone)
+                toUtc.toTimeTextString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         } else if (isSameDate(fromUtc, toUtc)) {
             context.getString(
                 R.string.is_same_date,
                 fromUtc.toShortDateString(timezone),
                 fromUtc.toTimeTextString(timezone),
-                toUtc.toTimeTextString(timezone)
+                toUtc.toTimeTextString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         } else {
             context.getString(
                 R.string.is_other_other,
                 fromUtc.toShortDateString(timezone),
-                toUtc.toShortDateString(timezone)
+                toUtc.toShortDateString(timezone),
+                toUtc.toTimeZoneString(timezone)
             )
         }
     }
@@ -83,6 +90,12 @@ private fun Date.toTimeTextString(timezone: TimeZone?): String {
 
 private fun Date.toShortDateString(timezone: TimeZone?): String {
     val outputDateShortFormatSdf = SimpleDateFormat(dateShortFormat)
+    outputDateShortFormatSdf.timeZone = timezone ?: TimeZone.getDefault()
+    return outputDateShortFormatSdf.format(this)
+}
+
+private fun Date.toTimeZoneString(timezone: TimeZone?): String {
+    val outputDateShortFormatSdf = SimpleDateFormat(timeZoneFormat)
     outputDateShortFormatSdf.timeZone = timezone ?: TimeZone.getDefault()
     return outputDateShortFormatSdf.format(this)
 }

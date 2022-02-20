@@ -296,10 +296,10 @@
     <string name="large_text">Grande</string>
     <string name="recent">Recente</string>
     <string name="hot">Forte atividade</string>
-    <string name="is_today">Hoje, %1s - %2s</string>
-    <string name="is_yesterday_today">Ontem %1s - Hoje %2s</string>
-    <string name="is_yesterday">Ontem, %1s - %2s</string>
-    <string name="is_other_today">%1s - Hoje, %2s</string>
-    <string name="is_other_yesterday">%1s - Ontem, %2s</string>
+    <string name="is_today">Hoje, %1s - %2s  %3s</string>
+    <string name="is_yesterday_today">Ontem %1s - Hoje %2s  %3s</string>
+    <string name="is_yesterday">Ontem, %1s - %2s  %3s</string>
+    <string name="is_other_today">%1s - Hoje, %2s  %3s</string>
+    <string name="is_other_yesterday">%1s - Ontem, %2s  %3s</string>
 
 </resources>
