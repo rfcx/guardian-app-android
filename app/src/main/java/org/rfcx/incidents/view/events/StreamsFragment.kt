@@ -748,6 +748,9 @@ class StreamsFragment :
         super.onHiddenChanged(hidden)
         if (!hidden) {
             viewModel.refreshStreams()
+
+            val projectId = preferences.getString(Preferences.SELECTED_PROJECT)
+            projectId?.let { viewModel.selectProject(it) }
         }
     }
 
