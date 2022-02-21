@@ -12,6 +12,7 @@ import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.dateRangeFormat
+import org.rfcx.incidents.util.setShortTimeZone
 import java.util.TimeZone
 
 class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
@@ -80,7 +81,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
-            timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone))
+            timeTextView.text = setShortTimeZone(dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone)))
             timeTextView.visibility = View.VISIBLE
             bellImageView.visibility = View.VISIBLE
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }

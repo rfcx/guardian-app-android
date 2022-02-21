@@ -94,7 +94,29 @@ fun Date.toTimeWithTimeZone(timeZone: TimeZone): String {
 fun Date.toStringWithTimeZone(timeZone: TimeZone): String {
     val tempSdf = outputDateSdf
     tempSdf.timeZone = timeZone
-    return tempSdf.format(this)
+    return setShortTimeZone(tempSdf.format(this))
+}
+
+fun setShortTimeZone(str: String): String {
+    val start = str.split("(")
+    if (start[1].contains("GMT")) {
+        val numberFirst = str.split("+")
+        val numberLast = numberFirst[1].split(":")
+        return if (numberFirst[1].first() == '0') {
+            if (numberLast[1].first() == '0') {
+                start[0] + "GMT+" + numberLast[0].last()
+            } else {
+                start[0] + "GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1)
+            }
+        } else {
+            if (numberLast[1].first() == '0') {
+                start[0] + "GMT+" + numberLast[0]
+            } else {
+                start[0] + "GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1)
+            }
+        }
+    }
+    return str
 }
 
 private val legacyInputFormatters by lazy {
