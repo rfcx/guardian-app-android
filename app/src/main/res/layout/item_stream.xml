@@ -143,15 +143,18 @@
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/timeTextView"
 		style="@style/RangerText.Label.Secondary"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:paddingStart="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/margin_padding_normal"
 		android:paddingBottom="@dimen/margin_padding_normal"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:layout_marginTop="@dimen/margin_10_dp"
 		app:layout_constraintBottom_toBottomOf="@id/bgView"
 		app:layout_constraintStart_toEndOf="@id/bellImageView"
 		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
+         app:layout_constraintEnd_toStartOf="@id/otherLayout"
 		tools:text="3 hrs 40 mins" />
 
     <View
