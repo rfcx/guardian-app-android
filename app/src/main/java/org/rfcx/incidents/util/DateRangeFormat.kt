@@ -14,23 +14,24 @@ private const val timeZoneFormat = "(zzz)"
 
 fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
     val text: String
+    val timeZoneText = if (timezone == TimeZone.getDefault()) "" else  toUtc.toTimeZoneString(timezone)
 
     if (isToday(fromUtc.time) && isToday(toUtc.time)) {
-        text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone), toUtc.toTimeZoneString(timezone))
+        text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone), timeZoneText)
     } else if (isYesterday(fromUtc.time)) {
         text = if (isToday(toUtc.time)) {
             context.getString(
                 R.string.is_yesterday_today,
                 fromUtc.toTimeTextString(timezone),
                 toUtc.toTimeTextString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         } else {
             context.getString(
                 R.string.is_yesterday,
                 fromUtc.toTimeTextString(timezone),
                 toUtc.toTimeTextString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         }
     } else {
@@ -39,14 +40,14 @@ fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: Time
                 R.string.is_other_today,
                 fromUtc.toShortDateString(timezone),
                 toUtc.toTimeTextString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         } else if (isYesterday(toUtc.time)) {
             context.getString(
                 R.string.is_other_yesterday,
                 fromUtc.toShortDateString(timezone),
                 toUtc.toTimeTextString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         } else if (isSameDate(fromUtc, toUtc)) {
             context.getString(
@@ -54,14 +55,14 @@ fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: Time
                 fromUtc.toShortDateString(timezone),
                 fromUtc.toTimeTextString(timezone),
                 toUtc.toTimeTextString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         } else {
             context.getString(
                 R.string.is_other_other,
                 fromUtc.toShortDateString(timezone),
                 toUtc.toShortDateString(timezone),
-                toUtc.toTimeZoneString(timezone)
+                timeZoneText
             )
         }
     }

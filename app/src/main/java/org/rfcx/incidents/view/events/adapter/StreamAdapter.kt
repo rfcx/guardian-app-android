@@ -81,7 +81,13 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
-            timeTextView.text = setShortTimeZone(dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone)))
+            val timezone = TimeZone.getTimeZone(stream.timezone)
+            timeTextView.text = if (timezone == TimeZone.getDefault()) dateRangeFormat(
+                itemView.context,
+                events.first()!!.start,
+                events.last()!!.end,
+                timezone
+            ) else setShortTimeZone(dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, timezone))
             timeTextView.visibility = View.VISIBLE
             bellImageView.visibility = View.VISIBLE
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
