@@ -99,10 +99,8 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         }
 
         viewModel.getStream(streamId)?.let { stream ->
-            binding.guardianNameTextView.text = stream.name
+            binding.toolbarLayout.title = stream.name
         }
-        binding.distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
-        binding.distanceTextView.text = distance?.setFormatLabel()
 
         streamId.let {
             if (viewModel.getEventsCount(it) != 0L) {
