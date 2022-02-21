@@ -23,6 +23,12 @@ private val isoFormat by lazy {
     sdf
 }
 
+private val isoTextFormat by lazy {
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf
+}
+
 private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
@@ -57,12 +63,12 @@ private val outputWithTimeZoneSdf by lazy {
     sdf
 }
 
-fun Date.toIsoString(): String {
-    return isoSdf.format(this) // pattern 2008-09-15T15:53:00.000Z
-}
-
 fun Date.toIsoFormatString(): String {
     return isoFormat.format(this) // pattern 20211128T153441279Z
+}
+
+fun Date.toIsoString(): String {
+    return isoTextFormat.format(this) // pattern 2008-09-15T15:53:00.000Z
 }
 
 fun Date.toTimeString(): String {
