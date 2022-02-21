@@ -92,7 +92,7 @@ fun Date.millisecondsSince(): Long {
 }
 
 fun Date.toDateWithTimeZone(timeZone: TimeZone): Date {
-    val dateString = this.toIsoString()
+    val dateString = isoSdf.format(this)
     val tempSdf = isoSdf
     tempSdf.timeZone = timeZone
     return tempSdf.parse(dateString)
