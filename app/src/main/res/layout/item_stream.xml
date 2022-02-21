@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="?attr/selectableItemBackground">
-	
+
 	<View
 		android:id="@+id/bgView"
 		android:layout_width="match_parent"
@@ -14,7 +14,7 @@
 		android:background="@drawable/bg_stream_item"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
-	
+
 	<TextView
 		android:id="@+id/guardianNameTextView"
 		style="@style/RangerText.Subhead"
@@ -28,7 +28,27 @@
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="Guardian A" />
-	
+
+    <ImageView
+        android:id="@+id/iconTypeImageView"
+        android:src="@drawable/ic_signal_cellular_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/tag_padding"
+        android:paddingTop="@dimen/margin_padding_small"
+        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+        app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
+        app:tint="@color/iconColor" />
+
+    <TextView
+        android:id="@+id/typeTextView"
+        style="@style/RangerText.Label.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Cell"
+        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+        app:layout_constraintStart_toEndOf="@id/iconTypeImageView"/>
+
 	<TextView
 		android:id="@+id/recentTextView"
 		style="@style/RangerText.Caption"
@@ -40,7 +60,7 @@
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_10_dp"
+        android:layout_marginTop="@dimen/margin_padding_normal"
 		android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
@@ -49,10 +69,10 @@
 		android:textColor="@color/white"
 		android:textStyle="bold"
 		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-		app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
+		app:layout_constraintStart_toEndOf="@id/typeTextView"
 		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
 		tools:text="Recent" />
-	
+
 	<TextView
 		android:id="@+id/hotTextView"
 		style="@style/RangerText.Caption"
@@ -64,7 +84,7 @@
 		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_10_dp"
+        android:layout_marginTop="@dimen/margin_padding_normal"
         android:paddingStart="@dimen/tag_padding"
 		android:paddingTop="@dimen/margin_padding_xsmall"
 		android:paddingEnd="@dimen/tag_padding"
@@ -76,7 +96,7 @@
 		app:layout_constraintStart_toEndOf="@id/recentTextView"
 		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
 		tools:text="Hot" />
-	
+
 	<TextView
 		android:id="@+id/incidentIdTextView"
 		style="@style/RangerText.Subhead"
@@ -92,7 +112,7 @@
 		app:layout_constraintEnd_toEndOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/bgView"
 		tools:text="#123" />
-	
+
 	<TextView
 		android:id="@+id/noneTextView"
 		style="@style/RangerText.Label.Secondary"
@@ -107,7 +127,7 @@
 		app:layout_constraintEnd_toStartOf="@id/incidentIdTextView"
 		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
 		tools:text="None" />
-	
+
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellImageView"
 		android:layout_width="@dimen/type_icon_size"
@@ -119,7 +139,7 @@
 		app:layout_constraintStart_toStartOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/timeTextView"
 		app:tint="@color/iconColor" />
-	
+
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/timeTextView"
 		style="@style/RangerText.Label.Secondary"
@@ -153,13 +173,13 @@
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintEnd_toEndOf="@id/bgView"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
-		
+
 		<androidx.appcompat.widget.AppCompatImageView
 			android:layout_width="@dimen/type_icon_size"
 			android:layout_height="@dimen/type_icon_size"
 			android:src="@drawable/ic_chainsaw"
 			app:tint="@color/iconColor" />
-		
+
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/numOfChainsawTextView"
 			style="@style/RangerText.Label.Secondary"
@@ -168,7 +188,7 @@
 			android:layout_marginStart="@dimen/margin_padding_xsmall"
 			android:text="2" />
 	</LinearLayout>
-	
+
 	<LinearLayout
 		android:id="@+id/gunLayout"
 		android:layout_width="wrap_content"
@@ -179,13 +199,13 @@
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintEnd_toStartOf="@id/chainsawLayout"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
-		
+
 		<androidx.appcompat.widget.AppCompatImageView
 			android:layout_width="@dimen/type_icon_size"
 			android:layout_height="@dimen/type_icon_size"
 			android:src="@drawable/ic_gun"
 			app:tint="@color/iconColor" />
-		
+
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/numOfGunTextView"
 			style="@style/RangerText.Label.Secondary"
@@ -194,7 +214,7 @@
 			android:layout_marginStart="@dimen/margin_padding_xsmall"
 			android:text="3" />
 	</LinearLayout>
-	
+
 	<LinearLayout
 		android:id="@+id/otherLayout"
 		android:layout_width="wrap_content"
@@ -205,13 +225,13 @@
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintEnd_toStartOf="@id/gunLayout"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
-		
+
 		<androidx.appcompat.widget.AppCompatImageView
 			android:layout_width="@dimen/type_icon_size"
 			android:layout_height="@dimen/type_icon_size"
 			android:src="@drawable/ic_report"
 			app:tint="@color/iconColor" />
-		
+
 		<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/numOfOtherTextView"
 			style="@style/RangerText.Label.Secondary"

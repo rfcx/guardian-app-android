@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.dateRangeFormat
 import java.util.TimeZone
@@ -50,6 +51,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
         private val numOfGunTextView = binding.numOfGunTextView
+        private val iconTypeImageView = binding.iconTypeImageView
+        private val typeTextView = binding.typeTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -70,6 +73,9 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             noneTextView.visibility = View.GONE
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
+
+            iconTypeImageView.setImageResource(if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt else R.drawable.ic_satellite_alt)
+            typeTextView.text = itemView.context.getString(if (stream.guardianType == GuardianType.CELL.value) R.string.cell else R.string.satellite)
 
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
