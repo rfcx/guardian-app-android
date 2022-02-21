@@ -106,7 +106,6 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
 
         streamId.let {
             if (viewModel.getEventsCount(it) != 0L) {
-                eventItemAdapter.items = viewModel.getEventsByStream(it)
                 isShowProgressBar(false)
                 viewModel.fetchEvents(it)
             } else {
@@ -135,6 +134,12 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
                 binding.eventsSwipeRefreshView.isRefreshing = false
             }, {
             })
+        }
+
+        streamId.let {
+            viewModel.getEventsByStream(it).observe(viewLifecycleOwner) { events ->
+                eventItemAdapter.items = events
+            }
         }
     }
 

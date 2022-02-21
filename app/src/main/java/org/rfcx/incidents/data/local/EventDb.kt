@@ -36,8 +36,8 @@ class EventDb(private val realm: Realm) {
         realm.where(Event::class.java).equalTo(Event.EVENT_STREAM_ID, streamId).sort(Event.EVENT_START, Sort.DESCENDING)
             .findAll()
 
-    fun getAllResultsAsync(): RealmResults<Event> {
-        return realm.where(Event::class.java).sort(Event.EVENT_START, Sort.DESCENDING).findAllAsync()
+    fun getEventsByDescendingAsync(streamId: String): RealmResults<Event> {
+        return realm.where(Event::class.java).equalTo(Event.EVENT_STREAM_ID, streamId).sort(Event.EVENT_START, Sort.DESCENDING).findAllAsync()
     }
 
     fun deleteEventsByStreamId(id: String) {
