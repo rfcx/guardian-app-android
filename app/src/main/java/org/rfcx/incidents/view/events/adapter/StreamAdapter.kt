@@ -142,7 +142,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private const val MINUTE = 60L * 1000L
         private const val HOUR = 60L * MINUTE
         private const val DAY = 24L * HOUR
-        private const val GUNSHOT = "gunshot"
-        private const val CHAINSAW = "chainsaw"
+        const val GUNSHOT = "gunshot"
+        const val CHAINSAW = "chainsaw"
     }
 }

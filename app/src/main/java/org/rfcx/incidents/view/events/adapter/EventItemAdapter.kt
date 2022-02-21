@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -37,10 +38,17 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
     inner class EventItemViewHolder(binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
         private val typeTextView = binding.typeTextView
         private val dateTextView = binding.dateTextView
+        private val numberOfEventsImageView = binding.numberOfEventsImageView
 
         fun bind(item: Event) {
             dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context, timeZone)
             typeTextView.text = item.classification?.title
+            val imageIcon = when (item.classification?.value) {
+                StreamAdapter.GUNSHOT -> R.drawable.ic_gun
+                StreamAdapter.CHAINSAW -> R.drawable.ic_chainsaw
+                else -> R.drawable.ic_report
+            }
+            numberOfEventsImageView.setImageResource(imageIcon)
         }
     }
 }
