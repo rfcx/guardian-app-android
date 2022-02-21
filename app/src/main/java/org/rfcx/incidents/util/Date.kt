@@ -168,7 +168,7 @@ fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZon
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
     } else if (niceDateStr.toString() == "Yesterday") {
-        "${context.getString(R.string.yesterday)} ${this.toTimeWithTimeZone(timeZone)}"
+        "${context.getString(R.string.yesterday)} ${this.toStringWithTimeZone(timeZone)}"
     } else if (!niceDateStr.toString().contains("ago")) {
         this.toStringWithTimeZone(timeZone)
     } else if (niceDateStr.toString().contains("days ago")) {

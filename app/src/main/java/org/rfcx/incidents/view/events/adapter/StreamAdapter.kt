@@ -64,10 +64,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
 
             // Stream level
             guardianName.text = stream.name
-            stream.tags?.let { tags ->
-                if (tags.contains(Stream.TAG_RECENT)) recentTextView.visibility = View.VISIBLE
-                if (tags.contains(Stream.TAG_HOT)) hotTextView.visibility = View.VISIBLE
-            }
 
             // Incident level
             val incident = stream.lastIncident ?: return
@@ -102,6 +98,11 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     { it.classification?.value == CHAINSAW }
                 )
             )
+
+            stream.tags?.let { tags ->
+                if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
+                if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
+            }
 
             eventsSorted.forEachIndexed { index, event ->
                 val type = event.classification?.value ?: return
