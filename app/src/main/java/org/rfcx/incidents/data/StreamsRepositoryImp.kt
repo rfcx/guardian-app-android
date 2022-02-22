@@ -28,6 +28,7 @@ class StreamsRepositoryImp(
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
         return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
+            if (offset == 0) streamDb.deleteStreamsByProjectId(projectId)
             rawStreams.forEachIndexed { index, streamRes ->
                 val stream = streamRes.toStream()
                 stream.order = offset + index
