@@ -14,7 +14,7 @@ private const val timeZoneFormat = "(zzz)"
 
 fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: TimeZone? = null): String {
     val text: String
-    val timeZoneText = if (timezone == TimeZone.getDefault()) "" else  toUtc.toTimeZoneString(timezone)
+    val timeZoneText = if (timezone == TimeZone.getDefault()) "" else toUtc.toTimeZoneString(timezone)
 
     if (isToday(fromUtc.time) && isToday(toUtc.time)) {
         text = context.getString(R.string.is_today, fromUtc.toTimeTextString(timezone), toUtc.toTimeTextString(timezone), timeZoneText)

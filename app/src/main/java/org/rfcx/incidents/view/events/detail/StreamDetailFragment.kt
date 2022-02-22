@@ -21,7 +21,6 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
-import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 import java.util.TimeZone

@@ -92,9 +92,7 @@ class AssetsFragment : BaseImageFragment() {
         }
 
         binding?.submitButton?.setOnClickListener {
-            if (!TextUtils.isEmpty(binding?.noteEditText?.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage()
-                    .isNotEmpty()
-            ) {
+            if (!TextUtils.isEmpty(binding?.noteEditText?.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
                 saveAssets()
                 analytics?.trackSubmitResponseEvent()
                 listener.onSubmitButtonClick()

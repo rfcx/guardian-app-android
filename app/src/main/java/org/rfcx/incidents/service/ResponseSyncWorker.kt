@@ -14,7 +14,6 @@ import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.companion.service.TrackingSyncWorker
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.TrackingFileDb

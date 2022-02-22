@@ -71,7 +71,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
 
-            iconTypeImageView.setImageResource(if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt else R.drawable.ic_satellite_alt)
+            iconTypeImageView.setImageResource(
+                if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt
+                else R.drawable.ic_satellite_alt
+            )
             typeTextView.text = itemView.context.getString(if (stream.guardianType == GuardianType.CELL.value) R.string.cell else R.string.satellite)
 
             val events = incident.events?.sort(Event.EVENT_START)
