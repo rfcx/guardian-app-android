@@ -34,11 +34,13 @@ import org.rfcx.incidents.databinding.ActivityResponseDetailBinding
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
+import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.report.create.image.ReportImageAdapter
 import org.rfcx.incidents.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
+import java.util.TimeZone
 
 class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -101,7 +103,11 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         response?.let { res ->
-            binding.investigateAtTextView.text = res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this)
+            val timeZone = TimeZone.getTimeZone(viewModel.getStream(res.streamId)?.timezone)
+            binding.investigateAtTextView.text = if (timeZone == TimeZone.getDefault()) res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
+                this,
+                timeZone
+            ) else res.investigatedAt.toStringWithTimeZone(timeZone)
             responseDetailAdapter.items = getMessageList(res.answers)
             binding.answersTextView.visibility = if (res.answers.size == 0) View.VISIBLE else View.GONE
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE

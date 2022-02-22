@@ -11,11 +11,14 @@ import org.rfcx.incidents.databinding.ItemDraftReportsBinding
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.setDrawableImage
+import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.incidents.view.report.submitted.ResponseItem
+import java.util.TimeZone
 
 class DraftReportsAdapter(private val listener: ReportOnClickListener) :
     RecyclerView.Adapter<DraftReportsAdapter.ReportsViewHolder>() {
-    var items: List<Response> = arrayListOf()
+    var items: List<ResponseItem> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -39,11 +42,11 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
         private val dateTextView = binding.dateTextView
         private val actionImageView = binding.actionImageView
 
-        fun bind(report: Response) {
+        fun bind(item: ResponseItem) {
             actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
-            setClickable(itemView, report.syncState == SyncState.SENT.value)
+            setClickable(itemView, item.response.syncState == SyncState.SENT.value)
 
-            if (report.syncState == SyncState.SENT.value) {
+            if (item.response.syncState == SyncState.SENT.value) {
                 guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
                 dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
             } else {
@@ -51,15 +54,18 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
                 dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
             }
 
-            guardianName.text = report.streamName
-            dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
+            guardianName.text = item.response.streamName
+            dateTextView.text = if (item.timeZone == TimeZone.getDefault()) item.response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
+                itemView.context,
+                item.timeZone
+            ) else item.response.investigatedAt.toStringWithTimeZone(item.timeZone)
 
             actionImageView.setOnClickListener {
-                listener.onClickedDelete(report)
+                listener.onClickedDelete(item.response)
             }
 
             itemView.setOnClickListener {
-                listener.onClickedItem(report)
+                listener.onClickedItem(item.response)
             }
         }
 

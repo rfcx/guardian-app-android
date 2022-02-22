@@ -23,6 +23,8 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
+import org.rfcx.incidents.view.report.submitted.ResponseItem
+import java.util.TimeZone
 
 class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
     private var _binding: FragmentDraftReportsBinding? = null
@@ -126,7 +128,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             val items = responses.sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-            reportsAdapter.items = items
+            reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
         }
     }
 
@@ -165,7 +167,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items
+            reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -189,7 +191,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                     .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
-                reportsAdapter.items = items
+                reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
                 binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }
