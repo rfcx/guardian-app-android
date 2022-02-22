@@ -12,11 +12,13 @@ import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.response.syncImage
 import org.rfcx.incidents.entity.response.syncLabel
 import org.rfcx.incidents.util.setDrawableImage
+import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import java.util.TimeZone
 
 class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListener) :
     RecyclerView.Adapter<SubmittedReportsAdapter.ReportsViewHolder>() {
-    var items: List<Response> = arrayListOf()
+    var items: List<ResponseItem> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -41,17 +43,19 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
         private val syncLabelTextView = binding.syncLabelTextView
         private val actionImageView = binding.actionImageView
 
-        fun bind(report: Response) {
-            setClickable(itemView, report.syncState != SyncState.SENT.value)
-            actionImageView.setDrawableImage(itemView.context, report.syncImage())
-            reportIdTextView.visibility = if (report.incidentRef != null) View.VISIBLE else View.GONE
-            reportIdTextView.text = itemView.context.getString(R.string.incident_ref, report.incidentRef)
-            syncLabelTextView.text = itemView.context.getString(report.syncLabel())
-            guardianName.text = report.streamName
-            dateTextView.text = report.investigatedAt.toTimeSinceStringAlternativeTimeAgo(itemView.context)
-
+        fun bind(item: ResponseItem) {
+            setClickable(itemView, item.response.syncState != SyncState.SENT.value)
+            actionImageView.setDrawableImage(itemView.context, item.response.syncImage())
+            reportIdTextView.visibility = if (item.response.incidentRef != null) View.VISIBLE else View.GONE
+            reportIdTextView.text = itemView.context.getString(R.string.incident_ref, item.response.incidentRef)
+            syncLabelTextView.text = itemView.context.getString(item.response.syncLabel())
+            guardianName.text = item.response.streamName
+            dateTextView.text = if (item.timeZone == TimeZone.getDefault()) item.response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
+                itemView.context,
+                item.timeZone
+            ) else item.response.investigatedAt.toStringWithTimeZone(item.timeZone)
             itemView.setOnClickListener {
-                listener.onClickedItem(report)
+                listener.onClickedItem(item.response)
             }
         }
 
@@ -71,3 +75,5 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
 interface SubmittedReportsOnClickListener {
     fun onClickedItem(response: Response)
 }
+
+data class ResponseItem(var response: Response, var timeZone: TimeZone)

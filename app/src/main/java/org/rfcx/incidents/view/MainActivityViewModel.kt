@@ -50,6 +50,8 @@ class MainActivityViewModel(
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
+    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
 
