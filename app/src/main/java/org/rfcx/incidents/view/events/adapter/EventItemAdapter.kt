@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import java.util.TimeZone
 
@@ -41,7 +42,10 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
         private val numberOfEventsImageView = binding.numberOfEventsImageView
 
         fun bind(item: Event) {
-            dateTextView.text = item.start.toTimeSinceStringAlternativeTimeAgo(itemView.context, timeZone)
+            dateTextView.text = if (timeZone == TimeZone.getDefault()) item.start.toTimeSinceStringAlternativeTimeAgo(
+                itemView.context,
+                timeZone
+            ) else item.start.toStringWithTimeZone(timeZone)
             typeTextView.text = item.classification?.title
             val imageIcon = when (item.classification?.value) {
                 StreamAdapter.GUNSHOT -> R.drawable.ic_gun
