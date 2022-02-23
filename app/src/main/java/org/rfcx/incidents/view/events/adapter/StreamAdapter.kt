@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.events.adapter
 
 import android.content.res.Resources
+import android.content.res.Resources.getSystem
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -105,6 +106,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
+                if ((tags.contains(Stream.TAG_HOT) || tags.contains(Stream.TAG_RECENT)) && events.isNotEmpty()) guardianName.maxWidth = (125 * getSystem().displayMetrics.density).toInt()
+                if (stream.name.length > 20 && recentTextView.visibility != View.VISIBLE && hotTextView.visibility != View.VISIBLE) guardianName.maxWidth = (200 * getSystem().displayMetrics.density).toInt()
             }
 
             eventsSorted.forEachIndexed { index, event ->
