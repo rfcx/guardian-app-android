@@ -370,6 +370,7 @@
 	<string name="hot">Hot</string>
 	
 	<string name="audio_not_found">Audio not found</string>
+	<string name="satellite_audio_not_found">Audio not available for satellite Guardians</string>
 
     <string name="satellite">Sat</string>
     <string name="cell">Cell</string>

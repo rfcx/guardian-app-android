@@ -71,7 +71,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             noneTextView.visibility = View.GONE
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
-
+            iconTypeImageView.visibility = if(stream.guardianType == null) View.GONE else View.VISIBLE
+            typeTextView.visibility = if(stream.guardianType == null) View.GONE else View.VISIBLE
             iconTypeImageView.setImageResource(
                 if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt
                 else R.drawable.ic_satellite_alt
