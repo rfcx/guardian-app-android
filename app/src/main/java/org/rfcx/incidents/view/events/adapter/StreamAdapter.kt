@@ -187,6 +187,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         const val CHAINSAW = "chainsaw"
         const val DOG_BARK = "dog_bark"
         const val VEHICLE = "vehicle"
-        const val VOICE = "human_voice"
+        const val VOICE = "humanvoice"
     }
 }
