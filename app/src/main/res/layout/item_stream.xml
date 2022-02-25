@@ -221,7 +221,7 @@
 	</LinearLayout>
 
 	<LinearLayout
-		android:id="@+id/otherLayout"
+		android:id="@+id/vehicleLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
@@ -229,6 +229,84 @@
 		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintEnd_toStartOf="@id/gunLayout"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_vehicle"
+			app:tint="@color/iconColor" />
+
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfVehicleTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="3" />
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/voiceLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+        app:layout_constraintEnd_toStartOf="@id/vehicleLayout"
+        app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:src="@drawable/ic_voice"
+            app:tint="@color/iconColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numOfVoiceTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dogBarkLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+        app:layout_constraintEnd_toStartOf="@id/voiceLayout"
+        app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:src="@drawable/ic_dog_bark"
+            app:tint="@color/iconColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numOfDogBarkTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:text="3" />
+    </LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/otherLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toStartOf="@id/dogBarkLayout"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
 
 		<androidx.appcompat.widget.AppCompatImageView

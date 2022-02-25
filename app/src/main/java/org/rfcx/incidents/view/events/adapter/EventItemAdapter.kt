@@ -50,6 +50,9 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
             val imageIcon = when (item.classification?.value) {
                 StreamAdapter.GUNSHOT -> R.drawable.ic_gun
                 StreamAdapter.CHAINSAW -> R.drawable.ic_chainsaw
+                StreamAdapter.VEHICLE -> R.drawable.ic_vehicle
+                StreamAdapter.VOICE -> R.drawable.ic_voice
+                StreamAdapter.DOG_BARK -> R.drawable.ic_dog_bark
                 else -> R.drawable.ic_report
             }
             numberOfEventsImageView.setImageResource(imageIcon)
