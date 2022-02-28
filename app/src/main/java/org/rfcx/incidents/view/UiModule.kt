@@ -39,7 +39,7 @@ object UiModule {
     }
 
     var loginModule = module {
-        viewModel { LoginViewModel(androidContext(), get()) }
+        viewModel { LoginViewModel(androidContext(), get(), get()) }
         viewModel { SetUserNameViewModel(androidContext(), get()) }
         viewModel { SetProjectsViewModel(get()) }
     }
