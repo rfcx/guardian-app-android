@@ -18,7 +18,7 @@ import java.util.TimeZone
 
 class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListener) :
     RecyclerView.Adapter<SubmittedReportsAdapter.ReportsViewHolder>() {
-    var items: List<ResponseItem> = arrayListOf()
+    var items: List<Pair<Response, TimeZone?>> = listOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -43,19 +43,20 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
         private val syncLabelTextView = binding.syncLabelTextView
         private val actionImageView = binding.actionImageView
 
-        fun bind(item: ResponseItem) {
-            setClickable(itemView, item.response.syncState != SyncState.SENT.value)
-            actionImageView.setDrawableImage(itemView.context, item.response.syncImage())
-            reportIdTextView.visibility = if (item.response.incidentRef != null) View.VISIBLE else View.GONE
-            reportIdTextView.text = itemView.context.getString(R.string.incident_ref, item.response.incidentRef)
-            syncLabelTextView.text = itemView.context.getString(item.response.syncLabel())
-            guardianName.text = item.response.streamName
-            dateTextView.text = if (item.timeZone == TimeZone.getDefault()) item.response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
+        fun bind(item: Pair<Response, TimeZone?>) {
+            val (response, timeZone) = item
+            setClickable(itemView, response.syncState != SyncState.SENT.value)
+            actionImageView.setDrawableImage(itemView.context, response.syncImage())
+            reportIdTextView.visibility = if (response.incidentRef != null) View.VISIBLE else View.GONE
+            reportIdTextView.text = itemView.context.getString(R.string.incident_ref, response.incidentRef)
+            syncLabelTextView.text = itemView.context.getString(response.syncLabel())
+            guardianName.text = response.streamName
+            dateTextView.text = if (timeZone == TimeZone.getDefault()) response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
-                item.timeZone
-            ) else item.response.investigatedAt.toStringWithTimeZone(item.timeZone)
+                timeZone
+            ) else response.investigatedAt.toStringWithTimeZone(timeZone)
             itemView.setOnClickListener {
-                listener.onClickedItem(item.response)
+                listener.onClickedItem(response)
             }
         }
 
@@ -76,4 +77,4 @@ interface SubmittedReportsOnClickListener {
     fun onClickedItem(response: Response)
 }
 
-data class ResponseItem(var response: Response, var timeZone: TimeZone)
+// data class ResponseItem(var response: Response, var timeZone: TimeZone)

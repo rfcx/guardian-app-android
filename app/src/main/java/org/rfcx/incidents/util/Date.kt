@@ -104,10 +104,11 @@ fun Date.toTimeWithTimeZone(timeZone: TimeZone): String {
     return tempSdf.format(this)
 }
 
-fun Date.toStringWithTimeZone(timeZone: TimeZone): String {
-    val tempSdf = if (timeZone == TimeZone.getDefault()) outputDateSdf else outputWithTimeZoneSdf
-    tempSdf.timeZone = timeZone
-    return if (timeZone == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
+fun Date.toStringWithTimeZone(timeZone: TimeZone?): String {
+    val tz = timeZone ?: TimeZone.getDefault()
+    val tempSdf = if (tz == TimeZone.getDefault()) outputDateSdf else outputWithTimeZoneSdf
+    tempSdf.timeZone = tz
+    return if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
 }
 
 fun setShortTimeZone(str: String): String {
@@ -183,9 +184,13 @@ private const val DAY = 24 * HOUR
 private const val WEEK = 7 * DAY
 
 @SuppressLint("SimpleDateFormat")
-fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZone = TimeZone.getDefault()): String {
+fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZone? = TimeZone.getDefault()): String {
     val niceDateStr =
-        DateUtils.getRelativeTimeSpanString(this.toDateWithTimeZone(timeZone).time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        DateUtils.getRelativeTimeSpanString(
+            this.toDateWithTimeZone(timeZone ?: TimeZone.getDefault()).time,
+            Calendar.getInstance().timeInMillis,
+            DateUtils.MINUTE_IN_MILLIS
+        )
 
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
