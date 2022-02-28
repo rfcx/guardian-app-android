@@ -22,7 +22,7 @@
 			
 			<TextView
 				android:id="@+id/whenTextView"
-				style="@style/RangerText.SubTitle"
+				style="@style/RangerText.Body"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="@string/when_investigate"
@@ -89,7 +89,7 @@
 			
 			<androidx.appcompat.widget.AppCompatTextView
 				android:id="@+id/whatTimeTextView"
-				style="@style/RangerText.SubTitle"
+				style="@style/RangerText.Body"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_padding_large"

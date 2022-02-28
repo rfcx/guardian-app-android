@@ -187,10 +187,11 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     private fun setColorOfTitle(str: String): SpannableString {
         val spannableString = SpannableString(str)
         val gray = ForegroundColorSpan(ContextCompat.getColor(this, R.color.text_secondary))
-        spannableString.setSpan(gray, 7, str.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val start = getString(R.string.create_report_steps).length
+        spannableString.setSpan(gray, start, str.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(
             AbsoluteSizeSpan(resources.getDimensionPixelSize(R.dimen.text_small)),
-            7,
+            start,
             str.length,
             SPAN_INCLUSIVE_INCLUSIVE
         )
