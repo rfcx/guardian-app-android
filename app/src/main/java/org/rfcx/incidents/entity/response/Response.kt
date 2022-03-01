@@ -28,6 +28,7 @@ open class Response(
     var streamName: String = "",
     var audioLocation: String? = null,
     var incidentRef: String? = null,
+    var assets: RealmList<Asset> = RealmList(),
     var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
     companion object {
@@ -51,6 +52,7 @@ open class Response(
         const val RESPONSE_POACHING_SCALE = "poachingScale"
         const val RESPONSE_POACHING_EVIDENCE = "poachingEvidence"
         const val RESPONSE_ANSWERS = "answers"
+        const val RESPONSE_ASSETS = "assets"
     }
 }
 
