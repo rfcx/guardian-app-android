@@ -111,47 +111,30 @@ fun Date.toStringWithTimeZone(timeZone: TimeZone?): String {
     return if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
 }
 
+private fun makeToShortString(str: String, symbol: String): String {
+    val timeText = str.split(":")
+    return if (str.first() == '0') {
+        if (timeText[1].first() == '0') {
+            "(GMT" + symbol + timeText[0].last() + ")"
+        } else {
+            "(GMT" + symbol + timeText[0] + ":" + timeText[1].dropLast(1) + ")"
+        }
+    } else {
+        if (timeText[1].first() == '0') {
+            "(GMT" + symbol + timeText[0] + ")"
+        } else {
+            "(GMT" + symbol + timeText[0] + ":" + timeText[1].dropLast(1) + ")"
+        }
+    }
+}
+
 fun setShortTimeZone(str: String): String {
     val start = str.split("(")
-
     return when {
-        start[1].contains("GMT+") -> {
-            val numberFirst = str.split("+")
-            val numberLast = numberFirst[1].split(":")
-            return if (numberFirst[1].first() == '0') {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT+" + numberLast[0].last() + ")"
-                } else {
-                    start[0] + "(GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            } else {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT+" + numberLast[0] + ")"
-                } else {
-                    start[0] + "(GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            }
-        }
-        start[1].contains("GMT-") -> {
-            val numberFirst = str.split("-")
-            val numberLast = numberFirst.last().split(":")
-            return if (numberFirst[1].first() == '0') {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT-" + numberLast[0].last() + ")"
-                } else {
-                    start[0] + "(GMT-" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            } else {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT-" + numberLast[0] + ")"
-                } else {
-                    start[0] + "(GMT-" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            }
-        }
-        else -> {
-            str
-        }
+        start[1].contains("GMT+00") -> start[0] + "(GMT)"
+        start[1].contains("GMT+") -> start[0] + makeToShortString(str.split("+").last(), "+")
+        start[1].contains("GMT-") -> start[0] + makeToShortString(str.split("-").last(), "-")
+        else -> str
     }
 }
 
