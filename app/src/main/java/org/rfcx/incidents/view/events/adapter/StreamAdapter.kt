@@ -71,13 +71,14 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             noneTextView.visibility = View.GONE
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
-            iconTypeImageView.visibility = if(stream.guardianType == null) View.GONE else View.VISIBLE
-            typeTextView.visibility = if(stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
+            iconTypeImageView.visibility = if (stream.guardianType == null) View.GONE else View.VISIBLE
+            typeTextView.visibility = if (stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
             iconTypeImageView.setImageResource(
                 if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt
                 else R.drawable.ic_satellite_alt
             )
-            typeTextView.text = itemView.context.getString(if (stream.guardianType == GuardianType.CELL.value || stream.guardianType == "unknown") R.string.cell else R.string.satellite)
+            typeTextView.text =
+                itemView.context.getString(if (stream.guardianType == GuardianType.CELL.value || stream.guardianType == "unknown") R.string.cell else R.string.satellite)
 
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
