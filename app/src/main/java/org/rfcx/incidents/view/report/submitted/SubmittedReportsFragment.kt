@@ -25,7 +25,6 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
-import java.util.TimeZone
 
 class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, ProjectOnClickListener {
     private var _binding: FragmentSubmittedReportsBinding? = null
@@ -52,7 +51,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
+            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -155,7 +154,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = res.sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
+            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
             reportsAdapter.notifyDataSetChanged()
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         })
@@ -198,7 +197,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                     .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-                reportsAdapter.items = items.map { ResponseItem(it, TimeZone.getTimeZone(viewModel.getStream(it.streamId)?.timezone)) }
+                reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
                 binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }

@@ -4,6 +4,7 @@ import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import java.util.TimeZone
 
 @RealmClass
 open class Stream(
@@ -19,6 +20,9 @@ open class Stream(
     var guardianType: String? = null,
     var order: Int = Int.MAX_VALUE
 ) : RealmModel {
+
+    fun getTimezone(): TimeZone = TimeZone.getTimeZone(this.timezone)
+
     companion object {
         const val TABLE_NAME = "Stream"
         const val FIELD_ID = "id"
