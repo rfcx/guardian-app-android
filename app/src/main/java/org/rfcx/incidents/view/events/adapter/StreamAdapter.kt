@@ -94,9 +94,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt
                 else R.drawable.ic_satellite_alt
             )
-            typeTextView.text =
-                itemView.context.getString(if (stream.guardianType == GuardianType.CELL.value || stream.guardianType == "unknown") R.string.cell else R.string.satellite)
-
+            val typeStr = if (stream.guardianType == GuardianType.CELL.value) R.string.cell else R.string.satellite
+            typeTextView.text = itemView.context.getString(typeStr)
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
