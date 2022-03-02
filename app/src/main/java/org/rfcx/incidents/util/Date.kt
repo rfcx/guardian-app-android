@@ -104,53 +104,37 @@ fun Date.toTimeWithTimeZone(timeZone: TimeZone): String {
     return tempSdf.format(this)
 }
 
-fun Date.toStringWithTimeZone(timeZone: TimeZone): String {
-    val tempSdf = if (timeZone == TimeZone.getDefault()) outputDateSdf else outputWithTimeZoneSdf
-    tempSdf.timeZone = timeZone
-    return if (timeZone == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
+fun Date.toStringWithTimeZone(timeZone: TimeZone?): String {
+    val tz = timeZone ?: TimeZone.getDefault()
+    val tempSdf = if (tz == TimeZone.getDefault()) outputDateSdf else outputWithTimeZoneSdf
+    tempSdf.timeZone = tz
+    return if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
+}
+
+private fun makeToShortString(str: String, symbol: String): String {
+    val timeText = str.split(":")
+    return if (str.first() == '0') {
+        if (timeText[1].first() == '0') {
+            "(GMT" + symbol + timeText[0].last() + ")"
+        } else {
+            "(GMT" + symbol + timeText[0] + ":" + timeText[1].dropLast(1) + ")"
+        }
+    } else {
+        if (timeText[1].first() == '0') {
+            "(GMT" + symbol + timeText[0] + ")"
+        } else {
+            "(GMT" + symbol + timeText[0] + ":" + timeText[1].dropLast(1) + ")"
+        }
+    }
 }
 
 fun setShortTimeZone(str: String): String {
     val start = str.split("(")
-
     return when {
-        start[1].contains("GMT+") -> {
-            val numberFirst = str.split("+")
-            val numberLast = numberFirst[1].split(":")
-            return if (numberFirst[1].first() == '0') {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT+" + numberLast[0].last() + ")"
-                } else {
-                    start[0] + "(GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            } else {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT+" + numberLast[0] + ")"
-                } else {
-                    start[0] + "(GMT+" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            }
-        }
-        start[1].contains("GMT-") -> {
-            val numberFirst = str.split("-")
-            val numberLast = numberFirst.last().split(":")
-            return if (numberFirst[1].first() == '0') {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT-" + numberLast[0].last() + ")"
-                } else {
-                    start[0] + "(GMT-" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            } else {
-                if (numberLast[1].first() == '0') {
-                    start[0] + "(GMT-" + numberLast[0] + ")"
-                } else {
-                    start[0] + "(GMT-" + numberLast[0] + ":" + numberLast[1].dropLast(1) + ")"
-                }
-            }
-        }
-        else -> {
-            str
-        }
+        start[1].contains("GMT+00") -> start[0] + "(GMT)"
+        start[1].contains("GMT+") -> start[0] + makeToShortString(str.split("+").last(), "+")
+        start[1].contains("GMT-") -> start[0] + makeToShortString(str.split("-").last(), "-")
+        else -> str
     }
 }
 
@@ -183,9 +167,13 @@ private const val DAY = 24 * HOUR
 private const val WEEK = 7 * DAY
 
 @SuppressLint("SimpleDateFormat")
-fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZone = TimeZone.getDefault()): String {
+fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZone? = TimeZone.getDefault()): String {
     val niceDateStr =
-        DateUtils.getRelativeTimeSpanString(this.toDateWithTimeZone(timeZone).time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        DateUtils.getRelativeTimeSpanString(
+            this.toDateWithTimeZone(timeZone ?: TimeZone.getDefault()).time,
+            Calendar.getInstance().timeInMillis,
+            DateUtils.MINUTE_IN_MILLIS
+        )
 
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
