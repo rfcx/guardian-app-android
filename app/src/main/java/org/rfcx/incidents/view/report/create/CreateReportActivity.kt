@@ -26,6 +26,8 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityCreateReportBinding
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.entity.response.Asset
+import org.rfcx.incidents.entity.response.AssetType
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
@@ -228,8 +230,9 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     }
 
     override fun setAudio(audioPath: String?) {
+        if (audioPath == null) return
         val response = _response ?: Response()
-        response.audioLocation = audioPath
+        response.assets.add(Asset(type = AssetType.AUDIO.value, localPath = audioPath))
         setResponse(response)
     }
 
@@ -311,8 +314,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         lastLocation?.let { saveLocation(it) }
-        viewModel.saveResponseInLocalDb(response, _images)
         viewModel.saveTrackingFile(response, this)
+        viewModel.saveResponseInLocalDb(response, _images)
         when {
             this.isOnAirplaneMode() -> {
                 Toast.makeText(
