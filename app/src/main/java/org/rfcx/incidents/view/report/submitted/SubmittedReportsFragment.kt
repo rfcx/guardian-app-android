@@ -51,7 +51,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
+            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -154,7 +154,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = res.sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
+            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             reportsAdapter.notifyDataSetChanged()
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         })
@@ -197,7 +197,7 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                     .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-                reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.getTimezone()) }
+                reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
                 binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }

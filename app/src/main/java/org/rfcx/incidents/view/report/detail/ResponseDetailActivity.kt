@@ -103,7 +103,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         response?.let { res ->
-            val timeZone = TimeZone.getTimeZone(viewModel.getStream(res.streamId)?.timezone)
+            val timeZone = TimeZone.getTimeZone(viewModel.getStream(res.streamId)?.timezoneRaw)
             binding.investigateAtTextView.text = if (timeZone == TimeZone.getDefault()) res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
                 this,
                 timeZone

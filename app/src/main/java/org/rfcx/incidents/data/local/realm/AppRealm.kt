@@ -8,11 +8,12 @@ import io.realm.RealmConfiguration
 import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
+import org.rfcx.incidents.entity.stream.Stream
 
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 19L
+        private const val schemaVersion = 20L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -60,7 +61,14 @@ private class Migrations : RealmMigration {
 
     override fun migrate(c: DynamicRealm, oldVersion: Long, newVersion: Long) {
         if (oldVersion < 20L && newVersion >= 20) {
-            // TODO Placeholder for next schema version
+            migrateToV20(c)
+        }
+    }
+
+    private fun migrateToV20(realm: DynamicRealm) {
+        val stream = realm.schema.get(Stream.TABLE_NAME)
+        stream?.apply {
+            renameField("timezone", Stream.TAG_TIMEZONE_RAW)
         }
     }
 

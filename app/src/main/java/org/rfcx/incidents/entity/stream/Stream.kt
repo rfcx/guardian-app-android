@@ -13,7 +13,7 @@ open class Stream(
     var name: String = "",
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
-    var timezone: String = "",
+    var timezoneRaw: String = "",
     var projectId: String = "",
     var tags: RealmList<String>? = null,
     var lastIncident: Incident? = null,
@@ -21,7 +21,7 @@ open class Stream(
     var order: Int = Int.MAX_VALUE
 ) : RealmModel {
 
-    fun getTimezone(): TimeZone = TimeZone.getTimeZone(this.timezone)
+    val timezone: TimeZone get() = TimeZone.getTimeZone(this.timezoneRaw)
 
     companion object {
         const val TABLE_NAME = "Stream"
@@ -30,5 +30,6 @@ open class Stream(
         const val FIELD_ORDER = "order"
         const val TAG_HOT = "hot"
         const val TAG_RECENT = "recent"
+        const val TAG_TIMEZONE_RAW = "timezoneRaw"
     }
 }

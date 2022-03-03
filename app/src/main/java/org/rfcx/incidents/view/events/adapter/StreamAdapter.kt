@@ -83,7 +83,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
-            val timezone = TimeZone.getTimeZone(stream.timezone)
+            val timezone = TimeZone.getTimeZone(stream.timezoneRaw)
             timeTextView.text = if (timezone == TimeZone.getDefault()) dateRangeFormat(
                 itemView.context,
                 events.first()!!.start,
