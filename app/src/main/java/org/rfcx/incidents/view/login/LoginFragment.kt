@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentLoginBinding
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
@@ -151,12 +153,35 @@ class LoginFragment : BaseFragment() {
             viewLifecycleOwner,
             Observer { status ->
                 if (status !== null && status) {
-                    listener.handleOpenPage()
+                    loginViewModel.fetchProjects()
                 } else {
                     loading(false)
                 }
             }
         )
+
+        loginViewModel.projects.observe(viewLifecycleOwner) { result ->
+            result.success({ projects ->
+                if (projects.size == 1) {
+                    loginViewModel.subscribe(projects[0]) { status ->
+                        if (status) {
+                            val preferences = Preferences.getInstance(requireContext())
+                            val projectId = projects[0].id
+                            preferences.putString(Preferences.SELECTED_PROJECT, projectId)
+                            saveSubscribedProject(arrayListOf(projects[0].id))
+
+                            listener.openMain()
+                        } else {
+                            listener.handleOpenPage()
+                        }
+                    }
+                } else {
+                    listener.handleOpenPage()
+                }
+            }, {
+                listener.handleOpenPage()
+            }, {})
+        }
 
         loginViewModel.resetPassword.observe(
             viewLifecycleOwner,
@@ -186,6 +211,12 @@ class LoginFragment : BaseFragment() {
     private fun View.hideKeyboard() = this.let {
         val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    private fun saveSubscribedProject(subscribedProjects: ArrayList<String>) {
+        val preferenceHelper = Preferences.getInstance(requireContext())
+        preferenceHelper.remove(Preferences.SUBSCRIBED_PROJECTS)
+        preferenceHelper.putArrayList(Preferences.SUBSCRIBED_PROJECTS, subscribedProjects)
     }
 
     companion object {
