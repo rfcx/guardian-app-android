@@ -9,6 +9,7 @@
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/whatActionTextView"
+        style="@style/RangerText.Body"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingStart="@dimen/margin_padding_normal"

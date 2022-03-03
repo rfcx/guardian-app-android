@@ -73,6 +73,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         setContentView(view)
         setupDisplayTheme()
         setStatusBar()
+        if (supportFragmentManager.fragments.lastOrNull() is StreamDetailFragment) hideBottomAppBar()
 
         // TODO: move preferences to viewmodel
         val preferences = Preferences.getInstance(this)

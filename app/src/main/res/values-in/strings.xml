@@ -6,16 +6,16 @@
     <string name="login">Masuk</string>
     <string name="connect_with_facebook">Lanjutkan dengan facebook</string>
     <string name="connect_with_sms">Lanjutkan dengan nomor telepon</string>
-    <string name="pls_fill_email">Masukkan Email</string>
-    <string name="pls_fill_password">Masukkan kata sandi</string>
-    <string name="incorrect_username_password">Username dan kata sandi salah</string>
-    <string name="an_error_occurred">layanan tidak tersedia</string>
+    <string name="pls_fill_email">Silakan masukan alamat email</string>
+    <string name="pls_fill_password">Silakan masukan kata sandi</string>
+    <string name="incorrect_username_password">Nama pengguna atau kata sandi salah</string>
+    <string name="an_error_occurred">Layanan tidak tersedia</string>
     <string name="or">atau</string>
-    <string name="powered_by">Dipersembahkan oleh</string>
+    <string name="powered_by">Didukung oleh</string>
     
     <!-- LoginActivity -->
-    <string name="next">Lanjut</string>
-    <string name="skip">Melewatkan</string>
+    <string name="next">Berikutnya</string>
+    <string name="skip">Lewati</string>
     <string name="done">Selesai</string>
     <string name="available_in_settings">Anda juga dapat menemukan Tutorial ini di tab Profil</string>
     <string name="name_of_guardian">Nama situs</string>
@@ -40,11 +40,11 @@
     
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
-    <string name="invitation_submit_button_label">menyerahkan</string>
-    <string name="forgot_your_password">Lupa kata sandi Anda</string>
+    <string name="invitation_submit_button_label">Kirim</string>
+    <string name="forgot_your_password">Lupa kata sandi?</string>
     <string name="reset_password">Mereset password Anda</string>
     <string name="enter_email">Masukkan email Anda untuk menerima link yang ulang</string>
-    <string name="cancel">Membatalkan</string>
+    <string name="cancel">Batalkan</string>
     <string name="reset_link_send">Tautan penyetelan ulang kirim ke email Anda.</string>
     <string name="reset">Ulang</string>
     
@@ -53,7 +53,7 @@
     <string name="hint_name">Nama</string>
     
     <string name="terms_and_service">Saya telah membaca dan menyetujui Ketentuan Layanan ini</string>
-    <string name="continue_text">Terus</string>
+    <string name="continue_text">Lanjut</string>
     
     <!-- common error -->
     <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
@@ -77,7 +77,7 @@
     <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
     <string name="report_note_label">Catatan (Opsional)</string>
     <string name="report_note">Catatan</string>
-    <string name="report_note_hint">Menaruh beberapa catatan di sini</string>
+    <string name="report_note_hint">Tulis beberapa catatan di sini</string>
     <string name="some_photo_already_exists">Beberapa foto sudah ada</string>
     <string name="these_photos_already_exists">Foto ini sudah ada</string>
     <string name="this_photo_already_exists">foto ini sudah ada</string>
@@ -107,7 +107,7 @@
     <string name="within_24_hours">Dalam 24 jam</string>
     <string name="at_that_time">Pada saat itu</string>
 
-    <string name="tab_to_record_label">Ketuk dan tahan tombol untuk merekam catatan</string>
+    <string name="tab_to_record_label">Tekan dan tahan tombol untuk merekam</string>
     <string name="new_password">Kata sandi baru</string>
     <string name="new_password_again">Konfirmasi password baru</string>
     <string name="change_password">Ganti kata sandi</string>
@@ -157,7 +157,7 @@
     <!-- Alerts -->
 	<string name="yesterday">Kemarin</string>
     
-    <string name="no_internet_connection">Tidak ada internet, Silakan coba lagi.</string>
+    <string name="no_internet_connection">Tidak ada internet, harap coba lagi.</string>
 	
 	<!--Event value-->
     <string name="chainsaw">gergaji</string>
@@ -171,8 +171,8 @@
     <string name="profile_receive_noti_by_email">melalui email</string>
     <string name="profile_sign_out_label">Keluar</string>
     <string name="profile_aditional_label">Tambahan</string>
-    <string name="profile_app_version_label">versi aplikasi</string>
-    <string name="profile_feedback_label">Masukan</string>
+    <string name="profile_app_version_label">Versi aplikasi</string>
+    <string name="profile_feedback_label">Saran</string>
     <string name="profile_rate_app_label">Menilai aplikasi</string>
     <string name="save_changed">Simpan perubahan</string>
     
@@ -210,7 +210,98 @@
     <string name="detected_at">terdeteksi di</string>
     
     <!-- SetProjectsFragment -->
-    <string name="set_alerts">Set alert</string>
-    <string name="choose_which_projects">Pilih yang proyek untuk menerima pemberitahuan peringatan</string>
+    <string name="set_alerts">Atur peringatan</string>
+    <string name="choose_which_projects">Pilih proyek yang akan mendapatkan pemberitahuan</string>
+    <string name="receive_alert_notification">Menerima pemberitahuan peringatan</string>
+    <string name="system_options">Opsi sistem</string>
+    <string name="system_options_subtitle">"Pilih suara, getar, dan kepentingan"</string>
+    <string name="events">Kejadian</string>
+    <string name="no_projects_selected">"Tidak ada proyek yang dipilih"</string>
+    <string name="other_project">, &amp; %d proyek lainnya</string>
+    <string name="other_projects">, &amp; %d proyek lainnya</string>
+    <string name="menu_new_events">Kegiatan Baru</string>
+    <string name="menu_submitted_reports">Laporan Terkirim</string>
+    <string name="menu_draft_reports">Draf Laporan</string>
+    <string name="unable_to_submit_no_internet_connection">"Tidak dapat mengirim saat tidak ada koneksi"</string>
+    <string name="unable_to_submit_on_airplane_mode">Tidak dapat mengirim saat dalam mode pesawat</string>
+    <string name="network_not_available">Jaringan tidak tersedia</string>
+    <string name="no_content_project">"Tidak ada proyek yang dapat diakses pada akun ini. Silahkan hubungi admin atau buat proyek di platform Arbimon."</string>
+    <string name="logout">Keluar</string>
+    <string name="select">Pilih</string>
+    <string name="refresh">Muat ulang</string>
+    <string name="failed_receive_notification">Gagal menerima pemberitahuan dari %s</string>
+    <string name="failed_unsubscribe_receive_notification">Tidak bisa menghentikan penerimaan pemberitahuan dari s%</string>
+    <string name="project_could_not_refreshed">Proyek tidak dapat diperbaharui</string>
+    <string name="not_have_permission">Anda tidak punya akses untuk menggunakan proyek ini. Hubungi pemilik proyek untuk mengubah peran anda.</string>
+    <string name="not_have_stream">Tidak ada situs dalam proyek ini</string>
+    <string name="not_have_draft_reports">"Anda tidak memiliki draf laporan"</string>
+    <string name="unsent">Menunggu</string>
+    <string name="sending">Sedang Mengirim</string>
+    <string name="sent">Terkirim</string>
+    <string name="not_submitted_reports_yet">Anda belum mengirimkan laporan apapun</string>
+    <string name="create_report">Buat Laporan</string>
+    <string name="open_in_maps">Buka di peta</string>
+    <string name="guardian_event_detail">Detail Kejadian</string>
+    <string name="not_have_events">Tidak ada peristiwa sejak kejadian terakhir</string>
+    <string name="create_report_steps">Laporan</string>
+    <string name="create_report_title">Laporan %d langkah tersisa</string>
+    <string name="create_report_title_one_step">Laporan 1 langkah tersisa</string>
+    <string name="last_step">Laporan langkah terakhir</string>
+    <string name="when_investigate">Kapan Anda melakukan investigasi?</string>
+    <string name="what_time">Pukul berapa Anda melakukan investigasi?</string>
+    <string name="today">Hari ini</string>
+    <string name="other_date">Lainnya…</string>
+    <string name="edit">Ubah</string>
+    <string name="do_not_future_time">Waktu investigasi tidak bisa diatur untuk kejadian (investigasi) yang akan datang / Waktu investigasi hanya bisa diatur untuk kejadian (investigasi) yang sudah dilakukan</string>
+    <string name="what_investigate">Apa yang kamu investigasi? <i>Pilih semua</i></string>
+    <string name="logging">Penebangan kayu</string>
+    <string name="poaching">Perburuan</string>
+    <string name="what_evidence">Bukti penebangan apa yang anda temui? <i>Pilih semua</i></string>
+    <string name="cut_down_trees">Pohon yang ditebang</string>
+    <string name="cleared_areas">Area tebangan</string>
+    <string name="logging_equipment">Alat penebangan</string>
+    <string name="loggers_at_site">Perambah di lokasi</string>
+    <string name="illegal_camps">Kamp/ pos ilegal</string>
+    <string name="fires_burned_areas">Kebakaran/ Wilayah yang terbakar</string>
+    <string name="what_scale">Berapa skala operasi penebangan?</string>
+    <string name="small">Kecil (subsisten, pertanian, dll)</string>
+    <string name="large">Besar (skala komersial, alat berat dll)</string>
+    <string name="what_scale_poaching">Berapa skala operasi perburuan?</string>
+    <string name="small_poaching">Kecil (individu, tidak resmi)</string>
+    <string name="large_poaching">Besar (grup, terkoordinasi)</string>
+    <string name="what_poaching_evidence">Bukti perburuan apa yang anda temui? <i>Pilih semua</i></string>
+    <string name="bullet_shells">Selongsong peluru / sisa senjata</string>
+    <string name="footprints">Jejak kaki manusia</string>
+    <string name="dog_tracks">Jejak anjing</string>
+    <string name="what_action">Tindakan apa yang diambil?</string>
+    <string name="confiscated_equipment">Peralatan yang disita</string>
+    <string name="issue_a_warning">Memberikan peringatan</string>
+    <string name="damaged_machinery">Mesin rusak</string>
+    <string name="collected_evidence">Bukti yang terkumpul</string>
+    <string name="add_evidence">Tambahkan bukti</string>
+    <string name="save_draft">Simpan draf</string>
+    <string name="add_photos">Foto (maksimal 5 foto)</string>
+    <string name="add_notes">Catatan</string>
+    <string name="add_notes_required">Catatan*</string>
+    <string name="upload_voice_notes">Catatan suara</string>
+    <string name="are_you_sure">Apakah Anda yakin ingin mengirimkan laporan tanpa menyertakan foto atau catatan?</string>
+    <string name="small_text">Kecil</string>
+    <string name="large_text">Besar</string>
+    <string name="other_text">Lainnya</string>
+    <string name="answers">Jawaban</string>
+    <string name="logging_scale">Skala penebangan:</string>
+    <string name="poaching_scale">Skala Perburuan:</string>
+    <string name="assets">Aset:</string>
+    <string name="note">Catatan: %s</string>
+    <string name="recent">Terkini</string>
+    <string name="hot">Maraknya kejadian</string>
+    <string name="is_today">Hari ini, %1s - %2s %3s</string>
+    <string name="is_yesterday_today">"Kemarin %1s - Hari ini %2s %3s"</string>
+    <string name="is_yesterday">Kemarin, %1s - %2s %3s</string>
+    <string name="is_other_today">%1s - Hari ini, %2s %3s</string>
+    <string name="is_other_yesterday">%1s - Kemarin, %2s %3s</string>
+    <string name="audio_not_found">Audio tidak ditemukan</string>
+    <string name="satellite_audio_not_found">Audio tidak tersedia untuk satelit Guardian</string>
+    <string name="can_not_play_audio">Tidak bisa memutar audio, silakan coba lagi  nanti.</string>
 
 </resources>
