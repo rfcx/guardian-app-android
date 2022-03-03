@@ -15,89 +15,107 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<TextView
-		android:id="@+id/guardianNameTextView"
-		style="@style/RangerText.Subhead"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:ellipsize="end"
-		android:gravity="center_vertical"
-		android:maxLines="1"
-		android:paddingStart="@dimen/margin_padding_normal"
-		android:paddingTop="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toStartOf="@id/bgView"
-		app:layout_constraintTop_toTopOf="@id/bgView"
-		tools:text="Guardian A" />
-
-    <ImageView
-        android:id="@+id/iconTypeImageView"
-        android:src="@drawable/ic_signal_cellular_alt"
-        android:layout_width="@dimen/type_icon_size"
-        android:layout_height="@dimen/type_icon_size"
-        android:layout_marginStart="@dimen/margin_padding_xsmall"
-        android:layout_marginBottom="@dimen/margin_2_dp"
-        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-        app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
-        app:tint="@color/iconColor" />
-
-    <TextView
-        android:id="@+id/typeTextView"
-        style="@style/RangerText.Label.Secondary"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_2_dp"
-        android:layout_marginBottom="@dimen/margin_2_dp"
-        tools:text="Cell"
-        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-        app:layout_constraintStart_toEndOf="@id/iconTypeImageView"/>
+        app:layout_constraintStart_toStartOf="@id/bgView"
+        app:layout_constraintEnd_toStartOf="@id/incidentIdTextView"
+        app:layout_constraintTop_toTopOf="@id/bgView">
 
-	<TextView
-		android:id="@+id/recentTextView"
-		style="@style/RangerText.Caption"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:alpha="0.7"
-		android:background="@drawable/bg_recent_tag"
-		android:ellipsize="end"
-		android:gravity="center_vertical"
-		android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-		android:paddingStart="@dimen/tag_padding"
-		android:paddingTop="@dimen/margin_padding_xsmall"
-		android:paddingEnd="@dimen/tag_padding"
-		android:paddingBottom="@dimen/margin_padding_xsmall"
-		android:text="@string/recent"
-		android:textColor="@color/white"
-		android:textStyle="bold"
-		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-		app:layout_constraintStart_toEndOf="@id/typeTextView"
-		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
-		tools:text="Recent" />
+        <TextView
+            android:id="@+id/guardianNameTextView"
+            style="@style/RangerText.Subhead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="@dimen/margin_padding_normal"
+            android:paddingTop="@dimen/margin_padding_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintEnd_toStartOf="@id/iconTypeImageView"
+            tools:text="GuardianGuardianGuardian A" />
 
-	<TextView
-		android:id="@+id/hotTextView"
-		style="@style/RangerText.Caption"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_small"
-		android:alpha="0.7"
-		android:background="@drawable/bg_hot_tag"
-		android:ellipsize="end"
-		android:gravity="center_vertical"
-		android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:paddingStart="@dimen/tag_padding"
-		android:paddingTop="@dimen/margin_padding_xsmall"
-		android:paddingEnd="@dimen/tag_padding"
-		android:paddingBottom="@dimen/margin_padding_xsmall"
-		android:text="@string/hot"
-		android:textColor="@color/white"
-		android:textStyle="bold"
-		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
-		app:layout_constraintStart_toEndOf="@id/recentTextView"
-		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
-		tools:text="Hot" />
+        <ImageView
+            android:id="@+id/iconTypeImageView"
+            android:src="@drawable/ic_signal_cellular_alt"
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:layout_marginBottom="@dimen/margin_2_dp"
+            app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+            app:layout_constraintEnd_toStartOf="@id/typeTextView"
+            app:layout_constraintStart_toEndOf="@id/guardianNameTextView"
+            app:tint="@color/iconColor" />
+
+        <TextView
+            android:id="@+id/typeTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_2_dp"
+            android:layout_marginBottom="@dimen/margin_2_dp"
+            tools:text="Cell"
+            app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+            app:layout_constraintEnd_toStartOf="@id/recentTextView"
+            app:layout_constraintStart_toEndOf="@id/iconTypeImageView"/>
+
+        <TextView
+            android:id="@+id/recentTextView"
+            style="@style/RangerText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:alpha="0.7"
+            android:background="@drawable/bg_recent_tag"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:paddingStart="@dimen/tag_padding"
+            android:paddingTop="@dimen/margin_padding_xsmall"
+            android:paddingEnd="@dimen/tag_padding"
+            android:paddingBottom="@dimen/margin_padding_xsmall"
+            android:text="@string/recent"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+            app:layout_constraintStart_toEndOf="@id/typeTextView"
+            app:layout_constraintEnd_toStartOf="@id/hotTextView"
+            app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+            tools:text="Recent" />
+
+        <TextView
+            android:id="@+id/hotTextView"
+            style="@style/RangerText.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            android:alpha="0.7"
+            android:background="@drawable/bg_hot_tag"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:paddingStart="@dimen/tag_padding"
+            android:paddingTop="@dimen/margin_padding_xsmall"
+            android:paddingEnd="@dimen/tag_padding"
+            android:paddingBottom="@dimen/margin_padding_xsmall"
+            android:text="@string/hot"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+            app:layout_constraintStart_toEndOf="@id/recentTextView"
+            app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+            tools:text="Hot" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 	<TextView
 		android:id="@+id/incidentIdTextView"
@@ -125,9 +143,9 @@
 		android:paddingEnd="@dimen/margin_padding_normal"
 		android:text="@string/common_none"
 		android:textColor="@color/text_secondary"
-		app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+		app:layout_constraintBottom_toBottomOf="@id/layout"
 		app:layout_constraintEnd_toStartOf="@id/incidentIdTextView"
-		app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+		app:layout_constraintTop_toTopOf="@id/layout"
 		tools:text="None" />
 
 	<androidx.appcompat.widget.AppCompatImageView
@@ -155,7 +173,7 @@
         android:layout_marginTop="@dimen/margin_10_dp"
 		app:layout_constraintBottom_toBottomOf="@id/bgView"
 		app:layout_constraintStart_toEndOf="@id/bellImageView"
-		app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
+		app:layout_constraintTop_toBottomOf="@id/layout"
          app:layout_constraintEnd_toStartOf="@id/otherLayout"
 		tools:text="3 hrs 40 mins" />
 
@@ -166,7 +184,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/bgView"
         app:layout_constraintStart_toEndOf="@id/bellImageView"
-        app:layout_constraintTop_toBottomOf="@id/guardianNameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/layout" />
 
 	<LinearLayout
 		android:id="@+id/chainsawLayout"
@@ -221,7 +239,7 @@
 	</LinearLayout>
 
 	<LinearLayout
-		android:id="@+id/otherLayout"
+		android:id="@+id/vehicleLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/margin_padding_normal"
@@ -229,6 +247,84 @@
 		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
 		app:layout_constraintEnd_toStartOf="@id/gunLayout"
+		app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+		<androidx.appcompat.widget.AppCompatImageView
+			android:layout_width="@dimen/type_icon_size"
+			android:layout_height="@dimen/type_icon_size"
+			android:src="@drawable/ic_vehicle"
+			app:tint="@color/iconColor" />
+
+		<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/numOfVehicleTextView"
+			style="@style/RangerText.Label.Secondary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_padding_xsmall"
+			android:text="3" />
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/voiceLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+        app:layout_constraintEnd_toStartOf="@id/vehicleLayout"
+        app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:src="@drawable/ic_voice"
+            app:tint="@color/iconColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numOfVoiceTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dogBarkLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+        app:layout_constraintEnd_toStartOf="@id/voiceLayout"
+        app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:src="@drawable/ic_dog_bark"
+            app:tint="@color/iconColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numOfDogBarkTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:text="3" />
+    </LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/otherLayout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_padding_normal"
+		android:layout_marginBottom="@dimen/margin_padding_normal"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+		app:layout_constraintEnd_toStartOf="@id/dogBarkLayout"
 		app:layout_constraintTop_toTopOf="@id/timeTextView">
 
 		<androidx.appcompat.widget.AppCompatImageView

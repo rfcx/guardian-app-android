@@ -55,10 +55,27 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfGunTextView = binding.numOfGunTextView
         private val iconTypeImageView = binding.iconTypeImageView
         private val typeTextView = binding.typeTextView
+        private val vehicleLayout = binding.vehicleLayout
+        private val numOfVehicleTextView = binding.numOfVehicleTextView
+        private val voiceLayout = binding.voiceLayout
+        private val numOfVoiceTextView = binding.numOfVoiceTextView
+        private val dogBarkLayout = binding.dogBarkLayout
+        private val numOfDogBarkTextView = binding.numOfDogBarkTextView
 
         fun bind(stream: Stream) {
             // Reset
-            listOf(recentTextView, hotTextView, timeTextView, bellImageView, chainsawLayout, gunLayout, otherLayout).forEach {
+            listOf(
+                recentTextView,
+                hotTextView,
+                timeTextView,
+                bellImageView,
+                chainsawLayout,
+                gunLayout,
+                otherLayout,
+                vehicleLayout,
+                voiceLayout,
+                dogBarkLayout
+            ).forEach {
                 it.visibility = View.GONE
             }
             noneTextView.visibility = View.VISIBLE
@@ -79,7 +96,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             )
             val typeStr = if (stream.guardianType == GuardianType.CELL.value) R.string.cell else R.string.satellite
             typeTextView.text = itemView.context.getString(typeStr)
-
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
@@ -96,33 +112,24 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             if (eventsDistinctType.isEmpty()) return
             var number = 0
 
-            // sorted by "chainsaw" first, and "gunshot" next, and then other values (for show icon of events)
-            val eventsSorted = eventsDistinctType.sortedWith(
-                compareBy(
-                    { it.classification?.value != GUNSHOT && it.classification?.value != CHAINSAW },
-                    { it.classification?.value == GUNSHOT },
-                    { it.classification?.value == CHAINSAW }
-                )
-            )
+            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK)
+            var counts = 0
+            value.forEach { v ->
+                if (events.any { a -> a.classification?.value == v }) {
+                    if (counts < 2) {
+                        showIconType(v, events)
+                    } else {
+                        otherLayout.visibility = View.VISIBLE
+                        number += getNumberOfEventByType(events, v).toInt()
+                        numOfOtherTextView.text = (number).toString()
+                    }
+                    counts += 1
+                }
+            }
 
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
-                if ((tags.contains(Stream.TAG_HOT) || tags.contains(Stream.TAG_RECENT)) && events.isNotEmpty()) guardianName.maxWidth =
-                    (125 * getSystem().displayMetrics.density).toInt()
-                if (stream.name.length > 20 && recentTextView.visibility != View.VISIBLE && hotTextView.visibility != View.VISIBLE) guardianName.maxWidth =
-                    (200 * getSystem().displayMetrics.density).toInt()
-            }
-
-            eventsSorted.forEachIndexed { index, event ->
-                val type = event.classification?.value ?: return
-                if (index < 2) {
-                    showIconType(type, events)
-                } else {
-                    otherLayout.visibility = View.VISIBLE
-                    number += getNumberOfEventByType(events, type).toInt()
-                    numOfOtherTextView.text = (number).toString()
-                }
             }
         }
 
@@ -135,6 +142,18 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
                     numOfChainsawTextView.text = getNumberOfEventByType(events, type)
+                }
+                VEHICLE -> {
+                    vehicleLayout.visibility = View.VISIBLE
+                    numOfVehicleTextView.text = getNumberOfEventByType(events, type)
+                }
+                VOICE -> {
+                    voiceLayout.visibility = View.VISIBLE
+                    numOfVoiceTextView.text = getNumberOfEventByType(events, type)
+                }
+                DOG_BARK -> {
+                    dogBarkLayout.visibility = View.VISIBLE
+                    numOfDogBarkTextView.text = getNumberOfEventByType(events, type)
                 }
                 else -> {
                     otherLayout.visibility = View.VISIBLE
@@ -161,5 +180,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private const val DAY = 24L * HOUR
         const val GUNSHOT = "gunshot"
         const val CHAINSAW = "chainsaw"
+        const val DOG_BARK = "dog_bark"
+        const val VEHICLE = "vehicle"
+        const val VOICE = "humanvoice"
     }
 }
