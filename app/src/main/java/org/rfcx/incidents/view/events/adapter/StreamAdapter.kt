@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.events.adapter
 
 import android.content.res.Resources
+import android.content.res.Resources.getSystem
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.dateRangeFormat
+import org.rfcx.incidents.util.setShortTimeZone
 import java.util.TimeZone
 
 class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
@@ -50,6 +53,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfChainsawTextView = binding.numOfChainsawTextView
         private val gunLayout = binding.gunLayout
         private val numOfGunTextView = binding.numOfGunTextView
+        private val iconTypeImageView = binding.iconTypeImageView
+        private val typeTextView = binding.typeTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -60,21 +65,31 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
 
             // Stream level
             guardianName.text = stream.name
-            stream.tags?.let { tags ->
-                if (tags.contains(Stream.TAG_RECENT)) recentTextView.visibility = View.VISIBLE
-                if (tags.contains(Stream.TAG_HOT)) hotTextView.visibility = View.VISIBLE
-            }
 
             // Incident level
             val incident = stream.lastIncident ?: return
             noneTextView.visibility = View.GONE
             incidentIdTextView.visibility = View.VISIBLE
             incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
+            iconTypeImageView.visibility = if (stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
+            typeTextView.visibility = if (stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
+            iconTypeImageView.setImageResource(
+                if (stream.guardianType == GuardianType.CELL.value) R.drawable.ic_signal_cellular_alt
+                else R.drawable.ic_satellite_alt
+            )
+            val typeStr = if (stream.guardianType == GuardianType.CELL.value) R.string.cell else R.string.satellite
+            typeTextView.text = itemView.context.getString(typeStr)
 
             val events = incident.events?.sort(Event.EVENT_START)
             lineBottomView.visibility = if (events?.size == 0) View.VISIBLE else View.GONE
             if (events == null || events.size == 0) return
-            timeTextView.text = dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, TimeZone.getTimeZone(stream.timezone))
+            val timezone = TimeZone.getTimeZone(stream.timezoneRaw)
+            timeTextView.text = if (timezone == TimeZone.getDefault()) dateRangeFormat(
+                itemView.context,
+                events.first()!!.start,
+                events.last()!!.end,
+                timezone
+            ) else setShortTimeZone(dateRangeFormat(itemView.context, events.first()!!.start, events.last()!!.end, timezone))
             timeTextView.visibility = View.VISIBLE
             bellImageView.visibility = View.VISIBLE
             val eventsDistinctType = events.distinctBy { a -> a.classification?.value }
@@ -89,6 +104,15 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     { it.classification?.value == CHAINSAW }
                 )
             )
+
+            stream.tags?.let { tags ->
+                if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
+                if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
+                if ((tags.contains(Stream.TAG_HOT) || tags.contains(Stream.TAG_RECENT)) && events.isNotEmpty()) guardianName.maxWidth =
+                    (125 * getSystem().displayMetrics.density).toInt()
+                if (stream.name.length > 20 && recentTextView.visibility != View.VISIBLE && hotTextView.visibility != View.VISIBLE) guardianName.maxWidth =
+                    (200 * getSystem().displayMetrics.density).toInt()
+            }
 
             eventsSorted.forEachIndexed { index, event ->
                 val type = event.classification?.value ?: return
@@ -135,7 +159,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private const val MINUTE = 60L * 1000L
         private const val HOUR = 60L * MINUTE
         private const val DAY = 24L * HOUR
-        private const val GUNSHOT = "gunshot"
-        private const val CHAINSAW = "chainsaw"
+        const val GUNSHOT = "gunshot"
+        const val CHAINSAW = "chainsaw"
     }
 }

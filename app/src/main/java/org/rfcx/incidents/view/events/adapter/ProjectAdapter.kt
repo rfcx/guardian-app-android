@@ -41,13 +41,11 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
     inner class ProjectSelectViewHolder(binding: ItemProjectBinding) : RecyclerView.ViewHolder(binding.root) {
         private val locationGroupTextView = binding.locationGroupTextView
         private val lockImageView = binding.lockImageView
-        private val checkImageView = binding.checkImageView
 
         fun bind(project: Project, isChecked: Boolean) {
             locationGroupTextView.text = project.name
             lockImageView.visibility =
                 if (project.isGuest()) View.VISIBLE else View.GONE
-            checkImageView.visibility = if (isChecked) View.VISIBLE else View.GONE
             setClickable(itemView, project.isGuest())
 
             if (project.isGuest()) {

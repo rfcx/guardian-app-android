@@ -16,15 +16,20 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
+import org.rfcx.incidents.domain.GetStreamsParams
+import org.rfcx.incidents.domain.GetStreamsUseCase
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.entity.stream.Stream
 
 class MainActivityViewModel(
+    private val preferences: Preferences,
     private val context: Context,
     private val responseDb: ResponseDb,
     private val projectDb: ProjectDb,
     private val streamDb: StreamDb,
     private val getProjectsUseCase: GetProjectsUseCase,
+    private val getStreamsUseCase: GetStreamsUseCase,
     credentialKeeper: CredentialKeeper
 ) : ViewModel() {
 
@@ -45,6 +50,8 @@ class MainActivityViewModel(
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
+    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
 
@@ -60,6 +67,18 @@ class MainActivityViewModel(
                 }
             },
             GetProjectsParams()
+        )
+    }
+
+    fun refreshStreams() {
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+        getStreamsUseCase.execute(
+            object : DisposableSingleObserver<List<Stream>>() {
+                override fun onSuccess(t: List<Stream>) {}
+
+                override fun onError(e: Throwable) {}
+            },
+            GetStreamsParams(projectId, true, 0)
         )
     }
 

@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:background="?attr/selectableItemBackground">
-	
-	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/numberOfEventsImageView"
-		android:layout_width="@dimen/number_Events_site"
-		android:layout_height="@dimen/number_Events_site"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:src="@drawable/bg_circle_red"
-		app:layout_constraintBottom_toBottomOf="@id/typeTextView"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@id/typeTextView" />
-	
-	<TextView
-		android:id="@+id/typeTextView"
-		style="@style/RangerText.Body"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintStart_toEndOf="@id/numberOfEventsImageView"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="Chainsaw" />
-	
-	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/dateTextView"
-		style="@style/RangerText.SubTitle.Secondary"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:gravity="end"
-		android:padding="@dimen/margin_padding_normal"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@id/typeTextView"
-		app:layout_constraintTop_toTopOf="parent"
-		tools:text="2 hrs ago" />
-	
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:background="@color/separateLine"
-		app:layout_constraintTop_toBottomOf="@+id/typeTextView" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/numberOfEventsImageView"
+        android:layout_width="@dimen/type_icon_size"
+        android:layout_height="@dimen/type_icon_size"
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:src="@drawable/bg_circle_red"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/dateTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dateTextView" />
+
+    <TextView
+        android:id="@+id/typeTextView"
+        style="@style/RangerText.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        app:layout_constraintBottom_toBottomOf="@id/dateTextView"
+        app:layout_constraintStart_toEndOf="@id/numberOfEventsImageView"
+        app:layout_constraintTop_toTopOf="@id/dateTextView"
+        tools:text="Chainsaw" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dateTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end|center"
+        android:padding="@dimen/margin_padding_normal"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/typeTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2 hrs ago" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separateLine"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

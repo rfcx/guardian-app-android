@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/spectrogram_height"
             android:scaleType="fitXY"
-            android:src="@drawable/spectrogram_place_holder"/>
+            android:src="@drawable/bg_placeholder_image"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/classificationRecyclerView"
@@ -92,6 +92,7 @@
                 app:tint="@color/text_secondary"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/notAudioTextView"
                 style="@style/RangerText.Label.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

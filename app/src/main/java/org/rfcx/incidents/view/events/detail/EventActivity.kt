@@ -16,6 +16,7 @@ import org.rfcx.incidents.adapter.classifycation.ClassificationAdapter
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.ActivityEventBinding
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -50,7 +51,8 @@ class EventActivity : AppCompatActivity() {
 
         val event = eventId?.let { viewModel.getEvent(it) }
         binding.guardianNameTextView.text = event?.classification?.title
-        val timezoneString = event?.streamId?.let { viewModel.getStream(it) }?.timezone
+        binding.toolbarLayout.title = event?.streamId?.let { viewModel.getStream(it) }?.name
+        val timezoneString = event?.streamId?.let { viewModel.getStream(it) }?.timezoneRaw
         val timezone = if (timezoneString == null) TimeZone.getDefault() else TimeZone.getTimeZone(timezoneString)
         binding.timeTextView.text = event?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this, timezone)
         val token = this.getTokenID()
@@ -64,12 +66,21 @@ class EventActivity : AppCompatActivity() {
                 eventData = it.setNewTime(end = Date(event.start.time + 15 * SECOND))
             }
 
-            binding.spectrogramImageView.setReportImage(
-                url = viewModel.setFormatUrlOfSpectrogram(eventData),
-                fromServer = true,
-                token = token,
-                progressBar = binding.loadingImageProgressBar
-            )
+            val guardianType = event.streamId.let { id -> viewModel.getStream(id) }?.guardianType
+            if (guardianType == GuardianType.SATELLITE.value) {
+                binding.canNotLoadImageLayout.visibility = View.VISIBLE
+                binding.loadingImageProgressBar.visibility = View.INVISIBLE
+                binding.loadingSoundProgressBar.visibility = View.INVISIBLE
+                binding.soundProgressSeekBar.visibility = View.INVISIBLE
+                binding.notAudioTextView.text = getString(R.string.satellite_audio_not_found)
+            } else {
+                binding.spectrogramImageView.setReportImage(
+                    url = viewModel.setFormatUrlOfSpectrogram(eventData),
+                    fromServer = true,
+                    token = token,
+                    progressBar = binding.loadingImageProgressBar
+                )
+            }
             viewModel.setEvent(eventData)
             setupView(viewModel.setFormatUrlOfAudio(eventData))
             observePlayer()
@@ -139,7 +150,6 @@ class EventActivity : AppCompatActivity() {
             when (it) {
                 Player.STATE_BUFFERING -> {
                     binding.replayButton.visibility = View.INVISIBLE
-                    binding.loadingSoundProgressBar.visibility = View.VISIBLE
                 }
                 Player.STATE_READY -> {
                     binding.replayButton.visibility = View.INVISIBLE

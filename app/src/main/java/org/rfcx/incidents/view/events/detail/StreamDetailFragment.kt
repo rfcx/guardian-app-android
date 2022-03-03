@@ -21,7 +21,6 @@ import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
-import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 import java.util.TimeZone
@@ -81,7 +80,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
             layoutManager = LinearLayoutManager(context)
             adapter = eventItemAdapter
             eventItemAdapter.items = events
-            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezone)
+            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezoneRaw)
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
@@ -99,14 +98,11 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         }
 
         viewModel.getStream(streamId)?.let { stream ->
-            binding.guardianNameTextView.text = stream.name
+            binding.toolbarLayout.title = stream.name
         }
-        binding.distanceTextView.visibility = if (distance != null) View.VISIBLE else View.GONE
-        binding.distanceTextView.text = distance?.setFormatLabel()
 
         streamId.let {
             if (viewModel.getEventsCount(it) != 0L) {
-                eventItemAdapter.items = viewModel.getEventsByStream(it)
                 isShowProgressBar(false)
                 viewModel.fetchEvents(it)
             } else {
@@ -115,6 +111,10 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
                 } else {
                     viewModel.fetchEvents(it)
                 }
+            }
+
+            viewModel.getEventsByStream(it).observe(viewLifecycleOwner) { events ->
+                eventItemAdapter.items = events
             }
         }
 

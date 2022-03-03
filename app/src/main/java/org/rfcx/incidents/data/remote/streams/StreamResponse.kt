@@ -15,7 +15,8 @@ data class StreamResponse(
     var project: ProjectResponse = ProjectResponse(),
     var timezone: String,
     var tags: List<String>,
-    var incidents: IncidentListResponse = IncidentListResponse()
+    var incidents: IncidentListResponse = IncidentListResponse(),
+    var guardianType: String
 ) {
     fun lastIncident(): IncidentResponse? = incidents.items.firstOrNull()
 }
@@ -58,10 +59,11 @@ fun StreamResponse.toStream(): Stream = Stream(
     name = name,
     latitude = latitude,
     longitude = longitude,
-    timezone = timezone,
+    timezoneRaw = timezone,
     projectId = project.id,
     tags = realmList(tags),
-    lastIncident = lastIncident()?.toIncident()
+    lastIncident = lastIncident()?.toIncident(),
+    guardianType = guardianType
 )
 
 private fun IncidentResponse.toIncident(): Incident = Incident(

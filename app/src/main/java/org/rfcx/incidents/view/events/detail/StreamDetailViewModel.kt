@@ -2,11 +2,13 @@ package org.rfcx.incidents.view.events.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetEventsUseCase
 import org.rfcx.incidents.entity.event.Event
@@ -27,7 +29,9 @@ class StreamDetailViewModel(
 
     fun getStream(serverId: String): Stream? = streamDb.get(serverId)
 
-    fun getEventsByStream(streamId: String): List<Event> = eventDb.getEventsByDescending(streamId)
+    fun getEventsByStream(streamId: String): LiveData<List<Event>> {
+        return Transformations.map(eventDb.getEventsAsync(streamId).asLiveData()) { it }
+    }
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
         trackingDb.insertOrUpdate(tracking, coordinate)

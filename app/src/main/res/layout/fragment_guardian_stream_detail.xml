@@ -22,26 +22,6 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/guardianNameTextView"
-            style="@style/RangerText.Body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_padding_normal"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbarLayout"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/distanceTextView"
-            style="@style/RangerText.Body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_padding_normal"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/toolbarLayout"
-            app:layout_constraintTop_toBottomOf="@id/toolbarLayout"/>
-
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -51,7 +31,7 @@
             app:layout_constraintBottom_toTopOf="@id/createReportButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"/>
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/eventsSwipeRefreshView"
@@ -59,7 +39,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             app:layout_constraintBottom_toTopOf="@id/createReportButton"
-            app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/eventsRecyclerView"
@@ -76,7 +56,7 @@
             android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/createReportButton"
-            app:layout_constraintTop_toBottomOf="@id/guardianNameTextView">
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/notHaveEventsImageView"

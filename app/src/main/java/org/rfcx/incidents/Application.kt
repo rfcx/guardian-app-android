@@ -10,7 +10,6 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.mapbox.android.core.permissions.PermissionsManager
-import net.danlew.android.joda.JodaTimeAndroid
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -39,8 +38,6 @@ class Application : MultiDexApplication(), LifecycleObserver {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         MultiDex.install(this)
-
-        JodaTimeAndroid.init(this)
 
         AppRealm.init(this)
         setupKoin()

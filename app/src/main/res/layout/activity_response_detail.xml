@@ -86,7 +86,6 @@
                 android:paddingStart="@dimen/margin_padding_normal"
                 android:paddingTop="@dimen/margin_padding_small"
                 android:paddingEnd="@dimen/margin_padding_normal"
-                android:paddingBottom="@dimen/margin_padding_small"
                 android:text="@string/assets"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/answersRecyclerView" />
@@ -97,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/margin_padding_normal"
-                android:paddingTop="@dimen/margin_padding_small"
+                android:paddingTop="@dimen/margin_padding_normal"
                 android:paddingEnd="@dimen/margin_padding_normal"
                 android:text="@string/note"
                 app:layout_constraintStart_toStartOf="parent"

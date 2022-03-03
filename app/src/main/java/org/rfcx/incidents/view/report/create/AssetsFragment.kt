@@ -83,7 +83,9 @@ class AssetsFragment : BaseImageFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupImageRecycler()
-        view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
+        view.viewTreeObserver.addOnGlobalLayoutListener {
+            if (_binding != null) setOnFocusEditText()
+        }
 
         binding.saveDraftButton.setOnClickListener {
             saveAssets()
@@ -92,9 +94,7 @@ class AssetsFragment : BaseImageFragment() {
         }
 
         binding.submitButton.setOnClickListener {
-            if (!TextUtils.isEmpty(binding.noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage()
-                .isNotEmpty()
-            ) {
+            if (!TextUtils.isEmpty(binding.noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
                 saveAssets()
                 analytics?.trackSubmitResponseEvent()
                 listener.onSubmitButtonClick()

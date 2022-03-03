@@ -1,374 +1,369 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
-	<string name="app_name_label">RFCx Guardian</string>
-	
-	<!-- LoginActivity -->
-	<string name="email">Email</string>
-	<string name="password">Password</string>
-	<string name="login">Login</string>
-	<string name="connect_with_facebook">Continue with facebook</string>
-	<string name="connect_with_sms">Continue with phone number</string>
-	<string name="pls_fill_email">Please fill email</string>
-	<string name="pls_fill_password">Please fill password</string>
-	<string name="incorrect_username_password">Incorrect username or password</string>
-	<string name="an_error_occurred">Service unavailable</string>
-	<string name="or">OR</string>
-	<string name="powered_by">Powered by</string>
-	
-	<!-- LoginActivity -->
-	<string name="next">Next</string>
-	<string name="skip">Skip</string>
-	<string name="done">Done</string>
-	<string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
-	<string name="name_of_guardian">Name of site</string>
-	<string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
-	<string name="when_the_event">When the event was detected</string>
-	<string name="number_of_reviews">Number of confirmed reviews</string>
-	<string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
-	<string name="confirm_it">Confirm it is  a chainsaw</string>
-	<string name="reject_it">Reject it is NOT a chainsaw</string>
-	<string name="create_new_reports">Create new reports</string>
-	<string name="view_reports">View reports by location</string>
-	<string name="app_intro">App intro</string>
-	<string name="coordinates">Coordinates</string>
-	
-	<!--new Login Activite-->
-	<string name="login_sign_in_button_label">Sign in</string>
-	<string name="invitation_submit_button_label">Submit</string>
-	<string name="forgot_your_password">Forgot your password?</string>
-	<string name="reset_password">Reset your password</string>
-	<string name="enter_email">Enter your email to receive reset link</string>
-	<string name="cancel">Cancel</string>
-	<string name="reset_link_send">Reset link send to your email.</string>
-	<string name="reset">Reset</string>
-	
-	<string name="what_we_call_you">What should we call you?</string>
-	<string name="please_tell_name">Please tell us your name</string>
-	<string name="hint_name">Name</string>
-	
-	<string name="terms_and_service">I have read and agree to these Terms of Service</string>
-	<string name="continue_text">Continue</string>
-	
-	<!-- common error -->
-	<string name="error_common">An error occurred. Please try again.</string>
-	<string name="location_permission_msg">Ranger App would like to use your location</string>
-	<string name="record_audio_permission_msg">Ranger App would like to record audio</string>
-	<string name="camera_permission_msg">Ranger App would like to use your camera</string>
-	<string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
-	<string name="go_to_setting">Settings</string>
-	
-	<!-- message list -->
-	<string name="please_set_guardian_group">Please set projects</string>
-	<string name="sent_to">sent to</string>
-	
-	<!-- report -->
-	<string name="report_title">Report</string>
-	<string name="report_what_label">WHAT?</string>
-	<string name="report_when_label">WHEN?</string>
-	<string name="report_submit_button_label">Submit</string>
-	<string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
-	<string name="report_attach_image_label">PHOTOS (Optional)</string>
-	<string name="report_location_null">Location not found. Please try again.</string>
-	<string name="report_note_label">Notes (Optional)</string>
-	<string name="report_note">Notes</string>
-	<string name="report_note_hint">Put some notes here</string>
-	<string name="some_photo_already_exists">Some photo already exists</string>
-	<string name="these_photos_already_exists">These photos already exist</string>
-	<string name="this_photo_already_exists">This photo already exists</string>
-	<string name="expires_in_24h">expires in 24h</string>
-	
-	<!-- Notification -->
-	<string name="notification_location_loading">Loading location…</string>
-	<string name="notification_location_not_availability">Please enable your device\'s location settings</string>
-	
-	<!-- Settings -->
-	<string name="dialog_loading">Loading…</string>
-	<string name="location_tracking_label">Location tracking</string>
-	<string name="location_tracking_on_label">On</string>
-	<string name="location_tracking_off_label">Off</string>
-	<string name="guardian_group_label">Projects</string>
-	<string name="receive_alert_notification">Receive alert notification</string>
-	<string name="system_options">System Options</string>
-	<string name="system_options_subtitle">Choose sounds, vibration, and importance</string>
-	<string name="events">Events</string>
-	<string name="no_projects_selected">No projects selected</string>
-	<string name="other_project">, &amp; %d other project</string>
-	<string name="other_projects">, &amp; %d other projects</string>
-	<string name="notifications">Notifications</string>
-	<string name="start_demo">Send a test alert</string>
-	<string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>
-	<string name="perform_test">Perform test</string>
-	
-	<string name="dd_coordinates">DD</string>
-	<string name="ddm_coordinates">DDM</string>
-	<string name="dms_coordinates">DMS</string>
-	
-	<string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-	<string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-	<string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-	
-	<string name="last_month">Last\nMonth</string>
-	<string name="last_week">Last\nWeek</string>
-	<string name="last_24_hours">Last\n24 hours</string>
-	<string name="now">Now</string>
-	<string name="within_month">Within a month</string>
-	<string name="within_week">Within a week</string>
-	<string name="within_24_hours">Within 24 hours</string>
-	<string name="at_that_time">At that moment</string>
-	
-	<string name="tab_to_record_label">Tap and hold the button to record notes</string>
-	<string name="new_password">New password</string>
-	<string name="new_password_again">Confirm new password</string>
-	<string name="change_password">Change password</string>
-	
-	<!-- Invitation -->
-	<string name="invitation_title">Connect to a site</string>
-	<string name="invitation_desc">Please enter your invitation code</string>
-	<string name="hint_code">Code</string>
-	<string name="invalid_invite_code">Invalid invite code</string>
-	<string name="switch_account">switch account</string>
-	
-	<!-- Report -->
-	<string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
-	
-	<string name="menu_camera">Camera</string>
-	<string name="menu_gallery">Gallery</string>
-	
-	<!-- Report list -->
-	<string name="report_list_title">Report History</string>
-	<string name="report_list_empty_message">You do not have any reports</string>
-	<string name="images_sync_format">%d photos (synced)</string>
-	<string name="images_unsync_format">%1d photos (%2d unsynced)</string>
-	<string name="report_detail_title">Report detail</string>
-	
-	<string name="in_air_plane_mode">Unable to determine your location</string>
-	<string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
-	
-	<string name="location">Location</string>
-	<string name="photos">Photos</string>
-	<string name="audio_notes">Audio notes</string>
-	
-	<string name="menu_new_events">New Events</string>
-	<string name="menu_submitted_reports">Submitted Reports</string>
-	<string name="menu_draft_reports">Draft Reports</string>
-	<string name="menu_profile">Profile</string>
-	
-	<string name="see_report_detail">See Detail</string>
-	<string name="report_time_second">Just now</string>
-	<string name="report_minutes_format">%dm</string>
-	<string name="report_hr_format">%dh</string>
-	<string name="report_day_format">%dd</string>
-	<string name="report_week_format">%dw</string>
-	
-	<string name="common_ok">OK</string>
-	<string name="common_none">None</string>
-	
-	<!-- Status -->
-	
-	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">OK</string>
-	<!-- Override string res from matisse Image picker library -->
-	
-	<!-- Alerts -->
-	<string name="yesterday">Yesterday</string>
-	<string name="no_internet_connection">No internet, Please try again.</string>
-	<string name="unable_to_submit_no_internet_connection">Unable to submit while there is no connection.</string>
-	<string name="unable_to_submit_on_airplane_mode">Unable to submit while in airplane mode.</string>
-	
-	<!--Event value-->
-	<string name="chainsaw">chainsaw</string>
-	<string name="gunshot">gunshot</string>
-	<string name="vehicle">vehicle</string>
-	<string name="trespasser">trespasser</string>
-	<string name="other">other</string>
-	
-	<!--Profile -->
-	<string name="profile_receive_noti_label">by push notification</string>
-	<string name="profile_receive_noti_by_email">by email</string>
-	<string name="profile_sign_out_label">Sign out</string>
-	<string name="please_enter_your_new_password">Please enter your new password</string>
-	<string name="please_confirm_your_new_password">Please confirm your new password</string>
-	<string name="password_must_have_at_least_6_characters">Password must have at least 6 characters</string>
-	<string name="confirm_password_does_not_match">Confirm password does not match</string>
-	<string name="password_changed_successfully">The password has been changed successfully.</string>
-	<string name="something_is_wrong">Something went wrong. Please try again later.</string>
-	<string name="profile_aditional_label">Additional</string>
-	<string name="profile_app_version_label">App version</string>
-	<string name="profile_feedback_label">Feedback</string>
-	<string name="profile_rate_app_label">Rate the app</string>
-	<string name="save_changed">Save Changes</string>
-	<string name="please_try_again_later">Please try again later</string>
-	
-	<string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
-	<string name="feedback_submission_failed">Feedback submission failed! Please try again.</string>
-	<string name="snackbar_retry">RETRY</string>
-	<string name="profile_send_feedback">Send feedback</string>
-	<string name="from">From:</string>
-	<string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
-	<string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
-	<string name="account">Account</string>
-	
-	<string name="change_profile_photo">Change profile photo</string>
-	<string name="edit_profile">Edit Profile</string>
-	
-	<!--Guardian Group List-->
-	<string name="guardian_group_list">Project List</string>
-	
-	<string name="notification_tracking_title">On-duty and tracking enabled</string>
-	<string name="notification_traking_message_format">%d minutes recorded</string>
-	
-	<string name="required">Required!</string>
-	<string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
-	<string name="detected_at">detected at</string>
-	
-	<!-- SetProjectsFragment -->
-	<string name="set_alerts">Set alerts</string>
-	<string name="choose_which_projects">Choose which projects to receive alert notifications</string>
-	<string name="network_not_available">network not available</string>
-	<string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
-	<string name="logout">logout</string>
-	<string name="select">Select</string>
-	<string name="refresh">refresh</string>
-	<string name="failed_receive_notification">Failed to receive notification from %s</string>
-	<string name="failed_unsubscribe_receive_notification">Failed to unsubscribe receive notification from %s</string>
-	<string name="project_could_not_refreshed">The project could not be refreshed.</string>
-	
-	<!-- EventsFragment -->
-	<string name="all_projects">All projects</string>
-	<string name="nearby">nearby</string>
-	<string name="others">others</string>
-	<string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
-	<string name="num_more_then_99">99+</string>
-	<string name="not_have_stream">No sites in this project</string>
-	
-	<!-- DraftReportsFragment -->
-	<string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
-	<string name="not_have_draft_reports">You don’t have any draft reports</string>
-	
-	<!-- SubmittedReportsFragment -->
-	<string name="unsent">Queued</string>
-	<string name="sending">Sending</string>
-	<string name="sent">Sent</string>
-	<string name="incident_ref">#%s</string>
-	<string name="not_submitted_reports_yet">You haven’t submitted any reports yet</string>
-	
-	<!-- GuardianEventDetailFragment -->
-	<string name="create_report">Create Report</string>
-	<string name="open_in_maps">Open in maps</string>
-	<string name="guardian_event_detail">Event Detail</string>
-	<string name="not_have_events">No events since the last incident</string>
-	
-	<!-- CreateReportActivity -->
-	<string name="create_report_steps">Report</string>
-	<string name="create_report_title">Report %d steps remaining</string>
-	<string name="create_report_title_one_step">Report 1 step remaining</string>
-	<string name="last_step">Report last step</string>
-	
-	<!-- WhenInvestigateStepFragment -->
-	<string name="when_investigate">When did you investigate?</string>
-	<string name="today">Today</string>
-	<string name="other_date">Other...</string>
-	<string name="edit">Edit</string>
-	<string name="what_time">What time did you investigate?</string>
-	<string name="do_not_future_time">Investigation time cannot be in the future</string>
-	
-	<!-- InvestigationTypeFragment -->
-	<string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>
-	<string name="logging">Logging</string>
-	<string name="poaching">Poaching</string>
-	
-	<!-- SetWhatEvidenceFragment -->
-	<string name="what_evidence">What <b>logging evidence</b> did you encounter? <i>Select all that apply</i></string>
-	<string name="cut_down_trees">Cut down trees</string>
-	<string name="cleared_areas">Cleared areas</string>
-	<string name="logging_equipment">Logging equipment</string>
-	<string name="loggers_at_site">Loggers at Site</string>
-	<string name="illegal_camps">Illegal camps</string>
-	<string name="fires_burned_areas">Fires/burned areas</string>
-	
-	<!-- HowMuchDamageFragment -->
-	<string name="how_much_damage">How much damage was done to the area?</string>
-	<string name="no_visible">No visible tree disruption found</string>
-	<string name="small_trees_cut_down">Minimal - a few trees cut down (1 truck)</string>
-	<string name="medium_trees_cut_down">Moderate destruction (2-5 trucks)</string>
-	<string name="large_area_clear_cut">Substantially clear-cut (5+ trucks of wood)</string>
-	
-	<!-- SetWhatScaleFragment -->
-	<string name="what_scale">What was the <b>scale of the logging</b> operation?</string>
-	<string name="small">Small (subsistence, agriculture etc)</string>
-	<string name="large">Large (commercial scale, heavy equipment etc)</string>
-	
-	<!-- PoachingScaleFragment -->
-	<string name="what_scale_poaching">What was the <b>scale of the poaching</b> operation?</string>
-	<string name="small_poaching">Small (individual, informal)</string>
-	<string name="large_poaching">Large (group, coordinated)</string>
-	
-	<!-- PoachingEvidenceFragment -->
-	<string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
-	<string name="bullet_shells">Bullet shells / gun remains</string>
-	<string name="footprints">Footprints (human)</string>
-	<string name="dog_tracks">Dog tracks</string>
-	
-	<!-- SetWhatActionFragment -->
-	<string name="what_action">What <b>action</b> was taken? <i>Select all that apply</i></string>
-	<string name="confiscated_equipment">Confiscated equipment</string>
-	<string name="collected_evidence">Collected evidence</string>
-	<string name="issue_a_warning">Issue a warning</string>
-	<string name="damaged_machinery">Damaged machinery</string>
-	
-	<!-- AddEvidenceFragment -->
-	<string name="add_evidence">Add evidence</string>
-	<string name="save_draft">Save Draft</string>
-	<string name="add_photos">Photos (up to 5)</string>
-	<string name="add_notes">Text notes</string>
-	<string name="add_notes_required">Text notes*</string>
-	<string name="upload_voice_notes">Voice notes</string>
-	<string name="none_collected">None collected</string>
-	
-	<string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
-	<string name="submit_report">Submit report</string>
-	
-	<string name="answers">Answers:</string>
-	<string name="logging_scale">Logging Scale:</string>
-	<string name="poaching_scale">Poaching Scale:</string>
-	<string name="damage">Damage:</string>
-	<string name="small_text">Small</string>
-	<string name="large_text">Large</string>
-	<string name="other_text">Other</string>
-	
-	<string name="can_not_play_audio">Unable to play audio, please try again later.</string>
-	
-	<string name="assets">Assets:</string>
-	<string name="note">Note: %s</string>
-	<string name="tracking_line">#e55e5e</string>
-	
-	<string name="day">day</string>
-	<string name="days">days</string>
-	<string name="hr">hr</string>
-	<string name="hrs">hrs</string>
-	<string name="min">min</string>
-	
-	<!-- Theme App -->
-	<string name="dark_theme">Dark</string>
-	<string name="light_theme">Light</string>
-	<string name="system_default">System default</string>
-	<string name="site_name">Site %s</string>
-	<string name="display">Display</string>
-	<string name="theme">Theme</string>
-	
-	<!-- Date time format -->
-	<string name="is_today">Today, %1s - %2s</string>
-	<string name="is_yesterday_today">Yesterday %1s - Today %2s</string>
-	<string name="is_yesterday">Yesterday, %1s - %2s</string>
-	<string name="is_other_today">%1s - Today, %2s</string>
-	<string name="is_other_yesterday">%1s - Yesterday, %2s</string>
-	<string name="is_other_other">%1s - %2s</string>
-	<string name="is_same_date">%1s, %2s - %3s</string>
-	
-	<string name="recent">Recent</string>
-	<string name="hot">Hot</string>
-	
-	<string name="audio_not_found">Audio not found</string>
+
+    <string name="app_name_label">RFCx Guardian</string>
+
+    <!-- LoginActivity -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="connect_with_facebook">Continue with facebook</string>
+    <string name="connect_with_sms">Continue with phone number</string>
+    <string name="pls_fill_email">Please fill email</string>
+    <string name="pls_fill_password">Please fill password</string>
+    <string name="incorrect_username_password">Incorrect username or password</string>
+    <string name="an_error_occurred">Service unavailable</string>
+    <string name="or">OR</string>
+    <string name="powered_by">Powered by</string>
+
+    <!-- LoginActivity -->
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
+    <string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
+    <string name="name_of_guardian">Name of site</string>
+    <string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
+    <string name="when_the_event">When the event was detected</string>
+    <string name="number_of_reviews">Number of confirmed reviews</string>
+    <string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
+    <string name="confirm_it">Confirm it is  a chainsaw</string>
+    <string name="reject_it">Reject it is NOT a chainsaw</string>
+    <string name="create_new_reports">Create new reports</string>
+    <string name="view_reports">View reports by location</string>
+    <string name="app_intro">App intro</string>
+    <string name="coordinates">Coordinates</string>
+
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">Sign in</string>
+    <string name="invitation_submit_button_label">Submit</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="reset_password">Reset your password</string>
+    <string name="enter_email">Enter your email to receive reset link</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_link_send">Reset link send to your email.</string>
+    <string name="reset">Reset</string>
+
+    <string name="what_we_call_you">What should we call you?</string>
+    <string name="please_tell_name">Please tell us your name</string>
+    <string name="hint_name">Name</string>
+
+    <string name="terms_and_service">I have read and agree to these Terms of Service</string>
+    <string name="continue_text">Continue</string>
+
+    <!-- common error -->
+    <string name="error_common">An error occurred. Please try again.</string>
+    <string name="location_permission_msg">Ranger App would like to use your location</string>
+    <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
+    <string name="camera_permission_msg">Ranger App would like to use your camera</string>
+    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
+    <string name="go_to_setting">Settings</string>
+
+    <!-- message list -->
+    <string name="please_set_guardian_group">Please set projects</string>
+    <string name="sent_to">sent to</string>
+
+    <!-- report -->
+    <string name="report_title">Report</string>
+    <string name="report_what_label">WHAT?</string>
+    <string name="report_when_label">WHEN?</string>
+    <string name="report_submit_button_label">Submit</string>
+    <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
+    <string name="report_attach_image_label">PHOTOS (Optional)</string>
+    <string name="report_location_null">Location not found. Please try again.</string>
+    <string name="report_note_label">Notes (Optional)</string>
+    <string name="report_note">Notes</string>
+    <string name="report_note_hint">Put some notes here</string>
+    <string name="some_photo_already_exists">Some photo already exists</string>
+    <string name="these_photos_already_exists">These photos already exist</string>
+    <string name="this_photo_already_exists">This photo already exists</string>
+    <string name="expires_in_24h">expires in 24h</string>
+
+    <!-- Notification -->
+    <string name="notification_location_loading">Loading location…</string>
+    <string name="notification_location_not_availability">Please enable your device\'s location settings</string>
+
+    <!-- Settings -->
+    <string name="dialog_loading">Loading…</string>
+    <string name="location_tracking_label">Location tracking</string>
+    <string name="location_tracking_on_label">On</string>
+    <string name="location_tracking_off_label">Off</string>
+    <string name="guardian_group_label">Projects</string>
+    <string name="receive_alert_notification">Receive alert notification</string>
+    <string name="system_options">System Options</string>
+    <string name="system_options_subtitle">Choose sounds, vibration, and importance</string>
+    <string name="events">Events</string>
+    <string name="no_projects_selected">No projects selected</string>
+    <string name="other_project">, &amp; %d other project</string>
+    <string name="other_projects">, &amp; %d other projects</string>
+    <string name="notifications">Notifications</string>
+    <string name="start_demo">Send a test alert</string>
+    <string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>
+    <string name="perform_test">Perform test</string>
+
+    <string name="dd_coordinates">DD</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
+
+    <string name="last_month">Last\nMonth</string>
+    <string name="last_week">Last\nWeek</string>
+    <string name="last_24_hours">Last\n24 hours</string>
+    <string name="now">Now</string>
+    <string name="within_month">Within a month</string>
+    <string name="within_week">Within a week</string>
+    <string name="within_24_hours">Within 24 hours</string>
+    <string name="at_that_time">At that moment</string>
+
+    <string name="tab_to_record_label">Tap and hold the button to record notes</string>
+    <string name="new_password">New password</string>
+    <string name="new_password_again">Confirm new password</string>
+    <string name="change_password">Change password</string>
+
+    <!-- Invitation -->
+    <string name="invitation_title">Connect to a site</string>
+    <string name="invitation_desc">Please enter your invitation code</string>
+    <string name="hint_code">Code</string>
+    <string name="invalid_invite_code">Invalid invite code</string>
+    <string name="switch_account">switch account</string>
+
+    <!-- Report -->
+    <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
+
+    <string name="menu_camera">Camera</string>
+    <string name="menu_gallery">Gallery</string>
+
+    <!-- Report list -->
+    <string name="report_list_title">Report History</string>
+    <string name="report_list_empty_message">You do not have any reports</string>
+    <string name="images_sync_format">%d photos (synced)</string>
+    <string name="images_unsync_format">%1d photos (%2d unsynced)</string>
+    <string name="report_detail_title">Report detail</string>
+
+    <string name="in_air_plane_mode">Unable to determine your location</string>
+    <string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
+
+    <string name="location">Location</string>
+    <string name="photos">Photos</string>
+    <string name="audio_notes">Audio notes</string>
+
+    <string name="menu_new_events">New Events</string>
+    <string name="menu_submitted_reports">Submitted Reports</string>
+    <string name="menu_draft_reports">Draft Reports</string>
+    <string name="menu_profile">Profile</string>
+
+    <string name="see_report_detail">See Detail</string>
+    <string name="report_time_second">Just now</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_none">None</string>
+
+    <!-- Status -->
+
+    <!-- Override string res from matisse Image picker library -->
+    <string name="button_ok">OK</string>
+    <!-- Override string res from matisse Image picker library -->
+
+    <!-- Alerts -->
+    <string name="yesterday">Yesterday</string>
+    <string name="no_internet_connection">No internet, Please try again.</string>
+    <string name="unable_to_submit_no_internet_connection">Unable to submit while there is no connection.</string>
+    <string name="unable_to_submit_on_airplane_mode">Unable to submit while in airplane mode.</string>
+
+    <!--Event value-->
+    <string name="chainsaw">chainsaw</string>
+    <string name="gunshot">gunshot</string>
+    <string name="vehicle">vehicle</string>
+    <string name="trespasser">trespasser</string>
+    <string name="other">other</string>
+
+    <!--Profile -->
+    <string name="profile_receive_noti_label">by push notification</string>
+    <string name="profile_receive_noti_by_email">by email</string>
+    <string name="profile_sign_out_label">Sign out</string>
+    <string name="please_enter_your_new_password">Please enter your new password</string>
+    <string name="please_confirm_your_new_password">Please confirm your new password</string>
+    <string name="password_must_have_at_least_6_characters">Password must have at least 6 characters</string>
+    <string name="confirm_password_does_not_match">Confirm password does not match</string>
+    <string name="password_changed_successfully">The password has been changed successfully.</string>
+    <string name="something_is_wrong">Something went wrong. Please try again later.</string>
+    <string name="profile_aditional_label">Additional</string>
+    <string name="profile_app_version_label">App version</string>
+    <string name="profile_feedback_label">Feedback</string>
+    <string name="profile_rate_app_label">Rate the app</string>
+    <string name="save_changed">Save Changes</string>
+    <string name="please_try_again_later">Please try again later</string>
+
+    <string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
+    <string name="feedback_submission_failed">Feedback submission failed! Please try again.</string>
+    <string name="snackbar_retry">RETRY</string>
+    <string name="profile_send_feedback">Send feedback</string>
+    <string name="from">From:</string>
+    <string name="app_feedback_share_ideas">Leave app feedback or share your ideas</string>
+    <string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
+    <string name="account">Account</string>
+
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="edit_profile">Edit Profile</string>
+
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">Project List</string>
+
+    <string name="notification_tracking_title">On-duty and tracking enabled</string>
+    <string name="notification_traking_message_format">%d minutes recorded</string>
+
+    <string name="required">Required!</string>
+    <string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
+    <string name="detected_at">detected at</string>
+
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">Set alerts</string>
+    <string name="choose_which_projects">Choose which projects to receive alert notifications</string>
+    <string name="network_not_available">network not available</string>
+    <string name="no_content_project">There is no accessible project in this account.\nPlease contact an administrator\nor create the project in Arbimon platform.</string>
+    <string name="logout">logout</string>
+    <string name="select">Select</string>
+    <string name="refresh">refresh</string>
+    <string name="failed_receive_notification">Failed to receive notification from %s</string>
+    <string name="failed_unsubscribe_receive_notification">Failed to unsubscribe receive notification from %s</string>
+    <string name="project_could_not_refreshed">The project could not be refreshed.</string>
+
+    <!-- EventsFragment -->
+    <string name="all_projects">All projects</string>
+    <string name="nearby">nearby</string>
+    <string name="others">others</string>
+    <string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
+    <string name="num_more_then_99">99+</string>
+    <string name="not_have_stream">No sites in this project</string>
+
+    <!-- DraftReportsFragment -->
+    <string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
+    <string name="not_have_draft_reports">You don’t have any draft reports</string>
+
+    <!-- SubmittedReportsFragment -->
+    <string name="unsent">Queued</string>
+    <string name="sending">Sending</string>
+    <string name="sent">Sent</string>
+    <string name="incident_ref">#%s</string>
+    <string name="not_submitted_reports_yet">You haven’t submitted any reports yet</string>
+
+    <!-- GuardianEventDetailFragment -->
+    <string name="create_report">Create Report</string>
+    <string name="open_in_maps">Open in maps</string>
+    <string name="guardian_event_detail">Event Detail</string>
+    <string name="not_have_events">No events since the last incident</string>
+
+    <!-- CreateReportActivity -->
+    <string name="create_report_steps">Report</string>
+    <string name="create_report_title">Report %d steps remaining</string>
+    <string name="create_report_title_one_step">Report 1 step remaining</string>
+    <string name="last_step">Report last step</string>
+
+    <!-- WhenInvestigateStepFragment -->
+    <string name="when_investigate">When did you investigate?</string>
+    <string name="today">Today</string>
+    <string name="other_date">Other...</string>
+    <string name="edit">Edit</string>
+    <string name="what_time">What time did you investigate?</string>
+    <string name="do_not_future_time">Investigation time cannot be in the future</string>
+
+    <!-- InvestigationTypeFragment -->
+    <string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>
+    <string name="logging">Logging</string>
+    <string name="poaching">Poaching</string>
+
+    <!-- SetWhatEvidenceFragment -->
+    <string name="what_evidence">What <b>logging evidence</b> did you encounter? <i>Select all that apply</i></string>
+    <string name="cut_down_trees">Cut down trees</string>
+    <string name="cleared_areas">Cleared areas</string>
+    <string name="logging_equipment">Logging equipment</string>
+    <string name="loggers_at_site">Loggers at Site</string>
+    <string name="illegal_camps">Illegal camps</string>
+    <string name="fires_burned_areas">Fires/burned areas</string>
+
+    <!-- HowMuchDamageFragment -->
+    <string name="how_much_damage">How much damage was done to the area?</string>
+    <string name="no_visible">No visible tree disruption found</string>
+    <string name="small_trees_cut_down">Minimal - a few trees cut down (1 truck)</string>
+    <string name="medium_trees_cut_down">Moderate destruction (2-5 trucks)</string>
+    <string name="large_area_clear_cut">Substantially clear-cut (5+ trucks of wood)</string>
+
+    <!-- SetWhatScaleFragment -->
+    <string name="what_scale">What was the <b>scale of the logging</b> operation?</string>
+    <string name="small">Small (subsistence, agriculture etc)</string>
+    <string name="large">Large (commercial scale, heavy equipment etc)</string>
+
+    <!-- PoachingScaleFragment -->
+    <string name="what_scale_poaching">What was the <b>scale of the poaching</b> operation?</string>
+    <string name="small_poaching">Small (individual, informal)</string>
+    <string name="large_poaching">Large (group, coordinated)</string>
+
+    <!-- PoachingEvidenceFragment -->
+    <string name="what_poaching_evidence">What <b>poaching evidence</b> did you encounter? <i>Select all that apply</i></string>
+    <string name="bullet_shells">Bullet shells / gun remains</string>
+    <string name="footprints">Footprints (human)</string>
+    <string name="dog_tracks">Dog tracks</string>
+
+    <!-- SetWhatActionFragment -->
+    <string name="what_action">What <b>action</b> was taken? <i>Select all that apply</i></string>
+    <string name="confiscated_equipment">Confiscated equipment</string>
+    <string name="collected_evidence">Collected evidence</string>
+    <string name="issue_a_warning">Issue a warning</string>
+    <string name="damaged_machinery">Damaged machinery</string>
+
+    <!-- AddEvidenceFragment -->
+    <string name="add_evidence">Add evidence</string>
+    <string name="save_draft">Save Draft</string>
+    <string name="add_photos">Photos (up to 5)</string>
+    <string name="add_notes">Text notes</string>
+    <string name="add_notes_required">Text notes*</string>
+    <string name="upload_voice_notes">Voice notes</string>
+    <string name="none_collected">None collected</string>
+
+    <string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+    <string name="submit_report">Submit report</string>
+
+    <string name="answers">Answers:</string>
+    <string name="logging_scale">Logging Scale:</string>
+    <string name="poaching_scale">Poaching Scale:</string>
+    <string name="damage">Damage:</string>
+    <string name="small_text">Small</string>
+    <string name="large_text">Large</string>
+    <string name="other_text">Other</string>
+
+    <string name="can_not_play_audio">Unable to play audio, please try again later.</string>
+
+    <string name="assets">Assets:</string>
+    <string name="note">Note: %s</string>
+    <string name="tracking_line">#e55e5e</string>
+
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="hr">hr</string>
+    <string name="hrs">hrs</string>
+    <string name="min">min</string>
+
+    <!-- Theme App -->
+    <string name="dark_theme">Dark</string>
+    <string name="light_theme">Light</string>
+    <string name="system_default">System default</string>
+    <string name="site_name">Site %s</string>
+    <string name="display">Display</string>
+    <string name="theme">Theme</string>
+
+    <string name="recent">Recent</string>
+    <string name="hot">Hot</string>
+
+    <string name="audio_not_found">Audio not found</string>
+    <string name="satellite_audio_not_found">Audio not available for satellite Guardians</string>
+
+    <string name="satellite">Sat</string>
+    <string name="cell">Cell</string>
 
 </resources>

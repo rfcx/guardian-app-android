@@ -40,8 +40,8 @@
 	<color name="grey_light">#F0F0F0</color>
 	<color name="grey_default">#98a0a9</color>
 	<color name="grey_active">#5A6978</color>
-	<color name="recent_color">#3971e6</color>
-	<color name="hot_color">#e55e5e</color>
+	<color name="recent_color">#3b82f6</color>
+	<color name="hot_color">#f87171</color>
 	
 	<color name="location_status_loading_bg">#ff2c9a46</color>
 	<color name="location_status_failed_bg">#FF0404</color>

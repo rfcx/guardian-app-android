@@ -6,11 +6,11 @@
 	android:layout_height="match_parent"
 	android:background="@color/backgroundColor"
 	tools:context=".view.report.submitted.SubmittedReportsFragment">
-	
+
 	<include
 		android:id="@+id/toolbarLayout"
 		layout="@layout/toolbar_project" />
-	
+
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/submittedReportsRecyclerView"
 		android:layout_width="match_parent"
@@ -18,15 +18,16 @@
 		android:background="@color/backgroundColor"
 		android:dividerHeight="1dp"
 		android:overScrollMode="never"
+        android:paddingBottom="@dimen/bottom_bar_height"
 		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
-	
+
 	<androidx.constraintlayout.widget.Group
 		android:id="@+id/notHaveSubmittedReportsGroupView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
 		app:constraint_referenced_ids="notHaveSubmittedReportsImageView, emptyListTextView" />
-	
+
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/notHaveSubmittedReportsImageView"
 		android:layout_width="@dimen/ic_empty_list_size"
@@ -38,7 +39,7 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintVertical_chainStyle="packed"
 		app:tint="@color/iconColor" />
-	
+
 	<TextView
 		android:id="@+id/emptyListTextView"
 		style="@style/RangerText.SubTitle.Secondary"
@@ -52,7 +53,7 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/notHaveSubmittedReportsImageView"
 		app:layout_constraintVertical_chainStyle="packed" />
-	
+
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 		android:id="@+id/projectSwipeRefreshView"
 		android:layout_width="match_parent"
@@ -60,7 +61,7 @@
 		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
-		
+
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/projectRecyclerView"
 			android:layout_width="match_parent"
@@ -68,7 +69,7 @@
 			android:background="@color/backgroundColor"
 			android:dividerHeight="1dp"
 			android:visibility="gone" />
-	
+
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

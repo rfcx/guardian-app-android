@@ -28,10 +28,12 @@ class StreamsRepositoryImp(
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
         return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
+            if (offset == 0) streamDb.deleteByProject(projectId)
             rawStreams.forEachIndexed { index, streamRes ->
                 val stream = streamRes.toStream()
                 stream.order = offset + index
                 streamDb.insertOrUpdate(stream)
+                eventDb.deleteEventsByStreamId(streamRes.id)
                 streamRes.lastIncident()?.events?.forEach { event ->
                     eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                 }
