@@ -76,5 +76,3 @@ class SubmittedReportsAdapter(private val listener: SubmittedReportsOnClickListe
 interface SubmittedReportsOnClickListener {
     fun onClickedItem(response: Response)
 }
-
-// data class ResponseItem(var response: Response, var timeZone: TimeZone)

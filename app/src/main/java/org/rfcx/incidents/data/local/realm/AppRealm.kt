@@ -11,6 +11,7 @@ import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.stream.Stream
 import java.util.Date
 
 class AppRealm {
@@ -71,7 +72,7 @@ private class Migrations : RealmMigration {
     private fun migrateToV20(realm: DynamicRealm) {
         val asset = realm.schema.create(Asset.TABLE_NAME)
         asset?.apply {
-            addField(Asset.ASSET_ID, Int::class.java)
+            addField(Asset.ASSET_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
             addField(Asset.ASSET_TYPE, String::class.java).setNullable(Asset.ASSET_TYPE, false)
             addField(Asset.ASSET_SERVER_ID, String::class.java)
             addField(Asset.ASSET_CREATED_AT, Date::class.java).setNullable(Asset.ASSET_CREATED_AT, false)
@@ -83,6 +84,11 @@ private class Migrations : RealmMigration {
         val response = realm.schema.get(Response.TABLE_NAME)
         response?.apply {
             addRealmListField(Response.RESPONSE_ASSETS, asset)
+        }
+
+        val stream = realm.schema.get(Stream.TABLE_NAME)
+        stream?.apply {
+            renameField("timezone", Stream.TAG_TIMEZONE_RAW)
         }
     }
 

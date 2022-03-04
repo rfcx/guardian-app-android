@@ -30,7 +30,7 @@ class StreamDetailViewModel(
     fun getStream(serverId: String): Stream? = streamDb.get(serverId)
 
     fun getEventsByStream(streamId: String): LiveData<List<Event>> {
-        return Transformations.map(eventDb.getEventsByDescendingAsync(streamId).asLiveData()) { it }
+        return Transformations.map(eventDb.getEventsAsync(streamId).asLiveData()) { it }
     }
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {

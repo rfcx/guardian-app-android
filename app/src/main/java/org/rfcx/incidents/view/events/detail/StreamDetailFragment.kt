@@ -80,7 +80,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
             layoutManager = LinearLayoutManager(context)
             adapter = eventItemAdapter
             eventItemAdapter.items = events
-            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezone)
+            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezoneRaw)
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
@@ -112,6 +112,10 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
                     viewModel.fetchEvents(it)
                 }
             }
+
+            viewModel.getEventsByStream(it).observe(viewLifecycleOwner) { events ->
+                eventItemAdapter.items = events
+            }
         }
 
         binding.eventsSwipeRefreshView.apply {
@@ -131,12 +135,6 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
                 binding.eventsSwipeRefreshView.isRefreshing = false
             }, {
             })
-        }
-
-        streamId.let {
-            viewModel.getEventsByStream(it).observe(viewLifecycleOwner) { events ->
-                eventItemAdapter.items = events
-            }
         }
     }
 
