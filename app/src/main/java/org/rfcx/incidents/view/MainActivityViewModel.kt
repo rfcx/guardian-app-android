@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.realm.asLiveData
@@ -18,6 +19,7 @@ import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.GetStreamsUseCase
+import org.rfcx.incidents.entity.response.ImageAsset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -28,6 +30,7 @@ class MainActivityViewModel(
     private val responseDb: ResponseDb,
     private val projectDb: ProjectDb,
     private val streamDb: StreamDb,
+    private val reportImageDb: ReportImageDb,
     private val getProjectsUseCase: GetProjectsUseCase,
     private val getStreamsUseCase: GetStreamsUseCase,
     credentialKeeper: CredentialKeeper
@@ -41,6 +44,8 @@ class MainActivityViewModel(
     fun getResponses(): LiveData<List<Response>> {
         return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
     }
+
+    fun getByReportId(id: Int): List<ImageAsset> = reportImageDb.getByReportId(id)
 
     init {
         isRequireToLogin.value = !credentialKeeper.hasValidCredentials()

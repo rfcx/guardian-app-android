@@ -8,16 +8,17 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDraftReportsBinding
+import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.util.setDrawableImage
+import org.rfcx.incidents.util.setImage
 import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import java.util.TimeZone
 
 class DraftReportsAdapter(private val listener: ReportOnClickListener) :
     RecyclerView.Adapter<DraftReportsAdapter.ReportsViewHolder>() {
-    var items: List<Pair<Response, TimeZone?>> = arrayListOf()
+    var items: List<Triple<Response, TimeZone?, String?>> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -40,19 +41,23 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
         private val guardianName = binding.guardianNameTextView
         private val dateTextView = binding.dateTextView
         private val actionImageView = binding.actionImageView
+        private val imageView = binding.imageView
+        private val imageCardView = binding.imageCardView
+        private val progressBarOfImageView = binding.progressBarOfImageView
+        private val loggingTextView = binding.loggingTextView
+        private val poachingTextView = binding.poachingTextView
+        private val otherTextView = binding.otherTextView
 
-        fun bind(item: Pair<Response, TimeZone?>) {
-            val (response, timeZone) = item
-            actionImageView.setDrawableImage(itemView.context, R.drawable.ic_delete_outline)
+        fun bind(item: Triple<Response, TimeZone?, String?>) {
+            val (response, timeZone, image) = item
             setClickable(itemView, response.syncState == SyncState.SENT.value)
 
-            if (response.syncState == SyncState.SENT.value) {
-                guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
-                dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_secondary))
-            } else {
-                guardianName.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
-                dateTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_black))
-            }
+            image?.let { imageView.setImage(it) }
+            imageCardView.visibility = if (image == null) View.GONE else View.VISIBLE
+
+            loggingTextView.visibility = if (response.investigateType.contains(InvestigationType.LOGGING.value)) View.VISIBLE else View.GONE
+            poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
+            otherTextView.visibility = if (response.investigateType.contains(InvestigationType.OTHER.value)) View.VISIBLE else View.GONE
 
             guardianName.text = response.streamName
             dateTextView.text = if (timeZone == TimeZone.getDefault()) response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
