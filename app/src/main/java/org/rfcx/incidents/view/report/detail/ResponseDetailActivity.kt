@@ -129,6 +129,9 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             res.guid?.let {
                 binding.attachImageRecycler.visibility = if (viewModel.getImagesByCoreId(it).isNotEmpty()) View.VISIBLE else View.GONE
                 reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
+                binding.additionalEvidenceLayout.visibility =
+                    if (res.note == null && viewModel.getImagesByCoreId(it).isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
+
             }
         }
     }
@@ -137,10 +140,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         var message = ""
         answers.forEach {
             if (it.toString()[0] == num) {
-                if (message.isBlank()) {
-                    message += it.getAnswerItem(this)
+                message += if (message.isBlank()) {
+                    it.getAnswerItem(this)
                 } else {
-                    message += ", " + it.getAnswerItem(this)
+                    ", " + it.getAnswerItem(this)
                 }
             }
         }
