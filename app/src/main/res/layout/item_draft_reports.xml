@@ -18,26 +18,34 @@
         android:id="@+id/imageCardView"
         android:layout_width="120dp"
         android:layout_height="0dp"
-        app:cardCornerRadius="6dp"
-        android:elevation="0dp"
         android:background="@color/statusColor"
+        android:elevation="0dp"
+        app:cardCornerRadius="6dp"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
         app:layout_constraintStart_toStartOf="@id/bgView"
-        app:layout_constraintTop_toTopOf="@id/bgView"
-        app:layout_constraintBottom_toBottomOf="@id/bgView">
+        app:layout_constraintTop_toTopOf="@id/bgView">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/grey_default" />
+
+        <ImageView
+            android:id="@+id/notHaveImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_image"
+            android:layout_gravity="center" />
     </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBarOfImageView"
         android:layout_width="@dimen/padding_size"
         android:layout_height="@dimen/padding_size"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/imageCardView"
         app:layout_constraintEnd_toEndOf="@id/imageCardView"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/imageCardView"
         app:layout_constraintTop_toTopOf="@id/imageCardView" />
 
@@ -62,21 +70,21 @@
         android:layout_height="@dimen/type_icon_size"
         android:layout_marginStart="@dimen/margin_padding_normal"
         android:src="@drawable/ic_schedule"
-        app:tint="@color/iconColor"
-        app:layout_constraintStart_toEndOf="@id/imageCardView"
         app:layout_constraintBottom_toBottomOf="@id/dateTextView"
-        app:layout_constraintTop_toTopOf="@id/dateTextView" />
+        app:layout_constraintStart_toEndOf="@id/imageCardView"
+        app:layout_constraintTop_toTopOf="@id/dateTextView"
+        app:tint="@color/iconColor" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dateTextView"
         style="@style/RangerText.SubTitle.Secondary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@id/bgView"
         android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_marginEnd="@dimen/margin_padding_normal"
+        app:layout_constraintEnd_toEndOf="@id/bgView"
         app:layout_constraintStart_toEndOf="@id/clockImageView"
         app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
         tools:text="Today, 14:00" />
@@ -86,12 +94,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_padding_normal"
-        android:visibility="gone"
         android:src="@drawable/ic_cloud_done"
-        app:tint="@color/iconColor"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/guardianNameTextView"
         app:layout_constraintEnd_toEndOf="@id/bgView"
-        app:layout_constraintTop_toTopOf="@id/guardianNameTextView" />
+        app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+        app:tint="@color/iconColor" />
 
     <TextView
         android:id="@+id/loggingTextView"
@@ -99,16 +107,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:alpha="0.7"
         android:background="@drawable/bg_type_tag"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_padding_normal"
         android:paddingStart="@dimen/tag_padding"
         android:paddingTop="@dimen/margin_padding_xsmall"
         android:paddingEnd="@dimen/tag_padding"
-        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:paddingBottom="@dimen/margin_padding_xsmall"
         android:text="@string/logging"
         android:textColor="@color/white"
@@ -123,16 +131,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:alpha="0.7"
         android:background="@drawable/bg_type_tag"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_padding_normal"
         android:paddingStart="@dimen/tag_padding"
         android:paddingTop="@dimen/margin_padding_xsmall"
         android:paddingEnd="@dimen/tag_padding"
-        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:paddingBottom="@dimen/margin_padding_xsmall"
         android:text="@string/poaching"
         android:textColor="@color/white"
@@ -147,16 +155,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:alpha="0.7"
         android:background="@drawable/bg_type_tag"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:layout_marginTop="@dimen/margin_padding_normal"
         android:paddingStart="@dimen/tag_padding"
         android:paddingTop="@dimen/margin_padding_xsmall"
         android:paddingEnd="@dimen/tag_padding"
-        android:layout_marginBottom="@dimen/margin_padding_normal"
         android:paddingBottom="@dimen/margin_padding_xsmall"
         android:text="@string/other_text"
         android:textColor="@color/white"

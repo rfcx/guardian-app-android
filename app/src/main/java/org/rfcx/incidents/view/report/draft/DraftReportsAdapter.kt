@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDraftReportsBinding
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
@@ -45,6 +43,7 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
         private val imageCardView = binding.imageCardView
         private val progressBarOfImageView = binding.progressBarOfImageView
         private val loggingTextView = binding.loggingTextView
+        private val notHaveImageView = binding.notHaveImageView
         private val poachingTextView = binding.poachingTextView
         private val otherTextView = binding.otherTextView
 
@@ -53,7 +52,7 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
             setClickable(itemView, response.syncState == SyncState.SENT.value)
 
             image?.let { imageView.setImage(it) }
-            imageCardView.visibility = if (image == null) View.GONE else View.VISIBLE
+            notHaveImageView.visibility = if (image == null) View.VISIBLE else View.GONE
 
             loggingTextView.visibility = if (response.investigateType.contains(InvestigationType.LOGGING.value)) View.VISIBLE else View.GONE
             poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
