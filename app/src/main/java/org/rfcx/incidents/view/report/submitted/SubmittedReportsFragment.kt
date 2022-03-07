@@ -25,14 +25,16 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
+import org.rfcx.incidents.view.report.draft.DraftReportsAdapter
+import org.rfcx.incidents.view.report.draft.ReportOnClickListener
 
-class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, ProjectOnClickListener {
+class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
     private var _binding: FragmentSubmittedReportsBinding? = null
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
-    private val reportsAdapter by lazy { SubmittedReportsAdapter(this) }
+    private val reportsAdapter by lazy { DraftReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
     lateinit var listener: MainActivityEventListener
     lateinit var preferences: Preferences
@@ -51,7 +53,8 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+            reportsAdapter.items =
+                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -154,8 +157,8 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
             streams = viewModel.getStreamIdsInProjectId()
             val items = res.sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
-            reportsAdapter.notifyDataSetChanged()
+            reportsAdapter.items =
+                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         })
 
@@ -197,7 +200,8 @@ class SubmittedReportsFragment : Fragment(), SubmittedReportsOnClickListener, Pr
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                     .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
-                reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+                reportsAdapter.items =
+                    items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
                 binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }

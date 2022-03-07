@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDraftReportsBinding
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.response.syncImage
+import org.rfcx.incidents.util.setDrawableImage
 import org.rfcx.incidents.util.setImage
 import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
@@ -40,16 +43,15 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
         private val dateTextView = binding.dateTextView
         private val actionImageView = binding.actionImageView
         private val imageView = binding.imageView
-        private val imageCardView = binding.imageCardView
-        private val progressBarOfImageView = binding.progressBarOfImageView
         private val loggingTextView = binding.loggingTextView
         private val notHaveImageView = binding.notHaveImageView
         private val poachingTextView = binding.poachingTextView
         private val otherTextView = binding.otherTextView
+        private val reportIdTextView = binding.reportIdTextView
 
         fun bind(item: Triple<Response, TimeZone?, String?>) {
             val (response, timeZone, image) = item
-            setClickable(itemView, response.syncState == SyncState.SENT.value)
+            val isSend = response.syncState == SyncState.SENT.value
 
             image?.let { imageView.setImage(it) }
             notHaveImageView.visibility = if (image == null) View.VISIBLE else View.GONE
@@ -58,35 +60,25 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
             poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
             otherTextView.visibility = if (response.investigateType.contains(InvestigationType.OTHER.value)) View.VISIBLE else View.GONE
 
+            actionImageView.visibility = if (isSend) View.VISIBLE else View.GONE
+            actionImageView.setDrawableImage(itemView.context, response.syncImage())
+
+            reportIdTextView.visibility = if (response.incidentRef != null) View.VISIBLE else View.GONE
+            reportIdTextView.text = itemView.context.getString(R.string.incident_ref, response.incidentRef)
+
             guardianName.text = response.streamName
             dateTextView.text = if (timeZone == TimeZone.getDefault()) response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
             ) else response.investigatedAt.toStringWithTimeZone(timeZone)
 
-            actionImageView.setOnClickListener {
-                listener.onClickedDelete(response)
-            }
-
             itemView.setOnClickListener {
                 listener.onClickedItem(response)
             }
-        }
-
-        private fun setClickable(view: View?, clickable: Boolean) {
-            if (view == null) return
-
-            if (view is ViewGroup) {
-                for (i in 0 until view.childCount) {
-                    setClickable(view.getChildAt(i), clickable)
-                }
-            }
-            view.isClickable = clickable
         }
     }
 }
 
 interface ReportOnClickListener {
-    fun onClickedDelete(response: Response)
     fun onClickedItem(response: Response)
 }

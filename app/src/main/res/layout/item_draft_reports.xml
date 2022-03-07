@@ -39,16 +39,6 @@
             android:layout_gravity="center" />
     </androidx.cardview.widget.CardView>
 
-    <ProgressBar
-        android:id="@+id/progressBarOfImageView"
-        android:layout_width="@dimen/padding_size"
-        android:layout_height="@dimen/padding_size"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/imageCardView"
-        app:layout_constraintEnd_toEndOf="@id/imageCardView"
-        app:layout_constraintStart_toStartOf="@id/imageCardView"
-        app:layout_constraintTop_toTopOf="@id/imageCardView" />
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/guardianNameTextView"
         style="@style/RangerText.Label"
@@ -56,10 +46,10 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="@dimen/margin_padding_normal"
+        android:paddingStart="@dimen/margin_padding_small"
         android:paddingTop="@dimen/margin_padding_normal"
         android:paddingBottom="@dimen/margin_padding_normal"
-        app:layout_constraintEnd_toStartOf="@id/actionImageView"
+        app:layout_constraintEnd_toStartOf="@id/reportIdTextView"
         app:layout_constraintStart_toEndOf="@+id/imageCardView"
         app:layout_constraintTop_toTopOf="@id/bgView"
         tools:text="Guardian A" />
@@ -68,7 +58,7 @@
         android:id="@+id/clockImageView"
         android:layout_width="@dimen/type_icon_size"
         android:layout_height="@dimen/type_icon_size"
-        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginStart="@dimen/margin_padding_small"
         android:src="@drawable/ic_schedule"
         app:layout_constraintBottom_toBottomOf="@id/dateTextView"
         app:layout_constraintStart_toEndOf="@id/imageCardView"
@@ -89,11 +79,28 @@
         app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
         tools:text="Today, 14:00" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reportIdTextView"
+        style="@style/RangerText.Label.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/actionImageView"
+        app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+        tools:text="#1234" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/actionImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_padding_normal"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        android:paddingEnd="@dimen/margin_padding_normal"
         android:src="@drawable/ic_cloud_done"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/guardianNameTextView"
@@ -106,7 +113,7 @@
         style="@style/RangerText.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginStart="@dimen/margin_padding_small"
         android:layout_marginTop="@dimen/margin_padding_normal"
         android:layout_marginBottom="@dimen/margin_padding_normal"
         android:alpha="0.7"
