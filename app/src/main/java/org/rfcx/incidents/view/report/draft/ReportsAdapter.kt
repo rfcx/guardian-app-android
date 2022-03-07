@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
-import org.rfcx.incidents.databinding.ItemDraftReportsBinding
+import org.rfcx.incidents.databinding.ItemReportBinding
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
@@ -17,8 +17,8 @@ import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import java.util.TimeZone
 
-class DraftReportsAdapter(private val listener: ReportOnClickListener) :
-    RecyclerView.Adapter<DraftReportsAdapter.ReportsViewHolder>() {
+class ReportsAdapter(private val listener: ReportOnClickListener) :
+    RecyclerView.Adapter<ReportsAdapter.ReportsViewHolder>() {
     var items: List<Triple<Response, TimeZone?, String?>> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
@@ -26,18 +26,18 @@ class DraftReportsAdapter(private val listener: ReportOnClickListener) :
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DraftReportsAdapter.ReportsViewHolder {
-        val binding = ItemDraftReportsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportsAdapter.ReportsViewHolder {
+        val binding = ItemReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReportsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: DraftReportsAdapter.ReportsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReportsAdapter.ReportsViewHolder, position: Int) {
         holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size
 
-    inner class ReportsViewHolder(binding: ItemDraftReportsBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ReportsViewHolder(binding: ItemReportBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val guardianName = binding.guardianNameTextView
         private val dateTextView = binding.dateTextView

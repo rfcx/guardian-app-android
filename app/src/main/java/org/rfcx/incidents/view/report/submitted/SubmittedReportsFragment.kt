@@ -25,7 +25,7 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
-import org.rfcx.incidents.view.report.draft.DraftReportsAdapter
+import org.rfcx.incidents.view.report.draft.ReportsAdapter
 import org.rfcx.incidents.view.report.draft.ReportOnClickListener
 
 class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
@@ -34,7 +34,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
 
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
-    private val reportsAdapter by lazy { DraftReportsAdapter(this) }
+    private val reportsAdapter by lazy { ReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
     lateinit var listener: MainActivityEventListener
     lateinit var preferences: Preferences

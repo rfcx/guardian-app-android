@@ -30,7 +30,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
-    private val reportsAdapter by lazy { DraftReportsAdapter(this) }
+    private val reportsAdapter by lazy { ReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
 
     lateinit var listener: MainActivityEventListener
