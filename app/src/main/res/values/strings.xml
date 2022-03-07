@@ -366,4 +366,12 @@
     <string name="satellite">Sat</string>
     <string name="cell">Cell</string>
 
+    <string name="investigated_at">Investigated at</string>
+    <string name="received_at">Received at</string>
+    <string name="action">Action</string>
+
+    <string name="small_scale_text">Small scale</string>
+    <string name="large_scale_text">Large scale</string>
+    <string name="additional_evidence">Additional evidence</string>
+
 </resources>
