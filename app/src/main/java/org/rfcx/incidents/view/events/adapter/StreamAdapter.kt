@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.events.adapter
 
 import android.content.res.Resources
-import android.content.res.Resources.getSystem
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View

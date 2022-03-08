@@ -21,6 +21,7 @@
         android:background="@color/statusColor"
         android:elevation="0dp"
         app:cardCornerRadius="6dp"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="@id/bgView"
         app:layout_constraintStart_toStartOf="@id/bgView"
         app:layout_constraintTop_toTopOf="@id/bgView">
@@ -28,6 +29,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
+            android:scaleType="fitXY"
             android:layout_height="match_parent"
             android:background="@color/grey_default" />
 
