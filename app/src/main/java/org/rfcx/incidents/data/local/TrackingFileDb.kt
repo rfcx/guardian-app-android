@@ -1,7 +1,6 @@
 package org.rfcx.incidents.data.local
 
 import io.realm.Realm
-import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.response.SyncState
 

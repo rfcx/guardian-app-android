@@ -131,7 +131,6 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
                 binding.additionalEvidenceLayout.visibility =
                     if (res.note == null && viewModel.getImagesByCoreId(it).isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
-
             }
         }
     }
