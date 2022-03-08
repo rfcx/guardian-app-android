@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.report.create
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
@@ -11,8 +12,9 @@ import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
-import org.rfcx.incidents.entity.location.TrackingFile
 import org.rfcx.incidents.entity.location.toListDoubleArray
+import org.rfcx.incidents.entity.response.Asset
+import org.rfcx.incidents.entity.response.AssetType
 import org.rfcx.incidents.entity.response.ImageAsset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Stream
@@ -26,6 +28,7 @@ class CreateReportViewModel(
     private val trackingDb: TrackingDb,
     private val trackingFileDb: TrackingFileDb,
     private val eventDb: EventDb,
+    private val assetDb: AssetDb,
     private val streamDb: StreamDb
 ) : ViewModel() {
 
@@ -39,13 +42,20 @@ class CreateReportViewModel(
         trackingDb.insertOrUpdate(tracking, coordinate)
     }
 
+    fun saveAsset(asset: Asset): Asset {
+        return assetDb.save(asset)
+    }
+
     fun saveResponseInLocalDb(response: Response, images: List<String>?) {
-        val res = responseDb.save(response)
+
         if (!images.isNullOrEmpty()) {
-            reportImageDb.deleteImages(res.id)
-            reportImageDb.save(res, images)
+            images.forEach { path ->
+                response.assets.add(assetDb.save(Asset(type = AssetType.IMAGE.value, localPath = path)))
+            }
+            // reportImageDb.deleteImages(res.id)
+            // reportImageDb.save(res, images)
         }
-        voiceDb.save(res)
+        responseDb.save(response)
     }
 
     fun saveTrackingFile(response: Response, context: Context) {
@@ -56,16 +66,15 @@ class CreateReportViewModel(
             if (events.isNotEmpty()) {
                 point = t.points.filter { p -> p.createdAt >= events[0].start }.toListDoubleArray()
             }
-            val trackingFile = TrackingFile(
-                responseId = response.id,
-                streamServerId = response.streamId,
+            val asset = Asset(
+                type = AssetType.KML.value,
                 localPath = GeoJsonUtils.generateGeoJson(
                     context,
                     GeoJsonUtils.generateFileName(response.submittedAt ?: Date()),
                     point
                 ).absolutePath
             )
-            trackingFileDb.insertOrUpdate(trackingFile)
+            response.assets.add(assetDb.save(asset))
         }
         trackingDb.deleteTracking(1, context)
     }
