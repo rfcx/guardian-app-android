@@ -247,7 +247,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         checkInSource?.setGeoJson(FeatureCollection.fromFeatures(pointFeatures))
                         moveCameraToLeavesBounds(lastLocation.coordinates())
                     } else {
-                        mapView.visibility = View.GONE
+                        binding.mapBoxCardView.visibility = View.GONE
                     }
                 }
             }

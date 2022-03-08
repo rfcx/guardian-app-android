@@ -293,16 +293,24 @@
                     tools:orientation="horizontal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.mapbox.mapboxsdk.maps.MapView
-                android:id="@+id/mapBoxView"
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mapBoxCardView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/map_height"
-                android:paddingStart="@dimen/margin_padding_normal"
-                android:paddingEnd="@dimen/margin_padding_normal"
-                android:paddingTop="@dimen/margin_padding_normal"
+                android:background="@color/statusColor"
+                android:elevation="0dp"
+                app:cardCornerRadius="6dp"
+                android:layout_margin="@dimen/margin_padding_normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/additionalEvidenceLayout" />
+                app:layout_constraintTop_toBottomOf="@id/additionalEvidenceLayout">
+
+                <com.mapbox.mapboxsdk.maps.MapView
+                    android:id="@+id/mapBoxView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/map_height" />
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
