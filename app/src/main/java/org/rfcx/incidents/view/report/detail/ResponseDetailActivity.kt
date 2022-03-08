@@ -116,14 +116,14 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.poachingLayout.visibility = if (res.answers.none { it.toString()[0] == '6' }) View.GONE else View.VISIBLE
             binding.actionLayout.visibility = if (res.answers.none { it.toString()[0] == '2' }) View.GONE else View.VISIBLE
 
-            binding.scaleLoggingTextView.text = setScale(res.answers)
+            binding.scaleLoggingTextView.text = setScale(res.answers.filter { it.toString()[0] == '3' })
             binding.scaleLoggingTextView.visibility = if (res.answers.contains(LoggingScale.NONE.value)) View.GONE else View.VISIBLE
 
-            binding.scalePoachingTextView.text = setScale(res.answers)
+            binding.scalePoachingTextView.text = setScale(res.answers.filter { it.toString()[0] == '7' })
             binding.scalePoachingTextView.visibility = if (res.answers.contains(PoachingScale.NONE.value)) View.GONE else View.VISIBLE
 
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
-            binding.noteTextView.text = getString(R.string.note, res.note)
+            binding.noteTextView.text = res.note
             res.audioLocation?.let { path -> setAudio(path) }
             binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {

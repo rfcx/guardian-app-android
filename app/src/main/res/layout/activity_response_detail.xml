@@ -57,10 +57,13 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/investigatedAtValueTextView"
                     style="@style/RangerText.Label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/investigatedAtTextView"
+                    app:layout_constraintEnd_toStartOf="@id/receivedValueTextView"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="@dimen/margin_padding_normal"
                     android:paddingTop="@dimen/margin_padding_small"
                     android:paddingBottom="@dimen/margin_padding_normal"
@@ -81,10 +84,14 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/receivedValueTextView"
                     style="@style/RangerText.Label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="end"
                     app:layout_constraintTop_toBottomOf="@id/investigatedAtTextView"
+                    app:layout_constraintStart_toEndOf="@id/investigatedAtValueTextView"
                     android:paddingEnd="@dimen/margin_padding_normal"
                     android:paddingTop="@dimen/margin_padding_small"
                     android:paddingBottom="@dimen/margin_padding_normal"
@@ -269,12 +276,14 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/noteTextView"
                     style="@style/RangerText.Label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:paddingStart="@dimen/margin_padding_normal"
-                    android:paddingTop="@dimen/margin_padding_small"
+                    android:paddingEnd="@dimen/margin_padding_normal"
+                    android:layout_marginTop="@dimen/margin_padding_small"
                     tools:text="Many trees were cut down" />
 
                 <androidx.recyclerview.widget.RecyclerView
