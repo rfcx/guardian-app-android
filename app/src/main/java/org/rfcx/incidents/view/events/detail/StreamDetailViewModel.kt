@@ -43,7 +43,7 @@ class StreamDetailViewModel(
         getEventsUseCase.execute(
             object : DisposableSingleObserver<List<Event>>() {
                 override fun onSuccess(t: List<Event>) {
-                    _events.value = Result.Success(t)
+                    _events.value = Result.Success(t.sortedByDescending { e -> e.start })
                 }
 
                 override fun onError(e: Throwable) {

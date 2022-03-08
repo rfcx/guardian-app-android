@@ -98,9 +98,9 @@ fun Date.toDateWithTimeZone(timeZone: TimeZone): Date {
     return tempSdf.parse(dateString)
 }
 
-fun Date.toTimeWithTimeZone(timeZone: TimeZone): String {
+fun Date.toTimeWithTimeZone(timeZone: TimeZone?): String {
     val tempSdf = outputWithTimeZoneSdf
-    tempSdf.timeZone = timeZone
+    tempSdf.timeZone = timeZone ?: TimeZone.getDefault()
     return tempSdf.format(this)
 }
 
@@ -178,7 +178,7 @@ fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZon
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
     } else if (niceDateStr.toString() == "Yesterday") {
-        "${context.getString(R.string.yesterday)} ${this.toStringWithTimeZone(timeZone)}"
+        "${context.getString(R.string.yesterday)}, ${this.toTimeString()}"
     } else if (!niceDateStr.toString().contains("ago")) {
         this.toStringWithTimeZone(timeZone)
     } else if (niceDateStr.toString().contains("days ago")) {
