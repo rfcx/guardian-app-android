@@ -35,7 +35,6 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
 
     lateinit var streamId: String
     var distance: Double? = null
-    var events = listOf<Event>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +78,6 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         binding.eventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = eventItemAdapter
-            eventItemAdapter.items = events
             eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezoneRaw)
 
             binding.createReportButton.setOnClickListener {
