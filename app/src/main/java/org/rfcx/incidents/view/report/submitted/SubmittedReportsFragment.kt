@@ -25,8 +25,8 @@ import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
-import org.rfcx.incidents.view.report.draft.ReportsAdapter
 import org.rfcx.incidents.view.report.draft.ReportOnClickListener
+import org.rfcx.incidents.view.report.draft.ReportsAdapter
 
 class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
     private var _binding: FragmentSubmittedReportsBinding? = null
