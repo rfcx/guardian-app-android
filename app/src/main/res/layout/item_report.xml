@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/bgView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:background="@drawable/bg_stream_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/imageCardView"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="0dp"
+        android:background="@color/statusColor"
+        android:elevation="0dp"
+        app:cardCornerRadius="6dp"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toStartOf="@id/bgView"
+        app:layout_constraintTop_toTopOf="@id/bgView">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent"
+            android:background="@color/grey_default" />
+
+        <ImageView
+            android:id="@+id/notHaveImageView"
+            android:layout_width="@dimen/ic_40_dp_size"
+            android:layout_height="@dimen/ic_40_dp_size"
+            android:src="@drawable/ic_image"
+            android:layout_gravity="center" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/guardianNameTextView"
+        style="@style/RangerText.Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        app:layout_constraintEnd_toStartOf="@id/reportIdTextView"
+        app:layout_constraintStart_toEndOf="@+id/imageCardView"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        tools:text="Guardian A" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/clockImageView"
+        android:layout_width="@dimen/type_icon_size"
+        android:layout_height="@dimen/type_icon_size"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:src="@drawable/ic_schedule"
+        app:layout_constraintBottom_toBottomOf="@id/dateTextView"
+        app:layout_constraintStart_toEndOf="@id/imageCardView"
+        app:layout_constraintTop_toTopOf="@id/dateTextView"
+        app:tint="@color/iconColor" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dateTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/clockImageView"
+        app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
+        tools:text="Today, 14:00" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reportIdTextView"
+        style="@style/RangerText.Label.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/actionImageView"
+        app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/guardianNameTextView"
+        tools:text="#1234" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/actionImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        android:paddingEnd="@dimen/margin_padding_normal"
+        android:src="@drawable/ic_cloud_done"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/guardianNameTextView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"
+        app:layout_constraintTop_toTopOf="@id/guardianNameTextView"
+        app:tint="@color/iconColor" />
+
+    <TextView
+        android:id="@+id/loggingTextView"
+        style="@style/RangerText.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:alpha="0.7"
+        android:background="@drawable/bg_type_tag"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingStart="@dimen/tag_padding"
+        android:paddingTop="@dimen/margin_padding_xsmall"
+        android:paddingEnd="@dimen/tag_padding"
+        android:paddingBottom="@dimen/margin_padding_xsmall"
+        android:text="@string/logging"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/imageCardView"
+        app:layout_constraintTop_toBottomOf="@id/dateTextView" />
+
+    <TextView
+        android:id="@+id/poachingTextView"
+        style="@style/RangerText.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:alpha="0.7"
+        android:background="@drawable/bg_type_tag"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingStart="@dimen/tag_padding"
+        android:paddingTop="@dimen/margin_padding_xsmall"
+        android:paddingEnd="@dimen/tag_padding"
+        android:paddingBottom="@dimen/margin_padding_xsmall"
+        android:text="@string/poaching"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/loggingTextView"
+        app:layout_constraintTop_toBottomOf="@id/dateTextView" />
+
+    <TextView
+        android:id="@+id/otherTextView"
+        style="@style/RangerText.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:alpha="0.7"
+        android:background="@drawable/bg_type_tag"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingStart="@dimen/tag_padding"
+        android:paddingTop="@dimen/margin_padding_xsmall"
+        android:paddingEnd="@dimen/tag_padding"
+        android:paddingBottom="@dimen/margin_padding_xsmall"
+        android:text="@string/other_text"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintStart_toEndOf="@id/poachingTextView"
+        app:layout_constraintTop_toBottomOf="@id/dateTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

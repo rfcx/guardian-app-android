@@ -31,6 +31,8 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ActivityResponseDetailBinding
+import org.rfcx.incidents.entity.response.LoggingScale
+import org.rfcx.incidents.entity.response.PoachingScale
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
@@ -62,7 +64,6 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val analytics by lazy { Analytics(this) }
     private val viewModel: ResponseDetailViewModel by viewModel()
-    private val responseDetailAdapter by lazy { ResponseDetailAdapter() }
     private val reportImageAdapter by lazy { ReportImageAdapter() }
 
     private var responseCoreId: String? = null
@@ -86,11 +87,6 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         setupToolbar()
         setupRecordSoundProgressView()
 
-        binding.answersRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = responseDetailAdapter
-        }
-
         binding.attachImageRecycler.apply {
             adapter = reportImageAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -104,43 +100,53 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         response?.let { res ->
             val timeZone = TimeZone.getTimeZone(viewModel.getStream(res.streamId)?.timezoneRaw)
-            binding.investigateAtTextView.text = if (timeZone == TimeZone.getDefault()) res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
-                this,
-                timeZone
-            ) else res.investigatedAt.toStringWithTimeZone(timeZone)
-            responseDetailAdapter.items = getMessageList(res.answers)
-            binding.answersTextView.visibility = if (res.answers.size == 0) View.VISIBLE else View.GONE
+            binding.investigatedAtValueTextView.text =
+                if (timeZone == TimeZone.getDefault()) res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this, timeZone)
+                else res.investigatedAt.toStringWithTimeZone(timeZone)
+
+            binding.receivedValueTextView.text =
+                if (timeZone == TimeZone.getDefault()) res.submittedAt?.toTimeSinceStringAlternativeTimeAgo(this, timeZone)
+                else res.submittedAt?.toStringWithTimeZone(timeZone)
+
+            binding.loggingValueTextView.text = getMessageList(res.answers, '1')
+            binding.poachingValueTextView.text = getMessageList(res.answers, '6')
+            binding.actionValueTextView.text = getMessageList(res.answers, '2')
+
+            binding.loggingLayout.visibility = if (res.answers.none { it.toString()[0] == '1' }) View.GONE else View.VISIBLE
+            binding.poachingLayout.visibility = if (res.answers.none { it.toString()[0] == '6' }) View.GONE else View.VISIBLE
+            binding.actionLayout.visibility = if (res.answers.none { it.toString()[0] == '2' }) View.GONE else View.VISIBLE
+
+            binding.scaleLoggingTextView.text = setScale(res.answers.filter { it.toString()[0] == '3' })
+            binding.scaleLoggingTextView.visibility = if (res.answers.contains(LoggingScale.NONE.value)) View.GONE else View.VISIBLE
+
+            binding.scalePoachingTextView.text = setScale(res.answers.filter { it.toString()[0] == '7' })
+            binding.scalePoachingTextView.visibility = if (res.answers.contains(PoachingScale.NONE.value)) View.GONE else View.VISIBLE
+
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
-            binding.noteTextView.text = getString(R.string.note, res.note)
+            binding.noteTextView.text = res.note
             res.audioLocation?.let { path -> setAudio(path) }
             binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {
                 binding.attachImageRecycler.visibility = if (viewModel.getImagesByCoreId(it).isNotEmpty()) View.VISIBLE else View.GONE
                 reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
-                binding.assetsTextView.visibility =
-                    if (viewModel.getImagesByCoreId(it).isEmpty() && res.note == null && viewModel.getTrackingByCoreId(
-                            it
-                        ) == null
-                    ) View.GONE else View.VISIBLE
+                binding.additionalEvidenceLayout.visibility =
+                    if (res.note == null && viewModel.getImagesByCoreId(it).isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
             }
         }
     }
 
-    private fun getMessageList(answers: List<Int>): List<AnswerItem> {
-        val sorted: List<Int> = answers.sortedWith(
-            compareBy(
-                { it.toString()[0] == '2' },
-                { it.toString()[0] == '7' },
-                { it.toString()[0] == '6' },
-                { it.toString()[0] == '3' },
-                { it.toString()[0] == '1' }
-            )
-        )
-        val answerItems = arrayListOf<AnswerItem>()
-        sorted.forEach {
-            it.getAnswerItem(this)?.let { item -> answerItems.add(item) }
+    private fun getMessageList(answers: List<Int>, num: Char): String {
+        var message = ""
+        answers.forEach {
+            if (it.toString()[0] == num) {
+                message += if (message.isBlank()) {
+                    it.getAnswerItem(this)
+                } else {
+                    ", " + it.getAnswerItem(this)
+                }
+            }
         }
-        return answerItems
+        return message
     }
 
     private fun setAudio(path: String) {
@@ -149,6 +155,16 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         if (recordFile?.exists() == true) {
             binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
         }
+    }
+
+    private fun setScale(answers: List<Int>): String {
+        if (answers.contains(LoggingScale.LARGE.value) || answers.contains(PoachingScale.LARGE.value))
+            return getString(R.string.large_scale_text)
+
+        if (answers.contains(LoggingScale.SMALL.value) || answers.contains(PoachingScale.SMALL.value))
+            return getString(R.string.small_scale_text)
+
+        return ""
     }
 
     private fun setupRecordSoundProgressView() {
@@ -230,7 +246,7 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         checkInSource?.setGeoJson(FeatureCollection.fromFeatures(pointFeatures))
                         moveCameraToLeavesBounds(lastLocation.coordinates())
                     } else {
-                        mapView.visibility = View.GONE
+                        binding.mapBoxCardView.visibility = View.GONE
                     }
                 }
             }

@@ -49,4 +49,7 @@
     <dimen name="margin_10_dp">10dp</dimen>
     <dimen name="margin_2_dp">2dp</dimen>
 
+    <dimen name="image_width">120dp</dimen>
+    <dimen name="ic_40_dp_size">40dp</dimen>
+
 </resources>

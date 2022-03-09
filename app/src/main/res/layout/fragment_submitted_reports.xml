@@ -13,13 +13,15 @@
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/submittedReportsRecyclerView"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/backgroundColor"
-		android:dividerHeight="1dp"
-		android:overScrollMode="never"
-        android:paddingBottom="@dimen/bottom_bar_height"
-		app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/backgroundColor"
+        android:dividerHeight="1dp"
+        android:overScrollMode="never"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:layout_marginBottom="@dimen/margin_padding_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 
 	<androidx.constraintlayout.widget.Group
 		android:id="@+id/notHaveSubmittedReportsGroupView"

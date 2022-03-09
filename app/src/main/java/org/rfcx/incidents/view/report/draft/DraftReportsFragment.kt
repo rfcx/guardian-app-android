@@ -30,7 +30,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 
     private val analytics by lazy { context?.let { Analytics(it) } }
     private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
-    private val reportsAdapter by lazy { DraftReportsAdapter(this) }
+    private val reportsAdapter by lazy { ReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
 
     lateinit var listener: MainActivityEventListener
@@ -68,8 +68,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
         setProjectTitle(viewModel.getProjectName(projectId))
         binding.toolbarLayout.changePageImageView.visibility = View.GONE
 
-        setObserve()
         setRecyclerView()
+        setObserve()
         setOnClickListener()
     }
 
@@ -126,7 +126,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             val items = responses.sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+            reportsAdapter.items =
+                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
         }
     }
 
@@ -142,10 +143,6 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             binding.projectRecyclerView.visibility = View.VISIBLE
             binding.projectSwipeRefreshView.visibility = View.VISIBLE
         }
-    }
-
-    override fun onClickedDelete(response: Response) {
-        Toast.makeText(context, "On click delete ${response.streamName}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onClickedItem(response: Response) {
@@ -165,7 +162,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             streams = viewModel.getStreamIdsInProjectId()
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                 .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
-            reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+            reportsAdapter.items =
+                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -189,7 +187,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
                     .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
-                reportsAdapter.items = items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+                reportsAdapter.items =
+                    items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
                 binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }

@@ -60,3 +60,10 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
             .into(this)
     }
 }
+
+fun ImageView.setImage(url: String?) {
+    GlideApp.with(this)
+        .load(url)
+        .centerCrop()
+        .into(this)
+}
