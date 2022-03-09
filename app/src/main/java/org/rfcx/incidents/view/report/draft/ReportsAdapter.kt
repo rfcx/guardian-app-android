@@ -19,7 +19,7 @@ import java.util.TimeZone
 
 class ReportsAdapter(private val listener: ReportOnClickListener) :
     RecyclerView.Adapter<ReportsAdapter.ReportsViewHolder>() {
-    var items: List<Triple<Response, TimeZone?, String?>> = arrayListOf()
+    var items: List<Pair<Response, TimeZone?>> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -49,17 +49,17 @@ class ReportsAdapter(private val listener: ReportOnClickListener) :
         private val otherTextView = binding.otherTextView
         private val reportIdTextView = binding.reportIdTextView
 
-        fun bind(item: Triple<Response, TimeZone?, String?>) {
-            val (response, timeZone, image) = item
+        fun bind(item: Pair<Response, TimeZone?>) {
+            val (response, timeZone) = item
             val isSend = response.syncState == SyncState.SENT.value
 
-            if (image == null) {
+            if (response.imagesAsset.isEmpty()) {
                 imageView.setDrawableImage(itemView.context, R.color.grey_default)
             } else {
-                imageView.setImage(image)
+                imageView.setImage(response.imagesAsset[0].localPath)
             }
 
-            notHaveImageView.visibility = if (image == null) View.VISIBLE else View.GONE
+            notHaveImageView.visibility = if (response.imagesAsset.isEmpty()) View.VISIBLE else View.GONE
             loggingTextView.visibility = if (response.investigateType.contains(InvestigationType.LOGGING.value)) View.VISIBLE else View.GONE
             poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
             otherTextView.visibility = if (response.investigateType.contains(InvestigationType.OTHER.value)) View.VISIBLE else View.GONE

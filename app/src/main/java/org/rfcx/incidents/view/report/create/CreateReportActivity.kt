@@ -78,13 +78,17 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             val response = viewModel.getResponseById(it)
             response?.let { res ->
                 setResponse(res)
+                res.imagesAsset.forEach { reportImage ->
+                    val path =
+                        if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
+                    _images.add(path)
+                }
             }
         }
 
         // TODO stream id should already be on the ViewModel
         streamName = viewModel.getStream(streamId)?.name ?: "Unknown"
 
-        getImagesFromLocal()
         setupToolbar()
         handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 
@@ -111,17 +115,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             }
         }
         return super.dispatchTouchEvent(event)
-    }
-
-    private fun getImagesFromLocal() {
-        responseId?.let {
-            val images = viewModel.getImagesFromLocal(it)
-            images.forEach { reportImage ->
-                val path =
-                    if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
-                _images.add(path)
-            }
-        }
     }
 
     private fun setupToolbar() {

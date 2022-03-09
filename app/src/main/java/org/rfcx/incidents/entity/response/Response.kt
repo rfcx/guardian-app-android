@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.response.CreateResponseRequest
 import org.rfcx.incidents.util.toIsoString
-import java.util.*
+import java.util.Date
 
 open class Response(
     @PrimaryKey
@@ -31,6 +31,10 @@ open class Response(
     var assets: RealmList<Asset> = RealmList(),
     var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
+    val imagesAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.IMAGE.value }
+    val audioAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.AUDIO.value }
+    val trackingAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.KML.value }
+
     companion object {
         const val TABLE_NAME = "Response"
         const val RESPONSE_ID = "id"

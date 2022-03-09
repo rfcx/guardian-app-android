@@ -18,7 +18,7 @@ import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 object UiModule {
 
     val mainModule = module {
-        viewModel { MainActivityViewModel(get(), androidContext(), get(), get(), get(), get(), get(), get(), get()) }
+        viewModel { MainActivityViewModel(get(), androidContext(), get(), get(), get(), get(), get(), get()) }
     }
 
     val eventsModule = module {
@@ -28,8 +28,8 @@ object UiModule {
     }
 
     val reportsModule = module {
-        viewModel { CreateReportViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-        viewModel { ResponseDetailViewModel(get(), get(), get(), get()) }
+        viewModel { CreateReportViewModel(get(), get(), get(), get(), get()) }
+        viewModel { ResponseDetailViewModel(get(), get(), get()) }
     }
 
     val profileModule = module {

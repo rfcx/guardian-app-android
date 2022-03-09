@@ -129,10 +129,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
             binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {
-                binding.attachImageRecycler.visibility = if (viewModel.getImagesByCoreId(it).isNotEmpty()) View.VISIBLE else View.GONE
-                reportImageAdapter.setImages(viewModel.getImagesByCoreId(it), false)
+                binding.attachImageRecycler.visibility = if (res.imagesAsset.isNotEmpty()) View.VISIBLE else View.GONE
+                reportImageAdapter.setImages(res.imagesAsset, false)
                 binding.additionalEvidenceLayout.visibility =
-                    if (res.note == null && viewModel.getImagesByCoreId(it).isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
+                    if (res.note == null && res.imagesAsset.isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
             }
         }
     }
