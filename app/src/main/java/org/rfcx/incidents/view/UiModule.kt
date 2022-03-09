@@ -29,7 +29,7 @@ object UiModule {
 
     val reportsModule = module {
         viewModel { CreateReportViewModel(get(), get(), get(), get(), get()) }
-        viewModel { ResponseDetailViewModel(get(), get(), get()) }
+        viewModel { ResponseDetailViewModel(get(), get()) }
     }
 
     val profileModule = module {
