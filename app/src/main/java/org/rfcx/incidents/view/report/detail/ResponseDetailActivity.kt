@@ -125,6 +125,8 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
             binding.noteTextView.text = res.note
             res.audioLocation?.let { path -> setAudio(path) }
+            binding.soundRecordProgressView.disableEdit()
+            binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
             binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
             res.guid?.let {
                 binding.attachImageRecycler.visibility = if (viewModel.getImagesByCoreId(it).isNotEmpty()) View.VISIBLE else View.GONE
