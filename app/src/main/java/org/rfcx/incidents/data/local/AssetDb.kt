@@ -15,6 +15,11 @@ class AssetDb(val realm: Realm) {
         return asset
     }
 
+    fun delete(assetId: Int) {
+        val shouldDelete = realm.where(Asset::class.java).equalTo(Asset.ASSET_ID, assetId).findFirst()
+        realm.executeTransaction { shouldDelete?.deleteFromRealm() }
+    }
+
     fun unsentCount(): Long {
         return realm.where(Asset::class.java).notEqualTo(Asset.ASSET_SYNC_STATE, SyncState.SENT.value).count()
     }

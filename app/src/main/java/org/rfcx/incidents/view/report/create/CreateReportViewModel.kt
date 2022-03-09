@@ -38,13 +38,15 @@ class CreateReportViewModel(
     }
 
     fun saveResponseInLocalDb(response: Response, images: List<String>?) {
+        response.imagesAsset.forEach {
+            assetDb.delete(it.id)
+            response.assets.remove(it)
+        }
 
         if (!images.isNullOrEmpty()) {
             images.forEach { path ->
                 response.assets.add(assetDb.save(Asset(type = AssetType.IMAGE.value, localPath = path)))
             }
-            // reportImageDb.deleteImages(res.id)
-            // reportImageDb.save(res, images)
         }
         responseDb.save(response)
     }
