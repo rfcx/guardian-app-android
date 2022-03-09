@@ -12,12 +12,9 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
-import org.rfcx.companion.service.TrackingSyncWorker
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.ResponseDb
-import org.rfcx.incidents.data.local.TrackingFileDb
-import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.entity.response.toCreateResponseRequest
@@ -34,9 +31,7 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
         val eventService = ServiceFactory.makeCreateResponseService(BuildConfig.DEBUG, context)
         val realm = Realm.getInstance(AppRealm.configuration())
         val db = ResponseDb(realm)
-        val reportImageDb = ReportImageDb(realm)
-        val trackingFileDb = TrackingFileDb(realm)
-        val voiceDb = VoiceDb(realm)
+        val assetDb = AssetDb(realm)
 
         val responses = db.lockUnsent()
         Log.d(TAG, "doWork: found ${responses.size} unsent")
@@ -49,21 +44,18 @@ class ResponseSyncWorker(private val context: Context, params: WorkerParameters)
                 val fullId = result.headers().get("Location")
                 val id = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length)
                 db.markSent(response.id, id, incidentRef)
-                trackingFileDb.updateResponseServerId(response.id, id)
-                TrackingSyncWorker.enqueue()
 
                 if (id != null) {
-                    reportImageDb.saveReportServerIdToImage(id, response.id)
-                    voiceDb.saveReportServerId(id, response.id)
+                    response.assets.forEach { a ->
+                        assetDb.saveReportServerId(id, a.id)
+                    }
+                    AssetSyncWorker.enqueue()
                 }
             } else {
                 someFailed = true
                 db.markUnsent(response.id)
             }
         }
-
-        // upload attaches image
-        ImageUploadWorker.enqueue()
 
         return if (someFailed) Result.retry() else Result.success()
     }
