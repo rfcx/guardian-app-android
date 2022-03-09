@@ -124,10 +124,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
             binding.noteTextView.text = res.note
-            res.audioLocation?.let { path -> setAudio(path) }
+            if (res.audioAsset.isNotEmpty()) setAudio(res.audioAsset[0].localPath)
             binding.soundRecordProgressView.disableEdit()
             binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-            binding.soundRecordProgressView.visibility = if (res.audioLocation != null) View.VISIBLE else View.GONE
+            binding.soundRecordProgressView.visibility = if (res.audioAsset.isNotEmpty()) View.VISIBLE else View.GONE
             res.guid?.let {
                 binding.attachImageRecycler.visibility = if (res.imagesAsset.isNotEmpty()) View.VISIBLE else View.GONE
                 reportImageAdapter.setImages(res.imagesAsset, false)
@@ -229,10 +229,10 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             response?.let { res ->
                 res.guid?.let { id ->
-                    val track = viewModel.getTrackingByCoreId(id)
-                    if (track != null) {
+                    val track = res.trackingAsset
+                    if (track.isNotEmpty()) {
                         val tempTrack = arrayListOf<Feature>()
-                        val json = File(track.localPath).readText()
+                        val json = File(track[0].localPath).readText()
                         val featureCollection = FeatureCollection.fromJson(json)
                         val feature = featureCollection.features()?.get(0)
                         feature?.let {

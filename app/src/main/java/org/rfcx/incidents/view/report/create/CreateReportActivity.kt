@@ -224,7 +224,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     override fun setAudio(audioPath: String?) {
         val response = _response ?: Response()
-        // response.audioLocation = audioPath
         audioPath?.let { response.assets.add(viewModel.saveAsset(Asset(type = AssetType.AUDIO.value, localPath = it))) }
         setResponse(response)
     }
