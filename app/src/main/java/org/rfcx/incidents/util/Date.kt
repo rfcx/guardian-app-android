@@ -33,7 +33,9 @@ private const val timeFormat = "HH:mm"
 private const val shortDateFormat = "dd MMM yyyy"
 private const val standardDateFormat = "MMMM d, yyyy HH:mm"
 private const val dateFormat = "d MMM yyyy, HH:mm"
+private const val dateFormatWithoutYear = "d MMM, HH:mm"
 private const val dateWithTimeZoneFormat = "d MMM yyyy, HH:mm (zzz)"
+private const val dateWithTimeZoneWithoutYear = "d MMM, HH:mm (zzz)"
 
 private val outputTimeSdf by lazy {
     val sdf = SimpleDateFormat(timeFormat, Locale.getDefault())
@@ -57,8 +59,20 @@ private val outputDateSdf by lazy {
     sdf
 }
 
+private val outputDateWithoutYearSdf by lazy {
+    val sdf = SimpleDateFormat(dateFormatWithoutYear, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
+}
+
 private val outputWithTimeZoneSdf by lazy {
     val sdf = SimpleDateFormat(dateWithTimeZoneFormat, Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
+}
+
+private val outputTimeZoneWithoutYearSdf by lazy {
+    val sdf = SimpleDateFormat(dateWithTimeZoneWithoutYear, Locale.getDefault())
     sdf.timeZone = TimeZone.getDefault()
     sdf
 }
@@ -106,7 +120,9 @@ fun Date.toTimeWithTimeZone(timeZone: TimeZone?): String {
 
 fun Date.toStringWithTimeZone(timeZone: TimeZone?): String {
     val tz = timeZone ?: TimeZone.getDefault()
-    val tempSdf = if (tz == TimeZone.getDefault()) outputDateSdf else outputWithTimeZoneSdf
+    val outputDate = if (this.isThisYear()) outputDateWithoutYearSdf else outputDateSdf
+    val outputWithTimeZone = if (this.isThisYear()) outputTimeZoneWithoutYearSdf else outputWithTimeZoneSdf
+    val tempSdf = if (tz == TimeZone.getDefault()) outputDate else outputWithTimeZone
     tempSdf.timeZone = tz
     return if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
 }

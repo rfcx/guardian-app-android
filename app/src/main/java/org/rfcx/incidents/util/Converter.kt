@@ -21,3 +21,11 @@ fun Map<String, String>.toJsonObject(): JsonObject {
     }
     return jsonObject
 }
+
+fun Date.isThisYear(): Boolean {
+    val today = Calendar.getInstance()
+    val checkDate = Calendar.getInstance()
+    checkDate.time = this
+
+    return today.get(Calendar.YEAR) == checkDate.get(Calendar.YEAR)
+}
