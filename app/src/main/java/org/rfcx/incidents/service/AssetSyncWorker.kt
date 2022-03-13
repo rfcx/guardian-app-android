@@ -43,7 +43,7 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
                     AssetType.KML.value -> {
                         file = createLocalFilePart(fileAsset = File(asset.localPath))
                     }
-                    else -> {
+                    AssetType.IMAGE.value -> {
                         val localPath =
                             if (asset.localPath.startsWith("file://")) asset.localPath.replace("file://", "") else asset.localPath
 
@@ -60,6 +60,7 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
                         }
                     }
                 }
+                if (file == null) return Result.failure()
 
                 val result = assetsService.uploadAssets(serverId, file).execute()
                 if (result.isSuccessful) {
