@@ -7,7 +7,7 @@ import java.util.Date
 open class Asset(
     @PrimaryKey
     var id: Int = 0,
-    var type: String = AssetType.IMAGE.value,
+    var typeRaw: String = AssetType.IMAGE.value,
     var serverId: String? = null,
     var createdAt: Date = Date(),
     var localPath: String = "", // Path on the device
@@ -17,7 +17,7 @@ open class Asset(
     companion object {
         const val TABLE_NAME = "Asset"
         const val ASSET_ID = "id"
-        const val ASSET_TYPE = "type"
+        const val ASSET_TYPE_RAW = "typeRaw"
         const val ASSET_SERVER_ID = "serverId"
         const val ASSET_CREATED_AT = "createdAt"
         const val ASSET_LOCAL_PATH = "localPath"

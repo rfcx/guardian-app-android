@@ -53,13 +53,13 @@ class ReportsAdapter(private val listener: ReportOnClickListener) :
             val (response, timeZone) = item
             val isSend = response.syncState == SyncState.SENT.value
 
-            if (response.imagesAsset.isEmpty()) {
+            if (response.imageAssets.isEmpty()) {
                 imageView.setDrawableImage(itemView.context, R.color.grey_default)
             } else {
-                imageView.setImage(response.imagesAsset[0].localPath)
+                imageView.setImage(response.imageAssets[0].localPath)
             }
 
-            notHaveImageView.visibility = if (response.imagesAsset.isEmpty()) View.VISIBLE else View.GONE
+            notHaveImageView.visibility = if (response.imageAssets.isEmpty()) View.VISIBLE else View.GONE
             loggingTextView.visibility = if (response.investigateType.contains(InvestigationType.LOGGING.value)) View.VISIBLE else View.GONE
             poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
             otherTextView.visibility = if (response.investigateType.contains(InvestigationType.OTHER.value)) View.VISIBLE else View.GONE

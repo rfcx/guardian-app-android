@@ -38,14 +38,14 @@ class CreateReportViewModel(
     }
 
     fun saveResponseInLocalDb(response: Response, images: List<String>?) {
-        response.imagesAsset.forEach {
+        response.imageAssets.forEach {
             assetDb.delete(it.id)
             response.assets.remove(it)
         }
 
         if (!images.isNullOrEmpty()) {
             images.forEach { path ->
-                response.assets.add(assetDb.save(Asset(type = AssetType.IMAGE.value, localPath = path)))
+                response.assets.add(assetDb.save(Asset(typeRaw = AssetType.IMAGE.value, localPath = path)))
             }
         }
         responseDb.save(response)
@@ -60,7 +60,7 @@ class CreateReportViewModel(
                 point = t.points.filter { p -> p.createdAt >= events[0].start }.toListDoubleArray()
             }
             val asset = Asset(
-                type = AssetType.KML.value,
+                typeRaw = AssetType.KML.value,
                 localPath = GeoJsonUtils.generateGeoJson(
                     context,
                     GeoJsonUtils.generateFileName(response.submittedAt ?: Date()),

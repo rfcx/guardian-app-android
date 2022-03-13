@@ -78,7 +78,7 @@ private class Migrations : RealmMigration {
         val asset = realm.schema.create(Asset.TABLE_NAME)
         asset?.apply {
             addField(Asset.ASSET_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
-            addField(Asset.ASSET_TYPE, String::class.java).setNullable(Asset.ASSET_TYPE, false)
+            addField(Asset.ASSET_TYPE_RAW, String::class.java).setNullable(Asset.ASSET_TYPE_RAW, false)
             addField(Asset.ASSET_SERVER_ID, String::class.java)
             addField(Asset.ASSET_CREATED_AT, Date::class.java).setNullable(Asset.ASSET_CREATED_AT, false)
             addField(Asset.ASSET_LOCAL_PATH, String::class.java).setNullable(Asset.ASSET_LOCAL_PATH, false)

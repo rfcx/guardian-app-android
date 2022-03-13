@@ -36,7 +36,7 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
         for (asset in assets) {
             asset.serverId?.let { serverId ->
                 var file: MultipartBody.Part? = null
-                when (asset.type) {
+                when (asset.typeRaw) {
                     AssetType.AUDIO.value -> {
                         file = createLocalFilePart(Uri.parse(asset.localPath), mediaType = "audio/mpeg")
                     }

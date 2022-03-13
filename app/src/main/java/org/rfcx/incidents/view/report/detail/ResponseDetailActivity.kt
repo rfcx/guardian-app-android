@@ -124,15 +124,15 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             binding.noteTextView.visibility = if (res.note != null) View.VISIBLE else View.GONE
             binding.noteTextView.text = res.note
-            if (res.audioAsset.isNotEmpty()) setAudio(res.audioAsset[0].localPath)
+            if (res.audioAssets.isNotEmpty()) setAudio(res.audioAssets[0].localPath)
             binding.soundRecordProgressView.disableEdit()
             binding.soundRecordProgressView.state = SoundRecordState.STOP_PLAYING
-            binding.soundRecordProgressView.visibility = if (res.audioAsset.isNotEmpty()) View.VISIBLE else View.GONE
+            binding.soundRecordProgressView.visibility = if (res.audioAssets.isNotEmpty()) View.VISIBLE else View.GONE
             res.guid?.let {
-                binding.attachImageRecycler.visibility = if (res.imagesAsset.isNotEmpty()) View.VISIBLE else View.GONE
-                reportImageAdapter.setImages(res.imagesAsset, false)
+                binding.attachImageRecycler.visibility = if (res.imageAssets.isNotEmpty()) View.VISIBLE else View.GONE
+                reportImageAdapter.setImages(res.imageAssets, false)
                 binding.additionalEvidenceLayout.visibility =
-                    if (res.note == null && res.imagesAsset.isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
+                    if (res.note == null && res.imageAssets.isEmpty() && res.audioLocation == null) View.GONE else View.VISIBLE
             }
         }
     }
@@ -228,28 +228,26 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             setupSources(style)
 
             response?.let { res ->
-                res.guid?.let { id ->
-                    val track = res.trackingAsset
-                    if (track.isNotEmpty()) {
-                        val tempTrack = arrayListOf<Feature>()
-                        val json = File(track[0].localPath).readText()
-                        val featureCollection = FeatureCollection.fromJson(json)
-                        val feature = featureCollection.features()?.get(0)
-                        feature?.let {
-                            tempTrack.add(it)
-                        }
-                        addLineLayer(style)
-                        lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
-
-                        val lastLocation = feature?.geometry() as LineString
-                        val pointFeatures = lastLocation.coordinates().map {
-                            Feature.fromGeometry(Point.fromLngLat(it.longitude(), it.latitude()))
-                        }
-                        checkInSource?.setGeoJson(FeatureCollection.fromFeatures(pointFeatures))
-                        moveCameraToLeavesBounds(lastLocation.coordinates())
-                    } else {
-                        binding.mapBoxCardView.visibility = View.GONE
+                val track = res.trackingAssets.firstOrNull()
+                if (track != null) {
+                    val tempTrack = arrayListOf<Feature>()
+                    val json = File(track.localPath).readText()
+                    val featureCollection = FeatureCollection.fromJson(json)
+                    val feature = featureCollection.features()?.get(0)
+                    feature?.let {
+                        tempTrack.add(it)
                     }
+                    addLineLayer(style)
+                    lineSource?.setGeoJson(FeatureCollection.fromFeatures(tempTrack))
+
+                    val lastLocation = feature?.geometry() as LineString
+                    val pointFeatures = lastLocation.coordinates().map {
+                        Feature.fromGeometry(Point.fromLngLat(it.longitude(), it.latitude()))
+                    }
+                    checkInSource?.setGeoJson(FeatureCollection.fromFeatures(pointFeatures))
+                    moveCameraToLeavesBounds(lastLocation.coordinates())
+                } else {
+                    binding.mapBoxCardView.visibility = View.GONE
                 }
             }
         }

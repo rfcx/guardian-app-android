@@ -78,7 +78,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             val response = viewModel.getResponseById(it)
             response?.let { res ->
                 setResponse(res)
-                res.imagesAsset.forEach { reportImage ->
+                res.imageAssets.forEach { reportImage ->
                     val path =
                         if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
                     _images.add(path)
@@ -224,7 +224,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     override fun setAudio(audioPath: String?) {
         val response = _response ?: Response()
-        audioPath?.let { response.assets.add(viewModel.saveAsset(Asset(type = AssetType.AUDIO.value, localPath = it))) }
+        audioPath?.let { response.assets.add(viewModel.saveAsset(Asset(typeRaw = AssetType.AUDIO.value, localPath = it))) }
         setResponse(response)
     }
 

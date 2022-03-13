@@ -183,7 +183,7 @@ class AssetsFragment : BaseImageFragment() {
     private fun setupAssets() {
         val response = listener.getResponse()
         response?.note?.let { note -> binding.noteEditText.setText(note) }
-        response?.audioAsset?.let { audios ->
+        response?.audioAssets?.let { audios ->
             if (audios.isNotEmpty()) setAudio(audios[0].localPath)
         }
 

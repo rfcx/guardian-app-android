@@ -31,9 +31,9 @@ open class Response(
     var assets: RealmList<Asset> = RealmList(),
     var syncState: Int = SyncState.UNSENT.value
 ) : RealmObject() {
-    val imagesAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.IMAGE.value }
-    val audioAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.AUDIO.value }
-    val trackingAsset: List<Asset> get() = this.assets.filter { a -> a.type == AssetType.KML.value }
+    val imageAssets: List<Asset> get() = this.assets.filter { a -> a.typeRaw == AssetType.IMAGE.value }
+    val audioAssets: List<Asset> get() = this.assets.filter { a -> a.typeRaw == AssetType.AUDIO.value }
+    val trackingAssets: List<Asset> get() = this.assets.filter { a -> a.typeRaw == AssetType.KML.value }
 
     companion object {
         const val TABLE_NAME = "Response"
