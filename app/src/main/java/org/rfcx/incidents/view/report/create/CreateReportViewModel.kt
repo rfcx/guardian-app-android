@@ -38,14 +38,27 @@ class CreateReportViewModel(
     }
 
     fun saveResponseInLocalDb(response: Response, images: List<String>?) {
-        response.imageAssets.forEach {
-            assetDb.delete(it.id)
-            response.assets.remove(it)
-        }
+        if (images != null) {
+            var shouldBeDelete = listOf<Asset>()
+            val shouldBeAdd = arrayListOf<String>()
 
-        if (!images.isNullOrEmpty()) {
-            images.forEach { path ->
-                response.assets.add(assetDb.save(Asset(typeRaw = AssetType.IMAGE.value, localPath = path)))
+            images.forEach {
+                if (it.contains("file://")) {
+                    shouldBeDelete = response.imageAssets.filter { image -> !images.contains("file://" + image.localPath) }
+                } else {
+                    shouldBeAdd.add(it)
+                }
+            }
+
+            shouldBeDelete.forEach {
+                assetDb.delete(it.id)
+                response.assets.remove(it)
+            }
+
+            if (!shouldBeAdd.isNullOrEmpty()) {
+                shouldBeAdd.forEach { path ->
+                    response.assets.add(assetDb.save(Asset(typeRaw = AssetType.IMAGE.value, localPath = path)))
+                }
             }
         }
         responseDb.save(response)
