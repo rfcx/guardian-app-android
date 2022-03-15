@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
@@ -32,6 +33,7 @@ import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
 import org.rfcx.incidents.service.ResponseSyncWorker
+import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -65,6 +67,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     private var _response: Response? = null
     private var _images: ArrayList<String> = arrayListOf()
     private var locationManager: LocationManager? = null
+    private val locationPermissions by lazy { LocationPermissions(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -303,10 +306,13 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         val response = _response ?: Response()
         response.submittedAt = Date()
         response.answers = response.saveToAnswers()
-        locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        lastLocation?.let { saveLocation(it) }
-        viewModel.saveTrackingFile(response, this)
+        // Check if permissions are enabled
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+            locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+            val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            lastLocation?.let { saveLocation(it) }
+            viewModel.saveTrackingFile(response, this)
+        }
         viewModel.saveResponseInLocalDb(response, _images)
         when {
             this.isOnAirplaneMode() -> {
