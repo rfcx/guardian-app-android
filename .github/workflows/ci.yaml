@@ -35,3 +35,9 @@ jobs:
 
       - name: 'Test: Unit Tests'
         run: ./gradlew testStagingDebugUnitTest
+        
+      - name: 'Upload APK'
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: app/staging/release/app-staging.apk
