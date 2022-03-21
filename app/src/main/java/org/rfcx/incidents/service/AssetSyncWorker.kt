@@ -33,7 +33,7 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
         var someFailed = false
         Log.d(TAG, "doWork: found ${assets.size} unsent")
 
-        assets.forEach {  asset ->
+        assets.forEach { asset ->
             asset.serverId?.let { serverId ->
                 var file: MultipartBody.Part? = null
                 when (asset.type) {
