@@ -9,8 +9,8 @@ class AssetDb(val realm: Realm) {
         realm.executeTransaction {
             if (asset.id == 0) {
                 asset.id = (it.where(Asset::class.java).max("id")?.toInt() ?: 0) + 1
-                it.insertOrUpdate(asset)
             }
+            it.insertOrUpdate(asset)
         }
         return asset
     }
