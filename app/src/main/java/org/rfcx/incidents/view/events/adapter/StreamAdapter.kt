@@ -60,6 +60,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfVoiceTextView = binding.numOfVoiceTextView
         private val dogBarkLayout = binding.dogBarkLayout
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
+        private val elephantLayout = binding.elephantLayout
+        private val numOfElephantTextView = binding.numOfElephantTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -73,7 +75,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 otherLayout,
                 vehicleLayout,
                 voiceLayout,
-                dogBarkLayout
+                dogBarkLayout,
+                elephantLayout
             ).forEach {
                 it.visibility = View.GONE
             }
@@ -153,6 +156,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 DOG_BARK -> {
                     dogBarkLayout.visibility = View.VISIBLE
                     numOfDogBarkTextView.text = getNumberOfEventByType(events, type)
+                }
+                ELEPHANT -> {
+                    elephantLayout.visibility = View.VISIBLE
+                    numOfElephantTextView.text = getNumberOfEventByType(events, type)
                 }
                 else -> {
                     otherLayout.visibility = View.VISIBLE

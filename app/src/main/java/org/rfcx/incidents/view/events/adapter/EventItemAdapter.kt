@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toStringWithTimeZone
@@ -45,9 +46,29 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
                 itemView.context,
                 timeZone
             ) else item.start.toStringWithTimeZone(itemView.context, timeZone)
-            val valueTitle = item.valueTitle
+
+            val valueIcon = when (item.classification?.value) {
+                StreamAdapter.GUNSHOT -> R.drawable.ic_gun
+                StreamAdapter.CHAINSAW -> R.drawable.ic_chainsaw
+                StreamAdapter.VEHICLE -> R.drawable.ic_vehicle
+                StreamAdapter.VOICE -> R.drawable.ic_voice
+                StreamAdapter.DOG_BARK -> R.drawable.ic_dog_bark
+                StreamAdapter.ELEPHANT -> R.drawable.ic_elephant
+                else -> R.drawable.ic_report
+            }
+
+            val valueTitle: Int? = when (item.classification?.value) {
+                StreamAdapter.GUNSHOT -> R.string.gunshot
+                StreamAdapter.CHAINSAW -> R.string.chainsaw
+                StreamAdapter.VEHICLE -> R.string.vehicle
+                StreamAdapter.VOICE -> R.string.human_voice
+                StreamAdapter.DOG_BARK -> R.string.dog_bark
+                StreamAdapter.ELEPHANT -> R.string.elephant
+                else -> null
+            }
+
             typeTextView.text = if (valueTitle != null) itemView.context.getString(valueTitle) else item.classification?.title
-            numberOfEventsImageView.setImageResource(item.valueIcon)
+            numberOfEventsImageView.setImageResource(valueIcon)
         }
     }
 }
