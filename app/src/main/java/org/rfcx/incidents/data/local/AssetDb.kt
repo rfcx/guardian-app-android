@@ -70,8 +70,8 @@ class AssetDb(val realm: Realm) {
         val asset = realm.where(Asset::class.java)
             .equalTo(Asset.ASSET_ID, assetId).findFirst()
 
-        realm.executeTransaction { transaction ->
-            if (asset != null) {
+        if (asset != null) {
+            realm.executeTransaction { transaction ->
                 asset.serverId = serverId
                 transaction.insertOrUpdate(asset)
             }
