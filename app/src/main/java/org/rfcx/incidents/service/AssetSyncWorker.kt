@@ -36,14 +36,14 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
         for (asset in assets) {
             asset.serverId?.let { serverId ->
                 var file: MultipartBody.Part? = null
-                when (asset.typeRaw) {
-                    AssetType.AUDIO.value -> {
+                when (asset.type) {
+                    AssetType.AUDIO -> {
                         file = createLocalFilePart(Uri.parse(asset.localPath), mediaType = "audio/mpeg")
                     }
-                    AssetType.KML.value -> {
+                    AssetType.KML -> {
                         file = createLocalFilePart(fileAsset = File(asset.localPath))
                     }
-                    AssetType.IMAGE.value -> {
+                    AssetType.IMAGE -> {
                         val localPath =
                             if (asset.localPath.startsWith("file://")) asset.localPath.replace("file://", "") else asset.localPath
 
