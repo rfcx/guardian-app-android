@@ -117,7 +117,7 @@ class LocationPermissions(private val activity: Activity) {
     }
 
     companion object {
-        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+        const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
         private const val REQUEST_CHECK_LOCATION_SETTINGS = 35
     }
 }

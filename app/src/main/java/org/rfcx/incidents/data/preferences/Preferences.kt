@@ -40,6 +40,7 @@ class Preferences(context: Context) {
         const val LATEST_GET_LOCATION_TIME = "LATEST_GET_LOCATION_TIME"
         const val LATEST_CURRENT_LOCATION_TIME = "LATEST_CURRENT_LOCATION_TIME"
         const val SUBSCRIBED_PROJECTS = "SUBSCRIBED_PROJECTS"
+        const val SELECTED_STREAM_ID = "SELECTED_STREAM_ID"
     }
 
     init {
