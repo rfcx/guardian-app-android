@@ -177,9 +177,12 @@
     <string name="unable_to_submit_on_airplane_mode">Unable to submit while in airplane mode.</string>
 
     <!--Event value-->
-    <string name="chainsaw">chainsaw</string>
-    <string name="gunshot">gunshot</string>
-    <string name="vehicle">vehicle</string>
+    <string name="chainsaw">Chainsaw</string>
+    <string name="gunshot">Gunshot, gunfire</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="human_voice">Human voice</string>
+    <string name="dog_bark">Bark</string>
+    <string name="elephant">Elephant</string>
     <string name="trespasser">trespasser</string>
     <string name="other">other</string>
 

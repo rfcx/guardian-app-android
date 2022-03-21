@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.toStringWithTimeZone
@@ -46,16 +45,9 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
                 itemView.context,
                 timeZone
             ) else item.start.toStringWithTimeZone(timeZone)
-            typeTextView.text = item.classification?.title
-            val imageIcon = when (item.classification?.value) {
-                StreamAdapter.GUNSHOT -> R.drawable.ic_gun
-                StreamAdapter.CHAINSAW -> R.drawable.ic_chainsaw
-                StreamAdapter.VEHICLE -> R.drawable.ic_vehicle
-                StreamAdapter.VOICE -> R.drawable.ic_voice
-                StreamAdapter.DOG_BARK -> R.drawable.ic_dog_bark
-                else -> R.drawable.ic_report
-            }
-            numberOfEventsImageView.setImageResource(imageIcon)
+            val valueTitle = item.valueTitle
+            typeTextView.text = if (valueTitle != null) itemView.context.getString(valueTitle) else item.classification?.title
+            numberOfEventsImageView.setImageResource(item.valueIcon)
         }
     }
 }

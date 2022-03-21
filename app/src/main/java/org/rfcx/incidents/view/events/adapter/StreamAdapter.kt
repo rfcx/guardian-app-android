@@ -111,7 +111,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             if (eventsDistinctType.isEmpty()) return
             var number = 0
 
-            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK)
+            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK, ELEPHANT)
             var counts = 0
             value.forEach { v ->
                 if (events.any { a -> a.classification?.value == v }) {
@@ -182,5 +182,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         const val DOG_BARK = "dog_bark"
         const val VEHICLE = "vehicle"
         const val VOICE = "humanvoice"
+        const val ELEPHANT = "elephant"
     }
 }

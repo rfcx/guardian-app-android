@@ -160,9 +160,12 @@
     <string name="no_internet_connection">Tidak ada internet, harap coba lagi.</string>
 	
 	<!--Event value-->
-    <string name="chainsaw">gergaji</string>
-    <string name="gunshot">tembakan</string>
-    <string name="vehicle">kendaraan</string>
+    <string name="chainsaw">Gergaji mesin</string>
+    <string name="gunshot">Suara tembakan</string>
+    <string name="vehicle">Kendaraan</string>
+    <string name="human_voice">Suara manusia</string>
+    <string name="dog_bark">Gonggongan anjing</string>
+    <string name="elephant">Gajah</string>
     <string name="trespasser">penyusup</string>
     <string name="other">lainnya</string>
     
