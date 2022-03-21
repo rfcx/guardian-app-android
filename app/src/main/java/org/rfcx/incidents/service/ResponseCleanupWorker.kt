@@ -8,10 +8,8 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
-import org.rfcx.companion.service.TrackingSyncWorker
-import org.rfcx.incidents.data.local.ReportImageDb
+import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.ResponseDb
-import org.rfcx.incidents.data.local.TrackingFileDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import java.util.concurrent.TimeUnit
 
@@ -39,18 +37,11 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
             ResponseSyncWorker.enqueue()
         }
 
-        val imageDb = ReportImageDb(realm)
-        val imageUnsent = imageDb.unsentCount()
-        imageDb.unlockSending()
-        if (imageUnsent > 0) {
-            ImageUploadWorker.enqueue()
-        }
-
-        val trackingFileDb = TrackingFileDb(realm)
-        val trackingFileUnsent = trackingFileDb.unsentCount()
-        trackingFileDb.unlockSending()
-        if (trackingFileUnsent > 0) {
-            TrackingSyncWorker.enqueue()
+        val assetDb = AssetDb(realm)
+        val assetUnsent = assetDb.unsentCount()
+        assetDb.unlockSending()
+        if (assetUnsent > 0) {
+            AssetSyncWorker.enqueue()
         }
     }
 

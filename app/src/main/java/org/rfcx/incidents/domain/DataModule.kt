@@ -26,16 +26,14 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.data.local.ReportImageDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
-import org.rfcx.incidents.data.local.TrackingFileDb
-import org.rfcx.incidents.data.local.VoiceDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -104,12 +102,10 @@ object DataModule {
         factory { CachedEndpointDb(get()) }
         factory { ProjectDb(get()) }
         factory { ResponseDb(get()) }
-        factory { ReportImageDb(get()) }
-        factory { VoiceDb(get()) }
         factory { EventDb(get()) }
         factory { StreamDb(get()) }
+        factory { AssetDb(get()) }
         factory { TrackingDb(get()) }
-        factory { TrackingFileDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }

@@ -26,6 +26,8 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityCreateReportBinding
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.entity.response.Asset
+import org.rfcx.incidents.entity.response.AssetType
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
@@ -76,13 +78,17 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             val response = viewModel.getResponseById(it)
             response?.let { res ->
                 setResponse(res)
+                res.imageAssets.forEach { reportImage ->
+                    val path =
+                        if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
+                    _images.add(path)
+                }
             }
         }
 
         // TODO stream id should already be on the ViewModel
         streamName = viewModel.getStream(streamId)?.name ?: "Unknown"
 
-        getImagesFromLocal()
         setupToolbar()
         handleCheckClicked(StepCreateReport.INVESTIGATION_TIMESTAMP.step)
 
@@ -109,17 +115,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
             }
         }
         return super.dispatchTouchEvent(event)
-    }
-
-    private fun getImagesFromLocal() {
-        responseId?.let {
-            val images = viewModel.getImagesFromLocal(it)
-            images.forEach { reportImage ->
-                val path =
-                    if (reportImage.remotePath != null) BuildConfig.RANGER_API_BASE_URL + reportImage.remotePath else "file://${reportImage.localPath}"
-                _images.add(path)
-            }
-        }
     }
 
     private fun setupToolbar() {
@@ -229,7 +224,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     override fun setAudio(audioPath: String?) {
         val response = _response ?: Response()
-        response.audioLocation = audioPath
+        audioPath?.let { response.assets.add(viewModel.saveAsset(Asset(typeRaw = AssetType.AUDIO.value, localPath = it))) }
         setResponse(response)
     }
 
@@ -311,8 +306,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         lastLocation?.let { saveLocation(it) }
-        viewModel.saveResponseInLocalDb(response, _images)
         viewModel.saveTrackingFile(response, this)
+        viewModel.saveResponseInLocalDb(response, _images)
         when {
             this.isOnAirplaneMode() -> {
                 Toast.makeText(

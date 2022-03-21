@@ -54,7 +54,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
             val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
             reportsAdapter.items =
-                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
+                items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -158,7 +158,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
             val items = res.sortedByDescending { r -> r.submittedAt }
                 .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
             reportsAdapter.items =
-                items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
+                items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         })
 
@@ -201,7 +201,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.submittedAt }
                     .filter { r -> r.syncState == SyncState.SENT.value && streams.contains(r.streamId) }
                 reportsAdapter.items =
-                    items.map { Triple(it, viewModel.getStream(it.streamId)?.timezone, viewModel.getByReportId(it.id).firstOrNull()?.localPath) }
+                    items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
                 binding.notHaveSubmittedReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             }
         }
