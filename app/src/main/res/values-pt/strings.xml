@@ -295,6 +295,6 @@
     <string name="small_text">Pequena</string>
     <string name="large_text">Grande</string>
     <string name="recent">Recente</string>
-    <string name="hot">Forte atividade</string>
+    <string name="hot">Hot</string>
 
 </resources>

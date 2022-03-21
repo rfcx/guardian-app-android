@@ -44,7 +44,7 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
             dateTextView.text = if (timeZone == TimeZone.getDefault()) item.start.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
-            ) else item.start.toStringWithTimeZone(timeZone)
+            ) else item.start.toStringWithTimeZone(itemView.context, timeZone)
             val valueTitle = item.valueTitle
             typeTextView.text = if (valueTitle != null) itemView.context.getString(valueTitle) else item.classification?.title
             numberOfEventsImageView.setImageResource(item.valueIcon)

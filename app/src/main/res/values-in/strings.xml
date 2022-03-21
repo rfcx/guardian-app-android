@@ -307,4 +307,29 @@
     <string name="satellite_audio_not_found">Audio tidak tersedia untuk satelit Guardian</string>
     <string name="can_not_play_audio">Tidak bisa memutar audio, silakan coba lagi  nanti.</string>
 
+    <string name="seconds">detik</string>
+    <string name="minutes">menit</string>
+    <string name="hours">jam</string>
+    <string name="years">tahun</string>
+    <string name="months">bulan</string>
+    <string name="days">hari</string>
+    <string name="second">detik</string>
+    <string name="minute">menit</string>
+    <string name="hour">jam</string>
+    <string name="year">tahun</string>
+    <string name="month">bulan</string>
+    <string name="day">hari1</string>
+    <string name="jan">Jan1</string>
+    <string name="feb">Feb1</string>
+    <string name="mar">Mar1</string>
+    <string name="apr">Apr1</string>
+    <string name="may">Mei1</string>
+    <string name="jun">Jun1</string>
+    <string name="jul">Jul1</string>
+    <string name="aug">Agu1</string>
+    <string name="sep">Sep1</string>
+    <string name="oct">Okt1</string>
+    <string name="nov">Nov1</string>
+    <string name="dec">Des1</string>
+
 </resources>

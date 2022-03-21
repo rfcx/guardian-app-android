@@ -102,11 +102,11 @@ class ResponseDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             val timeZone = TimeZone.getTimeZone(viewModel.getStream(res.streamId)?.timezoneRaw)
             binding.investigatedAtValueTextView.text =
                 if (timeZone == TimeZone.getDefault()) res.investigatedAt.toTimeSinceStringAlternativeTimeAgo(this, timeZone)
-                else res.investigatedAt.toStringWithTimeZone(timeZone)
+                else res.investigatedAt.toStringWithTimeZone(this, timeZone)
 
             binding.receivedValueTextView.text =
                 if (timeZone == TimeZone.getDefault()) res.submittedAt?.toTimeSinceStringAlternativeTimeAgo(this, timeZone)
-                else res.submittedAt?.toStringWithTimeZone(timeZone)
+                else res.submittedAt?.toStringWithTimeZone(this, timeZone)
 
             binding.loggingValueTextView.text = getMessageList(res.answers, '1')
             binding.poachingValueTextView.text = getMessageList(res.answers, '6')

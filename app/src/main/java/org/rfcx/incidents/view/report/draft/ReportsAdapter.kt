@@ -74,7 +74,7 @@ class ReportsAdapter(private val listener: ReportOnClickListener) :
             dateTextView.text = if (timeZone == TimeZone.getDefault()) response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
-            ) else response.investigatedAt.toStringWithTimeZone(timeZone)
+            ) else response.investigatedAt.toStringWithTimeZone(itemView.context, timeZone)
 
             itemView.setOnClickListener {
                 listener.onClickedItem(response)

@@ -118,13 +118,13 @@ fun Date.toTimeWithTimeZone(timeZone: TimeZone?): String {
     return tempSdf.format(this)
 }
 
-fun Date.toStringWithTimeZone(timeZone: TimeZone?): String {
+fun Date.toStringWithTimeZone(context: Context, timeZone: TimeZone?): String {
     val tz = timeZone ?: TimeZone.getDefault()
     val outputDate = if (this.isThisYear()) outputDateWithoutYearSdf else outputDateSdf
     val outputWithTimeZone = if (this.isThisYear()) outputTimeZoneWithoutYearSdf else outputWithTimeZoneSdf
     val tempSdf = if (tz == TimeZone.getDefault()) outputDate else outputWithTimeZone
     tempSdf.timeZone = tz
-    return if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))
+    return (if (tz == TimeZone.getDefault()) tempSdf.format(this) else setShortTimeZone(tempSdf.format(this))).monthTranslate(context)
 }
 
 private fun makeToShortString(str: String, symbol: String): String {
@@ -190,16 +190,96 @@ fun Date.toTimeSinceStringAlternativeTimeAgo(context: Context, timeZone: TimeZon
             Calendar.getInstance().timeInMillis,
             DateUtils.MINUTE_IN_MILLIS
         )
-
     return if (niceDateStr.toString() == "0 minutes ago") {
         context.getString(R.string.report_time_second)
     } else if (niceDateStr.toString() == "Yesterday") {
         "${context.getString(R.string.yesterday)}, ${this.toTimeString()}"
     } else if (!niceDateStr.toString().contains("ago")) {
-        this.toStringWithTimeZone(timeZone)
+        this.toStringWithTimeZone(context, timeZone)
     } else if (niceDateStr.toString().contains("days ago")) {
-        this.toStringWithTimeZone(timeZone)
+        this.toStringWithTimeZone(context, timeZone)
     } else {
         niceDateStr.toString()
+    }
+}
+
+fun String.monthTranslate(context: Context): String {
+    // Log.d("monthTranslate",this)
+    return when {
+        this.contains("seconds") -> {
+            this.replace("seconds", context.getString(R.string.seconds))
+        }
+        this.contains("minutes") -> {
+            this.replace("minutes", context.getString(R.string.minutes))
+        }
+        this.contains("hours") -> {
+            this.replace("hours", context.getString(R.string.hours))
+        }
+        this.contains("years") -> {
+            this.replace("years", context.getString(R.string.years))
+        }
+        this.contains("months") -> {
+            this.replace("months", context.getString(R.string.months))
+        }
+        this.contains("days") -> {
+            this.replace("days", context.getString(R.string.days))
+        }
+        this.contains("second") -> {
+            this.replace("second", context.getString(R.string.second))
+        }
+        this.contains("minute") -> {
+            this.replace("minute", context.getString(R.string.minute))
+        }
+        this.contains("hour") -> {
+            this.replace("hour", context.getString(R.string.hour))
+        }
+        this.contains("year") -> {
+            this.replace("year", context.getString(R.string.year))
+        }
+        this.contains("month") -> {
+            this.replace("month", context.getString(R.string.month))
+        }
+        this.contains("day") -> {
+            this.replace("day", context.getString(R.string.day))
+        }
+        this.contains("Jan") -> {
+            this.replace("Jan", context.getString(R.string.jan))
+        }
+        this.contains("Feb") -> {
+            this.replace("Feb", context.getString(R.string.feb))
+        }
+        this.contains("Mar") -> {
+            this.replace("Mar", context.getString(R.string.mar))
+        }
+        this.contains("Apr") -> {
+            this.replace("Apr", context.getString(R.string.apr))
+        }
+        this.contains("May") -> {
+            this.replace("May", context.getString(R.string.may))
+        }
+        this.contains("Jun") -> {
+            this.replace("Jun", context.getString(R.string.jun))
+        }
+        this.contains("Jul") -> {
+            this.replace("Jul", context.getString(R.string.jul))
+        }
+        this.contains("Aug") -> {
+            this.replace("Aug", context.getString(R.string.aug))
+        }
+        this.contains("Sep") -> {
+            this.replace("Sep", context.getString(R.string.sep))
+        }
+        this.contains("Oct") -> {
+            this.replace("Oct", context.getString(R.string.oct))
+        }
+        this.contains("Nov") -> {
+            this.replace("Nov", context.getString(R.string.nov))
+        }
+        this.contains("Dec") -> {
+            this.replace("Dec", context.getString(R.string.dec))
+        }
+        else -> {
+            this
+        }
     }
 }
