@@ -19,6 +19,7 @@ import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.view.MainActivityEventListener
@@ -32,6 +33,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
     private val viewModel: StreamDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
     private val eventItemAdapter by lazy { EventItemAdapter(this) }
+    private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
 
     lateinit var streamId: String
     var distance: Double? = null
@@ -82,10 +84,15 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
-                listener.getCurrentLocation()?.let { loc ->
-                    saveLocation(loc)
+                Preferences.getInstance(requireContext()).putString(Preferences.SELECTED_STREAM_ID, streamId)
+                locationPermissions.check {
+                    if (it) {
+                        listener.getCurrentLocation()?.let { loc ->
+                            saveLocation(loc)
+                        }
+                        listener.openCreateReportActivity(streamId)
+                    }
                 }
-                listener.openCreateReportActivity(streamId)
             }
         }
 
