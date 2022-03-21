@@ -9,8 +9,8 @@ class AssetDb(val realm: Realm) {
         realm.executeTransaction {
             if (asset.id == 0) {
                 asset.id = (it.where(Asset::class.java).max("id")?.toInt() ?: 0) + 1
-                it.insertOrUpdate(asset)
             }
+            it.insertOrUpdate(asset)
         }
         return asset
     }
@@ -70,8 +70,8 @@ class AssetDb(val realm: Realm) {
         val asset = realm.where(Asset::class.java)
             .equalTo(Asset.ASSET_ID, assetId).findFirst()
 
-        realm.executeTransaction { transaction ->
-            if (asset != null) {
+        if (asset != null) {
+            realm.executeTransaction { transaction ->
                 asset.serverId = serverId
                 transaction.insertOrUpdate(asset)
             }

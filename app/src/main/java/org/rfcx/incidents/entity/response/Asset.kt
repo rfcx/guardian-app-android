@@ -14,6 +14,15 @@ open class Asset(
     var syncState: Int = SyncState.UNSENT.value,
     var remotePath: String? = null // image url after synced to server
 ) : RealmObject() {
+
+    val type: AssetType?
+        get() = when (typeRaw) {
+            AssetType.IMAGE.value -> AssetType.IMAGE
+            AssetType.AUDIO.value -> AssetType.AUDIO
+            AssetType.KML.value -> AssetType.KML
+            else -> null
+        }
+
     companion object {
         const val TABLE_NAME = "Asset"
         const val ASSET_ID = "id"
