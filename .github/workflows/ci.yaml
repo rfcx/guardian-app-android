@@ -35,9 +35,3 @@ jobs:
 
       - name: 'Test: Unit Tests'
         run: ./gradlew testStagingDebugUnitTest
-        
-      - name: 'Upload a Build APK'
-        uses: actions/upload-artifact@v3.0.0
-        with:
-          name: guardian-staging
-          path: app/build/outputs/apk/staging/debug/app-staging-debug.apk
