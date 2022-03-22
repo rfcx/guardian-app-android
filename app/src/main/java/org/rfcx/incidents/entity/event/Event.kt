@@ -3,9 +3,7 @@ package org.rfcx.incidents.entity.event
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
-import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.stream.Incident
-import org.rfcx.incidents.view.events.adapter.StreamAdapter
 import java.util.Date
 
 @RealmClass
