@@ -18,6 +18,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityMainBinding
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.EventNotification
@@ -26,6 +28,7 @@ import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.LocationPermissions
+import org.rfcx.incidents.util.LocationPermissions.Companion.REQUEST_PERMISSIONS_REQUEST_CODE
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.logout
 import org.rfcx.incidents.util.saveUserLoginWith
@@ -126,6 +129,15 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissions.handleRequestResult(requestCode, grantResults)
 
+        if (supportFragmentManager.fragments.lastOrNull() is StreamDetailFragment) {
+            if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+                getCurrentLocation()?.let { loc ->
+                    saveLocation(loc)
+                }
+                openCreateReportActivity(Preferences.getInstance(this).getString(Preferences.SELECTED_STREAM_ID, ""))
+            }
+        }
+
         currentFragment?.let {
             if (it is StreamsFragment) {
                 it.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -152,6 +164,17 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.statusColor)
         }
+    }
+
+    private fun saveLocation(location: Location) {
+        val tracking = Tracking(id = 1)
+        val coordinate = Coordinate(
+            latitude = location.latitude,
+            longitude = location.longitude,
+            altitude = location.altitude
+        )
+        mainViewModel.saveLocation(tracking, coordinate)
+        Preferences.getInstance(this).putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
     }
 
     private fun setupBottomMenu() {

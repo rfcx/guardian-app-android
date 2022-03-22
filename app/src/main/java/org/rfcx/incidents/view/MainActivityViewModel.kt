@@ -10,6 +10,7 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
+import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -18,6 +19,8 @@ import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.GetStreamsUseCase
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -28,6 +31,7 @@ class MainActivityViewModel(
     private val responseDb: ResponseDb,
     private val projectDb: ProjectDb,
     private val streamDb: StreamDb,
+    private val trackingDb: TrackingDb,
     private val getProjectsUseCase: GetProjectsUseCase,
     private val getStreamsUseCase: GetStreamsUseCase,
     credentialKeeper: CredentialKeeper
@@ -68,6 +72,10 @@ class MainActivityViewModel(
             },
             GetProjectsParams()
         )
+    }
+
+    fun saveLocation(tracking: Tracking, coordinate: Coordinate) {
+        trackingDb.insertOrUpdate(tracking, coordinate)
     }
 
     fun refreshStreams() {
