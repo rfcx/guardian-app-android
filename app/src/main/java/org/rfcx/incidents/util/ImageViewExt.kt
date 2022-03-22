@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -13,7 +14,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import org.rfcx.incidents.R
 
-fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = null, progressBar: ProgressBar) {
+fun ImageView.setReportImage(
+    url: String,
+    fromServer: Boolean,
+    token: String? = null,
+    progressBar: ProgressBar,
+    failedIcon: ImageView? = null,
+    noneFoundText: TextView? = null
+) {
     val placeholder = R.drawable.bg_placeholder_image
     if (fromServer) {
         progressBar.visibility = View.VISIBLE
@@ -35,6 +43,10 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
                     isFirstResource: Boolean
                 ): Boolean {
                     progressBar.visibility = View.GONE
+                    if (failedIcon != null && noneFoundText != null) {
+                        failedIcon.visibility = View.VISIBLE
+                        noneFoundText.visibility = View.VISIBLE
+                    }
                     return false
                 }
 
@@ -46,6 +58,10 @@ fun ImageView.setReportImage(url: String, fromServer: Boolean, token: String? = 
                     isFirstResource: Boolean
                 ): Boolean {
                     progressBar.visibility = View.GONE
+                    if (failedIcon != null && noneFoundText != null) {
+                        failedIcon.visibility = View.GONE
+                        noneFoundText.visibility = View.GONE
+                    }
                     return false
                 }
             })

@@ -304,6 +304,7 @@
     <string name="is_other_today">%1s - Hari ini, %2s %3s</string>
     <string name="is_other_yesterday">%1s - Kemarin, %2s %3s</string>
     <string name="audio_not_found">Audio tidak ditemukan</string>
+    <string name="not_found">tidak ditemukan</string>
     <string name="satellite_audio_not_found">Audio tidak tersedia untuk satelit Guardian</string>
     <string name="can_not_play_audio">Tidak bisa memutar audio, silakan coba lagi  nanti.</string>
 
