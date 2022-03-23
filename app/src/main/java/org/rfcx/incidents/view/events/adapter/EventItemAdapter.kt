@@ -45,17 +45,30 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
             dateTextView.text = if (timeZone == TimeZone.getDefault()) item.start.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
-            ) else item.start.toStringWithTimeZone(timeZone)
-            typeTextView.text = item.classification?.title
-            val imageIcon = when (item.classification?.value) {
+            ) else item.start.toStringWithTimeZone(itemView.context, timeZone)
+
+            val valueIcon = when (item.classification?.value) {
                 StreamAdapter.GUNSHOT -> R.drawable.ic_gun
                 StreamAdapter.CHAINSAW -> R.drawable.ic_chainsaw
                 StreamAdapter.VEHICLE -> R.drawable.ic_vehicle
                 StreamAdapter.VOICE -> R.drawable.ic_voice
                 StreamAdapter.DOG_BARK -> R.drawable.ic_dog_bark
+                StreamAdapter.ELEPHANT -> R.drawable.ic_elephant
                 else -> R.drawable.ic_report
             }
-            numberOfEventsImageView.setImageResource(imageIcon)
+
+            val valueTitle: Int? = when (item.classification?.value) {
+                StreamAdapter.GUNSHOT -> R.string.gunshot
+                StreamAdapter.CHAINSAW -> R.string.chainsaw
+                StreamAdapter.VEHICLE -> R.string.vehicle
+                StreamAdapter.VOICE -> R.string.human_voice
+                StreamAdapter.DOG_BARK -> R.string.dog_bark
+                StreamAdapter.ELEPHANT -> R.string.elephant
+                else -> null
+            }
+
+            typeTextView.text = if (valueTitle != null) itemView.context.getString(valueTitle) else item.classification?.title
+            numberOfEventsImageView.setImageResource(valueIcon)
         }
     }
 }

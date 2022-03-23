@@ -41,7 +41,7 @@ fun dateRangeFormat(context: Context, fromUtc: Date, toUtc: Date, timezone: Time
             }
         }
     }
-    return text
+    return text.monthTranslate(context)
 }
 
 private fun sameDateFormat(date: String, from: String, to: String, timezone: String): String {

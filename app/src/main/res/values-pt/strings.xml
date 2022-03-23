@@ -252,6 +252,7 @@
     <string name="menu_submitted_reports">Relatórios Enviados</string>
     <string name="menu_draft_reports">Rascunhos</string>
     <string name="audio_not_found">Áudio não encontrado</string>
+    <string name="not_found">não encontrado</string>
     <string name="refresh">atualizar</string>
     <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i>"</string>
     <string name="submit_report">Enviar relatório</string>
@@ -295,6 +296,6 @@
     <string name="small_text">Pequena</string>
     <string name="large_text">Grande</string>
     <string name="recent">Recente</string>
-    <string name="hot">Forte atividade</string>
+    <string name="hot">Hot</string>
 
 </resources>

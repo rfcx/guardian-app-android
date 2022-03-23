@@ -54,7 +54,7 @@ class EventActivity : AppCompatActivity() {
         binding.toolbarLayout.title = event?.streamId?.let { viewModel.getStream(it) }?.name
         val timezoneString = event?.streamId?.let { viewModel.getStream(it) }?.timezoneRaw
         val timezone = if (timezoneString == null) TimeZone.getDefault() else TimeZone.getTimeZone(timezoneString)
-        binding.timeTextView.text = event?.createdAt?.toTimeSinceStringAlternativeTimeAgo(this, timezone)
+        binding.timeTextView.text = event?.start?.toTimeSinceStringAlternativeTimeAgo(this, timezone)
         val token = this.getTokenID()
 
         event?.let {

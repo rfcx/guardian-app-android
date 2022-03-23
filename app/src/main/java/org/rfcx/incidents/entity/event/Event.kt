@@ -18,6 +18,7 @@ open class Event(
     var classification: Classification? = null,
     var incident: Incident? = null
 ) : RealmModel {
+
     companion object {
         const val TABLE_NAME = "Event"
         const val EVENT_ID = "id"

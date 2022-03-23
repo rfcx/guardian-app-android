@@ -123,8 +123,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     private fun setObserve() {
         viewModel.getResponses().observe(viewLifecycleOwner) { responses ->
             streams = viewModel.getStreamIdsInProjectId()
-            val items = responses.sortedByDescending { r -> r.startedAt }
-                .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
+            val items = responses.sortedByDescending { r -> r.startedAt }.filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
             reportsAdapter.items =
                 items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
@@ -160,8 +159,9 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             setProjectTitle(viewModel.getProjectName(projectId))
 
             streams = viewModel.getStreamIdsInProjectId()
-            val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
-                .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
+            val items =
+                viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
+                    .filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
             reportsAdapter.items =
                 items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
@@ -186,7 +186,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             else -> {
                 streams = viewModel.getStreamIdsInProjectId()
                 val items = viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
-                    .filter { r -> r.syncState == SyncState.UNSENT.value && streams.contains(r.streamId) }
+                    .filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
                 reportsAdapter.items =
                     items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
                 binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE

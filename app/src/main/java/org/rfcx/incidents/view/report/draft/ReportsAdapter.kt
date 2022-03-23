@@ -64,7 +64,7 @@ class ReportsAdapter(private val listener: ReportOnClickListener) :
             poachingTextView.visibility = if (response.investigateType.contains(InvestigationType.POACHING.value)) View.VISIBLE else View.GONE
             otherTextView.visibility = if (response.investigateType.contains(InvestigationType.OTHER.value)) View.VISIBLE else View.GONE
 
-            actionImageView.visibility = if (isSend) View.VISIBLE else View.GONE
+            actionImageView.visibility = if (response.submittedAt != null) View.VISIBLE else View.GONE
             actionImageView.setDrawableImage(itemView.context, response.syncImage())
 
             reportIdTextView.visibility = if (response.incidentRef != null) View.VISIBLE else View.GONE
@@ -74,7 +74,7 @@ class ReportsAdapter(private val listener: ReportOnClickListener) :
             dateTextView.text = if (timeZone == TimeZone.getDefault()) response.investigatedAt.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
-            ) else response.investigatedAt.toStringWithTimeZone(timeZone)
+            ) else response.investigatedAt.toStringWithTimeZone(itemView.context, timeZone)
 
             itemView.setOnClickListener {
                 listener.onClickedItem(response)

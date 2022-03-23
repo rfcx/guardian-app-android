@@ -160,9 +160,12 @@
     <string name="no_internet_connection">Tidak ada internet, harap coba lagi.</string>
 	
 	<!--Event value-->
-    <string name="chainsaw">gergaji</string>
-    <string name="gunshot">tembakan</string>
-    <string name="vehicle">kendaraan</string>
+    <string name="chainsaw">Gergaji mesin</string>
+    <string name="gunshot">Suara tembakan</string>
+    <string name="vehicle">Kendaraan</string>
+    <string name="human_voice">Suara manusia</string>
+    <string name="dog_bark">Gonggongan anjing</string>
+    <string name="elephant">Gajah</string>
     <string name="trespasser">penyusup</string>
     <string name="other">lainnya</string>
     
@@ -301,7 +304,33 @@
     <string name="is_other_today">%1s - Hari ini, %2s %3s</string>
     <string name="is_other_yesterday">%1s - Kemarin, %2s %3s</string>
     <string name="audio_not_found">Audio tidak ditemukan</string>
+    <string name="not_found">tidak ditemukan</string>
     <string name="satellite_audio_not_found">Audio tidak tersedia untuk satelit Guardian</string>
     <string name="can_not_play_audio">Tidak bisa memutar audio, silakan coba lagi  nanti.</string>
+
+    <string name="seconds">detik</string>
+    <string name="minutes">menit</string>
+    <string name="hours">jam</string>
+    <string name="years">tahun</string>
+    <string name="months">bulan</string>
+    <string name="days">hari</string>
+    <string name="second">detik</string>
+    <string name="minute">menit</string>
+    <string name="hour">jam</string>
+    <string name="year">tahun</string>
+    <string name="month">bulan</string>
+    <string name="day">hari1</string>
+    <string name="jan">Jan1</string>
+    <string name="feb">Feb1</string>
+    <string name="mar">Mar1</string>
+    <string name="apr">Apr1</string>
+    <string name="may">Mei1</string>
+    <string name="jun">Jun1</string>
+    <string name="jul">Jul1</string>
+    <string name="aug">Agu1</string>
+    <string name="sep">Sep1</string>
+    <string name="oct">Okt1</string>
+    <string name="nov">Nov1</string>
+    <string name="dec">Des1</string>
 
 </resources>

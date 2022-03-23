@@ -60,6 +60,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfVoiceTextView = binding.numOfVoiceTextView
         private val dogBarkLayout = binding.dogBarkLayout
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
+        private val elephantLayout = binding.elephantLayout
+        private val numOfElephantTextView = binding.numOfElephantTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -73,7 +75,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 otherLayout,
                 vehicleLayout,
                 voiceLayout,
-                dogBarkLayout
+                dogBarkLayout,
+                elephantLayout
             ).forEach {
                 it.visibility = View.GONE
             }
@@ -111,7 +114,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             if (eventsDistinctType.isEmpty()) return
             var number = 0
 
-            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK)
+            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK, ELEPHANT)
             var counts = 0
             value.forEach { v ->
                 if (events.any { a -> a.classification?.value == v }) {
@@ -154,6 +157,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     dogBarkLayout.visibility = View.VISIBLE
                     numOfDogBarkTextView.text = getNumberOfEventByType(events, type)
                 }
+                ELEPHANT -> {
+                    elephantLayout.visibility = View.VISIBLE
+                    numOfElephantTextView.text = getNumberOfEventByType(events, type)
+                }
                 else -> {
                     otherLayout.visibility = View.VISIBLE
                     numOfOtherTextView.text = getNumberOfEventByType(events, type)
@@ -182,5 +189,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         const val DOG_BARK = "dog_bark"
         const val VEHICLE = "vehicle"
         const val VOICE = "humanvoice"
+        const val ELEPHANT = "elephant"
     }
 }
