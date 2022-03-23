@@ -160,7 +160,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 
             streams = viewModel.getStreamIdsInProjectId()
             val items =
-                viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }.filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
+                viewModel.getResponsesFromLocal().sortedByDescending { r -> r.startedAt }
+                    .filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
             reportsAdapter.items =
                 items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
             binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
