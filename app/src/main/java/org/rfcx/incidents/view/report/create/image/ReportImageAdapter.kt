@@ -161,6 +161,8 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
     ) : RecyclerView.ViewHolder(binding.root) {
         private val imageReport = binding.imageReport
         private val progressBar = binding.progressBarOfImageView
+        private val imageIconImageView = binding.imageIconImageView
+        private val notFoundTextView = binding.notFoundTextView
 
         fun bind(imagePath: String, canDelete: Boolean) {
             val fromServer = imagePath.startsWith(BuildConfig.RANGER_API_BASE_URL)
@@ -170,7 +172,9 @@ class ReportImageAdapter : ListAdapter<BaseListItem, RecyclerView.ViewHolder>(Re
                 url = imagePath,
                 fromServer = fromServer,
                 token = token,
-                progressBar = progressBar
+                progressBar = progressBar,
+                failedIcon = imageIconImageView,
+                noneFoundText = notFoundTextView
             )
 
             binding.onClickDeleteImageButton = View.OnClickListener {
