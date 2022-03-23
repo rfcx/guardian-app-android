@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import io.realm.RealmList
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.GuardianType
+import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.dateRangeFormat
 import org.rfcx.incidents.util.setShortTimeZone
@@ -62,6 +64,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
         private val elephantLayout = binding.elephantLayout
         private val numOfElephantTextView = binding.numOfElephantTextView
+        private val reportImageView = binding.reportImageView
+        private val createByTextView = binding.createByTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -70,6 +74,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 hotTextView,
                 timeTextView,
                 bellImageView,
+                createByTextView,
+                reportImageView,
                 chainsawLayout,
                 gunLayout,
                 otherLayout,
@@ -129,6 +135,11 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 }
             }
 
+            reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+            createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+
+            createByTextView.text = incident.responses?.let { setCreateByText(it) }
+
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
@@ -171,6 +182,43 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private fun getNumberOfEventByType(events: List<Event>, type: String): String {
             return events.filter { a -> a.classification?.value == type }.size.toString()
         }
+    }
+
+    fun setCreateByText(res: RealmList<ResponseItem>): String {
+        var num = 0
+        val createByList = arrayListOf<String>()
+        if (res.size == 1) {
+            res[0]?.createdBy?.firstname?.let { firstname ->
+                val name = firstname.replaceFirstChar { it.uppercase() }
+                return "1 response by $name"
+            }
+        } else {
+            res.forEach {
+                it.createdBy?.firstname?.let { firstname ->
+                    val name = firstname.replaceFirstChar { it.uppercase() }
+                    if (!createByList.contains(name)) {
+                        num += 1
+                        createByList.add(name)
+                    }
+                }
+            }
+        }
+
+        var createByText = ""
+        createByList.forEach { firstname ->
+            createByText += when (firstname) {
+                createByList.first() -> {
+                    "$firstname "
+                }
+                createByList.last() -> {
+                    "and $firstname "
+                }
+                else -> {
+                    ", $firstname "
+                }
+            }
+        }
+        return "$num responses by $createByText"
     }
 
     val Number.toPx
