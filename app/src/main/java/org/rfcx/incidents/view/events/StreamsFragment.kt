@@ -78,7 +78,8 @@ class StreamsFragment :
     OnMapReadyCallback,
     PermissionsListener,
     ProjectOnClickListener,
-    SwipeRefreshLayout.OnRefreshListener, (Stream) -> Unit {
+    SwipeRefreshLayout.OnRefreshListener,
+    (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
