@@ -11,13 +11,15 @@ import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.stream.Incident
+import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
 import java.util.Date
 
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 20L
+        private const val schemaVersion = 21L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -67,6 +69,10 @@ private class Migrations : RealmMigration {
         if (oldVersion < 20L && newVersion >= 20) {
             migrateToV20(c)
         }
+
+        if (oldVersion < 21L && newVersion >= 21) {
+            migrateToV21(c)
+        }
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -88,6 +94,18 @@ private class Migrations : RealmMigration {
         val response = realm.schema.get(Response.TABLE_NAME)
         response?.apply {
             addRealmListField(Response.RESPONSE_ASSETS, asset)
+        }
+    }
+
+    private fun migrateToV21(realm: DynamicRealm) {
+        val responseItem = realm.schema.create(ResponseItem.TABLE_NAME)
+        responseItem?.apply {
+            addField(ResponseItem.RESPONSES_ID, String::class.java).setNullable(ResponseItem.RESPONSES_ID, false)
+        }
+
+        val incident = realm.schema.get(Incident.TABLE_NAME)
+        incident?.apply {
+            addRealmListField(Incident.FIELD_RESPONSES, responseItem)
         }
     }
 

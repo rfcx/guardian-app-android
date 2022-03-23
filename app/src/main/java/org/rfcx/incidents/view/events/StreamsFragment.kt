@@ -79,7 +79,7 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-    (Stream) -> Unit {
+        (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -606,7 +606,7 @@ class StreamsFragment :
         layers.forEachIndexed { i, ly ->
             val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_EVENT)
             val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
-                .toString() != "0"
+                    .toString() != "0"
             ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
             val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
@@ -664,9 +664,9 @@ class StreamsFragment :
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        ) != PackageManager.PERMISSION_GRANTED
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return
                 }
