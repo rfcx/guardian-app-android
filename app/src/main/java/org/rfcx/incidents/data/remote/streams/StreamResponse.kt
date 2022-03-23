@@ -3,6 +3,7 @@ package org.rfcx.incidents.data.remote.streams
 import io.realm.RealmList
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.stream.CreatedBy
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
@@ -47,7 +48,12 @@ data class EventResponse(
 )
 
 data class ResponseItemResponse(
-    var id: String
+    var id: String = "",
+    var createdBy: CreatedBy? = null
+)
+
+data class CreatedByResponse(
+    var firstname: String = ""
 )
 
 data class ClassificationResponse(
@@ -77,7 +83,7 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     ref = this.ref.toString(),
     closedAt = this.closedAt,
     createdAt = this.createdAt,
-    responses = realmList(this.responses.map { ResponseItem(it.id) })
+    responses = realmList(this.responses.map { ResponseItem(it.id, it.createdBy) })
 )
 
 fun EventResponse.toEvent(streamId: String): Event = Event(
