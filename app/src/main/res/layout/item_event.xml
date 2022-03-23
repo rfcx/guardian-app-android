@@ -37,34 +37,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end|center"
-        android:paddingTop="@dimen/margin_padding_normal"
-        android:paddingBottom="@dimen/margin_padding_normal"
-        android:paddingEnd="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_normal"
         android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintEnd_toStartOf="@id/reportImageView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/typeTextView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2 hrs ago" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/reportImageView"
-        android:layout_width="@dimen/type_icon_size"
-        android:layout_height="@dimen/type_icon_size"
-        android:layout_marginEnd="@dimen/margin_padding_small"
-        android:src="@drawable/ic_task"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@id/dateTextView"
-        app:layout_constraintEnd_toStartOf="@id/marginEnd"
-        app:layout_constraintTop_toTopOf="@id/dateTextView" />
-
-    <View
-        android:id="@+id/marginEnd"
-        android:layout_width="@dimen/margin_padding_small"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/dateTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/dateTextView" />
 
     <View
         android:layout_width="match_parent"
