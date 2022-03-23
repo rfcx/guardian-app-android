@@ -78,8 +78,7 @@ class StreamsFragment :
     OnMapReadyCallback,
     PermissionsListener,
     ProjectOnClickListener,
-    SwipeRefreshLayout.OnRefreshListener,
-        (Stream) -> Unit {
+    SwipeRefreshLayout.OnRefreshListener, (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -605,9 +604,8 @@ class StreamsFragment :
 
         layers.forEachIndexed { i, ly ->
             val unClustered = CircleLayer("UN_CLUSTERED_POINTS-$i", SOURCE_EVENT)
-            val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
-                    .toString() != "0"
-            ) Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
+            val color = if (Expression.toString(Expression.get(PROPERTY_MARKER_EVENT_COUNT)).toString() != "0")
+                Color.parseColor("#e41a1a") else Color.parseColor("#2FB04A")
             unClustered.setProperties(PropertyFactory.circleColor(color), PropertyFactory.circleRadius(14f))
             val eventsSize = Expression.toNumber(Expression.get(PROPERTY_MARKER_EVENT_COUNT))
             unClustered.setFilter(
@@ -659,14 +657,8 @@ class StreamsFragment :
                 // Activate the LocationComponent with options
                 activateLocationComponent(locationComponentActivationOptions)
                 // Enable to make the LocationComponent visible
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return
                 }
