@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.events.adapter
 
+import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -138,7 +139,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
             createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
 
-            createByTextView.text = incident.responses?.let { setCreateByText(it) }
+            createByTextView.text = incident.responses?.let { setCreateByText(itemView.context, it) }
 
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
@@ -184,13 +185,13 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         }
     }
 
-    fun setCreateByText(res: RealmList<ResponseItem>): String {
+    fun setCreateByText(context: Context, res: RealmList<ResponseItem>): String {
         var num = 0
         val createByList = arrayListOf<String>()
         if (res.size == 1) {
             res[0]?.createdBy?.firstname?.let { firstname ->
                 val name = firstname.replaceFirstChar { it.uppercase() }
-                return "1 response by $name"
+                return context.getString(R.string.response_by) + " " + name
             }
         } else {
             res.forEach {
@@ -211,14 +212,14 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     "$firstname "
                 }
                 createByList.last() -> {
-                    "and $firstname "
+                    " " + context.getString(R.string.and) + " " + firstname
                 }
                 else -> {
                     ", $firstname "
                 }
             }
         }
-        return "$num responses by $createByText"
+        return num.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
     }
 
     val Number.toPx

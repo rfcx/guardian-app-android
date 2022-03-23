@@ -401,5 +401,8 @@
     <string name="dec">Dec</string>
 
     <string name="not_found">not found</string>
-    
+    <string name="response_by">1 response by</string>
+    <string name="responses_by">responses by</string>
+    <string name="and">and</string>
+
 </resources>
