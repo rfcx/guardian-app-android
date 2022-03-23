@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.events.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
@@ -21,6 +22,7 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
         }
 
     var timeZone: TimeZone = TimeZone.getDefault()
+    var isReportAlready: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventItemViewHolder {
         val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -40,12 +42,15 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
         private val typeTextView = binding.typeTextView
         private val dateTextView = binding.dateTextView
         private val numberOfEventsImageView = binding.numberOfEventsImageView
+        private val reportImageView = binding.reportImageView
 
         fun bind(item: Event) {
             dateTextView.text = if (timeZone == TimeZone.getDefault()) item.start.toTimeSinceStringAlternativeTimeAgo(
                 itemView.context,
                 timeZone
             ) else item.start.toStringWithTimeZone(itemView.context, timeZone)
+
+            reportImageView.visibility = if (isReportAlready) View.VISIBLE else View.GONE
 
             val valueIcon = when (item.classification?.value) {
                 StreamAdapter.GUNSHOT -> R.drawable.ic_gun
