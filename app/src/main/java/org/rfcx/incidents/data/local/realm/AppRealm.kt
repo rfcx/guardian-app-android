@@ -11,7 +11,6 @@ import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.entity.stream.CreatedBy
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
@@ -99,15 +98,10 @@ private class Migrations : RealmMigration {
     }
 
     private fun migrateToV21(realm: DynamicRealm) {
-        val createdBy = realm.schema.create(CreatedBy.TABLE_NAME)
-        createdBy?.apply {
-            addField(CreatedBy.FIRSTNAME, String::class.java)
-        }
-
         val responseItem = realm.schema.create(ResponseItem.TABLE_NAME)
         responseItem?.apply {
             addField(ResponseItem.RESPONSES_ID, String::class.java)
-            addRealmObjectField(ResponseItem.RESPONSES_CREATED_BY, createdBy)
+            addField(ResponseItem.RESPONSES_FIRSTNAME, String::class.java)
         }
 
         val incident = realm.schema.get(Incident.TABLE_NAME)
