@@ -319,18 +319,18 @@
     <string name="hour">jam</string>
     <string name="year">tahun</string>
     <string name="month">bulan</string>
-    <string name="day">hari1</string>
-    <string name="jan">Jan1</string>
-    <string name="feb">Feb1</string>
-    <string name="mar">Mar1</string>
-    <string name="apr">Apr1</string>
-    <string name="may">Mei1</string>
-    <string name="jun">Jun1</string>
-    <string name="jul">Jul1</string>
-    <string name="aug">Agu1</string>
-    <string name="sep">Sep1</string>
-    <string name="oct">Okt1</string>
-    <string name="nov">Nov1</string>
-    <string name="dec">Des1</string>
+    <string name="day">hari</string>
+    <string name="jan">Jan</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">Mei</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Agu</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Okt</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Des</string>
 
 </resources>

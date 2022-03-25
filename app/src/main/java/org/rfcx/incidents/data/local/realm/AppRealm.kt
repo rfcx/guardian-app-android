@@ -101,7 +101,7 @@ private class Migrations : RealmMigration {
         val responseItem = realm.schema.create(ResponseItem.TABLE_NAME)
         responseItem?.apply {
             addField(ResponseItem.RESPONSES_ID, String::class.java)
-            addField(ResponseItem.RESPONSES_FIRSTNAME, String::class.java)
+            addField(ResponseItem.RESPONSES_CREATED_BY, String::class.java)
         }
 
         val incident = realm.schema.get(Incident.TABLE_NAME)

@@ -185,17 +185,17 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         }
     }
 
-    fun setCreateByText(context: Context, res: RealmList<ResponseItem>): String {
+    fun setCreateByText(context: Context, res: List<ResponseItem>): String {
         var num = 0
         val createByList = arrayListOf<String>()
         if (res.size == 1) {
-            res[0]?.firstname?.let { firstname ->
+            res[0].createdBy?.let { firstname ->
                 val name = firstname.replaceFirstChar { it.uppercase() }
                 return context.getString(R.string.response_by) + " " + name
             }
         } else {
             res.forEach {
-                it.firstname?.let { firstname ->
+                it.createdBy?.let { firstname ->
                     val name = firstname.replaceFirstChar { it.uppercase() }
                     if (!createByList.contains(name)) {
                         num += 1
