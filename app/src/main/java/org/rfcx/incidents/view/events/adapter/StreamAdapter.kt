@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.RealmList
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
