@@ -3,8 +3,8 @@ package org.rfcx.incidents.data.remote.streams
 import io.realm.RealmList
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
-import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.CreatedBy
+import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
 import java.util.Date

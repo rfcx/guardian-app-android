@@ -11,8 +11,8 @@ import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.CreatedBy
+import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
 import java.util.Date
