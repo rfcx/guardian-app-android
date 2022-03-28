@@ -260,8 +260,6 @@
 	<string name="select">Selecione</string>
     <string name="failed_receive_notification">Falha no recebimento de notificação de %s</string>
     <string name="failed_unsubscribe_receive_notification">Falha em descadastrar recebimento de notificação de %s</string>
-    <string name="nearby">Próximo</string>
-    <string name="others">Outros</string>
     <string name="receive_alert_notification">Receba uma notificação de alerta</string>
     <string name="unsent">"Na fila"</string>
     <string name="sending">Enviando</string>

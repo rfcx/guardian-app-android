@@ -239,8 +239,6 @@
 
     <!-- EventsFragment -->
     <string name="all_projects">All projects</string>
-    <string name="nearby">nearby</string>
-    <string name="others">others</string>
     <string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
     <string name="num_more_then_99">99+</string>
     <string name="not_have_stream">No sites in this project</string>
@@ -354,7 +352,6 @@
     <string name="dark_theme">Dark</string>
     <string name="light_theme">Light</string>
     <string name="system_default">System default</string>
-    <string name="site_name">Site %s</string>
     <string name="display">Display</string>
     <string name="theme">Theme</string>
 

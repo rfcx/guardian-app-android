@@ -4,7 +4,7 @@ import io.realm.RealmObject
 
 open class ResponseItem(
     var id: String? = null,
-    var userResponseItem: UserResponseItem? = null
+    var user: User? = null
 ) : RealmObject() {
     companion object {
         const val TABLE_NAME = "ResponseItem"
