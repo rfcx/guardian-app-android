@@ -48,10 +48,10 @@ data class EventResponse(
 
 data class ResponseItemResponse(
     var id: String = "",
-    var createdBy: CreatedByResponse? = null
+    var user: UserResponse? = null
 )
 
-data class CreatedByResponse(
+data class UserResponse(
     var firstname: String = ""
 )
 
@@ -82,7 +82,7 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     ref = this.ref.toString(),
     closedAt = this.closedAt,
     createdAt = this.createdAt,
-    responses = realmList(this.responses.map { ResponseItem(it.id, it.createdBy?.firstname) })
+    responses = realmList(this.responses.map { ResponseItem(it.id, it.user?.firstname) })
 )
 
 fun EventResponse.toEvent(streamId: String): Event = Event(
