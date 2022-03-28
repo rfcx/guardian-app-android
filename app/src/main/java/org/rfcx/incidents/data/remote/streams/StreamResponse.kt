@@ -6,6 +6,7 @@ import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.entity.stream.UserResponseItem
 import java.util.Date
 
 data class StreamResponse(
@@ -48,7 +49,7 @@ data class EventResponse(
 
 data class ResponseItemResponse(
     var id: String = "",
-    var user: UserResponse? = null
+    var createdBy: UserResponse? = null
 )
 
 data class UserResponse(
@@ -82,7 +83,7 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     ref = this.ref.toString(),
     closedAt = this.closedAt,
     createdAt = this.createdAt,
-    responses = realmList(this.responses.map { ResponseItem(it.id, it.user?.firstname) })
+    responses = realmList(this.responses.map { ResponseItem(it.id, UserResponseItem(it.createdBy?.firstname ?: "")) })
 )
 
 fun EventResponse.toEvent(streamId: String): Event = Event(

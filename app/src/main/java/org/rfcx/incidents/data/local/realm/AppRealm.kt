@@ -14,6 +14,7 @@ import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.entity.stream.UserResponseItem
 import java.util.Date
 
 class AppRealm {
@@ -98,10 +99,15 @@ private class Migrations : RealmMigration {
     }
 
     private fun migrateToV21(realm: DynamicRealm) {
+        val userResponse = realm.schema.create(UserResponseItem.TABLE_NAME)
+        userResponse?.apply {
+            addField(UserResponseItem.FIRSTNAME, String::class.java)
+        }
+
         val responseItem = realm.schema.create(ResponseItem.TABLE_NAME)
         responseItem?.apply {
             addField(ResponseItem.RESPONSES_ID, String::class.java)
-            addField(ResponseItem.RESPONSES_CREATED_BY, String::class.java)
+            addRealmObjectField(ResponseItem.RESPONSES_USER_RESPONSE_ITEM, userResponse)
         }
 
         val incident = realm.schema.get(Incident.TABLE_NAME)

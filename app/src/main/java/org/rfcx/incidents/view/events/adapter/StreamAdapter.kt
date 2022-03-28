@@ -188,14 +188,14 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         var num = 0
         val createByList = arrayListOf<String>()
         if (res.size == 1) {
-            res[0].createdBy?.let { firstname ->
-                val name = firstname.replaceFirstChar { it.uppercase() }
+            res[0].userResponseItem?.let { user ->
+                val name = user.firstname.replaceFirstChar { it.uppercase() }
                 return context.getString(R.string.response_by) + " " + name
             }
         } else {
             res.forEach {
-                it.createdBy?.let { firstname ->
-                    val name = firstname.replaceFirstChar { it.uppercase() }
+                it.userResponseItem?.let { user ->
+                    val name = user.firstname.replaceFirstChar { it.uppercase() }
                     if (!createByList.contains(name)) {
                         num += 1
                         createByList.add(name)
