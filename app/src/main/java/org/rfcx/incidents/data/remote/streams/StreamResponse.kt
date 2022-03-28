@@ -4,7 +4,7 @@ import io.realm.RealmList
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Incident
-import org.rfcx.incidents.entity.stream.ResponseItem
+import org.rfcx.incidents.entity.stream.CreatedBy
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
 import java.util.Date
@@ -83,7 +83,7 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     ref = this.ref.toString(),
     closedAt = this.closedAt,
     createdAt = this.createdAt,
-    responses = realmList(this.responses.map { ResponseItem(it.id, User(it.createdBy?.firstname ?: "")) })
+    responses = realmList(this.responses.map { CreatedBy(User(it.createdBy?.firstname ?: "")) })
 )
 
 fun EventResponse.toEvent(streamId: String): Event = Event(

@@ -141,7 +141,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 val userText = if (res.size == 1) {
                     itemView.context.getString(R.string.response_by) + " " + res[0]?.user?.firstname.toString().firstCharUppercase
                 } else {
-                    setCreateByText(itemView.context, res.map { u -> u.user?.firstname ?: "" })
+                    setCreatedByText(itemView.context, res.map { u -> u.user?.firstname ?: "" })
                 }
 
                 createByTextView.text = userText
@@ -191,7 +191,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         }
     }
 
-    fun setCreateByText(context: Context, users: List<String>): String {
+    fun setCreatedByText(context: Context, users: List<String>): String {
         val userFilter = users.toCheckDuplicate()
         var createByText = ""
         userFilter.forEach { firstname ->
