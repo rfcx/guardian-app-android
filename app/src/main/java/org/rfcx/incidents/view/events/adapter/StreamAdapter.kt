@@ -11,7 +11,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemStreamBinding
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.GuardianType
-import org.rfcx.incidents.entity.stream.ResponseItem
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.dateRangeFormat
 import org.rfcx.incidents.util.setShortTimeZone
@@ -138,7 +137,16 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
             createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
 
-            createByTextView.text = incident.responses?.let { setCreateByText(itemView.context, it) }
+            incident.responses?.let { res ->
+                val userText = if (res.size == 1) {
+                    itemView.context.getString(R.string.response_by) + " " + res[0]?.userResponseItem?.firstname.toString().firstCharUppercase
+                } else {
+                    setCreateByText(itemView.context, res.map { u -> u.userResponseItem?.firstname ?: "" })
+                }
+
+                createByTextView.text = userText
+            }
+
 
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
@@ -184,42 +192,31 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         }
     }
 
-    fun setCreateByText(context: Context, res: List<ResponseItem>): String {
-        var num = 0
-        val createByList = arrayListOf<String>()
-        if (res.size == 1) {
-            res[0].userResponseItem?.let { user ->
-                val name = user.firstname.replaceFirstChar { it.uppercase() }
-                return context.getString(R.string.response_by) + " " + name
-            }
-        } else {
-            res.forEach {
-                it.userResponseItem?.let { user ->
-                    val name = user.firstname.replaceFirstChar { it.uppercase() }
-                    if (!createByList.contains(name)) {
-                        num += 1
-                        createByList.add(name)
-                    }
-                }
-            }
-        }
-
+    fun setCreateByText(context: Context, users: List<String>): String {
+        val userFilter = users.toCheckDuplicate()
         var createByText = ""
-        createByList.forEach { firstname ->
+        userFilter.forEach { firstname ->
             createByText += when (firstname) {
-                createByList.first() -> {
-                    firstname
-                }
-                createByList.last() -> {
-                    " " + context.getString(R.string.and) + " " + firstname
-                }
-                else -> {
-                    ", $firstname"
-                }
+                userFilter.first() -> firstname
+                userFilter.last() -> " " + context.getString(R.string.and) + " " + firstname
+                else -> ", $firstname"
             }
         }
-        return num.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
+        return userFilter.size.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
     }
+
+    private fun List<String>.toCheckDuplicate(): ArrayList<String> {
+        val values = arrayListOf<String>()
+        this.forEach { s ->
+            if (!values.contains(s)) {
+                values.add(s.firstCharUppercase)
+            }
+        }
+        return values
+    }
+
+    val String.firstCharUppercase
+        get() = this.replaceFirstChar { it.uppercase() }
 
     val Number.toPx
         get() = TypedValue.applyDimension(

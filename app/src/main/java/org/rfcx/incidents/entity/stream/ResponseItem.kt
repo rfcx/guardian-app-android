@@ -1,7 +1,6 @@
 package org.rfcx.incidents.entity.stream
 
 import io.realm.RealmObject
-import org.rfcx.incidents.data.remote.streams.UserResponse
 
 open class ResponseItem(
     var id: String? = null,
