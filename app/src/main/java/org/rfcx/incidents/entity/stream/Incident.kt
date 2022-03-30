@@ -14,8 +14,8 @@ open class Incident(
     var ref: String = "",
     var closedAt: Date? = null,
     var createdAt: Date = Date(),
-    @LinkingObjects("incident") val events: RealmResults<Event>? = null,
-    val responses: RealmList<CreatedBy>? = null,
+    var responses: RealmList<CreatedBy>? = null,
+    @LinkingObjects("incident") val events: RealmResults<Event>? = null
 ) : RealmModel {
     companion object {
         const val TABLE_NAME = "Incident"
