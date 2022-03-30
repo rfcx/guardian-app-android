@@ -201,7 +201,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 else -> ", $firstname"
             }
         }
-        return userFilter.size.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
+        return users.size.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
     }
 
     private fun List<String>.toCheckDuplicate(): ArrayList<String> {
