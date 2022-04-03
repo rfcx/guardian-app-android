@@ -139,9 +139,9 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
 
             incident.responses?.let { res ->
                 val userText = if (res.size == 1) {
-                    itemView.context.getString(R.string.response_by) + " " + res[0]?.user?.firstname.toString().firstCharUppercase
+                    itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
                 } else {
-                    setCreatedByText(itemView.context, res.map { u -> u.user?.firstname ?: "" })
+                    setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
                 }
 
                 createByTextView.text = userText

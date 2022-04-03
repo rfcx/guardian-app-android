@@ -14,7 +14,7 @@ open class Incident(
     var ref: String = "",
     var closedAt: Date? = null,
     var createdAt: Date = Date(),
-    var responses: RealmList<CreatedBy>? = null,
+    var responses: RealmList<User>? = null,
     @LinkingObjects("incident") val events: RealmResults<Event>? = null
 ) : RealmModel {
     companion object {

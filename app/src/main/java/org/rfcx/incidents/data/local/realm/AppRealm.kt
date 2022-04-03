@@ -11,7 +11,6 @@ import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
-import org.rfcx.incidents.entity.stream.CreatedBy
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
@@ -104,14 +103,9 @@ private class Migrations : RealmMigration {
             addField(User.FIRSTNAME, String::class.java)
         }
 
-        val responseItem = realm.schema.create(CreatedBy.TABLE_NAME)
-        responseItem?.apply {
-            addRealmObjectField(CreatedBy.RESPONSES_USER, user)
-        }
-
         val incident = realm.schema.get(Incident.TABLE_NAME)
         incident?.apply {
-            addRealmListField(Incident.FIELD_RESPONSES, responseItem)
+            addRealmListField(Incident.FIELD_RESPONSES, user)
         }
     }
 
