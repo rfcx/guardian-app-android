@@ -297,7 +297,7 @@
     <string name="assets">Aset:</string>
     <string name="note">Catatan: %s</string>
     <string name="recent">Terkini</string>
-    <string name="hot">Maraknya kejadian</string>
+    <string name="hot">Hot</string>
     <string name="is_today">Hari ini, %1s - %2s %3s</string>
     <string name="is_yesterday_today">"Kemarin %1s - Hari ini %2s %3s"</string>
     <string name="is_yesterday">Kemarin, %1s - %2s %3s</string>
