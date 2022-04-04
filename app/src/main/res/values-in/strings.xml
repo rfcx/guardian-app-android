@@ -247,8 +247,8 @@
     <string name="guardian_event_detail">Detail Kejadian</string>
     <string name="not_have_events">Tidak ada peristiwa sejak kejadian terakhir</string>
     <string name="create_report_steps">Laporan</string>
-    <string name="create_report_title">Laporan %d langkah tersisa</string>
-    <string name="create_report_title_one_step">Laporan 1 langkah tersisa</string>
+    <string name="create_report_title">%d langkah tersisa</string>
+    <string name="create_report_title_one_step">1 langkah tersisa</string>
     <string name="last_step">Laporan langkah terakhir</string>
     <string name="when_investigate">Kapan Anda melakukan investigasi?</string>
     <string name="what_time">Pukul berapa Anda melakukan investigasi?</string>
