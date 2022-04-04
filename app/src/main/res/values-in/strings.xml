@@ -332,5 +332,13 @@
     <string name="oct">Okt</string>
     <string name="nov">Nov</string>
     <string name="dec">Des</string>
+    <string name="investigated_at">Diselidiki di</string>
+    <string name="received_at">Diterima di</string>
+    <string name="action">Tindakan</string>
+    <string name="small_scale_text">Skala Kecil</string>
+    <string name="large_scale_text">"Skala Besar  "</string>
+    <string name="additional_evidence">"Bukti Tambahan  "</string>
+    <string name="response_by">1 tanggapan oleh</string>
+    <string name="responses_by">tanggapan oleh</string>
 
 </resources>
