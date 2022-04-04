@@ -20,6 +20,7 @@ import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setReportImage
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.incidents.view.events.adapter.StreamAdapter
 import org.rfcx.incidents.view.events.detail.EventViewModel.Companion.maxProgress
 import java.util.Date
 import java.util.TimeZone
@@ -50,7 +51,16 @@ class EventActivity : AppCompatActivity() {
         setupToolbar()
 
         val event = eventId?.let { viewModel.getEvent(it) }
-        binding.guardianNameTextView.text = event?.classification?.title
+        val valueTitle: Int? = when (event?.classification?.value) {
+            StreamAdapter.GUNSHOT -> R.string.gunshot
+            StreamAdapter.CHAINSAW -> R.string.chainsaw
+            StreamAdapter.VEHICLE -> R.string.vehicle
+            StreamAdapter.VOICE -> R.string.human_voice
+            StreamAdapter.DOG_BARK -> R.string.dog_bark
+            StreamAdapter.ELEPHANT -> R.string.elephant
+            else -> null
+        }
+        binding.guardianNameTextView.text = if (valueTitle != null) getString(valueTitle) else event?.classification?.title
         binding.toolbarLayout.title = event?.streamId?.let { viewModel.getStream(it) }?.name
         val timezoneString = event?.streamId?.let { viewModel.getStream(it) }?.timezoneRaw
         val timezone = if (timezoneString == null) TimeZone.getDefault() else TimeZone.getTimeZone(timezoneString)

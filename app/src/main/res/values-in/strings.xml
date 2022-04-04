@@ -247,8 +247,8 @@
     <string name="guardian_event_detail">Detail Kejadian</string>
     <string name="not_have_events">Tidak ada peristiwa sejak kejadian terakhir</string>
     <string name="create_report_steps">Laporan</string>
-    <string name="create_report_title">Laporan %d langkah tersisa</string>
-    <string name="create_report_title_one_step">Laporan 1 langkah tersisa</string>
+    <string name="create_report_title">%d langkah tersisa</string>
+    <string name="create_report_title_one_step">1 langkah tersisa</string>
     <string name="last_step">Laporan langkah terakhir</string>
     <string name="when_investigate">Kapan Anda melakukan investigasi?</string>
     <string name="what_time">Pukul berapa Anda melakukan investigasi?</string>
@@ -297,7 +297,7 @@
     <string name="assets">Aset:</string>
     <string name="note">Catatan: %s</string>
     <string name="recent">Terkini</string>
-    <string name="hot">Maraknya kejadian</string>
+    <string name="hot">Hot</string>
     <string name="is_today">Hari ini, %1s - %2s %3s</string>
     <string name="is_yesterday_today">"Kemarin %1s - Hari ini %2s %3s"</string>
     <string name="is_yesterday">Kemarin, %1s - %2s %3s</string>
@@ -332,5 +332,14 @@
     <string name="oct">Okt</string>
     <string name="nov">Nov</string>
     <string name="dec">Des</string>
+    <string name="investigated_at">Diselidiki di</string>
+    <string name="received_at">Diterima di</string>
+    <string name="action">Tindakan</string>
+    <string name="small_scale_text">Skala Kecil</string>
+    <string name="large_scale_text">"Skala Besar  "</string>
+    <string name="additional_evidence">"Bukti Tambahan  "</string>
+    <string name="response_by">1 tanggapan oleh</string>
+    <string name="responses_by">tanggapan oleh</string>
+    <string name="and">dan</string>
 
 </resources>

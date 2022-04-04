@@ -163,23 +163,15 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     }
 
     private fun setNumberOnTitle(step: Int, isSelectedBoth: Boolean) {
-        when (step) {
-            StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) setTitleToolbar(
-                getString(
-                    R.string.create_report_title,
-                    5
-                )
-            ) else setTitleToolbar(getString(R.string.create_report_title, 3))
-            StepCreateReport.SCALE.step -> if (isSelectedBoth) setTitleToolbar(
-                getString(
-                    R.string.create_report_title,
-                    4
-                )
-            ) else setTitleToolbar(getString(R.string.create_report_title, 2))
-            StepCreateReport.POACHING_EVIDENCE.step -> setTitleToolbar(getString(R.string.create_report_title, 3))
-            StepCreateReport.SCALE_POACHING.step -> setTitleToolbar(getString(R.string.create_report_title, 2))
-            StepCreateReport.ACTION.step -> setTitleToolbar(getString(R.string.create_report_title_one_step))
+        val text = when (step) {
+            StepCreateReport.EVIDENCE.step -> if (isSelectedBoth) getString(R.string.create_report_title, 5) else getString(R.string.create_report_title, 3)
+            StepCreateReport.SCALE.step -> if (isSelectedBoth) getString(R.string.create_report_title, 4) else getString(R.string.create_report_title, 2)
+            StepCreateReport.POACHING_EVIDENCE.step -> getString(R.string.create_report_title, 3)
+            StepCreateReport.SCALE_POACHING.step -> getString(R.string.create_report_title, 2)
+            StepCreateReport.ACTION.step -> getString(R.string.create_report_title_one_step)
+            else -> ""
         }
+        setTitleToolbar(getString(R.string.create_report_steps) + " " + text)
     }
 
     private fun setColorOfTitle(str: String): SpannableString {
