@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.events.adapter
 
+import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -62,6 +63,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
         private val elephantLayout = binding.elephantLayout
         private val numOfElephantTextView = binding.numOfElephantTextView
+        private val reportImageView = binding.reportImageView
+        private val createByTextView = binding.createByTextView
 
         fun bind(stream: Stream) {
             // Reset
@@ -70,6 +73,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 hotTextView,
                 timeTextView,
                 bellImageView,
+                createByTextView,
+                reportImageView,
                 chainsawLayout,
                 gunLayout,
                 otherLayout,
@@ -129,6 +134,19 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 }
             }
 
+            reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+            createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+
+            incident.responses?.let { res ->
+                val userText = if (res.size == 1) {
+                    itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
+                } else {
+                    setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
+                }
+
+                createByTextView.text = userText
+            }
+
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
@@ -172,6 +190,32 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             return events.filter { a -> a.classification?.value == type }.size.toString()
         }
     }
+
+    fun setCreatedByText(context: Context, users: List<String>): String {
+        val userFilter = users.toCheckDuplicate()
+        var createByText = ""
+        userFilter.forEach { firstname ->
+            createByText += when (firstname) {
+                userFilter.first() -> firstname
+                userFilter.last() -> " " + context.getString(R.string.and) + " " + firstname
+                else -> ", $firstname"
+            }
+        }
+        return users.size.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
+    }
+
+    private fun List<String>.toCheckDuplicate(): ArrayList<String> {
+        val values = arrayListOf<String>()
+        this.forEach { s ->
+            if (!values.contains(s)) {
+                values.add(s.firstCharUppercase)
+            }
+        }
+        return values
+    }
+
+    val String.firstCharUppercase
+        get() = this.replaceFirstChar { it.uppercase() }
 
     val Number.toPx
         get() = TypedValue.applyDimension(

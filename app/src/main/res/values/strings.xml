@@ -239,8 +239,6 @@
 
     <!-- EventsFragment -->
     <string name="all_projects">All projects</string>
-    <string name="nearby">nearby</string>
-    <string name="others">others</string>
     <string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
     <string name="num_more_then_99">99+</string>
     <string name="not_have_stream">No sites in this project</string>
@@ -264,8 +262,8 @@
 
     <!-- CreateReportActivity -->
     <string name="create_report_steps">Report</string>
-    <string name="create_report_title">Report %d steps remaining</string>
-    <string name="create_report_title_one_step">Report 1 step remaining</string>
+    <string name="create_report_title">%d steps remaining</string>
+    <string name="create_report_title_one_step">1 step remaining</string>
     <string name="last_step">Report last step</string>
 
     <!-- WhenInvestigateStepFragment -->
@@ -354,7 +352,6 @@
     <string name="dark_theme">Dark</string>
     <string name="light_theme">Light</string>
     <string name="system_default">System default</string>
-    <string name="site_name">Site %s</string>
     <string name="display">Display</string>
     <string name="theme">Theme</string>
 
@@ -401,5 +398,8 @@
     <string name="dec">Dec</string>
 
     <string name="not_found">not found</string>
-    
+    <string name="response_by">1 response by</string>
+    <string name="responses_by">responses by</string>
+    <string name="and">and</string>
+
 </resources>

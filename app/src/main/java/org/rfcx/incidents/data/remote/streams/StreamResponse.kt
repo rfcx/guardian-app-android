@@ -5,6 +5,7 @@ import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.entity.stream.User
 import java.util.Date
 
 data class StreamResponse(
@@ -33,7 +34,8 @@ data class IncidentResponse(
     var createdAt: Date,
     var updatedAt: Date,
     var firstEventId: String,
-    var events: List<EventResponse> = listOf()
+    var events: List<EventResponse> = listOf(),
+    var responses: List<ResponseItemResponse> = listOf()
 )
 
 data class EventResponse(
@@ -42,6 +44,15 @@ data class EventResponse(
     var end: Date,
     var createdAt: Date,
     var classification: ClassificationResponse
+)
+
+data class ResponseItemResponse(
+    var id: String = "",
+    var createdBy: UserResponse? = null
+)
+
+data class UserResponse(
+    var firstname: String = ""
 )
 
 data class ClassificationResponse(
@@ -70,7 +81,8 @@ private fun IncidentResponse.toIncident(): Incident = Incident(
     id = this.id,
     ref = this.ref.toString(),
     closedAt = this.closedAt,
-    createdAt = this.createdAt
+    createdAt = this.createdAt,
+    responses = realmList(this.responses.map { User(it.createdBy?.firstname ?: "") })
 )
 
 fun EventResponse.toEvent(streamId: String): Event = Event(

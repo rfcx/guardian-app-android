@@ -1,5 +1,6 @@
 package org.rfcx.incidents.entity.stream
 
+import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
@@ -13,6 +14,7 @@ open class Stream(
     var name: String = "",
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
+    @SerializedName("timezone")
     var timezoneRaw: String = "",
     var projectId: String = "",
     var tags: RealmList<String>? = null,
