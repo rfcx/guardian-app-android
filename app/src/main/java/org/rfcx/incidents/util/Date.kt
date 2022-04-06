@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.format.DateUtils
 import org.rfcx.incidents.R
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -177,27 +176,6 @@ fun setShortTimeZone(str: String): String {
         start[1].contains("GMT-") -> start[0] + makeToShortString(str.split("-").last(), "-")
         else -> str
     }
-}
-
-private val legacyInputFormatters by lazy {
-    arrayListOf(
-        isoSdf,
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ", Locale.US),
-        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-    )
-}
-
-@Deprecated(message = "Only used for migrating old dates from Realm.")
-fun legacyDateParser(input: String?): Date? {
-    input ?: return null
-
-    legacyInputFormatters.forEach {
-        try {
-            return it.parse(input)
-        } catch (e: ParseException) {
-        }
-    }
-    return null // not found format matching
 }
 
 // TODO Moved from Common, is it still needed?
