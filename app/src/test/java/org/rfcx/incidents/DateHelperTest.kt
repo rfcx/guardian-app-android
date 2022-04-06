@@ -181,6 +181,5 @@ class DateHelperTest {
         Assert.assertEquals(expected5, actual5) // 23 Feb, 01:35 (EST)
         Assert.assertEquals(expected6, actual6) // 23 Feb, 18:00 (GMT+02:00)
         Assert.assertEquals(expected7, actual7) // 23 Feb, 11:42 (GMT+10:30)
-
     }
 }
