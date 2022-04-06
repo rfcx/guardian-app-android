@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.zhihu.matisse.Matisse
@@ -28,18 +29,45 @@ abstract class BaseImageFragment : BaseFragment() {
     protected abstract fun didAddImages(imagePaths: List<String>)
     protected abstract fun didRemoveImage(imagePath: String)
 
-    protected val reportImageAdapter by lazy { ReportImageAdapter() }
+    private var reportImageAdapter: ReportImageAdapter? = null
     private var imageFile: File? = null
+    private var filePath: String? = null
 
     private lateinit var attachImageDialog: BottomSheetDialog
     private val cameraPermissions by lazy { CameraPermissions(requireActivity()) }
     private val galleryPermissions by lazy { GalleryPermissions(requireActivity()) }
+
+    private val CAMERA_IMAGE_PATH = "cameraImagePath"
+
+    fun getReportImageAdapter(): ReportImageAdapter {
+        if (reportImageAdapter != null) {
+            return reportImageAdapter!!
+        }
+        reportImageAdapter = ReportImageAdapter()
+        return reportImageAdapter!!
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupAttachImageDialog()
         setupReportImages()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (filePath != null) {
+            outState.putString(CAMERA_IMAGE_PATH, filePath.toString())
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        savedInstanceState?.let {
+            if (it.containsKey(CAMERA_IMAGE_PATH)) {
+                filePath = it.getString(CAMERA_IMAGE_PATH)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -50,19 +78,19 @@ abstract class BaseImageFragment : BaseFragment() {
     }
 
     private fun setupReportImages() {
-        reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
+        getReportImageAdapter().onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
             override fun onAddImageClick() {
                 attachImageDialog.show()
             }
 
             override fun onDeleteImageClick(position: Int, imagePath: String) {
-                reportImageAdapter.removeAt(position)
+                getReportImageAdapter().removeAt(position)
                 dismissImagePickerOptionsDialog()
                 didRemoveImage(imagePath)
             }
         }
 
-        reportImageAdapter.setImages(arrayListOf())
+        getReportImageAdapter().setImages(arrayListOf())
         dismissImagePickerOptionsDialog()
     }
 
@@ -85,7 +113,7 @@ abstract class BaseImageFragment : BaseFragment() {
 
     private fun takePhoto() {
         if (!cameraPermissions.allowed()) {
-            imageFile = null
+            filePath = null
             cameraPermissions.check { }
         } else {
             startTakePhoto()
@@ -94,11 +122,17 @@ abstract class BaseImageFragment : BaseFragment() {
 
     private fun startTakePhoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        imageFile = ReportUtils.createReportImageFile()
-
-        val image = imageFile ?: return
-        val photoURI = FileProvider.getUriForFile(requireContext(), ReportUtils.FILE_CONTENT_PROVIDER, image)
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        val imageFile = ReportUtils.createReportImageFile()
+        filePath = imageFile.absolutePath
+        val imageUri =
+            context?.let {
+                FileProvider.getUriForFile(
+                    it,
+                    ReportUtils.FILE_CONTENT_PROVIDER,
+                    imageFile
+                )
+            }
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         startActivityForResult(takePictureIntent, ReportUtils.REQUEST_TAKE_PHOTO)
     }
 
@@ -106,24 +140,24 @@ abstract class BaseImageFragment : BaseFragment() {
         if (requestCode != ReportUtils.REQUEST_TAKE_PHOTO) return
 
         if (resultCode == Activity.RESULT_OK) {
-            imageFile?.let {
-                val pathList = listOf(it.absolutePath)
-                reportImageAdapter.addImages(pathList)
+            filePath?.let {
+                val pathList = listOf(it)
+                getReportImageAdapter().addImages(pathList)
                 didAddImages(pathList)
             }
             dismissImagePickerOptionsDialog()
         } else {
             // remove file image
-            imageFile?.let {
-                ImageFileUtils.removeFile(it)
-                this.imageFile = null
+            filePath?.let {
+                ImageFileUtils.removeFile(File(it))
+                this.filePath = null
             }
         }
     }
 
     private fun openGallery() {
         if (!galleryPermissions.allowed()) {
-            imageFile = null
+            filePath = null
             galleryPermissions.check { }
         } else {
             startOpenGallery()
@@ -131,7 +165,7 @@ abstract class BaseImageFragment : BaseFragment() {
     }
 
     private fun startOpenGallery() {
-        val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - reportImageAdapter.getImageCount()
+        val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - getReportImageAdapter().getImageCount()
         Matisse.from(this)
             .choose(MimeType.ofImage())
             .countable(true)
@@ -154,7 +188,7 @@ abstract class BaseImageFragment : BaseFragment() {
                 pathList.add(path)
             }
         }
-        reportImageAdapter.addImages(pathList)
+        getReportImageAdapter().addImages(pathList)
         didAddImages(pathList)
         dismissImagePickerOptionsDialog()
     }

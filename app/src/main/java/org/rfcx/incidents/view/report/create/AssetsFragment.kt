@@ -94,7 +94,7 @@ class AssetsFragment : BaseImageFragment() {
         }
 
         binding.submitButton.setOnClickListener {
-            if (!TextUtils.isEmpty(binding.noteEditText.text) || recordFile?.canonicalPath != null || reportImageAdapter.getNewAttachImage().isNotEmpty()) {
+            if (!TextUtils.isEmpty(binding.noteEditText.text) || recordFile?.canonicalPath != null || getReportImageAdapter().getNewAttachImage().isNotEmpty()) {
                 saveAssets()
                 analytics?.trackSubmitResponseEvent()
                 listener.onSubmitButtonClick()
@@ -193,7 +193,7 @@ class AssetsFragment : BaseImageFragment() {
             images.forEach {
                 pathList.add(it)
             }
-            reportImageAdapter.addImages(pathList)
+            getReportImageAdapter().addImages(pathList)
             didAddImages(pathList)
         }
     }
@@ -204,17 +204,17 @@ class AssetsFragment : BaseImageFragment() {
                 listener.setNotes(it.toString())
             }
         }
-        listener.setImages(ArrayList(reportImageAdapter.getNewAttachImage()))
+        listener.setImages(ArrayList(getReportImageAdapter().getNewAttachImage()))
         listener.setAudio(recordFile?.canonicalPath)
     }
 
     private fun setupImageRecycler() {
         binding.attachImageRecycler.apply {
-            adapter = reportImageAdapter
+            adapter = getReportImageAdapter()
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
-        reportImageAdapter.setImages(arrayListOf())
+        getReportImageAdapter().setImages(arrayListOf())
     }
 
     private fun setAudio(path: String) {
