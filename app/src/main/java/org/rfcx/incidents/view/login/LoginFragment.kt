@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,17 +61,9 @@ class LoginFragment : BaseFragment() {
     private fun initView() {
         binding.signInButton.setOnClickListener {
             analytics?.trackLoginEvent("email")
-            var email = binding.loginEmailEditText.text.toString()
+            val email = binding.loginEmailEditText.text.toString().trim()
             val password = binding.loginPasswordEditText.text.toString()
             it.hideKeyboard()
-
-            if (email.last() == ' ') {
-                email = email.dropLast(1)
-            }
-
-            if (email.first() == ' ') {
-                email = email.drop(1)
-            }
 
             if (validateInput(email, password)) {
                 loading()
