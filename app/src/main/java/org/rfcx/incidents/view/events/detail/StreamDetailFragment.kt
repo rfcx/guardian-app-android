@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,7 @@ import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 import java.util.TimeZone
@@ -85,6 +87,12 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
                 Preferences.getInstance(requireContext()).putString(Preferences.SELECTED_STREAM_ID, streamId)
+                
+                if (requireContext().isOnAirplaneMode()) {
+                    Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
+                    listener.openCreateReportActivity(streamId)
+                }
+
                 locationPermissions.check {
                     if (it) {
                         listener.getCurrentLocation()?.let { loc ->
