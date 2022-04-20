@@ -70,6 +70,10 @@ class LoginFragment : BaseFragment() {
                 email = email.dropLast(1)
             }
 
+            if (email.first() == ' ') {
+                email = email.drop(1)
+            }
+
             if (validateInput(email, password)) {
                 loading()
                 loginViewModel.login(email, password)
