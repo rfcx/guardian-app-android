@@ -61,7 +61,7 @@ class LoginFragment : BaseFragment() {
     private fun initView() {
         binding.signInButton.setOnClickListener {
             analytics?.trackLoginEvent("email")
-            val email = binding.loginEmailEditText.text.toString()
+            val email = binding.loginEmailEditText.text.toString().trim()
             val password = binding.loginPasswordEditText.text.toString()
             it.hideKeyboard()
 

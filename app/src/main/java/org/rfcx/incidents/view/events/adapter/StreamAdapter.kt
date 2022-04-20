@@ -94,7 +94,20 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             val incident = stream.lastIncident ?: return
             noneTextView.visibility = View.GONE
             incidentIdTextView.visibility = View.VISIBLE
-            incidentIdTextView.text = stream.lastIncident?.let { itemView.context.getString(R.string.incident_ref, it.ref) } ?: "-"
+
+            reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+            createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
+            incident.responses?.let { res ->
+                val userText = if (res.size == 1) {
+                    itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
+                } else {
+                    setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
+                }
+
+                createByTextView.text = userText
+            }
+
+            incidentIdTextView.text = itemView.context.getString(R.string.incident_ref, incident.ref)
             iconTypeImageView.visibility = if (stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
             typeTextView.visibility = if (stream.guardianType == null || stream.guardianType == "unknown") View.GONE else View.VISIBLE
             iconTypeImageView.setImageResource(
@@ -132,19 +145,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                     }
                     counts += 1
                 }
-            }
-
-            reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
-            createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
-
-            incident.responses?.let { res ->
-                val userText = if (res.size == 1) {
-                    itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
-                } else {
-                    setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
-                }
-
-                createByTextView.text = userText
             }
 
             stream.tags?.let { tags ->
@@ -207,7 +207,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
     private fun List<String>.toCheckDuplicate(): ArrayList<String> {
         val values = arrayListOf<String>()
         this.forEach { s ->
-            if (!values.contains(s)) {
+            if (!values.contains(s.firstCharUppercase)) {
                 values.add(s.firstCharUppercase)
             }
         }
