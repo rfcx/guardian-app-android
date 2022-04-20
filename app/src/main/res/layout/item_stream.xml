@@ -381,7 +381,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@id/bellImageView"
+        app:layout_constraintStart_toEndOf="@id/reportImageView"
         app:layout_constraintTop_toBottomOf="@id/timeTextView"
         app:layout_constraintEnd_toEndOf="@id/bgView"
         tools:text="2 responses by Ratree and Wasuphon" />
