@@ -87,7 +87,6 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
                 Preferences.getInstance(requireContext()).putString(Preferences.SELECTED_STREAM_ID, streamId)
-                
                 if (requireContext().isOnAirplaneMode()) {
                     Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
                     listener.openCreateReportActivity(streamId)
