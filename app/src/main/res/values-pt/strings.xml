@@ -160,9 +160,9 @@
     <string name="no_internet_connection">Sem internet. Tente de novo.</string>
 	
 	<!--Event value-->
-    <string name="chainsaw">motosserra</string>
-    <string name="gunshot">bala</string>
-    <string name="vehicle">veículo</string>
+    <string name="chainsaw">Motoserra</string>
+    <string name="gunshot">Arma de fogo</string>
+    <string name="vehicle">Veículo</string>
     <string name="trespasser">invasor</string>
     <string name="other">outro</string>
     
@@ -257,7 +257,7 @@
     <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i>"</string>
     <string name="submit_report">Enviar relatório</string>
     <string name="add_notes_required">Anotação*</string>
-	<string name="select">Selecione</string>
+	<string name="select">Selecionar</string>
     <string name="failed_receive_notification">Falha no recebimento de notificação de %s</string>
     <string name="failed_unsubscribe_receive_notification">Falha em descadastrar recebimento de notificação de %s</string>
     <string name="receive_alert_notification">Receba uma notificação de alerta</string>
@@ -271,7 +271,6 @@
     <string name="project_could_not_refreshed">O projeto não pôde ser atualizado</string>
     <string name="answers">Resposta:</string>
     <string name="logging_scale">Escala de desmatamento:</string>
-    <string name="damage">Tamanho do estrago:</string>
     <string name="note">Anotação: %s</string>
     <string name="assets">Material:</string>
 	<string name="damaged_machinery">Estraguei o maquinário (trator, caminhão)</string>
@@ -295,5 +294,54 @@
     <string name="large_text">Grande</string>
     <string name="recent">Recente</string>
     <string name="hot">Hot</string>
+    <string name="system_options">Opções de Sistema</string>
+    <string name="system_options_subtitle">Escolher toques, vibrações e importância</string>
+    <string name="events">Eventos</string>
+    <string name="no_projects_selected">Nenhum projeto selecionado</string>
+    <string name="other_project">, &amp; %d outros projeto</string>
+    <string name="other_projects">, &amp; %d outros projetos</string>
+    <string name="human_voice">Voz humana</string>
+    <string name="dog_bark">Latido</string>
+    <string name="elephant">Elefante</string>
+    <string name="create_report_title">%d  passos faltando</string>
+    <string name="create_report_title_one_step">1 passo faltando</string>
+    <string name="poaching_scale">Tamanho do estrago:</string>
+    <string name="can_not_play_audio">Não é possível tocar o áudio, por favor tente</string>
+    <string name="satellite_audio_not_found">Áudio não disponível para Guardians à Satélite</string>
+    <string name="satellite">Set</string>
+    <string name="cell">Célula</string>
+    <string name="investigated_at">Investigado às</string>
+    <string name="received_at">Recebido às</string>
+    <string name="action">Ação</string>
+    <string name="small_scale_text">Pequena escala</string>
+    <string name="large_scale_text">Grande escala</string>
+    <string name="additional_evidence">Evidência adicional</string>
+    <string name="seconds">segundos</string>
+    <string name="minutes">minutos</string>
+    <string name="hours">horas</string>
+    <string name="years">anos</string>
+    <string name="months">meses</string>
+    <string name="days">dias</string>
+    <string name="second">segundo</string>
+    <string name="minute">minutos</string>
+    <string name="hour">hora</string>
+    <string name="year">ano</string>
+    <string name="month">mês</string>
+    <string name="day">dia</string>
+    <string name="jan">Jan</string>
+    <string name="feb">Fev</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Abr</string>
+    <string name="may">Mai</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Ago</string>
+    <string name="sep">Set</string>
+    <string name="oct">Out</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dez</string>
+    <string name="response_by">1 resposta por</string>
+    <string name="responses_by">respostas por</string>
+    <string name="and">e</string>
 
 </resources>
