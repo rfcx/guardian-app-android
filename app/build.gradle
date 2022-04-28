@@ -125,7 +125,7 @@ dependencies {
     }
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.2'
     implementation 'id.zelory:compressor:3.0.1'
-    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    implementation 'com.opensooq.supernova:gligar:1.1.0'
 
     //Dependency Injection Koin
     implementation "org.koin:koin-core:2.0.1"

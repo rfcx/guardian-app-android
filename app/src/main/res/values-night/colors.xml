@@ -54,8 +54,10 @@
 	<color name="separateLine">#45485D</color>
 	<color name="bottomBar">#232436</color>
 	<color name="bottom_bar_icon_default_tint">#e6e6e6</color>
-	
-	<color name="action_color">#9100e6</color>
+    <color name="toolbar_bg">#232436</color>
+    <color name="counter_bg">#232436</color>
+
+    <color name="action_color">#9100e6</color>
 	<color name="evidence_color">#3971e6</color>
 	<color name="logging_color">#187f36</color>
 	<color name="damage_color">#674A40</color>
