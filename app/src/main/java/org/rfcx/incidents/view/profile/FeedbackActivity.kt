@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,16 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
+import com.opensooq.supernova.gligar.GligarPicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
 import org.rfcx.incidents.databinding.ActivityFeedbackBinding
 import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.CameraPermissions
 import org.rfcx.incidents.util.GalleryPermissions
-import org.rfcx.incidents.util.ImageFileUtils
 import org.rfcx.incidents.util.ReportUtils
 import org.rfcx.incidents.util.Screen
 import java.io.File
@@ -36,6 +33,7 @@ class FeedbackActivity : AppCompatActivity() {
     lateinit var binding: ActivityFeedbackBinding
     private val feedbackViewModel: FeedbackViewModel by viewModel()
     private var imageFile: File? = null
+    private val cameraPermissions by lazy { CameraPermissions(this) }
     private val galleryPermissions by lazy { GalleryPermissions(this) }
     private val feedbackImageAdapter by lazy { FeedbackImageAdapter() }
     private var pathListArray: List<String>? = null
@@ -115,7 +113,15 @@ class FeedbackActivity : AppCompatActivity() {
         R.id.attachView
         when (item.itemId) {
             android.R.id.home -> finish()
-            R.id.attachView -> openGallery()
+            R.id.attachView -> {
+                if (!cameraPermissions.allowed() || !galleryPermissions.allowed()) {
+                    imageFile = null
+                    if (!cameraPermissions.allowed()) cameraPermissions.check { }
+                    if (!galleryPermissions.allowed()) galleryPermissions.check { }
+                } else {
+                    startOpenGallery()
+                }
+            }
             R.id.sendFeedbackView -> sendFeedback()
         }
         return super.onOptionsItemSelected(item)
@@ -146,15 +152,11 @@ class FeedbackActivity : AppCompatActivity() {
     private fun startOpenGallery() {
         if (feedbackImageAdapter.getImageCount() < FeedbackImageAdapter.MAX_IMAGE_SIZE) {
             val remainingImage = FeedbackImageAdapter.MAX_IMAGE_SIZE - feedbackImageAdapter.getImageCount()
-            Matisse.from(this)
-                .choose(MimeType.ofImage())
-                .countable(true)
-                .maxSelectable(remainingImage)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                .thumbnailScale(0.85f)
-                .imageEngine(GlideEngine())
-                .theme(R.style.Matisse_Dracula)
-                .forResult(ReportUtils.REQUEST_GALLERY)
+            GligarPicker()
+                .requestCode(ReportUtils.REQUEST_GALLERY)
+                .limit(remainingImage)
+                .withActivity(this)
+                .show()
         } else {
             Toast.makeText(this, R.string.maximum_number_of_attachments, Toast.LENGTH_LONG).show()
         }
@@ -164,12 +166,9 @@ class FeedbackActivity : AppCompatActivity() {
         if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
 
         val pathList = mutableListOf<String>()
-        val results = Matisse.obtainResult(intentData)
-        results.forEach {
-            val imagePath = ImageFileUtils.findRealPath(this, it)
-            imagePath?.let { path ->
-                pathList.add(path)
-            }
+        val results = intentData.extras?.getStringArray(GligarPicker.IMAGES_RESULT)
+        results?.forEach {
+            pathList.add(it)
         }
         feedbackImageAdapter.addImages(pathList)
     }

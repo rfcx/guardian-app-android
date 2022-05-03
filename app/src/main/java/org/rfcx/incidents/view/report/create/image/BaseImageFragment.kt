@@ -2,16 +2,12 @@ package org.rfcx.incidents.view.report.create.image
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
-import org.rfcx.incidents.R
+import com.opensooq.supernova.gligar.GligarPicker
 import org.rfcx.incidents.databinding.ButtomSheetAttachImageLayoutBinding
 import org.rfcx.incidents.util.CameraPermissions
 import org.rfcx.incidents.util.GalleryPermissions
@@ -52,7 +48,13 @@ abstract class BaseImageFragment : BaseFragment() {
     private fun setupReportImages() {
         reportImageAdapter.onReportImageAdapterClickListener = object : OnReportImageAdapterClickListener {
             override fun onAddImageClick() {
-                attachImageDialog.show()
+                if (!cameraPermissions.allowed() || !galleryPermissions.allowed()) {
+                    imageFile = null
+                    if (!cameraPermissions.allowed()) cameraPermissions.check { }
+                    if (!galleryPermissions.allowed()) galleryPermissions.check { }
+                } else {
+                    startOpenGallery()
+                }
             }
 
             override fun onDeleteImageClick(position: Int, imagePath: String) {
@@ -132,27 +134,20 @@ abstract class BaseImageFragment : BaseFragment() {
 
     private fun startOpenGallery() {
         val remainingImage = ReportImageAdapter.MAX_IMAGE_SIZE - reportImageAdapter.getImageCount()
-        Matisse.from(this)
-            .choose(MimeType.ofImage())
-            .countable(true)
-            .maxSelectable(remainingImage)
-            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            .thumbnailScale(0.85f)
-            .imageEngine(GlideEngine())
-            .theme(R.style.Matisse_Dracula)
-            .forResult(ReportUtils.REQUEST_GALLERY)
+        GligarPicker()
+            .requestCode(ReportUtils.REQUEST_GALLERY)
+            .limit(remainingImage)
+            .withFragment(this)
+            .show()
     }
 
     private fun handleGalleryResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         if (requestCode != ReportUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
 
         val pathList = mutableListOf<String>()
-        val results = Matisse.obtainResult(intentData)
-        results.forEach {
-            val imagePath = ImageFileUtils.findRealPath(requireContext(), it)
-            imagePath?.let { path ->
-                pathList.add(path)
-            }
+        val results = intentData.extras?.getStringArray(GligarPicker.IMAGES_RESULT)
+        results?.forEach {
+            pathList.add(it)
         }
         reportImageAdapter.addImages(pathList)
         didAddImages(pathList)
