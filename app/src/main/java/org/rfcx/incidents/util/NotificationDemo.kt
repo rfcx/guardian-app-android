@@ -25,7 +25,7 @@ class NotificationDemo() {
             stackBuilder.addNextIntent(intent)
             val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            var contentText = "Chainsaw ${context.getString(R.string.detected_at)} Bear Hut #2"
+            var contentText = "Chainsaw ${context.getString(R.string.detected_at)} George5"
             // if (event?.id != null) {
             //     contentText = "Cat ${context.getString(R.string.detected_at)} // Todo: add name "
             // }

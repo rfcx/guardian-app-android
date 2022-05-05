@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -117,7 +118,26 @@ class ProfileFragment : BaseFragment() {
         }
 
         viewDataBinding.onClickStartDemo = View.OnClickListener {
-            context?.let { it1 -> NotificationDemo().startDemo(it1) }
+            val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
+            if (builder != null) {
+                builder.setTitle(null)
+                builder.setMessage(R.string.notification_will_sent)
+                builder.setCancelable(false)
+                builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
+                    context?.let { it1 -> NotificationDemo().startDemo(it1) }
+                }
+
+                builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val alertDialog = builder.create()
+                alertDialog.setOnShowListener {
+                    alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.text_secondary))
+                    alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+                }
+                alertDialog.show()
+            }
         }
     }
 
