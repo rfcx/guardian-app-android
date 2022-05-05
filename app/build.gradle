@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId 'org.rfcx.incidents'
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 32
+        versionCode 33
         versionName '1.0.5'
         minSdkVersion 19
         targetSdkVersion 30
@@ -47,7 +47,7 @@ android {
         }
         staging {
             applicationIdSuffix ".staging"
-            manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher", roundIcon: "@mipmap/ic_launcher"]
             buildConfigField 'String', 'CORE_API_BASE_URL', '"https://staging-api.rfcx.org/"'
             buildConfigField 'String', 'RANGER_API_BASE_URL', '"https://staging-ranger-api.rfcx.org/"'
         }
