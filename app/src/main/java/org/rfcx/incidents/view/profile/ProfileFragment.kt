@@ -19,7 +19,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentProfileBinding
+import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.NotificationDemo
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.base.BaseFragment
@@ -112,6 +114,10 @@ class ProfileFragment : BaseFragment() {
 
         viewDataBinding.onClickLogout = View.OnClickListener {
             profileViewModel.onLogout()
+        }
+
+        viewDataBinding.onClickStartDemo = View.OnClickListener {
+            context?.let { it1 -> NotificationDemo().startDemo(it1) }
         }
     }
 

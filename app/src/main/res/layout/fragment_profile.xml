@@ -29,6 +29,10 @@
             name="onClickLogout"
             type="android.view.View.OnClickListener"/>
 
+        <variable
+            name="onClickStartDemo"
+            type="android.view.View.OnClickListener"/>
+
     </data>
 
     <ScrollView
@@ -191,6 +195,23 @@
                 android:paddingEnd="@dimen/margin_padding_small"
                 android:paddingBottom="@dimen/margin_padding_normal"
                 android:text="@string/profile_feedback_label"/>
+
+            <LinearLayout
+                android:id="@+id/startDemoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                android:onClick="@{onClickStartDemo}"
+                android:padding="@dimen/margin_padding_normal">
+                <TextView
+                    android:id="@+id/startDemoTextView"
+                    style="@style/RangerText.SubTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:text="@string/start_demo" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

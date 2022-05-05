@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.profile
 
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.rfcx.incidents.BuildConfig
@@ -9,6 +10,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.logout
 
 class ProfileViewModel(
