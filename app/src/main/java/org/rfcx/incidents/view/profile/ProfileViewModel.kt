@@ -2,22 +2,23 @@ package org.rfcx.incidents.view.profile
 
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.preferences.Preferences
-import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.logout
+import kotlin.random.Random
 
 class ProfileViewModel(
     private val context: Context,
     profileData: ProfileData,
-    private val projectDb: ProjectDb
+    private val projectDb: ProjectDb,
+    private val streamDb: StreamDb
 ) : ViewModel() {
 
     val appVersion = MutableLiveData<String>()
@@ -27,12 +28,14 @@ class ProfileViewModel(
     val preferences = Preferences.getInstance(context)
 
     private val _logoutState = MutableLiveData<Boolean>()
+    private var _streams: List<Stream> = listOf()
 
     init {
         appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
         userName.value = profileData.getUserNickname()
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
+        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, "")).filter { it.lastIncident?.events != null }
     }
 
     fun resumed() {
@@ -42,6 +45,12 @@ class ProfileViewModel(
     fun onLogout() {
         _logoutState.value = true
         context.logout()
+    }
+
+    fun randomStream(): Stream? {
+        if (_streams.isNullOrEmpty()) return null
+        val index = Random.nextInt(_streams.size)
+        return _streams[index]
     }
 
     private fun updateEventSubtitle() {

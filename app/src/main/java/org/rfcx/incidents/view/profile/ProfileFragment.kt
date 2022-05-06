@@ -20,7 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentProfileBinding
-import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.NotificationDemo
 import org.rfcx.incidents.util.Screen
@@ -124,7 +123,14 @@ class ProfileFragment : BaseFragment() {
                 builder.setMessage(R.string.notification_will_sent)
                 builder.setCancelable(false)
                 builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
-                    context?.let { it1 -> NotificationDemo().startDemo(it1) }
+                    context?.let { it1 ->
+                        val stream = profileViewModel.randomStream()
+                        if (stream == null) {
+                            // Todo:: add when not have stream
+                        } else {
+                            NotificationDemo(stream).startDemo(it1)
+                        }
+                    }
                 }
 
                 builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->

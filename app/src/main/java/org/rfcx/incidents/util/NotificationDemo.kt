@@ -12,23 +12,22 @@ import android.os.Build
 import android.os.Handler
 import androidx.core.app.NotificationCompat
 import org.rfcx.incidents.R
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.EventNotification.INTENT_KEY_STREAM_ID
 import org.rfcx.incidents.view.MainActivity
 
-class NotificationDemo() {
+class NotificationDemo(private val stream: Stream) {
     fun startDemo(context: Context) {
         Handler().postDelayed({
             val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra(INTENT_KEY_STREAM_ID, "xqcth5uvwomx")
+            intent.putExtra(INTENT_KEY_STREAM_ID, stream.id)
             val stackBuilder = TaskStackBuilder.create(context)
             stackBuilder.addParentStack(MainActivity::class.java)
             stackBuilder.addNextIntent(intent)
             val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            var contentText = "Chainsaw ${context.getString(R.string.detected_at)} George5"
-            // if (event?.id != null) {
-            //     contentText = "Cat ${context.getString(R.string.detected_at)} // Todo: add name "
-            // }
+            val contentText =
+                "${stream.lastIncident?.events?.get(0)?.classification?.title} ${context.getString(R.string.detected_at)} ${stream.name.replaceFirstChar { it.uppercase() }}"
             val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setSound(alarmSound)
