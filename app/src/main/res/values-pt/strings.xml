@@ -94,11 +94,12 @@
     <string name="location_tracking_off_label">Desligado</string>
 	<string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
-    <string name="start_demo">Enviar um alerta de teste</string>
+    <string name="start_demo">Enviar um notificação de teste</string>
     <string name="notification_will_sent">A notificação será enviada no prazo de 30 segundos para verificar se você pode receber alertas</string>
     <string name="perform_test">Realizar teste</string>
-    
-	<string name="last_month">Último\nMês</string>
+    <string name="least_one_event">Você precisa de pelo menos um evento em seu projeto atualmente selecionado para poder enviar um teste</string>
+
+    <string name="last_month">Último\nMês</string>
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>

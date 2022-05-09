@@ -96,9 +96,10 @@
     <string name="other_project">, &amp; %d other project</string>
     <string name="other_projects">, &amp; %d other projects</string>
     <string name="notifications">Notifications</string>
-    <string name="start_demo">Send a test alert</string>
+    <string name="start_demo">Send a test notification</string>
     <string name="notification_will_sent">A notification will be sent within 30 seconds to verify that you can receive alerts</string>
     <string name="perform_test">Perform test</string>
+    <string name="least_one_event">You need at least one event in your currently selected project to be able send a test</string>
 
     <string name="dd_coordinates">DD</string>
     <string name="ddm_coordinates">DDM</string>

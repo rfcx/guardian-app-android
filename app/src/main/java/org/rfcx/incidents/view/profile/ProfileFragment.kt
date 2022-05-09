@@ -14,6 +14,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -117,32 +118,37 @@ class ProfileFragment : BaseFragment() {
         }
 
         viewDataBinding.onClickStartDemo = View.OnClickListener {
-            val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
-            if (builder != null) {
-                builder.setTitle(null)
-                builder.setMessage(R.string.notification_will_sent)
-                builder.setCancelable(false)
-                builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
-                    context?.let { it1 ->
-                        val stream = profileViewModel.randomStream()
-                        if (stream == null) {
-                            // Todo:: add when not have stream
-                        } else {
+            context?.let { it1 ->
+                val stream = profileViewModel.randomStream()
+                if (stream == null) {
+                    view?.let {
+                        Snackbar.make(it, R.string.least_one_event, Snackbar.LENGTH_SHORT)
+                            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+                            .apply { view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).maxLines = 3 }
+                            .setAnchorView(R.id.bottomBar).show()
+                    }
+                } else {
+                    val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
+                    if (builder != null) {
+                        builder.setTitle(null)
+                        builder.setMessage(R.string.notification_will_sent)
+                        builder.setCancelable(false)
+                        builder.setPositiveButton(getString(R.string.perform_test)) { _, _ ->
                             NotificationDemo(stream).startDemo(it1)
                         }
+
+                        builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        val alertDialog = builder.create()
+                        alertDialog.setOnShowListener {
+                            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.text_secondary))
+                            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
+                        }
+                        alertDialog.show()
                     }
                 }
-
-                builder.setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.setOnShowListener {
-                    alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.text_secondary))
-                    alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(TypedValue.COMPLEX_UNIT_PX, 40.0F)
-                }
-                alertDialog.show()
             }
         }
     }

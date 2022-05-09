@@ -35,11 +35,11 @@ class ProfileViewModel(
         userName.value = profileData.getUserNickname()
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
-        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, "")).filter { it.lastIncident?.events != null }
-    }
+            }
 
     fun resumed() {
         updateEventSubtitle()
+        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, "")).filter { it.lastIncident?.events?.size != 0 }
     }
 
     fun onLogout() {
