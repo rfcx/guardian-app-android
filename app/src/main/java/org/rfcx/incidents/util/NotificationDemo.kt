@@ -27,7 +27,8 @@ class NotificationDemo(private val stream: Stream) {
             val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val contentText =
-                "${stream.lastIncident?.events?.get(0)?.classification?.title} ${context.getString(R.string.detected_at)} ${stream.name.replaceFirstChar { it.uppercase() }}"
+                "${stream.lastIncident?.events?.get(0)?.classification?.title} ${context.getString(R.string.detected_at)} " +
+                    stream.name.replaceFirstChar { it.uppercase() }
             val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setSound(alarmSound)

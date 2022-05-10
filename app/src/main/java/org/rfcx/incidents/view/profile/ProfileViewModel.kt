@@ -35,7 +35,7 @@ class ProfileViewModel(
         userName.value = profileData.getUserNickname()
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
-            }
+    }
 
     fun resumed() {
         updateEventSubtitle()
