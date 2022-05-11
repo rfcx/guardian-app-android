@@ -86,11 +86,12 @@
 	<string name="location_tracking_off_label">Uit</string>
 	<string name="guardian_group_label">Projecten</string>
 	<string name="notifications">Meldingen</string>
-	<string name="start_demo">Stuur een testwaarschuwing</string>
+	<string name="start_demo">Stuur een test kennisgeving</string>
 	<string name="notification_will_sent">Een kennisgeving wordt binnen 30 seconden worden verzonden om te controleren of u waarschuwingen kan ontvangen</string>
 	<string name="perform_test">Test uitvoeren</string>
-	
-	<string name="dd_coordinates">DD</string>
+    <string name="least_one_event">Je hebt minimaal één evenement in je momenteel geselecteerde project nodig om een test te kunnen verzenden</string>
+
+    <string name="dd_coordinates">DD</string>
 	<string name="ddm_coordinates">DDM</string>
 	<string name="dms_coordinates">DMS</string>
 	

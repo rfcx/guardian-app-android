@@ -95,7 +95,8 @@
     <string name="start_demo">ทดสอบส่งการแจ้งเตือน</string>
     <string name="notification_will_sent">การแจ้งเตือนจะถูกส่งภายใน 30 วินาทีเพื่อยืนยันว่าคุณสามารถรับการแจ้งเตือนได้</string>
     <string name="perform_test">ทำการทดสอบ</string>
-    
+    <string name="least_one_event">คุณต้องมีอย่างน้อยหนึ่งแจ้งเตือนในโปรเจคที่คุณเลือกในปัจจุบันจึงจะสามารถส่งการทดสอบได้</string>
+
 	<string name="last_month">เดือนที่แล้ว</string>
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>

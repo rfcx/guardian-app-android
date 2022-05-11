@@ -8,13 +8,17 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
+import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.logout
+import kotlin.random.Random
 
 class ProfileViewModel(
     private val context: Context,
     profileData: ProfileData,
-    private val projectDb: ProjectDb
+    private val projectDb: ProjectDb,
+    private val streamDb: StreamDb
 ) : ViewModel() {
 
     val appVersion = MutableLiveData<String>()
@@ -24,6 +28,7 @@ class ProfileViewModel(
     val preferences = Preferences.getInstance(context)
 
     private val _logoutState = MutableLiveData<Boolean>()
+    private var _streams: List<Stream> = listOf()
 
     init {
         appVersion.value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) "
@@ -34,11 +39,18 @@ class ProfileViewModel(
 
     fun resumed() {
         updateEventSubtitle()
+        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, "")).filter { it.lastIncident?.events?.size != 0 }
     }
 
     fun onLogout() {
         _logoutState.value = true
         context.logout()
+    }
+
+    fun randomStream(): Stream? {
+        if (_streams.isNullOrEmpty()) return null
+        val index = Random.nextInt(_streams.size)
+        return _streams[index]
     }
 
     private fun updateEventSubtitle() {
