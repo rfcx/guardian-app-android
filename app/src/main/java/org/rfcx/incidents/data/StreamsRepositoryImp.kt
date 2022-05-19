@@ -21,7 +21,11 @@ class StreamsRepositoryImp(
 ) : StreamsRepository {
     override fun get(params: GetStreamsParams): Single<List<Stream>> {
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
-            return refreshFromAPI(params.projectId, params.offset)
+            var data: Single<List<Stream>>? = null
+            if (params.offset == 0) {
+                streamDb.deleteByProject(params.projectId) { if (it) data = refreshFromAPI(params.projectId, params.offset) }
+            }
+            return data ?: refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
     }
