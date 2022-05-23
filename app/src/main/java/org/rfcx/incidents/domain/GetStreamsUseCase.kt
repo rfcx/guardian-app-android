@@ -21,5 +21,6 @@ class GetStreamsUseCase(
 data class GetStreamsParams(
     val projectId: String,
     val forceRefresh: Boolean = false,
-    val offset: Int = 0
+    val offset: Int = 0,
+    val streamRefresh: Boolean = false
 )
