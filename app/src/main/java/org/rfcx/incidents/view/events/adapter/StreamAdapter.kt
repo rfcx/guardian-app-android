@@ -63,6 +63,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
         private val elephantLayout = binding.elephantLayout
         private val numOfElephantTextView = binding.numOfElephantTextView
+        private val fireLayout = binding.fireLayout
+        private val numOfFireTextView = binding.numOfFireTextView
         private val reportImageView = binding.reportImageView
         private val createByTextView = binding.createByTextView
 
@@ -132,7 +134,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             if (eventsDistinctType.isEmpty()) return
             var number = 0
 
-            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK, ELEPHANT)
+            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, FIRE, DOG_BARK, ELEPHANT)
             var counts = 0
             value.forEach { v ->
                 if (events.any { a -> a.classification?.value == v }) {
@@ -185,6 +187,10 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 ELEPHANT -> {
                     elephantLayout.visibility = View.VISIBLE
                     numOfElephantTextView.text = getNumberOfEventByType(events, type)
+                }
+                FIRE -> {
+                    fireLayout.visibility = View.VISIBLE
+                    numOfFireTextView.text = getNumberOfEventByType(events, type)
                 }
                 else -> {
                     otherLayout.visibility = View.VISIBLE
@@ -241,5 +247,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         const val VEHICLE = "vehicle"
         const val VOICE = "humanvoice"
         const val ELEPHANT = "elephant"
+        const val FIRE = "fire"
     }
 }

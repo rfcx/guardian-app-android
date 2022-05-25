@@ -304,6 +304,7 @@
     <string name="human_voice">Voz humana</string>
     <string name="dog_bark">Latido</string>
     <string name="elephant">Elefante</string>
+    <string name="fire">Incêndio</string>
     <string name="create_report_title">%d  passos faltando</string>
     <string name="create_report_title_one_step">1 passo faltando</string>
     <string name="poaching_scale">Tamanho do estrago:</string>
