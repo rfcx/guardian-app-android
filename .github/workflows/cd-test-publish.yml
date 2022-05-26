@@ -93,6 +93,7 @@ jobs:
               "Tooseriuz": { "SLACK_MENTION_USERS": "UC905TCTV" },
               "RatreeOchn": { "SLACK_MENTION_USERS": "UK4PVHM9C" }
             }
+            
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@v1
         if: always()
@@ -105,7 +106,7 @@ jobs:
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_FAILURE }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_COREDT_WEBHOOK }}
           SENDER: ${{ github.event.sender.login }}
           
       - name: 'Notify: Slack Success'
