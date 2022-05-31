@@ -166,41 +166,41 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             when (type) {
                 GUNSHOT -> {
                     gunLayout.visibility = View.VISIBLE
-                    numOfGunTextView.text = getNumberOfEventByType(events, type)
+                    numOfGunTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
-                    numOfChainsawTextView.text = getNumberOfEventByType(events, type)
+                    numOfChainsawTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 VEHICLE -> {
                     vehicleLayout.visibility = View.VISIBLE
-                    numOfVehicleTextView.text = getNumberOfEventByType(events, type)
+                    numOfVehicleTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 VOICE -> {
                     voiceLayout.visibility = View.VISIBLE
-                    numOfVoiceTextView.text = getNumberOfEventByType(events, type)
+                    numOfVoiceTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 DOG_BARK -> {
                     dogBarkLayout.visibility = View.VISIBLE
-                    numOfDogBarkTextView.text = getNumberOfEventByType(events, type)
+                    numOfDogBarkTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 ELEPHANT -> {
                     elephantLayout.visibility = View.VISIBLE
-                    numOfElephantTextView.text = getNumberOfEventByType(events, type)
+                    numOfElephantTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 FIRE -> {
                     fireLayout.visibility = View.VISIBLE
-                    numOfFireTextView.text = getNumberOfEventByType(events, type)
+                    numOfFireTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 else -> {
                     otherLayout.visibility = View.VISIBLE
-                    numOfOtherTextView.text = getNumberOfEventByType(events, type)
+                    numOfOtherTextView.text = getNumberOfEventByType(events, type).toString()
                 }
             }
         }
 
-        private fun getNumberOfEventByType(events: List<Event>, type: String): String {
-            return events.filter { a -> a.classification?.value == type }.size.toString()
+        private fun getNumberOfEventByType(events: List<Event>, type: String): Int {
+            return events.filter { a -> a.classification?.value == type }.size
         }
     }
 
