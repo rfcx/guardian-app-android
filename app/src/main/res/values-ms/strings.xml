@@ -44,6 +44,7 @@
     <string name="vehicle">Kenderaan</string>
     <string name="dog_bark">Salakan</string>
     <string name="elephant">Gajah</string>
+    <string name="fire">Api</string>
     <string name="other">Lain-lain</string>
     <string name="profile_sign_out_label">Daftar keluar</string>
     <string name="profile_aditional_label">Tambahan</string>

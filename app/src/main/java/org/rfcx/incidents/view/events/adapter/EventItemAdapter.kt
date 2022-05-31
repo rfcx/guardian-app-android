@@ -54,6 +54,7 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
                 StreamAdapter.VOICE -> R.drawable.ic_voice
                 StreamAdapter.DOG_BARK -> R.drawable.ic_dog_bark
                 StreamAdapter.ELEPHANT -> R.drawable.ic_elephant
+                StreamAdapter.FIRE -> R.drawable.ic_fire
                 else -> R.drawable.ic_report
             }
 
@@ -64,6 +65,7 @@ class EventItemAdapter(private val onClickListener: (Event) -> Unit) :
                 StreamAdapter.VOICE -> R.string.human_voice
                 StreamAdapter.DOG_BARK -> R.string.dog_bark
                 StreamAdapter.ELEPHANT -> R.string.elephant
+                StreamAdapter.FIRE -> R.string.fire
                 else -> null
             }
 

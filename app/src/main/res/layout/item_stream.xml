@@ -284,13 +284,38 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/dogBarkLayout"
+        android:id="@+id/fireLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_padding_normal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/timeTextView"
         app:layout_constraintEnd_toStartOf="@id/voiceLayout"
+        app:layout_constraintTop_toTopOf="@id/timeTextView">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:src="@drawable/ic_fire"
+            app:tint="@color/iconColor" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numOfFireTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dogBarkLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/timeTextView"
+        app:layout_constraintEnd_toStartOf="@id/fireLayout"
         app:layout_constraintTop_toTopOf="@id/timeTextView">
 
         <androidx.appcompat.widget.AppCompatImageView
