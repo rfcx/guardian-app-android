@@ -63,6 +63,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         private val numOfDogBarkTextView = binding.numOfDogBarkTextView
         private val elephantLayout = binding.elephantLayout
         private val numOfElephantTextView = binding.numOfElephantTextView
+        private val fireLayout = binding.fireLayout
+        private val numOfFireTextView = binding.numOfFireTextView
         private val reportImageView = binding.reportImageView
         private val createByTextView = binding.createByTextView
 
@@ -132,7 +134,7 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             if (eventsDistinctType.isEmpty()) return
             var number = 0
 
-            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, DOG_BARK, ELEPHANT)
+            val value = listOf(CHAINSAW, GUNSHOT, VEHICLE, VOICE, FIRE, DOG_BARK, ELEPHANT)
             var counts = 0
             value.forEach { v ->
                 if (events.any { a -> a.classification?.value == v }) {
@@ -147,6 +149,13 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 }
             }
 
+            val notInDefaultType = events.filter { e -> !value.contains(e.classification?.value) }
+            if (notInDefaultType.isNotEmpty()) {
+                otherLayout.visibility = View.VISIBLE
+                number += notInDefaultType.size
+                numOfOtherTextView.text = (number).toString()
+            }
+
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE
@@ -157,37 +166,41 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             when (type) {
                 GUNSHOT -> {
                     gunLayout.visibility = View.VISIBLE
-                    numOfGunTextView.text = getNumberOfEventByType(events, type)
+                    numOfGunTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 CHAINSAW -> {
                     chainsawLayout.visibility = View.VISIBLE
-                    numOfChainsawTextView.text = getNumberOfEventByType(events, type)
+                    numOfChainsawTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 VEHICLE -> {
                     vehicleLayout.visibility = View.VISIBLE
-                    numOfVehicleTextView.text = getNumberOfEventByType(events, type)
+                    numOfVehicleTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 VOICE -> {
                     voiceLayout.visibility = View.VISIBLE
-                    numOfVoiceTextView.text = getNumberOfEventByType(events, type)
+                    numOfVoiceTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 DOG_BARK -> {
                     dogBarkLayout.visibility = View.VISIBLE
-                    numOfDogBarkTextView.text = getNumberOfEventByType(events, type)
+                    numOfDogBarkTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 ELEPHANT -> {
                     elephantLayout.visibility = View.VISIBLE
-                    numOfElephantTextView.text = getNumberOfEventByType(events, type)
+                    numOfElephantTextView.text = getNumberOfEventByType(events, type).toString()
+                }
+                FIRE -> {
+                    fireLayout.visibility = View.VISIBLE
+                    numOfFireTextView.text = getNumberOfEventByType(events, type).toString()
                 }
                 else -> {
                     otherLayout.visibility = View.VISIBLE
-                    numOfOtherTextView.text = getNumberOfEventByType(events, type)
+                    numOfOtherTextView.text = getNumberOfEventByType(events, type).toString()
                 }
             }
         }
 
-        private fun getNumberOfEventByType(events: List<Event>, type: String): String {
-            return events.filter { a -> a.classification?.value == type }.size.toString()
+        private fun getNumberOfEventByType(events: List<Event>, type: String): Int {
+            return events.filter { a -> a.classification?.value == type }.size
         }
     }
 
@@ -234,5 +247,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
         const val VEHICLE = "vehicle"
         const val VOICE = "humanvoice"
         const val ELEPHANT = "elephant"
+        const val FIRE = "fire"
     }
 }
