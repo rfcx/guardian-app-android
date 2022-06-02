@@ -20,12 +20,13 @@ class StreamsRepositoryImp(
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {
     override fun get(params: GetStreamsParams): Single<List<Stream>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
+        if (params.streamRefresh) {
             var data: Single<List<Stream>>? = null
-            if (params.offset == 0) {
-                streamDb.deleteByProject(params.projectId) { if (it) data = refreshFromAPI(params.projectId, params.offset) }
-            }
+            streamDb.deleteByProject(params.projectId) { if (it) data = refreshFromAPI(params.projectId, params.offset) }
             return data ?: refreshFromAPI(params.projectId, params.offset)
+        }
+        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
+            return refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
     }

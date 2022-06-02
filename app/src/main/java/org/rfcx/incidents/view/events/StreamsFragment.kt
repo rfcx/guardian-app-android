@@ -794,7 +794,7 @@ class StreamsFragment :
 
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
-            viewModel.refreshStreams(force = true)
+            viewModel.refreshStreams(streamRefresh = true)
         } else {
             binding.refreshView.isRefreshing = false
             Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()

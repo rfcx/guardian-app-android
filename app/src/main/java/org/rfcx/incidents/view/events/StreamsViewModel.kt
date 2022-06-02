@@ -80,7 +80,7 @@ class StreamsViewModel(
         )
     }
 
-    fun refreshStreams(force: Boolean = false, offset: Int = 0) {
+    fun refreshStreams(force: Boolean = false, offset: Int = 0, streamRefresh: Boolean = false) {
         isLoadingMore = true
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
         getStreamsUseCase.execute(
@@ -95,7 +95,7 @@ class StreamsViewModel(
                     _streams.value = Result.Error(e)
                 }
             },
-            GetStreamsParams(projectId, force, offset)
+            GetStreamsParams(projectId, force, offset, streamRefresh)
         )
     }
 
