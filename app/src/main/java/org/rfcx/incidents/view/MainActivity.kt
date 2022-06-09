@@ -394,8 +394,9 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         if (intent?.hasExtra(EventNotification.INTENT_KEY_STREAM_ID) == true) {
             val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
             if (streamId != null) {
-                mainViewModel.refreshStreams()
-                openStreamDetail(streamId, null)
+                mainViewModel.refreshStreams {
+                    if (it) openStreamDetail(streamId, null)
+                }
             }
         }
     }

@@ -78,13 +78,17 @@ class MainActivityViewModel(
         trackingDb.insertOrUpdate(tracking, coordinate)
     }
 
-    fun refreshStreams() {
+    fun refreshStreams(callback: (Boolean) -> Unit) {
         val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
         getStreamsUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
-                override fun onSuccess(t: List<Stream>) {}
+                override fun onSuccess(t: List<Stream>) {
+                    callback.invoke(true)
+                }
 
-                override fun onError(e: Throwable) {}
+                override fun onError(e: Throwable) {
+                    callback.invoke(false)
+                }
             },
             GetStreamsParams(projectId, true, 0)
         )
