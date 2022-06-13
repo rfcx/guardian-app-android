@@ -83,7 +83,8 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 vehicleLayout,
                 voiceLayout,
                 dogBarkLayout,
-                elephantLayout
+                elephantLayout,
+                fireLayout
             ).forEach {
                 it.visibility = View.GONE
             }

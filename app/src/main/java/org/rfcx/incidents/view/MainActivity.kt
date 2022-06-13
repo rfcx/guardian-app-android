@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -53,6 +54,7 @@ import org.rfcx.incidents.widget.BottomNavigationMenuItem
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
+    private val preferences = Preferences.getInstance(this)
 
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val onNetworkReceived by lazy { NetworkReceiver(this) }
@@ -392,13 +394,39 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     private fun getEventFromIntentIfHave(intent: Intent?) {
         if (intent?.hasExtra(EventNotification.INTENT_KEY_STREAM_ID) == true) {
+            val dialog = Dialog(this)
+            dialog.setContentView(R.layout.fragment_loading)
+            dialog.setCancelable(false)
+            dialog.show()
+
+            val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+            val listOfProject = listOf(projectId) + getSubscribedProject().filter { s -> s != projectId }
             val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
+
             if (streamId != null) {
-                mainViewModel.refreshStreams {
-                    if (it) openStreamDetail(streamId, null)
+                if (mainViewModel.getStream(streamId) == null) {
+                    listOfProject.forEach { id ->
+                        mainViewModel.refreshStreams(id) { streams ->
+                            if (!streams.isNullOrEmpty()) {
+                                if (streams.any { s -> s.id == streamId }) {
+                                    openStreamDetail(streamId, null)
+                                    dialog.dismiss()
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    openStreamDetail(streamId, null)
+                    dialog.dismiss()
                 }
+            } else {
+                dialog.dismiss()
             }
         }
+    }
+
+    private fun getSubscribedProject(): List<String> {
+        return preferences.getArrayList(Preferences.SUBSCRIBED_PROJECTS) ?: listOf()
     }
 
     companion object {
