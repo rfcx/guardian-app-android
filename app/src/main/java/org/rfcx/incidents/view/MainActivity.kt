@@ -399,28 +399,25 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             dialog.setCancelable(false)
             dialog.show()
 
-            val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
-            val listOfProject = listOf(projectId) + getSubscribedProject().filter { s -> s != projectId }
             val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
-
-            if (streamId != null) {
-                if (mainViewModel.getStream(streamId) == null) {
-                    listOfProject.forEach { id ->
-                        mainViewModel.refreshStreams(id) { streams ->
-                            if (!streams.isNullOrEmpty()) {
-                                if (streams.any { s -> s.id == streamId }) {
-                                    openStreamDetail(streamId, null)
-                                    dialog.dismiss()
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    openStreamDetail(streamId, null)
-                    dialog.dismiss()
-                }
-            } else {
+            if (streamId == null) {
                 dialog.dismiss()
+                return
+            }
+
+            if (mainViewModel.getStream(streamId) != null) {
+                openStreamDetail(streamId, null)
+                dialog.dismiss()
+            }
+
+            getSubscribedProject().forEach { id ->
+                mainViewModel.refreshStreams(id) { streams ->
+                    if (streams.isNullOrEmpty()) return@refreshStreams
+                    if (streams.any { s -> s.id == streamId }) {
+                        openStreamDetail(streamId, null)
+                        dialog.dismiss()
+                    }
+                }
             }
         }
     }
