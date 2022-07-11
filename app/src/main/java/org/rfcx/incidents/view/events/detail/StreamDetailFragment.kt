@@ -11,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentGuardianStreamDetailBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
@@ -32,6 +34,8 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
     private var _binding: FragmentGuardianStreamDetailBinding? = null
     private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
+
     private val viewModel: StreamDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener
     private val eventItemAdapter by lazy { EventItemAdapter(this) }
@@ -165,6 +169,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
     }
 
     override fun invoke(event: Event) {
+        firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickEvent.key, "Id: " + event.id + "/ Stream Id: " + event.streamId)
         listener.openEvent(event)
     }
 

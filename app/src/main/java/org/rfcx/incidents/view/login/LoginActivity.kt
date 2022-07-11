@@ -3,9 +3,11 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
@@ -14,6 +16,7 @@ import org.rfcx.incidents.view.base.BaseActivity
 class LoginActivity : BaseActivity(), LoginListener {
 
     private lateinit var binding: ActivityLoginNewBinding
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
 
     companion object {
         fun startActivity(context: Context) {
@@ -93,7 +96,9 @@ class LoginActivity : BaseActivity(), LoginListener {
 
     private fun getEventFromIntentIfHave(intent: Intent?): String? {
         if (intent?.hasExtra("streamId") == true) {
-            return intent.getStringExtra("streamId")
+            val streamId = intent.getStringExtra("streamId")
+            firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickNotification.key, streamId ?: "")
+            return streamId
         }
         return null
     }

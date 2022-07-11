@@ -19,6 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityMainBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
     private val preferences = Preferences.getInstance(this)
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
 
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val onNetworkReceived by lazy { NetworkReceiver(this) }
@@ -80,7 +82,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         setContentView(view)
         setupDisplayTheme()
         setStatusBar()
-        FirebaseCrashlytics.getInstance().setCustomKey("Email", this.getUserEmail())
+        firebaseCrashlytics.setCustomKey(CrashlyticsKey.EmailUser.key, this.getUserEmail())
         if (supportFragmentManager.fragments.lastOrNull() is StreamDetailFragment) hideBottomAppBar()
 
         // TODO: move preferences to viewmodel

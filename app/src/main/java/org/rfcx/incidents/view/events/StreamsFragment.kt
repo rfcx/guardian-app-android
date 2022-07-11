@@ -26,6 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -58,6 +59,7 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentStreamsBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -112,6 +114,8 @@ class StreamsFragment :
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
+
     private val viewModel: StreamsViewModel by viewModel()
     private val projectAdapter by lazy { ProjectAdapter(this) }
     private val streamAdapter by lazy { StreamAdapter(this) }
@@ -300,6 +304,7 @@ class StreamsFragment :
 
     override fun onClicked(project: Project) {
         viewModel.selectProject(project.id)
+        firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnSelectedProject.key, project.id + " : " + project.name)
 
         isShowNotHaveStreams(false)
         binding.streamLayout.visibility = View.GONE
@@ -375,7 +380,8 @@ class StreamsFragment :
     }
 
     override fun invoke(stream: Stream) {
-        listener.openStreamDetail(stream.id, null) // , stream.distance)
+        firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamNewEventPage.key, "Stream name: " + stream.name + "/ Project id: " + stream.projectId)
+        listener.openStreamDetail(stream.id, null)
     }
 
     private fun setupToolbar() {
@@ -480,6 +486,8 @@ class StreamsFragment :
                     if (features?.groupBy { it }?.size == 1) {
                         val distance = features[0].getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
                         val streamId = features[0].getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
+                        val streamName = features[0].getProperty(PROPERTY_MARKER_EVENT_SITE).asString
+                        firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, streamName)
                         listener.openStreamDetail(streamId, distance.toDouble())
                     } else {
                         moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
@@ -489,6 +497,8 @@ class StreamsFragment :
                 val selectedFeature = eventFeatures[0]
                 val distance = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
                 val streamId = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
+                val streamName = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_SITE).asString
+                firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, streamName)
                 listener.openStreamDetail(streamId, if (distance.isBlank()) null else distance.toDouble())
             }
             return true

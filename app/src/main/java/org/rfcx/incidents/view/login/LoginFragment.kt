@@ -13,11 +13,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentLoginBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isValidEmail
@@ -30,6 +32,7 @@ class LoginFragment : BaseFragment() {
     private val loginViewModel: LoginViewModel by viewModel()
 
     private val analytics by lazy { context?.let { Analytics(it) } }
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,6 +66,7 @@ class LoginFragment : BaseFragment() {
             analytics?.trackLoginEvent("email")
             val email = binding.loginEmailEditText.text.toString().trim()
             val password = binding.loginPasswordEditText.text.toString()
+            firebaseCrashlytics.setCustomKey(CrashlyticsKey.LoginWith.key, email)
             it.hideKeyboard()
 
             if (validateInput(email, password)) {
