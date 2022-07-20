@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -22,6 +21,7 @@ import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Crashlytics
 import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
@@ -34,7 +34,7 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
     private var _binding: FragmentGuardianStreamDetailBinding? = null
     private val binding get() = _binding!!
     private val analytics by lazy { context?.let { Analytics(it) } }
-    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
+    private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val viewModel: StreamDetailViewModel by viewModel()
     lateinit var listener: MainActivityEventListener

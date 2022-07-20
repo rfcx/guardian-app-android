@@ -65,6 +65,7 @@ import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.EventNotification
 import org.rfcx.incidents.util.Analytics
+import org.rfcx.incidents.util.Crashlytics
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -114,7 +115,7 @@ class StreamsFragment :
     private val binding get() = _binding!!
 
     private val analytics by lazy { context?.let { Analytics(it) } }
-    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
+    private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val viewModel: StreamsViewModel by viewModel()
     private val projectAdapter by lazy { ProjectAdapter(this) }
