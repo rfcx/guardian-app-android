@@ -3,11 +3,11 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.util.Crashlytics
+import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
@@ -36,7 +36,7 @@ class LoginActivity : BaseActivity(), LoginListener {
         val preferenceHelper = Preferences.getInstance(this)
         val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
 
-        if (CredentialKeeper(this).hasValidCredentials() && selectedProject != "" && getUserNickname().substring(0, 1) != "+") {
+        if (this.getTokenID() != null && selectedProject != "" && getUserNickname().substring(0, 1) != "+") {
             openMain()
         } else {
             openLoginFragment()
