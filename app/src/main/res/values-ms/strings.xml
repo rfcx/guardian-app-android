@@ -164,6 +164,8 @@
     <string name="not_found">tidak ditemui</string>
     <string name="response_by">1 respon daripada</string>
     <string name="responses_by">respon daripada</string>
+    <string name="response">1 respon</string>
+    <string name="responses">respon</string>
     <string name="and">dan</string>
     <string name="account">Akaun</string>
     <string name="last_step">Laporan langkah terakhir</string>
