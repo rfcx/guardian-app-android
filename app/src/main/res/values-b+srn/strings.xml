@@ -153,5 +153,7 @@
     <string name="dec">December</string>
     <string name="response_by">1 piki fu</string>
     <string name="responses_by">piki fu</string>
+    <string name="response">1 piki</string>
+    <string name="responses">piki</string>
     <string name="and">en</string>
 </resources>

@@ -344,6 +344,8 @@
     <string name="dec">Dez</string>
     <string name="response_by">1 resposta por</string>
     <string name="responses_by">respostas por</string>
+    <string name="response">1 resposta</string>
+    <string name="responses">respostas</string>
     <string name="and">e</string>
 
 </resources>

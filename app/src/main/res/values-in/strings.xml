@@ -342,6 +342,8 @@
     <string name="additional_evidence">"Bukti Tambahan  "</string>
     <string name="response_by">1 tanggapan oleh</string>
     <string name="responses_by">tanggapan oleh</string>
+    <string name="response">1 tanggapan</string>
+    <string name="responses">tanggapan</string>
     <string name="and">dan</string>
 
 </resources>

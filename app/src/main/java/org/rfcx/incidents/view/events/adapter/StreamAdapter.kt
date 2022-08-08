@@ -101,10 +101,16 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
             reportImageView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
             createByTextView.visibility = if (incident.responses?.isNotEmpty() == true) View.VISIBLE else View.GONE
             incident.responses?.let { res ->
-                val userText = if (res.size == 1) {
-                    itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
-                } else {
-                    setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
+                val userText = when {
+                    res.getOrNull(0)?.firstname.isNullOrBlank() -> {
+                        itemView.context.getString(R.string.response)
+                    }
+                    res.size == 1 -> {
+                        itemView.context.getString(R.string.response_by) + " " + res[0]?.firstname.toString().firstCharUppercase
+                    }
+                    else -> {
+                        setCreatedByText(itemView.context, res.map { u -> u?.firstname ?: "" })
+                    }
                 }
 
                 createByTextView.text = userText
@@ -215,7 +221,11 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 else -> ", $firstname"
             }
         }
-        return users.size.toString() + " " + context.getString(R.string.responses_by) + " " + createByText
+        return if (createByText.isBlank()) {
+            "${users.size} ${context.getString(R.string.responses)}"
+        } else {
+            "${users.size} ${context.getString(R.string.responses_by)} $createByText"
+        }
     }
 
     private fun List<String>.toCheckDuplicate(): ArrayList<String> {
