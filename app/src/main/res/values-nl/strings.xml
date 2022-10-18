@@ -63,7 +63,7 @@
 	<string name="report_title">Verslag doen van</string>
 	<string name="report_what_label">WAT?</string>
 	<string name="report_when_label">WANNEER?</string>
-	<string name="report_submit_button_label">voorleggen</string>
+	<string name="report_submit_button_label">Indienen</string>
 	<string name="report_record_label">RECORD\'S (Optioneel)</string>
 	<string name="report_attach_image_label">FOTO (optioneel)</string>
 	<string name="report_location_null">Locatie is niet gevonden. Probeer het opnieuw.</string>
@@ -193,7 +193,7 @@
 	<string name="something_is_wrong">Er is iets fout gegaan. Probeer het later opnieuw.</string>
 	<string name="profile_aditional_label">Aanvullend</string>
 	<string name="profile_app_version_label">App versie</string>
-	<string name="profile_feedback_label">Terugkoppeling</string>
+	<string name="profile_feedback_label">Feedback</string>
 	<string name="profile_rate_app_label">Beoordeel de app</string>
 	<string name="save_changed">Wijzigingen opslaan</string>
 	<string name="please_try_again_later">Probeer het later opnieuw.</string>
