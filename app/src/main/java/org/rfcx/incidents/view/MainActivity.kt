@@ -13,12 +13,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityMainBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
@@ -29,6 +29,7 @@ import org.rfcx.incidents.service.NetworkReceiver
 import org.rfcx.incidents.service.NetworkReceiver.Companion.CONNECTIVITY_ACTION
 import org.rfcx.incidents.service.NetworkState
 import org.rfcx.incidents.service.ResponseSyncWorker
+import org.rfcx.incidents.util.Crashlytics
 import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.LocationPermissions.Companion.REQUEST_PERMISSIONS_REQUEST_CODE
 import org.rfcx.incidents.util.Screen
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
     private val preferences = Preferences.getInstance(this)
+    private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val locationPermissions by lazy { LocationPermissions(this) }
     private val onNetworkReceived by lazy { NetworkReceiver(this) }
@@ -80,7 +82,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         setContentView(view)
         setupDisplayTheme()
         setStatusBar()
-        FirebaseCrashlytics.getInstance().setCustomKey("Email", this.getUserEmail())
+        firebaseCrashlytics.setCustomKey(CrashlyticsKey.EmailUser.key, this.getUserEmail())
         if (supportFragmentManager.fragments.lastOrNull() is StreamDetailFragment) hideBottomAppBar()
 
         // TODO: move preferences to viewmodel
