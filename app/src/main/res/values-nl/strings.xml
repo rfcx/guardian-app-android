@@ -173,6 +173,7 @@
 	<string name="no_internet_connection">Geen internet, probeer het opnieuw.</string>
     <string name="unable_to_submit_on_airplane_mode">Kan niet indienen in vliegtuigmodus.</string>
     <string name="unable_to_submit_no_internet_connection">Kan niet verzenden, terwijl er geen verbinding is.</string>
+    <string name="other_text">Overigen</string>
 
     <!--Event value-->
 	<string name="chainsaw">kettingzaag</string>
