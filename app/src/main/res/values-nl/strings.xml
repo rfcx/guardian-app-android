@@ -6,16 +6,16 @@
 	<string name="login">Log in</string>
 	<string name="connect_with_facebook">Verbinden met Facebook</string>
 	<string name="connect_with_sms">Ga verder met telefoonnummer</string>
-	<string name="pls_fill_email">Vul e-mail</string>
-	<string name="pls_fill_password">Vul wachtwoord</string>
-	<string name="incorrect_username_password">foute gebruikersnaam of wachtwoord</string>
-	<string name="an_error_occurred">Service onbeschikbaar</string>
+	<string name="pls_fill_email">Gelieve uw email in te vullen</string>
+	<string name="pls_fill_password">Gelieve uw wachtwoord in te vullen</string>
+	<string name="incorrect_username_password">Foutieve gebruikersnaam of wachtwoord</string>
+	<string name="an_error_occurred">Dienst onbeschikbaar</string>
 	<string name="or">OF</string>
-	<string name="powered_by">Aangedreven door</string>
+	<string name="powered_by">Ingevuld door</string>
 	
 	<!-- LoginActivity -->
-	<string name="next">De volgende</string>
-	<string name="skip">Overspringen</string>
+	<string name="next">Volgende</string>
+	<string name="skip">Overslaan</string>
 	<string name="done">Gedaan</string>
 	<string name="available_in_settings">U vindt er ook deze les in het tabblad Profile</string>
 	<string name="name_of_guardian">Naam van de site</string>
@@ -33,7 +33,7 @@
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Inloggen</string>
 	<string name="invitation_submit_button_label">voorleggen</string>
-	<string name="forgot_your_password">Je wachtwoord vergeten</string>
+	<string name="forgot_your_password">Wachtwoord vergeten?</string>
 	<string name="reset_password">Stel je wachtwoord opnieuw in</string>
 	<string name="enter_email">Vul uw e-mail naar link voor herstel te ontvangen</string>
 	<string name="cancel">Annuleren</string>
@@ -45,7 +45,7 @@
 	<string name="hint_name">Naam</string>
 	
 	<string name="terms_and_service">Ik heb deze Service Voorwaarden gelezen en ga ermee akkoord</string>
-	<string name="continue_text">Doorgaan met</string>
+	<string name="continue_text">Doorgaan</string>
 	
 	<!-- common error -->
 	<string name="error_common">Er is een fout opgetreden. Probeer het opnieuw.</string>
@@ -69,7 +69,7 @@
 	<string name="report_location_null">Locatie is niet gevonden. Probeer het opnieuw.</string>
 	<string name="report_note_label">Notes (optioneel)</string>
 	<string name="report_note">Notes</string>
-	<string name="report_note_hint">Doe wat aantekeningen hier</string>
+	<string name="report_note_hint">Zet hier wat aantekeningen</string>
 	<string name="some_photo_already_exists">Sommige foto bestaat al</string>
 	<string name="these_photos_already_exists">Deze foto\'s bestaan</string>
 	<string name="this_photo_already_exists">Deze foto bestaat al</string>
@@ -90,6 +90,16 @@
 	<string name="notification_will_sent">Een kennisgeving wordt binnen 30 seconden worden verzonden om te controleren of u waarschuwingen kan ontvangen</string>
 	<string name="perform_test">Test uitvoeren</string>
     <string name="least_one_event">Je hebt minimaal één evenement in je momenteel geselecteerde project nodig om een test te kunnen verzenden</string>
+    <string name="events">Gebeurtenissen</string>
+    <string name="receive_alert_notification">Waarschuwingsmeldingen ontvangen</string>
+    <string name="failed_receive_notification">Geen melding ontvangen van %s</string>
+    <string name="failed_unsubscribe_receive_notification">Afmelden mislukt, ontvang bericht van %s</string>
+    <string name="no_projects_selected">Geen projecten geselecteerd</string>
+    <string name="other_project">, &amp; %d ander project</string>
+    <string name="other_projects">, &amp; %d andere projecten</string>
+    <string name="system_options">Systeem opties</string>
+    <string name="system_options_subtitle">Kies geluiden, trillingen en belangrijkheid</string>
+
 
     <string name="dd_coordinates">DD</string>
 	<string name="ddm_coordinates">DDM</string>
@@ -108,7 +118,7 @@
 	<string name="within_24_hours">Binnen 24 uur</string>
 	<string name="at_that_time">Op dat moment</string>
 	
-	<string name="tab_to_record_label">Houd de knop om op te nemen notities</string>
+	<string name="tab_to_record_label">Houd de knop ingedrukt om notities op te nemen</string>
 	<string name="new_password">Nieuw paswoord</string>
 	<string name="new_password_again">Bevestig nieuw wachtwoord</string>
 	<string name="change_password">Verander wachtwoord</string>
@@ -161,8 +171,10 @@
 	<!-- Alerts -->
 	<string name="yesterday">Gisteren</string>
 	<string name="no_internet_connection">Geen internet, probeer het opnieuw.</string>
-	
-	<!--Event value-->
+    <string name="unable_to_submit_on_airplane_mode">Kan niet indienen in vliegtuigmodus.</string>
+    <string name="unable_to_submit_no_internet_connection">Kan niet verzenden, terwijl er geen verbinding is.</string>
+
+    <!--Event value-->
 	<string name="chainsaw">kettingzaag</string>
 	<string name="gunshot">geweerschot</string>
 	<string name="vehicle">voertuig</string>
@@ -179,7 +191,7 @@
 	<string name="confirm_password_does_not_match">Bevestig wachtwoord komt niet overeen</string>
 	<string name="password_changed_successfully">Het wachtwoord is gewijzigd.</string>
 	<string name="something_is_wrong">Er is iets fout gegaan. Probeer het later opnieuw.</string>
-	<string name="profile_aditional_label">Extra</string>
+	<string name="profile_aditional_label">Aanvullend</string>
 	<string name="profile_app_version_label">App versie</string>
 	<string name="profile_feedback_label">Terugkoppeling</string>
 	<string name="profile_rate_app_label">Beoordeel de app</string>
@@ -209,7 +221,141 @@
 	<string name="detected_at">gedetecteerd bij</string>
 	
 	<!-- SetProjectsFragment -->
-	<string name="set_alerts">Stel waarschuwingen</string>
-	<string name="choose_which_projects">Kies welke projecten om meldingen alert ontvangen</string>
-	
+	<string name="set_alerts">Meldingen instellen</string>
+	<string name="choose_which_projects">Kies voor welke projecten u waarschuwingsmeldingen wilt ontvangen</string>
+    <string name="no_content_project">Er is geen toegankelijk project in dit profiel.\nNeem contact op met een beheerder of maak\nhet project aan in het Arnimon-platform</string>
+    <string name="logout">Uitloggen</string>
+    <string name="refresh">Vernieuwen</string>
+    <string name="select">Selecteren</string>
+    <string name="network_not_available">Netwerk niet beschikbaar</string>
+    <string name="project_could_not_refreshed">Het project kan niet worden vernieuwd.</string>
+
+
+    <string name="menu_new_events">Nieuwe evenementen</string>
+    <string name="menu_submitted_reports">Ingediende rapporten</string>
+    <string name="menu_draft_reports">Concept rapporten</string>
+
+    <!-- EventsFragment -->
+    <string name="all_projects">All projects</string>
+    <string name="not_have_permission">U hoeft geen toestemming om dit project te gebruiken.\nVraag de project eigenaar om uw rol te wijzigen.</string>
+    <string name="not_have_stream">Geen sites in dit project</string>
+
+    <!-- DraftReportsFragment -->
+    <string name="can_not_open_the_report">Can’t open the report that has already been sent.</string>
+    <string name="not_have_draft_reports">U heeft geen concept rapporten</string>
+
+    <!-- SubmittedReportsFragment -->
+    <string name="unsent">Opeenvolgende (in de wachtrij)</string>
+    <string name="sending">Bezig met verzenden</string>
+    <string name="sent">Verzonden</string>
+    <string name="incident_ref">#%s</string>
+    <string name="not_submitted_reports_yet">U heeft nog geen rapporten ingediend</string>
+
+    <!-- GuardianEventDetailFragment -->
+    <string name="create_report">Rapport opmaken</string>
+    <string name="open_in_maps">Openen in maps</string>
+    <string name="guardian_event_detail">Evenementen details</string>
+    <string name="not_have_events">Geen gebeurtenissen sinds het laatste incident</string>
+    <string name="audio_not_found">Audio niet gevonden</string>
+    <string name="satellite_audio_not_found">Audio niet beschikbaar voor satelliet Bewakers</string>
+    <string name="can_not_play_audio">Kan geen audio afspelen, probeer het later opnieuw.</string>
+
+    <!-- CreateReportActivity -->
+    <string name="create_report_steps">Rapport</string>
+    <string name="create_report_title">%d resterende stappen</string>
+    <string name="create_report_title_one_step">1 stap resterend</string>
+    <string name="last_step">Laatste stap rapporteren</string>
+
+    <!-- WhenInvestigateStepFragment -->
+    <string name="when_investigate">Wanneer heb je onderzoek gedaan?</string>
+    <string name="today">Vandaag</string>
+    <string name="other_date">Overigen…</string>
+    <string name="edit">Bewerken</string>
+    <string name="what_time">Hoelaat heb je onderzoek gedaan?</string>
+    <string name="do_not_future_time">Onderzoekstijd kan niet in de toekomst geschieden</string>
+
+    <!-- InvestigationTypeFragment -->
+    <string name="what_investigate">Wat heb je onderzocht? <i>Selecteer alles wat van toepassing is</i></string>
+    <string name="logging">Houtkap</string>
+    <string name="poaching">Stroperij</string>
+
+    <!-- SetWhatEvidenceFragment -->
+    <string name="what_evidence">Welk <b>houtkapbewijs</b> ben je tegengekomen? <i>Selecteer alles wat van toepassing is</i></string>
+    <string name="cut_down_trees">Omgehakte bomen</string>
+    <string name="cleared_areas">Vrijgemaakte gebieden (kaal gekapt)</string>
+    <string name="logging_equipment">Houtkap apparatuur</string>
+    <string name="loggers_at_site">Houthakkers in het gebied</string>
+    <string name="illegal_camps">Illegale kampen</string>
+    <string name="fires_burned_areas">Bosbranden / verbrande gebieden</string>
+
+    <!-- SetWhatScaleFragment -->
+    <string name="what_scale">Wat was de <b>omvang van de houtkap</b> operaties?</string>
+    <string name="small">Klein (levensonderhoud, landbouw enz.)</string>
+    <string name="large">Groot (commerciele schaal, zwaar materieel enz.)</string>
+
+    <!-- PoachingEvidenceFragment -->
+    <string name="what_poaching_evidence">Welk <b>bewijs van stroperij</b> ben je tegengekomen? <i>Selecteer alles wat van toepassing is</i></string>
+    <string name="bullet_shells">Kogelhulzen / wapen resten</string>
+    <string name="footprints">Voetafdrukken (menselijk)</string>
+    <string name="dog_tracks">Hondensporen</string>
+
+    <!-- PoachingScaleFragment -->
+    <string name="what_scale_poaching">Wat was de <b>de omvang van de stroperij?</b></string>
+    <string name="small_poaching">Klein (individueel, informeel)</string>
+    <string name="large_poaching">Groot (groep, gecoördineerd)</string>
+
+    <!-- SetWhatActionFragment -->
+    <string name="what_action">Welk <b>actie</b> is ondernomen? <i>Selecteer alles wat van toepassing is</i></string>
+    <string name="confiscated_equipment">In beslag genomen apparatuur</string>
+    <string name="collected_evidence">Verzameld bewijs</string>
+    <string name="issue_a_warning">Geef een waarschuwing</string>
+    <string name="damaged_machinery">Beschadigde machines</string>
+
+    <!-- AddEvidenceFragment -->
+    <string name="add_evidence">Bewijs toevoegen</string>
+    <string name="save_draft">Concept opslaan</string>
+    <string name="add_photos">Foto’s (maximaal 5)</string>
+    <string name="add_notes">Tekst notities</string>
+    <string name="add_notes_required">Tekst notities*</string>
+    <string name="upload_voice_notes">Spraak notities (voice note)</string>
+
+    <string name="are_you_sure">Weet u zeker dat u een melding wilt indienen zonder foto’s of notities?</string>
+    <string name="submit_report">Rapport indienen</string>
+
+    <string name="answers">Antwoorden:</string>
+    <string name="logging_scale">Houtkap Schaal:</string>
+    <string name="poaching_scale">Stroperij Schaal:</string>
+    <string name="damage">Damage:</string>
+    <string name="assets">Middelen:</string>
+    <string name="note">Opmerking: %s</string>
+
+    <string name="recent">Recente</string>
+    <string name="hot">Heet</string>
+
+    <string name="seconds">seconden</string>
+    <string name="minutes">minuten</string>
+    <string name="hours">uren</string>
+    <string name="years">jaren</string>
+    <string name="months">maanden</string>
+    <string name="days">dagen</string>
+    <string name="second">seconde</string>
+    <string name="minute">minuut</string>
+    <string name="hour">uur</string>
+    <string name="year">jaar</string>
+    <string name="month">maand</string>
+    <string name="day">dag</string>
+    <string name="may">Mei</string>
+    <string name="oct">Okt</string>
+
+    <string name="investigated_at">Onderzocht bij</string>
+    <string name="received_at">Ontvangen bij</string>
+    <string name="action">Actie</string>
+
+    <string name="small_scale_text">Kleinschalig</string>
+    <string name="large_scale_text">Grootschalig</string>
+    <string name="additional_evidence">Aanvullend bewijs</string>
+
+    <string name="response_by">1 reactie door</string>
+    <string name="responses_by">reacties van</string>
+    <string name="and">en</string>
 </resources>
