@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<!-- LoginActivity -->
-	<string name="email">E-mail</string>
-	<string name="password">Wachtwoord</string>
-	<string name="login">Log in</string>
-	<string name="connect_with_facebook">Verbinden met Facebook</string>
-	<string name="connect_with_sms">Ga verder met telefoonnummer</string>
-	<string name="pls_fill_email">Gelieve uw email in te vullen</string>
-	<string name="pls_fill_password">Gelieve uw wachtwoord in te vullen</string>
-	<string name="incorrect_username_password">Foutieve gebruikersnaam of wachtwoord</string>
-	<string name="an_error_occurred">Dienst onbeschikbaar</string>
-	<string name="or">OF</string>
-	<string name="powered_by">Ingevuld door</string>
-	
-	<!-- LoginActivity -->
-	<string name="next">Volgende</string>
-	<string name="skip">Overslaan</string>
-	<string name="done">Gedaan</string>
-	<string name="available_in_settings">U vindt er ook deze les in het tabblad Profile</string>
-	<string name="name_of_guardian">Naam van de site</string>
-	<string name="enable_tracking_when">Schakel het volgen als je op patrouille om uw positie te melden</string>
-	<string name="when_the_event">Wanneer de gebeurtenis gedetecteerd</string>
-	<string name="number_of_reviews">Aantal bevestigde beoordelingen</string>
-	<string name="boxes_indicate_possible">Vakjes geven mogelijke kettingzaag gebeurtenissen</string>
-	<string name="confirm_it">Bevestigen dat het een kettingzaag</string>
-	<string name="reject_it">Weigeren het is niet een kettingzaag</string>
-	<string name="create_new_reports">Maak nieuwe rapporten</string>
-	<string name="view_reports">Rapporten te bekijken per locatie</string>
-	<string name="app_intro">App intro</string>
-	<string name="coordinates">Coördinaten</string>
-	
-	<!--new Login Activite-->
-	<string name="login_sign_in_button_label">Inloggen</string>
-	<string name="invitation_submit_button_label">voorleggen</string>
-	<string name="forgot_your_password">Wachtwoord vergeten?</string>
-	<string name="reset_password">Stel je wachtwoord opnieuw in</string>
-	<string name="enter_email">Vul uw e-mail naar link voor herstel te ontvangen</string>
-	<string name="cancel">Annuleren</string>
-	<string name="reset_link_send">Reset link naar uw e-mail.</string>
-	<string name="reset">Reset</string>
-	
-	<string name="what_we_call_you">Wat moeten we je bellen?</string>
-	<string name="please_tell_name">Vertel ons uw naam</string>
-	<string name="hint_name">Naam</string>
-	
-	<string name="terms_and_service">Ik heb deze Service Voorwaarden gelezen en ga ermee akkoord</string>
-	<string name="continue_text">Doorgaan</string>
-	
-	<!-- common error -->
-	<string name="error_common">Er is een fout opgetreden. Probeer het opnieuw.</string>
-	<string name="location_permission_msg">Ranger App wilt uw locatie te gebruiken</string>
-	<string name="record_audio_permission_msg">Ranger App willen audio op te nemen</string>
-	<string name="camera_permission_msg">Ranger App wilt uw camera te gebruiken</string>
-	<string name="read_storage_permission_msg">Ranger App wilt uw camera te gebruiken</string>
-	<string name="go_to_setting">instellingen</string>
-	
-	<!-- message list -->
-	<string name="please_set_guardian_group">Gelieve set project</string>
-	<string name="sent_to">verzenden naar</string>
-	
-	<!-- report -->
-	<string name="report_title">Verslag doen van</string>
-	<string name="report_what_label">WAT?</string>
-	<string name="report_when_label">WANNEER?</string>
-	<string name="report_submit_button_label">Indienen</string>
-	<string name="report_record_label">RECORD\'S (Optioneel)</string>
-	<string name="report_attach_image_label">FOTO (optioneel)</string>
-	<string name="report_location_null">Locatie is niet gevonden. Probeer het opnieuw.</string>
-	<string name="report_note_label">Notes (optioneel)</string>
-	<string name="report_note">Notes</string>
-	<string name="report_note_hint">Zet hier wat aantekeningen</string>
-	<string name="some_photo_already_exists">Sommige foto bestaat al</string>
-	<string name="these_photos_already_exists">Deze foto\'s bestaan</string>
-	<string name="this_photo_already_exists">Deze foto bestaat al</string>
-	<string name="expires_in_24h">loopt af in 24 uur</string>
-	
-	<!-- Notification -->
-	<string name="notification_location_loading">Laden locatie…</string>
-	<string name="notification_location_not_availability">Schakel de locatie-instellingen van uw apparaat in</string>
-	
-	<!-- Settings -->
-	<string name="dialog_loading">Bezig met laden…</string>
-	<string name="location_tracking_label">Location tracking</string>
-	<string name="location_tracking_on_label">Aan</string>
-	<string name="location_tracking_off_label">Uit</string>
-	<string name="guardian_group_label">Projecten</string>
-	<string name="notifications">Meldingen</string>
-	<string name="start_demo">Stuur een test kennisgeving</string>
-	<string name="notification_will_sent">Een kennisgeving wordt binnen 30 seconden worden verzonden om te controleren of u waarschuwingen kan ontvangen</string>
-	<string name="perform_test">Test uitvoeren</string>
+    <!-- LoginActivity -->
+    <string name="email">Email</string>
+    <string name="password">Wachtwoord</string>
+    <string name="login">Log in</string>
+    <string name="connect_with_facebook">Verbinden met Facebook</string>
+    <string name="connect_with_sms">Ga verder met telefoonnummer</string>
+    <string name="pls_fill_email">Gelieve uw email in te vullen</string>
+    <string name="pls_fill_password">Gelieve uw wachtwoord in te vullen</string>
+    <string name="incorrect_username_password">Foutieve gebruikersnaam of wachtwoord</string>
+    <string name="an_error_occurred">Dienst onbeschikbaar</string>
+    <string name="or">OF</string>
+    <string name="powered_by">Ingevuld door</string>
+
+    <!-- LoginActivity -->
+    <string name="next">Volgende</string>
+    <string name="skip">Overslaan</string>
+    <string name="done">Gedaan</string>
+    <string name="available_in_settings">U vindt er ook deze les in het tabblad Profile</string>
+    <string name="name_of_guardian">Naam van de site</string>
+    <string name="enable_tracking_when">Schakel het volgen als je op patrouille om uw positie te melden</string>
+    <string name="when_the_event">Wanneer de gebeurtenis gedetecteerd</string>
+    <string name="number_of_reviews">Aantal bevestigde beoordelingen</string>
+    <string name="boxes_indicate_possible">Vakjes geven mogelijke kettingzaag gebeurtenissen</string>
+    <string name="confirm_it">Bevestigen dat het een kettingzaag</string>
+    <string name="reject_it">Weigeren het is niet een kettingzaag</string>
+    <string name="create_new_reports">Maak nieuwe rapporten</string>
+    <string name="view_reports">Rapporten te bekijken per locatie</string>
+    <string name="app_intro">App intro</string>
+    <string name="coordinates">Coördinaten</string>
+
+    <!--new Login Activite-->
+    <string name="login_sign_in_button_label">Inloggen</string>
+    <string name="invitation_submit_button_label">voorleggen</string>
+    <string name="forgot_your_password">Wachtwoord vergeten?</string>
+    <string name="reset_password">Stel je wachtwoord opnieuw in</string>
+    <string name="enter_email">Vul uw e-mail naar link voor herstel te ontvangen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="reset_link_send">Reset link naar uw e-mail.</string>
+    <string name="reset">Reset</string>
+
+    <string name="what_we_call_you">Wat moeten we je bellen?</string>
+    <string name="please_tell_name">Vertel ons uw naam</string>
+    <string name="hint_name">Naam</string>
+
+    <string name="terms_and_service">Ik heb deze Service Voorwaarden gelezen en ga ermee akkoord</string>
+    <string name="continue_text">Doorgaan</string>
+
+    <!-- common error -->
+    <string name="error_common">Er is een fout opgetreden. Probeer het opnieuw.</string>
+    <string name="location_permission_msg">Ranger App wilt uw locatie te gebruiken</string>
+    <string name="record_audio_permission_msg">Ranger App willen audio op te nemen</string>
+    <string name="camera_permission_msg">Ranger App wilt uw camera te gebruiken</string>
+    <string name="read_storage_permission_msg">Ranger App wilt uw camera te gebruiken</string>
+    <string name="go_to_setting">instellingen</string>
+
+    <!-- message list -->
+    <string name="please_set_guardian_group">Gelieve set project</string>
+    <string name="sent_to">verzenden naar</string>
+
+    <!-- report -->
+    <string name="report_title">Verslag doen van</string>
+    <string name="report_what_label">WAT?</string>
+    <string name="report_when_label">WANNEER?</string>
+    <string name="report_submit_button_label">Indienen</string>
+    <string name="report_record_label">RECORD\'S (Optioneel)</string>
+    <string name="report_attach_image_label">FOTO (optioneel)</string>
+    <string name="report_location_null">Locatie is niet gevonden. Probeer het opnieuw.</string>
+    <string name="report_note_label">Notes (optioneel)</string>
+    <string name="report_note">Notes</string>
+    <string name="report_note_hint">Zet hier wat aantekeningen</string>
+    <string name="some_photo_already_exists">Sommige foto bestaat al</string>
+    <string name="these_photos_already_exists">Deze foto\'s bestaan</string>
+    <string name="this_photo_already_exists">Deze foto bestaat al</string>
+    <string name="expires_in_24h">loopt af in 24 uur</string>
+
+    <!-- Notification -->
+    <string name="notification_location_loading">Laden locatie…</string>
+    <string name="notification_location_not_availability">Schakel de locatie-instellingen van uw apparaat in</string>
+
+    <!-- Settings -->
+    <string name="dialog_loading">Bezig met laden…</string>
+    <string name="location_tracking_label">Location tracking</string>
+    <string name="location_tracking_on_label">Aan</string>
+    <string name="location_tracking_off_label">Uit</string>
+    <string name="guardian_group_label">Projecten</string>
+    <string name="notifications">Meldingen</string>
+    <string name="start_demo">Stuur een test kennisgeving</string>
+    <string name="notification_will_sent">Een kennisgeving wordt binnen 30 seconden worden verzonden om te controleren of u waarschuwingen kan ontvangen</string>
+    <string name="perform_test">Test uitvoeren</string>
     <string name="least_one_event">Je hebt minimaal één evenement in je momenteel geselecteerde project nodig om een test te kunnen verzenden</string>
     <string name="events">Gebeurtenissen</string>
     <string name="receive_alert_notification">Waarschuwingsmeldingen ontvangen</string>
@@ -102,128 +102,128 @@
 
 
     <string name="dd_coordinates">DD</string>
-	<string name="ddm_coordinates">DDM</string>
-	<string name="dms_coordinates">DMS</string>
-	
-	<string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-	<string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-	<string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-	
-	<string name="last_month">Laatste \nMonth</string>
-	<string name="last_week">Laatste \nWeek</string>
-	<string name="last_24_hours">Laatste \n24 uur</string>
-	<string name="now">Nu</string>
-	<string name="within_month">Binnen een maand</string>
-	<string name="within_week">Binnen een week</string>
-	<string name="within_24_hours">Binnen 24 uur</string>
-	<string name="at_that_time">Op dat moment</string>
-	
-	<string name="tab_to_record_label">Houd de knop ingedrukt om notities op te nemen</string>
-	<string name="new_password">Nieuw paswoord</string>
-	<string name="new_password_again">Bevestig nieuw wachtwoord</string>
-	<string name="change_password">Verander wachtwoord</string>
-	
-	<!-- Invitation -->
-	<string name="invitation_title">Verbinding maken met een website</string>
-	<string name="invitation_desc">Vul hier uw uitnodiging code</string>
-	<string name="hint_code">Code</string>
-	<string name="invalid_invite_code">Ongeldige code uit te nodigen</string>
-	<string name="switch_account">wissel account</string>
-	
-	<!-- Report -->
-	<string name="empty_list_description">"Er waren geen incidenten onlangs. \nGeniet van je dag :)"</string>
-	
-	<string name="menu_camera">Camera</string>
-	<string name="menu_gallery">Galerij</string>
-	
-	<!-- Report list -->
-	<string name="report_list_title">verslag Geschiedenis</string>
-	<string name="report_list_empty_message">Je hebt geen rapporten</string>
-	<string name="images_sync_format">%d foto\'s (gesynchroniseerd)</string>
-	<string name="images_unsync_format">%1d\'s (%2d-gesynchroniseerde)</string>
-	<string name="report_detail_title">rapport detail</string>
-	
-	<string name="in_air_plane_mode">Kan uw locatie te bepalen</string>
-	<string name="pls_off_air_plane_mode">Schakel de vliegtuigmodus uit</string>
-	
-	<string name="location">Plaats</string>
-	<string name="photos">Foto\'s</string>
-	<string name="audio_notes">audio notities</string>
-	
-	<string name="menu_profile">Profiel</string>
-	
-	<string name="see_report_detail">Zie detail</string>
-	<string name="report_time_second">Net nu</string>
-	<string name="report_minutes_format">%dm</string>
-	<string name="report_hr_format">%dh</string>
-	<string name="report_day_format">%dd</string>
-	<string name="report_week_format">%dw</string>
-	
-	<string name="common_ok">OK</string>
-	<string name="common_none">Geen</string>
-	
-	<!-- Status -->
-	
-	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">OK</string>
-	<!-- Override string res from matisse Image picker library -->
-	
-	<!-- Alerts -->
-	<string name="yesterday">Gisteren</string>
-	<string name="no_internet_connection">Geen internet, probeer het opnieuw.</string>
+    <string name="ddm_coordinates">DDM</string>
+    <string name="dms_coordinates">DMS</string>
+
+    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
+
+    <string name="last_month">Laatste \nMonth</string>
+    <string name="last_week">Laatste \nWeek</string>
+    <string name="last_24_hours">Laatste \n24 uur</string>
+    <string name="now">Nu</string>
+    <string name="within_month">Binnen een maand</string>
+    <string name="within_week">Binnen een week</string>
+    <string name="within_24_hours">Binnen 24 uur</string>
+    <string name="at_that_time">Op dat moment</string>
+
+    <string name="tab_to_record_label">Houd de knop ingedrukt om notities op te nemen</string>
+    <string name="new_password">Nieuw paswoord</string>
+    <string name="new_password_again">Bevestig nieuw wachtwoord</string>
+    <string name="change_password">Verander wachtwoord</string>
+
+    <!-- Invitation -->
+    <string name="invitation_title">Verbinding maken met een website</string>
+    <string name="invitation_desc">Vul hier uw uitnodiging code</string>
+    <string name="hint_code">Code</string>
+    <string name="invalid_invite_code">Ongeldige code uit te nodigen</string>
+    <string name="switch_account">wissel account</string>
+
+    <!-- Report -->
+    <string name="empty_list_description">"Er waren geen incidenten onlangs. \nGeniet van je dag :)"</string>
+
+    <string name="menu_camera">Camera</string>
+    <string name="menu_gallery">Galerij</string>
+
+    <!-- Report list -->
+    <string name="report_list_title">verslag Geschiedenis</string>
+    <string name="report_list_empty_message">Je hebt geen rapporten</string>
+    <string name="images_sync_format">%d foto\'s (gesynchroniseerd)</string>
+    <string name="images_unsync_format">%1d\'s (%2d-gesynchroniseerde)</string>
+    <string name="report_detail_title">rapport detail</string>
+
+    <string name="in_air_plane_mode">Kan uw locatie te bepalen</string>
+    <string name="pls_off_air_plane_mode">Schakel de vliegtuigmodus uit</string>
+
+    <string name="location">Plaats</string>
+    <string name="photos">Foto\'s</string>
+    <string name="audio_notes">audio notities</string>
+
+    <string name="menu_profile">Profiel</string>
+
+    <string name="see_report_detail">Zie detail</string>
+    <string name="report_time_second">Net nu</string>
+    <string name="report_minutes_format">%dm</string>
+    <string name="report_hr_format">%dh</string>
+    <string name="report_day_format">%dd</string>
+    <string name="report_week_format">%dw</string>
+
+    <string name="common_ok">OK</string>
+    <string name="common_none">Geen</string>
+
+    <!-- Status -->
+
+    <!-- Override string res from matisse Image picker library -->
+    <string name="button_ok">OK</string>
+    <!-- Override string res from matisse Image picker library -->
+
+    <!-- Alerts -->
+    <string name="yesterday">Gisteren</string>
+    <string name="no_internet_connection">Geen internet, probeer het opnieuw.</string>
     <string name="unable_to_submit_on_airplane_mode">Kan niet indienen in vliegtuigmodus.</string>
     <string name="unable_to_submit_no_internet_connection">Kan niet verzenden, terwijl er geen verbinding is.</string>
     <string name="other_text">Overigen</string>
 
     <!--Event value-->
-	<string name="chainsaw">kettingzaag</string>
-	<string name="gunshot">geweerschot</string>
-	<string name="vehicle">voertuig</string>
-	<string name="trespasser">overtreder</string>
-	<string name="other">anders</string>
-	
-	<!--Profile -->
-	<string name="profile_receive_noti_label">door pushmelding</string>
-	<string name="profile_receive_noti_by_email">per email</string>
-	<string name="profile_sign_out_label">Afmelden</string>
-	<string name="please_enter_your_new_password">Vul uw nieuwe wachtwoord</string>
-	<string name="please_confirm_your_new_password">Bevestig uw nieuwe wachtwoord</string>
-	<string name="password_must_have_at_least_6_characters">Wachtwoord moet minimaal 6 tekens</string>
-	<string name="confirm_password_does_not_match">Bevestig wachtwoord komt niet overeen</string>
-	<string name="password_changed_successfully">Het wachtwoord is gewijzigd.</string>
-	<string name="something_is_wrong">Er is iets fout gegaan. Probeer het later opnieuw.</string>
-	<string name="profile_aditional_label">Aanvullend</string>
-	<string name="profile_app_version_label">App versie</string>
-	<string name="profile_feedback_label">Feedback</string>
-	<string name="profile_rate_app_label">Beoordeel de app</string>
-	<string name="save_changed">Wijzigingen opslaan</string>
-	<string name="please_try_again_later">Probeer het later opnieuw.</string>
-	
-	<string name="feedback_submitted">Terugkoppeling ingediend. Bedankt voor je tijd :)</string>
-	<string name="feedback_submission_failed">Indienen van gebruikersfeedback mislukt! Probeer het opnieuw.</string>
-	<string name="snackbar_retry">Opnieuw</string>
-	<string name="profile_send_feedback">Feedback sturen</string>
-	<string name="from">Van:</string>
-	<string name="app_feedback_share_ideas">Laat app feedback of deel uw ideeën</string>
-	<string name="maximum_number_of_attachments">Je hebt max selecteerbare bereikt. Probeer het verwijderen van een aantal items voor het toevoegen van meer bijlagen.</string>
-	<string name="account">Account</string>
-	
-	<string name="change_profile_photo">Profiel wijzigen Photo</string>
-	<string name="edit_profile">Bewerk profiel</string>
-	
-	<!--Guardian Group List-->
-	<string name="guardian_group_list">Projecten lijst</string>
-	
-	<string name="notification_tracking_title">On-plicht en bijhouden heeft ingeschakeld</string>
-	<string name="notification_traking_message_format">%d minuten geregistreerd</string>
-	
-	<string name="required">Verplicht!</string>
-	<string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
-	<string name="detected_at">gedetecteerd bij</string>
-	
-	<!-- SetProjectsFragment -->
-	<string name="set_alerts">Meldingen instellen</string>
-	<string name="choose_which_projects">Kies voor welke projecten u waarschuwingsmeldingen wilt ontvangen</string>
+    <string name="chainsaw">kettingzaag</string>
+    <string name="gunshot">geweerschot</string>
+    <string name="vehicle">voertuig</string>
+    <string name="trespasser">overtreder</string>
+    <string name="other">anders</string>
+
+    <!--Profile -->
+    <string name="profile_receive_noti_label">door pushmelding</string>
+    <string name="profile_receive_noti_by_email">per email</string>
+    <string name="profile_sign_out_label">Afmelden</string>
+    <string name="please_enter_your_new_password">Vul uw nieuwe wachtwoord</string>
+    <string name="please_confirm_your_new_password">Bevestig uw nieuwe wachtwoord</string>
+    <string name="password_must_have_at_least_6_characters">Wachtwoord moet minimaal 6 tekens</string>
+    <string name="confirm_password_does_not_match">Bevestig wachtwoord komt niet overeen</string>
+    <string name="password_changed_successfully">Het wachtwoord is gewijzigd.</string>
+    <string name="something_is_wrong">Er is iets fout gegaan. Probeer het later opnieuw.</string>
+    <string name="profile_aditional_label">Aanvullend</string>
+    <string name="profile_app_version_label">App versie</string>
+    <string name="profile_feedback_label">Feedback</string>
+    <string name="profile_rate_app_label">Beoordeel de app</string>
+    <string name="save_changed">Wijzigingen opslaan</string>
+    <string name="please_try_again_later">Probeer het later opnieuw.</string>
+
+    <string name="feedback_submitted">Terugkoppeling ingediend. Bedankt voor je tijd :)</string>
+    <string name="feedback_submission_failed">Indienen van gebruikersfeedback mislukt! Probeer het opnieuw.</string>
+    <string name="snackbar_retry">Opnieuw</string>
+    <string name="profile_send_feedback">Feedback sturen</string>
+    <string name="from">Van:</string>
+    <string name="app_feedback_share_ideas">Laat app feedback of deel uw ideeën</string>
+    <string name="maximum_number_of_attachments">Je hebt max selecteerbare bereikt. Probeer het verwijderen van een aantal items voor het toevoegen van meer bijlagen.</string>
+    <string name="account">Account</string>
+
+    <string name="change_profile_photo">Profiel wijzigen Photo</string>
+    <string name="edit_profile">Bewerk profiel</string>
+
+    <!--Guardian Group List-->
+    <string name="guardian_group_list">Projecten lijst</string>
+
+    <string name="notification_tracking_title">On-plicht en bijhouden heeft ingeschakeld</string>
+    <string name="notification_traking_message_format">%d minuten geregistreerd</string>
+
+    <string name="required">Verplicht!</string>
+    <string name="error_unsubscribe_by_email">Afmelden voor %s mislukt.</string>
+    <string name="detected_at">gedetecteerd bij</string>
+
+    <!-- SetProjectsFragment -->
+    <string name="set_alerts">Meldingen instellen</string>
+    <string name="choose_which_projects">Kies voor welke projecten u waarschuwingsmeldingen wilt ontvangen</string>
     <string name="no_content_project">Er is geen toegankelijk project in dit profiel.\nNeem contact op met een beheerder of maak\nhet project aan in het Arnimon-platform</string>
     <string name="logout">Uitloggen</string>
     <string name="refresh">Vernieuwen</string>
