@@ -275,6 +275,7 @@
     <string name="edit">Edit</string>
     <string name="what_time">What time did you investigate?</string>
     <string name="do_not_future_time">Investigation time cannot be in the future</string>
+    <string name="do_not_past_time">Investigation time cannot be before events</string>
 
     <!-- InvestigationTypeFragment -->
     <string name="what_investigate">What did you investigate? <i>Select all that apply</i></string>

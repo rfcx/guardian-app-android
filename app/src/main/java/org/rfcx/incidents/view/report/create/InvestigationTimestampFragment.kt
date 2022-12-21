@@ -92,11 +92,17 @@ class InvestigationTimestampFragment : Fragment() {
 
     private fun setupOnListener() {
         binding.nextStepButton.setOnClickListener {
-            if (calendar.time > today.time) {
-                Toast.makeText(context, getString(R.string.do_not_future_time), Toast.LENGTH_LONG).show()
-            } else {
-                listener.setInvestigationTimestamp(calendar.time)
-                listener.handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+            when {
+                calendar.time > today.time -> {
+                    Toast.makeText(context, getString(R.string.do_not_future_time), Toast.LENGTH_LONG).show()
+                }
+                calendar.time < listener.getStream()?.lastIncident?.events?.firstOrNull()?.start -> {
+                    Toast.makeText(context, getString(R.string.do_not_past_time), Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    listener.setInvestigationTimestamp(calendar.time)
+                    listener.handleCheckClicked(StepCreateReport.INVESTIGATION_TYPE.step)
+                }
             }
         }
 
@@ -134,8 +140,8 @@ class InvestigationTimestampFragment : Fragment() {
         }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH))
 
         datePicker.datePicker.maxDate = today.timeInMillis
-        listener.getStream()?.lastIncident?.createdAt?.time?.let {
-            datePicker.datePicker.minDate = it
+        listener.getStream()?.lastIncident?.events?.firstOrNull()?.start?.let {
+            datePicker.datePicker.minDate = it.time
         }
         datePicker.setOnCancelListener {
             if (binding.earlierRadioButton.text == requireContext().getString(R.string.other_date)) {
