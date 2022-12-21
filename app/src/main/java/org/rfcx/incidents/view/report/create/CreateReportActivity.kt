@@ -32,6 +32,7 @@ import org.rfcx.incidents.entity.response.AssetType
 import org.rfcx.incidents.entity.response.InvestigationType
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.saveToAnswers
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.ResponseSyncWorker
 import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
@@ -60,7 +61,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     private val viewModel: CreateReportViewModel by viewModel()
 
     private var passedChecks = ArrayList<Int>()
-    lateinit var streamId: String
+    private lateinit var streamId: String
     private var streamName: String? = null
     private var responseId: Int? = null
 
@@ -212,6 +213,8 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     override fun getImages(): ArrayList<String> = _images
 
     override fun getSiteName(): String? = streamName
+
+    override fun getStream(): Stream? = viewModel.getStream(streamId)
 
     override fun setImages(images: ArrayList<String>) {
         _images = images
@@ -403,6 +406,7 @@ interface CreateReportListener {
     fun getResponse(): Response?
     fun getImages(): ArrayList<String>
     fun getSiteName(): String?
+    fun getStream(): Stream?
 
     fun setInvestigationTimestamp(date: Date)
     fun setEvidence(evidence: List<Int>)
