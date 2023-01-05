@@ -55,7 +55,8 @@
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".view.login.LoginActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -75,12 +76,14 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".service.BootCompletedReceiver">
+        <receiver android:name=".service.BootCompletedReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.NetworkReceiver">
+        <receiver android:name=".service.NetworkReceiver"
+            android:exported="true">
             <intent-filter>
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"

@@ -24,7 +24,7 @@ android {
         versionCode 47
         versionName '1.0.10'
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
