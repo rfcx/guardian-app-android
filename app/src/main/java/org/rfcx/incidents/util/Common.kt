@@ -39,7 +39,7 @@ fun View.hideKeyboard() = this.let {
 fun Context.removeLocationUpdates() {
     val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
-    val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_IMMUTABLE)
     locationProviderClient.removeLocationUpdates(locationIntent)
 }
 
@@ -49,7 +49,7 @@ fun Context.startLocationChange() {
 
     val locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     val locationReceiverIntent = Intent(this, LocationChangeReceiver::class.java)
-    val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val locationIntent = PendingIntent.getBroadcast(this, 0, locationReceiverIntent, PendingIntent.FLAG_IMMUTABLE)
 
     val locationRequest =
         LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(interval)

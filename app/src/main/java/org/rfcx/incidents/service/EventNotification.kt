@@ -28,7 +28,7 @@ object EventNotification {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(INTENT_KEY_STREAM_ID, data["streamId"]) // TODO Test that the streamId exists
 
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setAutoCancel(true)
             .setContentTitle(notification.title)

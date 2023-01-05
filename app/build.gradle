@@ -21,8 +21,8 @@ android {
     defaultConfig {
         applicationId 'org.rfcx.incidents'
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 47
-        versionName '1.0.10'
+        versionCode 48
+        versionName '1.0.11'
         minSdkVersion 19
         targetSdkVersion 31
         multiDexEnabled true
@@ -72,7 +72,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation 'android.arch.work:work-runtime-ktx:1.0.1'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
 

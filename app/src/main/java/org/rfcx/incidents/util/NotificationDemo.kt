@@ -24,7 +24,7 @@ class NotificationDemo(private val stream: Stream) {
             val stackBuilder = TaskStackBuilder.create(context)
             stackBuilder.addParentStack(MainActivity::class.java)
             stackBuilder.addNextIntent(intent)
-            val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
             val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val contentText =
                 "${stream.lastIncident?.events?.get(0)?.classification?.title} ${context.getString(R.string.detected_at)} " +
