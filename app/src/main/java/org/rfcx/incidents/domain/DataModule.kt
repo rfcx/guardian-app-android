@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
 import org.rfcx.incidents.data.interfaces.EventsRepository
@@ -26,6 +27,7 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
@@ -40,6 +42,7 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -81,6 +84,9 @@ object DataModule {
 
         single { MediaRepositoryImp(get()) } bind MediaRepository::class
         single { MediaUseCase(get(), get(), get()) }
+
+        single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
+        single { GetNearbyHotspotUseCase() }
     }
 
     val remoteModule = module {
