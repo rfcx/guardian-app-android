@@ -42,6 +42,7 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.view.UiThread
@@ -88,6 +89,7 @@ object DataModule {
 
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
         single { GetNearbyHotspotUseCase(get()) }
+        single { ConnectHotspotUseCase(get()) }
     }
 
     val remoteModule = module {

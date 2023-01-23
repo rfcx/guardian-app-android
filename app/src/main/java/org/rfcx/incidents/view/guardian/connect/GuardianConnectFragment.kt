@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,20 +42,54 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
         lifecycleScope.launchWhenStarted {
             viewModel.hotspotsState.collectLatest { result ->
                 when (result) {
-                    is Result.Error -> {}
+                    is Result.Error -> {
+                        binding.connectGuardianLoading.visibility = View.GONE
+                    }
                     Result.Loading -> {
                         binding.connectGuardianLoading.visibility = View.VISIBLE
                     }
                     is Result.Success -> {
-                        hotspotAdapter.items = result.data
+                        if (result.data.isNullOrEmpty()) {
+                            binding.guardianHotspotRecyclerView.visibility = View.GONE
+                            binding.notFoundTextView.visibility = View.VISIBLE
+                        } else {
+                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                            binding.notFoundTextView.visibility = View.GONE
+                            hotspotAdapter.items = result.data
+                        }
                         binding.connectGuardianLoading.visibility = View.GONE
+                    }
+                }
+            }
+        }
+
+        binding.connectGuardianButton.setOnClickListener {
+            viewModel.connect()
+            lifecycleScope.launchWhenStarted {
+                viewModel.connectionState.collectLatest { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            Log.d("Comp", "Fail!")
+                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                            binding.connectGuardianLoading.visibility = View.GONE
+                        }
+                        Result.Loading -> {
+                            binding.guardianHotspotRecyclerView.visibility = View.GONE
+                            binding.connectGuardianLoading.visibility = View.VISIBLE
+                        }
+                        is Result.Success -> {
+                            Log.d("Comp", "Success!")
+                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                            binding.connectGuardianLoading.visibility = View.GONE
+                        }
                     }
                 }
             }
         }
     }
     override fun invoke(hotspot: ScanResult) {
-        TODO("Not yet implemented")
+        viewModel.setSelectedHotspot(hotspot)
+        binding.connectGuardianButton.isEnabled = true
     }
 
 

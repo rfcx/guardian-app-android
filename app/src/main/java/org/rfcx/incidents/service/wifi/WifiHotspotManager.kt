@@ -20,7 +20,9 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.util.wifi.WifiHotspotUtils
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WifiHotspotManager(private val context: Context) {
@@ -31,7 +33,6 @@ class WifiHotspotManager(private val context: Context) {
 
     private var wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
     private lateinit var connectivityManager: ConnectivityManager
-    private lateinit var wifiConnectionReceiver: WifiHotspotConnectionReceiver
 
     fun nearbyHotspot(): Flow<Result<List<ScanResult>>> {
 
@@ -63,49 +64,52 @@ class WifiHotspotManager(private val context: Context) {
             awaitClose {
                 context.unregisterReceiver(receiver)
             }
-        }.catch {
-            Result.Error(it)
         }
     }
 
-    fun connectTo(guardian: ScanResult, nearbyHotspotListener: NearbyHotspotListener) {
+    fun connectTo(guardian: ScanResult): Flow<Result<Boolean>> {
+        // check if current wifi is connected to targeted hotspot
+        if (WifiHotspotUtils.isConnectedWithGuardian(context, guardian.SSID)) {
+            return flow { emit(Result.Success(true)) }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder().also {
-                it.setSsid(guardian.SSID)
-                it.setWpa2Passphrase("rfcxrfcx")
-            }.build()
+            return callbackFlow<Result<Boolean>> {
+                trySendBlocking(Result.Loading)
+                val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder().also {
+                    it.setSsid(guardian.SSID)
+                    it.setWpa2Passphrase("rfcxrfcx")
+                }.build()
 
-            val networkRequest = NetworkRequest.Builder().also {
-                it.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                it.setNetworkSpecifier(wifiNetworkSpecifier)
-            }.build()
+                val networkRequest = NetworkRequest.Builder().also {
+                    it.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    it.setNetworkSpecifier(wifiNetworkSpecifier)
+                }.build()
 
-            connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            connectivityManager.requestNetwork(networkRequest, object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    super.onAvailable(network)
-                    println("available")
-                    connectivityManager.bindProcessToNetwork(network)
-                    // nearbyHotspotListener.onWifiConnected()
-                }
+                connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                connectivityManager.requestNetwork(networkRequest, object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        super.onAvailable(network)
+                        connectivityManager.bindProcessToNetwork(network)
+                        trySendBlocking(Result.Success(true))
+                    }
 
-                override fun onLost(network: Network) {
-                    super.onLost(network)
-                    println("lost")
+                    override fun onLost(network: Network) {
+                        super.onLost(network)
+                        connectivityManager.bindProcessToNetwork(null)
+                        trySendBlocking(Result.Success(false))
+                    }
+
+                    override fun onUnavailable() {
+                        super.onUnavailable()
+                        trySendBlocking(Result.Success(false))
+                    }
+                })
+                awaitClose {
                     connectivityManager.bindProcessToNetwork(null)
                 }
-
-                override fun onUnavailable() {
-                    super.onUnavailable()
-                    println("unavailable")
-                }
-            })
+            }
         } else {
-            wifiConnectionReceiver = WifiHotspotConnectionReceiver(guardian.SSID, nearbyHotspotListener)
-            context.registerReceiver(
-                wifiConnectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-            )
-
             val wifiConfig = WifiConfiguration()
             wifiConfig.SSID = "\"${guardian.SSID}\""
             wifiConfig.preSharedKey = "\"rfcxrfcx\""
@@ -121,18 +125,28 @@ class WifiHotspotManager(private val context: Context) {
             val netId = wifiManager.addNetwork(wifiConfig)
             wifiManager.enableNetwork(netId, true)
             wifiManager.reconnect()
+            return callbackFlow<Result<Boolean>> {
+                trySendBlocking(Result.Loading)
+                val receiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context, intent: Intent) {
+                        val conManager =
+                            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                        val netInfo = conManager.activeNetworkInfo
+                        if (netInfo != null && netInfo.isConnected && netInfo.type == ConnectivityManager.TYPE_WIFI) {
+                            if (WifiHotspotUtils.isConnectedWithGuardian(context, guardian.SSID)) {
+                                trySendBlocking(Result.Success(true))
+                            }
+                        }
+                    }
+                }
+                context.registerReceiver(
+                    receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                )
+
+                awaitClose {
+                    context.unregisterReceiver(receiver)
+                }
+            }
         }
     }
-
-    fun unRegisterReceiver() {
-        try {
-            if (::wifiConnectionReceiver.isInitialized) context.unregisterReceiver(wifiConnectionReceiver)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-}
-
-interface NearbyHotspotListener {
-    fun onScanReceive(result: List<ScanResult>)
 }
