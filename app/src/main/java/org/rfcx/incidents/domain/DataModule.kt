@@ -43,6 +43,7 @@ import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
+import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -86,7 +87,7 @@ object DataModule {
         single { MediaUseCase(get(), get(), get()) }
 
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
-        single { GetNearbyHotspotUseCase() }
+        single { GetNearbyHotspotUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -115,5 +116,6 @@ object DataModule {
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
+        factory { WifiHotspotManager(androidContext()) }
     }
 }

@@ -1,11 +1,13 @@
 package org.rfcx.incidents.view
 
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.incidents.view.events.StreamsViewModel
 import org.rfcx.incidents.view.events.detail.EventViewModel
 import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
+import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
 import org.rfcx.incidents.view.login.SetUserNameViewModel
@@ -42,5 +44,9 @@ object UiModule {
         viewModel { LoginViewModel(androidContext(), get(), get()) }
         viewModel { SetUserNameViewModel(androidContext(), get()) }
         viewModel { SetProjectsViewModel(get()) }
+    }
+
+    var guardianModule = module {
+        viewModel { GuardianConnectViewModel(get()) }
     }
 }

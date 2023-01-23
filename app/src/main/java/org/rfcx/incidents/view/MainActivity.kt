@@ -42,6 +42,7 @@ import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.StreamsFragment
 import org.rfcx.incidents.view.events.detail.EventActivity
 import org.rfcx.incidents.view.events.detail.StreamDetailFragment
+import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
@@ -93,7 +94,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
         setupBottomMenu()
         if (savedInstanceState == null) {
-            setupFragments()
+            // setupFragments()
+            GuardianDeploymentActivity.startActivity(this)
         }
         this.saveUserLoginWith()
         observeMain()
@@ -155,6 +157,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         locationPermissions.handleActivityResult(requestCode, resultCode)
