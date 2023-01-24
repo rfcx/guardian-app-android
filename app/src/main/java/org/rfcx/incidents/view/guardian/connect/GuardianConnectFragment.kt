@@ -9,14 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentGuardianConnectBinding
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
-import org.rfcx.incidents.view.base.BaseFragment
-import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 
 class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
@@ -38,8 +37,8 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             adapter = hotspotAdapter
         }
 
-        viewModel.nearbyHotspots()
         lifecycleScope.launchWhenStarted {
+            viewModel.nearbyHotspots()
             viewModel.hotspotsState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
@@ -64,34 +63,65 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
         }
 
         binding.connectGuardianButton.setOnClickListener {
-            viewModel.connect()
             lifecycleScope.launchWhenStarted {
-                viewModel.connectionState.collectLatest { result ->
-                    when (result) {
-                        is Result.Error -> {
-                            Log.d("Comp", "Fail!")
-                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
-                            binding.connectGuardianLoading.visibility = View.GONE
+                launch {
+                    viewModel.connect()
+                    viewModel.connectionState.collect { result ->
+                        when (result) {
+                            is Result.Error -> {
+                                binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                                binding.connectGuardianLoading.visibility = View.GONE
+                                binding.connectGuardianButton.isEnabled = true
+                            }
+                            Result.Loading -> {
+                                binding.guardianHotspotRecyclerView.visibility = View.GONE
+                                binding.connectGuardianLoading.visibility = View.VISIBLE
+                                binding.connectGuardianButton.isEnabled = false
+                            }
+                            is Result.Success -> launch { viewModel.initSocket() }
                         }
-                        Result.Loading -> {
-                            binding.guardianHotspotRecyclerView.visibility = View.GONE
-                            binding.connectGuardianLoading.visibility = View.VISIBLE
+                    }
+                }
+
+                launch {
+                    viewModel.initSocketState.collectLatest { result ->
+                        when (result) {
+                            is Result.Success -> launch { viewModel.readSocket() }
+                            else -> {}
                         }
-                        is Result.Success -> {
-                            Log.d("Comp", "Success!")
-                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
-                            binding.connectGuardianLoading.visibility = View.GONE
+                    }
+                }
+
+                launch {
+                    viewModel.socketMessageState.collect { result ->
+                        Log.d("Comp3", result.toString())
+                        when (result) {
+                            is Result.Error -> {
+                                binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                                binding.connectGuardianLoading.visibility = View.GONE
+                                binding.connectGuardianButton.isEnabled = true
+                            }
+                            Result.Loading -> {
+                                binding.guardianHotspotRecyclerView.visibility = View.GONE
+                                binding.connectGuardianLoading.visibility = View.VISIBLE
+                                binding.connectGuardianButton.isEnabled = false
+                            }
+                            is Result.Success -> {
+                                binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                                binding.connectGuardianLoading.visibility = View.GONE
+                                binding.connectGuardianButton.isEnabled = true
+                            }
                         }
                     }
                 }
             }
         }
     }
+
     override fun invoke(hotspot: ScanResult) {
         viewModel.setSelectedHotspot(hotspot)
         binding.connectGuardianButton.isEnabled = true
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

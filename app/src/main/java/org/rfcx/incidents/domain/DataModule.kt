@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
@@ -27,6 +28,7 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -42,9 +44,12 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
+import org.rfcx.incidents.service.wifi.socket.GuardianSocket
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -90,6 +95,10 @@ object DataModule {
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
         single { GetNearbyHotspotUseCase(get()) }
         single { ConnectHotspotUseCase(get()) }
+
+        single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
+        single { InitSocketUseCase(get()) }
+        single { GetSocketMessageUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -118,6 +127,7 @@ object DataModule {
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
-        factory { WifiHotspotManager(androidContext()) }
+        single { WifiHotspotManager(androidContext()) }
+        single { GuardianSocket }
     }
 }
