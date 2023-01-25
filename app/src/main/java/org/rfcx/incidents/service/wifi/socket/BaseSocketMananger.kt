@@ -23,7 +23,6 @@ abstract class BaseSocketMananger {
     private var writeChannel: DataOutputStream? = null
 
     private var port: Int = 0
-    var isAvailableToSend = false
 
     data class SocketRequest(
         val command: String
@@ -42,7 +41,6 @@ abstract class BaseSocketMananger {
                 socket?.soTimeout = 10000
                 readChannel = DataInputStream(socket!!.getInputStream())
                 writeChannel = DataOutputStream(socket!!.getOutputStream())
-                isAvailableToSend = true
 
                 writeChannel?.writeUTF(message)
                 writeChannel?.flush()
@@ -59,8 +57,9 @@ abstract class BaseSocketMananger {
     fun read(): Flow<Result<String>> {
         return callbackFlow {
             trySendBlocking(Result.Loading)
+            var isActive = true
             try {
-                while (true) {
+                while (isActive) {
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
                         trySendBlocking(Result.Success(dataInput))
@@ -68,27 +67,20 @@ abstract class BaseSocketMananger {
                     }
                 }
             } catch (e: Exception) {
+                Log.d("Comp4", e.toString())
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
                 }
             }
 
             awaitClose {
-                close()
+                isActive = false
             }
         }
     }
 
     private fun isErrorNeedReset(e: Exception): Boolean {
         if (e is EOFException) return false
-        val message = e.message
-        message?.let {
-            when (it.lowercase()) {
-                "broken pipe" -> isAvailableToSend = false
-                "connection reset" -> isAvailableToSend = false
-                "Read timed out" -> isAvailableToSend = false
-            }
-        }
         return true
     }
 

@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import org.rfcx.incidents.view.events.StreamsViewModel
 import org.rfcx.incidents.view.events.detail.EventViewModel
 import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
+import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
@@ -47,6 +48,7 @@ object UiModule {
     }
 
     var guardianModule = module {
-        viewModel { GuardianConnectViewModel(get(), get(), get(), get()) }
+        viewModel { GuardianDeploymentViewModel(get(), get()) }
+        viewModel { GuardianConnectViewModel(get(), get()) }
     }
 }
