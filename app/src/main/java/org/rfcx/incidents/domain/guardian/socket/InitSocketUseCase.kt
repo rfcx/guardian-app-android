@@ -13,10 +13,13 @@ class InitSocketUseCase(private val guardianRepository: GuardianSocketRepository
     FlowUseCase<Result<Boolean>>() {
     override fun performAction(): Flow<Result<Boolean>> {
         return guardianRepository.initialize().combine(adminRepository.initialize()) { f1, f2 ->
+            if (f1 is Result.Loading || f2 is Result.Loading) {
+                return@combine Result.Loading
+            }
             if ((f1 is Result.Success && f1.data == true) && (f2 is Result.Success && f2.data == true)) {
-                Result.Success(true)
+                return@combine Result.Success(true)
             } else {
-                Result.Success(false)
+                return@combine Result.Success(false)
             }
         }
     }

@@ -85,6 +85,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     Result.Loading -> {
                         binding.connectGuardianLoading.visibility = View.VISIBLE
+                        binding.notFoundTextView.visibility = View.GONE
                     }
                     is Result.Success -> {
                         if (result.data.isNullOrEmpty()) {
@@ -147,6 +148,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectSocketRead() {
         lifecycleScope.launch {
             mainViewModel.socketMessageState.collectLatest { result ->
+                Log.d("Comp4", result.toString())
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
@@ -160,7 +162,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
-                            Log.d("Comp4", result.toString())
                             binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                             binding.connectGuardianLoading.visibility = View.GONE
                             binding.connectGuardianButton.isEnabled = true
