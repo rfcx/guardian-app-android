@@ -3,7 +3,6 @@ package org.rfcx.incidents.service.wifi.socket
 import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -67,7 +66,6 @@ abstract class BaseSocketMananger {
                     }
                 }
             } catch (e: Exception) {
-                Log.d("Comp4", e.toString())
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
                 }
