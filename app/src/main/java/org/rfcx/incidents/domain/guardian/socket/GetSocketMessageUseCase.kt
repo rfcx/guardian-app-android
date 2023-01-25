@@ -11,10 +11,13 @@ import org.rfcx.incidents.domain.base.FlowUseCase
 class GetSocketMessageUseCase(private val guardianRepository: GuardianSocketRepository, private val adminRepository: AdminSocketRepository) : FlowUseCase<Result<List<String>>>() {
     override fun performAction(): Flow<Result<List<String>>> {
         return guardianRepository.getMessage().combine(adminRepository.getMessage()) { f1, f2 ->
+            if (f1 is Result.Loading || f2 is Result.Loading) {
+                return@combine Result.Loading
+            }
             if ((f1 is Result.Success && f1.data.isNotEmpty()) && (f2 is Result.Success && f2.data.isNotEmpty())) {
-                Result.Success(listOf(f1.data, f2.data))
+                return@combine Result.Success(listOf(f1.data, f2.data))
             } else {
-                Result.Success(listOf())
+                return@combine Result.Success(listOf())
             }
         }
     }
