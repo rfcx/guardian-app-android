@@ -21,6 +21,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         binding = ActivityGuardianDeploymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupToolbar()
+
         // Show guardian connect screen first
         showScreen(GuardianScreen.CONNECT)
     }
@@ -28,6 +30,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     private fun showScreen(screen: GuardianScreen) {
         when (screen) {
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
+            GuardianScreen.CHECKLIST -> startFragment(GuardianConnectFragment.newInstance())
         }
     }
 
@@ -59,6 +62,11 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             this.title = title
         }
     }
+
+    override fun changeScreen(screen: GuardianScreen) {
+        showScreen(screen)
+    }
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, GuardianDeploymentActivity::class.java)

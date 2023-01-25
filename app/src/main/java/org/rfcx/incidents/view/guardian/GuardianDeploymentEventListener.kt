@@ -5,4 +5,6 @@ interface GuardianDeploymentEventListener {
     fun showToolbar()
     fun hideToolbar()
     fun setToolbarTitle(title: String)
+
+    fun changeScreen(screen: GuardianScreen)
 }
