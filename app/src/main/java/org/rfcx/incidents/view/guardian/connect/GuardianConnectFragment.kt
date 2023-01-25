@@ -19,6 +19,9 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentGuardianConnectBinding
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
+import org.rfcx.incidents.view.base.BaseFragment
+import org.rfcx.incidents.view.events.adapter.EventItemAdapter
+import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
@@ -28,13 +31,18 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private val mainViewModel: GuardianDeploymentViewModel by viewModel()
     private val hotspotAdapter by lazy { GuardianHotspotAdapter(this) }
 
+    private var mainEvent: GuardianDeploymentEventListener? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mainEvent = context as GuardianDeploymentEventListener
         binding = FragmentGuardianConnectBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mainEvent?.hideToolbar()
 
         collectStates()
 
