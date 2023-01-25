@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.databinding.ToolbarDefaultBinding
+import org.rfcx.incidents.view.guardian.checklist.GuardianChecklistFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 import org.rfcx.incidents.view.report.create.CreateReportActivity
 
@@ -30,7 +31,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     private fun showScreen(screen: GuardianScreen) {
         when (screen) {
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
-            GuardianScreen.CHECKLIST -> startFragment(GuardianConnectFragment.newInstance())
+            GuardianScreen.CHECKLIST -> startFragment(GuardianChecklistFragment.newInstance())
         }
     }
 
