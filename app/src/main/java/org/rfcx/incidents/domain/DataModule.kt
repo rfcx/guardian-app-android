@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
@@ -28,6 +29,7 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
 import org.rfcx.incidents.data.local.AssetDb
@@ -49,6 +51,7 @@ import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
+import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
 import org.rfcx.incidents.view.UiThread
 
@@ -97,8 +100,9 @@ object DataModule {
         single { ConnectHotspotUseCase(get()) }
 
         single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
-        single { InitSocketUseCase(get()) }
-        single { GetSocketMessageUseCase(get()) }
+        single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class
+        single { InitSocketUseCase(get(), get()) }
+        single { GetSocketMessageUseCase(get(), get()) }
     }
 
     val remoteModule = module {
@@ -129,5 +133,6 @@ object DataModule {
         single { CredentialKeeper(androidContext()) }
         single { WifiHotspotManager(androidContext()) }
         single { GuardianSocket }
+        single { AdminSocket }
     }
 }

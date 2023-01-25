@@ -63,7 +63,7 @@ abstract class BaseSocketMananger {
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
                         trySendBlocking(Result.Success(dataInput))
-                        Log.d("Comp", dataInput.toString())
+                        Log.d("Comp", "${port} ${dataInput.toString()}")
                     }
                 }
             } catch (e: Exception) {

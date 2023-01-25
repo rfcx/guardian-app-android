@@ -91,7 +91,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                         }
                         binding.connectGuardianLoading.visibility = View.GONE
                     }
-                    null -> { binding.connectGuardianLoading.visibility = View.VISIBLE }
                 }
             }
         }
@@ -111,14 +110,10 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                         binding.connectGuardianLoading.visibility = View.VISIBLE
                         binding.connectGuardianButton.isEnabled = false
                     }
-                    is Result.Success ->
+                    is Result.Success -> {
                         if (result.data) {
                             launch { mainViewModel.initSocket() }
                         }
-                    null -> {
-                        binding.guardianHotspotRecyclerView.visibility = View.GONE
-                        binding.connectGuardianLoading.visibility = View.VISIBLE
-                        binding.connectGuardianButton.isEnabled = false
                     }
                 }
             }
@@ -144,7 +139,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectSocketRead() {
         lifecycleScope.launch {
             mainViewModel.socketMessageState.collectLatest { result ->
-                Log.d("Comp4", result.toString())
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
@@ -158,15 +152,11 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
+                            Log.d("Comp4", result.toString())
                             binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                             binding.connectGuardianLoading.visibility = View.GONE
                             binding.connectGuardianButton.isEnabled = true
                         }
-                    }
-                    else -> {
-                        binding.guardianHotspotRecyclerView.visibility = View.GONE
-                        binding.connectGuardianLoading.visibility = View.VISIBLE
-                        binding.connectGuardianButton.isEnabled = false
                     }
                 }
             }
