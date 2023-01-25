@@ -64,9 +64,6 @@ class WifiHotspotManager(private val context: Context) {
                                     }
                                 }
                         }
-                        launch {
-                            delay(10000)
-                        }
                     }
                 }
             }
