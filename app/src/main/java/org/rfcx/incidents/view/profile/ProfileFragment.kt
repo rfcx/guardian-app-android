@@ -151,6 +151,12 @@ class ProfileFragment : BaseFragment() {
                 }
             }
         }
+        viewDataBinding.onClickSoftware = View.OnClickListener {
+
+        }
+        viewDataBinding.onClickClassifier = View.OnClickListener {
+
+        }
     }
 
     override fun onPause() {
