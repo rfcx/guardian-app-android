@@ -48,7 +48,7 @@ object UiModule {
     }
 
     var guardianModule = module {
-        viewModel { GuardianDeploymentViewModel(get(), get()) }
+        viewModel { GuardianDeploymentViewModel(get(), get(), get(), get()) }
         viewModel { GuardianConnectViewModel(get(), get()) }
     }
 }

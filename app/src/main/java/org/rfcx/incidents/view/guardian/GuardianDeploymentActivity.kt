@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.databinding.ToolbarDefaultBinding
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
@@ -14,6 +15,7 @@ import org.rfcx.incidents.view.report.create.CreateReportActivity
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 
     lateinit var binding: ActivityGuardianDeploymentBinding
+    private val viewModel: GuardianDeploymentViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,11 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         supportActionBar?.apply {
             this.title = title
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
     }
     companion object {
         fun startActivity(context: Context) {

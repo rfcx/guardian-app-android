@@ -16,7 +16,11 @@ class AdminSocketRepositoryImpl(
         return adminSocket.read()
     }
 
-    override fun sendMessage(message: String): Flow<Result<Boolean>> {
-        return adminSocket.send(message)
+    override fun sendMessage(message: String) {
+        adminSocket.send(message)
+    }
+
+    override fun close() {
+        adminSocket.close()
     }
 }
