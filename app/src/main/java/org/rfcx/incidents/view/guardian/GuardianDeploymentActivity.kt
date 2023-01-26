@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.databinding.ToolbarDefaultBinding
 import org.rfcx.incidents.view.guardian.checklist.GuardianChecklistFragment
@@ -68,6 +70,22 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun changeScreen(screen: GuardianScreen) {
         showScreen(screen)
+    }
+
+    override fun initSocket() {
+        viewModel.initSocket()
+    }
+
+    override fun sendHeartBeatSocket() {
+        viewModel.sendHeartbeatSignalPeriodic()
+    }
+
+    override fun getInitSocketState(): SharedFlow<Result<Boolean>> {
+        return viewModel.initSocketState
+    }
+
+    override fun getSocketMessageState(): SharedFlow<Result<List<String>>> {
+        return viewModel.socketMessageState
     }
 
     override fun onDestroy() {

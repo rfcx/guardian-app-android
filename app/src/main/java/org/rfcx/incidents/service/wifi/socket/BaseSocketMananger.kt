@@ -21,6 +21,7 @@ abstract class BaseSocketMananger {
     private var writeChannel: DataOutputStream? = null
 
     private var port: Int = 0
+    private var fromInit = false
 
     enum class Type {
         GUARDIAN, ADMIN, ALL
@@ -31,6 +32,8 @@ abstract class BaseSocketMananger {
         return flow {
             try {
                 // Need to send a message to establish the connection
+                // To emit loading to UI
+                fromInit = true
                 send("{}")
                 emit(Result.Success(true))
             } catch (e: Exception) {
@@ -53,7 +56,9 @@ abstract class BaseSocketMananger {
 
     fun read(): Flow<Result<String>> {
         return callbackFlow {
-            trySendBlocking(Result.Loading)
+            if (fromInit) {
+                trySendBlocking(Result.Loading)
+            }
             var isActive = true
             try {
                 while (isActive) {

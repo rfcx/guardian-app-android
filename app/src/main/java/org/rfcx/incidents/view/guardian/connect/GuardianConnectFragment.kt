@@ -6,21 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentGuardianConnectBinding
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
-import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
-import org.rfcx.incidents.view.base.BaseFragment
-import org.rfcx.incidents.view.events.adapter.EventItemAdapter
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 import org.rfcx.incidents.view.guardian.GuardianScreen
 
@@ -29,7 +23,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private lateinit var binding: FragmentGuardianConnectBinding
     private lateinit var hotspotManager: WifiHotspotManager
     private val viewModel: GuardianConnectViewModel by viewModel()
-    private val mainViewModel: GuardianDeploymentViewModel by viewModel()
     private val hotspotAdapter by lazy { GuardianHotspotAdapter(this) }
 
     private var mainEvent: GuardianDeploymentEventListener? = null
@@ -54,7 +47,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
         lifecycleScope.launchWhenStarted { viewModel.nearbyHotspots() }
 
-        binding.connectGuardianButton.setOnClickListener{
+        binding.connectGuardianButton.setOnClickListener {
             lifecycleScope.launchWhenStarted {
                 launch {
                     viewModel.connect()
@@ -122,7 +115,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data) {
-                            launch { mainViewModel.initSocket() }
+                            launch { mainEvent?.initSocket() }
                         }
                     }
                 }
@@ -132,12 +125,12 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
     private fun collectSocketInitial() {
         lifecycleScope.launch {
-            mainViewModel.initSocketState.collectLatest { result ->
+            mainEvent?.getInitSocketState()?.collectLatest { result ->
                 Log.d("Comp3", result.toString())
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
-                            launch { mainViewModel.sendHeartbeatSignalPeriodic() }
+                            launch { mainEvent?.sendHeartBeatSocket() }
                         }
                     }
                     else -> {}
@@ -148,7 +141,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
     private fun collectSocketRead() {
         lifecycleScope.launch {
-            mainViewModel.socketMessageState.collectLatest { result ->
+            mainEvent?.getSocketMessageState()?.collectLatest { result ->
                 Log.d("Comp4", result.toString())
                 when (result) {
                     is Result.Error -> {
