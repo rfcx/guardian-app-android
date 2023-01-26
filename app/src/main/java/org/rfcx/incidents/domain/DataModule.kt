@@ -46,8 +46,10 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
@@ -103,6 +105,8 @@ object DataModule {
         single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class
         single { InitSocketUseCase(get(), get()) }
         single { GetSocketMessageUseCase(get(), get()) }
+        single { SendSocketMessageUseCase(get(), get()) }
+        single { CloseSocketUseCase(get(), get()) }
     }
 
     val remoteModule = module {

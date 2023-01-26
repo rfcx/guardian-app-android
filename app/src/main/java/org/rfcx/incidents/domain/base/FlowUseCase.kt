@@ -3,7 +3,6 @@ package org.rfcx.incidents.domain.base
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
-@OptIn(ExperimentalCoroutinesApi::class)
 abstract class FlowUseCase<T> {
     /**
      * Triggers the execution of this use case

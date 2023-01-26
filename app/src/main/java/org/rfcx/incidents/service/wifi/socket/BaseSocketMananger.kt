@@ -1,7 +1,6 @@
 package org.rfcx.incidents.service.wifi.socket
 
 import android.util.Log
-import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -23,27 +22,16 @@ abstract class BaseSocketMananger {
 
     private var port: Int = 0
 
-    data class SocketRequest(
-        val command: String
-    )
+    enum class Type {
+        GUARDIAN, ADMIN, ALL
+    }
 
     fun initialize(port: Int): Flow<Result<Boolean>> {
         this.port = port
-        return send(Gson().toJson(SocketRequest("connection")))
-    }
-
-    fun send(message: String): Flow<Result<Boolean>> {
         return flow {
             try {
-                socket = Socket("192.168.43.1", port)
-                socket?.keepAlive = true
-                socket?.soTimeout = 10000
-                readChannel = DataInputStream(socket!!.getInputStream())
-                writeChannel = DataOutputStream(socket!!.getOutputStream())
-
-                writeChannel?.writeUTF(message)
-                writeChannel?.flush()
-
+                // Need to send a message to establish the connection
+                send("{}")
                 emit(Result.Success(true))
             } catch (e: Exception) {
                 if (isErrorNeedReset(e)) {
@@ -53,12 +41,23 @@ abstract class BaseSocketMananger {
         }
     }
 
+    fun send(message: String) {
+        // Always need to new Socket object to re-send message
+        socket = Socket("192.168.43.1", port)
+        socket?.keepAlive = true
+        socket?.soTimeout = 10000
+        writeChannel = DataOutputStream(socket!!.getOutputStream())
+        writeChannel?.writeUTF(message)
+        writeChannel?.flush()
+    }
+
     fun read(): Flow<Result<String>> {
         return callbackFlow {
             trySendBlocking(Result.Loading)
             var isActive = true
             try {
                 while (isActive) {
+                    readChannel = DataInputStream(socket!!.getInputStream())
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
                         trySendBlocking(Result.Success(dataInput))

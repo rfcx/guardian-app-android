@@ -137,7 +137,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
-                            launch { mainViewModel.readSocket() }
+                            launch { mainViewModel.sendHeartbeatSignalPeriodic() }
                         }
                     }
                     else -> {}
