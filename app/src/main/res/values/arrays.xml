@@ -11,4 +11,26 @@
 		<item>@string/light_theme</item>
 		<item>@string/dark_theme</item>
 	</string-array>
+
+    <!--  Guardian  -->
+    <string-array name="guardian_assembly_checks">
+        <item>Software Update</item>
+        <item>Classifier Upload</item>
+        <item>Power Diagnostics</item>
+        <item>Communication Configuration</item>
+    </string-array>
+
+    <string-array name="guardian_setup_checks">
+        <item>Guardian Registration</item>
+        <item>Network Signal Test</item>
+        <item>Audio Parameter Config</item>
+        <item>Microphone Capture Test</item>
+        <item>Storage Inspector</item>
+        <item>Guardian Installation Location</item>
+    </string-array>
+
+    <string-array name="guardian_optional_checks">
+        <item>Add Photo(s)</item>
+        <item>Confirm CheckIn Status</item>
+    </string-array>
 </resources>

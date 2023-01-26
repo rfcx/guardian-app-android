@@ -10,10 +10,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
-import org.rfcx.incidents.databinding.ToolbarDefaultBinding
-import org.rfcx.incidents.view.guardian.checklist.GuardianChecklistFragment
+import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
-import org.rfcx.incidents.view.report.create.CreateReportActivity
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 
@@ -35,7 +33,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     private fun showScreen(screen: GuardianScreen) {
         when (screen) {
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
-            GuardianScreen.CHECKLIST -> startFragment(GuardianChecklistFragment.newInstance())
+            GuardianScreen.CHECKLIST -> startFragment(GuardianCheckListFragment.newInstance())
         }
     }
 

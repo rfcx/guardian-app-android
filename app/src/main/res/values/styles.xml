@@ -75,6 +75,10 @@
 		<item name="android:textSize">@dimen/text_medium</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
+
+    <style name="RangerText.Body.Small" parent="RangerText.Body">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
 	
 	<style name="RangerText.Label" parent="TextAppearance.AppCompat.Body2">
 		<item name="android:textColor">@color/text_primary</item>
