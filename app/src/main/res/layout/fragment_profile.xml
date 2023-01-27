@@ -192,7 +192,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{onClickSoftware}"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Guardian software"/>
+                android:text="Software"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/classifierTextView"
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Guardian classifier"/>
+                android:text="Classifier"/>
 
             <View
                 android:layout_width="match_parent"

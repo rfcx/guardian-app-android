@@ -26,6 +26,7 @@ import org.rfcx.incidents.util.NotificationDemo
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.base.BaseFragment
+import org.rfcx.incidents.view.profile.guardian.SoftwareDownloadActivity
 
 class ProfileFragment : BaseFragment() {
 
@@ -152,7 +153,7 @@ class ProfileFragment : BaseFragment() {
             }
         }
         viewDataBinding.onClickSoftware = View.OnClickListener {
-
+            SoftwareDownloadActivity.startActivity(requireContext())
         }
         viewDataBinding.onClickClassifier = View.OnClickListener {
 

@@ -21,8 +21,8 @@ fun HttpException?.getErrorFormApi(): Exception {
             return ApiException(this?.code(), "error and missing error body")
         }
 
-        val url = this.response().raw().request.url.toString()
-        val errString = this.response().errorBody()?.string()
+        val url = this.response()?.raw()?.request?.url.toString()
+        val errString = this.response()?.errorBody()?.string()
 
         FirebaseCrashlytics.getInstance().log("API failed from $url,code ${this.code()} ===> response $errString")
 

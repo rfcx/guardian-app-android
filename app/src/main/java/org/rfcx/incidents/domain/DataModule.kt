@@ -17,6 +17,7 @@ import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
+import org.rfcx.incidents.data.guardian.software.SoftwareRepositoryImpl
 import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
@@ -31,6 +32,7 @@ import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
+import org.rfcx.incidents.data.interfaces.guardian.software.SoftwareRepository
 import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -50,6 +52,7 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.software.GetSoftwareUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
@@ -107,6 +110,9 @@ object DataModule {
         single { GetSocketMessageUseCase(get(), get()) }
         single { SendSocketMessageUseCase(get(), get()) }
         single { CloseSocketUseCase(get(), get()) }
+
+        single { SoftwareRepositoryImpl(get()) } bind SoftwareRepository::class
+        single { GetSoftwareUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -121,6 +127,7 @@ object DataModule {
         factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
     }
 
     val localModule = module {

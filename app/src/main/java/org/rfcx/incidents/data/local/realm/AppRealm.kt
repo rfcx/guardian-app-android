@@ -19,7 +19,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 21L
+        private const val schemaVersion = 22L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -73,6 +73,11 @@ private class Migrations : RealmMigration {
         if (oldVersion < 21L && newVersion >= 21) {
             migrateToV21(c)
         }
+
+        if (oldVersion < 22L && newVersion >= 22) {
+            migrateToV22(c)
+        }
+
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -106,6 +111,15 @@ private class Migrations : RealmMigration {
         val incident = realm.schema.get(Incident.TABLE_NAME)
         incident?.apply {
             addRealmListField(Incident.FIELD_RESPONSES, user)
+        }
+    }
+
+    private fun migrateToV22(realm: DynamicRealm) {
+        val software = realm.schema.create("Software")
+        software?.apply {
+            addField("role", String::class.java, FieldAttribute.PRIMARY_KEY).setRequired("role", true)
+            addField("version", String::class.java).setRequired("version", true)
+            addField("path", String::class.java).setRequired("path", true)
         }
     }
 
