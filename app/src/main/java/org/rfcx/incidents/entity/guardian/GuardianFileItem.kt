@@ -1,8 +1,7 @@
 package org.rfcx.incidents.entity.guardian
 
-data class GuardianFile(
-    val file: FileResponse,
-    val status: FileStatus
+data class GuardianFileItem(
+    val file: FileResponse, val status: FileStatus
 )
 
 interface FileResponse

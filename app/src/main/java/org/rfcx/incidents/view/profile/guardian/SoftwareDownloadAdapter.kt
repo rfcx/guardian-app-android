@@ -5,23 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.databinding.ItemSoftwareDownloadBinding
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.Software
+import org.rfcx.incidents.entity.guardian.GuardianFileItem
 
 class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : RecyclerView.Adapter<SoftwareDownloadAdapter.SoftwareDownloadViewHolder>() {
 
     private lateinit var binding: ItemSoftwareDownloadBinding
 
-    var availableSoftwares: List<GuardianFile> = listOf()
+    var availableSoftwares: List<GuardianFileItem> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    var downloadedSoftwares: List<Software> = listOf()
+    var downloadedSoftwares: List<GuardianFile> = listOf()
         set(value) {
             field = value
         }
@@ -59,7 +58,7 @@ class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : Rec
         val deleteButton: Button = binding.softwareDeleteButton
         private val loading = binding.downloadLoading
 
-        fun bind(file: GuardianFile) {
+        fun bind(file: GuardianFileItem) {
             val software = (file.file as SoftwareResponse)
             val downloadedSoftware = downloadedSoftwares.findLast { it.role == software.role }
             name.text = software.role

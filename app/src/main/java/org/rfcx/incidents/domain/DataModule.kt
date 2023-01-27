@@ -42,6 +42,7 @@ import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -52,7 +53,8 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
-import org.rfcx.incidents.domain.guardian.software.GetSoftwareUseCase
+import org.rfcx.incidents.domain.guardian.software.GetSoftwareLocalUseCase
+import org.rfcx.incidents.domain.guardian.software.GetSoftwareRemoteUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
@@ -111,8 +113,9 @@ object DataModule {
         single { SendSocketMessageUseCase(get(), get()) }
         single { CloseSocketUseCase(get(), get()) }
 
-        single { SoftwareRepositoryImpl(get()) } bind SoftwareRepository::class
-        single { GetSoftwareUseCase(get()) }
+        single { SoftwareRepositoryImpl(get(), get()) } bind SoftwareRepository::class
+        single { GetSoftwareRemoteUseCase(get()) }
+        single { GetSoftwareLocalUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -139,6 +142,7 @@ object DataModule {
         factory { StreamDb(get()) }
         factory { AssetDb(get()) }
         factory { TrackingDb(get()) }
+        factory { GuardianFileDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }

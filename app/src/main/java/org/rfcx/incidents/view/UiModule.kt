@@ -53,6 +53,6 @@ object UiModule {
         viewModel { GuardianDeploymentViewModel(get(), get(), get(), get()) }
         viewModel { GuardianConnectViewModel(get(), get()) }
         viewModel { GuardianCheckListViewModel(androidContext()) }
-        viewModel { SoftwareDownloadViewModel(get()) }
+        viewModel { SoftwareDownloadViewModel(get(), get()) }
     }
 }

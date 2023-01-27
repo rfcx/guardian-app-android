@@ -14,7 +14,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.databinding.ActivitySoftwareDownloadBinding
-import org.rfcx.incidents.view.guardian.checklist.CheckListAdapter
 
 class SoftwareDownloadActivity : AppCompatActivity(), SoftwareEventListener {
 
@@ -31,7 +30,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), SoftwareEventListener {
         setupToolbar()
         setToolbarTitle("Software Download")
 
-        viewModel.getSoftwareFromRemote()
+        viewModel.getSoftwareItem()
 
         binding.softwareRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
