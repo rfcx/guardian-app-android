@@ -133,7 +133,7 @@
 		<item name="android:textColor">@android:color/white</item>
 	</style>
 
-    <style name="RangerButton.Software.DeActive" parent="RangerButton">
+    <style name="RangerButton.File.DeActive" parent="RangerButton">
         <item name="android:background">@drawable/bg_color_deactive_button</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/color_deactive_text</item>

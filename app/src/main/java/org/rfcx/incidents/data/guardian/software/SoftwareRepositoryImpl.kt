@@ -1,7 +1,9 @@
 package org.rfcx.incidents.data.guardian.software
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import org.rfcx.incidents.data.interfaces.guardian.software.SoftwareRepository
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.remote.common.Result

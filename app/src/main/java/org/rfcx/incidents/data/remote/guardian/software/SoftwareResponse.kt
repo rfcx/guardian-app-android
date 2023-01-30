@@ -1,20 +1,18 @@
 package org.rfcx.incidents.data.remote.guardian.software
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import org.rfcx.incidents.entity.guardian.FileResponse
 import java.util.Date
 
 data class SoftwareResponse(
-    @SerializedName("role")
+    @Expose(serialize = false)
     val role: String,
-    @SerializedName("version")
+    @Expose(serialize = false)
     val version: String,
-    @SerializedName("sha1")
+    @Expose(serialize = false)
     val sha1: String,
-    @SerializedName("size")
     val size: Long,
-    @SerializedName("url")
     val url: String,
-    @SerializedName("released")
+    @Expose(serialize = false)
     val released: Date
-) : FileResponse
+)

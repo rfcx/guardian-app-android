@@ -5,22 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
-import org.rfcx.incidents.databinding.ItemSoftwareDownloadBinding
+import org.rfcx.incidents.databinding.ItemGuardianFileDownloadBinding
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileItem
 
-class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : RecyclerView.Adapter<SoftwareDownloadAdapter.SoftwareDownloadViewHolder>() {
+class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListener) :
+    RecyclerView.Adapter<GuardianFileDownloadAdapter.fileDownloadViewHolder>() {
 
-    private lateinit var binding: ItemSoftwareDownloadBinding
+    private lateinit var binding: ItemGuardianFileDownloadBinding
 
-    var availableSoftwares: List<GuardianFileItem> = listOf()
+    var availableFiles: List<GuardianFileItem> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    var downloadedSoftwares: List<GuardianFile> = listOf()
+    var downloadedFiles: List<GuardianFile> = listOf()
         set(value) {
             field = value
         }
@@ -30,38 +30,37 @@ class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : Rec
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): SoftwareDownloadViewHolder {
-        binding = ItemSoftwareDownloadBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SoftwareDownloadViewHolder(binding)
+    ): fileDownloadViewHolder {
+        binding = ItemGuardianFileDownloadBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return fileDownloadViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: SoftwareDownloadViewHolder, position: Int) {
-        holder.bind(availableSoftwares[position])
+    override fun onBindViewHolder(holder: fileDownloadViewHolder, position: Int) {
+        holder.bind(availableFiles[position])
         holder.deleteButton.setOnClickListener {
             selected = position
-            listener.onDeleteClicked(availableSoftwares[position].file as SoftwareResponse)
+            listener.onDeleteClicked(availableFiles[position].file)
         }
         holder.downloadButton.setOnClickListener {
             selected = position
             needLoading = true
             notifyDataSetChanged()
-            listener.onDownloadClicked(availableSoftwares[position].file as SoftwareResponse)
+            listener.onDownloadClicked(availableFiles[position].file)
         }
     }
 
-    override fun getItemCount(): Int = availableSoftwares.size
+    override fun getItemCount(): Int = availableFiles.size
 
-    inner class SoftwareDownloadViewHolder(binding: ItemSoftwareDownloadBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val name = binding.softwareName
-        private val status = binding.softwareStatus
-        val downloadButton: Button = binding.softwareDownloadButton
-        val deleteButton: Button = binding.softwareDeleteButton
+    inner class fileDownloadViewHolder(binding: ItemGuardianFileDownloadBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val name = binding.fileName
+        private val status = binding.fileStatus
+        val downloadButton: Button = binding.fileDownloadButton
+        val deleteButton: Button = binding.fileDeleteButton
         private val loading = binding.downloadLoading
 
         fun bind(file: GuardianFileItem) {
-            val software = (file.file as SoftwareResponse)
-            val downloadedSoftware = downloadedSoftwares.findLast { it.role == software.role }
-            name.text = software.role
+            val downloadedfile = downloadedFiles.findLast { it.role == file.file.role }
+            name.text = file.file.role
             when (file.status) {
                 FileStatus.NOT_DOWNLOADED -> {
                     status.visibility = View.VISIBLE
@@ -84,7 +83,7 @@ class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : Rec
                     downloadButton.text = "Up to date"
                     deleteButton.isEnabled = true
                     deleteButton.visibility = View.VISIBLE
-                    deleteButton.text = "delete v${downloadedSoftware!!.version}"
+                    deleteButton.text = "delete v${downloadedfile!!.version}"
                 }
             }
 
@@ -103,7 +102,7 @@ class SoftwareDownloadAdapter(private val listener: SoftwareEventListener) : Rec
     }
 }
 
-interface SoftwareEventListener {
-    fun onDownloadClicked(software: SoftwareResponse)
-    fun onDeleteClicked(software: SoftwareResponse)
+interface GuardianFileEventListener {
+    fun onDownloadClicked(file: GuardianFile)
+    fun onDeleteClicked(file: GuardianFile)
 }

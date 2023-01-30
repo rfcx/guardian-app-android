@@ -14,12 +14,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.databinding.ActivitySoftwareDownloadBinding
+import org.rfcx.incidents.entity.guardian.GuardianFile
 
-class SoftwareDownloadActivity : AppCompatActivity(), SoftwareEventListener {
+class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener {
 
     private lateinit var binding: ActivitySoftwareDownloadBinding
     private val viewModel: SoftwareDownloadViewModel by viewModel()
-    private val softwareAdapter by lazy { SoftwareDownloadAdapter(this) }
+    private val softwareAdapter by lazy { GuardianFileDownloadAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), SoftwareEventListener {
                     is Result.Success -> {
                         binding.softwareLoading.visibility = View.GONE
                         binding.softwareRecyclerView.visibility = View.VISIBLE
-                        softwareAdapter.availableSoftwares = result.data
+                        softwareAdapter.availableFiles = result.data
                     }
                 }
             }
@@ -79,11 +80,11 @@ class SoftwareDownloadActivity : AppCompatActivity(), SoftwareEventListener {
         }
     }
 
-    override fun onDownloadClicked(software: SoftwareResponse) {
+    override fun onDownloadClicked(file: GuardianFile) {
         // TODO
     }
 
-    override fun onDeleteClicked(software: SoftwareResponse) {
+    override fun onDeleteClicked(file: GuardianFile) {
         // TODO
     }
 }

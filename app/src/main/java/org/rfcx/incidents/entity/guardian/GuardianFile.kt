@@ -10,5 +10,10 @@ open class GuardianFile(
     var role: String = "",
     var version: String = "",
     var path: String = "",
-    var type: String = ""
+    var type: String = "",
+    var meta: String = ""
 ) : RealmModel
+
+enum class GuardianFileType(val value: String) {
+    SOFTWARE("software"), CLASSIFIER("classifier")
+}

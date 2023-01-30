@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/softwareName"
+        android:id="@+id/fileName"
         style="@style/RangerText.SubTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -30,16 +30,16 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineVertical"/>
 
     <TextView
-        android:id="@+id/softwareStatus"
+        android:id="@+id/fileStatus"
         style="@style/RangerText.SubTitle.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:layout_marginStart="@dimen/margin_padding_small"
         android:text="not found"
-        app:layout_constraintBottom_toBottomOf="@id/softwareName"
+        app:layout_constraintBottom_toBottomOf="@id/fileName"
         app:layout_constraintStart_toEndOf="@id/guidelineVertical"
-        app:layout_constraintTop_toTopOf="@id/softwareName"
+        app:layout_constraintTop_toTopOf="@id/fileName"
         app:layout_constraintEnd_toStartOf="@id/guidelineVertical2"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -51,21 +51,21 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/softwareDeleteButton"
-        style="@style/RangerButton.Software.DeActive"
+        android:id="@+id/fileDeleteButton"
+        style="@style/RangerButton.File.DeActive"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginStart="@dimen/margin_padding_small"
         android:text="delete from local"
         android:textSize="@dimen/text_xxsmall"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/softwareName"
+        app:layout_constraintBottom_toBottomOf="@id/fileName"
         app:layout_constraintStart_toEndOf="@id/guidelineVertical"
-        app:layout_constraintTop_toTopOf="@id/softwareName"
+        app:layout_constraintTop_toTopOf="@id/fileName"
         app:layout_constraintEnd_toStartOf="@id/guidelineVertical2" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/softwareDownloadButton"
+        android:id="@+id/fileDownloadButton"
         style="@style/RangerButton.GreenButton"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
@@ -75,17 +75,17 @@
         android:text="download"
         android:textSize="@dimen/text_xxsmall"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/softwareName"
+        app:layout_constraintBottom_toBottomOf="@id/fileName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/softwareName" />
+        app:layout_constraintTop_toTopOf="@id/fileName" />
 
     <ProgressBar
         android:id="@+id/downloadLoading"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="@id/softwareName"
+        app:layout_constraintBottom_toBottomOf="@id/fileName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guidelineVertical2"
-        app:layout_constraintTop_toTopOf="@id/softwareName" />
+        app:layout_constraintTop_toTopOf="@id/fileName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

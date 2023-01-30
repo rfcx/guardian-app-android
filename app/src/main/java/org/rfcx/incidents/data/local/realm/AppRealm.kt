@@ -121,6 +121,7 @@ private class Migrations : RealmMigration {
             addField("version", String::class.java).setRequired("version", true)
             addField("path", String::class.java).setRequired("path", true)
             addField("type", String::class.java).setRequired("type", true)
+            addField("meta", String::class.java).setRequired("meta", true)
         }
     }
 
