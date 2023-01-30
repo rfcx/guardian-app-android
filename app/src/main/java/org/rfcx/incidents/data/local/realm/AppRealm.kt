@@ -117,7 +117,7 @@ private class Migrations : RealmMigration {
     private fun migrateToV22(realm: DynamicRealm) {
         val guardianFile = realm.schema.create("GuardianFile")
         guardianFile?.apply {
-            addField("role", String::class.java, FieldAttribute.PRIMARY_KEY).setRequired("role", true)
+            addField("name", String::class.java, FieldAttribute.PRIMARY_KEY).setRequired("name", true)
             addField("version", String::class.java).setRequired("version", true)
             addField("path", String::class.java).setRequired("path", true)
             addField("type", String::class.java).setRequired("type", true)

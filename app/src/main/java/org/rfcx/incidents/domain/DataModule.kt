@@ -53,10 +53,13 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
+import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.software.GetSoftwareLocalUseCase
 import org.rfcx.incidents.domain.guardian.software.GetSoftwareRemoteUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
+import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
@@ -113,9 +116,11 @@ object DataModule {
         single { SendSocketMessageUseCase(get(), get()) }
         single { CloseSocketUseCase(get(), get()) }
 
-        single { SoftwareRepositoryImpl(get(), get()) } bind SoftwareRepository::class
+        single { SoftwareRepositoryImpl(get(), get(), get()) } bind SoftwareRepository::class
         single { GetSoftwareRemoteUseCase(get()) }
         single { GetSoftwareLocalUseCase(get()) }
+        single { DownloadFileUseCase(get()) }
+        single { DeleteFileUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -149,5 +154,6 @@ object DataModule {
         single { WifiHotspotManager(androidContext()) }
         single { GuardianSocket }
         single { AdminSocket }
+        single { GuardianFileHelper(androidContext()) }
     }
 }

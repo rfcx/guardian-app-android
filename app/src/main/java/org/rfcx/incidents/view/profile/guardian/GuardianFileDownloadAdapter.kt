@@ -20,13 +20,20 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
             field = value
             notifyDataSetChanged()
         }
-    var downloadedFiles: List<GuardianFile> = listOf()
-        set(value) {
-            field = value
-        }
 
     var needLoading = false
     var selected = -1
+
+    fun showLoading() {
+        needLoading = true
+        notifyDataSetChanged()
+    }
+
+    fun hideLoading() {
+        needLoading = false
+        selected = -1
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -39,13 +46,11 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
         holder.bind(availableFiles[position])
         holder.deleteButton.setOnClickListener {
             selected = position
-            listener.onDeleteClicked(availableFiles[position].file)
+            listener.onDeleteClicked(availableFiles[position].local ?: availableFiles[position].remote)
         }
         holder.downloadButton.setOnClickListener {
             selected = position
-            needLoading = true
-            notifyDataSetChanged()
-            listener.onDownloadClicked(availableFiles[position].file)
+            listener.onDownloadClicked(availableFiles[position].remote)
         }
     }
 
@@ -59,32 +64,33 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
         private val loading = binding.downloadLoading
 
         fun bind(file: GuardianFileItem) {
-            val downloadedfile = downloadedFiles.findLast { it.role == file.file.role }
-            name.text = file.file.role
+            name.text = file.remote.name
             when (file.status) {
                 FileStatus.NOT_DOWNLOADED -> {
                     status.visibility = View.VISIBLE
                     downloadButton.isEnabled = true
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.text = "Download"
-                    deleteButton.visibility = View.GONE
                 }
                 FileStatus.NEED_UPDATE -> {
                     status.visibility = View.GONE
                     downloadButton.isEnabled = true
                     downloadButton.visibility = View.VISIBLE
-                    deleteButton.isEnabled = true
-                    deleteButton.visibility = View.VISIBLE
                 }
                 FileStatus.UP_TO_DATE -> {
                     status.visibility = View.GONE
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.isEnabled = false
                     downloadButton.text = "Up to date"
-                    deleteButton.isEnabled = true
-                    deleteButton.visibility = View.VISIBLE
-                    deleteButton.text = "delete v${downloadedfile!!.version}"
                 }
+            }
+
+            if (file.local != null) {
+                deleteButton.isEnabled = true
+                deleteButton.visibility = View.VISIBLE
+                deleteButton.text = "delete v${file.local.version}"
+            } else {
+                deleteButton.visibility = View.GONE
             }
 
             if (needLoading && adapterPosition != selected) {

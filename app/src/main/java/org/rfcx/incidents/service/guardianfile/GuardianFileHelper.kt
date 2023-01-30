@@ -1,0 +1,64 @@
+package org.rfcx.incidents.service.guardianfile
+
+import android.content.Context
+import okhttp3.ResponseBody
+import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.GuardianFileType
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import org.rfcx.incidents.data.remote.common.Result
+
+class GuardianFileHelper(private val context: Context) {
+
+    companion object {
+        private const val DIR = "guardian-file"
+    }
+
+    suspend fun saveToDisk(response: ResponseBody?, targetFile: GuardianFile): Result<String> {
+        if (response == null) return Result.Error(Throwable("response cannot be null"))
+        return try {
+            val dir = File(context.filesDir, "$DIR/${targetFile.type}")
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+            val ext = if (targetFile.type == GuardianFileType.SOFTWARE.value) "apk.gz" else "tflite"
+            val file = File(dir, "${targetFile.name}-${targetFile.version}.${ext}")
+            var inputStream: InputStream? = null
+            var outputStream: OutputStream? = null
+            try {
+                val fileReader = ByteArray(4096)
+                inputStream = response.byteStream()
+                outputStream = FileOutputStream(file)
+                while (true) {
+                    val read: Int = inputStream.read(fileReader)
+                    if (read == -1) {
+                        break
+                    }
+                    outputStream.write(fileReader, 0, read)
+                }
+                outputStream.flush()
+                Result.Success(file.absolutePath)
+            } catch (e: IOException) {
+                Result.Error(e)
+            } finally {
+                inputStream?.close()
+                outputStream?.close()
+            }
+        } catch (e: IOException) {
+            Result.Error(e)
+        }
+    }
+
+    suspend fun removeFromDisk(targetFile: GuardianFile): Result<Boolean> {
+        val file = File(targetFile.path)
+        if (file.exists()) {
+            file.delete()
+            return Result.Success(true)
+        } else {
+            return Result.Error(Throwable("File not found"))
+        }
+    }
+}
