@@ -9,8 +9,8 @@ import org.rfcx.incidents.entity.guardian.GuardianFile
 interface GuardianFileRepository {
     fun getSoftwareRemote(): Flow<Result<List<SoftwareResponse>>>
     fun getClassifierRemote(): Flow<Result<List<ClassifierResponse>>>
-    fun getLocal(): List<GuardianFile>
-    fun getLocalAsFlow(): Flow<List<GuardianFile>>
+    fun getSoftwareLocalAsFlow(): Flow<List<GuardianFile>>
+    fun getClassifierLocalAsFlow(): Flow<List<GuardianFile>>
     fun download(targetFile: GuardianFile): Flow<Result<Boolean>>
     fun delete(targetFile: GuardianFile): Flow<Result<Boolean>>
 }

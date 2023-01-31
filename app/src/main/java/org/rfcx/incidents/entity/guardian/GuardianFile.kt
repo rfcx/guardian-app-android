@@ -13,7 +13,16 @@ open class GuardianFile(
     var type: String = "",
     var url: String = "",
     var meta: String = ""
-) : RealmModel
+) : RealmModel {
+    companion object {
+        const val FIELD_NAME = "name"
+        const val FIELD_VERSION = "version"
+        const val FIELD_PATH = "path"
+        const val FIELD_TYPE = "type"
+        const val FIELD_URL = "url"
+        const val FIELD_META = "meta"
+    }
+}
 
 enum class GuardianFileType(val value: String) {
     SOFTWARE("software"), CLASSIFIER("classifier")

@@ -55,7 +55,7 @@ import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
-import org.rfcx.incidents.domain.guardian.software.GetSoftwareLocalUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
@@ -116,9 +116,9 @@ object DataModule {
         single { SendSocketMessageUseCase(get(), get()) }
         single { CloseSocketUseCase(get(), get()) }
 
-        single { GuardianFileRepositoryImpl(get(), get(), get(), get()) } bind GuardianFileRepository::class
+        single { GuardianFileRepositoryImpl(get(), get(), get(), get(), get()) } bind GuardianFileRepository::class
         single { GetGuardianFileRemoteUseCase(get()) }
-        single { GetSoftwareLocalUseCase(get()) }
+        single { GetGuardianFileLocalUseCase(get()) }
         single { DownloadFileUseCase(get()) }
         single { DeleteFileUseCase(get()) }
     }
@@ -137,6 +137,7 @@ object DataModule {
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeDownloadFileService(BuildConfig.DEBUG) }
     }
 
     val localModule = module {

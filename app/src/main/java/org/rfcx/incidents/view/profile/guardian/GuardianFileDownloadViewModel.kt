@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onErrorCollect
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
@@ -21,9 +23,10 @@ import org.rfcx.incidents.domain.guardian.software.DeleteFileParams
 import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.software.DownloadFileParams
 import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalParams
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileParams
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
-import org.rfcx.incidents.domain.guardian.software.GetSoftwareLocalUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileItem
@@ -35,7 +38,7 @@ import java.net.UnknownHostException
 class GuardianFileDownloadViewModel(
     private val context: Context,
     private val getGuardianFileRemoteUseCase: GetGuardianFileRemoteUseCase,
-    private val getSoftwareLocalUseCase: GetSoftwareLocalUseCase,
+    private val getGuardianFileLocalUseCase: GetGuardianFileLocalUseCase,
     private val downloadFileUseCase: DownloadFileUseCase,
     private val deleteFileUseCase: DeleteFileUseCase
 ) : ViewModel() {
@@ -65,14 +68,14 @@ class GuardianFileDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             if (!context.isNetworkAvailable()) {
                 _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
-                listenToLocalGuardianFile()
+                listenToLocal(type)
                 return@launch
             }
             getGuardianFileRemoteUseCase.launch(GetGuardianFileParams(type)).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         remoteData = result.data
-                        listenToLocalGuardianFile()
+                        listenToLocal(type)
                     }
                     Result.Loading -> _guardianFileItemState.tryEmit(Result.Loading)
                     is Result.Error -> {
@@ -85,16 +88,33 @@ class GuardianFileDownloadViewModel(
         }
     }
 
-    fun listenToLocalGuardianFile() {
+    private fun listenToLocal(type: GuardianFileType) {
+        when(type) {
+            GuardianFileType.SOFTWARE -> listenToLocalSoftware()
+            GuardianFileType.CLASSIFIER -> listenToLocalClassifier()
+        }
+    }
+
+    private fun listenToLocalSoftware() {
+        listenToLocalGuardianFile(GuardianFileType.SOFTWARE)
+    }
+
+    private fun listenToLocalClassifier() {
+        listenToLocalGuardianFile(GuardianFileType.CLASSIFIER)
+    }
+
+    private fun listenToLocalGuardianFile(type: GuardianFileType) {
         // Dispatcher.Main to work with local realm with created in Main thread
         viewModelScope.launch(Dispatchers.Main) {
-            getSoftwareLocalUseCase.launch().collect { result ->
+            getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(type)).map { result ->
                 localData = result
-                Log.d("Comp", result.toString())
-                _guardianFileItemState.tryEmit(Result.Success(getFileItemFromRemoteAndLocal(remoteData, localData)))
+                getFileItemFromRemoteAndLocal(remoteData, localData)
+            }.collect { result ->
+                _guardianFileItemState.tryEmit(Result.Success(result))
             }
         }
     }
+
 
     fun download(targetFile: GuardianFile) {
         // Dispatcher.Main to work with local realm with created in Main thread
@@ -136,18 +156,22 @@ class GuardianFileDownloadViewModel(
 
     private fun getResultToGuardianFile(result: List<GuardianFileResponse>): List<GuardianFile> {
         return result.map {
+            val obj = GuardianFile(
+                name = it.name, version = it.version, url = it.url
+            )
             var meta = ""
             val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
             if (it is SoftwareResponse) {
                 meta = gson.toJson(it, SoftwareResponse::class.java)
+                obj.meta = meta
+                obj.type = GuardianFileType.SOFTWARE.value
             }
             if (it is ClassifierResponse) {
                 meta = gson.toJson(it, ClassifierResponse::class.java)
+                obj.meta = meta
+                obj.type = GuardianFileType.CLASSIFIER.value
             }
-
-            GuardianFile(
-                name = it.name, version = it.version, type = GuardianFileType.SOFTWARE.value, url = it.url, meta = meta
-            )
+            obj
         }
     }
 }
