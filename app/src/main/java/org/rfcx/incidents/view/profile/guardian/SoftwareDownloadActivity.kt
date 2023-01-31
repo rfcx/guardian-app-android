@@ -64,7 +64,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
 
     private fun getSoftwareState() {
         lifecycleScope.launch {
-            viewModel.softwareItemState.collectLatest { result ->
+            viewModel.guardianFileItemState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         Toast.makeText(this@SoftwareDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
@@ -89,7 +89,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
 
     private fun downloadSoftwareState() {
         lifecycleScope.launch {
-            viewModel.downloadSoftwareState.collectLatest { result ->
+            viewModel.downloadGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         softwareAdapter.hideLoading()
@@ -106,7 +106,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
 
     private fun deleteSoftwareState() {
         lifecycleScope.launch {
-            viewModel.deleteSoftwareState.collectLatest { result ->
+            viewModel.deleteGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         softwareAdapter.hideLoading()

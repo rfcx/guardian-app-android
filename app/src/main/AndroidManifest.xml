@@ -76,6 +76,10 @@
             android:name=".view.profile.guardian.SoftwareDownloadActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".view.profile.guardian.ClassifierDownloadActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".service.LocationTrackerService"
             android:exported="false"

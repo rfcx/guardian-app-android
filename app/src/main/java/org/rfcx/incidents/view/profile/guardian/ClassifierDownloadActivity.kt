@@ -29,7 +29,7 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
 
         setupToolbar("Classifier Download")
 
-        viewModel.getSoftwareItem()
+        viewModel.getClassifierItem()
 
         binding.classifierRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -56,15 +56,15 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
 
     private fun collectStates() {
         lifecycleScope.launch {
-            launch { getSoftwareState() }
-            launch { downloadSoftwareState() }
-            launch { deleteSoftwareState() }
+            launch { getClassifierState() }
+            launch { downloadClassifierState() }
+            launch { deleteClassifierState() }
         }
     }
 
-    private fun getSoftwareState() {
+    private fun getClassifierState() {
         lifecycleScope.launch {
-            viewModel.softwareItemState.collectLatest { result ->
+            viewModel.guardianFileItemState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         Toast.makeText(this@ClassifierDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
@@ -87,9 +87,9 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
         }
     }
 
-    private fun downloadSoftwareState() {
+    private fun downloadClassifierState() {
         lifecycleScope.launch {
-            viewModel.downloadSoftwareState.collectLatest { result ->
+            viewModel.downloadGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         classifierAdapter.hideLoading()
@@ -104,9 +104,9 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
         }
     }
 
-    private fun deleteSoftwareState() {
+    private fun deleteClassifierState() {
         lifecycleScope.launch {
-            viewModel.deleteSoftwareState.collectLatest { result ->
+            viewModel.deleteGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         classifierAdapter.hideLoading()
@@ -131,7 +131,7 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
 
     companion object {
         fun startActivity(context: Context) {
-            val intent = Intent(context, SoftwareDownloadActivity::class.java)
+            val intent = Intent(context, ClassifierDownloadActivity::class.java)
             context.startActivity(intent)
         }
     }

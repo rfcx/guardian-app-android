@@ -40,14 +40,14 @@ class GuardianFileDownloadViewModel(
     private val deleteFileUseCase: DeleteFileUseCase
 ) : ViewModel() {
 
-    private val _softwareItemState: MutableStateFlow<Result<List<GuardianFileItem>>> = MutableStateFlow(Result.Loading)
-    val softwareItemState = _softwareItemState.asStateFlow()
+    private val _guardianFileItemState: MutableStateFlow<Result<List<GuardianFileItem>>> = MutableStateFlow(Result.Loading)
+    val guardianFileItemState = _guardianFileItemState.asStateFlow()
 
-    private val _downloadSoftwareState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val downloadSoftwareState = _downloadSoftwareState.asSharedFlow()
+    private val _downloadGuardianFileState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val downloadGuardianFileState = _downloadGuardianFileState.asSharedFlow()
 
-    private val _deleteSoftwareState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val deleteSoftwareState = _deleteSoftwareState.asSharedFlow()
+    private val _deleteGuardianFileState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val deleteGuardianFileState = _deleteGuardianFileState.asSharedFlow()
 
     private var remoteData: List<GuardianFileResponse> = emptyList()
     private var localData: List<GuardianFile> = emptyList()
@@ -64,7 +64,7 @@ class GuardianFileDownloadViewModel(
         // Dispatcher.Main to work with local realm with created in Main thread
         viewModelScope.launch(Dispatchers.Main) {
             if (!context.isNetworkAvailable()) {
-                _softwareItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
+                _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
                 listenToLocalGuardianFile()
                 return@launch
             }
@@ -74,10 +74,10 @@ class GuardianFileDownloadViewModel(
                         remoteData = result.data
                         listenToLocalGuardianFile()
                     }
-                    Result.Loading -> _softwareItemState.tryEmit(Result.Loading)
+                    Result.Loading -> _guardianFileItemState.tryEmit(Result.Loading)
                     is Result.Error -> {
                         if (result.throwable is UnknownHostException) {
-                            _softwareItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
+                            _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
                         }
                     }
                 }
@@ -91,7 +91,7 @@ class GuardianFileDownloadViewModel(
             getSoftwareLocalUseCase.launch().collect { result ->
                 localData = result
                 Log.d("Comp", result.toString())
-                _softwareItemState.tryEmit(Result.Success(getFileItemFromRemoteAndLocal(remoteData, localData)))
+                _guardianFileItemState.tryEmit(Result.Success(getFileItemFromRemoteAndLocal(remoteData, localData)))
             }
         }
     }
@@ -101,9 +101,9 @@ class GuardianFileDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             downloadFileUseCase.launch(DownloadFileParams(targetFile)).collect { result ->
                 when (result) {
-                    is Result.Error -> _downloadSoftwareState.tryEmit(result)
-                    Result.Loading -> _downloadSoftwareState.tryEmit(Result.Loading)
-                    is Result.Success -> _downloadSoftwareState.tryEmit(result)
+                    is Result.Error -> _downloadGuardianFileState.tryEmit(result)
+                    Result.Loading -> _downloadGuardianFileState.tryEmit(Result.Loading)
+                    is Result.Success -> _downloadGuardianFileState.tryEmit(result)
                 }
             }
         }
@@ -114,9 +114,9 @@ class GuardianFileDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             deleteFileUseCase.launch(DeleteFileParams(targetFile)).collect { result ->
                 when (result) {
-                    is Result.Error -> _deleteSoftwareState.tryEmit(result)
-                    Result.Loading -> _deleteSoftwareState.tryEmit(Result.Loading)
-                    is Result.Success -> _deleteSoftwareState.tryEmit(result)
+                    is Result.Error -> _deleteGuardianFileState.tryEmit(result)
+                    Result.Loading -> _deleteGuardianFileState.tryEmit(Result.Loading)
+                    is Result.Success -> _deleteGuardianFileState.tryEmit(result)
                 }
             }
         }
