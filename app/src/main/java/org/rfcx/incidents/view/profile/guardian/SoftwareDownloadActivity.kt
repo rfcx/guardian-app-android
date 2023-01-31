@@ -27,8 +27,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
         binding = ActivitySoftwareDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar()
-        setToolbarTitle("Software Download")
+        setupToolbar("Software Download")
 
         viewModel.getSoftwareItem()
 
@@ -40,19 +39,19 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
         collectStates()
     }
 
-    fun setupToolbar() {
+    fun setupToolbar(title: String) {
         setSupportActionBar(binding.toolbarLayout.toolbarDefault)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(true)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            this.title = title
         }
     }
 
-    fun setToolbarTitle(title: String) {
-        supportActionBar?.apply {
-            this.title = title
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun collectStates() {
@@ -75,9 +74,13 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
                         binding.softwareRecyclerView.visibility = View.GONE
                     }
                     is Result.Success -> {
+                        if (result.data.isEmpty()) {
+                            binding.noSoftwareItem.visibility = View.VISIBLE
+                        } else {
+                            binding.softwareRecyclerView.visibility = View.VISIBLE
+                            softwareAdapter.availableFiles = result.data
+                        }
                         binding.softwareLoading.visibility = View.GONE
-                        binding.softwareRecyclerView.visibility = View.VISIBLE
-                        softwareAdapter.availableFiles = result.data
                     }
                 }
             }
@@ -95,7 +98,6 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
                     Result.Loading -> softwareAdapter.showLoading()
                     is Result.Success -> {
                         softwareAdapter.hideLoading()
-                        softwareAdapter.availableFiles = result.data
                     }
                 }
             }
@@ -113,7 +115,6 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
                     Result.Loading -> softwareAdapter.showLoading()
                     is Result.Success -> {
                         softwareAdapter.hideLoading()
-                        softwareAdapter.availableFiles = result.data
                     }
                 }
             }

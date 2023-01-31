@@ -11,6 +11,7 @@ import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
+import java.net.UnknownHostException
 
 class SoftwareRepositoryImpl(
     private val endpoint: SoftwareEndpoint,
@@ -20,15 +21,20 @@ class SoftwareRepositoryImpl(
     override fun getRemote(): Flow<Result<List<SoftwareResponse>>> {
         return flow {
             emit(Result.Loading)
-            emit(Result.Success(endpoint.getSoftware()))
+            try {
+                emit(Result.Success(endpoint.getSoftware()))
+            } catch (e: Exception) {
+                emit(Result.Error(e))
+            }
         }
     }
 
-    override fun getLocal(): Flow<Result<List<GuardianFile>>> {
-        return flow {
-            emit(Result.Loading)
-            emit(Result.Success(localDb.getAll()))
-        }
+    override fun getLocal(): List<GuardianFile> {
+        return localDb.getAll()
+    }
+
+    override fun getLocalAsFlow(): Flow<List<GuardianFile>> {
+        return localDb.getAllAsync()
     }
 
     override fun download(targetFile: GuardianFile): Flow<Result<Boolean>> {

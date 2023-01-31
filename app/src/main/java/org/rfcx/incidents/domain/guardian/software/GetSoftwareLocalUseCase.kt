@@ -7,8 +7,8 @@ import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.domain.base.FlowUseCase
 import org.rfcx.incidents.entity.guardian.GuardianFile
 
-class GetSoftwareLocalUseCase(private val repository: SoftwareRepository) : FlowUseCase<Result<List<GuardianFile>>>() {
-    override fun performAction(): Flow<Result<List<GuardianFile>>> {
-        return repository.getLocal()
+class GetSoftwareLocalUseCase(private val repository: SoftwareRepository) : FlowUseCase<List<GuardianFile>>() {
+    override fun performAction(): Flow<List<GuardianFile>> {
+        return repository.getLocalAsFlow()
     }
 }

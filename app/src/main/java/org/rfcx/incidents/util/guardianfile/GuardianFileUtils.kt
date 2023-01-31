@@ -3,9 +3,12 @@ package org.rfcx.incidents.util.guardianfile
 import org.rfcx.incidents.entity.guardian.FileStatus
 
 object GuardianFileUtils {
-    fun compareIfNeedToUpdate(version1: String, version2: String?): FileStatus {
+    fun compareIfNeedToUpdate(version1: String?, version2: String?): FileStatus {
         if (version2 == null) {
             return FileStatus.NOT_DOWNLOADED
+        }
+        if (version1 == null) {
+            return FileStatus.NO_INTERNET
         }
         val levels1 = version1.split(".")
         val levels2 = version2.split(".")

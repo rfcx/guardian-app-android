@@ -46,11 +46,11 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
         holder.bind(availableFiles[position])
         holder.deleteButton.setOnClickListener {
             selected = position
-            listener.onDeleteClicked(availableFiles[position].local ?: availableFiles[position].remote)
+            listener.onDeleteClicked(availableFiles[position].local!!)
         }
         holder.downloadButton.setOnClickListener {
             selected = position
-            listener.onDownloadClicked(availableFiles[position].remote)
+            listener.onDownloadClicked(availableFiles[position].remote!!)
         }
     }
 
@@ -64,7 +64,7 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
         private val loading = binding.downloadLoading
 
         fun bind(file: GuardianFileItem) {
-            name.text = file.remote.name
+            name.text = file.local?.name ?: file.remote!!.name
             when (file.status) {
                 FileStatus.NOT_DOWNLOADED -> {
                     status.visibility = View.VISIBLE
@@ -82,6 +82,12 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.isEnabled = false
                     downloadButton.text = "Up to date"
+                }
+                else -> {
+                    status.visibility = View.GONE
+                    downloadButton.visibility = View.VISIBLE
+                    downloadButton.isEnabled = false
+                    downloadButton.text = "unavailable"
                 }
             }
 
