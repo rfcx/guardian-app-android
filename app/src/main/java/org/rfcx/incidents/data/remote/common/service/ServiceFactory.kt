@@ -9,6 +9,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
 import org.rfcx.incidents.data.remote.media.MediaEndpoint
 import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
@@ -125,6 +126,14 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(SoftwareEndpoint::class.java)
+    }
+
+    fun makeClassifierService(isDebug: Boolean, context: Context): ClassifierEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(ClassifierEndpoint::class.java)
     }
 
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

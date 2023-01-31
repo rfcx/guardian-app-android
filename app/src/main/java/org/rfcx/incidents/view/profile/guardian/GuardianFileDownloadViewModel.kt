@@ -4,25 +4,26 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
+import org.rfcx.incidents.data.remote.guardian.software.GuardianFileResponse
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
 import org.rfcx.incidents.domain.guardian.software.DeleteFileParams
 import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.software.DownloadFileParams
 import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileParams
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.software.GetSoftwareLocalUseCase
-import org.rfcx.incidents.domain.guardian.software.GetSoftwareRemoteUseCase
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileItem
@@ -31,9 +32,9 @@ import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
 import org.rfcx.incidents.util.isNetworkAvailable
 import java.net.UnknownHostException
 
-class SoftwareDownloadViewModel(
+class GuardianFileDownloadViewModel(
     private val context: Context,
-    private val getSoftwareRemoteUseCase: GetSoftwareRemoteUseCase,
+    private val getGuardianFileRemoteUseCase: GetGuardianFileRemoteUseCase,
     private val getSoftwareLocalUseCase: GetSoftwareLocalUseCase,
     private val downloadFileUseCase: DownloadFileUseCase,
     private val deleteFileUseCase: DeleteFileUseCase
@@ -48,10 +49,18 @@ class SoftwareDownloadViewModel(
     private val _deleteSoftwareState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val deleteSoftwareState = _deleteSoftwareState.asSharedFlow()
 
-    private var remoteData: List<SoftwareResponse> = emptyList()
+    private var remoteData: List<GuardianFileResponse> = emptyList()
     private var localData: List<GuardianFile> = emptyList()
 
     fun getSoftwareItem() {
+        getGuardianFileItem(GuardianFileType.SOFTWARE)
+    }
+
+    fun getClassifierItem() {
+        getGuardianFileItem(GuardianFileType.CLASSIFIER)
+    }
+
+    private fun getGuardianFileItem(type: GuardianFileType) {
         // Dispatcher.Main to work with local realm with created in Main thread
         viewModelScope.launch(Dispatchers.Main) {
             if (!context.isNetworkAvailable()) {
@@ -59,7 +68,7 @@ class SoftwareDownloadViewModel(
                 listenToLocalGuardianFile()
                 return@launch
             }
-            getSoftwareRemoteUseCase.launch().collect { result ->
+            getGuardianFileRemoteUseCase.launch(GetGuardianFileParams(type)).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         remoteData = result.data
@@ -81,6 +90,7 @@ class SoftwareDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getSoftwareLocalUseCase.launch().collect { result ->
                 localData = result
+                Log.d("Comp", result.toString())
                 _softwareItemState.tryEmit(Result.Success(getFileItemFromRemoteAndLocal(remoteData, localData)))
             }
         }
@@ -112,7 +122,7 @@ class SoftwareDownloadViewModel(
         }
     }
 
-    private fun getFileItemFromRemoteAndLocal(remote: List<SoftwareResponse>, local: List<GuardianFile>): List<GuardianFileItem> {
+    private fun getFileItemFromRemoteAndLocal(remote: List<GuardianFileResponse>, local: List<GuardianFile>): List<GuardianFileItem> {
         val fileStatus = arrayListOf<GuardianFileItem>()
         if (remote.isEmpty()) return local.map { GuardianFileItem(null, it, FileStatus.NO_INTERNET) }
 
@@ -124,15 +134,19 @@ class SoftwareDownloadViewModel(
         return fileStatus
     }
 
-    private fun getResultToGuardianFile(result: List<SoftwareResponse>): List<GuardianFile> {
+    private fun getResultToGuardianFile(result: List<GuardianFileResponse>): List<GuardianFile> {
         return result.map {
+            var meta = ""
+            val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+            if (it is SoftwareResponse) {
+                meta = gson.toJson(it, SoftwareResponse::class.java)
+            }
+            if (it is ClassifierResponse) {
+                meta = gson.toJson(it, ClassifierResponse::class.java)
+            }
+
             GuardianFile(
-                name = it.role,
-                version = it.version,
-                type = GuardianFileType.SOFTWARE.value,
-                url = it.url,
-                size = it.size,
-                sha1 = it.sha1
+                name = it.name, version = it.version, type = GuardianFileType.SOFTWARE.value, url = it.url, meta = meta
             )
         }
     }
