@@ -81,6 +81,8 @@ class GuardianFileDownloadViewModel(
                     is Result.Error -> {
                         if (result.throwable is UnknownHostException) {
                             _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
+                        } else {
+                            _guardianFileItemState.tryEmit(result)
                         }
                     }
                 }
