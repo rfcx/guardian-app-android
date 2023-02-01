@@ -9,7 +9,6 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.util.Crashlytics
-import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
@@ -37,13 +36,16 @@ class LoginActivity : BaseActivity(), LoginListener {
         setupDisplayTheme()
 
         loginViewModel.isTokenValid()
-        loginViewModel.isRefreshTokenNeeded.observe(this, Observer {
-            if (it) {
-                openLoginFragment()
-            } else {
-                openMain()
+        loginViewModel.isRefreshTokenNeeded.observe(
+            this,
+            Observer {
+                if (it) {
+                    openLoginFragment()
+                } else {
+                    openMain()
+                }
             }
-        })
+        )
     }
 
     override fun handleOpenPage() {

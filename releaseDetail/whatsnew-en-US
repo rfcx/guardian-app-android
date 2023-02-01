@@ -1,1 +1,1 @@
-- Back to login screen if user is expired
+- Refresh token if expired and back to login if failed
