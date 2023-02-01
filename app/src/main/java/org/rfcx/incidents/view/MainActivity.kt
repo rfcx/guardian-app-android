@@ -12,7 +12,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
@@ -34,7 +33,6 @@ import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.LocationPermissions.Companion.REQUEST_PERMISSIONS_REQUEST_CODE
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.getUserEmail
-import org.rfcx.incidents.util.logout
 import org.rfcx.incidents.util.saveUserLoginWith
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.util.startLocationChange
