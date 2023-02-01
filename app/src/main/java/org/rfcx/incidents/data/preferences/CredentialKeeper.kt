@@ -43,10 +43,10 @@ class CredentialKeeper(val context: Context) {
 
     fun hasValidCredentials(): Boolean {
         val preferences = Preferences.getInstance(context)
-        return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty() && !isTokenExpired()
+        return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty()
     }
 
-    private fun isTokenExpired(): Boolean {
+    fun isTokenExpired(): Boolean {
         val preferences = Preferences.getInstance(context)
         return System.currentTimeMillis() > preferences.getLong(Preferences.TOKEN_EXPIRES_AT, 0)
     }

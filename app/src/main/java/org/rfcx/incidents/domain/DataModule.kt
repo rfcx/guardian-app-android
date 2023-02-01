@@ -37,6 +37,7 @@ import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
@@ -109,5 +110,6 @@ object DataModule {
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
+        single { CredentialVerifier(androidContext()) }
     }
 }

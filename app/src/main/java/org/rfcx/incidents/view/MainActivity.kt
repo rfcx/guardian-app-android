@@ -96,7 +96,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             setupFragments()
         }
         this.saveUserLoginWith()
-        observeMain()
         getEventFromIntentIfHave(intent)
         this.startLocationChange()
     }
@@ -383,15 +382,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         val contentContainerPaddingBottom =
             if (show) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
         binding.contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
-    }
-
-    private fun observeMain() {
-        mainViewModel.isRequireToLogin.observe(
-            this,
-            Observer {
-                if (it) logout()
-            }
-        )
     }
 
     private fun getEventFromIntentIfHave(intent: Intent?) {

@@ -3,6 +3,8 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
@@ -16,6 +18,7 @@ import org.rfcx.incidents.view.base.BaseActivity
 class LoginActivity : BaseActivity(), LoginListener {
 
     private lateinit var binding: ActivityLoginNewBinding
+    private val loginViewModel: LoginViewModel by viewModel()
     private val firebaseCrashlytics by lazy { Crashlytics() }
 
     companion object {
@@ -33,14 +36,14 @@ class LoginActivity : BaseActivity(), LoginListener {
         setContentView(binding.root)
         setupDisplayTheme()
 
-        val preferenceHelper = Preferences.getInstance(this)
-        val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
-
-        if (this.getTokenID() != null && selectedProject != "" && getUserNickname().substring(0, 1) != "+") {
-            openMain()
-        } else {
-            openLoginFragment()
-        }
+        loginViewModel.isTokenValid()
+        loginViewModel.isRefreshTokenNeeded.observe(this, Observer {
+            if (it) {
+                openLoginFragment()
+            } else {
+                openMain()
+            }
+        })
     }
 
     override fun handleOpenPage() {

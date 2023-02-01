@@ -33,21 +33,14 @@ class MainActivityViewModel(
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
     private val getProjectsUseCase: GetProjectsUseCase,
-    private val getStreamsUseCase: GetStreamsUseCase,
-    credentialKeeper: CredentialKeeper
+    private val getStreamsUseCase: GetStreamsUseCase
 ) : ViewModel() {
-
-    val isRequireToLogin = MutableLiveData<Boolean>()
 
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
 
     fun getResponses(): LiveData<List<Response>> {
         return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
-    }
-
-    init {
-        isRequireToLogin.value = !credentialKeeper.hasValidCredentials()
     }
 
     fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()
