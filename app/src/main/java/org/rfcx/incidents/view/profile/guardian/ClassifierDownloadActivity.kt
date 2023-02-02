@@ -12,28 +12,28 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.databinding.ActivitySoftwareDownloadBinding
+import org.rfcx.incidents.databinding.ActivityClassifierDownloadBinding
 import org.rfcx.incidents.entity.guardian.GuardianFile
 
-class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener {
+class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListener {
 
-    private lateinit var binding: ActivitySoftwareDownloadBinding
+    private lateinit var binding: ActivityClassifierDownloadBinding
     private val viewModel: GuardianFileDownloadViewModel by viewModel()
-    private val softwareAdapter by lazy { GuardianFileDownloadAdapter(this) }
+    private val classifierAdapter by lazy { GuardianFileDownloadAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivitySoftwareDownloadBinding.inflate(layoutInflater)
+        binding = ActivityClassifierDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar("Software Download")
+        setupToolbar("Classifier Download")
 
-        viewModel.getSoftwareItem()
+        viewModel.getClassifierItem()
 
-        binding.softwareRecyclerView.apply {
+        binding.classifierRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = softwareAdapter
+            adapter = classifierAdapter
         }
 
         collectStates()
@@ -56,65 +56,65 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
 
     private fun collectStates() {
         lifecycleScope.launch {
-            launch { getSoftwareState() }
-            launch { downloadSoftwareState() }
-            launch { deleteSoftwareState() }
+            launch { getClassifierState() }
+            launch { downloadClassifierState() }
+            launch { deleteClassifierState() }
         }
     }
 
-    private fun getSoftwareState() {
+    private fun getClassifierState() {
         lifecycleScope.launch {
             viewModel.guardianFileItemState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        Toast.makeText(this@SoftwareDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@ClassifierDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
                     }
                     Result.Loading -> {
-                        binding.softwareLoading.visibility = View.VISIBLE
-                        binding.softwareRecyclerView.visibility = View.GONE
+                        binding.classifierLoading.visibility = View.VISIBLE
+                        binding.classifierRecyclerView.visibility = View.GONE
                     }
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
-                            binding.noSoftwareItem.visibility = View.VISIBLE
+                            binding.noClassifierItem.visibility = View.VISIBLE
                         } else {
-                            binding.softwareRecyclerView.visibility = View.VISIBLE
-                            softwareAdapter.availableFiles = result.data
+                            binding.classifierRecyclerView.visibility = View.VISIBLE
+                            classifierAdapter.availableFiles = result.data
                         }
-                        binding.softwareLoading.visibility = View.GONE
+                        binding.classifierLoading.visibility = View.GONE
                     }
                 }
             }
         }
     }
 
-    private fun downloadSoftwareState() {
+    private fun downloadClassifierState() {
         lifecycleScope.launch {
             viewModel.downloadGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        softwareAdapter.hideLoading()
-                        Toast.makeText(this@SoftwareDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
+                        classifierAdapter.hideLoading()
+                        Toast.makeText(this@ClassifierDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
                     }
-                    Result.Loading -> softwareAdapter.showLoading()
+                    Result.Loading -> classifierAdapter.showLoading()
                     is Result.Success -> {
-                        softwareAdapter.hideLoading()
+                        classifierAdapter.hideLoading()
                     }
                 }
             }
         }
     }
 
-    private fun deleteSoftwareState() {
+    private fun deleteClassifierState() {
         lifecycleScope.launch {
             viewModel.deleteGuardianFileState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        softwareAdapter.hideLoading()
-                        Toast.makeText(this@SoftwareDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
+                        classifierAdapter.hideLoading()
+                        Toast.makeText(this@ClassifierDownloadActivity, result.throwable.message, Toast.LENGTH_LONG).show()
                     }
-                    Result.Loading -> softwareAdapter.showLoading()
+                    Result.Loading -> classifierAdapter.showLoading()
                     is Result.Success -> {
-                        softwareAdapter.hideLoading()
+                        classifierAdapter.hideLoading()
                     }
                 }
             }
@@ -131,7 +131,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
 
     companion object {
         fun startActivity(context: Context) {
-            val intent = Intent(context, SoftwareDownloadActivity::class.java)
+            val intent = Intent(context, ClassifierDownloadActivity::class.java)
             context.startActivity(intent)
         }
     }

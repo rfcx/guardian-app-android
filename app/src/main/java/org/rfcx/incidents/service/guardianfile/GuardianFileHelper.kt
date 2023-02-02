@@ -17,8 +17,8 @@ class GuardianFileHelper(private val context: Context) {
         private const val DIR = "guardian-file"
     }
 
-    suspend fun saveToDisk(response: ResponseBody?, targetFile: GuardianFile): Result<String> {
-        if (response == null) return Result.Error(Throwable("response cannot be null"))
+    suspend fun saveToDisk(response: ResponseBody?, targetFile: GuardianFile): String {
+        if (response == null) throw Throwable("response cannot be null")
         return try {
             val dir = File(context.filesDir, "$DIR/${targetFile.type}")
             if (!dir.exists()) {
@@ -40,15 +40,15 @@ class GuardianFileHelper(private val context: Context) {
                     outputStream.write(fileReader, 0, read)
                 }
                 outputStream.flush()
-                Result.Success(file.absolutePath)
+                file.absolutePath
             } catch (e: IOException) {
-                Result.Error(e)
+                throw e
             } finally {
                 inputStream?.close()
                 outputStream?.close()
             }
         } catch (e: IOException) {
-            Result.Error(e)
+            throw e
         }
     }
 
@@ -58,7 +58,7 @@ class GuardianFileHelper(private val context: Context) {
             file.delete()
             return Result.Success(true)
         } else {
-            return Result.Error(Throwable("File not found"))
+            throw Throwable("File not found")
         }
     }
 }

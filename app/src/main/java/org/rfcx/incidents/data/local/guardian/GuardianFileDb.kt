@@ -5,15 +5,16 @@ import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.GuardianFileType
 
 class GuardianFileDb(private val realm: Realm) {
-    fun getAll(): List<GuardianFile> {
-        val files = realm.where(GuardianFile::class.java).findAll()
-        return realm.copyFromRealm(files)
+    fun getSoftwareAllAsync(): Flow<List<GuardianFile>> {
+        val files = realm.where(GuardianFile::class.java).equalTo(GuardianFile.FIELD_TYPE, GuardianFileType.SOFTWARE.value).findAllAsync().toFlow()
+        return files
     }
 
-    fun getAllAsync(): Flow<List<GuardianFile>> {
-        val files = realm.where(GuardianFile::class.java).findAllAsync().toFlow()
+    fun getClassifierAllAsync(): Flow<List<GuardianFile>> {
+        val files = realm.where(GuardianFile::class.java).equalTo(GuardianFile.FIELD_TYPE, GuardianFileType.CLASSIFIER.value).findAllAsync().toFlow()
         return files
     }
 
@@ -25,7 +26,7 @@ class GuardianFileDb(private val realm: Realm) {
 
     fun delete(file: GuardianFile) {
         realm.executeTransaction {
-            val localFile = realm.where(GuardianFile::class.java).equalTo("name", file.name).findFirst()
+            val localFile = realm.where(GuardianFile::class.java).equalTo(GuardianFile.FIELD_NAME, file.name).findFirst()
             localFile?.deleteFromRealm()
         }
     }

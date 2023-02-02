@@ -40,9 +40,9 @@ class GuardianDeploymentViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             initSocketUseCase.launch().collectLatest { result ->
                 when (result) {
-                    is Result.Error -> _initSocketState.tryEmit(Result.Error(result.throwable))
+                    is Result.Error -> _initSocketState.tryEmit(result)
                     Result.Loading -> _initSocketState.tryEmit(Result.Loading)
-                    is Result.Success -> _initSocketState.tryEmit(Result.Success(result.data))
+                    is Result.Success -> _initSocketState.tryEmit(result)
                 }
             }
         }
@@ -66,9 +66,9 @@ class GuardianDeploymentViewModel(
         readChannelJob = viewModelScope.launch(Dispatchers.IO) {
             getSocketMessageUseCase.launch().collectLatest { result ->
                 when (result) {
-                    is Result.Error -> _socketMessageState.tryEmit(Result.Error(result.throwable))
+                    is Result.Error -> _socketMessageState.tryEmit(result)
                     Result.Loading -> _socketMessageState.tryEmit(Result.Loading)
-                    is Result.Success -> _socketMessageState.tryEmit(Result.Success(result.data))
+                    is Result.Success -> _socketMessageState.tryEmit(result)
                 }
             }
         }
