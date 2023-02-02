@@ -3,12 +3,12 @@ package org.rfcx.incidents.view.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.ActivityLoginNewBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.util.Crashlytics
+import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.util.setupDisplayTheme
 import org.rfcx.incidents.view.MainActivity
@@ -35,17 +35,14 @@ class LoginActivity : BaseActivity(), LoginListener {
         setContentView(binding.root)
         setupDisplayTheme()
 
-        loginViewModel.isTokenValid()
-        loginViewModel.isRefreshTokenNeeded.observe(
-            this,
-            Observer {
-                if (it) {
-                    openLoginFragment()
-                } else {
-                    openMain()
-                }
-            }
-        )
+        val preferenceHelper = Preferences.getInstance(this)
+        val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
+
+        if (this.getTokenID() != null && selectedProject != "" && getUserNickname().substring(0, 1) != "+") {
+            openMain()
+        } else {
+            openLoginFragment()
+        }
     }
 
     override fun handleOpenPage() {

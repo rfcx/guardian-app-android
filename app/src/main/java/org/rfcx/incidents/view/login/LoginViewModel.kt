@@ -14,7 +14,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.CredentialKeeper
-import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.CheckUserTouchUseCase
@@ -25,7 +24,6 @@ import org.rfcx.incidents.entity.common.Ok
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.user.UserAuthResponse
 import org.rfcx.incidents.util.CloudMessaging
-import org.rfcx.incidents.util.getUserNickname
 import org.rfcx.incidents.view.login.LoginFragment.Companion.SUCCESS
 
 class LoginViewModel(
@@ -66,33 +64,10 @@ class LoginViewModel(
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val projects: LiveData<Result<List<Project>>> get() = _projects
 
-    private val _isRefreshTokenNeeded: MutableLiveData<Boolean> = MutableLiveData()
-    val isRefreshTokenNeeded: LiveData<Boolean> get() = _isRefreshTokenNeeded
-
     init {
         _userAuth.postValue(null)
         _loginFailure.postValue(null)
         _statusUserTouch.postValue(null)
-    }
-
-    fun isTokenValid() {
-        val preferenceHelper = Preferences.getInstance(context)
-        val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
-        if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname().substring(0, 1) != "+") {
-            if (credentialKeeper.isTokenExpired()) {
-                refreshToken { success ->
-                    if (success) {
-                        _isRefreshTokenNeeded.postValue(false)
-                    } else {
-                        _isRefreshTokenNeeded.postValue(true)
-                    }
-                }
-            } else {
-                _isRefreshTokenNeeded.postValue(false)
-            }
-        } else {
-            _isRefreshTokenNeeded.postValue(true)
-        }
     }
 
     fun fetchProjects() {
@@ -173,33 +148,5 @@ class LoginViewModel(
             },
             null
         )
-    }
-
-    private fun refreshToken(callback: (Boolean) -> Unit) {
-        val refreshToken = Preferences.getInstance(context).getString(Preferences.REFRESH_TOKEN)
-        if (refreshToken == null) {
-            callback(false)
-            return
-        }
-
-        authentication.renewAuth(refreshToken).start(object : BaseCallback<Credentials, AuthenticationException> {
-            override fun onSuccess(credentials: Credentials) {
-                val result = credentialVerifier.verify(credentials)
-                when (result) {
-                    is Err -> {
-                        callback(false)
-                    }
-                    is Ok -> {
-                        val userAuthResponse = result.value
-                        credentialKeeper.save(userAuthResponse)
-                        callback(true)
-                    }
-                }
-            }
-
-            override fun onFailure(error: AuthenticationException) {
-                callback(false)
-            }
-        })
     }
 }
