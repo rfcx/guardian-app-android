@@ -16,6 +16,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentGuardianConnectBinding
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
+import org.rfcx.incidents.view.guardian.GuardianScreen
 
 class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
@@ -155,9 +156,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
-                            binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
-                            binding.connectGuardianLoading.visibility = View.GONE
-                            binding.connectGuardianButton.isEnabled = true
+                            mainEvent?.changeScreen(GuardianScreen.CHECKLIST)
                         }
                     }
                 }

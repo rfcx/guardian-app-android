@@ -9,6 +9,8 @@ interface GuardianDeploymentEventListener {
     fun hideToolbar()
     fun setToolbarTitle(title: String)
 
+    fun changeScreen(screen: GuardianScreen)
+
     fun initSocket()
     fun sendHeartBeatSocket()
     fun getInitSocketState(): SharedFlow<Result<Boolean>>

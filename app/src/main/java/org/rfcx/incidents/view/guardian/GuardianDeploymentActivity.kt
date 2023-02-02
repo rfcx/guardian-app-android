@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
-import org.rfcx.incidents.databinding.ToolbarDefaultBinding
+import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
-import org.rfcx.incidents.view.report.create.CreateReportActivity
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 
@@ -25,6 +24,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         binding = ActivityGuardianDeploymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupToolbar()
+
         // Show guardian connect screen first
         showScreen(GuardianScreen.CONNECT)
     }
@@ -32,6 +33,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     private fun showScreen(screen: GuardianScreen) {
         when (screen) {
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
+            GuardianScreen.CHECKLIST -> startFragment(GuardianCheckListFragment.newInstance())
         }
     }
 
@@ -64,6 +66,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         }
     }
 
+    override fun changeScreen(screen: GuardianScreen) {
+        showScreen(screen)
+    }
+
     override fun initSocket() {
         viewModel.initSocket()
     }
@@ -84,6 +90,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         super.onDestroy()
         viewModel.onDestroy()
     }
+    
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, GuardianDeploymentActivity::class.java)

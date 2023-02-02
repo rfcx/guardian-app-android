@@ -9,6 +9,9 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
+import org.rfcx.incidents.data.remote.guardian.software.DownloadFileEndpoint
+import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
 import org.rfcx.incidents.data.remote.media.MediaEndpoint
 import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
 import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
@@ -117,6 +120,30 @@ object ServiceFactory {
         )
             .create(SubscribeEndpoint::class.java)
     }
+
+    fun makeSoftwareService(isDebug: Boolean, context: Context): SoftwareEndpoint {
+        return createRetrofit(
+            BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(SoftwareEndpoint::class.java)
+    }
+
+    fun makeClassifierService(isDebug: Boolean, context: Context): ClassifierEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(ClassifierEndpoint::class.java)
+    }
+    fun makeDownloadFileService(isDebug: Boolean): DownloadFileEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createDefaultOkHttpClient(isDebug),
+            GsonProvider.getInstance().gson
+        )
+            .create(DownloadFileEndpoint::class.java)
+    }
+
 
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)
