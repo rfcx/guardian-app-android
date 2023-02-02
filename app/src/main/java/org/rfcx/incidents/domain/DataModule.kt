@@ -17,6 +17,7 @@ import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
+import org.rfcx.incidents.data.guardian.software.GuardianFileRepositoryImpl
 import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
 import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
@@ -31,6 +32,7 @@ import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
+import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileRepository
 import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -40,6 +42,7 @@ import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -50,8 +53,13 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
+import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
+import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
@@ -107,6 +115,12 @@ object DataModule {
         single { GetSocketMessageUseCase(get(), get()) }
         single { SendSocketMessageUseCase(get(), get()) }
         single { CloseSocketUseCase(get(), get()) }
+
+        single { GuardianFileRepositoryImpl(get(), get(), get(), get(), get()) } bind GuardianFileRepository::class
+        single { GetGuardianFileRemoteUseCase(get()) }
+        single { GetGuardianFileLocalUseCase(get()) }
+        single { DownloadFileUseCase(get()) }
+        single { DeleteFileUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -121,6 +135,9 @@ object DataModule {
         factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeDownloadFileService(BuildConfig.DEBUG) }
     }
 
     val localModule = module {
@@ -132,11 +149,13 @@ object DataModule {
         factory { StreamDb(get()) }
         factory { AssetDb(get()) }
         factory { TrackingDb(get()) }
+        factory { GuardianFileDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
         single { WifiHotspotManager(androidContext()) }
         single { GuardianSocket }
         single { AdminSocket }
+        single { GuardianFileHelper(androidContext()) }
     }
 }
