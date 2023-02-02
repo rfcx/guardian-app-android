@@ -59,6 +59,7 @@ class AssetSyncWorker(private val context: Context, params: WorkerParameters) : 
                             createLocalFilePart(mediaType = "image/*", fileAsset = compressedFile)
                         }
                     }
+                    null -> {}
                 }
                 if (file == null) return Result.failure()
 

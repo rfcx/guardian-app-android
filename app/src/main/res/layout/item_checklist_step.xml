@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/checkName"
+        style="@style/RangerText.Label.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="@dimen/margin_padding_small"
+        android:paddingTop="@dimen/margin_padding_normal"
+        android:paddingBottom="@dimen/margin_padding_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Install bracket"
+        app:drawableStartCompat="@drawable/ic_checklist" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_padding_small"
+        android:background="@color/separateLine"
+        app:layout_constraintTop_toBottomOf="@id/checkName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

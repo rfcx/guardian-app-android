@@ -73,6 +73,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             UiModule.reportsModule,
             UiModule.profileModule,
             UiModule.loginModule,
+            UiModule.guardianModule,
             DataModule.localModule,
             DataModule.remoteModule,
             DataModule.dataModule
