@@ -12,7 +12,6 @@ class WifiHotspotRepositoryImpl(
     override fun getHotspots(): Flow<Result<List<ScanResult>>> {
         return wifiHotspotManager.nearbyHotspot()
     }
-
     override fun connect(scanResult: ScanResult): Flow<Result<Boolean>> {
         return wifiHotspotManager.connectTo(scanResult)
     }

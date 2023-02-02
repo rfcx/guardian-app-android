@@ -9,8 +9,7 @@ import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 
 class ConnectHotspotUseCase(private val repository: WifiHotspotRepository) : FlowWithParamUseCase<ConnectHotspotParams, Result<Boolean>>() {
 
-    override fun performAction(param: ConnectHotspotParams?): Flow<Result<Boolean>> {
-        if (param == null) return flow { emit(Result.Error(Throwable("null parameter is not allowed"))) }
+    override fun performAction(param: ConnectHotspotParams): Flow<Result<Boolean>> {
         if (param.targetHotspot == null) return flow { emit(Result.Error(Throwable("null target hotspot is not allowed"))) }
         return repository.connect(param.targetHotspot)
     }

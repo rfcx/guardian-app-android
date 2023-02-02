@@ -1,12 +1,13 @@
 package org.rfcx.incidents.view
 
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.rfcx.incidents.view.events.StreamsViewModel
 import org.rfcx.incidents.view.events.detail.EventViewModel
 import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
+import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
+import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
@@ -14,6 +15,7 @@ import org.rfcx.incidents.view.login.SetUserNameViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
 import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
+import org.rfcx.incidents.view.profile.guardian.GuardianFileDownloadViewModel
 import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
@@ -47,6 +49,9 @@ object UiModule {
     }
 
     var guardianModule = module {
+        viewModel { GuardianDeploymentViewModel(get(), get(), get(), get()) }
         viewModel { GuardianConnectViewModel(get(), get()) }
+        viewModel { GuardianCheckListViewModel(androidContext()) }
+        viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
     }
 }

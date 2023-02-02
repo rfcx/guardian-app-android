@@ -17,10 +17,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.util.wifi.WifiHotspotUtils
 
@@ -39,6 +41,13 @@ class WifiHotspotManager(private val context: Context) {
         wifiManager.startScan()
         return callbackFlow {
             trySendBlocking(Result.Loading)
+
+            // No hotspot found timeout
+            val delayJob = launch {
+                delay(15000)
+                trySendBlocking(Result.Success(listOf()))
+            }
+
             val receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent) {
                     if (intent.action == WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) {
@@ -47,6 +56,7 @@ class WifiHotspotManager(private val context: Context) {
                             it.SSID.contains(SSID_PREFIX)
                         }
                         if (guardianWifiHotspot.isNotEmpty()) {
+                            delayJob.cancel()
                             trySendBlocking(Result.Success(guardianWifiHotspot))
                                 .onFailure { throwable ->
                                     throwable?.let {
@@ -76,6 +86,13 @@ class WifiHotspotManager(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return callbackFlow<Result<Boolean>> {
                 trySendBlocking(Result.Loading)
+
+                // hotspot connection timeout
+                val delayJob = launch {
+                    delay(15000)
+                    trySendBlocking(Result.Success(false))
+                }
+
                 val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder().also {
                     it.setSsid(guardian.SSID)
                     it.setWpa2Passphrase("rfcxrfcx")
@@ -91,18 +108,21 @@ class WifiHotspotManager(private val context: Context) {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
                         connectivityManager.bindProcessToNetwork(network)
+                        delayJob.cancel()
                         trySendBlocking(Result.Success(true))
                     }
 
                     override fun onLost(network: Network) {
                         super.onLost(network)
                         connectivityManager.bindProcessToNetwork(null)
-                        trySendBlocking(Result.Success(false))
+                        delayJob.cancel()
+                        trySendBlocking(Result.Error(Throwable("onLost")))
                     }
 
                     override fun onUnavailable() {
                         super.onUnavailable()
-                        trySendBlocking(Result.Success(false))
+                        delayJob.cancel()
+                        trySendBlocking(Result.Error(Throwable("onUnavailable")))
                     }
                 })
                 awaitClose {
@@ -127,6 +147,13 @@ class WifiHotspotManager(private val context: Context) {
             wifiManager.reconnect()
             return callbackFlow<Result<Boolean>> {
                 trySendBlocking(Result.Loading)
+
+                // hotspot connection timeout
+                val delayJob = launch {
+                    delay(15000)
+                    trySendBlocking(Result.Success(false))
+                }
+
                 val receiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context, intent: Intent) {
                         val conManager =
@@ -134,6 +161,7 @@ class WifiHotspotManager(private val context: Context) {
                         val netInfo = conManager.activeNetworkInfo
                         if (netInfo != null && netInfo.isConnected && netInfo.type == ConnectivityManager.TYPE_WIFI) {
                             if (WifiHotspotUtils.isConnectedWithGuardian(context, guardian.SSID)) {
+                                delayJob.cancel()
                                 trySendBlocking(Result.Success(true))
                             }
                         }
