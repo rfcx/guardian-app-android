@@ -32,7 +32,7 @@ class CredentialKeeper(val context: Context) {
             preferences.putString(Preferences.IMAGE_PROFILE, user.picture)
         }
         if (user.expiredAt != null) {
-            preferences.putLong(Preferences.TOKEN_EXPIRES_AT, System.currentTimeMillis() + 60000)
+            preferences.putLong(Preferences.TOKEN_EXPIRES_AT, user.expiredAt * 1000)
         }
     }
 

@@ -125,7 +125,7 @@ class MainActivityViewModel(
         val credentialKeeper = CredentialKeeper(context)
 
         if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname()
-                .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
+            .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
         ) {
             return false
         }
