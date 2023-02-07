@@ -31,6 +31,7 @@ class Preferences(context: Context) {
         const val EMAIL = "EMAIL"
         const val NICKNAME = "NICKNAME"
         const val IMAGE_PROFILE = "IMAGE_PROFILE"
+        const val TOKEN_EXPIRES_AT = "TOKEN_EXPIRES_AT"
 
         // UI state
         const val SELECTED_PROJECT = "SELECTED_PROJECT"
