@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.guardian.checklist.softwareupdate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,7 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
         viewModel.getGuardianSoftware()
         lifecycleScope.launch {
             viewModel.guardianSoftwareState.collectLatest {
+                Log.d("Comp", it.toString())
                 softwareUpdateAdapter.files = it
             }
         }

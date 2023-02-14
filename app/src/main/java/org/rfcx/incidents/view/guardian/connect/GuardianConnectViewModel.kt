@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +38,7 @@ class GuardianConnectViewModel(
         getNearbyJob?.cancel()
         getNearbyJob = viewModelScope.launch(Dispatchers.IO) {
             getNearbyHotspotUseCase.launch().collectLatest { result ->
+                Log.d("Comp", result.toString())
                 when (result) {
                     is Result.Error -> _hotspotsState.tryEmit(Result.Error(result.throwable))
                     Result.Loading -> _hotspotsState.tryEmit(Result.Loading)

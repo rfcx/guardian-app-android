@@ -90,6 +90,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                             binding.notFoundTextView.visibility = View.GONE
                             binding.retryGuardianButton.visibility = View.GONE
+                            Log.d("Comp", result.data.toString())
                             hotspotAdapter.items = result.data
                         }
                         binding.connectGuardianLoading.visibility = View.GONE

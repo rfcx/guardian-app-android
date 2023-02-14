@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.FragmentGuardianChecklistBinding
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
+import org.rfcx.incidents.view.guardian.GuardianScreen
 
 class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
 
@@ -67,6 +68,8 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     }
 
     override fun invoke(p1: Int, p2: String) {
-        //
+        if (p1 == 0) {
+            mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
+        }
     }
 }
