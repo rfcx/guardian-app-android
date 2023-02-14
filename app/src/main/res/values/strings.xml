@@ -407,4 +407,8 @@
     <string name="responses">responses</string>
     <string name="and">and</string>
 
+    <!-- GuardianFileUpdateAdapter -->
+    <string name="installed_guardian_file">(current %s installed)</string>
+
+
 </resources>

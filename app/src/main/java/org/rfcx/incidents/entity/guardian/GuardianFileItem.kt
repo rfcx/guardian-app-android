@@ -6,4 +6,4 @@ data class GuardianFileItem(
     val status: FileStatus
 )
 
-enum class FileStatus { NOT_DOWNLOADED, UP_TO_DATE, NEED_UPDATE, NO_INTERNET }
+enum class FileStatus { NOT_DOWNLOADED, UP_TO_DATE, NEED_DOWNLOAD, NO_INTERNET }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
+import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 

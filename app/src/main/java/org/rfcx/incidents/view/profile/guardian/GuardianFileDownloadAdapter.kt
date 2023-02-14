@@ -11,7 +11,7 @@ import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileItem
 
 class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListener) :
-    RecyclerView.Adapter<GuardianFileDownloadAdapter.fileDownloadViewHolder>() {
+    RecyclerView.Adapter<GuardianFileDownloadAdapter.FileDownloadViewHolder>() {
 
     private lateinit var binding: ItemGuardianFileDownloadBinding
 
@@ -37,12 +37,12 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): fileDownloadViewHolder {
+    ): FileDownloadViewHolder {
         binding = ItemGuardianFileDownloadBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return fileDownloadViewHolder(binding)
+        return FileDownloadViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: fileDownloadViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FileDownloadViewHolder, position: Int) {
         holder.bind(availableFiles[position])
         holder.deleteButton.setOnClickListener {
             selected = position
@@ -56,7 +56,7 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
 
     override fun getItemCount(): Int = availableFiles.size
 
-    inner class fileDownloadViewHolder(binding: ItemGuardianFileDownloadBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class FileDownloadViewHolder(binding: ItemGuardianFileDownloadBinding) : RecyclerView.ViewHolder(binding.root) {
         private val name = binding.fileName
         private val status = binding.fileStatus
         val downloadButton: Button = binding.fileDownloadButton
@@ -72,7 +72,7 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.text = "Download"
                 }
-                FileStatus.NEED_UPDATE -> {
+                FileStatus.NEED_DOWNLOAD -> {
                     status.visibility = View.GONE
                     downloadButton.isEnabled = true
                     downloadButton.visibility = View.VISIBLE

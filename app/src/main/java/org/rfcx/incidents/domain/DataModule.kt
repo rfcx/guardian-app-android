@@ -50,6 +50,7 @@ import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
@@ -121,6 +122,8 @@ object DataModule {
         single { GetGuardianFileLocalUseCase(get()) }
         single { DownloadFileUseCase(get()) }
         single { DeleteFileUseCase(get()) }
+
+        single { GetGuardianMessageUseCase(get()) }
     }
 
     val remoteModule = module {

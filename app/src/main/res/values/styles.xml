@@ -102,6 +102,10 @@
 		<item name="android:textColor">@color/text_black</item>
 		<item name="android:textSize">@dimen/text_small</item>
 	</style>
+
+    <style name="RangerText.SubTitle.Bold" parent="RangerText.SubTitle">
+        <item name="android:textStyle">bold</item>
+    </style>
 	
 	<style name="RangerText.SubTitle.Secondary" parent="TextAppearance.AppCompat.Body1">
 		<item name="android:textColor">@color/text_secondary</item>

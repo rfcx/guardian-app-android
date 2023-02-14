@@ -8,6 +8,7 @@ import org.rfcx.incidents.view.events.detail.EventViewModel
 import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListViewModel
+import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
@@ -53,5 +54,6 @@ object UiModule {
         viewModel { GuardianConnectViewModel(get(), get()) }
         viewModel { GuardianCheckListViewModel(androidContext()) }
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
+        viewModel { SoftwareUpdateViewModel(get(), get()) }
     }
 }

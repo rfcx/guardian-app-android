@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.profile.guardian
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
@@ -11,9 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onErrorCollect
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
@@ -24,9 +21,9 @@ import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.software.DownloadFileParams
 import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalParams
+import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileParams
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
-import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileItem
@@ -150,7 +147,7 @@ class GuardianFileDownloadViewModel(
 
         getResultToGuardianFile(remote).forEach { res ->
             val downloadedFile = local.find { it.name == res.name }
-            val status = GuardianFileUtils.compareIfNeedToUpdate(res.version, downloadedFile?.version)
+            val status = GuardianFileUtils.compareIfNeedToDownload(res.version, downloadedFile?.version)
             fileStatus.add(GuardianFileItem(res, downloadedFile, status))
         }
         return fileStatus
