@@ -11,9 +11,13 @@ interface GuardianDeploymentEventListener {
     fun setToolbarTitle(title: String)
 
     fun changeScreen(screen: GuardianScreen)
+    fun back()
+    fun next()
+    fun getPassedScreen(): List<GuardianScreen>
 
     fun initSocket()
     fun sendHeartBeatSocket()
     fun getInitSocketState(): SharedFlow<Result<Boolean>>
     fun getSocketMessageState(): SharedFlow<Result<List<String>>>
+    fun closeSocket()
 }

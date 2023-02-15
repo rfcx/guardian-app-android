@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
@@ -33,7 +34,6 @@ class SoftwareUpdateViewModel(
     fun getGuardianSoftware() {
         viewModelScope.launch {
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.SOFTWARE)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
-                Log.d("Comp7", "$f1 $f2")
                 if (f2 != null) {
                     val software = f2.getSoftware()
                     if (software != null) {
@@ -43,8 +43,7 @@ class SoftwareUpdateViewModel(
                     }
                 }
             }.catch {
-                Log.d("Comp7", "$it")
-            }.collect()
+            }.collectLatest {  }
         }
     }
 
@@ -52,7 +51,7 @@ class SoftwareUpdateViewModel(
         val list = arrayListOf<GuardianFileUpdateItem>()
         downloaded.forEach {
             val header = GuardianFileUpdateItem.GuardianFileUpdateHeader(it.name)
-            val child = GuardianFileUpdateItem.GuardianFileUpdateVersion(it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(it.version, installed[it.name]), null)
+            val child = GuardianFileUpdateItem.GuardianFileUpdateVersion(it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version), null)
             list.add(header)
             list.add(child)
         }

@@ -17,7 +17,7 @@ class AdminSocketRepositoryImpl(
         return adminSocket.read()
     }
 
-    override fun getMessageSharedFlow(): SharedFlow<Result<String>> {
+    override fun getMessageSharedFlow(): SharedFlow<String> {
         return adminSocket.messageShared
     }
 

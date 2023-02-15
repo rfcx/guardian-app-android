@@ -7,7 +7,7 @@ import org.rfcx.incidents.data.remote.common.Result
 interface SocketRepository {
     fun initialize(): Flow<Result<Boolean>>
     fun getMessage(): Flow<Result<String>>
-    fun getMessageSharedFlow(): SharedFlow<Result<String>>
+    fun getMessageSharedFlow(): SharedFlow<String>
     fun sendMessage(message: String)
     fun close()
 }

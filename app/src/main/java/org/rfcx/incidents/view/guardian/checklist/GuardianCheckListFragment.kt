@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +38,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             adapter = checkListAdapter
         }
         collectStates()
-        viewModel.getAllCheckList()
+        viewModel.getAllCheckList(mainEvent?.getPassedScreen())
     }
 
     private fun collectStates() {
@@ -51,7 +50,6 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     private fun collectCheckListItem() {
         lifecycleScope.launch {
             viewModel.checklistItemState.collectLatest {
-                Log.d("Comp", it.toString())
                 checkListAdapter.setCheckList(it)
             }
         }
@@ -59,6 +57,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
 
     override fun onDestroy() {
         super.onDestroy()
+        mainEvent?.closeSocket()
     }
 
     companion object {

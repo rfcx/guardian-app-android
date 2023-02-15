@@ -17,7 +17,7 @@ class GuardianSocketRepositoryImpl(
         return guardianSocket.read()
     }
 
-    override fun getMessageSharedFlow(): SharedFlow<Result<String>> {
+    override fun getMessageSharedFlow(): SharedFlow<String> {
         return guardianSocket.messageShared
     }
 

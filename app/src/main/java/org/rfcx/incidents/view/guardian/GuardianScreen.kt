@@ -1,5 +1,5 @@
 package org.rfcx.incidents.view.guardian
 
-enum class GuardianScreen {
-    CONNECT, CHECKLIST, SOFTWARE_UPDATE
+enum class GuardianScreen(val value: Int) {
+    CONNECT(-2), CHECKLIST(-1), SOFTWARE_UPDATE(0)
 }

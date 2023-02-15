@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.guardian
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +51,6 @@ class GuardianDeploymentViewModel(
         heartBeatJob?.cancel()
         heartBeatJob = viewModelScope.launch(Dispatchers.IO) {
             while (true) {
-                Log.d("Comp6", "send heartbeat")
                 sendSocketMessageUseCase.launch(SendMessageParams(BaseSocketMananger.Type.ALL, "{command:\"connection\"}"))
                 // To re-reference new socket
                 readSocket()

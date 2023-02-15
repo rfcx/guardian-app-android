@@ -20,6 +20,9 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     lateinit var binding: ActivityGuardianDeploymentBinding
     private val viewModel: GuardianDeploymentViewModel by viewModel()
 
+    private var currentScreen = GuardianScreen.CHECKLIST
+    private val passedScreen = arrayListOf<GuardianScreen>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Binding view
@@ -70,8 +73,24 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     }
 
     override fun changeScreen(screen: GuardianScreen) {
+        currentScreen = screen
         showScreen(screen)
     }
+
+    override fun back() {
+        when(currentScreen) {
+            GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()
+            GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
+            GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
+        }
+    }
+
+    override fun next() {
+        passedScreen.add(currentScreen)
+        changeScreen(GuardianScreen.CHECKLIST)
+    }
+
+    override fun getPassedScreen(): List<GuardianScreen> = passedScreen
 
     override fun initSocket() {
         viewModel.initSocket()
@@ -89,9 +108,22 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         return viewModel.socketMessageState
     }
 
+    override fun closeSocket() {
+        viewModel.onDestroy()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        back()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        back()
+        return true
     }
     
     companion object {

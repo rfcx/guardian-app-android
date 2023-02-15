@@ -50,7 +50,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 

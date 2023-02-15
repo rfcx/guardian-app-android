@@ -10,11 +10,9 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 import org.rfcx.incidents.data.remote.common.Result
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -33,9 +31,7 @@ abstract class BaseSocketMananger {
     private var port: Int = 0
     private var fromInit = false
 
-    private lateinit var messageSharedFlow: SharedFlow<Result<String>>
-
-    private val _messageShared = MutableSharedFlow<Result<String>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _messageShared = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val messageShared = _messageShared.asSharedFlow()
 
     enum class Type {
@@ -73,7 +69,7 @@ abstract class BaseSocketMananger {
         return callbackFlow {
             if (fromInit) {
                 trySendBlocking(Result.Loading)
-                _messageShared.tryEmit(Result.Loading)
+                fromInit = false
             }
             var isActive = true
             try {
@@ -81,15 +77,14 @@ abstract class BaseSocketMananger {
                     readChannel = DataInputStream(socket!!.getInputStream())
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
+                        Log.d("Comp", "get message")
                         trySendBlocking(Result.Success(dataInput))
-                        _messageShared.tryEmit(Result.Success(dataInput))
-                        Log.d("Comp", dataInput.toString())
+                        _messageShared.tryEmit(dataInput)
                     }
                 }
             } catch (e: Exception) {
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
-                    _messageShared.tryEmit(Result.Error(e))
                 }
             }
 

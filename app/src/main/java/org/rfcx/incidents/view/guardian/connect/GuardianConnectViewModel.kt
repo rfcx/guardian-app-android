@@ -38,7 +38,6 @@ class GuardianConnectViewModel(
         getNearbyJob?.cancel()
         getNearbyJob = viewModelScope.launch(Dispatchers.IO) {
             getNearbyHotspotUseCase.launch().collectLatest { result ->
-                Log.d("Comp", result.toString())
                 when (result) {
                     is Result.Error -> _hotspotsState.tryEmit(Result.Error(result.throwable))
                     Result.Loading -> _hotspotsState.tryEmit(Result.Loading)

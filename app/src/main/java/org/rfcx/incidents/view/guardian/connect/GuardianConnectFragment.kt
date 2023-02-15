@@ -2,7 +2,6 @@ package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +13,12 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentGuardianConnectBinding
-import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 import org.rfcx.incidents.view.guardian.GuardianScreen
 
 class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
     private lateinit var binding: FragmentGuardianConnectBinding
-    private lateinit var hotspotManager: WifiHotspotManager
     private val viewModel: GuardianConnectViewModel by viewModel()
     private val hotspotAdapter by lazy { GuardianHotspotAdapter(this) }
 
@@ -52,6 +49,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 launch {
                     viewModel.connect()
                 }
+                launch { collectHotspotConnect() }
             }
         }
 
@@ -64,9 +62,9 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectStates() {
         lifecycleScope.launchWhenStarted {
             launch { collectNearbyHotspot() }
-            launch { collectHotspotConnect() }
-            launch { collectSocketInitial() }
-            launch { collectSocketRead() }
+            // launch { collectHotspotConnect() }
+            // launch { collectSocketInitial() }
+            // launch { collectSocketRead() }
         }
     }
 
@@ -82,7 +80,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                         binding.notFoundTextView.visibility = View.GONE
                     }
                     is Result.Success -> {
-                        if (result.data.isNullOrEmpty()) {
+                        if (result.data.isEmpty()) {
                             binding.guardianHotspotRecyclerView.visibility = View.GONE
                             binding.retryGuardianButton.visibility = View.VISIBLE
                             binding.notFoundTextView.visibility = View.VISIBLE
@@ -90,7 +88,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                             binding.notFoundTextView.visibility = View.GONE
                             binding.retryGuardianButton.visibility = View.GONE
-                            Log.d("Comp", result.data.toString())
                             hotspotAdapter.items = result.data
                         }
                         binding.connectGuardianLoading.visibility = View.GONE
@@ -117,6 +114,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     is Result.Success -> {
                         if (result.data) {
                             launch { mainEvent?.initSocket() }
+                            launch { collectSocketInitial() }
                         }
                     }
                 }
@@ -127,11 +125,11 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectSocketInitial() {
         lifecycleScope.launch {
             mainEvent?.getInitSocketState()?.collectLatest { result ->
-                Log.d("Comp3", result.toString())
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
                             launch { mainEvent?.sendHeartBeatSocket() }
+                            launch { collectSocketRead() }
                         }
                     }
                     else -> {}
@@ -143,7 +141,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectSocketRead() {
         lifecycleScope.launch {
             mainEvent?.getSocketMessageState()?.collectLatest { result ->
-                Log.d("Comp4", result.toString())
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
@@ -168,10 +165,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     override fun invoke(hotspot: ScanResult) {
         viewModel.setSelectedHotspot(hotspot)
         binding.connectGuardianButton.isEnabled = true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     companion object {
