@@ -106,7 +106,10 @@ class GuardianFileUpdateAdapter(
                         apkUpToDateText.visibility = View.GONE
                     }
                     UpdateStatus.NOT_DOWNLOADED -> {
-                        apkSendButton.isEnabled = false
+                        apkSendButton.isEnabled = true
+                        apkSendButton.visibility = View.VISIBLE
+                        apkSendButton.text = "update to ${file.updateFile?.version}"
+                        apkUpToDateText.visibility = View.GONE
                     }
                 }
             }
