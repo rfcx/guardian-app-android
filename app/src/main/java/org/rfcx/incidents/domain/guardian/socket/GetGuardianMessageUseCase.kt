@@ -8,15 +8,20 @@ import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketReposito
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.base.FlowUseCase
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
+import org.rfcx.incidents.util.socket.PingUtils
 
 class GetGuardianMessageUseCase(private val guardianRepository: GuardianSocketRepository) : FlowUseCase<GuardianPing?>() {
     override fun performAction(): Flow<GuardianPing?> {
-        return guardianRepository.getMessage().map { result ->
-            Log.d("Comp7", result.toString())
+        Log.d("Comp7", "waiting")
+        return guardianRepository.getMessageSharedFlow().map { result ->
             when (result) {
                 is Result.Success -> {
                     val gson = Gson()
-                    gson.fromJson(result.data, GuardianPing::class.java)
+                    try {
+                        gson.fromJson(PingUtils.unGzipString(result.data), GuardianPing::class.java)
+                    } catch (e: Exception){
+                        null
+                    }
                 }
                 else -> null
             }

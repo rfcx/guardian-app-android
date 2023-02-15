@@ -1,10 +1,13 @@
 package org.rfcx.incidents.view.guardian.checklist.softwareupdate
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
@@ -30,6 +33,7 @@ class SoftwareUpdateViewModel(
     fun getGuardianSoftware() {
         viewModelScope.launch {
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.SOFTWARE)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
+                Log.d("Comp7", "$f1 $f2")
                 if (f2 != null) {
                     val software = f2.getSoftware()
                     if (software != null) {
@@ -38,7 +42,9 @@ class SoftwareUpdateViewModel(
                         _guardianSoftwareState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
                     }
                 }
-            }
+            }.catch {
+                Log.d("Comp7", "$it")
+            }.collect()
         }
     }
 

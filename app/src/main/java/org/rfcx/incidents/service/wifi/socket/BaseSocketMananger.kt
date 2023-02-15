@@ -1,12 +1,20 @@
 package org.rfcx.incidents.service.wifi.socket
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import org.rfcx.incidents.data.remote.common.Result
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -16,12 +24,19 @@ import java.net.Socket
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseSocketMananger {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     private var socket: Socket? = null
     private var readChannel: DataInputStream? = null
     private var writeChannel: DataOutputStream? = null
 
     private var port: Int = 0
     private var fromInit = false
+
+    private lateinit var messageSharedFlow: SharedFlow<Result<String>>
+
+    private val _messageShared = MutableSharedFlow<Result<String>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val messageShared = _messageShared.asSharedFlow()
 
     enum class Type {
         GUARDIAN, ADMIN, ALL
@@ -58,6 +73,7 @@ abstract class BaseSocketMananger {
         return callbackFlow {
             if (fromInit) {
                 trySendBlocking(Result.Loading)
+                _messageShared.tryEmit(Result.Loading)
             }
             var isActive = true
             try {
@@ -66,12 +82,14 @@ abstract class BaseSocketMananger {
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
                         trySendBlocking(Result.Success(dataInput))
-                        Log.d("Comp", "${port} ${dataInput.toString()}")
+                        _messageShared.tryEmit(Result.Success(dataInput))
+                        Log.d("Comp", dataInput.toString())
                     }
                 }
             } catch (e: Exception) {
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
+                    _messageShared.tryEmit(Result.Error(e))
                 }
             }
 
