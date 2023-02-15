@@ -68,6 +68,6 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
     }
 
     override fun onItemClick(selectedFile: GuardianFile) {
-
+        viewModel.updateOrInstallGuardianFile(selectedFile)
     }
 }

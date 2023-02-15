@@ -1,15 +1,11 @@
 package org.rfcx.incidents.service.wifi.socket
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
@@ -19,17 +15,14 @@ import java.io.DataOutputStream
 import java.io.EOFException
 import java.net.Socket
 
-@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseSocketMananger {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    var socket: Socket? = null
+    var readChannel: DataInputStream? = null
+    var writeChannel: DataOutputStream? = null
 
-    private var socket: Socket? = null
-    private var readChannel: DataInputStream? = null
-    private var writeChannel: DataOutputStream? = null
-
-    private var port: Int = 0
-    private var fromInit = false
+    var port: Int = 0
+    var fromInit = false
 
     private val _messageShared = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val messageShared = _messageShared.asSharedFlow()

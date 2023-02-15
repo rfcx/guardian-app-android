@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
+import org.rfcx.incidents.domain.guardian.socket.SendFileSocketParams
+import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalParams
 import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.entity.guardian.GuardianFile
@@ -23,6 +26,7 @@ import org.rfcx.incidents.util.socket.PingUtils.getSoftware
 class SoftwareUpdateViewModel(
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
     private val getGuardianFileLocalUseCase: GetGuardianFileLocalUseCase,
+    private val sendFileSocketUseCase: SendFileSocketUseCase
 ) : ViewModel() {
 
     private val _guardianSoftwareState: MutableSharedFlow<List<GuardianFileUpdateItem>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -56,5 +60,23 @@ class SoftwareUpdateViewModel(
             list.add(child)
         }
         return list
+    }
+
+    fun updateOrInstallGuardianFile(file: GuardianFile) {
+        viewModelScope.launch {
+            sendFileSocketUseCase.launch(SendFileSocketParams(file)).collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+
+                    }
+                    Result.Loading -> {
+
+                    }
+                    is Result.Success -> {
+
+                    }
+                }
+            }
+        }
     }
 }

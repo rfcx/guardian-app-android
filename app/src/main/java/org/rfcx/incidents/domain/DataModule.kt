@@ -16,6 +16,7 @@ import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
+import org.rfcx.incidents.data.guardian.socket.FileSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.software.GuardianFileRepositoryImpl
 import org.rfcx.incidents.data.guardian.wifi.WifiHotspotRepositoryImpl
@@ -31,6 +32,7 @@ import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
+import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileRepository
 import org.rfcx.incidents.data.interfaces.guardian.wifi.WifiHotspotRepository
@@ -53,6 +55,7 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
@@ -63,6 +66,7 @@ import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.service.wifi.socket.AdminSocket
+import org.rfcx.incidents.service.wifi.socket.FileSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
 import org.rfcx.incidents.view.UiThread
 
@@ -112,6 +116,7 @@ object DataModule {
 
         single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
         single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class
+        single { FileSocketRepositoryImpl(get()) } bind FileSocketRepository::class
         single { InitSocketUseCase(get(), get()) }
         single { GetSocketMessageUseCase(get(), get()) }
         single { SendSocketMessageUseCase(get(), get()) }
@@ -124,6 +129,7 @@ object DataModule {
         single { DeleteFileUseCase(get()) }
 
         single { GetGuardianMessageUseCase(get()) }
+        single { SendFileSocketUseCase(get())}
     }
 
     val remoteModule = module {
@@ -159,6 +165,7 @@ object DataModule {
         single { WifiHotspotManager(androidContext()) }
         single { GuardianSocket }
         single { AdminSocket }
+        single { FileSocket }
         single { GuardianFileHelper(androidContext()) }
     }
 }
