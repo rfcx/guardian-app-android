@@ -82,7 +82,7 @@ class GuardianFileUpdateAdapter(
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: GuardianFileUpdateItem.GuardianFileUpdateVersion, listener: ChildrenClickedListener) {
-            apkVersion.text = file.updateFile?.version
+            apkVersion.text = file.updateFile?.version ?: "-"
             apkVersion.apply {
                 apkInstalled.text = context.getString(R.string.installed_guardian_file, file.installedVersion)
                 when(file.status) {

@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
@@ -62,7 +63,10 @@ class GuardianDeploymentViewModel(
     private suspend fun readSocket() {
         readChannelJob?.cancel()
         readChannelJob = viewModelScope.launch(Dispatchers.IO) {
-            getSocketMessageUseCase.launch().collectLatest { result ->
+            getSocketMessageUseCase.launch()
+                .catch {
+                    _socketMessageState.tryEmit(Result.Error(it))
+                }.collectLatest { result ->
                 when (result) {
                     is Result.Error -> _socketMessageState.tryEmit(result)
                     Result.Loading -> _socketMessageState.tryEmit(Result.Loading)

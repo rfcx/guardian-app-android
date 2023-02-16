@@ -47,8 +47,7 @@ class SoftwareUpdateViewModel(
                     if (software != null) {
                         downloadedGuardianFile = f1
                         installedGuardianFile = software
-                        val installedVersion = installedGuardianFile[targetFile?.name]
-                        if (installedVersion != targetFile?.version) {
+                        if (installedGuardianFile[targetFile?.name] == targetFile?.version) {
                             isUploading = false
                             targetFile = null
                         }
@@ -64,7 +63,7 @@ class SoftwareUpdateViewModel(
         val list = arrayListOf<GuardianFileUpdateItem>()
         downloaded.forEach {
             val header = GuardianFileUpdateItem.GuardianFileUpdateHeader(it.name)
-            val status = if (isUploading  && it.name == targetFile?.name) {
+            val status = if (isUploading && it.name == targetFile?.name) {
                 UpdateStatus.LOADING
             } else if (isUploading) {
                 UpdateStatus.WAITING
