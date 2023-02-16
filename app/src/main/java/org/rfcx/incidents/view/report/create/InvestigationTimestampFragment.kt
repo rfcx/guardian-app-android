@@ -92,11 +92,12 @@ class InvestigationTimestampFragment : Fragment() {
 
     private fun setupOnListener() {
         binding.nextStepButton.setOnClickListener {
+            val lastIncident = listener.getStream()?.lastIncident?.events?.firstOrNull()
             when {
                 calendar.time > today.time -> {
                     Toast.makeText(context, getString(R.string.do_not_future_time), Toast.LENGTH_LONG).show()
                 }
-                calendar.time < listener.getStream()?.lastIncident?.events?.firstOrNull()?.start -> {
+                lastIncident != null && calendar.time < lastIncident.start -> {
                     Toast.makeText(context, getString(R.string.do_not_past_time), Toast.LENGTH_LONG).show()
                 }
                 else -> {
