@@ -89,27 +89,37 @@ class GuardianFileUpdateAdapter(
                     UpdateStatus.LOADING -> {
                         apkLoading.visibility = View.VISIBLE
                         apkSendButton.visibility = View.GONE
-                        if (file.progress != null && file.progress != 100) {
-                            apkLoading.setProgressCompat(file.progress, true)
-                        } else {
+                        // if (file.progress != null && file.progress != 100) {
+                        //     apkLoading.setProgressCompat(file.progress, true)
+                        // } else {
                             apkLoading.isIndeterminate = true
-                        }
+                        // }
                     }
                     UpdateStatus.UP_TO_DATE -> {
                         apkSendButton.visibility = View.GONE
                         apkUpToDateText.visibility = View.VISIBLE
+                        apkLoading.visibility = View.GONE
                     }
                     UpdateStatus.NEED_UPDATE -> {
                         apkSendButton.isEnabled = true
                         apkSendButton.visibility = View.VISIBLE
                         apkSendButton.text = "update to ${file.updateFile?.version}"
                         apkUpToDateText.visibility = View.GONE
+                        apkLoading.visibility = View.GONE
                     }
                     UpdateStatus.NOT_DOWNLOADED -> {
                         apkSendButton.isEnabled = true
                         apkSendButton.visibility = View.VISIBLE
                         apkSendButton.text = "update to ${file.updateFile?.version}"
                         apkUpToDateText.visibility = View.GONE
+                        apkLoading.visibility = View.GONE
+                    }
+                    UpdateStatus.WAITING -> {
+                        apkSendButton.isEnabled = false
+                        apkSendButton.visibility = View.VISIBLE
+                        apkSendButton.text = "waiting"
+                        apkUpToDateText.visibility = View.GONE
+                        apkLoading.visibility = View.GONE
                     }
                 }
             }

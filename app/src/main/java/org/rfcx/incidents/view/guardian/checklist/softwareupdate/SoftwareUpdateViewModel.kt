@@ -20,6 +20,7 @@ import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.GuardianFileType
 import org.rfcx.incidents.entity.guardian.GuardianFileUpdateItem
+import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
 import org.rfcx.incidents.util.socket.PingUtils.getSoftware
 
@@ -35,6 +36,9 @@ class SoftwareUpdateViewModel(
     private var downloadedGuardianFile = emptyList<GuardianFile>()
     private var installedGuardianFile = mapOf<String, String>()
 
+    private var isUploading = false
+    private var targetFile: GuardianFile? = null
+
     fun getGuardianSoftware() {
         viewModelScope.launch {
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.SOFTWARE)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
@@ -43,6 +47,11 @@ class SoftwareUpdateViewModel(
                     if (software != null) {
                         downloadedGuardianFile = f1
                         installedGuardianFile = software
+                        val installedVersion = installedGuardianFile[targetFile?.name]
+                        if (installedVersion != targetFile?.version) {
+                            isUploading = false
+                            targetFile = null
+                        }
                         _guardianSoftwareState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
                     }
                 }
@@ -55,7 +64,14 @@ class SoftwareUpdateViewModel(
         val list = arrayListOf<GuardianFileUpdateItem>()
         downloaded.forEach {
             val header = GuardianFileUpdateItem.GuardianFileUpdateHeader(it.name)
-            val child = GuardianFileUpdateItem.GuardianFileUpdateVersion(it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version), null)
+            val status = if (isUploading  && it.name == targetFile?.name) {
+                UpdateStatus.LOADING
+            } else if (isUploading) {
+                UpdateStatus.WAITING
+            } else {
+                GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version)
+            }
+            val child = GuardianFileUpdateItem.GuardianFileUpdateVersion(it.name, it, installed[it.name], status, null)
             list.add(header)
             list.add(child)
         }
@@ -63,17 +79,20 @@ class SoftwareUpdateViewModel(
     }
 
     fun updateOrInstallGuardianFile(file: GuardianFile) {
+        isUploading = true
+        targetFile = file
+        _guardianSoftwareState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
         viewModelScope.launch {
             sendFileSocketUseCase.launch(SendFileSocketParams(file)).collectLatest { result ->
                 when(result) {
                     is Result.Error -> {
-
+                        isUploading = false
+                        targetFile = null
                     }
                     Result.Loading -> {
 
                     }
                     is Result.Success -> {
-
                     }
                 }
             }
