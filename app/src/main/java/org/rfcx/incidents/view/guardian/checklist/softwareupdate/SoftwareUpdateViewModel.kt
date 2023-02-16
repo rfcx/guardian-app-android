@@ -66,7 +66,11 @@ class SoftwareUpdateViewModel(
             val status = if (isUploading && it.name == targetFile?.name) {
                 UpdateStatus.LOADING
             } else if (isUploading) {
-                UpdateStatus.WAITING
+                if (GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version) == UpdateStatus.UP_TO_DATE) {
+                    UpdateStatus.UP_TO_DATE
+                } else {
+                    UpdateStatus.WAITING
+                }
             } else {
                 GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version)
             }
