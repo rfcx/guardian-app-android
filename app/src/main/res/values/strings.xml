@@ -408,7 +408,7 @@
     <string name="and">and</string>
 
     <!-- GuardianFileUpdateAdapter -->
-    <string name="installed_guardian_file">(current %s installed)</string>
+    <string name="installed_guardian_file">(current v%s installed)</string>
 
 
 </resources>

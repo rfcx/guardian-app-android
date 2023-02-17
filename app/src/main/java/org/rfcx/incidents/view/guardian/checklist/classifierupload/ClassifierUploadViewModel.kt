@@ -1,4 +1,4 @@
-package org.rfcx.incidents.view.guardian.checklist.softwareupdate
+package org.rfcx.incidents.view.guardian.checklist.classifierupload
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,16 +21,16 @@ import org.rfcx.incidents.entity.guardian.GuardianFileType
 import org.rfcx.incidents.entity.guardian.GuardianFileUpdateItem
 import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
-import org.rfcx.incidents.util.socket.PingUtils.getSoftware
+import org.rfcx.incidents.util.socket.PingUtils.getClassifiers
 
-class SoftwareUpdateViewModel(
+class ClassifierUploadViewModel(
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
     private val getGuardianFileLocalUseCase: GetGuardianFileLocalUseCase,
     private val sendFileSocketUseCase: SendFileSocketUseCase
 ) : ViewModel() {
 
-    private val _guardianSoftwareState: MutableSharedFlow<List<GuardianFileUpdateItem>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val guardianSoftwareState = _guardianSoftwareState.asSharedFlow()
+    private val _guardianClassifierState: MutableSharedFlow<List<GuardianFileUpdateItem>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val guardianClassifierState = _guardianClassifierState.asSharedFlow()
 
     private var downloadedGuardianFile = emptyList<GuardianFile>()
     private var installedGuardianFile = mapOf<String, String>()
@@ -38,19 +38,19 @@ class SoftwareUpdateViewModel(
     private var isUploading = false
     private var targetFile: GuardianFile? = null
 
-    fun getGuardianSoftware() {
+    fun getGuardianClassifier() {
         viewModelScope.launch {
-            getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.SOFTWARE)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
+            getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.CLASSIFIER)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
                 if (f2 != null) {
-                    val software = f2.getSoftware()
-                    if (software != null) {
+                    val classifier = f2.getClassifiers()
+                    if (classifier != null) {
                         downloadedGuardianFile = f1
-                        installedGuardianFile = software
+                        installedGuardianFile = classifier
                         if (installedGuardianFile[targetFile?.name] == targetFile?.version) {
                             isUploading = false
                             targetFile = null
                         }
-                        _guardianSoftwareState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
+                        _guardianClassifierState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
                     }
                 }
             }.catch {
@@ -84,7 +84,7 @@ class SoftwareUpdateViewModel(
     fun updateOrInstallGuardianFile(file: GuardianFile) {
         isUploading = true
         targetFile = file
-        _guardianSoftwareState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
+        _guardianClassifierState.tryEmit(getGuardianFileUpdateItem(downloadedGuardianFile, installedGuardianFile))
         viewModelScope.launch {
             sendFileSocketUseCase.launch(SendFileSocketParams(file)).collectLatest { result ->
                 when(result) {

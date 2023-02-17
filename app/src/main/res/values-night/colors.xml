@@ -67,4 +67,7 @@
 	
 	<color name="tracking_line">#e55e5e</color>
 	<color name="background_placeholder">#141525</color>
+
+    <color name="blue">#1E8CAB</color>
+    <color name="blue_disable">#165A6E</color>
 </resources>

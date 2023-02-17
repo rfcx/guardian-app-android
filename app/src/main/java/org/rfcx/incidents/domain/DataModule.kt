@@ -57,10 +57,10 @@ import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
-import org.rfcx.incidents.domain.guardian.software.DeleteFileUseCase
-import org.rfcx.incidents.domain.guardian.software.DownloadFileUseCase
-import org.rfcx.incidents.domain.guardian.software.GetGuardianFileLocalUseCase
-import org.rfcx.incidents.domain.guardian.software.GetGuardianFileRemoteUseCase
+import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
+import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
+import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
+import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper

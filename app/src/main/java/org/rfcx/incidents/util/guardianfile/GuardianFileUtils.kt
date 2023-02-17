@@ -27,10 +27,10 @@ object GuardianFileUtils {
 
     fun compareIfNeedToUpdate(version1: String?, version2: String?): UpdateStatus {
         if (version2 == null) {
-            return UpdateStatus.NOT_DOWNLOADED
+            return UpdateStatus.NOT_INSTALLED
         }
         if (version1 == null) {
-            return UpdateStatus.NOT_DOWNLOADED
+            return UpdateStatus.NOT_INSTALLED
         }
         val levels1 = version1.split(".")
         val levels2 = version2.split(".")

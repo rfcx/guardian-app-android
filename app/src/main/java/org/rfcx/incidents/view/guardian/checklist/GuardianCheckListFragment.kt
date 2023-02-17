@@ -66,9 +66,10 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         }
     }
 
-    override fun invoke(p1: Int, p2: String) {
-        if (p1 == 0) {
-            mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
+    override fun invoke(number: Int, name: String) {
+        when(number) {
+            0 -> mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
+            1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
         }
     }
 }

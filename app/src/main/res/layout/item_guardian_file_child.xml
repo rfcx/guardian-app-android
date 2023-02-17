@@ -48,6 +48,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/fileVersionTextView" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fileDeActivateButton"
+        style="@style/RangerButton.File.DeActive"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:enabled="true"
+        android:text="deactivate"
+        android:textSize="@dimen/text_xxsmall"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/fileSendButton"
+        app:layout_constraintEnd_toEndOf="@id/fileSendButton"
+        app:layout_constraintStart_toStartOf="@id/fileSendButton"
+        app:layout_constraintTop_toTopOf="@id/fileSendButton" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fileActivateButton"
+        style="@style/RangerButton.File.Active"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:enabled="true"
+        android:text="activate"
+        android:textSize="@dimen/text_xxsmall"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/fileSendButton"
+        app:layout_constraintEnd_toEndOf="@id/fileSendButton"
+        app:layout_constraintStart_toStartOf="@id/fileSendButton"
+        app:layout_constraintTop_toTopOf="@id/fileSendButton" />
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/fileLoading"
         android:layout_width="0dp"

@@ -20,6 +20,25 @@ object PingUtils {
         return mapSoftwareVersion
     }
 
+    fun GuardianPing.getClassifiers(): Map<String, String>? {
+        val library = this.library ?: return null
+        library.let { lib ->
+            if (lib.has("classifiers")) {
+                val classifiers = lib.get("classifiers").asJsonArray
+                if (classifiers.size() > 0) {
+                    val map = mutableMapOf<String, String>()
+
+                    classifiers.forEach { clsf ->
+                        map[clsf.asJsonObject.get("guid").asString.split("-v")[0]] = clsf.asJsonObject.get("guid").asString.split("-v")[1]
+                    }
+                    return map
+                }
+                return null
+            }
+            return null
+        }
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }

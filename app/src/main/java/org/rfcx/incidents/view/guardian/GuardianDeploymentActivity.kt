@@ -12,6 +12,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
+import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 
@@ -40,6 +41,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
             GuardianScreen.CHECKLIST -> startFragment(GuardianCheckListFragment.newInstance())
             GuardianScreen.SOFTWARE_UPDATE -> startFragment(SoftwareUpdateFragment.newInstance())
+            GuardianScreen.CLASSIFIER_UPLOAD -> startFragment(ClassifierUploadFragment.newInstance())
         }
     }
 
@@ -82,6 +84,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()
             GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 

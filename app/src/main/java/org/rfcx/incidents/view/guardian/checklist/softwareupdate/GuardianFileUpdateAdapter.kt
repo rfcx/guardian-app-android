@@ -82,7 +82,7 @@ class GuardianFileUpdateAdapter(
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: GuardianFileUpdateItem.GuardianFileUpdateVersion, listener: ChildrenClickedListener) {
-            apkVersion.text = file.updateFile?.version ?: "-"
+            apkVersion.text = "v${file.updateFile?.version}" ?: "-"
             apkVersion.apply {
                 apkInstalled.text = context.getString(R.string.installed_guardian_file, file.installedVersion)
                 when(file.status) {
@@ -107,7 +107,7 @@ class GuardianFileUpdateAdapter(
                         apkUpToDateText.visibility = View.GONE
                         apkLoading.visibility = View.GONE
                     }
-                    UpdateStatus.NOT_DOWNLOADED -> {
+                    UpdateStatus.NOT_INSTALLED -> {
                         apkSendButton.isEnabled = true
                         apkSendButton.visibility = View.VISIBLE
                         apkSendButton.text = "update to ${file.updateFile?.version}"
@@ -120,6 +120,12 @@ class GuardianFileUpdateAdapter(
                         apkSendButton.text = "waiting"
                         apkUpToDateText.visibility = View.GONE
                         apkLoading.visibility = View.GONE
+                    }
+                    UpdateStatus.ACTIVATED -> {
+
+                    }
+                    UpdateStatus.DEACTIVATED -> {
+
                     }
                 }
             }
