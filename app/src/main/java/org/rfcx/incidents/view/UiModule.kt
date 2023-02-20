@@ -56,6 +56,6 @@ object UiModule {
         viewModel { GuardianCheckListViewModel(androidContext()) }
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
-        viewModel { ClassifierUploadViewModel(get(), get(), get()) }
+        viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
     }
 }

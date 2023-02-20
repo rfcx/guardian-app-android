@@ -1,7 +1,7 @@
 package org.rfcx.incidents.util.guardianfile
 
-import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.UpdateStatus
+import org.rfcx.incidents.entity.guardian.FileStatus
 
 object GuardianFileUtils {
     fun compareIfNeedToDownload(version1: String?, version2: String?): FileStatus {
@@ -25,15 +25,15 @@ object GuardianFileUtils {
         return FileStatus.UP_TO_DATE
     }
 
-    fun compareIfNeedToUpdate(version1: String?, version2: String?): UpdateStatus {
-        if (version2 == null) {
+    fun compareIfNeedToUpdate(installed: String?, downloaded: String?): UpdateStatus {
+        if (downloaded == null) {
             return UpdateStatus.NOT_INSTALLED
         }
-        if (version1 == null) {
+        if (installed == null) {
             return UpdateStatus.NOT_INSTALLED
         }
-        val levels1 = version1.split(".")
-        val levels2 = version2.split(".")
+        val levels1 = installed.split(".")
+        val levels2 = downloaded.split(".")
         val length = levels1.size.coerceAtLeast(levels2.size)
         for (i in 0 until length) {
             val v1 = if (i < levels1.size) levels1[i].toInt() else 0

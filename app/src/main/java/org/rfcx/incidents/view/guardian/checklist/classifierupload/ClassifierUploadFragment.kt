@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.guardian.checklist.classifierupload
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +15,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.FragmentClassifierUploadBinding
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.rfcx.incidents.view.guardian.checklist.softwareupdate.ChildrenClickedListener
-import org.rfcx.incidents.view.guardian.checklist.softwareupdate.GuardianFileUpdateAdapter
-import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
-import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
 
 class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
     lateinit var binding: FragmentClassifierUploadBinding
     private val viewModel: ClassifierUploadViewModel by viewModel()
-    private val classifierUploadAdapter by lazy { GuardianFileUpdateAdapter(this) }
+    private val classifierUploadAdapter by lazy { ClassifierUploadAdapter(this) }
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     override fun onCreateView(
@@ -71,7 +68,15 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
         fun newInstance() = ClassifierUploadFragment()
     }
 
-    override fun onItemClick(selectedFile: GuardianFile) {
+    override fun onUploadClick(selectedFile: GuardianFile) {
         viewModel.updateOrInstallGuardianFile(selectedFile)
+    }
+
+    override fun onActivateClick(selectedFile: GuardianFile) {
+        viewModel.activateClassifier(selectedFile)
+    }
+
+    override fun onDeActivateClick(selectedFile: GuardianFile) {
+        viewModel.deActivateClassifier(selectedFile)
     }
 }

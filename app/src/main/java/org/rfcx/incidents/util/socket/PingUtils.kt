@@ -2,6 +2,7 @@ package org.rfcx.incidents.util.socket
 
 import android.util.Base64
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
+import org.rfcx.incidents.util.socket.PingUtils.getClassifiers
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -20,8 +21,8 @@ object PingUtils {
         return mapSoftwareVersion
     }
 
-    fun GuardianPing.getClassifiers(): Map<String, String>? {
-        val library = this.library ?: return null
+    fun GuardianPing.getClassifiers(): Map<String, String> {
+        val library = this.library ?: return mapOf()
         library.let { lib ->
             if (lib.has("classifiers")) {
                 val classifiers = lib.get("classifiers").asJsonArray
@@ -33,9 +34,24 @@ object PingUtils {
                     }
                     return map
                 }
-                return null
+                return mapOf()
             }
-            return null
+            return mapOf()
+        }
+    }
+
+    fun GuardianPing.getActiveClassifiers(): Map<String, String> {
+        val library = this.activeClassifier ?: return mapOf()
+        library.let { lib ->
+            val activeClassifiers = lib.asJsonArray
+            if (activeClassifiers.size() > 0) {
+                val map = mutableMapOf<String, String>()
+                activeClassifiers.forEach { clsf ->
+                    map[clsf.asJsonObject.get("guid").asString.split("-v")[0]] = clsf.asJsonObject.get("guid").asString.split("-v")[1]
+                }
+                return map
+            }
+            return mapOf()
         }
     }
 

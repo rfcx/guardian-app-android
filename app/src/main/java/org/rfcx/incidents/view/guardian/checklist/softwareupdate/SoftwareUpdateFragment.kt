@@ -18,7 +18,7 @@ import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
     lateinit var binding: FragmentSoftwareUpdateBinding
     private val viewModel: SoftwareUpdateViewModel by viewModel()
-    private val softwareUpdateAdapter by lazy { GuardianFileUpdateAdapter(this) }
+    private val softwareUpdateAdapter by lazy { SoftwareUpdateAdapter(this) }
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     override fun onCreateView(

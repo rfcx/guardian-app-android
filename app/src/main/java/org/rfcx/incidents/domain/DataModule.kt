@@ -61,6 +61,7 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
+import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
@@ -129,7 +130,8 @@ object DataModule {
         single { DeleteFileUseCase(get()) }
 
         single { GetGuardianMessageUseCase(get()) }
-        single { SendFileSocketUseCase(get())}
+        single { SendFileSocketUseCase(get()) }
+        single { SendInstructionCommandUseCase(get()) }
     }
 
     val remoteModule = module {
