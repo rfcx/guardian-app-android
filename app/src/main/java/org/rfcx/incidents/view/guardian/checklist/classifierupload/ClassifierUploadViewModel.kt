@@ -1,5 +1,7 @@
 package org.rfcx.incidents.view.guardian.checklist.classifierupload
 
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -7,7 +9,9 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -43,6 +47,9 @@ class ClassifierUploadViewModel(
         MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val guardianClassifierState = _guardianClassifierState.asSharedFlow()
 
+    private val _errorClassifierState = MutableStateFlow(false)
+    val errorClassifierState = _errorClassifierState.asStateFlow()
+
     private var downloadedGuardianFile = emptyList<GuardianFile>()
     private var installedGuardianFile = mapOf<String, String>()
     private var activeClassifiers = mapOf<String, String>()
@@ -50,7 +57,10 @@ class ClassifierUploadViewModel(
     private var isUploading = false
     private var isSetting = false
     private var targetActivate: Boolean? = null
-    private var targetFile: GuardianFile? = null
+    private var targetSetFile: GuardianFile? = null
+    private var targetUploadFile: GuardianFile? = null
+
+    private var classifierTimer: CountDownTimer? = null
 
     fun getGuardianClassifier() {
         viewModelScope.launch {
@@ -62,17 +72,25 @@ class ClassifierUploadViewModel(
                     installedGuardianFile = classifier
                     activeClassifiers = activeClassifier
 
-                    if (installedGuardianFile[targetFile?.name] == targetFile?.version) {
+                    if (installedGuardianFile[targetUploadFile?.name] == targetUploadFile?.version) {
                         isUploading = false
+                        targetUploadFile = null
+                        stopTimer()
                     }
                     if (targetActivate == true) {
-                        if (activeClassifiers[targetFile?.name] != null) {
+                        if (activeClassifiers[targetSetFile?.name] != null) {
                             isSetting = false
+                            targetActivate = null
+                            targetSetFile = null
+                            stopTimer()
                         }
                     }
                     if (targetActivate == false) {
-                        if (activeClassifiers[targetFile?.name] == null) {
+                        if (activeClassifiers[targetSetFile?.name] == null) {
                             isSetting = false
+                            targetActivate = null
+                            targetSetFile = null
+                            stopTimer()
                         }
                     }
                     _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedGuardianFile, installedGuardianFile, activeClassifiers))
@@ -97,10 +115,10 @@ class ClassifierUploadViewModel(
                 isActive = false,
                 progress = null
             )
-            if ((isUploading || isSetting) && it.name == targetFile?.name) {
+            if ((isUploading || isSetting) && it.name == targetUploadFile?.name) {
                 child.status = UpdateStatus.LOADING
             }
-            if ((isUploading || isSetting) && it.name != targetFile?.name) {
+            if ((isUploading || isSetting) && it.name != targetUploadFile?.name) {
                 child.isEnabled = false
             }
 
@@ -117,14 +135,14 @@ class ClassifierUploadViewModel(
 
     fun updateOrInstallGuardianFile(file: GuardianFile) {
         isUploading = true
-        targetFile = file
+        targetUploadFile = file
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedGuardianFile, installedGuardianFile, activeClassifiers))
         viewModelScope.launch {
             sendFileSocketUseCase.launch(SendFileSocketParams(file)).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         isUploading = false
-                        targetFile = null
+                        targetUploadFile = null
                     }
                     Result.Loading -> {
                     }
@@ -133,11 +151,12 @@ class ClassifierUploadViewModel(
                 }
             }
         }
+        startTimer()
     }
 
     fun activateClassifier(file: GuardianFile) {
         isSetting = true
-        targetFile = file
+        targetUploadFile = file
         targetActivate = true
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedGuardianFile, installedGuardianFile, activeClassifiers))
 
@@ -152,11 +171,12 @@ class ClassifierUploadViewModel(
                 )
             )
         }
+        startTimer()
     }
 
     fun deActivateClassifier(file: GuardianFile) {
         isSetting = true
-        targetFile = file
+        targetUploadFile = file
         targetActivate = false
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedGuardianFile, installedGuardianFile, activeClassifiers))
 
@@ -171,5 +191,46 @@ class ClassifierUploadViewModel(
                 )
             )
         }
+        startTimer()
+    }
+
+    fun restartService() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val gson = Gson()
+            val json = JsonObject()
+            json.addProperty("service", "file-socket")
+            sendInstructionCommandUseCase.launch(
+                InstructionParams(
+                    InstructionType.CTRL,
+                    InstructionCommand.RESTART,
+                    gson.toJson(json)
+                )
+            )
+        }
+    }
+
+    private fun startTimer() {
+        classifierTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+
+            override fun onFinish() {
+                if (isUploading || isSetting) {
+                    Log.d("Comp5", "error")
+                    _errorClassifierState.tryEmit(true)
+                    isUploading = false
+                    targetUploadFile = null
+                    isSetting = false
+                    targetActivate = null
+                    targetSetFile = null
+                }
+                stopTimer()
+            }
+        }
+        classifierTimer?.start()
+    }
+
+    private fun stopTimer() {
+        classifierTimer?.cancel()
+        classifierTimer = null
     }
 }

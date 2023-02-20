@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,6 +23,8 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
     private val viewModel: ClassifierUploadViewModel by viewModel()
     private val classifierUploadAdapter by lazy { ClassifierUploadAdapter(this) }
     private var mainEvent: GuardianDeploymentEventListener? = null
+
+    private lateinit var dialogBuilder: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +63,24 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
         lifecycleScope.launch {
             viewModel.guardianClassifierState.collectLatest {
                 classifierUploadAdapter.files = it
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.errorClassifierState.collectLatest {
+                if (it) {
+                    dialogBuilder = MaterialAlertDialogBuilder(requireContext()).apply {
+                        setTitle(null)
+                        setMessage("Look like you have a trouble with uploading,\nTry restarting service?")
+                        setPositiveButton("Restart") { _, _ ->
+                            viewModel.restartService()
+                        }
+                        setNegativeButton("Negative") { _, _ ->
+                            dialogBuilder.dismiss()
+                        }
+                    }.create()
+                    dialogBuilder.show()
+                }
             }
         }
     }
