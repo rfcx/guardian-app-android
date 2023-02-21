@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.remote.common.NoConnectionException
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
 import org.rfcx.incidents.data.remote.guardian.software.GuardianFileResponse
@@ -66,7 +67,7 @@ class GuardianFileDownloadViewModel(
         // Dispatcher.Main to work with local realm with created in Main thread
         viewModelScope.launch(Dispatchers.Main) {
             if (!context.isNetworkAvailable()) {
-                _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
+                _guardianFileItemState.tryEmit(Result.Error(NoConnectionException()))
                 listenToLocal(type)
                 return@launch
             }
@@ -79,7 +80,7 @@ class GuardianFileDownloadViewModel(
                     Result.Loading -> _guardianFileItemState.tryEmit(Result.Loading)
                     is Result.Error -> {
                         if (result.throwable is UnknownHostException) {
-                            _guardianFileItemState.tryEmit(Result.Error(Throwable("There is no internet connection")))
+                            _guardianFileItemState.tryEmit(Result.Error(Throwable(NoConnectionException())))
                         } else {
                             _guardianFileItemState.tryEmit(result)
                         }
@@ -110,7 +111,6 @@ class GuardianFileDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(type)).map { result ->
                 localData = result
-                Log.d("Comp", result.toString())
                 getFileItemFromRemoteAndLocal(remoteData, localData)
             }.collect { result ->
                 _guardianFileItemState.tryEmit(Result.Success(result))

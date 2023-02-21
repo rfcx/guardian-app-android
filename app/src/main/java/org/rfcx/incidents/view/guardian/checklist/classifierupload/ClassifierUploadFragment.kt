@@ -13,13 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
-import org.rfcx.incidents.data.remote.common.socket.GuardianModeNotCompatibleException
-import org.rfcx.incidents.data.remote.common.socket.NoActiveClassifierException
-import org.rfcx.incidents.data.remote.common.socket.OperationTimeoutException
-import org.rfcx.incidents.data.remote.common.socket.SoftwareNotCompatibleException
+import org.rfcx.incidents.data.remote.common.GuardianModeNotCompatibleException
+import org.rfcx.incidents.data.remote.common.NoActiveClassifierException
+import org.rfcx.incidents.data.remote.common.OperationTimeoutException
+import org.rfcx.incidents.data.remote.common.SoftwareNotCompatibleException
 import org.rfcx.incidents.databinding.FragmentClassifierUploadBinding
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener

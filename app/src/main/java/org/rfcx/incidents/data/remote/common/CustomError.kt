@@ -1,4 +1,4 @@
-package org.rfcx.incidents.data.remote.common.socket
+package org.rfcx.incidents.data.remote.common
 
 class SoftwareNotCompatibleException: Exception() {
     override val message: String
@@ -12,3 +12,8 @@ class GuardianModeNotCompatibleException: Exception() {
 class NoActiveClassifierException: Exception()
 
 class OperationTimeoutException: Exception()
+
+class NoConnectionException: Exception() {
+    override val message: String
+        get() = "There is no internet connection"
+}

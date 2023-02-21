@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.rfcx.incidents.data.remote.common.socket.GuardianModeNotCompatibleException
-import org.rfcx.incidents.data.remote.common.socket.NoActiveClassifierException
-import org.rfcx.incidents.data.remote.common.socket.OperationTimeoutException
-import org.rfcx.incidents.data.remote.common.socket.SoftwareNotCompatibleException
+import org.rfcx.incidents.data.remote.common.GuardianModeNotCompatibleException
+import org.rfcx.incidents.data.remote.common.NoActiveClassifierException
+import org.rfcx.incidents.data.remote.common.OperationTimeoutException
+import org.rfcx.incidents.data.remote.common.SoftwareNotCompatibleException
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalParams
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
