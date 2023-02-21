@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.guardian.checklist.softwareupdate
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -33,7 +32,8 @@ class SoftwareUpdateViewModel(
     private val sendFileSocketUseCase: SendFileSocketUseCase
 ) : ViewModel() {
 
-    private val _guardianSoftwareState: MutableSharedFlow<List<SoftwareUpdateItem>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _guardianSoftwareState: MutableSharedFlow<List<SoftwareUpdateItem>> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val guardianSoftwareState = _guardianSoftwareState.asSharedFlow()
 
     private var downloadedSoftware = emptyList<GuardianFile>()
@@ -63,8 +63,8 @@ class SoftwareUpdateViewModel(
             }.collect()
         }
     }
+
     private fun handleLoadingAndSetting() {
-        Log.d("Comp", "${isOperating.value}")
         if (operatingType == OperationType.INSTALL && installedSoftware[targetFile?.name] == targetFile?.version) {
             _isOperating.tryEmit(false)
             targetFile = null
@@ -77,7 +77,14 @@ class SoftwareUpdateViewModel(
         val list = arrayListOf<SoftwareUpdateItem>()
         downloaded.forEach {
             val header = SoftwareUpdateItem.SoftwareUpdateHeader(it.name)
-            val child = SoftwareUpdateItem.SoftwareUpdateVersion(it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version), true, progress)
+            val child = SoftwareUpdateItem.SoftwareUpdateVersion(
+                it.name,
+                it,
+                installed[it.name],
+                GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version),
+                true,
+                progress
+            )
             if (_isOperating.value && it.name == targetFile?.name) {
                 child.status = UpdateStatus.LOADING
             }
@@ -102,7 +109,7 @@ class SoftwareUpdateViewModel(
                 targetFile = null
                 targetProgress = 0
             }.collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {
                         _isOperating.tryEmit(false)
                         operatingType = null
@@ -114,7 +121,6 @@ class SoftwareUpdateViewModel(
                             targetProgress = result.data.progress
                         }
                         _guardianSoftwareState.tryEmit(getSoftwareUpdateItem(downloadedSoftware, installedSoftware, targetProgress))
-
                     }
                 }
             }

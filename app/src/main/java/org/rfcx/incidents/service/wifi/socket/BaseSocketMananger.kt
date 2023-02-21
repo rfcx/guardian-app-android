@@ -1,6 +1,5 @@
 package org.rfcx.incidents.service.wifi.socket
 
-import android.util.Log
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -70,7 +69,6 @@ abstract class BaseSocketMananger {
                     readChannel = DataInputStream(socket!!.getInputStream())
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
-                        Log.d("Comp", "get message")
                         trySendBlocking(Result.Success(dataInput))
                         _messageShared.tryEmit(dataInput)
                     }
