@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="android.view.View"/>
+            type="android.view.View" />
 
         <variable
             name="viewModel"

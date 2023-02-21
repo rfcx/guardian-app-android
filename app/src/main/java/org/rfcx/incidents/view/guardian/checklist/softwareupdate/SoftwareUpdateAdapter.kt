@@ -86,11 +86,11 @@ class SoftwareUpdateAdapter(
                 UpdateStatus.LOADING -> {
                     apkLoading.visibility = View.VISIBLE
                     apkSendButton.visibility = View.GONE
-                    // if (file.progress != null && file.progress != 100) {
-                    //     apkLoading.setProgressCompat(file.progress, true)
-                    // } else {
-                    apkLoading.isIndeterminate = true
-                    // }
+                    if (file.progress != null && file.progress != 100) {
+                        apkLoading.setProgressCompat(file.progress, true)
+                    } else {
+                        apkLoading.isIndeterminate = true
+                    }
                 }
                 UpdateStatus.UP_TO_DATE -> {
                     apkSendButton.isEnabled = false

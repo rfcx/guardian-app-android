@@ -7,13 +7,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.entity.guardian.GuardianFileSendStatus
 import java.io.DataOutputStream
 import java.io.File
 import java.net.Socket
+import kotlin.math.roundToInt
 
 object FileSocket : BaseSocketMananger() {
 
-    fun sendFile(guardianFile: GuardianFile): Flow<Result<Boolean>> {
+    fun sendFile(guardianFile: GuardianFile): Flow<Result<GuardianFileSendStatus>> {
         return flow {
             emit(Result.Loading)
             try {
@@ -43,7 +45,7 @@ object FileSocket : BaseSocketMananger() {
                         break
                     }
                     writeChannel?.write(buffer, 0, count)
-                    // uploadingProgress.postValue(((progress.toDouble() / fileSize.toDouble()) * 100).roundToInt())
+                    emit(Result.Success(GuardianFileSendStatus(false, ((progress.toDouble() / fileSize.toDouble()) * 100).roundToInt())))
                 }
 
                 writeChannel?.flush()
@@ -52,7 +54,7 @@ object FileSocket : BaseSocketMananger() {
 
                 writeChannel?.write("****".toByteArray())
                 writeChannel?.flush()
-                emit(Result.Success(true))
+                emit(Result.Success(GuardianFileSendStatus(true, 100)))
             } catch (e: Exception) {
                 throw e
             }

@@ -13,11 +13,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.GuardianModeNotCompatibleException
 import org.rfcx.incidents.data.remote.common.NoActiveClassifierException
 import org.rfcx.incidents.data.remote.common.OperationTimeoutException
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.common.SoftwareNotCompatibleException
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalParams
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
@@ -65,6 +67,7 @@ class ClassifierUploadViewModel(
 
     private var targetActivate: Boolean? = null
     private var targetSetFile: GuardianFile? = null
+    private var targetProgress: Int? = null
 
     private var classifierTimer: CountDownTimer? = null
 
@@ -82,7 +85,7 @@ class ClassifierUploadViewModel(
                     activeClassifiers = activeClassifier
 
                     handleLoadingAndSetting()
-                    _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
+                    _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
                 }
             }.catch {
 
@@ -95,6 +98,7 @@ class ClassifierUploadViewModel(
             _isOperating.tryEmit(false)
             targetSetFile = null
             operatingType = null
+            targetProgress = null
             stopTimer()
         }
         if (operatingType == OperationType.ACTIVATION && targetActivate == true) {
@@ -152,19 +156,22 @@ class ClassifierUploadViewModel(
     }
 
     private fun getClassifierUpdateItem(
-        downloaded: List<GuardianFile>, installed: Map<String, String>, actives: Map<String, String>
+        downloaded: List<GuardianFile>,
+        installed: Map<String, String>,
+        actives: Map<String, String>,
+        progress: Int?
     ): List<ClassifierUploadItem> {
         val list = arrayListOf<ClassifierUploadItem>()
         downloaded.forEach {
             val header = ClassifierUploadItem.ClassifierUploadHeader(it.name)
             val child = ClassifierUploadItem.ClassifierUploadVersion(
                 it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version),
-                isEnabled = true, isActive = false, progress = null
+                isEnabled = true, isActive = false, progress = progress
             )
-            if ((isOperating.value) && it.name == targetSetFile?.name) {
+            if ((_isOperating.value) && it.name == targetSetFile?.name) {
                 child.status = UpdateStatus.LOADING
             }
-            if ((isOperating.value) && it.name != targetSetFile?.name) {
+            if ((_isOperating.value) && it.name != targetSetFile?.name) {
                 child.isEnabled = false
             }
 
@@ -181,13 +188,31 @@ class ClassifierUploadViewModel(
         _isOperating.tryEmit(true)
         targetSetFile = file
         operatingType = OperationType.INSTALL
-        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
+        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
         viewModelScope.launch {
             sendFileSocketUseCase.launch(SendFileSocketParams(file)).catch {
                 _isOperating.tryEmit(false)
                 operatingType = null
                 targetSetFile = null
-            }.collect()
+                targetProgress = null
+            }.collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        _isOperating.tryEmit(false)
+                        operatingType = null
+                        targetSetFile = null
+                        targetProgress = null
+                    }
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        if (!result.data.isSuccess) {
+                            targetProgress = result.data.progress
+                        }
+                        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
+
+                    }
+                }
+            }
         }
         startTimer()
     }
@@ -197,7 +222,7 @@ class ClassifierUploadViewModel(
         targetSetFile = file
         targetActivate = true
         operatingType = OperationType.ACTIVATION
-        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
+        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
 
         val gson = Gson()
         viewModelScope.launch(Dispatchers.IO) {
@@ -216,7 +241,7 @@ class ClassifierUploadViewModel(
         targetSetFile = file
         targetActivate = false
         operatingType = OperationType.ACTIVATION
-        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
+        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
 
         val gson = Gson()
         viewModelScope.launch(Dispatchers.IO) {
@@ -253,6 +278,7 @@ class ClassifierUploadViewModel(
                 if (_isOperating.value) {
                     _errorClassifierState.tryEmit(OperationTimeoutException())
                     _isOperating.tryEmit(false)
+                    targetProgress = null
                     operatingType = null
                     targetSetFile = null
                     targetActivate = null

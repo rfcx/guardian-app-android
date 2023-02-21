@@ -78,9 +78,6 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
             viewModel.errorClassifierState.collectLatest {
                 when(it) {
                     is OperationTimeoutException -> {
-                        if (::dialogBuilder.isInitialized) {
-                            dialogBuilder.dismiss()
-                        }
                         dialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
                             setTitle(null)
                             setMessage(R.string.classifier_service_reboot_message)
@@ -116,8 +113,8 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
     }
 
     private fun showAlert(text: String) {
-        if (::dialogBuilder.isInitialized) {
-            dialogBuilder.dismiss()
+        if (::dialogBuilder.isInitialized && dialogBuilder.isShowing) {
+            return
         }
         dialogBuilder =
             MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {

@@ -94,11 +94,11 @@ class ClassifierUploadAdapter(
                     classifierSendButton.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE
-                    // if (file.progress != null && file.progress != 100) {
-                    //     apkLoading.setProgressCompat(file.progress, true)
-                    // } else {
-                    classifierLoading.isIndeterminate = true
-                    // }
+                    if (file.progress != null && file.progress != 100) {
+                        classifierLoading.setProgressCompat(file.progress, true)
+                    } else {
+                        classifierLoading.isIndeterminate = true
+                    }
                 }
                 UpdateStatus.UP_TO_DATE -> {
                     classifierSendButton.isEnabled = false

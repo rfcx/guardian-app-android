@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,12 +29,15 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
         savedInstanceState: Bundle?
     ): View {
         mainEvent = context as GuardianDeploymentEventListener
-        binding = FragmentSoftwareUpdateBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_software_update, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.viewModel = viewModel
 
         mainEvent?.let {
             it.showToolbar()
@@ -69,6 +73,6 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
     }
 
     override fun onItemClick(selectedFile: GuardianFile) {
-        viewModel.updateOrInstallGuardianFile(selectedFile)
+        viewModel.updateOrInstallSoftware(selectedFile)
     }
 }

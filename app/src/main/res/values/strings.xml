@@ -425,6 +425,7 @@
 
     <!-- SoftwareUpdateFragment -->
     <string name="software_title">Software Update</string>
+    <string name="software_no_item">Download softwares from Guardian softwares page first\nProfile -> Guardian software -> Download APKs you needed</string>
 
     <!-- ClassifierUploadFragment -->
     <string name="classifier_title">Classifier Upload</string>

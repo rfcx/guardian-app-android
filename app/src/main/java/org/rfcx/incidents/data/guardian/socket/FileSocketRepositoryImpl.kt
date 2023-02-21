@@ -5,12 +5,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.GuardianFileSendStatus
 import org.rfcx.incidents.service.wifi.socket.FileSocket
 
 class FileSocketRepositoryImpl(
     private val fileSocket: FileSocket
 ) : FileSocketRepository {
-    override fun sendFile(file: GuardianFile): Flow<Result<Boolean>> {
+    override fun sendFile(file: GuardianFile): Flow<Result<GuardianFileSendStatus>> {
         return fileSocket.sendFile(file)
     }
 
