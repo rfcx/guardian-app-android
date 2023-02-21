@@ -34,6 +34,7 @@ import org.rfcx.incidents.entity.guardian.socket.ClassifierSet
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.InstructionCommand
 import org.rfcx.incidents.entity.guardian.socket.InstructionType
+import org.rfcx.incidents.entity.guardian.socket.OperationType
 import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
 import org.rfcx.incidents.util.socket.PingUtils.canGuardianClassify
 import org.rfcx.incidents.util.socket.PingUtils.getActiveClassifiers
@@ -60,13 +61,10 @@ class ClassifierUploadViewModel(
 
     private val _isOperating = MutableStateFlow(false)
     val isOperating = _isOperating.asStateFlow()
-
-    private var isUploading = false
-    private var isSetting = false
+    private var operatingType: OperationType? = null
 
     private var targetActivate: Boolean? = null
     private var targetSetFile: GuardianFile? = null
-    private var targetUploadFile: GuardianFile? = null
 
     private var classifierTimer: CountDownTimer? = null
 
@@ -93,24 +91,27 @@ class ClassifierUploadViewModel(
     }
 
     private fun handleLoadingAndSetting() {
-        if (installedClassifiers[targetUploadFile?.name] == targetUploadFile?.version) {
-            isUploading = false
-            targetUploadFile = null
+        if (operatingType == OperationType.INSTALL && installedClassifiers[targetSetFile?.name] == targetSetFile?.version) {
+            _isOperating.tryEmit(false)
+            targetSetFile = null
+            operatingType = null
             stopTimer()
         }
-        if (targetActivate == true) {
+        if (operatingType == OperationType.ACTIVATION && targetActivate == true) {
             if (activeClassifiers[targetSetFile?.name] != null) {
-                isSetting = false
+                _isOperating.tryEmit(false)
                 targetActivate = null
                 targetSetFile = null
+                operatingType = null
                 stopTimer()
             }
         }
-        if (targetActivate == false) {
+        if (operatingType == OperationType.ACTIVATION && targetActivate == false) {
             if (activeClassifiers[targetSetFile?.name] == null) {
-                isSetting = false
+                _isOperating.tryEmit(false)
                 targetActivate = null
                 targetSetFile = null
+                operatingType = null
                 stopTimer()
             }
         }
@@ -160,10 +161,10 @@ class ClassifierUploadViewModel(
                 it.name, it, installed[it.name], GuardianFileUtils.compareIfNeedToUpdate(installed[it.name], it.version),
                 isEnabled = true, isActive = false, progress = null
             )
-            if ((isUploading || isSetting) && (it.name == targetUploadFile?.name || it.name == targetSetFile?.name)) {
+            if ((isOperating.value) && it.name == targetSetFile?.name) {
                 child.status = UpdateStatus.LOADING
             }
-            if ((isUploading || isSetting) && it.name != targetUploadFile?.name || it.name == targetSetFile?.name) {
+            if ((isOperating.value) && it.name != targetSetFile?.name) {
                 child.isEnabled = false
             }
 
@@ -177,22 +178,25 @@ class ClassifierUploadViewModel(
     }
 
     fun updateOrUploadClassifier(file: GuardianFile) {
-        isUploading = true
-        targetUploadFile = file
+        _isOperating.tryEmit(true)
+        targetSetFile = file
+        operatingType = OperationType.INSTALL
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
         viewModelScope.launch {
             sendFileSocketUseCase.launch(SendFileSocketParams(file)).catch {
-                isUploading = false
-                targetUploadFile = null
+                _isOperating.tryEmit(false)
+                operatingType = null
+                targetSetFile = null
             }.collect()
         }
         startTimer()
     }
 
     fun activateClassifier(file: GuardianFile) {
-        isSetting = true
+        _isOperating.tryEmit(true)
         targetSetFile = file
         targetActivate = true
+        operatingType = OperationType.ACTIVATION
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
 
         val gson = Gson()
@@ -208,9 +212,10 @@ class ClassifierUploadViewModel(
     }
 
     fun deActivateClassifier(file: GuardianFile) {
-        isSetting = true
+        _isOperating.tryEmit(true)
         targetSetFile = file
         targetActivate = false
+        operatingType = OperationType.ACTIVATION
         _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers))
 
         val gson = Gson()
@@ -245,13 +250,12 @@ class ClassifierUploadViewModel(
             override fun onTick(millisUntilFinished: Long) {}
 
             override fun onFinish() {
-                if (isUploading || isSetting) {
+                if (_isOperating.value) {
                     _errorClassifierState.tryEmit(OperationTimeoutException())
-                    isUploading = false
-                    targetUploadFile = null
-                    isSetting = false
-                    targetActivate = null
+                    _isOperating.tryEmit(false)
+                    operatingType = null
                     targetSetFile = null
+                    targetActivate = null
                 }
                 stopTimer()
             }
