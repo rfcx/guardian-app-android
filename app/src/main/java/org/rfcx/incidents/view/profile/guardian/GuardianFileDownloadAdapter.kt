@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemGuardianFileDownloadBinding
 import org.rfcx.incidents.entity.guardian.FileStatus
 import org.rfcx.incidents.entity.guardian.GuardianFile
@@ -70,7 +71,7 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
                     status.visibility = View.VISIBLE
                     downloadButton.isEnabled = true
                     downloadButton.visibility = View.VISIBLE
-                    downloadButton.text = "Download"
+                    downloadButton.text = itemView.context.getString(R.string.download)
                 }
                 FileStatus.NEED_DOWNLOAD -> {
                     status.visibility = View.GONE
@@ -81,20 +82,20 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
                     status.visibility = View.GONE
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.isEnabled = false
-                    downloadButton.text = "Up to date"
+                    downloadButton.text = itemView.context.getString(R.string.up_to_date)
                 }
                 else -> {
                     status.visibility = View.GONE
                     downloadButton.visibility = View.VISIBLE
                     downloadButton.isEnabled = false
-                    downloadButton.text = "unavailable"
+                    downloadButton.text = itemView.context.getString(R.string.unavailable)
                 }
             }
 
             if (file.local != null) {
                 deleteButton.isEnabled = true
                 deleteButton.visibility = View.VISIBLE
-                deleteButton.text = "delete v${file.local.version}"
+                deleteButton.text = itemView.context.getString(R.string.file_delete, file.local.version)
             } else {
                 deleteButton.visibility = View.GONE
             }

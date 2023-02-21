@@ -410,6 +410,12 @@
     <!-- ClassifierDownloadActivity -->
     <string name="classifier_download_title">Classifier Download</string>
 
+    <!-- SoftwareDownloadActivity -->
+    <string name="software_download_title">Software Download</string>
+    <string name="download">Download</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="file_delete">delete v%s</string>
+
     <!-- GuardianFileUpdateAdapter -->
     <string name="installed_guardian_file">(current v%s installed)</string>
     <string name="up_to_date">up to date</string>
