@@ -414,6 +414,9 @@
     <string name="file_install">install v%s</string>
     <string name="file_version">v%s (%s installed)</string>
 
+    <!-- SoftwareUpdateFragment -->
+    <string name="software_title">Software Update</string>
+
     <!-- ClassifierUploadFragment -->
     <string name="classifier_title">Classifier Upload</string>
     <string name="classifier_service_reboot_message">Look like you have a trouble with uploading,\nTry restarting service?</string>

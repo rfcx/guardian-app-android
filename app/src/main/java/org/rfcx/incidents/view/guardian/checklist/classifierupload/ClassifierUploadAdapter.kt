@@ -75,52 +75,52 @@ class ClassifierUploadAdapter(
     }
 
     class ClassifierVersionViewHolder(itemView: ItemGuardianFileChildClassifierBinding) : RecyclerView.ViewHolder(itemView.root) {
-        private var apkVersion: TextView = itemView.fileVersionTextView
-        private var apkSendButton: Button = itemView.fileSendButton
+        private var classifierVersion: TextView = itemView.fileVersionTextView
+        private var classifierSendButton: Button = itemView.fileSendButton
         private var classifierActiveButton: Button = itemView.fileActivateButton
         private var classifierDeActiveButton: Button = itemView.fileDeActivateButton
-        private var apkLoading: LinearProgressIndicator = itemView.fileLoading
+        private var classifierLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: ClassifierUploadItem.ClassifierUploadVersion, listener: ChildrenClickedListener) {
-            apkVersion.text = itemView.context.getString(R.string.file_version, file.updateFile?.version, if (file.installedVersion == null) "not" else "v${file.installedVersion}")
-            apkSendButton.isEnabled = file.isEnabled
+            classifierVersion.text = itemView.context.getString(R.string.file_version, file.updateFile?.version, if (file.installedVersion == null) "not" else "v${file.installedVersion}")
+            classifierSendButton.isEnabled = file.isEnabled
             classifierActiveButton.isEnabled = file.isEnabled
             classifierDeActiveButton.isEnabled = file.isEnabled
             classifierActiveButton.visibility = if (file.isActive) View.GONE else View.VISIBLE
             classifierDeActiveButton.visibility = if (file.isActive) View.VISIBLE else View.GONE
             when(file.status) {
                 UpdateStatus.LOADING -> {
-                    apkLoading.visibility = View.VISIBLE
-                    apkSendButton.visibility = View.GONE
+                    classifierLoading.visibility = View.VISIBLE
+                    classifierSendButton.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE
                     // if (file.progress != null && file.progress != 100) {
                     //     apkLoading.setProgressCompat(file.progress, true)
                     // } else {
-                    apkLoading.isIndeterminate = true
+                    classifierLoading.isIndeterminate = true
                     // }
                 }
                 UpdateStatus.UP_TO_DATE -> {
-                    apkSendButton.isEnabled = false
-                    apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = itemView.context.getString(R.string.up_to_date)
-                    apkLoading.visibility = View.GONE
+                    classifierSendButton.isEnabled = false
+                    classifierSendButton.visibility = View.VISIBLE
+                    classifierSendButton.text = itemView.context.getString(R.string.up_to_date)
+                    classifierLoading.visibility = View.GONE
                 }
                 UpdateStatus.NEED_UPDATE -> {
-                    apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = itemView.context.getString(R.string.file_update, file.updateFile?.version)
-                    apkLoading.visibility = View.GONE
+                    classifierSendButton.visibility = View.VISIBLE
+                    classifierSendButton.text = itemView.context.getString(R.string.file_update, file.updateFile?.version)
+                    classifierLoading.visibility = View.GONE
                 }
                 UpdateStatus.NOT_INSTALLED -> {
-                    apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = itemView.context.getString(R.string.file_install, file.updateFile?.version)
-                    apkLoading.visibility = View.GONE
+                    classifierSendButton.visibility = View.VISIBLE
+                    classifierSendButton.text = itemView.context.getString(R.string.file_install, file.updateFile?.version)
+                    classifierLoading.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE
                 }
             }
 
-            apkSendButton.setOnClickListener {
+            classifierSendButton.setOnClickListener {
                 listener.onUploadClick(file.updateFile!!)
             }
             classifierActiveButton.setOnClickListener {
