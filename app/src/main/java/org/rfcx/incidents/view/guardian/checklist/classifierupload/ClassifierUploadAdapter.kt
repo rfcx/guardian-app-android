@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemGuardianFileChildClassifierBinding
 import org.rfcx.incidents.databinding.ItemGuardianFileHeaderBinding
 import org.rfcx.incidents.entity.guardian.ClassifierUploadItem
@@ -81,7 +82,7 @@ class ClassifierUploadAdapter(
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: ClassifierUploadItem.ClassifierUploadVersion, listener: ChildrenClickedListener) {
-            apkVersion.text = "v${file.updateFile?.version} (${if (file.installedVersion == null) "not" else "v${file.installedVersion}"} installed)"
+            apkVersion.text = itemView.context.getString(R.string.file_version, file.updateFile?.version, if (file.installedVersion == null) "not" else "v${file.installedVersion}")
             apkSendButton.isEnabled = file.isEnabled
             classifierActiveButton.isEnabled = file.isEnabled
             classifierDeActiveButton.isEnabled = file.isEnabled
@@ -102,17 +103,17 @@ class ClassifierUploadAdapter(
                 UpdateStatus.UP_TO_DATE -> {
                     apkSendButton.isEnabled = false
                     apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = "up to date"
+                    apkSendButton.text = itemView.context.getString(R.string.up_to_date)
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NEED_UPDATE -> {
                     apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = "update v${file.updateFile?.version}"
+                    apkSendButton.text = itemView.context.getString(R.string.file_update, file.updateFile?.version)
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NOT_INSTALLED -> {
                     apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = "install v${file.updateFile?.version}"
+                    apkSendButton.text = itemView.context.getString(R.string.file_install, file.updateFile?.version)
                     apkLoading.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE

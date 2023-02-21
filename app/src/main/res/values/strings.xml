@@ -409,6 +409,19 @@
 
     <!-- GuardianFileUpdateAdapter -->
     <string name="installed_guardian_file">(current v%s installed)</string>
+    <string name="up_to_date">up to date</string>
+    <string name="file_update">update v%s</string>
+    <string name="file_install">install v%s</string>
+    <string name="file_version">v%s (%s installed)</string>
+
+    <!-- ClassifierUploadFragment -->
+    <string name="classifier_title">Classifier Upload</string>
+    <string name="classifier_service_reboot_message">Look like you have a trouble with uploading,\nTry restarting service?</string>
+    <string name="restart">Restart</string>
+    <string name="no">No</string>
+    <string name="go_back">Go Back</string>
+    <string name="classifier_no_item"><![CDATA[Download classifiers from Guardian classifiers page first\nProfile -> Classifier -> Download classifiers you needed]]></string>
+    <string name="classifier_no_active">Please activate a classifier to proceed to the next step</string>
 
 
 </resources>

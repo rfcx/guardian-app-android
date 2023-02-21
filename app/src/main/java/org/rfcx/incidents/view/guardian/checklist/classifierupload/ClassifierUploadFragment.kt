@@ -50,7 +50,7 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Classifier Upload")
+            it.setToolbarTitle(getString(R.string.classifier_title))
         }
 
         binding.classifierRecyclerView.apply {
@@ -84,11 +84,11 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
                         }
                         dialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
                             setTitle(null)
-                            setMessage("Look like you have a trouble with uploading,\nTry restarting service?")
-                            setPositiveButton("Restart") { _, _ ->
+                            setMessage(R.string.classifier_service_reboot_message)
+                            setPositiveButton(R.string.restart) { _, _ ->
                                 viewModel.restartService()
                             }
-                            setNegativeButton("Negative") { _, _ ->
+                            setNegativeButton(R.string.no) { _, _ ->
                                 dialogBuilder.dismiss()
                             }
                         }.create()
@@ -124,7 +124,7 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
             MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
                 setTitle(null)
                 setMessage(text)
-                setPositiveButton("go back") { _, _ ->
+                setPositiveButton(R.string.go_back) { _, _ ->
                     dialogBuilder.dismiss()
                     mainEvent?.back()
                 }
