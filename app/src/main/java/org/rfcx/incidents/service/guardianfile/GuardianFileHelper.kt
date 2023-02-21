@@ -24,8 +24,9 @@ class GuardianFileHelper(private val context: Context) {
             if (!dir.exists()) {
                 dir.mkdirs()
             }
-            val ext = if (targetFile.type == GuardianFileType.SOFTWARE.value) "apk.gz" else "tflite"
-            val file = File(dir, "${targetFile.name}-${targetFile.version}.${ext}")
+            val ext = if (targetFile.type == GuardianFileType.SOFTWARE.value) "apk.gz" else "tflite.gz"
+            val name = if (targetFile.type == GuardianFileType.SOFTWARE.value) "${targetFile.name}-${targetFile.version}" else targetFile.id
+            val file = File(dir, "$name.${ext}")
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
             try {

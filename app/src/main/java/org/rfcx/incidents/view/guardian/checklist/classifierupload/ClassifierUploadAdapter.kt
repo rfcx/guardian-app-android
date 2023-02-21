@@ -78,7 +78,6 @@ class ClassifierUploadAdapter(
         private var apkSendButton: Button = itemView.fileSendButton
         private var classifierActiveButton: Button = itemView.fileActivateButton
         private var classifierDeActiveButton: Button = itemView.fileDeActivateButton
-        private var apkUpToDateText: TextView = itemView.fileUpToDateTextView
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: ClassifierUploadItem.ClassifierUploadVersion, listener: ChildrenClickedListener) {
@@ -92,7 +91,6 @@ class ClassifierUploadAdapter(
                 UpdateStatus.LOADING -> {
                     apkLoading.visibility = View.VISIBLE
                     apkSendButton.visibility = View.GONE
-                    apkUpToDateText.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE
                     // if (file.progress != null && file.progress != 100) {
@@ -102,20 +100,19 @@ class ClassifierUploadAdapter(
                     // }
                 }
                 UpdateStatus.UP_TO_DATE -> {
-                    apkSendButton.visibility = View.GONE
-                    apkUpToDateText.visibility = View.VISIBLE
+                    apkSendButton.isEnabled = false
+                    apkSendButton.visibility = View.VISIBLE
+                    apkSendButton.text = "up to date"
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NEED_UPDATE -> {
                     apkSendButton.visibility = View.VISIBLE
                     apkSendButton.text = "update v${file.updateFile?.version}"
-                    apkUpToDateText.visibility = View.GONE
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NOT_INSTALLED -> {
                     apkSendButton.visibility = View.VISIBLE
                     apkSendButton.text = "install v${file.updateFile?.version}"
-                    apkUpToDateText.visibility = View.GONE
                     apkLoading.visibility = View.GONE
                     classifierActiveButton.visibility = View.GONE
                     classifierDeActiveButton.visibility = View.GONE

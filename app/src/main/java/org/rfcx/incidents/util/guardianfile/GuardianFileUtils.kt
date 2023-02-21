@@ -2,6 +2,7 @@ package org.rfcx.incidents.util.guardianfile
 
 import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.entity.guardian.FileStatus
+import java.lang.Exception
 
 object GuardianFileUtils {
     fun compareIfNeedToDownload(version1: String?, version2: String?): FileStatus {
@@ -44,5 +45,18 @@ object GuardianFileUtils {
             }
         }
         return UpdateStatus.UP_TO_DATE
+    }
+
+    fun calculateVersionValue(versionName: String): Int {
+        return try {
+            val majorVersion = versionName.substring(0, versionName.indexOf(".")).toInt()
+            val subVersion =
+                versionName.substring(1 + versionName.indexOf("."), versionName.lastIndexOf("."))
+                    .toInt()
+            val updateVersion = versionName.substring(1 + versionName.lastIndexOf(".")).toInt()
+            10000 * majorVersion + 100 * subVersion + updateVersion
+        } catch (e: Exception) {
+            0
+        }
     }
 }

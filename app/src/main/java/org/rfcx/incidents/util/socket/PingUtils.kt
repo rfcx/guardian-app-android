@@ -1,7 +1,10 @@
 package org.rfcx.incidents.util.socket
 
 import android.util.Base64
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
+import org.rfcx.incidents.util.socket.PingUtils.getActiveClassifiers
 import org.rfcx.incidents.util.socket.PingUtils.getClassifiers
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -53,6 +56,14 @@ object PingUtils {
             }
             return mapOf()
         }
+    }
+
+    fun GuardianPing.canGuardianClassify(): Boolean {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return false
+            return PrefsUtils.canGuardianClassify(Gson().toJson(prefs))
+        }
+        return false
     }
 
     fun unGzipString(content: String?): String? {

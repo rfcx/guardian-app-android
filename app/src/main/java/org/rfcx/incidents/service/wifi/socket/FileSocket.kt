@@ -54,7 +54,7 @@ object FileSocket : BaseSocketMananger() {
                 writeChannel?.flush()
                 emit(Result.Success(true))
             } catch (e: Exception) {
-                emit(Result.Error(e))
+                throw e
             }
         }
             .flowOn(Dispatchers.IO)

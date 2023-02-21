@@ -28,7 +28,7 @@ abstract class BaseSocketMananger {
     val messageShared = _messageShared.asSharedFlow()
 
     enum class Type {
-        GUARDIAN, ADMIN, ALL
+        GUARDIAN, ADMIN, FILE, ALL
     }
 
     fun initialize(port: Int): Flow<Result<Boolean>> {

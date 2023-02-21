@@ -76,11 +76,11 @@ class SoftwareUpdateAdapter(
     class SoftwareVersionViewHolder(itemView: ItemGuardianFileChildSoftwareBinding) : RecyclerView.ViewHolder(itemView.root) {
         private var apkVersion: TextView = itemView.fileVersionTextView
         private var apkSendButton: Button = itemView.fileSendButton
-        private var apkUpToDateText: TextView = itemView.fileUpToDateTextView
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: SoftwareUpdateItem.SoftwareUpdateVersion, listener: ChildrenClickedListener) {
             apkVersion.text = "v${file.updateFile?.version} (${if (file.installedVersion == null) "not" else "v${file.installedVersion}"} installed)"
+            apkSendButton.isEnabled = file.isEnabled
             when(file.status) {
                 UpdateStatus.LOADING -> {
                     apkLoading.visibility = View.VISIBLE
@@ -92,27 +92,22 @@ class SoftwareUpdateAdapter(
                     // }
                 }
                 UpdateStatus.UP_TO_DATE -> {
-                    apkSendButton.visibility = View.GONE
-                    apkUpToDateText.visibility = View.VISIBLE
+                    apkSendButton.isEnabled = false
+                    apkSendButton.visibility = View.VISIBLE
+                    apkSendButton.text = "up to date"
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NEED_UPDATE -> {
-                    apkSendButton.isEnabled = true
                     apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = "update to v${file.updateFile?.version}"
-                    apkUpToDateText.visibility = View.GONE
+                    apkSendButton.text = "update v${file.updateFile?.version}"
                     apkLoading.visibility = View.GONE
                 }
                 UpdateStatus.NOT_INSTALLED -> {
-                    apkSendButton.isEnabled = true
                     apkSendButton.visibility = View.VISIBLE
-                    apkSendButton.text = "update to v${file.updateFile?.version}"
-                    apkUpToDateText.visibility = View.GONE
+                    apkSendButton.text = "install v${file.updateFile?.version}"
                     apkLoading.visibility = View.GONE
                 }
             }
-
-            apkSendButton.isEnabled = file.isEnabled
 
             apkSendButton.setOnClickListener {
                 listener.onItemClick(file.updateFile!!)

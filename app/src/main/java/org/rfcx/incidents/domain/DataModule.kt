@@ -120,8 +120,8 @@ object DataModule {
         single { FileSocketRepositoryImpl(get()) } bind FileSocketRepository::class
         single { InitSocketUseCase(get(), get()) }
         single { GetSocketMessageUseCase(get(), get()) }
-        single { SendSocketMessageUseCase(get(), get()) }
-        single { CloseSocketUseCase(get(), get()) }
+        single { SendSocketMessageUseCase(get(), get(), get()) }
+        single { CloseSocketUseCase(get(), get(), get()) }
 
         single { GuardianFileRepositoryImpl(get(), get(), get(), get(), get()) } bind GuardianFileRepository::class
         single { GetGuardianFileRemoteUseCase(get()) }

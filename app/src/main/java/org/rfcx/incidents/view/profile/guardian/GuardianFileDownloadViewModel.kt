@@ -1,9 +1,11 @@
 package org.rfcx.incidents.view.profile.guardian
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -81,6 +83,7 @@ class GuardianFileDownloadViewModel(
                         } else {
                             _guardianFileItemState.tryEmit(result)
                         }
+                        listenToLocal(type)
                     }
                 }
             }
@@ -107,6 +110,7 @@ class GuardianFileDownloadViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(type)).map { result ->
                 localData = result
+                Log.d("Comp", result.toString())
                 getFileItemFromRemoteAndLocal(remoteData, localData)
             }.collect { result ->
                 _guardianFileItemState.tryEmit(Result.Success(result))
@@ -156,18 +160,33 @@ class GuardianFileDownloadViewModel(
     private fun getResultToGuardianFile(result: List<GuardianFileResponse>): List<GuardianFile> {
         return result.map {
             val obj = GuardianFile(
-                name = it.name, version = it.version, url = it.url
+                id = it.name, name = it.name, version = it.version, url = it.url
             )
-            var meta = ""
             val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
             if (it is SoftwareResponse) {
-                meta = gson.toJson(it, SoftwareResponse::class.java)
+                val meta = gson.toJson(it, SoftwareResponse::class.java)
                 obj.meta = meta
                 obj.type = GuardianFileType.SOFTWARE.value
             }
             if (it is ClassifierResponse) {
-                meta = gson.toJson(it, ClassifierResponse::class.java)
-                obj.meta = meta
+                obj.id = it.id
+                val subObj = JsonObject()
+                subObj.addProperty("classifier_name", it.name)
+                subObj.addProperty("classifier_version", it.version)
+                subObj.addProperty("sample_rate", it.sampleRate)
+                subObj.addProperty("input_gain", it.inputGain)
+                subObj.addProperty("window_size", it.windowSize)
+                subObj.addProperty("step_size", it.stepSize)
+                subObj.addProperty("classifications", it.classifications)
+                subObj.addProperty("classifications_filter_threshold", it.classificationsFilterThreshold)
+
+                val metaClassifier = JsonObject()
+                metaClassifier.addProperty("asset_id", it.id)
+                metaClassifier.addProperty("file_type", it.classifierType)
+                metaClassifier.addProperty("checksum", it.sha1)
+                metaClassifier.addProperty("meta_json_blob", gson.toJson(subObj))
+
+                obj.meta = gson.toJson(metaClassifier)
                 obj.type = GuardianFileType.CLASSIFIER.value
             }
             obj
