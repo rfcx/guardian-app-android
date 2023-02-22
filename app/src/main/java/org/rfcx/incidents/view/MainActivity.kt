@@ -55,7 +55,7 @@ import org.rfcx.incidents.widget.BottomNavigationMenuItem
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
-    private val preferences = Preferences.getInstance(this)
+    private val preferences by lazy { Preferences.getInstance(this) }
     private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val locationPermissions by lazy { LocationPermissions(this) }
