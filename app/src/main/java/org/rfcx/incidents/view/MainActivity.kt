@@ -410,11 +410,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             if (mainViewModel.getStream(streamId) != null) {
                 openStreamDetail(streamId, null)
                 dialog.dismiss()
-            }
-
-            getSubscribedProject().forEach { id ->
-                mainViewModel.refreshStreams(id) { streams ->
-                    if (streams.isNullOrEmpty()) return@refreshStreams
+            } else {
+                getSubscribedProject().forEach { id ->
+                    mainViewModel.refreshStreams(id)
+                }
+                mainViewModel.streams.observe(this) { streams ->
+                    if (streams.isNullOrEmpty()) return@observe
                     if (streams.any { s -> s.id == streamId }) {
                         openStreamDetail(streamId, null)
                         dialog.dismiss()
