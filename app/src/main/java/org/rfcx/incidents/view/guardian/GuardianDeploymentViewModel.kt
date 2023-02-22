@@ -67,12 +67,12 @@ class GuardianDeploymentViewModel(
                 .catch {
                     _socketMessageState.tryEmit(Result.Error(it))
                 }.collectLatest { result ->
-                when (result) {
-                    is Result.Error -> _socketMessageState.tryEmit(result)
-                    Result.Loading -> _socketMessageState.tryEmit(Result.Loading)
-                    is Result.Success -> _socketMessageState.tryEmit(result)
+                    when (result) {
+                        is Result.Error -> _socketMessageState.tryEmit(result)
+                        Result.Loading -> _socketMessageState.tryEmit(Result.Loading)
+                        is Result.Success -> _socketMessageState.tryEmit(result)
+                    }
                 }
-            }
         }
     }
 

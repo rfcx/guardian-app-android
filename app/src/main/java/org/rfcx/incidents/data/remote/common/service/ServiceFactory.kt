@@ -21,7 +21,6 @@ import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
-import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -136,6 +135,7 @@ object ServiceFactory {
         )
             .create(ClassifierEndpoint::class.java)
     }
+
     fun makeDownloadFileService(isDebug: Boolean): DownloadFileEndpoint {
         return createRetrofit(
             BuildConfig.DEVICE_API_BASE_URL, createDefaultOkHttpClient(isDebug),
@@ -143,7 +143,6 @@ object ServiceFactory {
         )
             .create(DownloadFileEndpoint::class.java)
     }
-
 
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)

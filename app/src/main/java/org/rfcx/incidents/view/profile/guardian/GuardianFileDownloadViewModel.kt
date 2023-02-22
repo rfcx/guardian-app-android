@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.profile.guardian
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
@@ -92,7 +91,7 @@ class GuardianFileDownloadViewModel(
     }
 
     private fun listenToLocal(type: GuardianFileType) {
-        when(type) {
+        when (type) {
             GuardianFileType.SOFTWARE -> listenToLocalSoftware()
             GuardianFileType.CLASSIFIER -> listenToLocalClassifier()
         }
@@ -117,7 +116,6 @@ class GuardianFileDownloadViewModel(
             }
         }
     }
-
 
     fun download(targetFile: GuardianFile) {
         // Dispatcher.Main to work with local realm with created in Main thread

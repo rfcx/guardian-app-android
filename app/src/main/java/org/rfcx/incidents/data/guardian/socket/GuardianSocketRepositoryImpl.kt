@@ -8,7 +8,7 @@ import org.rfcx.incidents.service.wifi.socket.GuardianSocket
 
 class GuardianSocketRepositoryImpl(
     private val guardianSocket: GuardianSocket
-): GuardianSocketRepository {
+) : GuardianSocketRepository {
     override fun initialize(): Flow<Result<Boolean>> {
         return guardianSocket.initialize(9999)
     }

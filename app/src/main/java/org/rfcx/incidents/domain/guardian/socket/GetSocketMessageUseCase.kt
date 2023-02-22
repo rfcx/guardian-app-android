@@ -1,16 +1,14 @@
 package org.rfcx.incidents.domain.guardian.socket
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.map
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.base.FlowUseCase
 
-class GetSocketMessageUseCase(private val guardianRepository: GuardianSocketRepository, private val adminRepository: AdminSocketRepository) : FlowUseCase<Result<List<String>>>() {
+class GetSocketMessageUseCase(private val guardianRepository: GuardianSocketRepository, private val adminRepository: AdminSocketRepository) :
+    FlowUseCase<Result<List<String>>>() {
     override fun performAction(): Flow<Result<List<String>>> {
         return combine(
             guardianRepository.getMessage(),

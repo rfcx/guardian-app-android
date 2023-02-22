@@ -2,7 +2,6 @@ package org.rfcx.incidents.view.guardian
 
 import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 
 interface GuardianDeploymentEventListener {
     fun setupToolbar()

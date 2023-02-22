@@ -8,6 +8,6 @@ import org.rfcx.incidents.domain.base.FlowUseCase
 
 class GetNearbyHotspotUseCase(private val repository: WifiHotspotRepository) : FlowUseCase<Result<List<ScanResult>>>() {
     override fun performAction(): Flow<Result<List<ScanResult>>> {
-       return repository.getHotspots()
+        return repository.getHotspots()
     }
 }

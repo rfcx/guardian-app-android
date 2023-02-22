@@ -4,8 +4,6 @@ import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
-import org.rfcx.incidents.util.socket.PingUtils.getActiveClassifiers
-import org.rfcx.incidents.util.socket.PingUtils.getClassifiers
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream

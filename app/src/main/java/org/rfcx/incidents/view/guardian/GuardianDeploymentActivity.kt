@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
-import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
@@ -80,7 +79,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     }
 
     override fun back() {
-        when(currentScreen) {
+        when (currentScreen) {
             GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()
             GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
@@ -128,7 +127,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         back()
         return true
     }
-    
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, GuardianDeploymentActivity::class.java)

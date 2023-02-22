@@ -87,9 +87,7 @@ class ClassifierUploadViewModel(
                     handleLoadingAndSetting()
                     _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
                 }
-            }.catch {
-
-            }.collect()
+            }.catch { }.collect()
         }
     }
 
@@ -196,7 +194,7 @@ class ClassifierUploadViewModel(
                 targetSetFile = null
                 targetProgress = null
             }.collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {
                         _isOperating.tryEmit(false)
                         operatingType = null
@@ -208,8 +206,14 @@ class ClassifierUploadViewModel(
                         if (!result.data.isSuccess) {
                             targetProgress = result.data.progress
                         }
-                        _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
-
+                        _guardianClassifierState.tryEmit(
+                            getClassifierUpdateItem(
+                                downloadedClassifiers,
+                                installedClassifiers,
+                                activeClassifiers,
+                                targetProgress
+                            )
+                        )
                     }
                 }
             }

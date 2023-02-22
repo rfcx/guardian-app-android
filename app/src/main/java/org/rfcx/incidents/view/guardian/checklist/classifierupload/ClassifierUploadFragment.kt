@@ -76,7 +76,7 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
 
         lifecycleScope.launch {
             viewModel.errorClassifierState.collectLatest {
-                when(it) {
+                when (it) {
                     is OperationTimeoutException -> {
                         dialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
                             setTitle(null)

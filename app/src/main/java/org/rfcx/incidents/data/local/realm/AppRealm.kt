@@ -78,7 +78,6 @@ private class Migrations : RealmMigration {
         if (oldVersion < 22L && newVersion >= 22) {
             migrateToV22(c)
         }
-
     }
 
     private fun migrateToV20(realm: DynamicRealm) {

@@ -1,6 +1,5 @@
 package org.rfcx.incidents.domain.base
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 abstract class FlowUseCase<T> {
@@ -10,5 +9,6 @@ abstract class FlowUseCase<T> {
     suspend fun launch(): Flow<T> {
         return performAction()
     }
+
     protected abstract fun performAction(): Flow<T>
 }

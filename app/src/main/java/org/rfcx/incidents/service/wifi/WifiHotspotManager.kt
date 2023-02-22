@@ -20,7 +20,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
@@ -104,27 +103,30 @@ class WifiHotspotManager(private val context: Context) {
                 }.build()
 
                 connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                connectivityManager.requestNetwork(networkRequest, object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        super.onAvailable(network)
-                        connectivityManager.bindProcessToNetwork(network)
-                        delayJob.cancel()
-                        trySendBlocking(Result.Success(true))
-                    }
+                connectivityManager.requestNetwork(
+                    networkRequest,
+                    object : ConnectivityManager.NetworkCallback() {
+                        override fun onAvailable(network: Network) {
+                            super.onAvailable(network)
+                            connectivityManager.bindProcessToNetwork(network)
+                            delayJob.cancel()
+                            trySendBlocking(Result.Success(true))
+                        }
 
-                    override fun onLost(network: Network) {
-                        super.onLost(network)
-                        connectivityManager.bindProcessToNetwork(null)
-                        delayJob.cancel()
-                        trySendBlocking(Result.Error(Throwable("onLost")))
-                    }
+                        override fun onLost(network: Network) {
+                            super.onLost(network)
+                            connectivityManager.bindProcessToNetwork(null)
+                            delayJob.cancel()
+                            trySendBlocking(Result.Error(Throwable("onLost")))
+                        }
 
-                    override fun onUnavailable() {
-                        super.onUnavailable()
-                        delayJob.cancel()
-                        trySendBlocking(Result.Error(Throwable("onUnavailable")))
+                        override fun onUnavailable() {
+                            super.onUnavailable()
+                            delayJob.cancel()
+                            trySendBlocking(Result.Error(Throwable("onUnavailable")))
+                        }
                     }
-                })
+                )
                 awaitClose {
                     connectivityManager.bindProcessToNetwork(null)
                 }

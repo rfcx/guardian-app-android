@@ -80,9 +80,13 @@ class SoftwareUpdateAdapter(
         private var apkLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: SoftwareUpdateItem.SoftwareUpdateVersion, listener: ChildrenClickedListener) {
-            apkVersion.text = itemView.context.getString(R.string.file_version, file.updateFile?.version, if (file.installedVersion == null) "not" else "v${file.installedVersion}")
+            apkVersion.text = itemView.context.getString(
+                R.string.file_version,
+                file.updateFile?.version,
+                if (file.installedVersion == null) "not" else "v${file.installedVersion}"
+            )
             apkSendButton.isEnabled = file.isEnabled
-            when(file.status) {
+            when (file.status) {
                 UpdateStatus.LOADING -> {
                     apkLoading.visibility = View.VISIBLE
                     apkSendButton.visibility = View.GONE

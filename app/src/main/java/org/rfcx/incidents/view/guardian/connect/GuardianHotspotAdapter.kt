@@ -2,15 +2,14 @@ package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
-import org.rfcx.incidents.databinding.ItemEventBinding
 import org.rfcx.incidents.databinding.ItemGuardianHotspotBinding
 
-class GuardianHotspotAdapter(private val onHotspotClickListener: (ScanResult) -> Unit) : RecyclerView.Adapter<GuardianHotspotAdapter.GuardianHotspotViewHolder>() {
+class GuardianHotspotAdapter(private val onHotspotClickListener: (ScanResult) -> Unit) :
+    RecyclerView.Adapter<GuardianHotspotAdapter.GuardianHotspotViewHolder>() {
 
     var selectedPosition = -1
 

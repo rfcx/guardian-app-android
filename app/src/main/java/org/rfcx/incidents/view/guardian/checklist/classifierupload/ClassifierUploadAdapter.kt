@@ -82,13 +82,17 @@ class ClassifierUploadAdapter(
         private var classifierLoading: LinearProgressIndicator = itemView.fileLoading
 
         fun bind(file: ClassifierUploadItem.ClassifierUploadVersion, listener: ChildrenClickedListener) {
-            classifierVersion.text = itemView.context.getString(R.string.file_version, file.updateFile?.version, if (file.installedVersion == null) "not" else "v${file.installedVersion}")
+            classifierVersion.text = itemView.context.getString(
+                R.string.file_version,
+                file.updateFile?.version,
+                if (file.installedVersion == null) "not" else "v${file.installedVersion}"
+            )
             classifierSendButton.isEnabled = file.isEnabled
             classifierActiveButton.isEnabled = file.isEnabled
             classifierDeActiveButton.isEnabled = file.isEnabled
             classifierActiveButton.visibility = if (file.isActive) View.GONE else View.VISIBLE
             classifierDeActiveButton.visibility = if (file.isActive) View.VISIBLE else View.GONE
-            when(file.status) {
+            when (file.status) {
                 UpdateStatus.LOADING -> {
                     classifierLoading.visibility = View.VISIBLE
                     classifierSendButton.visibility = View.GONE

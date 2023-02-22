@@ -67,7 +67,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     }
 
     override fun invoke(number: Int, name: String) {
-        when(number) {
+        when (number) {
             0 -> mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
             1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
         }

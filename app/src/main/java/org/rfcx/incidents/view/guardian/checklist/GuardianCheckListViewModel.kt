@@ -1,21 +1,15 @@
 package org.rfcx.incidents.view.guardian.checklist
 
 import android.content.Context
-import android.net.wifi.ScanResult
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.common.Constants
-import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.view.guardian.GuardianScreen
 
 class GuardianCheckListViewModel(
     private val context: Context
-): ViewModel() {
+) : ViewModel() {
 
     private val _checklistItemState: MutableStateFlow<List<CheckListItem>> = MutableStateFlow(emptyList())
     val checklistItemState = _checklistItemState.asStateFlow()

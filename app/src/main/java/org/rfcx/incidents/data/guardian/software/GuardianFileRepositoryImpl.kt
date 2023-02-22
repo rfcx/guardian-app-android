@@ -3,7 +3,6 @@ package org.rfcx.incidents.data.guardian.software
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import okhttp3.ResponseBody
 import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileRepository
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.remote.common.Result
@@ -26,7 +25,7 @@ class GuardianFileRepositoryImpl(
         return flow {
             emit(Result.Loading)
             emit(Result.Success(softwareEndpoint.getSoftware()))
-        }.catch {e ->
+        }.catch { e ->
             emit(Result.Error(e))
         }
     }
@@ -35,7 +34,7 @@ class GuardianFileRepositoryImpl(
         return flow {
             emit(Result.Loading)
             emit(Result.Success(classifierEndpoint.getClassifier()))
-        }.catch {e ->
+        }.catch { e ->
             emit(Result.Error(e))
         }
     }

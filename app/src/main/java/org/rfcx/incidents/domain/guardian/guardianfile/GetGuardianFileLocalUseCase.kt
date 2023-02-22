@@ -8,7 +8,7 @@ import org.rfcx.incidents.entity.guardian.GuardianFileType
 
 class GetGuardianFileLocalUseCase(private val repository: GuardianFileRepository) : FlowWithParamUseCase<GetGuardianFileLocalParams, List<GuardianFile>>() {
     override fun performAction(param: GetGuardianFileLocalParams): Flow<List<GuardianFile>> {
-        return when(param.type) {
+        return when (param.type) {
             GuardianFileType.SOFTWARE -> repository.getSoftwareLocalAsFlow()
             GuardianFileType.CLASSIFIER -> repository.getClassifierLocalAsFlow()
         }
