@@ -55,7 +55,7 @@ import org.rfcx.incidents.widget.BottomNavigationMenuItem
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
-    private val preferences = Preferences.getInstance(this)
+    private val preferences by lazy { Preferences.getInstance(this) }
     private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val locationPermissions by lazy { LocationPermissions(this) }
@@ -410,11 +410,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             if (mainViewModel.getStream(streamId) != null) {
                 openStreamDetail(streamId, null)
                 dialog.dismiss()
-            }
-
-            getSubscribedProject().forEach { id ->
-                mainViewModel.refreshStreams(id) { streams ->
-                    if (streams.isNullOrEmpty()) return@refreshStreams
+            } else {
+                getSubscribedProject().forEach { id ->
+                    mainViewModel.refreshStreams(id)
+                }
+                mainViewModel.streams.observe(this) { streams ->
+                    if (streams.isNullOrEmpty()) return@observe
                     if (streams.any { s -> s.id == streamId }) {
                         openStreamDetail(streamId, null)
                         dialog.dismiss()

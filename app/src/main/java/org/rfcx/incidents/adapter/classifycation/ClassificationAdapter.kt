@@ -122,7 +122,12 @@ class ClassificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 }
 
 open class Classification(open var beginAt: Long, open var endAt: Long) {
-    fun durationSecond(): Int = (endAt - beginAt).toInt()
+    fun durationSecond(): Int {
+        if (endAt > beginAt) {
+            return (endAt - beginAt).toInt()
+        }
+        return (beginAt - endAt).toInt()
+    }
 }
 
 data class ClassificationBox(override var beginAt: Long, override var endAt: Long) : Classification(beginAt, endAt)

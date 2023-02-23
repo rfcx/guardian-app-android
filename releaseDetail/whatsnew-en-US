@@ -1,1 +1,5 @@
-- Refresh token if expired and back to login if failed
+- Bug fixes
+    - firebase messaging crashed fixed (newer version lib)
+    - app crashed when open notification from bad connectivity
+    - app crashed when preference is not initialized
+    - app crashed when event start time is bigger than end time

@@ -50,6 +50,9 @@ class MainActivityViewModel(
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
 
+    private val _streams = MutableLiveData<List<Stream>?>()
+    val streams = _streams
+
     private val auth0 by lazy {
         val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
         // auth0.isLoggingEnabled = true
@@ -102,6 +105,21 @@ class MainActivityViewModel(
 
                 override fun onError(e: Throwable) {
                     callback.invoke(null)
+                }
+            },
+            GetStreamsParams(projectId, true, 0)
+        )
+    }
+
+    fun refreshStreams(projectId: String) {
+        getStreamsUseCase.execute(
+            object : DisposableSingleObserver<List<Stream>>() {
+                override fun onSuccess(t: List<Stream>) {
+                    streams.postValue(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    streams.postValue(null)
                 }
             },
             GetStreamsParams(projectId, true, 0)
