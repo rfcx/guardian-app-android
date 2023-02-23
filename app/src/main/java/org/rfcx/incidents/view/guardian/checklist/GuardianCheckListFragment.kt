@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.FragmentGuardianChecklistBinding
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
+import org.rfcx.incidents.view.guardian.GuardianScreen
 
 class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
 
@@ -38,7 +38,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             adapter = checkListAdapter
         }
         collectStates()
-        viewModel.getAllCheckList()
+        viewModel.getAllCheckList(mainEvent?.getPassedScreen())
     }
 
     private fun collectStates() {
@@ -50,7 +50,6 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     private fun collectCheckListItem() {
         lifecycleScope.launch {
             viewModel.checklistItemState.collectLatest {
-                Log.d("Comp", it.toString())
                 checkListAdapter.setCheckList(it)
             }
         }
@@ -58,6 +57,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
 
     override fun onDestroy() {
         super.onDestroy()
+        mainEvent?.closeSocket()
     }
 
     companion object {
@@ -66,7 +66,10 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         }
     }
 
-    override fun invoke(p1: Int, p2: String) {
-        //
+    override fun invoke(number: Int, name: String) {
+        when (number) {
+            0 -> mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
+            1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
+        }
     }
 }

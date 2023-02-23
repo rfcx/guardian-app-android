@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.guardian
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +8,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
@@ -52,7 +52,6 @@ class GuardianDeploymentViewModel(
         heartBeatJob?.cancel()
         heartBeatJob = viewModelScope.launch(Dispatchers.IO) {
             while (true) {
-                Log.d("Comp6", "send heartbeat")
                 sendSocketMessageUseCase.launch(SendMessageParams(BaseSocketMananger.Type.ALL, "{command:\"connection\"}"))
                 // To re-reference new socket
                 readSocket()
@@ -64,13 +63,16 @@ class GuardianDeploymentViewModel(
     private suspend fun readSocket() {
         readChannelJob?.cancel()
         readChannelJob = viewModelScope.launch(Dispatchers.IO) {
-            getSocketMessageUseCase.launch().collectLatest { result ->
-                when (result) {
-                    is Result.Error -> _socketMessageState.tryEmit(result)
-                    Result.Loading -> _socketMessageState.tryEmit(Result.Loading)
-                    is Result.Success -> _socketMessageState.tryEmit(result)
+            getSocketMessageUseCase.launch()
+                .catch {
+                    _socketMessageState.tryEmit(Result.Error(it))
+                }.collectLatest { result ->
+                    when (result) {
+                        is Result.Error -> _socketMessageState.tryEmit(result)
+                        Result.Loading -> _socketMessageState.tryEmit(Result.Loading)
+                        is Result.Success -> _socketMessageState.tryEmit(result)
+                    }
                 }
-            }
         }
     }
 

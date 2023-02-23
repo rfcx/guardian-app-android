@@ -1,6 +1,5 @@
 package org.rfcx.incidents.domain.base
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 abstract class FlowWithParamUseCase<in Params, T> {

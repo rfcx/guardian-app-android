@@ -9,6 +9,7 @@ import io.realm.RealmConfiguration
 import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
+import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Incident
@@ -77,7 +78,6 @@ private class Migrations : RealmMigration {
         if (oldVersion < 22L && newVersion >= 22) {
             migrateToV22(c)
         }
-
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -115,13 +115,14 @@ private class Migrations : RealmMigration {
     }
 
     private fun migrateToV22(realm: DynamicRealm) {
-        val guardianFile = realm.schema.create("GuardianFile")
+        val guardianFile = realm.schema.create(GuardianFile.TABLE)
         guardianFile?.apply {
-            addField("name", String::class.java, FieldAttribute.PRIMARY_KEY).setRequired("name", true)
-            addField("version", String::class.java).setRequired("version", true)
-            addField("path", String::class.java).setRequired("path", true)
-            addField("type", String::class.java).setRequired("type", true)
-            addField("meta", String::class.java).setRequired("meta", true)
+            addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(GuardianFile.FIELD_ID, true)
+            addField(GuardianFile.FIELD_NAME, String::class.java).setRequired(GuardianFile.FIELD_NAME, true)
+            addField(GuardianFile.FIELD_VERSION, String::class.java).setRequired(GuardianFile.FIELD_VERSION, true)
+            addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
+            addField(GuardianFile.FIELD_TYPE, String::class.java).setRequired(GuardianFile.FIELD_TYPE, true)
+            addField(GuardianFile.FIELD_META, String::class.java).setRequired(GuardianFile.FIELD_META, true)
         }
     }
 

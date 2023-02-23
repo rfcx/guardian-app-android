@@ -101,7 +101,7 @@ class FeedbackActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceAsColor")
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuAll = menu
         val inflater = menuInflater
         inflater.inflate(R.menu.feedback_menu, menu)

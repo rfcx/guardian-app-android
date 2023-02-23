@@ -1,10 +1,11 @@
 package org.rfcx.incidents.service.wifi.socket
 
-import android.util.Log
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import org.rfcx.incidents.data.remote.common.Result
@@ -13,18 +14,20 @@ import java.io.DataOutputStream
 import java.io.EOFException
 import java.net.Socket
 
-@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseSocketMananger {
 
-    private var socket: Socket? = null
-    private var readChannel: DataInputStream? = null
-    private var writeChannel: DataOutputStream? = null
+    var socket: Socket? = null
+    var readChannel: DataInputStream? = null
+    var writeChannel: DataOutputStream? = null
 
-    private var port: Int = 0
-    private var fromInit = false
+    var port: Int = 0
+    var fromInit = false
+
+    private val _messageShared = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val messageShared = _messageShared.asSharedFlow()
 
     enum class Type {
-        GUARDIAN, ADMIN, ALL
+        GUARDIAN, ADMIN, FILE, ALL
     }
 
     fun initialize(port: Int): Flow<Result<Boolean>> {
@@ -58,6 +61,7 @@ abstract class BaseSocketMananger {
         return callbackFlow {
             if (fromInit) {
                 trySendBlocking(Result.Loading)
+                fromInit = false
             }
             var isActive = true
             try {
@@ -66,7 +70,7 @@ abstract class BaseSocketMananger {
                     val dataInput = readChannel?.readUTF()
                     if (dataInput != null) {
                         trySendBlocking(Result.Success(dataInput))
-                        Log.d("Comp", "${port} ${dataInput.toString()}")
+                        _messageShared.tryEmit(dataInput)
                     }
                 }
             } catch (e: Exception) {

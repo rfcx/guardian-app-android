@@ -7,6 +7,7 @@ import io.realm.annotations.RealmClass
 @RealmClass
 open class GuardianFile(
     @PrimaryKey
+    var id: String = "",
     var name: String = "",
     var version: String = "",
     var path: String = "",
@@ -15,6 +16,8 @@ open class GuardianFile(
     var meta: String = ""
 ) : RealmModel {
     companion object {
+        const val TABLE = "GuardianFile"
+        const val FIELD_ID = "id"
         const val FIELD_NAME = "name"
         const val FIELD_VERSION = "version"
         const val FIELD_PATH = "path"

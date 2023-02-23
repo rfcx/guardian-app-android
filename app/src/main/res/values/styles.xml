@@ -102,6 +102,10 @@
 		<item name="android:textColor">@color/text_black</item>
 		<item name="android:textSize">@dimen/text_small</item>
 	</style>
+
+    <style name="RangerText.SubTitle.Bold" parent="RangerText.SubTitle">
+        <item name="android:textStyle">bold</item>
+    </style>
 	
 	<style name="RangerText.SubTitle.Secondary" parent="TextAppearance.AppCompat.Body1">
 		<item name="android:textColor">@color/text_secondary</item>
@@ -137,6 +141,13 @@
         <item name="android:background">@drawable/bg_color_deactive_button</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/color_deactive_text</item>
+        <item name="android:textSize">@dimen/text_xxsmall</item>
+    </style>
+
+    <style name="RangerButton.File.Active" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_color_active_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_activate_text</item>
         <item name="android:textSize">@dimen/text_xxsmall</item>
     </style>
 	
@@ -176,5 +187,35 @@
 		<item name="android:textColor">@color/colorPrimary</item>
 		<item name="lineSpacing">0.5dp</item>
 	</style>
+
+    <style name="BaseAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/BaseAlertTitle</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:background">@color/dialogColor</item>
+        <item name="buttonBarPositiveButtonStyle">@style/BaseAlertButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/BaseAlertButton</item>
+    </style>
+    <style name="BaseAlertTitle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textAppearance">@style/BaseAlertSub</item>
+    </style>
+    <style name="BaseAlertSub" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="BaseAlertButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BannerButton" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="lineSpacing">0.5dp</item>
+    </style>
 
 </resources>

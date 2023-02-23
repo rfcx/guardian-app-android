@@ -11,12 +11,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
+import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
+import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 
     lateinit var binding: ActivityGuardianDeploymentBinding
     private val viewModel: GuardianDeploymentViewModel by viewModel()
+
+    private var currentScreen = GuardianScreen.CHECKLIST
+    private val passedScreen = arrayListOf<GuardianScreen>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         when (screen) {
             GuardianScreen.CONNECT -> startFragment(GuardianConnectFragment.newInstance())
             GuardianScreen.CHECKLIST -> startFragment(GuardianCheckListFragment.newInstance())
+            GuardianScreen.SOFTWARE_UPDATE -> startFragment(SoftwareUpdateFragment.newInstance())
+            GuardianScreen.CLASSIFIER_UPLOAD -> startFragment(ClassifierUploadFragment.newInstance())
         }
     }
 
@@ -67,8 +74,25 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     }
 
     override fun changeScreen(screen: GuardianScreen) {
+        currentScreen = screen
         showScreen(screen)
     }
+
+    override fun back() {
+        when (currentScreen) {
+            GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()
+            GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
+            GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
+        }
+    }
+
+    override fun next() {
+        passedScreen.add(currentScreen)
+        changeScreen(GuardianScreen.CHECKLIST)
+    }
+
+    override fun getPassedScreen(): List<GuardianScreen> = passedScreen
 
     override fun initSocket() {
         viewModel.initSocket()
@@ -86,11 +110,24 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         return viewModel.socketMessageState
     }
 
+    override fun closeSocket() {
+        viewModel.onDestroy()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
     }
-    
+
+    override fun onBackPressed() {
+        back()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        back()
+        return true
+    }
+
     companion object {
         fun startActivity(context: Context) {
             val intent = Intent(context, GuardianDeploymentActivity::class.java)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityClassifierDownloadBinding
 import org.rfcx.incidents.entity.guardian.GuardianFile
@@ -27,7 +28,7 @@ class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListene
         binding = ActivityClassifierDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar("Classifier Download")
+        setupToolbar(getString(R.string.classifier_download_title))
 
         viewModel.getClassifierItem()
 

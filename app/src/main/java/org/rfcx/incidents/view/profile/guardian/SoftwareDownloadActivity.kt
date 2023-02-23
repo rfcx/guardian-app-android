@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivitySoftwareDownloadBinding
 import org.rfcx.incidents.entity.guardian.GuardianFile
@@ -27,7 +28,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
         binding = ActivitySoftwareDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar("Software Download")
+        setupToolbar(getString(R.string.software_download_title))
 
         viewModel.getSoftwareItem()
 
@@ -50,7 +51,7 @@ class SoftwareDownloadActivity : AppCompatActivity(), GuardianFileEventListener 
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 
