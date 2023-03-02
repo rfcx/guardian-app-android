@@ -56,6 +56,7 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
@@ -130,6 +131,7 @@ object DataModule {
         single { DeleteFileUseCase(get()) }
 
         single { GetGuardianMessageUseCase(get()) }
+        single { GetAdminMessageUseCase(get()) }
         single { SendFileSocketUseCase(get()) }
         single { SendInstructionCommandUseCase(get()) }
     }

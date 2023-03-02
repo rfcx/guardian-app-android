@@ -9,6 +9,7 @@ import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListViewModel
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadViewModel
+import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
@@ -57,5 +58,6 @@ object UiModule {
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
+        viewModel { PowerDiagnosticViewModel(get(), get()) }
     }
 }

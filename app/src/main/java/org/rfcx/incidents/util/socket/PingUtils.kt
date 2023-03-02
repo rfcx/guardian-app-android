@@ -3,7 +3,10 @@ package org.rfcx.incidents.util.socket
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import org.rfcx.incidents.entity.guardian.socket.AdminPing
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
+import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
+import org.rfcx.incidents.util.socket.PingUtils.canGuardianClassify
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -62,6 +65,11 @@ object PingUtils {
             return PrefsUtils.canGuardianClassify(Gson().toJson(prefs))
         }
         return false
+    }
+
+    fun AdminPing.getI2cAccessibility(): I2CAccessibility? {
+        val i2c = this.companion?.get("i2c")?.asJsonObject ?: return null
+        return Gson().fromJson(i2c, I2CAccessibility::class.java)
     }
 
     fun unGzipString(content: String?): String? {
