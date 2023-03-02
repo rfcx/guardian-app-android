@@ -63,6 +63,15 @@
 		<item name="android:textSize">@dimen/text_large</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
+
+    <style name="RangerText.Subhead.Bold" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RangerText.Subhead.Small" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
 	
 	<style name="RangerText.Tutorial" parent="RangerText">
 		<item name="android:textColor">@android:color/white</item>
@@ -78,6 +87,10 @@
 
     <style name="RangerText.Body.Small" parent="RangerText.Body">
         <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
+    <style name="RangerText.Body.Secondary" parent="RangerText.Body">
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 	
 	<style name="RangerText.Label" parent="TextAppearance.AppCompat.Body2">

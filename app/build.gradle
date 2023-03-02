@@ -151,6 +151,9 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline-v9:0.7.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:6.1.0'
 
+    /* Chart */
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     testImplementation 'junit:junit:4.12'
     testImplementation "android.arch.core:core-testing:1.1.1"
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'
