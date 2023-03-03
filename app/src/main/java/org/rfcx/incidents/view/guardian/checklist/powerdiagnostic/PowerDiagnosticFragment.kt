@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentPowerDiagnosticBinding
@@ -46,6 +49,36 @@ class PowerDiagnosticFragment : Fragment() {
 
         setFeedbackChart()
         setChartDataSetting()
+
+        lifecycleScope.launch {
+            viewModel.i2cAccessibilityState.collectLatest {
+                if (it.isAccessible) {
+                    binding.i2cCheckbox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_checklist_passed, 0, 0, 0)
+                    binding.i2cCheckTextView.text = getString(R.string.sentinel_module_detect)
+                    binding.i2cFailMessage.visibility = View.GONE
+                } else {
+                    binding.i2cCheckbox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_red_error, 0, 0, 0)
+                    binding.i2cCheckTextView.text = getString(R.string.sentinel_module_not_detect)
+                    binding.i2cFailMessage.text = it.message
+                    binding.i2cFailMessage.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.powerChartState.collectLatest { entry ->
+                if (entry != null) {
+                    powerLineDataSet = binding.feedbackChart.data.getDataSetByIndex(0) as LineDataSet
+                    powerLineDataSet.addEntry(entry)
+                    binding.feedbackChart.notifyDataSetChanged()
+                    binding.feedbackChart.invalidate()
+                }
+            }
+        }
+
+        binding.nextButton.setOnClickListener {
+            mainEvent?.next()
+        }
     }
 
     private fun setFeedbackChart() {
@@ -106,6 +139,7 @@ class PowerDiagnosticFragment : Fragment() {
         private const val CHART_LINE_WIDTH = 1f
         private const val FORM_SIZE = 15f
         private const val CHART_TEXT_SIZE = 0f
+
         @JvmStatic
         fun newInstance() = PowerDiagnosticFragment()
     }

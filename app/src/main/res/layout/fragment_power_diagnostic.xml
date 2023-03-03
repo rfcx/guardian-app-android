@@ -6,6 +6,7 @@
     android:background="@color/backgroundColor">
 
     <data>
+
         <variable
             name="view"
             type="android.view.View" />
@@ -27,7 +28,7 @@
             android:layout_marginStart="@dimen/margin_padding_large"
             android:layout_marginTop="@dimen/margin_padding_normal"
             android:layout_marginEnd="@dimen/margin_padding_large"
-            android:text="Solar panel input values"
+            android:text="@string/power_diag_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +48,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sentinel module detected"
+            android:text="@string/sentinel_module_detected"
             app:layout_constraintStart_toEndOf="@id/i2cCheckbox"
             app:layout_constraintTop_toTopOf="@id/i2cCheckbox"
             app:layout_constraintBottom_toBottomOf="@id/i2cCheckbox" />
@@ -87,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Voltage" />
+                    android:text="@string/voltage" />
 
                 <TextView
                     android:id="@+id/voltageValueTextView"
@@ -96,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.voltageState}"
                     tools:text="100mV" />
             </LinearLayout>
 
@@ -111,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Current" />
+                    android:text="@string/current" />
 
                 <TextView
                     android:id="@+id/currentValueTextView"
@@ -120,6 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.currentState}"
                     tools:text="100" />
             </LinearLayout>
 
@@ -136,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Power" />
+                    android:text="@string/power" />
 
                 <TextView
                     android:id="@+id/powerValueTextView"
@@ -145,6 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.powerState}"
                     tools:text="100" />
             </LinearLayout>
         </LinearLayout>
@@ -177,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Main Battery" />
+                    android:text="@string/main_battery" />
 
                 <TextView
                     android:id="@+id/mainBatteryValueTextView"
@@ -186,6 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.mainBttState}"
                     tools:text="100" />
             </LinearLayout>
 
@@ -201,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Internal Battery" />
+                    android:text="@string/internal_battery" />
 
                 <TextView
                     android:id="@+id/internalBatteryValueTextView"
@@ -210,6 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.internalBttState}"
                     tools:text="100" />
             </LinearLayout>
         </LinearLayout>
@@ -236,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Battery Voltage" />
+                    android:text="@string/battery_voltage" />
 
                 <TextView
                     android:id="@+id/batteryVoltageValueTextView"
@@ -245,6 +251,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.bttVoltage}"
                     tools:text="100" />
             </LinearLayout>
 
@@ -260,7 +267,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="System Voltage" />
+                    android:text="@string/system_voltage" />
 
                 <TextView
                     android:id="@+id/systemVoltageValueTextView"
@@ -269,6 +276,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_padding_small"
+                    android:text="@{viewModel.sysVoltage}"
                     tools:text="100" />
             </LinearLayout>
         </LinearLayout>
@@ -279,23 +287,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_padding_small"
-            android:text="Please Begin Attaching the Solar Panels\nto Observe Feedback"
+            android:text="@string/power_diag_warning_solar"
             android:textColor="@color/text_error"
             android:textAlignment="center"
             android:visibility="@{viewModel.i2cAccessibilityState.isAccessible ? view.GONE : view.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@id/solarFinishButton"
-            app:layout_constraintEnd_toEndOf="@id/solarFinishButton"
-            app:layout_constraintStart_toStartOf="@id/solarFinishButton" />
+            app:layout_constraintBottom_toTopOf="@id/nextButton"
+            app:layout_constraintEnd_toEndOf="@id/nextButton"
+            app:layout_constraintStart_toStartOf="@id/nextButton" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/solarFinishButton"
+            android:id="@+id/nextButton"
             style="@style/RangerButton.GreenButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_large"
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
-            android:enabled="false"
+            android:enabled="@{viewModel.i2cAccessibilityState.isAccessible ? true : false}"
             android:text="@string/next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

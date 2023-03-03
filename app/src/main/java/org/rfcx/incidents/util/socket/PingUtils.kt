@@ -1,12 +1,18 @@
 package org.rfcx.incidents.util.socket
 
 import android.util.Base64
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.AdminPing
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
+import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
+import org.rfcx.incidents.entity.guardian.socket.SentinelInput
+import org.rfcx.incidents.entity.guardian.socket.SentinelPower
+import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.util.socket.PingUtils.canGuardianClassify
+import org.rfcx.incidents.util.socket.PingUtils.getI2cAccessibility
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -67,9 +73,50 @@ object PingUtils {
         return false
     }
 
+    fun GuardianPing.getInternalBattery(): Int? {
+        val battery = this.battery ?: return null
+        return battery.split("*")[1].toInt()
+    }
+
     fun AdminPing.getI2cAccessibility(): I2CAccessibility? {
         val i2c = this.companion?.get("i2c")?.asJsonObject ?: return null
         return Gson().fromJson(i2c, I2CAccessibility::class.java)
+    }
+
+    fun AdminPing.getSentinelPower(): SentinelPower? {
+        val sentinelPower = this.sentinelPower ?: return null
+        val splitSentinelPower = sentinelPower.split("|")
+        var system = SentinelSystem()
+        var input = SentinelInput()
+        var batt = SentinelBattery()
+        try {
+            splitSentinelPower.forEach {
+                val splittedItem = it.split("*")
+                when (splittedItem[0]) {
+                    "system" -> system = SentinelSystem(
+                        splittedItem[2].toInt(),
+                        splittedItem[3].toInt(),
+                        splittedItem[4].toInt(),
+                        splittedItem[5].toInt()
+                    )
+                    "input" -> input = SentinelInput(
+                        splittedItem[2].toInt(),
+                        splittedItem[3].toInt(),
+                        splittedItem[4].toInt(),
+                        splittedItem[5].toInt()
+                    )
+                    "battery" -> batt = SentinelBattery(
+                        splittedItem[2].toInt(),
+                        splittedItem[3].toInt(),
+                        splittedItem[4].toDouble(),
+                        splittedItem[5].toInt()
+                    )
+                }
+            }
+        } catch (e: NumberFormatException) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+        }
+        return SentinelPower(input, system, batt)
     }
 
     fun unGzipString(content: String?): String? {

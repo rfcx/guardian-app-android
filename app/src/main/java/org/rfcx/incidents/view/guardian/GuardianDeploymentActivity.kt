@@ -86,7 +86,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
-            GuardianScreen.POWER_DIAGNOSTIC -> changeScreen(GuardianScreen.POWER_DIAGNOSTIC)
+            GuardianScreen.POWER_DIAGNOSTIC -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 

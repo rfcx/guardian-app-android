@@ -436,5 +436,19 @@
     <string name="classifier_no_item"><![CDATA[Download classifiers from Guardian classifiers page first\nProfile -> Classifier -> Download classifiers you needed]]></string>
     <string name="classifier_no_active">Please activate a classifier to proceed to the next step</string>
 
+    <!-- PowerDiagnosticFragment -->
+    <string name="sentinel_module_detect">Sentinel module detected</string>
+    <string name="sentinel_module_not_detect">Sentinel module not detected</string>
+    <string name="power_diag_warning_solar">Please Begin Attaching the Solar Panels\nto Observe Feedback</string>
+    <string name="system_voltage">System Voltage</string>
+    <string name="battery_voltage">Battery Voltage</string>
+    <string name="internal_battery">Internal Battery</string>
+    <string name="main_battery">Main Battery</string>
+    <string name="power">Power</string>
+    <string name="current">Current</string>
+    <string name="voltage">Voltage</string>
+    <string name="sentinel_module_detected">Sentinel module detected</string>
+    <string name="power_diag_label">Solar panel input values</string>
+
 
 </resources>
