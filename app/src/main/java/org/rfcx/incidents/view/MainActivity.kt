@@ -94,8 +94,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
         setupBottomMenu()
         if (savedInstanceState == null) {
-            // setupFragments()
-            GuardianDeploymentActivity.startActivity(this)
+            setupFragments()
         }
         this.saveUserLoginWith()
         observeMain()

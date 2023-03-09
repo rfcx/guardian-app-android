@@ -70,6 +70,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         when (number) {
             0 -> mainEvent?.changeScreen(GuardianScreen.SOFTWARE_UPDATE)
             1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
+            2 -> mainEvent?.changeScreen(GuardianScreen.POWER_DIAGNOSTIC)
         }
     }
 }

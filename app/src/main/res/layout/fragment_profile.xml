@@ -40,6 +40,10 @@
         <variable
             name="onClickClassifier"
             type="android.view.View.OnClickListener"/>
+
+        <variable
+            name="onClickMakeDeployment"
+            type="android.view.View.OnClickListener"/>
     </data>
 
     <ScrollView
@@ -192,7 +196,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{onClickSoftware}"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Software"/>
+                android:text="Download Software"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/classifierTextView"
@@ -202,7 +206,17 @@
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{onClickClassifier}"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Classifier"/>
+                android:text="Download Classifier"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/makeDeploymentTextView"
+                style="@style/RangerText.SubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{onClickMakeDeployment}"
+                android:padding="@dimen/margin_padding_normal"
+                android:text="Make a deployment"/>
 
             <View
                 android:layout_width="match_parent"
