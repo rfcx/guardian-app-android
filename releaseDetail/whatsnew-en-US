@@ -3,3 +3,4 @@
     - app crashed when open notification from bad connectivity
     - app crashed when preference is not initialized
     - app crashed when event start time is bigger than end time
+    - sites are disappear when refresh with poor connection

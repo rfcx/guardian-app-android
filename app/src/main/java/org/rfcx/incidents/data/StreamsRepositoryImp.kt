@@ -21,9 +21,7 @@ class StreamsRepositoryImp(
 ) : StreamsRepository {
     override fun get(params: GetStreamsParams): Single<List<Stream>> {
         if (params.streamRefresh) {
-            var data: Single<List<Stream>>? = null
-            streamDb.deleteByProject(params.projectId) { if (it) data = refreshFromAPI(params.projectId, params.offset) }
-            return data ?: refreshFromAPI(params.projectId, params.offset)
+            return refreshFromAPI(params.projectId, params.offset, true)
         }
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
             return refreshFromAPI(params.projectId, params.offset)
@@ -31,8 +29,11 @@ class StreamsRepositoryImp(
         return getFromLocalDB(params.projectId)
     }
 
-    private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
+    private fun refreshFromAPI(projectId: String, offset: Int, fromRefresh: Boolean = false): Single<List<Stream>> {
         return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
+            if (fromRefresh) {
+                streamDb.deleteByProject(projectId)
+            }
             rawStreams.forEachIndexed { index, streamRes ->
                 val stream = streamRes.toStream()
                 stream.order = offset + index
