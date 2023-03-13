@@ -70,4 +70,8 @@
 
     <color name="blue">#1E8CAB</color>
     <color name="blue_disable">#165A6E</color>
+
+    <color name="red">#e41a1a</color>
+    <color name="orange">#FF9800</color>
+    <color name="yellow">#FFEB3B</color>
 </resources>
