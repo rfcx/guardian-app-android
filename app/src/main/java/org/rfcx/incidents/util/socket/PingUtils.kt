@@ -11,6 +11,7 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
 import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
+import org.rfcx.incidents.entity.guardian.socket.SpeedTest
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -136,6 +137,17 @@ object PingUtils {
         val network = this.swm ?: return null
         val splitNetworks = network.split("|").map { it.split("*") }
         return splitNetworks.last()[1].toIntOrNull()
+    }
+
+    fun AdminPing.getSpeedTest(): SpeedTest? {
+        val speedTest = this.companion?.get("speed_test")?.asJsonObject ?: return null
+        val downloadSpeed = speedTest.get("download_speed").asDouble
+        val uploadSpeed = speedTest.get("upload_speed").asDouble
+        val isFailed = speedTest.get("is_failed").asBoolean
+        val isTesting =
+            if (speedTest.has("is_testing")) speedTest.get("is_testing").asBoolean else false
+        val hasConnection = speedTest.get("connection_available").asBoolean
+        return SpeedTest(downloadSpeed, uploadSpeed, isFailed, isTesting, hasConnection)
     }
 
     fun unGzipString(content: String?): String? {

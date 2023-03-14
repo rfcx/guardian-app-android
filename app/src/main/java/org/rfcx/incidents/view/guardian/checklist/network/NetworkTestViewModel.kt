@@ -11,6 +11,7 @@ import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.util.socket.PingUtils.getSimDetected
 import org.rfcx.incidents.util.socket.PingUtils.getSimNetwork
+import org.rfcx.incidents.util.socket.PingUtils.getSpeedTest
 import org.rfcx.incidents.util.socket.PingUtils.getSwarmId
 
 class NetworkTestViewModel(
@@ -27,6 +28,9 @@ class NetworkTestViewModel(
     private val _simSignalState: MutableStateFlow<Int?> = MutableStateFlow(null)
     val simSignalState = _simSignalState.asStateFlow()
 
+    private val _internetConnectionState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val internetConnectionState = _internetConnectionState.asStateFlow()
+
     init {
         getSimModule()
         getSatModule()
@@ -42,6 +46,9 @@ class NetworkTestViewModel(
                 }
                 result?.getSimNetwork()?.let {
                     _simSignalState.tryEmit(it)
+                }
+                result?.getSpeedTest()?.let {
+                    _internetConnectionState.tryEmit(it.hasConnection)
                 }
             }
         }
