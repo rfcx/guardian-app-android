@@ -11,8 +11,6 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
 import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
-import org.rfcx.incidents.util.socket.PingUtils.canGuardianClassify
-import org.rfcx.incidents.util.socket.PingUtils.getI2cAccessibility
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -117,6 +115,16 @@ object PingUtils {
             FirebaseCrashlytics.getInstance().recordException(e)
         }
         return SentinelPower(input, system, batt)
+    }
+
+    fun AdminPing.getSimDetected(): Boolean? {
+        return this.companion?.get("sim_info")?.asJsonObject?.get("has_sim")?.asBoolean
+            ?: return null
+    }
+
+    fun AdminPing.getSwarmId(): String? {
+        return this.companion?.get("sat_info")?.asJsonObject?.get("sat_id")?.asString
+            ?: return null
     }
 
     fun unGzipString(content: String?): String? {

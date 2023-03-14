@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_large"
             android:layout_marginTop="@dimen/margin_padding_normal"
-            android:drawableStart="@drawable/ic_red_error"
+            android:drawableStart="@{viewModel.i2cAccessibilityState.isAccessible ? @drawable/ic_checklist_passed : @drawable/ic_red_error}"
             android:drawablePadding="@dimen/margin_padding_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/solarPanelTitle" />
@@ -48,7 +48,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sentinel_module_detected"
+            android:text="@{viewModel.i2cAccessibilityState.isAccessible ? @string/sentinel_module_detect : @string/sentinel_module_not_detect}"
             app:layout_constraintStart_toEndOf="@id/i2cCheckbox"
             app:layout_constraintTop_toTopOf="@id/i2cCheckbox"
             app:layout_constraintBottom_toBottomOf="@id/i2cCheckbox" />

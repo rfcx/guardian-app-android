@@ -450,5 +450,10 @@
     <string name="sentinel_module_detected">Sentinel module detected</string>
     <string name="power_diag_label">Solar panel input values</string>
 
-
+    <!-- NetworkTestFragment -->
+    <string name="lt_93_bad"><![CDATA[< -93 Bad]]></string>
+    <string name="lt_97_ok"><![CDATA[< -97 OK]]></string>
+    <string name="lt_100_ok"><![CDATA[< -100 Good]]></string>
+    <string name="lt_104_perfect"><![CDATA[< -104 Perfect]]></string>
+    <string name="lt_110_error"><![CDATA[< -110 Error]]></string>
 </resources>

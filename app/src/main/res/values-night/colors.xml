@@ -74,4 +74,7 @@
     <color name="red">#e41a1a</color>
     <color name="orange">#FF9800</color>
     <color name="yellow">#FFEB3B</color>
+
+    <color name="signal_stroke">#5A6978</color>
+    <color name="signal_filled">#2AA841</color>
 </resources>
