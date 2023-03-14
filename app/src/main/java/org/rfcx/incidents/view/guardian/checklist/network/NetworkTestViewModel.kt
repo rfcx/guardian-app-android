@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.util.socket.PingUtils.getSimDetected
+import org.rfcx.incidents.util.socket.PingUtils.getSimNetwork
 import org.rfcx.incidents.util.socket.PingUtils.getSwarmId
 
 class NetworkTestViewModel(
@@ -23,6 +24,9 @@ class NetworkTestViewModel(
     private val _satModuleState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val satModuleState = _satModuleState.asStateFlow()
 
+    private val _simSignalState: MutableStateFlow<Int?> = MutableStateFlow(null)
+    val simSignalState = _simSignalState.asStateFlow()
+
     init {
         getSimModule()
         getSatModule()
@@ -35,6 +39,9 @@ class NetworkTestViewModel(
             }.collectLatest { result ->
                 result?.getSimDetected()?.let {
                     _simModuleState.tryEmit(it)
+                }
+                result?.getSimNetwork()?.let {
+                    _simSignalState.tryEmit(it)
                 }
             }
         }

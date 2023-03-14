@@ -79,7 +79,7 @@
                         android:id="@+id/signalStrength1"
                         android:layout_width="15dp"
                         android:layout_height="20dp"
-                        android:background="@drawable/signal_strength"
+                        android:background="@{viewModel.simSignalState > -130 ? @drawable/signal_strength_filled : @drawable/signal_strength}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -88,7 +88,7 @@
                         android:layout_width="15dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="@dimen/margin_padding_small"
-                        android:background="@drawable/signal_strength"
+                        android:background="@{viewModel.simSignalState > -110 ? @drawable/signal_strength_filled : @drawable/signal_strength}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/signalStrength1" />
 
@@ -97,7 +97,7 @@
                         android:layout_width="15dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="@dimen/margin_padding_small"
-                        android:background="@drawable/signal_strength"
+                        android:background="@{viewModel.simSignalState > -90 ? @drawable/signal_strength_filled : @drawable/signal_strength}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/signalStrength2" />
 
@@ -106,7 +106,7 @@
                         android:layout_width="15dp"
                         android:layout_height="50dp"
                         android:layout_marginStart="@dimen/margin_padding_small"
-                        android:background="@drawable/signal_strength"
+                        android:background="@{viewModel.simSignalState > -70 ? @drawable/signal_strength_filled : @drawable/signal_strength}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/signalStrength3" />
 
@@ -119,6 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_small"
                     android:textSize="14sp"
+                    android:text="@{viewModel.simSignalState.toString() + ` db`}"
                     app:layout_constraintBottom_toBottomOf="@id/signalStrengthLayout"
                     app:layout_constraintStart_toEndOf="@id/signalStrengthLayout"
                     tools:text="20 db" />
@@ -129,10 +130,9 @@
                 android:id="@+id/cellDataTransferLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
                 android:layout_marginTop="@dimen/margin_padding_large"
-                android:layout_marginEnd="@dimen/margin_padding_large"
-                app:layout_constraintStart_toStartOf="@+id/cellSignalLayout"
-                app:layout_constraintTop_toBottomOf="@+id/cellSignalLayout">
+                android:layout_marginEnd="@dimen/margin_padding_large">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/cellDataTransferTitle"

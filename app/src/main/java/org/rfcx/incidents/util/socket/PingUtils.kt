@@ -127,6 +127,17 @@ object PingUtils {
             ?: return null
     }
 
+    fun AdminPing.getSimNetwork(): Int? {
+        val network = this.network ?: return null
+        return network.split("*")[1].toInt()
+    }
+
+    fun GuardianPing.getSwarmNetwork(): Int? {
+        val network = this.swm ?: return null
+        val splitNetworks = network.split("|").map { it.split("*") }
+        return splitNetworks.last()[1].toIntOrNull()
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }
