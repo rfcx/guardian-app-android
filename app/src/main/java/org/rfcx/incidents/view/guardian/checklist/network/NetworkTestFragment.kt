@@ -36,7 +36,7 @@ class NetworkTestFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Network test")
+            it.setToolbarTitle(getString(R.string.network_test))
         }
 
         binding.cellDataTransferButton.setOnClickListener {
