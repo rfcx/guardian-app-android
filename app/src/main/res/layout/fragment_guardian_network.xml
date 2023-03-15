@@ -35,7 +35,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SIM Card detected"
+            android:text="@{viewModel.simModuleState ? `Sim card detected` : `Sim card not detected`}"
             app:layout_constraintBottom_toBottomOf="@id/simDetectionCheckbox"
             app:layout_constraintStart_toEndOf="@+id/simDetectionCheckbox"
             app:layout_constraintTop_toTopOf="@id/simDetectionCheckbox" />
@@ -62,7 +62,7 @@
                     style="@style/RangerText.Subhead.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cell signal strength"
+                    android:text="@string/cell_signal_strength"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -139,7 +139,7 @@
                     style="@style/RangerText.Subhead.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cell data transfer"
+                    android:text="@string/cell_data_transfer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -148,7 +148,7 @@
                     style="@style/RangerText.Subhead.Secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No internet connection"
+                    android:text="@string/no_internet_connection_guardian"
                     android:visibility="@{viewModel.internetConnectionState ? view.GONE : view.VISIBLE}"
                     app:layout_constraintStart_toStartOf="@+id/cellDataTransferTitle"
                     app:layout_constraintTop_toBottomOf="@+id/cellDataTransferTitle" />
@@ -169,6 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_small"
                         android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:text="@{viewModel.downloadTestState}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="20 kb/s download" />
@@ -180,17 +181,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_small"
                         android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:text="@{viewModel.uploadTestState}"
                         app:layout_constraintStart_toStartOf="@+id/cellDownloadDataTransferValues"
                         app:layout_constraintTop_toBottomOf="@+id/cellDownloadDataTransferValues"
                         tools:text="20 kb/s upload" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/cellDataTransferButton"
-                        style="@style/RangerButton.GreenButton.TextSmall"
+                        style="@style/RangerButton.GreenButton"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_marginStart="@dimen/margin_padding_normal"
-                        android:text="Retest"
+                        android:text="@string/test"
+                        android:enabled="@{viewModel.testButtonState ? true : false}"
                         app:layout_constraintTop_toTopOf="@id/cellDownloadDataTransferValues"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/cellDownloadDataTransferValues"
@@ -217,7 +220,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Satellite module detected"
+            android:text="@{viewModel.simModuleState ? `Satellite module detected` : `Satellite module not detected`}"
             app:layout_constraintBottom_toBottomOf="@id/satDetectionCheckbox"
             app:layout_constraintStart_toEndOf="@+id/satDetectionCheckbox"
             app:layout_constraintTop_toTopOf="@id/satDetectionCheckbox" />
@@ -238,7 +241,7 @@
                 style="@style/RangerText.Subhead.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Background noise"
+                android:text="@string/background_noise"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -261,7 +264,7 @@
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:minWidth="70dp"
                 android:minHeight="20dp"
-                android:text="error"
+                android:text="@string/error"
                 android:textStyle="normal"
                 android:visibility="@{viewModel.satErrorState ? view.VISIBLE : view.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/satSignalValues"
@@ -277,7 +280,7 @@
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:minWidth="70dp"
                 android:minHeight="20dp"
-                android:text="Perfect"
+                android:text="@string/perfect"
                 android:textStyle="normal"
                 android:visibility="@{viewModel.satPerfectState ? view.VISIBLE : view.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/satSignalValues"
@@ -293,7 +296,7 @@
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:minWidth="70dp"
                 android:minHeight="20dp"
-                android:text="Good"
+                android:text="@string/good"
                 android:textStyle="normal"
                 android:visibility="@{viewModel.satGoodState ? view.VISIBLE : view.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/satSignalValues"
@@ -309,7 +312,7 @@
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:minWidth="70dp"
                 android:minHeight="20dp"
-                android:text="OK"
+                android:text="@string/ok"
                 android:textStyle="normal"
                 android:visibility="@{viewModel.satOKState ? view.VISIBLE : view.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/satSignalValues"
@@ -325,7 +328,7 @@
                 android:layout_marginStart="@dimen/margin_padding_small"
                 android:minWidth="70dp"
                 android:minHeight="20dp"
-                android:text="Bad"
+                android:text="@string/bad"
                 android:textStyle="normal"
                 android:visibility="@{viewModel.satBadState ? view.VISIBLE : view.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/satSignalValues"
@@ -396,7 +399,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red"
-            android:text="Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information"
+            android:text="@string/satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information"
             android:padding="@dimen/margin_padding_normal"
             android:textAlignment="center"
             android:visibility="gone"

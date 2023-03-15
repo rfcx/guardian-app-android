@@ -60,6 +60,6 @@ object UiModule {
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
         viewModel { PowerDiagnosticViewModel(get(), get()) }
-        viewModel { NetworkTestViewModel(get(), get()) }
+        viewModel { NetworkTestViewModel(get(), get(), get()) }
     }
 }

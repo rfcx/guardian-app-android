@@ -456,4 +456,15 @@
     <string name="lt_100_ok"><![CDATA[< -100 Good]]></string>
     <string name="lt_104_perfect"><![CDATA[< -104 Perfect]]></string>
     <string name="lt_110_error"><![CDATA[< -110 Error]]></string>
+    <string name="cell_data_transfer">Cell data transfer</string>
+    <string name="no_internet_connection_guardian">No internet connection</string>
+    <string name="cell_signal_strength">Cell signal strength</string>
+    <string name="test">test</string>
+    <string name="background_noise">Background noise</string>
+    <string name="error">error</string>
+    <string name="perfect">Perfect</string>
+    <string name="good">Good</string>
+    <string name="ok">OK</string>
+    <string name="bad">Bad</string>
+    <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
 </resources>
