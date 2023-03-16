@@ -218,6 +218,9 @@ class NetworkTestViewModel(
         } else if (speedTest.isFailed) {
             _downloadTestState.tryEmit("testing failed")
             _uploadTestState.tryEmit("testing failed")
+        } else if (speedTest.downloadSpeed == -1.0 && speedTest.uploadSpeed == -1.0) {
+            _downloadTestState.tryEmit(String.format("ready to test", speedTest.downloadSpeed))
+            _uploadTestState.tryEmit(String.format("ready to test", speedTest.uploadSpeed))
         } else {
             _testButtonState.tryEmit(true)
             _downloadTestState.tryEmit(String.format("%.2f kb/s download", speedTest.downloadSpeed))

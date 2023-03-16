@@ -437,6 +437,7 @@
     <string name="classifier_no_active">Please activate a classifier to proceed to the next step</string>
 
     <!-- PowerDiagnosticFragment -->
+    <string name="power_diagnostic">Power Diagnostic</string>
     <string name="sentinel_module_detect">Sentinel module detected</string>
     <string name="sentinel_module_not_detect">Sentinel module not detected</string>
     <string name="power_diag_warning_solar">Please Begin Attaching the Solar Panels\nto Observe Feedback</string>
