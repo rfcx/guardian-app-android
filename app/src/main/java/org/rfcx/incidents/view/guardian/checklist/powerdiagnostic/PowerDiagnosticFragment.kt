@@ -44,7 +44,7 @@ class PowerDiagnosticFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle(getString(R.string.software_title))
+            it.setToolbarTitle(getString(R.string.power_diagnostic))
         }
 
         setFeedbackChart()
