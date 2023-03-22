@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/nextButton"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/simDetectionCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:drawableStart="@drawable/ic_red_error"
+                android:drawablePadding="@dimen/margin_padding_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/simDetectionTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SIM Card detected"
+                app:layout_constraintBottom_toBottomOf="@id/simDetectionCheckbox"
+                app:layout_constraintStart_toEndOf="@+id/simDetectionCheckbox"
+                app:layout_constraintTop_toTopOf="@id/simDetectionCheckbox" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/phoneNumberTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_padding_small"
+                android:text="phone number:"
+                app:layout_constraintStart_toStartOf="@+id/simDetectionTextView"
+                app:layout_constraintTop_toBottomOf="@id/simDetectionTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/phoneNumberValueTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_padding_small"
+                android:paddingTop="@dimen/margin_padding_small"
+                app:layout_constraintStart_toEndOf="@+id/phoneNumberTextView"
+                app:layout_constraintTop_toBottomOf="@id/simDetectionTextView"
+                tools:text="01111111" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/satDetectionCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:drawableStart="@drawable/ic_red_error"
+                android:drawablePadding="@dimen/margin_padding_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phoneNumberTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/satDetectionTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Satellite module detected"
+                app:layout_constraintBottom_toBottomOf="@id/satDetectionCheckbox"
+                app:layout_constraintStart_toEndOf="@+id/satDetectionCheckbox"
+                app:layout_constraintTop_toTopOf="@id/satDetectionCheckbox" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/swarmIdTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_padding_small"
+                android:text="swarm id:"
+                app:layout_constraintStart_toStartOf="@+id/satDetectionTextView"
+                app:layout_constraintTop_toBottomOf="@id/satDetectionTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/swarmValueTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_padding_small"
+                android:paddingTop="@dimen/margin_padding_small"
+                app:layout_constraintStart_toEndOf="@+id/swarmIdTextView"
+                app:layout_constraintTop_toBottomOf="@id/satDetectionTextView"
+                tools:text="01111111" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/gpsDetectionCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:drawableStart="@drawable/ic_red_error"
+                android:drawablePadding="@dimen/margin_padding_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/swarmIdTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/gpsDetectionTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Satellite GPS detected"
+                app:layout_constraintBottom_toBottomOf="@id/gpsDetectionCheckbox"
+                app:layout_constraintStart_toEndOf="@+id/gpsDetectionCheckbox"
+                app:layout_constraintTop_toTopOf="@id/gpsDetectionCheckbox" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/systemTimeCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:drawableStart="@drawable/ic_red_error"
+                android:drawablePadding="@dimen/margin_padding_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gpsDetectionTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/guardianTimeTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardian local time:"
+                app:layout_constraintBottom_toBottomOf="@id/systemTimeCheckbox"
+                app:layout_constraintStart_toEndOf="@id/systemTimeCheckbox"
+                app:layout_constraintTop_toTopOf="@id/systemTimeCheckbox" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/guardianTimeValuesTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                app:layout_constraintBottom_toBottomOf="@id/guardianTimeTextView"
+                app:layout_constraintStart_toEndOf="@id/guardianTimeTextView"
+                app:layout_constraintTop_toTopOf="@id/guardianTimeTextView"
+                tools:text="19:00" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/timezoneTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_normal"
+                android:text="Guardian timezone:"
+                app:layout_constraintStart_toStartOf="@id/guardianTimeTextView"
+                app:layout_constraintTop_toBottomOf="@id/guardianTimeTextView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/timezoneValuesTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                app:layout_constraintBottom_toBottomOf="@id/timezoneTextView"
+                app:layout_constraintStart_toEndOf="@id/timezoneTextView"
+                app:layout_constraintTop_toTopOf="@id/timezoneTextView"
+                tools:text="Asia/Bangkok" />
+
+            <View
+                android:id="@+id/sectionDivide"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginTop="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_large"
+                android:background="@color/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@id/timezoneValuesTextView" />
+
+            <RadioGroup
+                android:id="@+id/guardianPlanGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_padding_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sectionDivide">
+
+                <RadioButton
+                    android:id="@+id/cellOnlyRadioButton"
+                    style="@style/RangerRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cell data only" />
+
+                <RadioButton
+                    android:id="@+id/cellSmsRadioButton"
+                    style="@style/RangerRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cell data + SMS fallback (experimental)" />
+
+                <RadioButton
+                    android:id="@+id/satOnlyRadioButton"
+                    style="@style/RangerRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Satellite only" />
+
+                <RadioButton
+                    android:id="@+id/offlineModeRadioButton"
+                    style="@style/RangerRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Offline mode" />
+            </RadioGroup>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/passTimesTextView"
+                style="@style/RangerText.Body.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Off times (local times)"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guardianPlanGroup" />
+
+            <RadioGroup
+                android:id="@+id/timeOffRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_padding_large"
+                android:paddingTop="@dimen/margin_padding_small"
+                android:paddingEnd="@dimen/margin_padding_large"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/passTimesTextView">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/manualRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Manual"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_small" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/presetRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Auto"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_small" />
+            </RadioGroup>
+
+            <org.rfcx.incidents.widget.StartStopTimePicker
+                android:id="@+id/offTimeChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_normal"
+                android:visibility="gone"
+                app:allowAdd="true"
+                app:layout_constraintTop_toBottomOf="@id/timeOffRadioGroup"
+                app:startTitle="Select Satellite start time off"
+                app:stopTitle="Select Satellite end time off" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/emptyOffTimeTextView"
+                style="@style/RangerText.Subhead.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_small"
+                android:text="There is no off time in this project"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeOffRadioGroup" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nextButton"
+        style="@style/RangerButton.GreenButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_large"
+        android:layout_marginEnd="@dimen/margin_padding_large"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:enabled="true"
+        android:text="@string/next"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar"
+        android:layout_height="@dimen/progress_bar"
+        android:layout_marginStart="@dimen/margin_padding_large"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginEnd="@dimen/margin_padding_large"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -469,4 +469,8 @@
     <string name="ok">OK</string>
     <string name="bad">Bad</string>
     <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
+
+    <!-- Communication Configuration -->
+    <string name="back">back</string>
+    <string name="plus">+</string>
 </resources>
