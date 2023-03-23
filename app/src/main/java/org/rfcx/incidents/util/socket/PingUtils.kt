@@ -171,6 +171,22 @@ object PingUtils {
         return timezone.asString
     }
 
+    fun GuardianPing.getGuardianPlan(): GuardianPlan? {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return null
+            return PrefsUtils.getGuardianPlanFromPrefs(Gson().toJson(prefs))
+        }
+        return null
+    }
+
+    fun GuardianPing.getSatTimeOff(): String? {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return null
+            return PrefsUtils.getSatTimeOffFromPrefs(Gson().toJson(prefs))
+        }
+        return null
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }

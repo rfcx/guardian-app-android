@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianCommunicationConfigurationBinding
@@ -36,6 +39,45 @@ class CommunicationFragment : Fragment() {
             it.showToolbar()
             it.setToolbarTitle("Communication Configuration")
         }
+
+        binding.guardianPlanGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == R.id.satOnlyRadioButton) {
+                binding.passTimesTextView.visibility = View.VISIBLE
+                binding.timeOffRadioGroup.visibility = View.VISIBLE
+                binding.offTimeChipGroup.visibility = View.VISIBLE
+            } else {
+                binding.passTimesTextView.visibility = View.GONE
+                binding.timeOffRadioGroup.visibility = View.GONE
+                binding.offTimeChipGroup.visibility = View.GONE
+            }
+        }
+
+        binding.offTimeChipGroup.fragmentManager = parentFragmentManager
+        binding.timeOffRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == R.id.manualRadioButton) {
+                binding.offTimeChipGroup.allowAdd = true
+                viewModel.onManualClicked()
+                hideEmptyOffTimeText()
+            } else {
+                binding.offTimeChipGroup.allowAdd = false
+                viewModel.onAutoClicked()
+                showEmptyOffTimeText()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.guardianSatTimeOffState.collectLatest {
+                binding.offTimeChipGroup.setTimes(it)
+            }
+        }
+    }
+
+    private fun showEmptyOffTimeText() {
+        binding.emptyOffTimeTextView.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyOffTimeText() {
+        binding.emptyOffTimeTextView.visibility = View.GONE
     }
 
     companion object {

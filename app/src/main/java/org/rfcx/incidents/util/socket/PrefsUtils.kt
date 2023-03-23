@@ -15,4 +15,25 @@ object PrefsUtils {
         }
         return canClassify
     }
+    fun getGuardianPlanFromPrefs(str: String?): GuardianPlan? {
+        if (str == null) return null
+        val json = JsonParser.parseString(str).asJsonObject
+        return when (json.get("api_protocol_escalation_order").asString) {
+            "mqtt,rest" -> GuardianPlan.CELL_ONLY
+            "mqtt,rest,sms" -> GuardianPlan.CELL_SMS
+            "sat" -> GuardianPlan.SAT_ONLY
+            "" -> GuardianPlan.OFFLINE_MODE
+            else -> null
+        }
+    }
+
+    fun getSatTimeOffFromPrefs(str: String?): String? {
+        if (str == null) return null
+        val json = JsonParser.parseString(str).asJsonObject
+        return json.get("api_satellite_off_hours").asString
+    }
+}
+
+enum class GuardianPlan {
+    CELL_ONLY, CELL_SMS, SAT_ONLY, OFFLINE_MODE
 }

@@ -219,6 +219,7 @@
                         style="@style/RangerRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{viewModel.guardianPlanCellState}"
                         android:text="Cell data only" />
 
                     <RadioButton
@@ -226,6 +227,7 @@
                         style="@style/RangerRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{viewModel.guardianPlanSMSState}"
                         android:text="Cell data + SMS fallback (experimental)" />
 
                     <RadioButton
@@ -233,6 +235,7 @@
                         style="@style/RangerRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{viewModel.guardianPlanSatState}"
                         android:text="Satellite only" />
 
                     <RadioButton
@@ -240,6 +243,7 @@
                         style="@style/RangerRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{viewModel.guardianPlanOfflineState}"
                         android:text="Offline mode" />
                 </RadioGroup>
 

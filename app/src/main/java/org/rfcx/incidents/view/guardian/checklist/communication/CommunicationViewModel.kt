@@ -9,15 +9,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
+import org.rfcx.incidents.util.socket.GuardianPlan
 import org.rfcx.incidents.util.socket.PingUtils.getGPSDetection
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
+import org.rfcx.incidents.util.socket.PingUtils.getGuardianPlan
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianTimezone
 import org.rfcx.incidents.util.socket.PingUtils.getPhoneNumber
+import org.rfcx.incidents.util.socket.PingUtils.getSatTimeOff
 import org.rfcx.incidents.util.socket.PingUtils.getSimDetected
-import org.rfcx.incidents.util.socket.PingUtils.getSimNetwork
-import org.rfcx.incidents.util.socket.PingUtils.getSpeedTest
 import org.rfcx.incidents.util.socket.PingUtils.getSwarmId
-import org.rfcx.incidents.util.socket.PingUtils.getSwarmNetwork
 import org.rfcx.incidents.util.toDateTimeString
 import java.util.Date
 
@@ -50,10 +50,30 @@ class CommunicationViewModel(
     private val _guardianLocalTimezoneState: MutableStateFlow<String> = MutableStateFlow("")
     val guardianLocalTimezoneState = _guardianLocalTimezoneState.asStateFlow()
 
+    private val _guardianPlanCellState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val guardianPlanCellState = _guardianPlanCellState.asStateFlow()
+
+    private val _guardianPlanSMSState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val guardianPlanSMSState = _guardianPlanSMSState.asStateFlow()
+
+    private val _guardianPlanSatState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val guardianPlanSatState = _guardianPlanSatState.asStateFlow()
+
+    private val _guardianPlanOfflineState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val guardianPlanOfflineState = _guardianPlanOfflineState.asStateFlow()
+
+    private val _guardianSatTimeOffState: MutableStateFlow<String> = MutableStateFlow("")
+    val guardianSatTimeOffState = _guardianSatTimeOffState.asStateFlow()
+
+    private var currentGuardianOffTimes: String = ""
+    private var currentProjectOffTimes: String = ""
+
     init {
         getSimModule()
         getSatModule()
         getGuardianTime()
+        getGuardianPlan()
+        getOffTimes()
     }
 
     private fun getSimModule() {
@@ -109,5 +129,62 @@ class CommunicationViewModel(
                 }
             }
         }
+    }
+
+    private fun getGuardianPlan() {
+        viewModelScope.launch {
+            getGuardianMessageUseCase.launch().catch {
+
+            }.collectLatest { result ->
+                result?.getGuardianPlan()?.let {
+                    when(it) {
+                        GuardianPlan.CELL_ONLY -> {
+                            _guardianPlanCellState.tryEmit(true)
+                            _guardianPlanSMSState.tryEmit(false)
+                            _guardianPlanSatState.tryEmit(false)
+                            _guardianPlanOfflineState.tryEmit(false)
+                        }
+                        GuardianPlan.CELL_SMS -> {
+                            _guardianPlanCellState.tryEmit(false)
+                            _guardianPlanSMSState.tryEmit(true)
+                            _guardianPlanSatState.tryEmit(false)
+                            _guardianPlanOfflineState.tryEmit(false)
+                        }
+                        GuardianPlan.SAT_ONLY -> {
+                            _guardianPlanCellState.tryEmit(false)
+                            _guardianPlanSMSState.tryEmit(false)
+                            _guardianPlanSatState.tryEmit(true)
+                            _guardianPlanOfflineState.tryEmit(false)
+                        }
+                        GuardianPlan.OFFLINE_MODE -> {
+                            _guardianPlanCellState.tryEmit(false)
+                            _guardianPlanSMSState.tryEmit(false)
+                            _guardianPlanSatState.tryEmit(false)
+                            _guardianPlanOfflineState.tryEmit(true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getOffTimes() {
+        viewModelScope.launch {
+            getGuardianMessageUseCase.launch().catch {
+
+            }.collectLatest { result ->
+                result?.getSatTimeOff()?.let {
+                    currentGuardianOffTimes = it
+                }
+            }
+        }
+    }
+
+    fun onManualClicked() {
+        _guardianSatTimeOffState.tryEmit(currentGuardianOffTimes)
+    }
+
+    fun onAutoClicked() {
+        _guardianSatTimeOffState.tryEmit("")
     }
 }
