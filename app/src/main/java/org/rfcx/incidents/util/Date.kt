@@ -126,6 +126,13 @@ fun Date.toDateTimeString(): String {
     return outputDateSdf.format(this)
 }
 
+fun Date.toDateTimeString(timeZone: String? = null): String {
+    if (timeZone != null) {
+        outputStandardDateSdf.timeZone = TimeZone.getTimeZone(timeZone)
+    }
+    return outputStandardDateSdf.format(this)
+}
+
 fun Date.millisecondsSince(): Long {
     return Date().time - this.time
 }

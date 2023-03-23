@@ -12,6 +12,7 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.entity.guardian.socket.SpeedTest
+import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -123,6 +124,11 @@ object PingUtils {
             ?: return null
     }
 
+    fun AdminPing.getGPSDetection(): Boolean? {
+        return this.companion?.get("sat_info")?.asJsonObject?.get("is_gps_connected")?.asBoolean
+            ?: return null
+    }
+
     fun AdminPing.getSwarmId(): String? {
         return this.companion?.get("sat_info")?.asJsonObject?.get("sat_id")?.asString
             ?: return null
@@ -148,6 +154,21 @@ object PingUtils {
             if (speedTest.has("is_testing")) speedTest.get("is_testing").asBoolean else false
         val hasConnection = speedTest.get("connection_available").asBoolean
         return SpeedTest(downloadSpeed, uploadSpeed, isFailed, isTesting, hasConnection)
+    }
+
+    fun AdminPing.getPhoneNumber(): String? {
+        return this.companion?.get("sim_info")?.asJsonObject?.get("phone_number")?.asString
+            ?: return null
+    }
+
+    fun GuardianPing.getGuardianLocalTime(): Long? {
+        val localtime = this.companion?.get("system_time_utc") ?: return null
+        return localtime.asLong
+    }
+
+    fun GuardianPing.getGuardianTimezone(): String? {
+        val timezone = this.companion?.get("system_timezone") ?: return null
+        return timezone.asString
     }
 
     fun unGzipString(content: String?): String? {

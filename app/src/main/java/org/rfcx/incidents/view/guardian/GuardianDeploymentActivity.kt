@@ -12,6 +12,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
+import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
@@ -44,6 +45,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.SOFTWARE_UPDATE -> startFragment(SoftwareUpdateFragment.newInstance())
             GuardianScreen.CLASSIFIER_UPLOAD -> startFragment(ClassifierUploadFragment.newInstance())
             GuardianScreen.POWER_DIAGNOSTIC -> startFragment(PowerDiagnosticFragment.newInstance())
+            GuardianScreen.COMMUNICATION -> startFragment(CommunicationFragment.newInstance())
             GuardianScreen.NETWORK_TEST -> startFragment(NetworkTestFragment.newInstance())
         }
     }
@@ -89,6 +91,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.POWER_DIAGNOSTIC -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.COMMUNICATION -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.NETWORK_TEST -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
