@@ -104,7 +104,7 @@ class CommunicationViewModel(
                 result?.getGuardianTimezone()?.let {
                     _guardianLocalTimezoneState.tryEmit(it)
                     if (localTime != 0L) {
-                        _guardianLocalTimeState.tryEmit(Date(it).toDateTimeString(it))
+                        _guardianLocalTimeState.tryEmit(Date(localTime).toDateTimeString(it))
                     }
                 }
             }
