@@ -45,7 +45,7 @@
                     style="@style/RangerText.Subhead.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SIM Card detected"
+                    android:text="@string/sim_card_detected"
                     app:layout_constraintBottom_toBottomOf="@id/simDetectionCheckbox"
                     app:layout_constraintStart_toEndOf="@+id/simDetectionCheckbox"
                     app:layout_constraintTop_toTopOf="@id/simDetectionCheckbox" />
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/margin_padding_small"
                     android:visibility="@{viewModel.simModuleState ? view.VISIBLE : view.GONE}"
-                    android:text="phone number:"
+                    android:text="@string/phone_number"
                     app:layout_constraintStart_toStartOf="@+id/simDetectionTextView"
                     app:layout_constraintTop_toBottomOf="@id/simDetectionTextView" />
 
@@ -90,7 +90,7 @@
                     style="@style/RangerText.Subhead.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Satellite module detected"
+                    android:text="@string/satellite_module_detected"
                     app:layout_constraintBottom_toBottomOf="@id/satDetectionCheckbox"
                     app:layout_constraintStart_toEndOf="@+id/satDetectionCheckbox"
                     app:layout_constraintTop_toTopOf="@id/satDetectionCheckbox" />
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/margin_padding_small"
-                    android:text="swarm id:"
+                    android:text="@string/swarm_id"
                     android:visibility="@{viewModel.satModuleState ? view.VISIBLE : view.GONE}"
                     app:layout_constraintStart_toStartOf="@+id/satDetectionTextView"
                     app:layout_constraintTop_toBottomOf="@id/satDetectionTextView" />
@@ -135,7 +135,7 @@
                     style="@style/RangerText.Subhead.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Satellite GPS detected"
+                    android:text="@string/satellite_gps_detected"
                     app:layout_constraintBottom_toBottomOf="@id/gpsDetectionCheckbox"
                     app:layout_constraintStart_toEndOf="@+id/gpsDetectionCheckbox"
                     app:layout_constraintTop_toTopOf="@id/gpsDetectionCheckbox" />
@@ -156,7 +156,7 @@
                     style="@style/RangerText.Subhead.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Guardian local time:"
+                    android:text="@string/guardian_local_time"
                     app:layout_constraintBottom_toBottomOf="@id/systemTimeCheckbox"
                     app:layout_constraintStart_toEndOf="@id/systemTimeCheckbox"
                     app:layout_constraintTop_toTopOf="@id/systemTimeCheckbox" />
@@ -179,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_normal"
-                    android:text="Guardian timezone:"
+                    android:text="@string/guardian_timezone"
                     app:layout_constraintStart_toStartOf="@id/guardianTimeTextView"
                     app:layout_constraintTop_toBottomOf="@id/guardianTimeTextView" />
 
@@ -220,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="@{viewModel.guardianPlanCellState}"
-                        android:text="Cell data only" />
+                        android:text="@string/cell_data_only" />
 
                     <RadioButton
                         android:id="@+id/cellSmsRadioButton"
@@ -228,7 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="@{viewModel.guardianPlanSMSState}"
-                        android:text="Cell data + SMS fallback (experimental)" />
+                        android:text="@string/cell_data_sms_fallback_experimental" />
 
                     <RadioButton
                         android:id="@+id/satOnlyRadioButton"
@@ -236,7 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="@{viewModel.guardianPlanSatState}"
-                        android:text="Satellite only" />
+                        android:text="@string/satellite_only" />
 
                     <RadioButton
                         android:id="@+id/offlineModeRadioButton"
@@ -252,7 +252,7 @@
                     style="@style/RangerText.Body.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Off times (local times)"
+                    android:text="@string/off_times_local_times"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -276,7 +276,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="Manual"
+                        android:text="@string/manual"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_small" />
 
@@ -284,7 +284,7 @@
                         android:id="@+id/presetRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Auto"
+                        android:text="@string/auto"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_small" />
                 </RadioGroup>
@@ -307,8 +307,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_small"
-                    android:text="There is no off time in this project"
-                    android:visibility="gone"
+                    android:text="@string/there_is_no_off_time_in_this_project"
+                    android:visibility="@{viewModel.guardianSatOffTimeEmptyTextState ? view.VISIBLE : view.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/timeOffRadioGroup" />

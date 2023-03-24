@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianCommunicationConfigurationBinding
+import org.rfcx.incidents.util.socket.GuardianPlan
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class CommunicationFragment : Fragment() {
@@ -37,7 +38,7 @@ class CommunicationFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Communication Configuration")
+            it.setToolbarTitle(getString(R.string.communication_configuration))
         }
 
         binding.guardianPlanGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -57,11 +58,9 @@ class CommunicationFragment : Fragment() {
             if (checkedId == R.id.manualRadioButton) {
                 binding.offTimeChipGroup.allowAdd = true
                 viewModel.onManualClicked()
-                hideEmptyOffTimeText()
             } else {
                 binding.offTimeChipGroup.allowAdd = false
                 viewModel.onAutoClicked()
-                showEmptyOffTimeText()
             }
         }
 
@@ -70,14 +69,35 @@ class CommunicationFragment : Fragment() {
                 binding.offTimeChipGroup.setTimes(it)
             }
         }
+
+        binding.nextButton.setOnClickListener {
+            binding.nextButton.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+            handlePlanSelection()
+        }
+
+        lifecycleScope.launch {
+            viewModel.checkSha1State.collectLatest {
+                if (it) {
+                    mainEvent?.next()
+                }
+            }
+        }
     }
 
-    private fun showEmptyOffTimeText() {
-        binding.emptyOffTimeTextView.visibility = View.VISIBLE
-    }
-
-    private fun hideEmptyOffTimeText() {
-        binding.emptyOffTimeTextView.visibility = View.GONE
+    private fun handlePlanSelection() {
+        if (binding.cellOnlyRadioButton.isChecked) {
+            viewModel.onNextClicked(GuardianPlan.CELL_ONLY)
+        }
+        if (binding.cellSmsRadioButton.isChecked) {
+            viewModel.onNextClicked(GuardianPlan.CELL_SMS)
+        }
+        if (binding.satOnlyRadioButton.isChecked) {
+            viewModel.onNextClicked(GuardianPlan.SAT_ONLY, binding.offTimeChipGroup.listOfTime, binding.manualRadioButton.isChecked)
+        }
+        if (binding.offlineModeRadioButton.isChecked) {
+            viewModel.onNextClicked(GuardianPlan.OFFLINE_MODE)
+        }
     }
 
     companion object {

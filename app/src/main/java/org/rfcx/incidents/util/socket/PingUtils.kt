@@ -187,6 +187,14 @@ object PingUtils {
         return null
     }
 
+    fun GuardianPing.getPrefsSha1(): String? {
+        if (this.prefs is JsonObject) {
+            val sha1 = this.prefs.get("sha1") ?: return null
+            return sha1.asString
+        }
+        return null
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }

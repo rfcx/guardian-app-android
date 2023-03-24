@@ -134,6 +134,8 @@ object DataModule {
         single { GetAdminMessageUseCase(get()) }
         single { SendFileSocketUseCase(get()) }
         single { SendInstructionCommandUseCase(get()) }
+
+        single { GetProjectOffTimesUseCase(get()) }
     }
 
     val remoteModule = module {

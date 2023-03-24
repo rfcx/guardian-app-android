@@ -62,6 +62,6 @@ object UiModule {
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
         viewModel { PowerDiagnosticViewModel(get(), get()) }
         viewModel { NetworkTestViewModel(get(), get(), get()) }
-        viewModel { CommunicationViewModel(get(), get(), get(), get()) }
+        viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
     }
 }

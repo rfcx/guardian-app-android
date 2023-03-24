@@ -7,9 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.ProjectDb
-import org.rfcx.incidents.data.remote.project.ProjectOffTimeResponse
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
-import org.rfcx.incidents.data.remote.project.ProjectResponse
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Project
 
