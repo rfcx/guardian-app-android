@@ -30,7 +30,7 @@ object ServiceFactory {
 
     fun makeProjectsService(isDebug: Boolean, context: Context): ProjectsEndpoint {
         return createRetrofit(
-            BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
             GsonProvider.getInstance().gson
         )
             .create(ProjectsEndpoint::class.java)

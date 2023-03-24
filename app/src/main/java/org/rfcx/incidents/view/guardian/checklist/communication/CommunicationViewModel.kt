@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.domain.GetProjectOffTimesParams
+import org.rfcx.incidents.domain.GetProjectOffTimesUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.util.socket.GuardianPlan
@@ -23,7 +26,9 @@ import java.util.Date
 
 class CommunicationViewModel(
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
-    private val getAdminMessageUseCase: GetAdminMessageUseCase
+    private val getAdminMessageUseCase: GetAdminMessageUseCase,
+    private val getProjectOffTimesUseCase: GetProjectOffTimesUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _simModuleState: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -178,6 +183,13 @@ class CommunicationViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            getProjectOffTimesUseCase.launch(GetProjectOffTimesParams(preferences.getString(Preferences.SELECTED_PROJECT, ""))).catch {
+
+            }.collectLatest { result ->
+                currentProjectOffTimes = result
+            }
+        }
     }
 
     fun onManualClicked() {
@@ -185,6 +197,6 @@ class CommunicationViewModel(
     }
 
     fun onAutoClicked() {
-        _guardianSatTimeOffState.tryEmit("")
+        _guardianSatTimeOffState.tryEmit(currentProjectOffTimes)
     }
 }

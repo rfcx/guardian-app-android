@@ -13,6 +13,7 @@ import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Incident
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
 import java.util.Date
@@ -20,7 +21,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 22L
+        private const val schemaVersion = 23L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -78,6 +79,10 @@ private class Migrations : RealmMigration {
         if (oldVersion < 22L && newVersion >= 22) {
             migrateToV22(c)
         }
+
+        if (oldVersion < 23L && newVersion >= 23) {
+            migrateToV23(c)
+        }
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -123,6 +128,13 @@ private class Migrations : RealmMigration {
             addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
             addField(GuardianFile.FIELD_TYPE, String::class.java).setRequired(GuardianFile.FIELD_TYPE, true)
             addField(GuardianFile.FIELD_META, String::class.java).setRequired(GuardianFile.FIELD_META, true)
+        }
+    }
+
+    private fun migrateToV23(realm: DynamicRealm) {
+        val project = realm.schema.get(Project.TABLE_NAME)
+        project?.apply {
+            addField(Project.PROJECT_OFFTIMES, String::class.java).setRequired(Project.PROJECT_OFFTIMES, true)
         }
     }
 
