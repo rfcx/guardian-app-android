@@ -9,6 +9,7 @@ import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListViewModel
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadViewModel
+import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationViewModel
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
@@ -61,5 +62,6 @@ object UiModule {
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
         viewModel { PowerDiagnosticViewModel(get(), get()) }
         viewModel { NetworkTestViewModel(get(), get(), get()) }
+        viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
     }
 }

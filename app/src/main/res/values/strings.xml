@@ -469,4 +469,23 @@
     <string name="ok">OK</string>
     <string name="bad">Bad</string>
     <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
+
+    <!-- Communication Configuration -->
+    <string name="communication_configuration">Communication Configuration</string>
+    <string name="back">back</string>
+    <string name="plus">+</string>
+    <string name="sim_card_detected">SIM Card detected</string>
+    <string name="phone_number">phone number:</string>
+    <string name="satellite_module_detected">Satellite module detected</string>
+    <string name="swarm_id">swarm id:</string>
+    <string name="satellite_gps_detected">Satellite GPS detected</string>
+    <string name="guardian_local_time">Guardian local time:</string>
+    <string name="guardian_timezone">Guardian timezone:</string>
+    <string name="cell_data_only">Cell data only</string>
+    <string name="cell_data_sms_fallback_experimental">Cell data + SMS fallback (experimental)</string>
+    <string name="satellite_only">Satellite only</string>
+    <string name="off_times_local_times">Off times (local times)</string>
+    <string name="manual">Manual</string>
+    <string name="auto">Auto</string>
+    <string name="there_is_no_off_time_in_this_project">There is no off time in this project</string>
 </resources>
