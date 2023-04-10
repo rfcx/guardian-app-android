@@ -86,6 +86,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         showScreen(screen)
     }
 
+    override fun setPassedScreen(screen: GuardianScreen) {
+        passedScreen.add(screen)
+    }
+
     override fun back() {
         when (currentScreen) {
             GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()

@@ -44,6 +44,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     private fun collectStates() {
         lifecycleScope.launchWhenStarted {
             launch { collectCheckListItem() }
+            launch { collectRegistration() }
         }
     }
 
@@ -51,6 +52,14 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         lifecycleScope.launch {
             viewModel.checklistItemState.collectLatest {
                 checkListAdapter.setCheckList(it)
+            }
+        }
+    }
+
+    private fun collectRegistration() {
+        lifecycleScope.launch {
+            viewModel.registrationState.collectLatest {
+                mainEvent?.setPassedScreen(GuardianScreen.REGISTER)
             }
         }
     }

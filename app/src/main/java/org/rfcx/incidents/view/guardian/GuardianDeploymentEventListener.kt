@@ -10,6 +10,7 @@ interface GuardianDeploymentEventListener {
     fun setToolbarTitle(title: String)
 
     fun changeScreen(screen: GuardianScreen)
+    fun setPassedScreen(screen: GuardianScreen)
     fun back()
     fun next()
     fun getPassedScreen(): List<GuardianScreen>
