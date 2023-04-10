@@ -9,6 +9,8 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterProductionEndpoint
+import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterStagingEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.DownloadFileEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
@@ -142,6 +144,22 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(DownloadFileEndpoint::class.java)
+    }
+
+    fun makeGuardianRegisterProductionService(context: Context): GuardianRegisterProductionEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(false, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(GuardianRegisterProductionEndpoint::class.java)
+    }
+
+    fun makeGuardianRegisterStagingService(context: Context): GuardianRegisterStagingEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(true, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(GuardianRegisterStagingEndpoint::class.java)
     }
 
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

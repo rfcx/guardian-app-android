@@ -12,6 +12,7 @@ import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUpl
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationViewModel
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
+import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
@@ -63,5 +64,6 @@ object UiModule {
         viewModel { PowerDiagnosticViewModel(get(), get()) }
         viewModel { NetworkTestViewModel(get(), get(), get()) }
         viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
+        viewModel { GuardianRegisterViewModel(get(), get()) }
     }
 }

@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.guardian.GuardianRegistrationRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.FileSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
@@ -31,6 +32,7 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.interfaces.guardian.GuardianRegistrationRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
@@ -55,6 +57,7 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
+import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
@@ -136,6 +139,9 @@ object DataModule {
         single { SendInstructionCommandUseCase(get()) }
 
         single { GetProjectOffTimesUseCase(get()) }
+
+        single { GuardianRegistrationRepositoryImpl(get(), get(), get()) } bind GuardianRegistrationRepository::class
+        single { SaveRegistrationUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -153,6 +159,8 @@ object DataModule {
         factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeDownloadFileService(BuildConfig.DEBUG) }
+        factory { ServiceFactory.makeGuardianRegisterProductionService(androidContext()) }
+        factory { ServiceFactory.makeGuardianRegisterStagingService(androidContext()) }
     }
 
     val localModule = module {
