@@ -15,6 +15,7 @@ import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUpl
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
+import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 
@@ -46,6 +47,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CLASSIFIER_UPLOAD -> startFragment(ClassifierUploadFragment.newInstance())
             GuardianScreen.POWER_DIAGNOSTIC -> startFragment(PowerDiagnosticFragment.newInstance())
             GuardianScreen.COMMUNICATION -> startFragment(CommunicationFragment.newInstance())
+            GuardianScreen.REGISTER -> startFragment(GuardianRegisterFragment.newInstance())
             GuardianScreen.NETWORK_TEST -> startFragment(NetworkTestFragment.newInstance())
         }
     }
@@ -92,6 +94,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.POWER_DIAGNOSTIC -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.COMMUNICATION -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.REGISTER -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.NETWORK_TEST -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }

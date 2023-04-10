@@ -72,6 +72,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
             2 -> mainEvent?.changeScreen(GuardianScreen.POWER_DIAGNOSTIC)
             3 -> mainEvent?.changeScreen(GuardianScreen.COMMUNICATION)
+            4 -> mainEvent?.changeScreen(GuardianScreen.REGISTER)
             5 -> mainEvent?.changeScreen(GuardianScreen.NETWORK_TEST)
         }
     }
