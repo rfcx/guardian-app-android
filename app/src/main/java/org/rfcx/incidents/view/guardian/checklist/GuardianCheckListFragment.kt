@@ -59,7 +59,10 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     private fun collectRegistration() {
         lifecycleScope.launch {
             viewModel.registrationState.collectLatest {
-                mainEvent?.setPassedScreen(GuardianScreen.REGISTER)
+                if (it) {
+                    mainEvent?.setPassedScreen(GuardianScreen.REGISTER)
+                    viewModel.getAllCheckList(mainEvent?.getPassedScreen())
+                }
             }
         }
     }

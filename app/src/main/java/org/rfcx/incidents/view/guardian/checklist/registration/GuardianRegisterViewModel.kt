@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterResponse
 import org.rfcx.incidents.domain.guardian.registration.OfflineRegistrationParams
 import org.rfcx.incidents.domain.guardian.registration.OnlineRegistrationParams
 import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
@@ -21,6 +22,7 @@ import org.rfcx.incidents.domain.guardian.socket.InstructionParams
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegisterRequest
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
+import org.rfcx.incidents.entity.guardian.registration.toSocketFormat
 import org.rfcx.incidents.entity.guardian.socket.InstructionCommand
 import org.rfcx.incidents.entity.guardian.socket.InstructionType
 import org.rfcx.incidents.util.common.StringUtils
@@ -37,8 +39,11 @@ class GuardianRegisterViewModel(
     private val _registerTextState: MutableStateFlow<String> = MutableStateFlow("")
     val registerTextState = _registerTextState.asStateFlow()
 
-    private val _registerButtonState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _registerButtonState: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val registerButtonState = _registerButtonState.asStateFlow()
+
+    private val _registrationState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val registrationState = _registrationState.asStateFlow()
 
     private var guid = ""
     private var waitingForRegistration = false
@@ -56,9 +61,14 @@ class GuardianRegisterViewModel(
                     guid = it
                 }
                 result?.isRegistered()?.let {
+                    if (it) {
+                        _registrationState.tryEmit(true)
+                        _registerButtonState.tryEmit(false)
+                    } else {
+                        _registrationState.tryEmit(false)
+                    }
                     if (waitingForRegistration && it) {
                         waitingForRegistration = false
-                        _registerButtonState.tryEmit(true)
                     }
                     if (it && !waitingForRegistration) {
                         _registerTextState.tryEmit("Your Guardian is already registered")
@@ -88,14 +98,6 @@ class GuardianRegisterViewModel(
                     keystorePassphrase = keystorePassphrase,
                     env = if (isProduction) "production" else "staging"
                 )
-                val renamedJson = JsonObject()
-                renamedJson.addProperty("guid", registration.guid)
-                renamedJson.addProperty("token", registration.token)
-                renamedJson.addProperty("keystore_passphrase", registration.keystorePassphrase)
-                renamedJson.addProperty("pin_code", registration.pinCode)
-                renamedJson.addProperty("api_mqtt_host", registration.apiMqttHost)
-                renamedJson.addProperty("api_sms_address", registration.apiSmsAddress)
-
                 withContext(Dispatchers.Main) {
                     saveRegistrationUseCase.launch(OfflineRegistrationParams(registration))
                 }
@@ -103,7 +105,7 @@ class GuardianRegisterViewModel(
                     waitingForRegistration = true
                     _registerButtonState.tryEmit(false)
                     _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
-                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SEND, InstructionCommand.IDENTITY, Gson().toJson(renamedJson)))
+                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.IDENTITY, convertToRegistrationFormat(registration)))
                 }
             }
         }
@@ -120,10 +122,28 @@ class GuardianRegisterViewModel(
                     when(result) {
                         is Result.Error -> _registerTextState.tryEmit("Register failed: ${result.throwable.message}")
                         Result.Loading -> _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
-                        is Result.Success -> _registerTextState.tryEmit("Your Guardian is already registered")
+                        is Result.Success -> {
+                            withContext(Dispatchers.IO) {
+                                sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.IDENTITY, convertToRegistrationFormat(result.data)))
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun convertToRegistrationFormat(registration: GuardianRegistration): String {
+        return convertToRegistrationFormat(registration.toSocketFormat())
+    }
+    private fun convertToRegistrationFormat(registration: GuardianRegisterResponse): String {
+        val renamedJson = JsonObject()
+        renamedJson.addProperty("guid", registration.guid)
+        renamedJson.addProperty("token", registration.token)
+        renamedJson.addProperty("keystore_passphrase", registration.keystorePassphrase)
+        renamedJson.addProperty("pin_code", registration.pinCode)
+        renamedJson.addProperty("api_mqtt_host", registration.apiMqttHost)
+        renamedJson.addProperty("api_sms_address", registration.apiSmsAddress)
+        return Gson().toJson(renamedJson)
     }
 }
