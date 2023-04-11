@@ -7,4 +7,6 @@ import org.rfcx.incidents.data.remote.common.Result
 interface WifiHotspotRepository {
     fun getHotspots(): Flow<Result<List<ScanResult>>>
     fun connect(scanResult: ScanResult): Flow<Result<Boolean>>
+
+    fun disconnect()
 }

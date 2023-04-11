@@ -2,11 +2,14 @@ package org.rfcx.incidents.view.guardian
 
 import android.content.Context
 import android.content.Intent
+import android.net.wifi.ScanResult
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
@@ -36,7 +39,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         setupToolbar()
 
         // Show guardian connect screen first
-        showScreen(GuardianScreen.CONNECT)
+        changeScreen(GuardianScreen.CONNECT)
     }
 
     private fun showScreen(screen: GuardianScreen) {
@@ -92,8 +95,11 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun back() {
         when (currentScreen) {
-            GuardianScreen.CONNECT -> onBackPressedDispatcher.onBackPressed()
-            GuardianScreen.CHECKLIST -> changeScreen(GuardianScreen.CONNECT)
+            GuardianScreen.CONNECT -> finish()
+            GuardianScreen.CHECKLIST -> {
+                viewModel.disconnectWifi()
+                changeScreen(GuardianScreen.CONNECT)
+            }
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CLASSIFIER_UPLOAD -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.POWER_DIAGNOSTIC -> changeScreen(GuardianScreen.CHECKLIST)
@@ -110,6 +116,14 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun getPassedScreen(): List<GuardianScreen> = passedScreen
 
+    override fun connectHotspot(hotspot: ScanResult?) {
+        lifecycleScope.launch {
+            viewModel.connectWifi(hotspot)
+        }
+    }
+    override fun getHotspotConnectionState(): SharedFlow<Result<Boolean>> {
+        return viewModel.connectionState
+    }
     override fun initSocket() {
         viewModel.initSocket()
     }

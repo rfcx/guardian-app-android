@@ -13,7 +13,7 @@ import java.io.File
 import java.net.Socket
 import kotlin.math.roundToInt
 
-object FileSocket : BaseSocketMananger() {
+object FileSocket : BaseSocketManager() {
 
     fun sendFile(guardianFile: GuardianFile): Flow<Result<GuardianFileSendStatus>> {
         return flow {

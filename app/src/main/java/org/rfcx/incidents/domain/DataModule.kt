@@ -69,6 +69,7 @@ import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
+import org.rfcx.incidents.domain.guardian.wifi.DisconnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
@@ -120,6 +121,7 @@ object DataModule {
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
         single { GetNearbyHotspotUseCase(get()) }
         single { ConnectHotspotUseCase(get()) }
+        single { DisconnectHotspotUseCase(get()) }
 
         single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
         single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class

@@ -115,7 +115,7 @@ class WifiHotspotManager(private val context: Context) {
 
                         override fun onLost(network: Network) {
                             super.onLost(network)
-                            connectivityManager.bindProcessToNetwork(null)
+                            disconnect()
                             delayJob.cancel()
                             trySendBlocking(Result.Error(Throwable("onLost")))
                         }
@@ -128,7 +128,7 @@ class WifiHotspotManager(private val context: Context) {
                     }
                 )
                 awaitClose {
-                    connectivityManager.bindProcessToNetwork(null)
+                    disconnect()
                 }
             }
         } else {
@@ -177,6 +177,12 @@ class WifiHotspotManager(private val context: Context) {
                     context.unregisterReceiver(receiver)
                 }
             }
+        }
+    }
+
+    fun disconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (::connectivityManager.isInitialized) connectivityManager.bindProcessToNetwork(null)
         }
     }
 }

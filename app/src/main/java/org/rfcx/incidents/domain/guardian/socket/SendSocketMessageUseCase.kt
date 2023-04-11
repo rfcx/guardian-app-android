@@ -4,7 +4,7 @@ import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.domain.base.NoResultWithParamUseCase
-import org.rfcx.incidents.service.wifi.socket.BaseSocketMananger
+import org.rfcx.incidents.service.wifi.socket.BaseSocketManager
 
 class SendSocketMessageUseCase(
     private val guardianRepository: GuardianSocketRepository,
@@ -13,10 +13,10 @@ class SendSocketMessageUseCase(
 ) : NoResultWithParamUseCase<SendMessageParams>() {
     override fun performAction(param: SendMessageParams) {
         when (param.type) {
-            BaseSocketMananger.Type.GUARDIAN -> guardianRepository.sendMessage(param.message)
-            BaseSocketMananger.Type.ADMIN -> adminRepository.sendMessage(param.message)
-            BaseSocketMananger.Type.FILE -> fileSocketRepository.sendMessage(param.message)
-            BaseSocketMananger.Type.ALL -> {
+            BaseSocketManager.Type.GUARDIAN -> guardianRepository.sendMessage(param.message)
+            BaseSocketManager.Type.ADMIN -> adminRepository.sendMessage(param.message)
+            BaseSocketManager.Type.FILE -> fileSocketRepository.sendMessage(param.message)
+            BaseSocketManager.Type.ALL -> {
                 guardianRepository.sendMessage(param.message)
                 adminRepository.sendMessage(param.message)
             }
@@ -25,6 +25,6 @@ class SendSocketMessageUseCase(
 }
 
 data class SendMessageParams(
-    val type: BaseSocketMananger.Type,
+    val type: BaseSocketManager.Type,
     val message: String
 )

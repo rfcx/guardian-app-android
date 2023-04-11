@@ -46,9 +46,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
         binding.connectGuardianButton.setOnClickListener {
             lifecycleScope.launchWhenStarted {
-                launch {
-                    viewModel.connect()
-                }
+                mainEvent?.connectHotspot(viewModel.getSelectedHotspot())
                 launch { collectHotspotConnect() }
             }
         }
@@ -62,9 +60,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
     private fun collectStates() {
         lifecycleScope.launchWhenStarted {
             launch { collectNearbyHotspot() }
-            // launch { collectHotspotConnect() }
-            // launch { collectSocketInitial() }
-            // launch { collectSocketRead() }
         }
     }
 
@@ -99,7 +94,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
 
     private fun collectHotspotConnect() {
         lifecycleScope.launch {
-            viewModel.connectionState.collectLatest { result ->
+            mainEvent?.getHotspotConnectionState()?.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE

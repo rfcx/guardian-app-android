@@ -16,4 +16,8 @@ class WifiHotspotRepositoryImpl(
     override fun connect(scanResult: ScanResult): Flow<Result<Boolean>> {
         return wifiHotspotManager.connectTo(scanResult)
     }
+
+    override fun disconnect() {
+        wifiHotspotManager.disconnect()
+    }
 }

@@ -15,7 +15,7 @@ import java.io.DataOutputStream
 import java.io.EOFException
 import java.net.Socket
 
-abstract class BaseSocketMananger {
+abstract class BaseSocketManager {
 
     var socket: Socket? = null
     var readChannel: DataInputStream? = null
