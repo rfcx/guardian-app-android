@@ -35,7 +35,7 @@ class GuardianRegisterFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Register Guardian with RFCx")
+            it.setToolbarTitle(getString(R.string.register_guardian))
         }
 
         binding.registerGuardianButton.setOnClickListener {

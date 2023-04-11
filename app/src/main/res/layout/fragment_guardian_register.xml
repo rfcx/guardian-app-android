@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_padding_normal"
-            android:text="Let's register your Guardian"
+            android:text="@string/let_s_register_your_guardian"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:text="Production"
+                android:text="@string/production"
                 android:enabled="@{viewModel.registrationState ? false : true}"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_small" />
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Staging"
+                android:text="@string/staging"
                 android:enabled="@{viewModel.registrationState ? false : true}"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_small" />
@@ -107,7 +107,7 @@
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             android:enabled="@{viewModel.registerButtonState}"
-            android:text="Register"
+            android:text="@string/register"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
