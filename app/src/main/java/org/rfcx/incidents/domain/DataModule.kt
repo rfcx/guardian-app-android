@@ -47,6 +47,7 @@ import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
+import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -58,6 +59,7 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
 import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
+import org.rfcx.incidents.domain.guardian.registration.SendRegistrationOnlineUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
@@ -142,6 +144,7 @@ object DataModule {
 
         single { GuardianRegistrationRepositoryImpl(get(), get(), get()) } bind GuardianRegistrationRepository::class
         single { SaveRegistrationUseCase(get()) }
+        single { SendRegistrationOnlineUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -173,6 +176,7 @@ object DataModule {
         factory { AssetDb(get()) }
         factory { TrackingDb(get()) }
         factory { GuardianFileDb(get()) }
+        factory { GuardianRegistrationDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
