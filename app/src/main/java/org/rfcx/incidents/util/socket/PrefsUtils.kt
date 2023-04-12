@@ -5,6 +5,16 @@ import com.google.gson.JsonParser
 import java.util.TimeZone
 
 object PrefsUtils {
+
+    const val audioDuration = "audio_cycle_duration"
+    const val audioSampleRate = "audio_stream_sample_rate"
+    const val audioCodec = "audio_stream_codec"
+    const val audioBitrate = "audio_stream_bitrate"
+    const val audioCastSampleRate = "audio_cast_sample_rate_minimum"
+    const val enableSampling = "enable_cutoffs_sampling_ratio"
+    const val sampling = "audio_sampling_ratio"
+    const val schedule = "audio_capture_schedule_off_hours"
+
     fun canGuardianClassify(str: String): Boolean {
         val expect = listOf("sms", "sat", "")
         val json = JsonParser.parseString(str).asJsonObject
@@ -132,6 +142,21 @@ object PrefsUtils {
         prefs.addProperty("api_ping_cycle_duration", "30")
         prefs.addProperty("api_ping_schedule_off_hours", "00:00-23:59")
         return prefs
+    }
+
+    fun stringToAudioPrefs(str: String?): JsonObject? {
+        if (str == null) {
+            return null
+        }
+        val json = JsonParser.parseString(str).asJsonObject
+        val keys = json.keySet()
+        val audioPrefs = listOf(audioDuration, audioSampleRate, audioCodec, audioBitrate, enableSampling, sampling, schedule)
+        val audioKeys = keys.filter { audioPrefs.contains(it) }
+        val audioJson = JsonObject()
+        audioKeys.toList().forEach {
+            audioJson.add(it, json[it])
+        }
+        return audioJson
     }
 }
 

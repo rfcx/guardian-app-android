@@ -495,4 +495,15 @@
     <string name="production">Production</string>
     <string name="staging">Staging</string>
     <string name="register">Register</string>
+
+    <!-- Guardian Audio Parameter -->
+    <string name="file_format">File format</string>
+    <string name="sample_rate">Sample Rate</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="duration">Recording cycle duration (per file)</string>
+    <string name="sample_ratio">Cycle(s) skipped between recordings</string>
+    <string name="recording_schedule">Recording schedule</string>
+    <string name="schedule_start_time">Select start time</string>
+    <string name="schedule_stop_time">Select stop time</string>
+    <string name="select_cycle_s_to_skip_between_recordings">Select cycle(s) to skip between recordings</string>
 </resources>
