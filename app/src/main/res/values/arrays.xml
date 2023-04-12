@@ -33,4 +33,99 @@
         <item>Add Photo(s)</item>
         <item>Confirm CheckIn Status</item>
     </string-array>
+
+    <string-array name="bitrate_entries">
+        <item>4 kbps</item>
+        <item>8 kbps</item>
+        <item>12 kbps</item>
+        <item>16 kbps</item>
+        <item>20 kbps</item>
+        <item>24 kbps</item>
+        <item>28 kbps</item>
+        <item>32 kbps</item>
+        <item>40 kbps</item>
+        <item>48 kbps</item>
+        <item>64 kbps</item>
+        <item>80 kbps</item>
+        <item>96 kbps</item>
+        <item>112 kbps</item>
+        <item>128 kbps</item>
+    </string-array>
+
+    <string-array name="bitrate_values">
+        <item>4096</item>
+        <item>8192</item>
+        <item>12288</item>
+        <item>16384</item>
+        <item>20480</item>
+        <item>24576</item>
+        <item>28672</item>
+        <item>32768</item>
+        <item>40960</item>
+        <item>49152</item>
+        <item>65536</item>
+        <item>81920</item>
+        <item>98304</item>
+        <item>114688</item>
+        <item>131072</item>
+    </string-array>
+
+    <string-array name="sample_rate_entries">
+        <item>8 kHz</item>
+        <item>12 kHz</item>
+        <item>16 kHz</item>
+        <item>24 kHz</item>
+        <item>48 kHz</item>
+    </string-array>
+
+    <string-array name="sample_rate_values">
+        <item>8000</item>
+        <item>12000</item>
+        <item>16000</item>
+        <item>24000</item>
+        <item>48000</item>
+    </string-array>
+
+    <string-array name="audio_codec">
+        <item>opus</item>
+        <item>flac</item>
+    </string-array>
+
+    <string-array name="duration_cycle_entries">
+        <item>15 secs</item>
+        <item>30 secs</item>
+        <item>45 secs</item>
+        <item>60 secs</item>
+        <item>90 secs</item>
+        <item>120 secs</item>
+        <item>150 secs</item>
+        <item>180 secs</item>
+    </string-array>
+
+    <string-array name="duration_cycle_values">
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+        <item>150</item>
+        <item>180</item>
+    </string-array>
+
+    <string-array name="sampling_entries">
+        <item>Record seamlessly</item>
+        <item>Record 1 in every 2 cycles</item>
+        <item>Record 1 in every 3 cycles</item>
+        <item>Record 1 in every 4 cycles</item>
+        <item>Record 1 in every 5 cycles</item>
+    </string-array>
+
+    <string-array name="sampling_values">
+        <item>0</item>
+        <item>1:2</item>
+        <item>1:3</item>
+        <item>1:4</item>
+        <item>1:5</item>
+    </string-array>
 </resources>

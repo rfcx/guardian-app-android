@@ -16,6 +16,7 @@ import org.rfcx.incidents.databinding.FragmentGuardianRegisterBinding
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import org.rfcx.incidents.widget.NumberPickerButtonClickListener
+import org.rfcx.incidents.widget.NumberPickerDialog
 
 class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListener {
 
@@ -67,15 +68,17 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
             it.setToolbarTitle("Audio Parameter Config")
         }
 
-        binding.nextButton.setOnClickListener {
-            schedule =
-                if (scheduleChipGroup.listOfTime.isNullOrEmpty()) "23:55-23:56,23:57-23:59" else scheduleChipGroup.listOfTime.toGuardianFormat()
-            syncConfig()
-            deploymentProtocol?.setSampleRate(sampleRate)
-        }
+        setPredefinedConfiguration(requireContext())
+        setFileFormatLayout()
+        setSampleRateLayout()
+        setBitrateLayout()
+        setDuration()
+        setSampling()
+        setRecordSchedule()
 
-        setNextButton(true)
-        retrieveCurrentConfigure()
+        binding.nextButton.setOnClickListener {
+            viewModel.syncParameter()
+        }
     }
 
     private fun setPredefinedConfiguration(context: Context) {
@@ -90,75 +93,15 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
         samplingValues = context.resources.getStringArray(R.array.sampling_values)
     }
 
-    private fun syncConfig() {
-        GuardianSocketManager.syncConfiguration(getConfiguration().toListForGuardian())
-        GuardianSocketManager.pingBlob.observe(
-            viewLifecycleOwner,
-            Observer {
-                requireActivity().runOnUiThread {
-                    if (!needCheckSha1) {
-                        deploymentProtocol?.nextStep()
-                    }
-                    if (currentPrefsSha1 != deploymentProtocol?.getPrefsSha1()) {
-                        deploymentProtocol?.nextStep()
-                    }
-                }
-            }
-        )
-    }
-
-    private fun getConfiguration(): GuardianConfiguration {
-        return GuardianConfiguration(
-            sampleRate,
-            bitrate,
-            fileFormat,
-            duration,
-            enableSampling,
-            sampling,
-            schedule
-        )
-    }
-
-    private fun retrieveCurrentConfigure() {
-        deploymentProtocol?.getAudioConfiguration()?.let {
-            bitrate = it.get(PrefsUtils.audioBitrate).asInt
-            sampleRate = it.get(PrefsUtils.audioSampleRate).asInt
-            duration = it.get(PrefsUtils.audioDuration).asInt
-            fileFormat = it.get(PrefsUtils.audioCodec).asString
-            enableSampling = it.get(PrefsUtils.enableSampling).asBoolean
-            sampling = it.get(PrefsUtils.sampling).asString
-            schedule = it.get(PrefsUtils.schedule).asString
-        }
-        setFileFormatLayout()
-        setSampleRateLayout()
-        setBitrateLayout()
-        setDuration()
-        setSampling()
-        setRecordSchedule()
-        setNextOnClick()
-    }
-
     private fun setBitrateLayout() {
-
-        val indexOfValue = bitrateValues?.indexOf(bitrate.toString()) ?: 6
-        bitrateValueTextView.text = bitrateEntries!![indexOfValue]
-
-        bitrateValueTextView.setOnClickListener {
+        binding.bitrateValueTextView.setOnClickListener {
             val builder =
                 context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_bitrate)
+                builder.setTitle("Choose Bitrate")
                     .setItems(bitrateEntries) { dialog, i ->
-                        try {
-                            if (bitrateValues!![i].toInt() == bitrate) {
-                                needCheckSha1 = false
-                            } else {
-                                bitrateValueTextView.text = bitrateEntries!![i]
-                                bitrate = bitrateValues!![i].toInt()
-                                needCheckSha1 = true
-                            }
-                        } catch (e: IllegalArgumentException) {
-                            dialog.dismiss()
+                        bitrateValues?.get(i)?.let {
+                            viewModel.selectBitrate(it)
                         }
                     }
                 val dialog = builder.create()
@@ -168,25 +111,14 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
     }
 
     private fun setFileFormatLayout() {
-
-        fileFormatValueTextView.text = fileFormat
-
-        fileFormatValueTextView.setOnClickListener {
+        binding.fileFormatValueTextView.setOnClickListener {
             val builder =
                 context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_file_format)
+                builder.setTitle("Choose file format")
                     .setItems(fileFormatList) { dialog, i ->
-                        try {
-                            if (fileFormatList!![i] == fileFormat) {
-                                needCheckSha1 = false
-                            } else {
-                                fileFormatValueTextView.text = fileFormatList!![i]
-                                fileFormat = fileFormatList!![i]
-                                needCheckSha1 = true
-                            }
-                        } catch (e: IllegalArgumentException) {
-                            dialog.dismiss()
+                        fileFormatList?.get(i)?.let {
+                            viewModel.selectFileFormat(it)
                         }
                     }
                 val dialog = builder.create()
@@ -196,26 +128,14 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
     }
 
     private fun setSampleRateLayout() {
-
-        val indexOfValue = sampleRateValues?.indexOf(sampleRate.toString()) ?: 3
-        sampleRateValueTextView.text = sampleRateEntries!![indexOfValue]
-
-        sampleRateValueTextView.setOnClickListener {
+        binding.sampleRateValueTextView.setOnClickListener {
             val builder =
                 context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_sample_rate)
+                builder.setTitle("Choose Sample rate")
                     .setItems(sampleRateEntries) { dialog, i ->
-                        try {
-                            if (sampleRateValues!![i].toInt() == sampleRate) {
-                                needCheckSha1 = false
-                            } else {
-                                sampleRateValueTextView.text = sampleRateEntries!![i]
-                                sampleRate = sampleRateValues!![i].toInt()
-                                needCheckSha1 = true
-                            }
-                        } catch (e: IllegalArgumentException) {
-                            dialog.dismiss()
+                        sampleRateValues?.get(i)?.let {
+                            viewModel.selectSampleRate(it)
                         }
                     }
                 val dialog = builder.create()
@@ -225,30 +145,14 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
     }
 
     private fun setDuration() {
-
-        val indexOfValue = durationValues?.indexOf(duration.toString()) ?: 3
-        if (indexOfValue == -1) {
-            durationValueTextView.text = "$duration secs"
-        } else {
-            durationValueTextView.text = durationEntries!![indexOfValue]
-        }
-
-        durationValueTextView.setOnClickListener {
+        binding.durationValueTextView.setOnClickListener {
             val builder =
                 context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_duration_cycle)
+                builder.setTitle("Choose Duration")
                     .setItems(durationEntries) { dialog, i ->
-                        try {
-                            if (durationValues!![i].toInt() == duration) {
-                                needCheckSha1 = false
-                            } else {
-                                durationValueTextView.text = durationEntries!![i]
-                                duration = durationValues!![i].toInt()
-                                needCheckSha1 = true
-                            }
-                        } catch (e: IllegalArgumentException) {
-                            dialog.dismiss()
+                        durationValues?.get(i)?.let {
+                            viewModel.selectDuration(it)
                         }
                     }
                 val dialog = builder.create()
@@ -258,17 +162,11 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
     }
 
     private fun setSampling() {
-        if (!enableSampling) {
-            samplingValueTextView.text = "0"
-        } else {
-            samplingValueTextView.text = sampling.split(":").getOrNull(1) ?: "0"
-        }
-
-        samplingValueTextView.setOnClickListener {
+        binding.samplingValueTextView.setOnClickListener {
             val guidelineDialog: NumberPickerDialog =
                 this.parentFragmentManager.findFragmentByTag(NumberPickerDialog::class.java.name) as NumberPickerDialog?
                     ?: run {
-                        NumberPickerDialog.newInstance(if (!enableSampling) 0 else (sampling.split(":").getOrNull(1) ?: "0").toInt(), this)
+                        NumberPickerDialog.newInstance(if (!viewModel.enableSampling) 0 else (viewModel.sampling.split(":").getOrNull(1) ?: "0").toInt(), this)
                     }
             guidelineDialog.show(
                 this.parentFragmentManager,
@@ -278,34 +176,12 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
     }
 
     private fun setRecordSchedule() {
-        scheduleChipGroup.fragmentManager = parentFragmentManager
-        scheduleChipGroup.setTimes(schedule, true)
+        binding.scheduleChipGroup.fragmentManager = parentFragmentManager
+        binding.scheduleChipGroup.setTimes(viewModel.schedule, true)
     }
 
     override fun onNextClicked(number: Int) {
-        val tempSamplingRatio = "1:$number"
-        when {
-            number == 0 && !enableSampling -> needCheckSha1 = false
-            tempSamplingRatio == sampling && enableSampling -> needCheckSha1 = false
-            tempSamplingRatio == sampling && !enableSampling -> {
-                samplingValueTextView.text = number.toString()
-                enableSampling = true
-                needCheckSha1 = true
-            }
-            else -> {
-                samplingValueTextView.text = number.toString()
-                if (number != 0) {
-                    sampling = tempSamplingRatio
-                }
-                enableSampling = number != 0
-                needCheckSha1 = true
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        analytics?.trackScreen(Screen.GUARDIAN_CONFIGURE)
+        viewModel.selectSampling(number.toString())
     }
 
     companion object {
