@@ -44,6 +44,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
     private fun collectStates() {
         lifecycleScope.launchWhenStarted {
             launch { collectCheckListItem() }
+            launch { collectRegistration() }
         }
     }
 
@@ -51,6 +52,17 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         lifecycleScope.launch {
             viewModel.checklistItemState.collectLatest {
                 checkListAdapter.setCheckList(it)
+            }
+        }
+    }
+
+    private fun collectRegistration() {
+        lifecycleScope.launch {
+            viewModel.registrationState.collectLatest {
+                if (it) {
+                    mainEvent?.setPassedScreen(GuardianScreen.REGISTER)
+                    viewModel.getAllCheckList(mainEvent?.getPassedScreen())
+                }
             }
         }
     }
@@ -72,6 +84,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             1 -> mainEvent?.changeScreen(GuardianScreen.CLASSIFIER_UPLOAD)
             2 -> mainEvent?.changeScreen(GuardianScreen.POWER_DIAGNOSTIC)
             3 -> mainEvent?.changeScreen(GuardianScreen.COMMUNICATION)
+            4 -> mainEvent?.changeScreen(GuardianScreen.REGISTER)
             5 -> mainEvent?.changeScreen(GuardianScreen.NETWORK_TEST)
         }
     }

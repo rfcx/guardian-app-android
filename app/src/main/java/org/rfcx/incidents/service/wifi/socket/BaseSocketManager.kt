@@ -1,5 +1,6 @@
 package org.rfcx.incidents.service.wifi.socket
 
+import android.util.Log
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -14,7 +15,7 @@ import java.io.DataOutputStream
 import java.io.EOFException
 import java.net.Socket
 
-abstract class BaseSocketMananger {
+abstract class BaseSocketManager {
 
     var socket: Socket? = null
     var readChannel: DataInputStream? = null
@@ -37,9 +38,10 @@ abstract class BaseSocketMananger {
                 // Need to send a message to establish the connection
                 // To emit loading to UI
                 fromInit = true
-                send("{}")
+                send("{\"command\":\"connection0\"}")
                 emit(Result.Success(true))
             } catch (e: Exception) {
+                Log.e("Comp2", e.toString())
                 if (isErrorNeedReset(e)) {
                     emit(Result.Error(e))
                 }
@@ -49,12 +51,16 @@ abstract class BaseSocketMananger {
 
     fun send(message: String) {
         // Always need to new Socket object to re-send message
-        socket = Socket("192.168.43.1", port)
-        socket?.keepAlive = true
-        socket?.soTimeout = 10000
-        writeChannel = DataOutputStream(socket!!.getOutputStream())
-        writeChannel?.writeUTF(message)
-        writeChannel?.flush()
+        try {
+            socket = Socket("192.168.43.1", port)
+            socket?.keepAlive = true
+            socket?.soTimeout = 10000
+            writeChannel = DataOutputStream(socket!!.getOutputStream())
+            writeChannel?.writeUTF(message)
+            writeChannel?.flush()
+        } catch (e: Exception) {
+            Log.e("Comp", e.toString())
+        }
     }
 
     fun read(): Flow<Result<String>> {
@@ -74,6 +80,7 @@ abstract class BaseSocketMananger {
                     }
                 }
             } catch (e: Exception) {
+                Log.e("Comp1", e.toString())
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
                 }

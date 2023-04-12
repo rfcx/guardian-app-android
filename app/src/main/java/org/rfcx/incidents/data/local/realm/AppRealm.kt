@@ -10,6 +10,7 @@ import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Incident
@@ -21,7 +22,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 23L
+        private const val schemaVersion = 24L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -83,6 +84,10 @@ private class Migrations : RealmMigration {
         if (oldVersion < 23L && newVersion >= 23) {
             migrateToV23(c)
         }
+
+        if (oldVersion < 24L && newVersion >= 24) {
+            migrateToV24(c)
+        }
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -135,6 +140,19 @@ private class Migrations : RealmMigration {
         val project = realm.schema.get(Project.TABLE_NAME)
         project?.apply {
             addField(Project.PROJECT_OFFTIMES, String::class.java).setRequired(Project.PROJECT_OFFTIMES, true)
+        }
+    }
+
+    private fun migrateToV24(realm: DynamicRealm) {
+        val registration = realm.schema.create(GuardianRegistration.TABLE_NAME)
+        registration?.apply {
+            addField(GuardianRegistration.FIELD_GUID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(GuardianRegistration.FIELD_GUID, true)
+            addField(GuardianRegistration.FIELD_TOKEN, String::class.java).setRequired(GuardianRegistration.FIELD_TOKEN, true)
+            addField(GuardianRegistration.FIELD_KEYSTORE_PASSPHRASE, String::class.java).setRequired(GuardianRegistration.FIELD_KEYSTORE_PASSPHRASE, true)
+            addField(GuardianRegistration.FIELD_PIN_CODE, String::class.java).setRequired(GuardianRegistration.FIELD_PIN_CODE, true)
+            addField(GuardianRegistration.FIELD_API_MQTT_HOST, String::class.java).setRequired(GuardianRegistration.FIELD_API_MQTT_HOST, true)
+            addField(GuardianRegistration.FIELD_API_SMS_ADDRESS, String::class.java).setRequired(GuardianRegistration.FIELD_API_SMS_ADDRESS, true)
+            addField(GuardianRegistration.FIELD_ENV, String::class.java).setRequired(GuardianRegistration.FIELD_ENV, true)
         }
     }
 

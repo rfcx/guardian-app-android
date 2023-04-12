@@ -12,6 +12,7 @@ import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUpl
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationViewModel
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
+import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateViewModel
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
@@ -54,14 +55,15 @@ object UiModule {
     }
 
     var guardianModule = module {
-        viewModel { GuardianDeploymentViewModel(get(), get(), get(), get()) }
-        viewModel { GuardianConnectViewModel(get(), get()) }
-        viewModel { GuardianCheckListViewModel(androidContext()) }
+        viewModel { GuardianDeploymentViewModel(get(), get(), get(), get(), get(), get()) }
+        viewModel { GuardianConnectViewModel(get()) }
+        viewModel { GuardianCheckListViewModel(androidContext(), get()) }
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
         viewModel { PowerDiagnosticViewModel(get(), get()) }
         viewModel { NetworkTestViewModel(get(), get(), get()) }
         viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
+        viewModel { GuardianRegisterViewModel(get(), get(), get(), get()) }
     }
 }

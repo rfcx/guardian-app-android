@@ -9,6 +9,8 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterProductionEndpoint
+import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterStagingEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.DownloadFileEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
@@ -21,6 +23,7 @@ import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
+import org.rfcx.incidents.util.common.StringUtils.insert
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -142,6 +145,44 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(DownloadFileEndpoint::class.java)
+    }
+
+    fun makeGuardianRegisterProductionService(context: Context): GuardianRegisterProductionEndpoint {
+        return createRetrofit(
+            urlFromArgument(false, BuildConfig.DEVICE_API_BASE_URL), createAuthTokenOkHttpClient(false, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(GuardianRegisterProductionEndpoint::class.java)
+    }
+
+    fun makeGuardianRegisterStagingService(context: Context): GuardianRegisterStagingEndpoint {
+        return createRetrofit(
+            urlFromArgument(true, BuildConfig.DEVICE_API_BASE_URL), createAuthTokenOkHttpClient(true, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(GuardianRegisterStagingEndpoint::class.java)
+    }
+
+    private fun urlFromArgument(isDebug: Boolean, url: String): String {
+        val staging = "staging-"
+        var tempUrl = url
+        if (tempUrl.contains(staging, ignoreCase = true)) {
+            tempUrl = url.replace(staging, "")
+        }
+        if (isDebug) {
+            var indexStart = 0
+            val indexOfHttps = tempUrl.indexOf("https://")
+            val indexOfHttp = tempUrl.indexOf("http://")
+            if (indexOfHttps != -1) {
+                indexStart = 8
+            } else {
+                if (indexOfHttp != -1) {
+                    indexStart = 7
+                }
+            }
+            tempUrl = tempUrl.insert(indexStart, staging) // 8 is last index of https
+        }
+        return tempUrl
     }
 
     private fun createRetrofit(baseUrl: String, okHttpClient: OkHttpClient, gson: Gson): Retrofit {

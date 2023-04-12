@@ -488,4 +488,11 @@
     <string name="manual">Manual</string>
     <string name="auto">Auto</string>
     <string name="there_is_no_off_time_in_this_project">There is no off time in this project</string>
+
+    <!-- Guardian Registration -->
+    <string name="register_guardian">Register Guardian with RFCx</string>
+    <string name="let_s_register_your_guardian">Let\'s register your Guardian</string>
+    <string name="production">Production</string>
+    <string name="staging">Staging</string>
+    <string name="register">Register</string>
 </resources>

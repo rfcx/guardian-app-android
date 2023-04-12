@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.guardian
 
+import android.net.wifi.ScanResult
 import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.remote.common.Result
 
@@ -10,10 +11,13 @@ interface GuardianDeploymentEventListener {
     fun setToolbarTitle(title: String)
 
     fun changeScreen(screen: GuardianScreen)
+    fun setPassedScreen(screen: GuardianScreen)
     fun back()
     fun next()
     fun getPassedScreen(): List<GuardianScreen>
 
+    fun connectHotspot(hotspot: ScanResult?)
+    fun getHotspotConnectionState(): SharedFlow<Result<Boolean>>
     fun initSocket()
     fun sendHeartBeatSocket()
     fun getInitSocketState(): SharedFlow<Result<Boolean>>

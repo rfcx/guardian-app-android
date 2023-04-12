@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
+import org.rfcx.incidents.data.guardian.GuardianRegistrationRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.FileSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
@@ -31,6 +32,7 @@ import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
+import org.rfcx.incidents.data.interfaces.guardian.GuardianRegistrationRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
@@ -45,6 +47,7 @@ import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
+import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
@@ -55,6 +58,8 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
+import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
+import org.rfcx.incidents.domain.guardian.registration.SendRegistrationOnlineUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
@@ -64,6 +69,7 @@ import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
+import org.rfcx.incidents.domain.guardian.wifi.DisconnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
@@ -115,6 +121,7 @@ object DataModule {
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
         single { GetNearbyHotspotUseCase(get()) }
         single { ConnectHotspotUseCase(get()) }
+        single { DisconnectHotspotUseCase(get()) }
 
         single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
         single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class
@@ -136,6 +143,10 @@ object DataModule {
         single { SendInstructionCommandUseCase(get()) }
 
         single { GetProjectOffTimesUseCase(get()) }
+
+        single { GuardianRegistrationRepositoryImpl(get(), get(), get()) } bind GuardianRegistrationRepository::class
+        single { SaveRegistrationUseCase(get()) }
+        single { SendRegistrationOnlineUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -153,6 +164,8 @@ object DataModule {
         factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeDownloadFileService(BuildConfig.DEBUG) }
+        factory { ServiceFactory.makeGuardianRegisterProductionService(androidContext()) }
+        factory { ServiceFactory.makeGuardianRegisterStagingService(androidContext()) }
     }
 
     val localModule = module {
@@ -165,6 +178,7 @@ object DataModule {
         factory { AssetDb(get()) }
         factory { TrackingDb(get()) }
         factory { GuardianFileDb(get()) }
+        factory { GuardianRegistrationDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }

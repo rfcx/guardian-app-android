@@ -13,6 +13,8 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.entity.guardian.socket.SpeedTest
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
+import org.rfcx.incidents.util.socket.PingUtils.getPrefsSha1
+import org.rfcx.incidents.util.socket.PingUtils.isRegistered
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
@@ -193,6 +195,16 @@ object PingUtils {
             return sha1.asString
         }
         return null
+    }
+
+    fun GuardianPing.isRegistered(): Boolean? {
+        val isRegistered = this.companion?.get("is_registered") ?: return null
+        return isRegistered.asBoolean
+    }
+
+    fun GuardianPing.getGuid(): String? {
+        val guid = this.companion?.get("guardian")?.asJsonObject?.get("guid") ?: return null
+        return guid.asString
     }
 
     fun unGzipString(content: String?): String? {
