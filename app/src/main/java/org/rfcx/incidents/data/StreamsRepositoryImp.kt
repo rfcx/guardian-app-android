@@ -11,19 +11,21 @@ import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.ConnectivityUtils
 
 class StreamsRepositoryImp(
     private val endpoint: Endpoint,
     private val streamDb: StreamDb,
     private val eventDb: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
+    private val connectivityUtils: ConnectivityUtils,
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {
     override fun get(params: GetStreamsParams): Single<List<Stream>> {
-        if (params.streamRefresh) {
+        if (params.streamRefresh && connectivityUtils.isNetworkAvailable()) {
             return refreshFromAPI(params.projectId, params.offset, true)
         }
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
+        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && connectivityUtils.isNetworkAvailable()) {
             return refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
