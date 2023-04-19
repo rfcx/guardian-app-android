@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
@@ -15,9 +14,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianAudioParameterBinding
-import org.rfcx.incidents.databinding.FragmentGuardianRegisterBinding
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import org.rfcx.incidents.widget.NumberPickerButtonClickListener
 import org.rfcx.incidents.widget.NumberPickerDialog
 
@@ -177,7 +174,7 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
             val guidelineDialog: NumberPickerDialog =
                 this.parentFragmentManager.findFragmentByTag(NumberPickerDialog::class.java.name) as NumberPickerDialog?
                     ?: run {
-                        NumberPickerDialog.newInstance(if (!viewModel.enableSampling) 0 else (viewModel.sampling.split(":").getOrNull(1) ?: "0").toInt(), this)
+                        NumberPickerDialog.newInstance(if (!viewModel.enableSampling) 0 else (viewModel.sampling.toInt()), this)
                     }
             guidelineDialog.show(
                 this.parentFragmentManager,

@@ -35,8 +35,6 @@ class GuardianAudioParameterViewModel(
     val durationTextState = _durationTextState.asStateFlow()
     private val _samplingTextState: MutableStateFlow<String> = MutableStateFlow("")
     val samplingTextState = _samplingTextState.asStateFlow()
-    private val _scheduleTextState: MutableStateFlow<String> = MutableStateFlow("")
-    val scheduleTextState = _scheduleTextState.asStateFlow()
     private val _loadingState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val loadingState = _loadingState.asStateFlow()
 
@@ -74,7 +72,6 @@ class GuardianAudioParameterViewModel(
                         enableSampling = it.get(PrefsUtils.enableSampling).asBoolean
                         sampling = it.get(PrefsUtils.sampling).asString.last().toString()
                         schedule = it.get(PrefsUtils.schedule).asString
-
                         showSampleRate()
                         showBitrate()
                         showFileFormat()
@@ -104,10 +101,18 @@ class GuardianAudioParameterViewModel(
     }
 
     fun syncParameter(schedule: List<TimeRange>) {
-        this.schedule = if (schedule.isEmpty()) "23:55-23:56,23:57-23:59" else schedule.toGuardianFormat()
-        viewModelScope.launch(Dispatchers.IO) {
-            _loadingState.tryEmit(true)
-            sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, getAsPrefsFormat()))
+        val scheduleGuardianFormat = schedule.toGuardianFormat()
+        if (this.schedule != scheduleGuardianFormat) {
+            needCheckSha1 = true
+        }
+        this.schedule = if (schedule.isEmpty()) "23:55-23:56,23:57-23:59" else scheduleGuardianFormat
+        if (!needCheckSha1) {
+            _prefsSyncState.tryEmit(true)
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                _loadingState.tryEmit(true)
+                sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, getAsPrefsFormat()))
+            }
         }
     }
 
