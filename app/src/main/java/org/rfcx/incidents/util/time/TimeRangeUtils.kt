@@ -119,6 +119,10 @@ fun ArrayList<TimeRange>.toGuardianFormat(): String {
     return TimeRangeUtils.toOppositeTimes(this).joinToString(",") { it.toStringFormat() }
 }
 
+fun List<TimeRange>.toGuardianFormat(): String {
+    return TimeRangeUtils.toOppositeTimes(this).joinToString(",") { it.toStringFormat() }
+}
+
 fun String.toListTimeRange(): List<TimeRange> {
     val list = arrayListOf<TimeRange>()
     val time =

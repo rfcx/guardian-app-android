@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianAudioParameterBinding
@@ -77,7 +80,15 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
         setRecordSchedule()
 
         binding.nextButton.setOnClickListener {
-            viewModel.syncParameter()
+            viewModel.syncParameter(binding.scheduleChipGroup.listOfTime)
+        }
+
+        lifecycleScope.launch {
+            viewModel.prefsSyncState.collectLatest {
+                if (it) {
+                    mainEvent?.next()
+                }
+            }
         }
     }
 

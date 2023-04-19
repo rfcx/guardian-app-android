@@ -14,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
+import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFragment
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
@@ -52,6 +53,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.COMMUNICATION -> startFragment(CommunicationFragment.newInstance())
             GuardianScreen.REGISTER -> startFragment(GuardianRegisterFragment.newInstance())
             GuardianScreen.NETWORK_TEST -> startFragment(NetworkTestFragment.newInstance())
+            GuardianScreen.AUDIO_PARAMETER -> startFragment(GuardianAudioParameterFragment.newInstance())
         }
     }
 
@@ -106,6 +108,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.COMMUNICATION -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.REGISTER -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.NETWORK_TEST -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.AUDIO_PARAMETER -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 
