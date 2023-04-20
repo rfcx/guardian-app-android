@@ -1,7 +1,5 @@
 package org.rfcx.incidents.data
 
-import android.os.Looper
-import android.util.Log
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -9,20 +7,20 @@ import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.util.ConnectivityUtils
 
 class ProjectsRepositoryImp(
     private val endpoint: ProjectsEndpoint,
     private val projectDb: ProjectDb,
     private val cachedEndpointDb: CachedEndpointDb,
+    private val connectivityUtils: ConnectivityUtils,
     private val postExecutionThread: PostExecutionThread
 ) : ProjectsRepository {
 
     override fun getProjects(forceRefresh: Boolean): Single<List<Project>> {
-        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
-            Log.d("ProjectsRepo", "API")
+        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects") && connectivityUtils.isNetworkAvailable()) {
             return refreshFromAPI()
         }
-        Log.d("ProjectsRepo", "DB")
         return getFromLocalDB()
     }
 
@@ -31,9 +29,7 @@ class ProjectsRepositoryImp(
     }
 
     private fun refreshFromAPI(): Single<List<Project>> {
-        Log.d("ProjectsRepo", "OUTSIDE: " + if (Looper.myLooper() == Looper.getMainLooper()) "MAIN THREAD" else "NOT MAIN!")
         return endpoint.getProjects().observeOn(postExecutionThread.scheduler).flatMap { rawProjects ->
-            Log.d("ProjectsRepo", "INSIDE: " + if (Looper.myLooper() == Looper.getMainLooper()) "MAIN THREAD" else "NOT MAIN!")
             rawProjects.forEach {
                 projectDb.insertOrUpdate(it)
             }

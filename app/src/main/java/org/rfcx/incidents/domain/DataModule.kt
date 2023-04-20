@@ -41,6 +41,7 @@ import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.util.ConnectivityUtils
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -50,10 +51,10 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
@@ -82,6 +83,8 @@ object DataModule {
 
         single { MediaRepositoryImp(get()) } bind MediaRepository::class
         single { MediaUseCase(get(), get(), get()) }
+
+        single { ConnectivityUtils(androidContext()) }
     }
 
     val remoteModule = module {
