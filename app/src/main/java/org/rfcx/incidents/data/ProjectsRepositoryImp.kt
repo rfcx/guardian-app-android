@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data
 
-import android.os.Looper
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
