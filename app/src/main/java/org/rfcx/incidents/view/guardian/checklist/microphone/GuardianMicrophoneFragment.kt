@@ -30,7 +30,7 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
 
     private lateinit var dialogBuilder: AlertDialog
 
-    private val viewModel: GuardianRegisterViewModel by viewModel()
+    private val viewModel: GuardianMicrophoneViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     private val microphoneTestUtils by lazy {
@@ -119,30 +119,26 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
         dialogBuilder.create().show()
     }
 
-    private fun setupAudioTrack() {
-        microphoneTestUtils.setSampleRate(deploymentProtocol?.getSampleRate() ?: DEF_SAMPLERATE)
-    }
-
     private fun setupSpectrogram() {
-        AudioSpectrogramUtils.resetToDefaultValue()
-        spectrogramView.resetToDefaultValue()
-        spectrogramView.setSamplingRate(deploymentProtocol?.getSampleRate() ?: DEF_SAMPLERATE)
-        spectrogramView.setBackgroundColor(Color.BLACK)
+        viewModel.resetSpectrogram()
+        binding.spectrogramView.resetToDefaultValue()
+        binding.spectrogramView.setSamplingRate(viewModel.sampleRateState.value)
+        binding.spectrogramView.setBackgroundColor(Color.BLACK)
     }
 
     private fun setupSpectrogramSpeed() {
-        speedValueTextView.text = speed[0]
-        speedValueTextView.setOnClickListener {
+        binding.speedValueTextView.text = speed[0]
+        binding.speedValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_speed)
+                builder.setTitle("Choose Speed")
                     .setItems(speed) { dialog, i ->
                         try {
-                            speedValueTextView.text = speed[i]
-                            AudioSpectrogramUtils.setSpeed(speed[i])
-                            AudioSpectrogramUtils.resetSetupState()
+                            binding.speedValueTextView.text = speed[i]
+                            viewModel.setSpectrogramSpeed(speed[i])
+                            viewModel.resetSpectrogramSetup()
                             spectrogramStack.clear()
-                            spectrogramView.invalidate()
+                            binding.spectrogramView.invalidate()
                         } catch (e: IllegalArgumentException) {
                             dialog.dismiss()
                         }
@@ -154,16 +150,16 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
     }
 
     private fun setupSpectrogramFreqMenu() {
-        freqScaleValueTextView.text = freq[0]
-        freqScaleValueTextView.setOnClickListener {
+        binding.freqScaleValueTextView.text = freq[0]
+        binding.freqScaleValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_freq)
+                builder.setTitle("Choose Frequency")
                     .setItems(freq) { dialog, i ->
                         try {
-                            freqScaleValueTextView.text = freq[i]
-                            spectrogramView.freqScale = freq[i]
-                            spectrogramView.invalidate()
+                            binding.freqScaleValueTextView.text = freq[i]
+                            binding.spectrogramView.freqScale = freq[i]
+                            binding.spectrogramView.invalidate()
                         } catch (e: IllegalArgumentException) {
                             dialog.dismiss()
                         }
@@ -175,16 +171,16 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
     }
 
     private fun setupSpectrogramColorMenu() {
-        colorSpecValueTextView.text = color[0]
-        colorSpecValueTextView.setOnClickListener {
+        binding.colorSpecValueTextView.text = color[0]
+        binding.colorSpecValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_color)
+                builder.setTitle("Choose Color")
                     .setItems(color) { dialog, i ->
                         try {
-                            colorSpecValueTextView.text = color[i]
-                            spectrogramView.colorScale = color[i]
-                            spectrogramView.invalidate()
+                            binding.colorSpecValueTextView.text = color[i]
+                            binding.spectrogramView.colorScale = color[i]
+                            binding.spectrogramView.invalidate()
                         } catch (e: IllegalArgumentException) {
                             dialog.dismiss()
                         }
@@ -196,18 +192,18 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
     }
 
     private fun setupAudioPlaybackMenu() {
-        playbackValueTextView.text = playback[0]
-        playbackValueTextView.setOnClickListener {
+        binding.playbackValueTextView.text = playback[0]
+        binding.playbackValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle(R.string.choose_play_back)
+                builder.setTitle("Choose Playback")
                     .setItems(playback) { dialog, i ->
                         try {
-                            playbackValueTextView.text = playback[i]
+                            binding.playbackValueTextView.text = playback[i]
                             if (i == 0) {
-                                microphoneTestUtils.play()
+                                viewModel.playAudio()
                             } else {
-                                microphoneTestUtils.stop()
+                                viewModel.stopAudio()
                             }
                         } catch (e: IllegalArgumentException) {
                             dialog.dismiss()
@@ -222,25 +218,22 @@ class GuardianMicrophoneFragment : Fragment(), SpectrogramListener {
     private fun setUiByState(state: MicTestingState) {
         when (state) {
             MicTestingState.READY -> {
-                listenAudioButton.visibility = View.VISIBLE
-                cancelAudioButton.visibility = View.GONE
-                listenAgainAudioButton.visibility = View.GONE
-                finishButton.visibility = View.GONE
-                microphoneView.setBackgroundResource(R.drawable.ic_microphone_grey)
+                binding.listenAudioButton.visibility = View.VISIBLE
+                binding.cancelAudioButton.visibility = View.GONE
+                binding.listenAgainAudioButton.visibility = View.GONE
+                binding.finishButton.visibility = View.GONE
             }
             MicTestingState.LISTENING -> {
-                listenAudioButton.visibility = View.GONE
-                cancelAudioButton.visibility = View.VISIBLE
-                listenAgainAudioButton.visibility = View.GONE
-                finishButton.visibility = View.GONE
-                microphoneView.setBackgroundResource(R.drawable.ic_microphone_green)
+                binding.listenAudioButton.visibility = View.GONE
+                binding.cancelAudioButton.visibility = View.VISIBLE
+                binding.listenAgainAudioButton.visibility = View.GONE
+                binding.finishButton.visibility = View.GONE
             }
             MicTestingState.FINISH -> {
-                listenAudioButton.visibility = View.GONE
-                cancelAudioButton.visibility = View.GONE
-                listenAgainAudioButton.visibility = View.VISIBLE
-                finishButton.visibility = View.VISIBLE
-                microphoneView.setBackgroundResource(R.drawable.ic_microphone_grey)
+                binding.listenAudioButton.visibility = View.GONE
+                binding.cancelAudioButton.visibility = View.GONE
+                binding.listenAgainAudioButton.visibility = View.VISIBLE
+                binding.finishButton.visibility = View.VISIBLE
             }
         }
     }

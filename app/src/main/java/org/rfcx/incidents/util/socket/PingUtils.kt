@@ -12,6 +12,7 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.entity.guardian.socket.SpeedTest
+import org.rfcx.incidents.util.socket.PingUtils.getAudioParameter
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
 import org.rfcx.incidents.util.socket.PingUtils.getPrefsSha1
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
@@ -211,6 +212,14 @@ object PingUtils {
         if (this.prefs is JsonObject) {
             val prefs = this.prefs.get("vals") ?: return null
             return PrefsUtils.stringToAudioPrefs(Gson().toJson(prefs))
+        }
+        return null
+    }
+
+    fun GuardianPing.getSampleRate(): Int? {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return null
+            return PrefsUtils.getSampleRateFromPrefs(Gson().toJson(prefs))
         }
         return null
     }
