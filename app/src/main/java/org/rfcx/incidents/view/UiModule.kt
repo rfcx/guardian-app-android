@@ -12,6 +12,7 @@ import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFr
 import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterViewModel
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadViewModel
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationViewModel
+import org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneViewModel
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
@@ -68,5 +69,6 @@ object UiModule {
         viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
         viewModel { GuardianRegisterViewModel(get(), get(), get(), get()) }
         viewModel { GuardianAudioParameterViewModel(get(), get()) }
+        viewModel { GuardianMicrophoneViewModel(get(), get(), get()) }
     }
 }
