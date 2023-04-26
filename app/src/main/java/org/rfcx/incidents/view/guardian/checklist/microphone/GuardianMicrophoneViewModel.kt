@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist.microphone
 
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -143,7 +142,6 @@ class GuardianMicrophoneViewModel(
 
             }.collectLatest { result ->
                 result?.let { audio ->
-                    Log.d("Comp", result.buffer)
                     audioChunks.add(audio.buffer)
                     if (audio.amount == audio.number) {
                         var fullAudio = ByteArray(0)
