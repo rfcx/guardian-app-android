@@ -26,11 +26,7 @@ import java.util.*
 class GuardianMicrophoneFragment : Fragment() {
 
     private lateinit var binding: FragmentGuardianMicrophoneBinding
-    private val spectrogramStack = arrayListOf<FloatArray>()
-    private var isTimerPause = false
-
     private lateinit var dialogBuilder: AlertDialog
-
     private val viewModel: GuardianMicrophoneViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
 
@@ -52,7 +48,7 @@ class GuardianMicrophoneFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Microphone Test")
+            it.setToolbarTitle(getString(R.string.microphone_title))
         }
 
         checkTestingRequirement()
@@ -119,13 +115,12 @@ class GuardianMicrophoneFragment : Fragment() {
         binding.speedValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle("Choose Speed")
+                builder.setTitle(getString(R.string.choose_speed))
                     .setItems(speed) { dialog, i ->
                         try {
                             binding.speedValueTextView.text = speed[i]
                             viewModel.setSpectrogramSpeed(speed[i])
                             viewModel.resetSpectrogramSetup()
-                            spectrogramStack.clear()
                             binding.spectrogramView.invalidate()
                         } catch (e: IllegalArgumentException) {
                             dialog.dismiss()
@@ -142,7 +137,7 @@ class GuardianMicrophoneFragment : Fragment() {
         binding.freqScaleValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle("Choose Frequency")
+                builder.setTitle(getString(R.string.choose_freq))
                     .setItems(freq) { dialog, i ->
                         try {
                             binding.freqScaleValueTextView.text = freq[i]
@@ -163,7 +158,7 @@ class GuardianMicrophoneFragment : Fragment() {
         binding.colorSpecValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle("Choose Color")
+                builder.setTitle(getString(R.string.choose_color))
                     .setItems(color) { dialog, i ->
                         try {
                             binding.colorSpecValueTextView.text = color[i]
@@ -184,7 +179,7 @@ class GuardianMicrophoneFragment : Fragment() {
         binding.playbackValueTextView.setOnClickListener {
             val builder = context?.let { it1 -> MaterialAlertDialogBuilder(it1, R.style.BaseAlertDialog) }
             if (builder != null) {
-                builder.setTitle("Choose Playback")
+                builder.setTitle(getString(R.string.choose_play_back))
                     .setItems(playback) { dialog, i ->
                         try {
                             binding.playbackValueTextView.text = playback[i]
@@ -241,7 +236,7 @@ class GuardianMicrophoneFragment : Fragment() {
         dialogBuilder =
             MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
                 setTitle(null)
-                setMessage("microphone...")
+                setMessage(getString(R.string.dialog_start_service_mic))
                 setPositiveButton(R.string.restart) { _, _ ->
                     viewModel.restartAudioService()
                 }

@@ -27,7 +27,7 @@
             android:layout_marginStart="@dimen/margin_padding_large"
             android:layout_marginTop="@dimen/margin_padding_normal"
             android:layout_marginEnd="@dimen/margin_padding_large"
-            android:text="Microphone Test"
+            android:text="@string/microphone_test"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,7 +61,7 @@
                     style="@style/RangerText.Body.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Speed" />
+                    android:text="@string/speed" />
 
                 <TextView
                     android:id="@+id/speedValueTextView"
@@ -85,7 +85,7 @@
                     style="@style/RangerText.Body.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Frequency Scale" />
+                    android:text="@string/frequency_scale" />
 
                 <TextView
                     android:id="@+id/freqScaleValueTextView"
@@ -110,7 +110,7 @@
                     style="@style/RangerText.Body.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Color" />
+                    android:text="@string/color" />
 
                 <TextView
                     android:id="@+id/colorSpecValueTextView"
@@ -134,7 +134,7 @@
                     style="@style/RangerText.Body.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Playback" />
+                    android:text="@string/playback" />
 
                 <TextView
                     android:id="@+id/playbackValueTextView"
@@ -164,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_normal"
-            android:text="Recorder service is not started yet.\nPlease try again later."
+            android:text="@string/mic_recorder_warn"
             android:textAlignment="center"
             android:textColor="@color/text_error"
             android:textSize="14sp"
@@ -188,7 +188,7 @@
                 android:layout_marginStart="@dimen/margin_padding_large"
                 android:layout_marginEnd="@dimen/margin_padding_large"
                 android:layout_marginBottom="@dimen/margin_padding_normal"
-                android:text="Begin Mic Test"
+                android:text="@string/begin_mic_test"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -201,7 +201,7 @@
                 android:layout_marginStart="@dimen/margin_padding_large"
                 android:layout_marginEnd="@dimen/margin_padding_large"
                 android:layout_marginBottom="@dimen/margin_padding_normal"
-                android:text="Halt Mic Test"
+                android:text="@string/halt_mic_test"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -215,7 +215,7 @@
                 android:layout_marginStart="@dimen/margin_padding_large"
                 android:layout_marginEnd="@dimen/margin_padding_large"
                 android:layout_marginBottom="@dimen/margin_padding_normal"
-                android:text="Restart Mic Test"
+                android:text="@string/restart_mic_test"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
