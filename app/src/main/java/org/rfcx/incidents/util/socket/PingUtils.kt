@@ -207,6 +207,14 @@ object PingUtils {
         return guid.asString
     }
 
+    fun GuardianPing.getAudioParameter(): JsonObject? {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return null
+            return PrefsUtils.stringToAudioPrefs(Gson().toJson(prefs))
+        }
+        return null
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }
