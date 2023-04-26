@@ -1,5 +1,6 @@
 package org.rfcx.incidents.domain.guardian.socket
 
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -12,6 +13,7 @@ class GetAudioMessageUseCase(private val audioSocketRepository: AudioSocketRepos
         return audioSocketRepository.getMessageSharedFlow().map { result ->
             val gson = Gson()
             try {
+                Log.d("Comp7", result)
                 gson.fromJson(result, AudioPing::class.java)
             } catch (e: Exception) {
                 null

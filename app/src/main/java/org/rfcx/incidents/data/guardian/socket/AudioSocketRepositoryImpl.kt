@@ -10,7 +10,7 @@ class AudioSocketRepositoryImpl(
     private val audioSocket: AudioSocket
 ) : AudioSocketRepository {
     override fun initialize(): Flow<Result<Boolean>> {
-        return audioSocket.initialize(9996)
+        return audioSocket.initialize(9998)
     }
 
     override fun getMessage(): Flow<Result<String>> {

@@ -507,4 +507,8 @@
     <string name="schedule_start_time">Select start time</string>
     <string name="schedule_stop_time">Select stop time</string>
     <string name="select_cycle_s_to_skip_between_recordings">Select cycle(s) to skip between recordings</string>
+
+    <!-- Guardian Microphone -->
+    <string name="unknown_error">unknown error</string>
+
 </resources>

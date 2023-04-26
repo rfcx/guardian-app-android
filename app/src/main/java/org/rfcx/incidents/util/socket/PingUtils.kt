@@ -5,6 +5,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.AdminPing
+import org.rfcx.incidents.entity.guardian.socket.AudioCaptureStatus
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
 import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
@@ -222,6 +223,12 @@ object PingUtils {
             return PrefsUtils.getSampleRateFromPrefs(Gson().toJson(prefs))
         }
         return null
+    }
+
+    fun GuardianPing.getAudioCaptureStatus(): AudioCaptureStatus? {
+        val isCapturing = this.companion?.get("is_audio_capturing") ?: return null
+        val captureMsg = this.companion.get("audio_capturing_message") ?: null
+        return AudioCaptureStatus(isCapturing.asBoolean, captureMsg?.asString)
     }
 
     fun unGzipString(content: String?): String? {

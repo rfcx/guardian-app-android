@@ -69,6 +69,6 @@ object UiModule {
         viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
         viewModel { GuardianRegisterViewModel(get(), get(), get(), get()) }
         viewModel { GuardianAudioParameterViewModel(get(), get()) }
-        viewModel { GuardianMicrophoneViewModel(get(), get(), get()) }
+        viewModel { GuardianMicrophoneViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     }
 }

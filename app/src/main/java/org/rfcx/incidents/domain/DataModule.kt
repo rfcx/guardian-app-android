@@ -67,7 +67,9 @@ import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAudioMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.socket.InitAudioSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.ReadAudioSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
@@ -80,6 +82,7 @@ import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.AudioSocket
 import org.rfcx.incidents.service.wifi.socket.FileSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
+import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
 import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
 import org.rfcx.incidents.view.UiThread
 
@@ -133,9 +136,11 @@ object DataModule {
         single { FileSocketRepositoryImpl(get()) } bind FileSocketRepository::class
         single { AudioSocketRepositoryImpl(get()) } bind AudioSocketRepository::class
         single { InitSocketUseCase(get(), get()) }
+        single { InitAudioSocketUseCase(get()) }
         single { GetSocketMessageUseCase(get(), get()) }
-        single { SendSocketMessageUseCase(get(), get(), get()) }
-        single { CloseSocketUseCase(get(), get(), get()) }
+        single { ReadAudioSocketUseCase(get()) }
+        single { SendSocketMessageUseCase(get(), get(), get(), get()) }
+        single { CloseSocketUseCase(get(), get(), get(), get()) }
 
         single { GuardianFileRepositoryImpl(get(), get(), get(), get(), get()) } bind GuardianFileRepository::class
         single { GetGuardianFileRemoteUseCase(get()) }
@@ -196,5 +201,6 @@ object DataModule {
         single { AudioSocket }
         single { GuardianFileHelper(androidContext()) }
         single { MicrophoneTestUtils() }
+        single { AudioSpectrogramUtils }
     }
 }

@@ -17,6 +17,7 @@ import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFragment
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
+import org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneFragment
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
@@ -54,6 +55,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.REGISTER -> startFragment(GuardianRegisterFragment.newInstance())
             GuardianScreen.NETWORK_TEST -> startFragment(NetworkTestFragment.newInstance())
             GuardianScreen.AUDIO_PARAMETER -> startFragment(GuardianAudioParameterFragment.newInstance())
+            GuardianScreen.MICROPHONE -> startFragment(GuardianMicrophoneFragment.newInstance())
         }
     }
 
@@ -109,6 +111,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.REGISTER -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.NETWORK_TEST -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.AUDIO_PARAMETER -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.MICROPHONE -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 

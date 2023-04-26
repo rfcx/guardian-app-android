@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.domain.guardian.socket.CloseSocketParams
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
@@ -107,7 +108,7 @@ class GuardianDeploymentViewModel(
 
     fun onDestroy() {
         viewModelScope.launch(Dispatchers.IO) {
-            closeSocketUseCase.launch()
+            closeSocketUseCase.launch(CloseSocketParams(BaseSocketManager.Type.ALL))
         }
     }
 }
