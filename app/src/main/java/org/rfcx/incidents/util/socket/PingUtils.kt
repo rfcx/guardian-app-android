@@ -7,12 +7,14 @@ import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.AdminPing
 import org.rfcx.incidents.entity.guardian.socket.AudioCaptureStatus
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
+import org.rfcx.incidents.entity.guardian.socket.GuardianStorage
 import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
 import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
 import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.entity.guardian.socket.SpeedTest
+import org.rfcx.incidents.entity.guardian.socket.Storage
 import org.rfcx.incidents.util.socket.PingUtils.getAudioParameter
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
 import org.rfcx.incidents.util.socket.PingUtils.getPrefsSha1
@@ -229,6 +231,20 @@ object PingUtils {
         val isCapturing = this.companion?.get("is_audio_capturing") ?: return null
         val captureMsg = this.companion.get("audio_capturing_message") ?: null
         return AudioCaptureStatus(isCapturing.asBoolean, captureMsg?.asString)
+    }
+
+    fun AdminPing.getStorage(): GuardianStorage? {
+        val storage = this.storage?.split("|") ?: return null
+        return GuardianStorage(
+            storage.getOrNull(0)?.let {
+                val values = it.split("*")
+                Storage(values[2].toLong(), values[2].toLong() + values[3].toLong())
+            },
+            storage.getOrNull(1)?.let {
+                val values = it.split("*")
+                Storage(values[2].toLong(), values[2].toLong() + values[3].toLong())
+            }
+        )
     }
 
     fun unGzipString(content: String?): String? {
