@@ -9,7 +9,7 @@
         android:id="@+id/yLabelTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="8sp"
+        android:textSize="@dimen/text_xxxsmall"
         android:textAlignment="textEnd"
         android:layout_marginEnd="@dimen/margin_padding_xsmall"
         app:layout_constraintBottom_toBottomOf="parent"

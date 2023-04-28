@@ -107,7 +107,7 @@ class HeatmapAudioCoverageActivity :
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = "Audio Coverage"
+            title = getString(R.string.audio_coverage)
         }
     }
 

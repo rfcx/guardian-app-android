@@ -526,6 +526,7 @@
     <string name="restart_mic_test">Restart Mic Test</string>
     <string name="dialog_start_service_mic">Look like you have a trouble with microphone.\nTry restarting service?</string>
 
+    <string name="audio_coverage">Audio Coverage</string>
     <string name="hour_less_than_10">0%d</string>
 
 </resources>

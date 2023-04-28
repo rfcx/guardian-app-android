@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_normal"
             android:layout_marginTop="@dimen/margin_padding_xsmall"
-            android:textSize="8sp"
+            android:textSize="@dimen/text_xxxsmall"
             android:text="@{viewModel.dateState}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
