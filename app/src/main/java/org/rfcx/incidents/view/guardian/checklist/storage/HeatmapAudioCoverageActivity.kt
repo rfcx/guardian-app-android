@@ -39,9 +39,9 @@ class HeatmapAudioCoverageActivity :
         binding.viewModel = viewModel
 
         setupToolbar()
+
+        showLoading()
         getExtra()
-
-
         binding.archivedHeatmap.apply {
             adapter = archivedHeatmapAdapter
             layoutManager = GridLayoutManager(context, 25)
@@ -50,8 +50,10 @@ class HeatmapAudioCoverageActivity :
 
         lifecycleScope.launch {
             viewModel.archivedItemsState.collectLatest {
-                archivedHeatmapAdapter.setData(it)
-                hideLoading()
+                if (it.isNotEmpty()) {
+                    archivedHeatmapAdapter.setData(it)
+                    hideLoading()
+                }
             }
         }
 

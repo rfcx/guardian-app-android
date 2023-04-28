@@ -1,9 +1,12 @@
 package org.rfcx.incidents.view.guardian.checklist.storage
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.entity.guardian.socket.GuardianArchived
 import org.rfcx.incidents.util.audiocoverage.AudioCoverageUtils
 
@@ -25,17 +28,21 @@ class HeatmapAudioCoverageViewModel() : ViewModel() {
         archivedAudioStructure = AudioCoverageUtils.toDateTimeStructure(tempArchived)
 
         val latestMonthYear = AudioCoverageUtils.getLatestMonthYear(tempArchived)
-        selectedMonth= latestMonthYear.first
-        selectedYear= latestMonthYear.second
-        availableYearMonths= AudioCoverageUtils.getAvailableMonths(archivedAudioStructure)
+        selectedMonth = latestMonthYear.first
+        selectedYear = latestMonthYear.second
+        availableYearMonths = AudioCoverageUtils.getAvailableMonths(archivedAudioStructure)
     }
 
     fun onPick(month: Int, year: Int) {
-        val items = AudioCoverageUtils.filterByMonthYear(archivedAudioStructure, month, year)
-        val months = arrayOf(
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        )
-        _dateState.tryEmit("Audio coverage on ${months[month]} $year")
-        _archivedItemsState.tryEmit(items)
+        selectedMonth = month
+        selectedYear = year
+        viewModelScope.launch(Dispatchers.IO) {
+            val items = AudioCoverageUtils.filterByMonthYear(archivedAudioStructure, month, year)
+            val months = arrayOf(
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            )
+            _dateState.tryEmit("Audio coverage on ${months[month]} $year")
+            _archivedItemsState.tryEmit(items)
+        }
     }
 }
