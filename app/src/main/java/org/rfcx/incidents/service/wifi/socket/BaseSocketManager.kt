@@ -1,6 +1,5 @@
 package org.rfcx.incidents.service.wifi.socket
 
-import android.util.Log
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -28,7 +27,7 @@ abstract class BaseSocketManager {
     val messageShared = _messageShared.asSharedFlow()
 
     enum class Type {
-        GUARDIAN, ADMIN, FILE, ALL
+        GUARDIAN, ADMIN, FILE, AUDIO, ALL
     }
 
     fun initialize(port: Int): Flow<Result<Boolean>> {
@@ -41,7 +40,6 @@ abstract class BaseSocketManager {
                 send("{\"command\":\"connection0\"}")
                 emit(Result.Success(true))
             } catch (e: Exception) {
-                Log.e("Comp2", e.toString())
                 if (isErrorNeedReset(e)) {
                     emit(Result.Error(e))
                 }
@@ -58,8 +56,8 @@ abstract class BaseSocketManager {
             writeChannel = DataOutputStream(socket!!.getOutputStream())
             writeChannel?.writeUTF(message)
             writeChannel?.flush()
-        } catch (e: Exception) {
-            Log.e("Comp", e.toString())
+        } catch (_: Exception) {
+
         }
     }
 
@@ -80,7 +78,6 @@ abstract class BaseSocketManager {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("Comp1", e.toString())
                 if (isErrorNeedReset(e)) {
                     trySendBlocking(Result.Error(e))
                 }

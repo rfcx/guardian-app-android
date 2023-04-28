@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,12 +24,10 @@ class SetProjectsViewModel(
         getProjectsUseCase.execute(
             object : DisposableSingleObserver<List<Project>>() {
                 override fun onSuccess(t: List<Project>) {
-                    Log.d("Comp", "$t")
                     _projects.value = Result.Success(t)
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.d("Comp", "$e")
                     _projects.value = Result.Error(e)
                 }
             },

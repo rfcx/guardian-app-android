@@ -5,6 +5,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.AdminPing
+import org.rfcx.incidents.entity.guardian.socket.AudioCaptureStatus
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
 import org.rfcx.incidents.entity.guardian.socket.SentinelBattery
@@ -12,6 +13,7 @@ import org.rfcx.incidents.entity.guardian.socket.SentinelInput
 import org.rfcx.incidents.entity.guardian.socket.SentinelPower
 import org.rfcx.incidents.entity.guardian.socket.SentinelSystem
 import org.rfcx.incidents.entity.guardian.socket.SpeedTest
+import org.rfcx.incidents.util.socket.PingUtils.getAudioParameter
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianLocalTime
 import org.rfcx.incidents.util.socket.PingUtils.getPrefsSha1
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
@@ -213,6 +215,20 @@ object PingUtils {
             return PrefsUtils.stringToAudioPrefs(Gson().toJson(prefs))
         }
         return null
+    }
+
+    fun GuardianPing.getSampleRate(): Int? {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return null
+            return PrefsUtils.getSampleRateFromPrefs(Gson().toJson(prefs))
+        }
+        return null
+    }
+
+    fun GuardianPing.getAudioCaptureStatus(): AudioCaptureStatus? {
+        val isCapturing = this.companion?.get("is_audio_capturing") ?: return null
+        val captureMsg = this.companion.get("audio_capturing_message") ?: null
+        return AudioCaptureStatus(isCapturing.asBoolean, captureMsg?.asString)
     }
 
     fun unGzipString(content: String?): String? {

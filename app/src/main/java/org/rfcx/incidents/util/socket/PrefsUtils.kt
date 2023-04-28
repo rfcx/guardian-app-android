@@ -158,6 +158,12 @@ object PrefsUtils {
         }
         return audioJson
     }
+
+    fun getSampleRateFromPrefs(str: String?): Int? {
+        if (str == null) return null
+        val json = JsonParser.parseString(str).asJsonObject
+        return json.get(audioSampleRate).asString.toInt()
+    }
 }
 
 enum class GuardianPlan {

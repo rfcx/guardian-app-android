@@ -507,4 +507,24 @@
     <string name="schedule_start_time">Select start time</string>
     <string name="schedule_stop_time">Select stop time</string>
     <string name="select_cycle_s_to_skip_between_recordings">Select cycle(s) to skip between recordings</string>
+
+    <!-- Guardian Microphone -->
+    <string name="microphone_title">Microphone Capture Test</string>
+    <string name="unknown_error">unknown error</string>
+    <string name="choose_speed">Choose spectrogram speed</string>
+    <string name="choose_freq">Choose spectrogram frequency scale</string>
+    <string name="choose_color">Choose spectrogram color</string>
+    <string name="choose_play_back">Choose audio playback</string>
+    <string name="mic_recorder_warn">Recorder service is not started yet.\nPlease try again later.</string>
+    <string name="microphone_test">Microphone Test</string>
+    <string name="speed">Speed</string>
+    <string name="frequency_scale">Frequency Scale</string>
+    <string name="color">Color</string>
+    <string name="playback">Playback</string>
+    <string name="begin_mic_test">Begin Mic Test</string>
+    <string name="halt_mic_test">Halt Mic Test</string>
+    <string name="restart_mic_test">Restart Mic Test</string>
+    <string name="dialog_start_service_mic">Look like you have a trouble with microphone.\nTry restarting service?</string>
+
+
 </resources>

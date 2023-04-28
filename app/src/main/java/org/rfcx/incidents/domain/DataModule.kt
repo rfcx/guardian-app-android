@@ -17,6 +17,7 @@ import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.GuardianRegistrationRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
+import org.rfcx.incidents.data.guardian.socket.AudioSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.FileSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.GuardianSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.software.GuardianFileRepositoryImpl
@@ -34,6 +35,7 @@ import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.GuardianRegistrationRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
+import org.rfcx.incidents.data.interfaces.guardian.socket.AudioSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.GuardianSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileRepository
@@ -62,9 +64,12 @@ import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
 import org.rfcx.incidents.domain.guardian.registration.SendRegistrationOnlineUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
+import org.rfcx.incidents.domain.guardian.socket.GetAudioMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetSocketMessageUseCase
+import org.rfcx.incidents.domain.guardian.socket.InitAudioSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
+import org.rfcx.incidents.domain.guardian.socket.ReadAudioSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
@@ -74,8 +79,11 @@ import org.rfcx.incidents.domain.guardian.wifi.GetNearbyHotspotUseCase
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.service.wifi.WifiHotspotManager
 import org.rfcx.incidents.service.wifi.socket.AdminSocket
+import org.rfcx.incidents.service.wifi.socket.AudioSocket
 import org.rfcx.incidents.service.wifi.socket.FileSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
+import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
+import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -126,10 +134,13 @@ object DataModule {
         single { GuardianSocketRepositoryImpl(get()) } bind GuardianSocketRepository::class
         single { AdminSocketRepositoryImpl(get()) } bind AdminSocketRepository::class
         single { FileSocketRepositoryImpl(get()) } bind FileSocketRepository::class
+        single { AudioSocketRepositoryImpl(get()) } bind AudioSocketRepository::class
         single { InitSocketUseCase(get(), get()) }
+        single { InitAudioSocketUseCase(get()) }
         single { GetSocketMessageUseCase(get(), get()) }
-        single { SendSocketMessageUseCase(get(), get(), get()) }
-        single { CloseSocketUseCase(get(), get(), get()) }
+        single { ReadAudioSocketUseCase(get()) }
+        single { SendSocketMessageUseCase(get(), get(), get(), get()) }
+        single { CloseSocketUseCase(get(), get(), get(), get()) }
 
         single { GuardianFileRepositoryImpl(get(), get(), get(), get(), get()) } bind GuardianFileRepository::class
         single { GetGuardianFileRemoteUseCase(get()) }
@@ -139,6 +150,7 @@ object DataModule {
 
         single { GetGuardianMessageUseCase(get()) }
         single { GetAdminMessageUseCase(get()) }
+        single { GetAudioMessageUseCase(get()) }
         single { SendFileSocketUseCase(get()) }
         single { SendInstructionCommandUseCase(get()) }
 
@@ -186,6 +198,9 @@ object DataModule {
         single { GuardianSocket }
         single { AdminSocket }
         single { FileSocket }
+        single { AudioSocket }
         single { GuardianFileHelper(androidContext()) }
+        single { MicrophoneTestUtils() }
+        single { AudioSpectrogramUtils }
     }
 }

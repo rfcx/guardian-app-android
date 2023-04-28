@@ -168,6 +168,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+    /* FFT */
+    implementation 'com.github.wendykierp:JTransforms:3.1'
 
 }
 
