@@ -1,15 +1,16 @@
-package org.rfcx.companion.view.deployment.guardian.storage
+package org.rfcx.incidents.view.guardian.checklist.storage
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_heatmap_normal.view.*
-import kotlinx.android.synthetic.main.item_heatmap_yaxis.view.*
-import org.rfcx.companion.R
+import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ItemHeatmapNormalBinding
+import org.rfcx.incidents.databinding.ItemHeatmapYaxisBinding
 
 class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private lateinit var yBinding: ItemHeatmapYaxisBinding
+    private lateinit var normalBinding: ItemHeatmapNormalBinding
     companion object {
         const val NORMAL_CELL = 1
         const val Y_AXIS_CELL = 2
@@ -31,14 +32,14 @@ class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            Y_AXIS_CELL -> YAxisHeatmapViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_heatmap_yaxis, parent, false)
-            )
-            else -> NormalHeatmapViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_heatmap_normal, parent, false)
-            )
+            Y_AXIS_CELL -> {
+                yBinding = ItemHeatmapYaxisBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                YAxisHeatmapViewHolder(yBinding)
+            }
+            else -> {
+                normalBinding = ItemHeatmapNormalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                NormalHeatmapViewHolder(normalBinding)
+            }
         }
     }
 
@@ -52,8 +53,7 @@ class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int = data.size
 
-    inner class NormalHeatmapViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val valueText = itemView.normalValue
+    inner class NormalHeatmapViewHolder(private val binding: ItemHeatmapNormalBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HeatmapItem.Normal) {
             val countAsPercent = (item.value.toFloat() / item.maximum.toFloat()) * 100
             when{
@@ -74,15 +74,14 @@ class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
             }
             if (item.value != 0) {
-                valueText.text = item.value.toString()
+                binding.normalValue.text = item.value.toString()
             }
         }
     }
 
-    inner class YAxisHeatmapViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val labelText = itemView.yLabelTextView
+    inner class YAxisHeatmapViewHolder(private val binding: ItemHeatmapYaxisBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HeatmapItem.YAxis) {
-            labelText.text = item.label
+            binding.yLabelTextView.text = item.label
         }
     }
 

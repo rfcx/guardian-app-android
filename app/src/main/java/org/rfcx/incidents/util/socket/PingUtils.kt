@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.rfcx.incidents.entity.guardian.socket.AdminPing
 import org.rfcx.incidents.entity.guardian.socket.AudioCaptureStatus
+import org.rfcx.incidents.entity.guardian.socket.GuardianArchived
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.GuardianStorage
 import org.rfcx.incidents.entity.guardian.socket.I2CAccessibility
@@ -245,6 +246,29 @@ object PingUtils {
                 Storage(values[2].toLong(), values[2].toLong() + values[3].toLong())
             }
         )
+    }
+
+    fun GuardianPing.getGuardianArchivedAudios(): List<GuardianArchived>? {
+        val archived = this.companion?.get("archived-audio")?.asString ?: return null
+        val listOfArchived = archived.split("|")
+        return listOfArchived.map {
+            val data = it.split("*")
+            var missing: List<String>? = null
+            if (data.size > 5) {
+                missing = data.subList(5, data.size)
+                if (missing.size == 1 && missing[0] == "") {
+                    missing = null
+                }
+            }
+            GuardianArchived(
+                data[0].toLong(),
+                data[1].toLong(),
+                data[2].toInt(),
+                data[3].toInt(),
+                data[4].toInt(),
+                if (missing.isNullOrEmpty()) null else missing
+            )
+        }
     }
 
     fun unGzipString(content: String?): String? {

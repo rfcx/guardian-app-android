@@ -10,18 +10,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_heatmap_audio_coverage.*
-import kotlinx.android.synthetic.main.toolbar_default.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.rfcx.companion.util.audiocoverage.AudioCoverageUtils
-import org.rfcx.companion.view.deployment.guardian.storage.ArchivedHeatmapAdapter
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ActivityHeatmapAudioCoverageBinding
 import org.rfcx.incidents.entity.guardian.socket.GuardianArchived
-import org.rfcx.incidents.entity.guardian.socket.GuardianArchivedCoverage
 import org.rfcx.incidents.widget.MonthYearPickerDialog
 
 class HeatmapAudioCoverageActivity :
@@ -31,12 +27,6 @@ class HeatmapAudioCoverageActivity :
     private val viewModel: HeatmapAudioCoverageViewModel by viewModel()
 
     private val archivedHeatmapAdapter by lazy { ArchivedHeatmapAdapter() }
-
-    private var archivedAudios = listOf<GuardianArchivedCoverage>()
-    private var archivedAudioStructure = JsonObject()
-    private var availableYearMonths = hashMapOf<Int, List<Int>>()
-    private var selectedMonth = 0
-    private var selectedYear = 1995
 
     private var menuAll: Menu? = null
 
@@ -50,23 +40,27 @@ class HeatmapAudioCoverageActivity :
 
         setupToolbar()
         getExtra()
-        val latestMonthYear = AudioCoverageUtils.getLatestMonthYear(archivedAudios)
-        selectedMonth = latestMonthYear.first
-        selectedYear = latestMonthYear.second
-        availableYearMonths = AudioCoverageUtils.getAvailableMonths(archivedAudioStructure)
-        archivedHeatmap.apply {
+
+
+        binding.archivedHeatmap.apply {
             adapter = archivedHeatmapAdapter
             layoutManager = GridLayoutManager(context, 25)
         }
         addHoursItem()
-        getData(archivedAudioStructure, selectedMonth, selectedYear)
+
+        lifecycleScope.launch {
+            viewModel.archivedItemsState.collectLatest {
+                archivedHeatmapAdapter.setData(it)
+                hideLoading()
+            }
+        }
+
+        viewModel.onPick(viewModel.selectedMonth, viewModel.selectedYear)
     }
 
     private fun getExtra() {
         val parcel = intent?.extras?.getParcelableArray(EXTRA_ARCHIVED_AUDIO) ?: return
-        archivedAudios =
-            parcel.map { it as GuardianArchived }.map { archived -> archived.toListOfTimestamp() }.sortedBy { it.listOfFile.firstOrNull() }
-        archivedAudioStructure = AudioCoverageUtils.toDateTimeStructure(archivedAudios)
+        viewModel.setArchivedData(parcel.map { it as GuardianArchived })
     }
 
     private fun addHoursItem() {
@@ -74,7 +68,7 @@ class HeatmapAudioCoverageActivity :
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             textSize = 8f
         }
-        hoursLayout.addView(text)
+        binding.hoursLayout.addView(text)
         val params = text.layoutParams as LinearLayout.LayoutParams
         params.width = 0
         params.weight = 1f
@@ -86,7 +80,7 @@ class HeatmapAudioCoverageActivity :
                     textSize = 8f
                 }
                 text2.text = getString(R.string.hour_less_than_10, k)
-                hoursLayout.addView(text2)
+                binding.hoursLayout.addView(text2)
                 val params2 = text2.layoutParams as LinearLayout.LayoutParams
                 params2.width = 0
                 params2.weight = 1f
@@ -97,7 +91,7 @@ class HeatmapAudioCoverageActivity :
                     textSize = 8f
                 }
                 text3.text = k.toString()
-                hoursLayout.addView(text3)
+                binding.hoursLayout.addView(text3)
                 val params3 = text3.layoutParams as LinearLayout.LayoutParams
                 params3.width = 0
                 params3.weight = 1f
@@ -133,9 +127,9 @@ class HeatmapAudioCoverageActivity :
             R.id.picker -> {
                 MonthYearPickerDialog.newInstance(
                     System.currentTimeMillis(),
-                    selectedMonth,
-                    selectedYear,
-                    availableYearMonths,
+                    viewModel.selectedMonth,
+                    viewModel.selectedYear,
+                    viewModel.availableYearMonths,
                     this
                 ).show(supportFragmentManager, MonthYearPickerDialog::class.java.name)
             }
@@ -144,40 +138,22 @@ class HeatmapAudioCoverageActivity :
     }
 
     override fun onPick(month: Int, year: Int) {
-        selectedMonth = month
-        selectedYear = year
-        getData(archivedAudioStructure, selectedMonth, selectedYear)
+        showLoading()
+        viewModel.onPick(month, year)
     }
 
-    private fun getData(obj: JsonObject, month: Int, year: Int) {
-        launch {
-            withContext(Dispatchers.Main) {
-                showLoading()
-            }
-            val items = AudioCoverageUtils.filterByMonthYear(obj, month, year)
-            val months = arrayOf(
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            )
-            withContext(Dispatchers.Main) {
-                archivedDate.text = getString(R.string.coverage_on, months[month], year)
-                archivedHeatmapAdapter.setData(items)
-                hideLoading()
-            }
-        }
+    private fun showLoading() {
+        binding.coverageLoading.visibility = View.VISIBLE
+        binding.archivedDate.visibility = View.GONE
+        binding.archivedHeatmap.visibility = View.GONE
+        binding.hoursLayout.visibility = View.GONE
     }
 
-    fun showLoading() {
-        coverageLoading.visibility = View.VISIBLE
-        archivedDate.visibility = View.GONE
-        archivedHeatmap.visibility = View.GONE
-        hoursLayout.visibility = View.GONE
-    }
-
-    fun hideLoading() {
-        coverageLoading.visibility = View.GONE
-        archivedDate.visibility = View.VISIBLE
-        archivedHeatmap.visibility = View.VISIBLE
-        hoursLayout.visibility = View.VISIBLE
+    private fun hideLoading() {
+        binding.coverageLoading.visibility = View.GONE
+        binding.archivedDate.visibility = View.VISIBLE
+        binding.archivedHeatmap.visibility = View.VISIBLE
+        binding.hoursLayout.visibility = View.VISIBLE
     }
 
     companion object {

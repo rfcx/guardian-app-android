@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
+import org.rfcx.incidents.entity.guardian.socket.GuardianArchived
+import org.rfcx.incidents.util.socket.PingUtils.getGuardianArchivedAudios
 import org.rfcx.incidents.util.socket.PingUtils.getStorage
 
 class GuardianStorageViewModel(
@@ -31,8 +33,11 @@ class GuardianStorageViewModel(
     private val _externalTextState: MutableStateFlow<String> = MutableStateFlow("")
     val externalTextState = _externalTextState.asStateFlow()
 
+    var archived = emptyList<GuardianArchived>()
+
     init {
         getStorage()
+        getArchived()
     }
 
     private fun getStorage() {
@@ -51,6 +56,18 @@ class GuardianStorageViewModel(
                         _externalTextState.tryEmit(externalStorage)
                         _externalState.tryEmit(((external.used.toFloat() / external.all.toFloat()) * 100).toInt())
                     }
+                }
+            }
+        }
+    }
+
+    private fun getArchived() {
+        viewModelScope.launch {
+            getGuardianMessageUseCase.launch().catch {
+
+            }.collectLatest { result ->
+                result?.getGuardianArchivedAudios()?.let {
+                    archived = it
                 }
             }
         }

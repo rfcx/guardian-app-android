@@ -37,6 +37,10 @@ class GuardianStorageFragment : Fragment() {
             it.setToolbarTitle("Storage Inspector")
         }
 
+        binding.audioCoverageButton.setOnClickListener {
+            HeatmapAudioCoverageActivity.startActivity(requireContext(), viewModel.archived)
+        }
+
         binding.internalFinishButton.setOnClickListener {
             mainEvent?.next()
         }
