@@ -533,4 +533,13 @@
     <string name="external_storage">External Storage</string>
     <string name="see_audio_coverage">See Audio Coverage</string>
 
+    <!-- Guardian Checkin Check -->
+    <string name="checkin_title">Confirm CheckIn Status</string>
+    <string name="guardian_checkin_check">Guardian Checkin Check</string>
+    <string name="protocol">Protocol</string>
+    <string name="dash">-</string>
+    <string name="last_checkin">Last checkin</string>
+    <string name="in_queue">In queue</string>
+    <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
+
 </resources>

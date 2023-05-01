@@ -1,117 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@color/backgroundColor">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/checkInTestTitle"
-        style="@style/RangerText.Subhead.Bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginTop="@dimen/margin_padding_normal"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:text="Guardian Checkin Check"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <LinearLayout
-        android:id="@+id/checkInInfoLayout"
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.guardian.checklist.checkin.GuardianCheckinTestViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/margin_padding_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkInTestTitle">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/checkInProtocolTextView"
-            style="@style/AudioMothText.Subhead"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/checkInTestTitle"
+            style="@style/RangerText.Subhead.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/protocol"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_small" />
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:text="@string/guardian_checkin_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/checkInProtocolValueTextView"
-            style="@style/AudioMothText.Body.Secondary"
+        <LinearLayout
+            android:id="@+id/checkInInfoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_padding_small"
-            android:text="@string/dash"
-            tools:text="mqtt" />
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin_padding_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkInTestTitle">
+
+            <TextView
+                android:id="@+id/checkInProtocolTextView"
+                style="@style/RangerText.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/protocol"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/checkInProtocolValueTextView"
+                style="@style/RangerText.Body.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_small"
+                android:text="@{viewModel.protocolState}"
+                tools:text="mqtt" />
+
+            <TextView
+                android:id="@+id/checkInTimeTextView"
+                style="@style/RangerText.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_checkin"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/checkInTimeValueTextView"
+                style="@style/RangerText.Body.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_small"
+                android:text="@{viewModel.lastCheckinState}"
+                tools:text="12 seconds ago" />
+
+            <TextView
+                android:id="@+id/checkInQueueTextView"
+                style="@style/RangerText.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/in_queue"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_small"
+                android:visibility="@{viewModel.checkinQueueVisibilityState ? view.VISIBLE : view.GONE}" />
+
+            <TextView
+                android:id="@+id/checkInQueueValueTextView"
+                style="@style/RangerText.Body.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_small"
+                android:text="@{viewModel.checkinQueueState}"
+                android:visibility="@{viewModel.checkinQueueVisibilityState ? view.VISIBLE : view.GONE}"
+                tools:text="23 messages" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/checkInTimeTextView"
-            style="@style/AudioMothText.Subhead"
+            android:id="@+id/checkInWarnTextView"
+            style="@style/RangerText.Body.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/last_checkin"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_small" />
+            android:paddingBottom="@dimen/margin_padding_small"
+            android:text="@string/wait_until_the_checkin_get_published"
+            app:layout_constraintBottom_toTopOf="@id/checkInFinishButton"
+            app:layout_constraintEnd_toEndOf="@id/checkInFinishButton"
+            app:layout_constraintStart_toStartOf="@id/checkInFinishButton" />
 
-        <TextView
-            android:id="@+id/checkInTimeValueTextView"
-            style="@style/AudioMothText.Body.Secondary"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/checkInFinishButton"
+            style="@style/RangerButton.GreenButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_padding_small"
-            android:text="@string/dash"
-            tools:text="12 seconds ago" />
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:enabled="@{viewModel.finishButtonState}"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/checkInQueueTextView"
-            style="@style/AudioMothText.Subhead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/in_queue"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_small"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/checkInQueueValueTextView"
-            style="@style/AudioMothText.Body.Secondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_padding_small"
-            android:text="@string/dash"
-            android:visibility="gone"
-            tools:text="23 messages" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/checkInWarnTextView"
-        style="@style/AudioMothText.Body.Secondary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_padding_small"
-        android:text="*Wait until the checkin get published"
-        app:layout_constraintBottom_toTopOf="@id/checkInFinishButton"
-        app:layout_constraintEnd_toEndOf="@id/checkInFinishButton"
-        app:layout_constraintStart_toStartOf="@id/checkInFinishButton" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/checkInFinishButton"
-        style="@style/AudioMothButton.GreenButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_large"
-        android:layout_marginEnd="@dimen/margin_padding_large"
-        android:layout_marginBottom="@dimen/margin_padding_normal"
-        android:enabled="false"
-        android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

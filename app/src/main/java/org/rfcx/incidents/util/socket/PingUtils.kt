@@ -271,6 +271,21 @@ object PingUtils {
         }
     }
 
+    fun GuardianPing.getLatestCheckIn(): JsonObject? {
+        if (this.prefs is JsonObject) {
+            val checkIn = this.companion?.get("checkin") ?: return null
+            return checkIn.asJsonObject
+        }
+        return null
+    }
+
+    fun GuardianPing.getSwarmUnsetMessages(): Int? {
+        val swm = this.swm ?: return null
+        val splitSwm = swm.split("|").map { it.split("*") }
+        val lastSwmObj = splitSwm.last()
+        return lastSwmObj[lastSwmObj.size - 1].toIntOrNull()
+    }
+
     fun unGzipString(content: String?): String? {
         return gZipByteArrayToUnGZipString(content)
     }
