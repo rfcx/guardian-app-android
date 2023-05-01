@@ -33,7 +33,7 @@
                 style="@style/RangerText.Subhead.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Internal Storage" />
+                android:text="@string/internal_storage" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/internalSizeTextView"
@@ -71,7 +71,7 @@
                 style="@style/RangerText.Subhead.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="External Storage" />
+                android:text="@string/external_storage" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/externalSizeTextView"
@@ -103,7 +103,7 @@
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             android:layout_marginTop="@dimen/margin_padding_large"
-            android:text="See Audio Coverage"
+            android:text="@string/see_audio_coverage"
             app:layout_constraintTop_toBottomOf="@id/externalStorageBar" />
 
         <androidx.appcompat.widget.AppCompatButton
