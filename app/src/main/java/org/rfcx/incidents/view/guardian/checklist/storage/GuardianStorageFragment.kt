@@ -34,7 +34,7 @@ class GuardianStorageFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Storage Inspector")
+            it.setToolbarTitle(getString(R.string.storage_title))
         }
 
         binding.audioCoverageButton.setOnClickListener {
