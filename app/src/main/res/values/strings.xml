@@ -527,6 +527,7 @@
     <string name="dialog_start_service_mic">Look like you have a trouble with microphone.\nTry restarting service?</string>
 
     <!-- Guardian Storage -->
+    <string name="storage_title">Storage Inspector</string>
     <string name="audio_coverage">Audio Coverage</string>
     <string name="hour_less_than_10">0%d</string>
     <string name="internal_storage">Internal Storage</string>
