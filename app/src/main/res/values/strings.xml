@@ -545,5 +545,6 @@
 
     <string name="search_box_hint">Search place, address or lat/long</string>
     <string name="no_result_found">No result found</string>
+    <string name="search_or_create_box_hint">Search site or create new</string>
 
 </resources>
