@@ -543,4 +543,7 @@
     <string name="in_queue">In queue</string>
     <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
 
+    <string name="search_box_hint">Search place, address or lat/long</string>
+    <string name="no_result_found">No result found</string>
+
 </resources>
