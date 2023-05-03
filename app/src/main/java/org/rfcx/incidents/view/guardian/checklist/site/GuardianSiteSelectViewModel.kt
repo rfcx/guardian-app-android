@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +14,11 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetLocalStreamsUseCase
 import org.rfcx.incidents.util.getListSite
+import org.rfcx.incidents.util.location.LocationHelper
 
 class GuardianSiteSelectViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
+    private val locationHelper: LocationHelper,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -31,10 +34,13 @@ class GuardianSiteSelectViewModel(
             getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!)).catch {
 
             }.collectLatest { result ->
-                val loc = Location(LocationManager.GPS_PROVIDER)
-                loc.latitude = 0.0
-                loc.longitude = 0.0
-                val siteItems = getListSite(loc, result)
+                val defaultLocation = Location(LocationManager.GPS_PROVIDER)
+                defaultLocation.latitude = 0.0
+                defaultLocation.longitude = 0.0
+                val lastLocation = locationHelper.getLastLocation()
+                Log.d("Comp", lastLocation.toString())
+                val siteItems = getListSite(lastLocation ?: defaultLocation, result)
+                Log.d("Comp", siteItems.size.toString())
                 _streams.tryEmit(siteItems)
             }
         }

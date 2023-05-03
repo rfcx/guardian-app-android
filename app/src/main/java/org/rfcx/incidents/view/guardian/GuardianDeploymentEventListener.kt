@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.guardian
 
+import android.location.Location
 import android.net.wifi.ScanResult
 import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.remote.common.Result

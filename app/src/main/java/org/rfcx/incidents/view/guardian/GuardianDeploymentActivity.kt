@@ -2,12 +2,17 @@ package org.rfcx.incidents.view.guardian
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.wifi.ScanResult
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,6 +31,8 @@ import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragmen
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 

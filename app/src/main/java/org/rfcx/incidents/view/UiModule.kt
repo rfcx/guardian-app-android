@@ -77,6 +77,6 @@ object UiModule {
         viewModel { GuardianStorageViewModel(androidContext(), get(), get()) }
         viewModel { HeatmapAudioCoverageViewModel() }
         viewModel { GuardianCheckinTestViewModel(get()) }
-        viewModel { GuardianSiteSelectViewModel(get(), get()) }
+        viewModel { GuardianSiteSelectViewModel(get(), get(), get()) }
     }
 }
