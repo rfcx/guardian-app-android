@@ -164,7 +164,7 @@ class GuardianSiteSelectFragment :
         const val ARG_LATITUDE = "ARG_LATITUDE"
         const val ARG_LONGITUDE = "ARG_LONGITUDE"
 
-        fun newInstance(lat: Double, lng: Double) =
+        fun newInstance() =
             GuardianSiteSelectFragment().apply {
                 arguments = Bundle().apply {
                     putDouble(ARG_LATITUDE, lat)
