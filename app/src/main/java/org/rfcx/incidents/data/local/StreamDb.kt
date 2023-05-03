@@ -25,8 +25,10 @@ class StreamDb(private val realm: Realm) {
     fun get(id: String): Stream? =
         realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()
 
-    fun getByProject(projectId: String): List<Stream> =
-        realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
+    fun getByProject(projectId: String): List<Stream> {
+        val streams = realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
+        return realm.copyFromRealm(streams)
+    }
 
     fun deleteByProject(projectId: String, callback: (Boolean) -> Unit) {
         realm.executeTransaction {

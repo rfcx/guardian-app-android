@@ -11,29 +11,29 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianSiteSelectBinding
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.randomStreamId
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageViewModel
 
 class GuardianSiteSelectFragment :
     Fragment(),
     (Stream, Boolean) -> Unit {
 
     private lateinit var binding: FragmentGuardianSiteSelectBinding
-    private val viewModel: GuardianStorageViewModel by viewModel()
+    private val viewModel: GuardianSiteSelectViewModel by viewModel()
 
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     // Adapter
     private val existedSiteAdapter by lazy { SiteAdapter(this) }
-    private var sitesAdapter = listOf<SiteWithLastDeploymentItem>()
-
-    private val preferences by lazy { Preferences.getInstance(requireContext()) }
+    private var sitesAdapter = listOf<SiteWithDistanceItem>()
 
     private var searchItem: MenuItem? = null
     private var latitude: Double = 0.0
@@ -71,12 +71,9 @@ class GuardianSiteSelectFragment :
         }
 
         setEditText()
-
-        setObserver()
         setupAdapter()
-        setupTopBar()
+        collectState()
         setEditText()
-        setSwipeSite()
     }
 
     private fun showKeyboard() {
@@ -111,27 +108,23 @@ class GuardianSiteSelectFragment :
                     existedSiteAdapter.isNewSite = false
                     existedSiteAdapter.items = sitesAdapter
                 } else {
-                    val text = s.toString().toLowerCase()
-                    val newList: ArrayList<SiteWithLastDeploymentItem> = ArrayList()
-                    newList.addAll(
-                        sitesAdapter.filter {
-                            it.stream.name.toLowerCase().contains(text)
-                        }
-                    )
+                    val text = s.toString().lowercase()
                     binding.noResultFound.visibility = View.GONE
                     val createNew = arrayListOf(
-                        SiteWithLastDeploymentItem(
+                        SiteWithDistanceItem(
                             Stream(
-                                id = -1,
+                                id = randomStreamId(),
                                 name = s.toString(),
                                 latitude = 0.0,
                                 longitude = 0.0
                             ),
-                            null,
                             0F
                         )
                     )
-                    existedSiteAdapter.setFilter(ArrayList(createNew + newList))
+                    val filteredNameSite = sitesAdapter.filter {
+                        it.stream.name.lowercase().contains(text)
+                    }
+                    existedSiteAdapter.setFilter(ArrayList(createNew + filteredNameSite))
                     existedSiteAdapter.isNewSite = true
                 }
             }
@@ -152,7 +145,12 @@ class GuardianSiteSelectFragment :
     }
 
     private fun collectState() {
-        //TODO get sites and update to adapter
+        lifecycleScope.launch {
+            viewModel.streams.collectLatest {
+                sitesAdapter = it
+                existedSiteAdapter.items = it
+            }
+        }
     }
 
     // On click site item
@@ -164,12 +162,6 @@ class GuardianSiteSelectFragment :
         const val ARG_LATITUDE = "ARG_LATITUDE"
         const val ARG_LONGITUDE = "ARG_LONGITUDE"
 
-        fun newInstance() =
-            GuardianSiteSelectFragment().apply {
-                arguments = Bundle().apply {
-                    putDouble(ARG_LATITUDE, lat)
-                    putDouble(ARG_LONGITUDE, lng)
-                }
-            }
+        fun newInstance() = GuardianSiteSelectFragment()
     }
 }

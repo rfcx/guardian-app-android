@@ -159,6 +159,8 @@ object DataModule {
         single { GuardianRegistrationRepositoryImpl(get(), get(), get()) } bind GuardianRegistrationRepository::class
         single { SaveRegistrationUseCase(get()) }
         single { SendRegistrationOnlineUseCase(get()) }
+
+        single { GetLocalStreamsUseCase(get()) }
     }
 
     val remoteModule = module {

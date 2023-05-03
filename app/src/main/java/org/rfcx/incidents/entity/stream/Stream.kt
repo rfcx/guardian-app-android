@@ -20,7 +20,8 @@ open class Stream(
     var tags: RealmList<String>? = null,
     var lastIncident: Incident? = null,
     var guardianType: String? = null,
-    var order: Int = Int.MAX_VALUE
+    var order: Int = Int.MAX_VALUE,
+    var isSynced: Boolean = false,
 ) : RealmModel {
 
     val timezone: TimeZone get() = TimeZone.getTimeZone(this.timezoneRaw)
@@ -28,6 +29,7 @@ open class Stream(
     companion object {
         const val TABLE_NAME = "Stream"
         const val FIELD_ID = "id"
+        const val FIELD_IS_SYNCED = "isSynced"
         const val FIELD_PROJECT_ID = "projectId"
         const val FIELD_ORDER = "order"
         const val TAG_HOT = "hot"

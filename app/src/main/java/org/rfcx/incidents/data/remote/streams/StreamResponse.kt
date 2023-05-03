@@ -74,7 +74,8 @@ fun StreamResponse.toStream(): Stream = Stream(
     projectId = project.id,
     tags = realmList(tags),
     lastIncident = lastIncident()?.toIncident(),
-    guardianType = guardianType
+    guardianType = guardianType,
+    isSynced = true
 )
 
 private fun IncidentResponse.toIncident(): Incident = Incident(
