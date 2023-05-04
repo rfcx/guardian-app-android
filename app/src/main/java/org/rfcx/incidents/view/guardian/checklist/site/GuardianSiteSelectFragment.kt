@@ -113,7 +113,7 @@ class GuardianSiteSelectFragment :
                     val createNew = arrayListOf(
                         SiteWithDistanceItem(
                             Stream(
-                                id = randomStreamId(),
+                                id = -1,
                                 name = s.toString(),
                                 latitude = 0.0,
                                 longitude = 0.0

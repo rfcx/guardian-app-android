@@ -163,7 +163,9 @@ private class Migrations : RealmMigration {
     private fun migrateToV25(realm: DynamicRealm) {
         val stream = realm.schema.get(Stream.TABLE_NAME)
         stream?.apply {
-            addField(Stream.FIELD_IS_SYNCED, Boolean::class.java)
+            addField(Stream.FIELD_ALTITUDE, Double::class.java)
+            addField(Stream.FIELD_EXTERNAL_ID, String::class.java).setRequired(Stream.FIELD_EXTERNAL_ID, false)
+            addField(Stream.FIELD_SYNC_STATE, Int::class.java)
         }
     }
 

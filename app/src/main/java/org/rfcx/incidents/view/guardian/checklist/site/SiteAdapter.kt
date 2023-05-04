@@ -36,7 +36,7 @@ class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
         val site = items[position]
         holder.bind(site)
         holder.itemView.setOnClickListener {
-            this.itemClickListener(site.stream, !site.stream.isSynced)
+            this.itemClickListener(site.stream, site.stream.externalId == null)
         }
     }
 
@@ -52,8 +52,8 @@ class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
             binding.siteNameTextView.text = site.stream.name
 
             binding.createdSiteNameTextView.visibility =
-                if (!site.stream.isSynced) View.VISIBLE else View.GONE
-            binding.siteNameTextView.visibility = if (site.stream.isSynced) View.VISIBLE else View.GONE
+                if (site.stream.externalId == null) View.VISIBLE else View.GONE
+            binding.siteNameTextView.visibility = if (site.stream.externalId != null) View.VISIBLE else View.GONE
 
             // binding.detailTextView.text = site.date?.toTimeSinceStringAlternativeTimeAgo(itemView.context)
             //     ?: itemView.context.getString(R.string.no_deployments)
@@ -63,7 +63,7 @@ class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
             } else {
                 binding.distanceTextView.visibility = View.GONE
             }
-            setDistanceAndIconAdd(!site.stream.isSynced)
+            setDistanceAndIconAdd(site.stream.externalId == null)
         }
 
         private fun setDistanceAndIconAdd(boolean: Boolean) {
