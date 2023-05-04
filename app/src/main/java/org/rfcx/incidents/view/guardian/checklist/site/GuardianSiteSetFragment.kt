@@ -125,77 +125,12 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.currentLocate.setOnClickListener {
-            setWithinText()
-            isUseCurrentLocate = true
-            if (id == -1) {
-                updateLocationOfNewSite()
-            } else {
-                site?.let {
-                    updateLocationOfExistingSite(
-                        currentUserLocation?.latitude ?: it.latitude,
-                        currentUserLocation?.longitude ?: it.longitude,
-                        currentUserLocation?.altitude ?: it.altitude
-                    )
-                }
-            }
+            //TODO: viewmodel to use current location
         }
 
         binding.viewMapBox.setOnClickListener {
-            deploymentProtocol?.let {
-                getLastLocation()
-                val siteLocation = userLocation
-                val siteId = if (isCreateNew) -1 else site?.id ?: -1
-                it.startMapPicker(
-                    siteLocation?.latitude ?: 0.0,
-                    siteLocation?.longitude ?: 0.0,
-                    siteLocation?.altitude ?: 0.0,
-                    siteId,
-                    siteName
-                )
-                it.hideToolbar()
-            }
+            //TODO: go to map picker
         }
-    }
-
-    private fun updateLocationOfNewSite() {
-        setLatLngToDefault()
-        val currentLatLng =
-            LatLng(currentUserLocation?.latitude ?: 0.0, currentUserLocation?.longitude ?: 0.0)
-        createSiteSymbol(currentLatLng)
-        moveCamera(LatLng(currentLatLng), DEFAULT_ZOOM)
-    }
-
-    private fun setLatLngToDefault() {
-        latitude = 0.0
-        longitude = 0.0
-    }
-
-    private fun updateLocationOfExistingSite(
-        latitude: Double,
-        longitude: Double,
-        altitude: Double
-    ) {
-        setLatLngToDefault()
-        var locate = Stream()
-        site?.let {
-            locate = Stream(
-                id = it.id,
-                serverId = it.serverId,
-                name = it.name,
-                latitude = latitude,
-                longitude = longitude,
-                altitude = altitude,
-                createdAt = it.createdAt,
-                updatedAt = it.updatedAt,
-                lastDeploymentId = it.lastDeploymentId,
-                syncState = it.syncState,
-                project = getProject(it.project?.id ?: 0),
-                deployments = it.deployments
-            )
-            createSiteSymbol(locate.getLatLng())
-            moveCamera(LatLng(locate.getLatLng()), DefaultSetupMap.DEFAULT_ZOOM)
-        }
-        site = locate
     }
 
     private fun createSite() {
