@@ -46,6 +46,7 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     // Arguments
     private lateinit var site: Stream
     var fromMapPicker: Boolean = false
+    private var isNewSite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +58,7 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         arguments?.let {
             site = it.getSerializable(ARG_SITE) as Stream
             fromMapPicker = it.getBoolean(ARG_FROM_MAP_PICKER)
+            isNewSite = it.getBoolean(ARG_IS_NEW_SITE)
         }
     }
 
@@ -103,6 +105,7 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.setSite(site)
+        viewModel.setIsNewSite(isNewSite)
         collectCurrentLoc()
     }
 
@@ -272,24 +275,27 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
         private const val ARG_SITE = "ARG_SITE"
         private const val ARG_FROM_MAP_PICKER = "ARG_FROM_MAP_PICKER"
+        private const val ARG_IS_NEW_SITE = "ARG_IS_NEW_SITE"
 
         const val PROPERTY_MARKER_IMAGE = "marker.image"
 
         @JvmStatic
         fun newInstance() = GuardianSiteSetFragment()
 
-        fun newInstance(stream: Stream) =
+        fun newInstance(stream: Stream, isNewSite: Boolean = false) =
             GuardianSiteSetFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_SITE, stream)
+                    putBoolean(ARG_IS_NEW_SITE, isNewSite)
                 }
             }
 
-        fun newInstance(stream: Stream, fromMapPicker: Boolean = false) =
+        fun newInstance(stream: Stream, fromMapPicker: Boolean = false, isNewSite: Boolean = false) =
             GuardianSiteSetFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_SITE, stream)
                     putBoolean(ARG_FROM_MAP_PICKER, fromMapPicker)
+                    putBoolean(ARG_IS_NEW_SITE, isNewSite)
                 }
             }
     }

@@ -23,7 +23,7 @@ import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class GuardianSiteSelectFragment :
     Fragment(),
-    (Stream) -> Unit {
+    (Stream, Boolean) -> Unit {
 
     private lateinit var binding: FragmentGuardianSiteSelectBinding
     private val viewModel: GuardianSiteSelectViewModel by viewModel()
@@ -35,19 +35,9 @@ class GuardianSiteSelectFragment :
     private var sitesAdapter = listOf<SiteWithDistanceItem>()
 
     private var searchItem: MenuItem? = null
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initIntent()
-    }
-
-    private fun initIntent() {
-        arguments?.let {
-            latitude = it.getDouble(ARG_LATITUDE)
-            longitude = it.getDouble(ARG_LONGITUDE)
-        }
     }
 
     override fun onCreateView(
@@ -152,14 +142,11 @@ class GuardianSiteSelectFragment :
         }
     }
 
-    override fun invoke(site: Stream) {
-        mainEvent?.goToSiteSetScreen(site)
+    override fun invoke(site: Stream, isNewSite: Boolean) {
+        mainEvent?.goToSiteSetScreen(site,isNewSite)
     }
 
     companion object {
-        const val ARG_LATITUDE = "ARG_LATITUDE"
-        const val ARG_LONGITUDE = "ARG_LONGITUDE"
-
         fun newInstance() = GuardianSiteSelectFragment()
     }
 }

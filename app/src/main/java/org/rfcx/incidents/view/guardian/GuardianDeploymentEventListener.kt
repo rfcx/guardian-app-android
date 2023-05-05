@@ -16,7 +16,7 @@ interface GuardianDeploymentEventListener {
     fun setPassedScreen(screen: GuardianScreen)
     fun back()
     fun next()
-    fun goToSiteSetScreen(stream: Stream)
+    fun goToSiteSetScreen(stream: Stream, isNewSite: Boolean)
     fun getPassedScreen(): List<GuardianScreen>
 
     fun connectHotspot(hotspot: ScanResult?)

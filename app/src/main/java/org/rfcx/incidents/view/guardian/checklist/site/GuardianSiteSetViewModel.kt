@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.domain.GetLocalProjectUseCase
 import org.rfcx.incidents.domain.GetLocalProjectsParams
 import org.rfcx.incidents.entity.stream.Stream
@@ -17,7 +18,8 @@ import org.rfcx.incidents.util.setFormatLabel
 
 class GuardianSiteSetViewModel(
     private val locationHelper: LocationHelper,
-    private val getLocalProjectUseCase: GetLocalProjectUseCase
+    private val getLocalProjectUseCase: GetLocalProjectUseCase,
+    private val preferences: Preferences
     ) : ViewModel() {
 
     private val _coordinateState: MutableStateFlow<String> = MutableStateFlow("")
@@ -36,6 +38,7 @@ class GuardianSiteSetViewModel(
     val currentLocationState = _currentLocationState.asStateFlow()
 
     private lateinit var site: Stream
+    private var isNewSite = false
 
     init {
         getLocationChanged()
@@ -45,6 +48,10 @@ class GuardianSiteSetViewModel(
         site = stream
         setStateFromSite()
         getProjectName()
+    }
+
+    fun setIsNewSite(value: Boolean) {
+        isNewSite = value
     }
 
     fun updateSiteToCurrentLocation() {
@@ -61,6 +68,9 @@ class GuardianSiteSetViewModel(
         viewModelScope.launch {
             locationHelper.getFlowLocationChanged().collectLatest {
                 _currentLocationState.tryEmit(it)
+                if (isNewSite) {
+                    updateSiteToCurrentLocation()
+                }
                 it?.altitude?.let { al ->
                     _altitudeState.tryEmit(al.setFormatLabel())
                 }
@@ -69,8 +79,9 @@ class GuardianSiteSetViewModel(
     }
 
     private fun getProjectName() {
+        val selectedProject = preferences.getString(Preferences.SELECTED_PROJECT) ?: ""
         viewModelScope.launch {
-            getLocalProjectUseCase.launch(GetLocalProjectsParams(site.projectId)).collectLatest { project ->
+            getLocalProjectUseCase.launch(GetLocalProjectsParams(selectedProject)).collectLatest { project ->
                 project?.let {
                     _projectState.tryEmit(it.name)
                 }

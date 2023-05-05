@@ -2,7 +2,6 @@ package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.location.Location
 import android.location.LocationManager
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,9 +37,7 @@ class GuardianSiteSelectViewModel(
                 defaultLocation.latitude = 0.0
                 defaultLocation.longitude = 0.0
                 val lastLocation = locationHelper.getLastLocation()
-                Log.d("Comp", lastLocation.toString())
                 val siteItems = getListSite(lastLocation ?: defaultLocation, result)
-                Log.d("Comp", siteItems.size.toString())
                 _streams.tryEmit(siteItems)
             }
         }

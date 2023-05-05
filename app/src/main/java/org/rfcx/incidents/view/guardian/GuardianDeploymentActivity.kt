@@ -133,9 +133,9 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         changeScreen(GuardianScreen.CHECKLIST)
     }
 
-    override fun goToSiteSetScreen(stream: Stream) {
+    override fun goToSiteSetScreen(stream: Stream, isNewSite: Boolean) {
         currentScreen = GuardianScreen.SITE_SET
-        startFragment(GuardianSiteSetFragment.newInstance(stream))
+        startFragment(GuardianSiteSetFragment.newInstance(stream, isNewSite))
     }
 
     override fun getPassedScreen(): List<GuardianScreen> = passedScreen
