@@ -13,5 +13,6 @@ enum class GuardianScreen(val value: Int) {
     MICROPHONE(7),
     STORAGE(8),
     SITE(9),
+    SITE_SET(-3),
     CHECKIN(11)
 }

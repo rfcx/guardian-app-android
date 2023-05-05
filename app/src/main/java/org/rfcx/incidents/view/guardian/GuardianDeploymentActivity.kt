@@ -2,22 +2,18 @@ package org.rfcx.incidents.view.guardian
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.net.wifi.ScanResult
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFragment
 import org.rfcx.incidents.view.guardian.checklist.checkin.GuardianCheckInTestFragment
@@ -28,11 +24,10 @@ import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragment
+import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
 
@@ -68,6 +63,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.MICROPHONE -> startFragment(GuardianMicrophoneFragment.newInstance())
             GuardianScreen.STORAGE -> startFragment(GuardianStorageFragment.newInstance())
             GuardianScreen.SITE -> startFragment(GuardianSiteSelectFragment.newInstance())
+            GuardianScreen.SITE_SET -> startFragment(GuardianSiteSetFragment.newInstance())
             GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
         }
     }
@@ -127,6 +123,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.MICROPHONE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.STORAGE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.SITE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.SITE_SET -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CHECKIN -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
@@ -134,6 +131,11 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
     override fun next() {
         passedScreen.add(currentScreen)
         changeScreen(GuardianScreen.CHECKLIST)
+    }
+
+    override fun goToSiteSetScreen(stream: Stream) {
+        currentScreen = GuardianScreen.SITE_SET
+        startFragment(GuardianSiteSetFragment.newInstance(stream))
     }
 
     override fun getPassedScreen(): List<GuardianScreen> = passedScreen

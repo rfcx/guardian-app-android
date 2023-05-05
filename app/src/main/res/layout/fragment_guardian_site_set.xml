@@ -2,6 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor">
 
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -119,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_small"
+                    android:text="@{viewModel.siteState}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/siteTitleTextView"
                     tools:text="AB01" />
@@ -142,6 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_small"
+                    android:text="@{viewModel.coordinateState}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/coordinatesTitleTextView"
                     tools:text="16.789, 100.1235" />
@@ -163,6 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_small"
+                    android:text="@{viewModel.altitudeState}"
                     app:layout_constraintStart_toStartOf="@id/guidelineVertical"
                     app:layout_constraintTop_toBottomOf="@id/altitudeLabel"
                     tools:text="50.00" />
@@ -186,7 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_small"
-                    android:text="None"
+                    android:text="@{viewModel.projectState}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/projectTitleTextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>

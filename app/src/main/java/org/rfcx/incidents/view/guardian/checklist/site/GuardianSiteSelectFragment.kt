@@ -19,12 +19,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianSiteSelectBinding
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.util.randomStreamId
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class GuardianSiteSelectFragment :
     Fragment(),
-    (Stream, Boolean) -> Unit {
+    (Stream) -> Unit {
 
     private lateinit var binding: FragmentGuardianSiteSelectBinding
     private val viewModel: GuardianSiteSelectViewModel by viewModel()
@@ -153,9 +152,8 @@ class GuardianSiteSelectFragment :
         }
     }
 
-    // On click site item
-    override fun invoke(site: Stream, isNewSite: Boolean) {
-        // TODO move to next screen
+    override fun invoke(site: Stream) {
+        mainEvent?.goToSiteSetScreen(site)
     }
 
     companion object {

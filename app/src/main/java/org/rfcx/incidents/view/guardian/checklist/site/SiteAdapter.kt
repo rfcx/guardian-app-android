@@ -9,7 +9,7 @@ import org.rfcx.incidents.databinding.ItemSiteBinding
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.setFormatLabel
 
-class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
+class SiteAdapter(private val itemClickListener: (Stream) -> Unit) :
     RecyclerView.Adapter<SiteAdapter.SiteAdapterViewHolder>() {
 
     private lateinit var siteBinding: ItemSiteBinding
@@ -36,7 +36,7 @@ class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
         val site = items[position]
         holder.bind(site)
         holder.itemView.setOnClickListener {
-            this.itemClickListener(site.stream, site.stream.externalId == null)
+            this.itemClickListener(site.stream)
         }
     }
 

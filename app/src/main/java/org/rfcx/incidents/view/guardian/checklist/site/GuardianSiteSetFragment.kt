@@ -1,20 +1,15 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.location.Location
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.mapbox.android.core.location.*
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -27,19 +22,20 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianSiteSetBinding
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.MapboxCameraUtils
-import org.rfcx.incidents.util.latitudeCoordinates
-import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentGuardianSiteSetBinding
-    private val viewModel: GuardianSiteSelectViewModel by viewModel()
+    private val viewModel: GuardianSiteSetViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     // Mapbox
@@ -48,37 +44,8 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     private var symbolManager: SymbolManager? = null
 
     // Arguments
-    var isUseCurrentLocate: Boolean = false
     lateinit var site: Stream
     var fromMapPicker: Boolean = false
-
-    // Location
-    private var currentUserLocation: Location? = null
-    private var userLocation: Location? = null
-    private lateinit var pinLocation: LatLng
-    private var locationEngine: LocationEngine? = null
-    private val mapboxLocationChangeCallback =
-        object : LocationEngineCallback<LocationEngineResult> {
-            override fun onSuccess(result: LocationEngineResult?) {
-                if (activity != null) {
-                    val location = result?.lastLocation
-                    location ?: return
-                    currentUserLocation = location
-                    updateView()
-
-                    if (isCreateNew && !fromMapPicker) {
-                        currentUserLocation?.let { currentUserLocation ->
-                            val latLng =
-                                LatLng(currentUserLocation.latitude, currentUserLocation.longitude)
-                            moveCamera(latLng, null, DefaultSetupMap.DEFAULT_ZOOM)
-                        }
-                    }
-                    pinLocation?.let { setWithInText(location.toLatLng(), it) }
-                }
-            }
-
-            override fun onFailure(exception: Exception) {}
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,9 +74,11 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewModel = viewModel
+
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Installation site selection")
+            it.setToolbarTitle("Installation site set")
         }
 
         mapView = view.findViewById(R.id.mapBoxView)
@@ -125,12 +94,17 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.currentLocate.setOnClickListener {
-            //TODO: viewmodel to use current location
+            viewModel.updateSiteToCurrentLocation()
+            setPinOnMap()
         }
 
         binding.viewMapBox.setOnClickListener {
             //TODO: go to map picker
         }
+
+        viewModel.setSite(site)
+        viewModel.getLocationChanged()
+        collectCurrentLoc()
     }
 
     private fun createSite() {
@@ -154,11 +128,10 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setPinOnMap() {
-        val curLoc = LatLng()
+        val curLoc = LatLng(viewModel.currentLocationState.value?.latitude ?: 0.0, viewModel.currentLocationState.value?.longitude ?: 0.0)
         val siteLoc = LatLng(site.latitude, site.longitude)
         moveCamera(curLoc, siteLoc, DEFAULT_ZOOM)
         createSiteSymbol(siteLoc)
-        pinLocation = siteLoc
     }
 
     private fun setupSymbolManager(style: Style) {
@@ -183,81 +156,34 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-    private fun hasPermissions(): Boolean {
-        val permissionState = context?.let {
-            ActivityCompat.checkSelfPermission(
-                it,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
-        return permissionState == PackageManager.PERMISSION_GRANTED
-    }
-
     @SuppressLint("MissingPermission")
     private fun enableLocationComponent() {
-        if (hasPermissions()) {
-            val loadedMapStyle = mapboxMap?.style
-            val locationComponent = mapboxMap?.locationComponent
-            // Activate the LocationComponent
-            val customLocationComponentOptions = context?.let {
-                LocationComponentOptions.builder(it)
-                    .trackingGesturesManagement(true)
-                    .accuracyColor(ContextCompat.getColor(it, R.color.colorPrimary))
+        val loadedMapStyle = mapboxMap?.style
+        // Activate the LocationComponent
+        val customLocationComponentOptions = context?.let {
+            LocationComponentOptions.builder(it)
+                .trackingGesturesManagement(true)
+                .accuracyColor(ContextCompat.getColor(it, R.color.colorPrimary))
+                .build()
+        }
+
+        val locationComponentActivationOptions =
+            context?.let {
+                LocationComponentActivationOptions.builder(it, loadedMapStyle!!)
+                    .locationComponentOptions(customLocationComponentOptions)
                     .build()
             }
 
-            val locationComponentActivationOptions =
-                context?.let {
-                    LocationComponentActivationOptions.builder(it, loadedMapStyle!!)
-                        .locationComponentOptions(customLocationComponentOptions)
-                        .build()
+        mapboxMap?.let { it ->
+            it.locationComponent.apply {
+                if (locationComponentActivationOptions != null) {
+                    activateLocationComponent(locationComponentActivationOptions)
                 }
 
-            mapboxMap?.let { it ->
-                it.locationComponent.apply {
-                    if (locationComponentActivationOptions != null) {
-                        activateLocationComponent(locationComponentActivationOptions)
-                    }
-
-                    isLocationComponentEnabled = true
-                    renderMode = RenderMode.COMPASS
-                }
+                isLocationComponentEnabled = true
+                renderMode = RenderMode.COMPASS
             }
-
-            this.currentUserLocation = locationComponent?.lastKnownLocation
-            initLocationEngine()
-        } else {
-            requestPermissions()
         }
-    }
-
-    private fun requestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity?.requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSIONS_REQUEST_CODE
-            )
-        } else {
-            throw Exception("Request permissions not required before API 23 (should never happen)")
-        }
-    }
-
-    /**
-     * Set up the LocationEngine and the parameters for querying the device's location
-     */
-    @SuppressLint("MissingPermission")
-    private fun initLocationEngine() {
-        locationEngine = context?.let { LocationEngineProvider.getBestLocationEngine(it) }
-        val request =
-            LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build()
-        locationEngine?.requestLocationUpdates(
-            request,
-            mapboxLocationChangeCallback,
-            Looper.getMainLooper()
-        )
-        locationEngine?.getLastLocation(mapboxLocationChangeCallback)
     }
 
     private fun moveCamera(userPosition: LatLng, nearestSite: LatLng?, zoom: Double) {
@@ -270,8 +196,16 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-    private fun moveCamera(latLng: LatLng, zoom: Double) {
-        mapboxMap?.moveCamera(MapboxCameraUtils.calculateLatLngForZoom(latLng, null, zoom))
+    private fun collectCurrentLoc() {
+        lifecycleScope.launch {
+            viewModel.currentLocationState.collectLatest { currentLoc ->
+                currentLoc?.let {
+                    val curLoc = LatLng(it.latitude, it.longitude)
+                    val siteLoc = LatLng(site.latitude, site.longitude)
+                    setWithInText(curLoc, siteLoc)
+                }
+            }
+        }
     }
 
     private fun setWithInText(curLoc: LatLng, target: LatLng) {
@@ -284,13 +218,14 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setWithinText() {
-        binding.withinTextView.text = "within"
         binding.withinTextView.setCompoundDrawablesWithIntrinsicBounds(
             R.drawable.ic_checklist_passed,
             0,
             0,
             0
         )
+        binding.withinTextView.text = getString(R.string.within)
+
     }
 
     private fun setNotWithinText(distance: String) {
@@ -335,9 +270,6 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
     companion object {
         const val DEFAULT_ZOOM = 15.0
-        const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-        const val DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L
-        const val DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5
 
         private const val ARG_SITE = "ARG_SITE"
         private const val ARG_FROM_MAP_PICKER = "ARG_FROM_MAP_PICKER"
