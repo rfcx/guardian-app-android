@@ -3,18 +3,22 @@ package org.rfcx.incidents.view.guardian.checklist.site
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.domain.GetLocalProjectUseCase
+import org.rfcx.incidents.domain.GetLocalProjectsParams
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.location.LocationHelper
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.setFormatLabel
 
-class GuardianSiteSetViewModel(private val locationHelper: LocationHelper) : ViewModel() {
+class GuardianSiteSetViewModel(
+    private val locationHelper: LocationHelper,
+    private val getLocalProjectUseCase: GetLocalProjectUseCase
+    ) : ViewModel() {
 
     private val _coordinateState: MutableStateFlow<String> = MutableStateFlow("")
     val coordinateState = _coordinateState.asStateFlow()
@@ -33,9 +37,14 @@ class GuardianSiteSetViewModel(private val locationHelper: LocationHelper) : Vie
 
     private lateinit var site: Stream
 
+    init {
+        getLocationChanged()
+    }
+
     fun setSite(stream: Stream) {
         site = stream
         setStateFromSite()
+        getProjectName()
     }
 
     fun updateSiteToCurrentLocation() {
@@ -48,7 +57,7 @@ class GuardianSiteSetViewModel(private val locationHelper: LocationHelper) : Vie
         setStateFromSite()
     }
 
-    fun getLocationChanged() {
+    private fun getLocationChanged() {
         viewModelScope.launch {
             locationHelper.getFlowLocationChanged().collectLatest {
                 _currentLocationState.tryEmit(it)
@@ -59,10 +68,19 @@ class GuardianSiteSetViewModel(private val locationHelper: LocationHelper) : Vie
         }
     }
 
+    private fun getProjectName() {
+        viewModelScope.launch {
+            getLocalProjectUseCase.launch(GetLocalProjectsParams(site.projectId)).collectLatest { project ->
+                project?.let {
+                    _projectState.tryEmit(it.name)
+                }
+            }
+        }
+    }
+
     private fun setStateFromSite() {
         _coordinateState.tryEmit("${site.latitude.latitudeCoordinates()}, ${site.longitude.longitudeCoordinates()}")
         _siteState.tryEmit(site.name)
-        _projectState.tryEmit(site.projectId)
     }
 
 }

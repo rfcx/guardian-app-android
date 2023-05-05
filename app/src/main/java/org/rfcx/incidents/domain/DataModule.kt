@@ -162,6 +162,7 @@ object DataModule {
         single { SendRegistrationOnlineUseCase(get()) }
 
         single { GetLocalStreamsUseCase(get()) }
+        single { GetLocalProjectUseCase(get()) }
     }
 
     val remoteModule = module {

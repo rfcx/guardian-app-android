@@ -79,6 +79,6 @@ object UiModule {
         viewModel { HeatmapAudioCoverageViewModel() }
         viewModel { GuardianCheckinTestViewModel(get()) }
         viewModel { GuardianSiteSelectViewModel(get(), get(), get()) }
-        viewModel { GuardianSiteSetViewModel(get()) }
+        viewModel { GuardianSiteSetViewModel(get(), get()) }
     }
 }

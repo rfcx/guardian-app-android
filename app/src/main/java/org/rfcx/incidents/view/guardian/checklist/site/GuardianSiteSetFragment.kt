@@ -44,7 +44,7 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
     private var symbolManager: SymbolManager? = null
 
     // Arguments
-    lateinit var site: Stream
+    private lateinit var site: Stream
     var fromMapPicker: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +103,6 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.setSite(site)
-        viewModel.getLocationChanged()
         collectCurrentLoc()
     }
 
