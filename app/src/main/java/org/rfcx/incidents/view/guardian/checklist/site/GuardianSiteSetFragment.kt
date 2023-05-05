@@ -80,7 +80,7 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Installation site set")
+            it.setToolbarTitle(getString(R.string.guardian_site_title))
         }
 
         mapView = view.findViewById(R.id.mapBoxView)

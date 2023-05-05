@@ -56,7 +56,7 @@ class GuardianSiteSelectFragment :
 
         mainEvent?.let {
             it.showToolbar()
-            it.setToolbarTitle("Installation site selection")
+            it.setToolbarTitle(getString(R.string.guardian_site_title))
         }
 
         setEditText()
