@@ -3,10 +3,11 @@ package org.rfcx.incidents.view.guardian.checklist.site
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
@@ -32,17 +33,19 @@ class MapView @JvmOverloads constructor(
     }
 
     private lateinit var mapbox: MapboxMap
-    private lateinit var mapView: MapView
     private lateinit var style: Style
     private lateinit var symbolManager: SymbolManager
 
     private var currentLoc = LatLng()
     private var siteLoc = LatLng()
+    private var canMove = false
+    private var createPin = false
+    private lateinit var callback: (LatLng) -> Unit
 
     init {
-        View.inflate(context, R.layout.widget_mapbox, this)
         initAttrs(attrs)
         setupView()
+        this.setOnTouchListener { v, event -> true }
     }
 
     private fun initAttrs(attrs: AttributeSet?) {
@@ -54,22 +57,40 @@ class MapView @JvmOverloads constructor(
         getMapAsync(this)
     }
 
+    fun setParam(canMove: Boolean, createPin: Boolean) {
+        this.canMove = canMove
+        this.createPin = createPin
+    }
+
+    fun setCameraMoveCallback(callback: (LatLng) -> Unit) {
+        this.callback = callback
+    }
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         mapbox = mapboxMap
-        mapboxMap.uiSettings.setAllGesturesEnabled(false)
+        mapboxMap.uiSettings.setAllGesturesEnabled(canMove)
         mapboxMap.uiSettings.isAttributionEnabled = false
         mapboxMap.uiSettings.isLogoEnabled = false
         mapboxMap.setStyle(Style.OUTDOORS) {
             style = it
             setupSymbolManager()
             enableLocationComponent()
-            moveCamera(currentLoc, siteLoc)
-            setPinOnMap(currentLoc, siteLoc)
+            if (currentLoc.latitude == 0.0 && currentLoc.longitude == 0.0) {
+                moveCamera(siteLoc)
+            } else {
+                moveCamera(currentLoc, siteLoc)
+            }
+            if (createPin) {
+                setPinOnMap(currentLoc, siteLoc)
+            }
         }
-    }
 
-    fun setView(mapView: MapView) {
-        this.mapView = mapView
+        mapbox.addOnCameraMoveListener {
+            val currentCameraPosition = mapbox.cameraPosition.target
+            if (::callback.isInitialized) {
+                this.callback.invoke(LatLng(currentCameraPosition.latitude, currentCameraPosition.longitude))
+            }
+        }
     }
 
     fun setLocation(currentLoc: LatLng, siteLoc: LatLng) {
@@ -78,7 +99,7 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setupSymbolManager() {
-        symbolManager = SymbolManager(this.mapView, mapbox, style)
+        symbolManager = SymbolManager(this, mapbox, style)
         symbolManager.iconAllowOverlap = true
         style.addImage(
             PROPERTY_MARKER_IMAGE,
@@ -109,6 +130,15 @@ class MapView @JvmOverloads constructor(
                 DEFAULT_ZOOM
             )
         )
+    }
+
+    fun moveCamera(latLng: LatLng) {
+        Log.d("GuardianApp", latLng.toString())
+        mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+    }
+
+    fun getCurrentPosition(): LatLng {
+        return mapbox.cameraPosition.target
     }
 
     @SuppressLint("MissingPermission")

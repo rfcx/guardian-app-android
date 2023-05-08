@@ -1,14 +1,12 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.mapbox.android.core.location.*
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +26,6 @@ class GuardianSiteSetFragment : Fragment() {
 
     // Arguments
     private lateinit var site: Stream
-    var fromMapPicker: Boolean = false
     private var isNewSite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +37,6 @@ class GuardianSiteSetFragment : Fragment() {
     private fun initIntent() {
         arguments?.let {
             site = it.getSerializable(ARG_SITE) as Stream
-            fromMapPicker = it.getBoolean(ARG_FROM_MAP_PICKER)
             isNewSite = it.getBoolean(ARG_IS_NEW_SITE)
         }
     }
@@ -67,14 +63,10 @@ class GuardianSiteSetFragment : Fragment() {
         }
 
         binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setView(binding.mapBoxView)
+        binding.mapBoxView.setParam(canMove = false, createPin = true)
 
         binding.nextButton.setOnClickListener {
-            if (id == -1) {
-                createSite()
-            } else {
-                handleExistLocate()
-            }
+            mainEvent?.nextWithStream(site)
         }
 
         binding.currentLocate.setOnClickListener {
@@ -85,20 +77,12 @@ class GuardianSiteSetFragment : Fragment() {
         }
 
         binding.viewMapBox.setOnClickListener {
-            //TODO: go to map picker
+            mainEvent?.goToMapPickerScreen(site)
         }
 
         viewModel.setSite(site)
         viewModel.setIsNewSite(isNewSite)
         collectCurrentLoc()
-    }
-
-    private fun createSite() {
-        //TODO: viewmodel for create site
-    }
-
-    private fun handleExistLocate() {
-        //TODO: viewmodel for update site
     }
 
     private fun collectCurrentLoc() {
@@ -177,7 +161,6 @@ class GuardianSiteSetFragment : Fragment() {
 
     companion object {
         private const val ARG_SITE = "ARG_SITE"
-        private const val ARG_FROM_MAP_PICKER = "ARG_FROM_MAP_PICKER"
         private const val ARG_IS_NEW_SITE = "ARG_IS_NEW_SITE"
 
         @JvmStatic
@@ -187,15 +170,6 @@ class GuardianSiteSetFragment : Fragment() {
             GuardianSiteSetFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_SITE, stream)
-                    putBoolean(ARG_IS_NEW_SITE, isNewSite)
-                }
-            }
-
-        fun newInstance(stream: Stream, fromMapPicker: Boolean = false, isNewSite: Boolean = false) =
-            GuardianSiteSetFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ARG_SITE, stream)
-                    putBoolean(ARG_FROM_MAP_PICKER, fromMapPicker)
                     putBoolean(ARG_IS_NEW_SITE, isNewSite)
                 }
             }

@@ -25,6 +25,7 @@ import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosti
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetFragment
+import org.rfcx.incidents.view.guardian.checklist.site.MapPickerFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
 import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
@@ -36,6 +37,9 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     private var currentScreen = GuardianScreen.CHECKLIST
     private val passedScreen = arrayListOf<GuardianScreen>()
+
+    private lateinit var stream: Stream
+    private var isNewSite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +68,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.STORAGE -> startFragment(GuardianStorageFragment.newInstance())
             GuardianScreen.SITE -> startFragment(GuardianSiteSelectFragment.newInstance())
             GuardianScreen.SITE_SET -> startFragment(GuardianSiteSetFragment.newInstance())
+            GuardianScreen.MAP_PICKER -> startFragment(GuardianSiteSetFragment.newInstance())
             GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
         }
     }
@@ -125,6 +130,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.SITE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.SITE_SET -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CHECKIN -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.MAP_PICKER -> {
+                currentScreen = GuardianScreen.SITE_SET
+                startFragment(GuardianSiteSetFragment.newInstance(this.stream, this.isNewSite))
+            }
         }
     }
 
@@ -135,10 +144,23 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun goToSiteSetScreen(stream: Stream, isNewSite: Boolean) {
         currentScreen = GuardianScreen.SITE_SET
+        this.stream = stream
+        this.isNewSite = isNewSite
         startFragment(GuardianSiteSetFragment.newInstance(stream, isNewSite))
     }
 
+    override fun goToMapPickerScreen(stream: Stream) {
+        this.stream = stream
+        startFragment(MapPickerFragment.newInstance(stream))
+    }
+
     override fun getPassedScreen(): List<GuardianScreen> = passedScreen
+    override fun nextWithStream(stream: Stream) {
+        currentScreen = GuardianScreen.SITE
+        this.stream = stream
+        passedScreen.add(currentScreen)
+        changeScreen(GuardianScreen.CHECKLIST)
+    }
 
     override fun connectHotspot(hotspot: ScanResult?) {
         lifecycleScope.launch {
