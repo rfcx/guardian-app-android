@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_normal"
             android:layout_marginTop="@dimen/margin_padding_normal"
-            android:text="Selected location"
+            android:text="@string/selected_location"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bottomView" />

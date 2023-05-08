@@ -552,5 +552,6 @@
     <string name="no_deployments">No deployments</string>
     <string name="more_than">You are %s from the site</string>
     <string name="within">You are currently within 20m of the site</string>
+    <string name="selected_location">Selected location</string>
 
 </resources>
