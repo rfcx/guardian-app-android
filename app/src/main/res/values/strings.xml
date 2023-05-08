@@ -526,5 +526,21 @@
     <string name="restart_mic_test">Restart Mic Test</string>
     <string name="dialog_start_service_mic">Look like you have a trouble with microphone.\nTry restarting service?</string>
 
+    <!-- Guardian Storage -->
+    <string name="storage_title">Storage Inspector</string>
+    <string name="audio_coverage">Audio Coverage</string>
+    <string name="hour_less_than_10">0%d</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="external_storage">External Storage</string>
+    <string name="see_audio_coverage">See Audio Coverage</string>
+
+    <!-- Guardian Checkin Check -->
+    <string name="checkin_title">Confirm CheckIn Status</string>
+    <string name="guardian_checkin_check">Guardian Checkin Check</string>
+    <string name="protocol">Protocol</string>
+    <string name="dash">-</string>
+    <string name="last_checkin">Last checkin</string>
+    <string name="in_queue">In queue</string>
+    <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
 
 </resources>

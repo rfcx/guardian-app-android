@@ -15,6 +15,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListFragment
 import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFragment
+import org.rfcx.incidents.view.guardian.checklist.checkin.GuardianCheckInTestFragment
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadFragment
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
 import org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneFragment
@@ -22,6 +23,7 @@ import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.softwareupdate.SoftwareUpdateFragment
+import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageFragment
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectFragment
 
 class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventListener {
@@ -56,6 +58,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.NETWORK_TEST -> startFragment(NetworkTestFragment.newInstance())
             GuardianScreen.AUDIO_PARAMETER -> startFragment(GuardianAudioParameterFragment.newInstance())
             GuardianScreen.MICROPHONE -> startFragment(GuardianMicrophoneFragment.newInstance())
+            GuardianScreen.STORAGE -> startFragment(GuardianStorageFragment.newInstance())
+            GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
         }
     }
 
@@ -112,6 +116,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.NETWORK_TEST -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.AUDIO_PARAMETER -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.MICROPHONE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.STORAGE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.CHECKIN -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 

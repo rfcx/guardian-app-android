@@ -88,6 +88,8 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             5 -> mainEvent?.changeScreen(GuardianScreen.NETWORK_TEST)
             6 -> mainEvent?.changeScreen(GuardianScreen.AUDIO_PARAMETER)
             7 -> mainEvent?.changeScreen(GuardianScreen.MICROPHONE)
+            8 -> mainEvent?.changeScreen(GuardianScreen.STORAGE)
+            11 -> mainEvent?.changeScreen(GuardianScreen.CHECKIN)
         }
     }
 }

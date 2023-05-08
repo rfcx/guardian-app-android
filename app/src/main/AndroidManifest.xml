@@ -81,6 +81,9 @@
             android:name=".view.profile.guardian.ClassifierDownloadActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".view.guardian.checklist.storage.HeatmapAudioCoverageActivity"
+            android:screenOrientation="landscape" />
+
         <service
             android:name=".service.LocationTrackerService"
             android:exported="false"

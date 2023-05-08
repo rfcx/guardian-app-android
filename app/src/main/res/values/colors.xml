@@ -36,6 +36,7 @@
 	<color name="transparent">@android:color/transparent</color>
 	
 	<color name="white">#FFF</color>
+    <color name="black">#000000</color>
 	<color name="grey">#D3D9E0</color>
 	<color name="gray_30">#FFD6D6D6</color>
 	<color name="grey_light">#F0F0F0</color>
