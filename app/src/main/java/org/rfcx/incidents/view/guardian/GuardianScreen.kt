@@ -11,5 +11,6 @@ enum class GuardianScreen(val value: Int) {
     NETWORK_TEST(5),
     AUDIO_PARAMETER(6),
     MICROPHONE(7),
-    STORAGE(8)
+    STORAGE(8),
+    CHECKIN(11)
 }

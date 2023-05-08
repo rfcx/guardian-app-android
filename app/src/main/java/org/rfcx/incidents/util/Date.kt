@@ -102,6 +102,17 @@ private val outputTimeZoneWithoutYearSdf by lazy {
     sdf
 }
 
+private val outputStandardDateSdfEng by lazy {
+    val sdf = SimpleDateFormat(standardDateFormat, Locale.ENGLISH)
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
+}
+
+fun timestampToDateString(timestamp: Long?): String {
+    if (timestamp == null) return "-"
+    return outputStandardDateSdfEng.format(Date(timestamp))
+}
+
 fun Date.toIsoFormatString(): String {
     return isoFormat.format(this) // pattern 20211128T153441279Z
 }
