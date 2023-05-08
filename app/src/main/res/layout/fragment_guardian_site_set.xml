@@ -37,7 +37,7 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.7" />
 
-                <com.mapbox.mapboxsdk.maps.MapView
+                <org.rfcx.incidents.view.guardian.checklist.site.MapView
                     android:id="@+id/mapBoxView"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"

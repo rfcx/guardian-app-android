@@ -1,47 +1,30 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.mapbox.android.core.location.*
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianSiteSetBinding
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.util.MapboxCameraUtils
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
-class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
+class GuardianSiteSetFragment : Fragment() {
 
     private lateinit var binding: FragmentGuardianSiteSetBinding
     private val viewModel: GuardianSiteSetViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
-
-    // Mapbox
-    private var mapboxMap: MapboxMap? = null
-    private lateinit var mapView: MapView
-    private var symbolManager: SymbolManager? = null
 
     // Arguments
     private lateinit var site: Stream
@@ -83,9 +66,8 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
             it.setToolbarTitle(getString(R.string.guardian_site_title))
         }
 
-        mapView = view.findViewById(R.id.mapBoxView)
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
+        binding.mapBoxView.onCreate(savedInstanceState)
+        binding.mapBoxView.setView(binding.mapBoxView)
 
         binding.nextButton.setOnClickListener {
             if (id == -1) {
@@ -97,7 +79,9 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
         binding.currentLocate.setOnClickListener {
             viewModel.updateSiteToCurrentLocation()
-            setPinOnMap()
+            val currentLoc = LatLng(viewModel.currentLocationState.value?.latitude ?: 0.0, viewModel.currentLocationState.value?.longitude ?: 0.0)
+            val siteLoc = LatLng(site.latitude, site.longitude)
+            binding.mapBoxView.setPinOnMap(siteLoc, currentLoc)
         }
 
         binding.viewMapBox.setOnClickListener {
@@ -117,87 +101,6 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
         //TODO: viewmodel for update site
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
-        mapboxMap.uiSettings.setAllGesturesEnabled(false)
-        mapboxMap.uiSettings.isAttributionEnabled = false
-        mapboxMap.uiSettings.isLogoEnabled = false
-        mapboxMap.setStyle(Style.OUTDOORS) {
-            setupSymbolManager(it)
-            setPinOnMap()
-            enableLocationComponent()
-        }
-    }
-
-    private fun setPinOnMap() {
-        val curLoc = LatLng(viewModel.currentLocationState.value?.latitude ?: 0.0, viewModel.currentLocationState.value?.longitude ?: 0.0)
-        val siteLoc = LatLng(site.latitude, site.longitude)
-        moveCamera(curLoc, siteLoc, DEFAULT_ZOOM)
-        createSiteSymbol(siteLoc)
-    }
-
-    private fun setupSymbolManager(style: Style) {
-        this.mapboxMap?.let { mapboxMap ->
-            symbolManager = SymbolManager(this.mapView, mapboxMap, style)
-            symbolManager?.iconAllowOverlap = true
-
-            style.addImage(
-                PROPERTY_MARKER_IMAGE,
-                ResourcesCompat.getDrawable(this.resources, R.drawable.ic_pin_map, null)!!
-            )
-        }
-    }
-
-    private fun createSiteSymbol(latLng: LatLng) {
-        symbolManager?.deleteAll()
-        symbolManager?.create(
-            SymbolOptions()
-                .withLatLng(latLng)
-                .withIconImage(PROPERTY_MARKER_IMAGE)
-                .withIconSize(0.75f)
-        )
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun enableLocationComponent() {
-        val loadedMapStyle = mapboxMap?.style
-        // Activate the LocationComponent
-        val customLocationComponentOptions = context?.let {
-            LocationComponentOptions.builder(it)
-                .trackingGesturesManagement(true)
-                .accuracyColor(ContextCompat.getColor(it, R.color.colorPrimary))
-                .build()
-        }
-
-        val locationComponentActivationOptions =
-            context?.let {
-                LocationComponentActivationOptions.builder(it, loadedMapStyle!!)
-                    .locationComponentOptions(customLocationComponentOptions)
-                    .build()
-            }
-
-        mapboxMap?.let { it ->
-            it.locationComponent.apply {
-                if (locationComponentActivationOptions != null) {
-                    activateLocationComponent(locationComponentActivationOptions)
-                }
-
-                isLocationComponentEnabled = true
-                renderMode = RenderMode.COMPASS
-            }
-        }
-    }
-
-    private fun moveCamera(userPosition: LatLng, nearestSite: LatLng?, zoom: Double) {
-        mapboxMap?.moveCamera(
-            MapboxCameraUtils.calculateLatLngForZoom(
-                userPosition,
-                nearestSite,
-                zoom
-            )
-        )
-    }
-
     private fun collectCurrentLoc() {
         lifecycleScope.launch {
             viewModel.currentLocationState.collectLatest { currentLoc ->
@@ -205,6 +108,8 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
                     val curLoc = LatLng(it.latitude, it.longitude)
                     val siteLoc = LatLng(site.latitude, site.longitude)
                     setWithInText(curLoc, siteLoc)
+
+                    binding.mapBoxView.setLocation(curLoc, siteLoc)
                 }
             }
         }
@@ -242,42 +147,38 @@ class GuardianSiteSetFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        binding.mapBoxView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        binding.mapBoxView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        binding.mapBoxView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        binding.mapBoxView.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        binding.mapBoxView.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView.onDestroy()
+        binding.mapBoxView.onDestroy()
     }
 
     companion object {
-        const val DEFAULT_ZOOM = 15.0
-
         private const val ARG_SITE = "ARG_SITE"
         private const val ARG_FROM_MAP_PICKER = "ARG_FROM_MAP_PICKER"
         private const val ARG_IS_NEW_SITE = "ARG_IS_NEW_SITE"
-
-        const val PROPERTY_MARKER_IMAGE = "marker.image"
 
         @JvmStatic
         fun newInstance() = GuardianSiteSetFragment()
