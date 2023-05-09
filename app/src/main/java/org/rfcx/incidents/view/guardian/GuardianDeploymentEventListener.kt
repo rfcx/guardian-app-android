@@ -28,4 +28,6 @@ interface GuardianDeploymentEventListener {
     fun getInitSocketState(): SharedFlow<Result<Boolean>>
     fun getSocketMessageState(): SharedFlow<Result<List<String>>>
     fun closeSocket()
+
+    fun getSavedImages()
 }

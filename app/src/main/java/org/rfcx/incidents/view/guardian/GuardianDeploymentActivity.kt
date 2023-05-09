@@ -21,6 +21,7 @@ import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUpl
 import org.rfcx.incidents.view.guardian.checklist.communication.CommunicationFragment
 import org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneFragment
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
+import org.rfcx.incidents.view.guardian.checklist.photos.AddPhotosFragment
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragment
@@ -69,6 +70,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.SITE -> startFragment(GuardianSiteSelectFragment.newInstance())
             GuardianScreen.SITE_SET -> startFragment(GuardianSiteSetFragment.newInstance())
             GuardianScreen.MAP_PICKER -> startFragment(GuardianSiteSetFragment.newInstance())
+            GuardianScreen.PHOTO -> startFragment(AddPhotosFragment.newInstance())
             GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
         }
     }
@@ -129,6 +131,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.STORAGE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.SITE -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.SITE_SET -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.PHOTO -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.CHECKIN -> changeScreen(GuardianScreen.CHECKLIST)
             GuardianScreen.MAP_PICKER -> {
                 currentScreen = GuardianScreen.SITE_SET
