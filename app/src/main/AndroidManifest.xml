@@ -71,7 +71,8 @@
 
         <activity
             android:name=".view.guardian.GuardianDeploymentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
 
         <activity
             android:name=".view.profile.guardian.SoftwareDownloadActivity"

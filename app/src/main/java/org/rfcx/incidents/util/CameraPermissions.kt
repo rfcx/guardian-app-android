@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import org.rfcx.incidents.R
@@ -17,9 +18,12 @@ class CameraPermissions(private val activity: Activity) {
 
     fun allowed(): Boolean {
         val permissionCameraState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
-        val permissionStorageState =
-            ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        return permissionCameraState == PackageManager.PERMISSION_GRANTED && permissionStorageState == PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            val permissionStorageState =
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return permissionCameraState == PackageManager.PERMISSION_GRANTED && permissionStorageState == PackageManager.PERMISSION_GRANTED
+        }
+        return permissionCameraState == PackageManager.PERMISSION_GRANTED
     }
 
     fun check(onCompletionCallback: (Boolean) -> Unit) {

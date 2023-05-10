@@ -13,15 +13,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.opensooq.supernova.gligar.GligarPicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianAddPhotosBinding
-import org.rfcx.incidents.databinding.FragmentGuardianStorageBinding
 import org.rfcx.incidents.util.CameraPermissions
 import org.rfcx.incidents.util.GalleryPermissions
+import org.rfcx.incidents.util.ImageFileUtils
+import org.rfcx.incidents.util.ImageUtils
+import org.rfcx.incidents.util.socket.GuardianPlan
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageViewModel
 import java.io.File
 
 class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickListener {
@@ -39,9 +39,34 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     private var imageExamples = listOf<String>()
 
     private lateinit var binding: FragmentGuardianAddPhotosBinding
-    private val viewModel: GuardianStorageViewModel by viewModel()
-
+    private val viewModel: AddPhotosViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        when (viewModel.guardianPlan) {
+            GuardianPlan.SAT_ONLY -> {
+                imagePlaceHolders =
+                    context.resources.getStringArray(R.array.sat_guardian_placeholders)
+                        .toList()
+                imageGuidelineTexts =
+                    context.resources.getStringArray(R.array.sat_guardian_guideline_texts)
+                        .toList()
+                imageExamples =
+                    context.resources.getStringArray(R.array.sat_guardian_photos).toList()
+            }
+            else -> {
+                imagePlaceHolders =
+                    context.resources.getStringArray(R.array.cell_guardian_placeholders)
+                        .toList()
+                imageGuidelineTexts =
+                    context.resources.getStringArray(R.array.cell_guardian_guideline_texts)
+                        .toList()
+                imageExamples =
+                    context.resources.getStringArray(R.array.cell_guardian_photos).toList()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +74,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         savedInstanceState: Bundle?
     ): View {
         mainEvent = context as GuardianDeploymentEventListener
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guardian_storage, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guardian_add_photos, container, false)
         binding.lifecycleOwner = this
         return binding.root
     }
@@ -57,7 +82,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         handleTakePhotoResult(requestCode, resultCode)
-        handleGligarPickerResult(requestCode, resultCode, data)
+        handleChooseImage(requestCode, resultCode, data)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -75,17 +100,21 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
             }
         }
 
+        mainEvent?.let {
+            it.showToolbar()
+            it.setToolbarTitle(getString(R.string.photo_title))
+        }
+
         setupImages()
         setupImageRecycler()
         updatePhotoTakenNumber()
 
         binding.finishButton.setOnClickListener {
-            val existing = getImageAdapter().getExistingImages()
             val missing = getImageAdapter().getMissingImages()
             if (missing.isEmpty()) {
-                handleNextStep(existing)
+                handleNextStep()
             } else {
-                showFinishDialog(existing, missing)
+                showFinishDialog(missing)
             }
         }
     }
@@ -99,18 +128,15 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     private fun setupImages() {
-
-        val savedImages =
-            audioMothDeploymentProtocol?.getImages() ?: songMeterDeploymentProtocol?.getImages()
-                ?: guardianDeploymentProtocol?.getImages()
+        val savedImages = mainEvent?.getSavedImages()
         getImageAdapter().setPlaceHolders(imagePlaceHolders)
-        if (savedImages != null && savedImages.isNotEmpty()) {
+        if (!savedImages.isNullOrEmpty()) {
             getImageAdapter().updateImagesFromSavedImages(savedImages)
         }
     }
 
     private fun setupImageRecycler() {
-        attachImageRecycler.apply {
+        binding.attachImageRecycler.apply {
             adapter = getImageAdapter()
             layoutManager = GridLayoutManager(context, 3)
         }
@@ -133,36 +159,31 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         }
     }
 
-    private fun handleGligarPickerResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+    private fun handleChooseImage(requestCode: Int, resultCode: Int, intentData: Intent?) {
         if (requestCode != ImageUtils.REQUEST_GALLERY || resultCode != Activity.RESULT_OK || intentData == null) return
 
-        val results = intentData.extras?.getStringArray(GligarPicker.IMAGES_RESULT)
-        results?.forEach {
-            getImageAdapter().updateTakeOrChooseImage(it)
+        intentData.data?.also {
+            val path = ImageUtils.createImageFile(it, requireContext())
+            if (path != null) {
+                getImageAdapter().updateTakeOrChooseImage(path)
+            }
         }
         updatePhotoTakenNumber()
     }
 
     private fun setCacheImages() {
         val images = getImageAdapter().getCurrentImagePaths()
-        audioMothDeploymentProtocol?.setImages(images)
-        songMeterDeploymentProtocol?.setImages(images)
-        guardianDeploymentProtocol?.setImages(images)
+        mainEvent?.setSavedImages(images)
     }
 
     private fun updatePhotoTakenNumber() {
         val number = getImageAdapter().getExistingImages().size
-        photoTakenTextView.text =
+        binding.photoTakenTextView.text =
             getString(R.string.photo_taken, number, getImageAdapter().itemCount)
     }
 
     override fun onPlaceHolderClick(position: Int) {
         showGuidelineDialog(position)
-    }
-
-    override fun onImageClick(image: Image) {
-        if (image.path == null) return
-        context?.let { DisplayImageActivity.startActivity(it, arrayOf("file://${image.path}"), arrayOf(image.name)) }
     }
 
     override fun onDeleteClick(image: Image) {
@@ -175,7 +196,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     override fun onChoosePhotoClick() {
-        openGligarPicker()
+        openPhotoPicker()
     }
 
     private fun startTakePhoto() {
@@ -198,8 +219,8 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         if (checkPermission()) startTakePhoto()
     }
 
-    private fun openGligarPicker() {
-        if (checkPermission()) startOpenGligarPicker()
+    private fun openPhotoPicker() {
+        if (checkPermission()) startOpenPhotoPicker()
     }
 
     private fun checkPermission(): Boolean {
@@ -213,13 +234,11 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         }
     }
 
-    private fun startOpenGligarPicker() {
-        GligarPicker()
-            .requestCode(ImageUtils.REQUEST_GALLERY)
-            .limit(1)
-            .withFragment(this)
-            .disableCamera(true)
-            .show()
+    private fun startOpenPhotoPicker() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            .setType("image/*")
+            .addCategory(Intent.CATEGORY_OPENABLE)
+        startActivityForResult(intent, ImageUtils.REQUEST_GALLERY)
     }
 
     private fun showGuidelineDialog(position: Int) {
@@ -240,7 +259,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         )
     }
 
-    private fun showFinishDialog(existing: List<Image>, missing: List<Image>) {
+    private fun showFinishDialog(missing: List<Image>) {
         MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
             setTitle(context.getString(R.string.missing_dialog_title))
             setMessage(
@@ -250,33 +269,14 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
             )
             setPositiveButton(R.string.back) { _, _ -> }
             setNegativeButton(R.string.button_continue) { _, _ ->
-                handleNextStep(existing)
+                handleNextStep()
             }
         }.create().show()
     }
 
-    private fun handleNextStep(images: List<Image>) {
+    private fun handleNextStep() {
         setCacheImages()
-        when (screen) {
-            Screen.AUDIO_MOTH_CHECK_LIST.id -> {
-                if (images.isNotEmpty()) {
-                    analytics?.trackAddDeploymentImageEvent(Device.AUDIOMOTH.value)
-                }
-                audioMothDeploymentProtocol?.nextStep()
-            }
-            Screen.SONG_METER_CHECK_LIST.id -> {
-                if (images.isNotEmpty()) {
-                    analytics?.trackAddDeploymentImageEvent(Device.SONGMETER.value)
-                }
-                songMeterDeploymentProtocol?.nextStep()
-            }
-            Screen.GUARDIAN_CHECK_LIST.id -> {
-                if (images.isNotEmpty()) {
-                    analytics?.trackAddDeploymentImageEvent(Device.GUARDIAN.value)
-                }
-                guardianDeploymentProtocol?.nextStep()
-            }
-        }
+        mainEvent?.next()
     }
 
     companion object {

@@ -154,11 +154,6 @@ class ImageAdapter(
             currentType = imageItems[currentPosition].type
             imageClickListener.onPlaceHolderClick(currentPosition)
         }
-
-        holder.imageView.setOnClickListener {
-            currentPosition = holder.adapterPosition
-            imageClickListener.onImageClick(imageItems[currentPosition])
-        }
         holder.deleteButton.setOnClickListener {
             currentPosition = holder.adapterPosition
             imageClickListener.onDeleteClick(imageItems[currentPosition])
@@ -228,6 +223,5 @@ enum class ImageType(val value: String) {
 
 interface ImageClickListener {
     fun onPlaceHolderClick(position: Int)
-    fun onImageClick(image: Image)
     fun onDeleteClick(image: Image)
 }

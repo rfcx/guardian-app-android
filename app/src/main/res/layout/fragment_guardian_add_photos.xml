@@ -29,8 +29,6 @@
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             android:gravity="center"
-            android:text="Photo taken"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/photoScroll"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

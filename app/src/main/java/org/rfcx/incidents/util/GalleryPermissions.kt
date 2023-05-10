@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import org.rfcx.incidents.R
@@ -15,8 +16,11 @@ class GalleryPermissions(val activity: Activity) {
     private var onCompletionCallback: ((Boolean) -> Unit)? = null
 
     fun allowed(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-        return permissionState == PackageManager.PERMISSION_GRANTED
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            val permissionState = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+            return permissionState == PackageManager.PERMISSION_GRANTED
+        }
+        return true
     }
 
     fun check(onCompletionCallback: (Boolean) -> Unit) {

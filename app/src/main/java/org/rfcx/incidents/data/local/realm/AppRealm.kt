@@ -9,6 +9,7 @@ import io.realm.RealmConfiguration
 import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
+import org.rfcx.incidents.entity.guardian.DeploymentImage
 import org.rfcx.incidents.entity.guardian.GuardianFile
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
@@ -22,7 +23,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 25L
+        private const val schemaVersion = 26L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -91,6 +92,10 @@ private class Migrations : RealmMigration {
 
         if (oldVersion < 25L && newVersion >= 25) {
             migrateToV25(c)
+        }
+
+        if (oldVersion < 26L && newVersion >= 26) {
+            migrateToV26(c)
         }
     }
 
@@ -166,6 +171,20 @@ private class Migrations : RealmMigration {
             addField(Stream.FIELD_ALTITUDE, Double::class.java)
             addField(Stream.FIELD_EXTERNAL_ID, String::class.java).setRequired(Stream.FIELD_EXTERNAL_ID, false)
             addField(Stream.FIELD_SYNC_STATE, Int::class.java)
+        }
+    }
+
+    private fun migrateToV26(realm: DynamicRealm) {
+        val image = realm.schema.create(DeploymentImage.TABLE_NAME)
+        image?.apply {
+            addField(DeploymentImage.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+            addField(DeploymentImage.FIELD_DEPLOYMENT_ID, Int::class.java)
+            addField(DeploymentImage.FIELD_DEPLOYMENT_EXTERNAL_ID, String::class.java)
+            addField(DeploymentImage.FIELD_LOCAL_PATH, String::class.java).setRequired(DeploymentImage.FIELD_LOCAL_PATH, true)
+            addField(DeploymentImage.FIELD_REMOTE_PATH, String::class.java)
+            addField(DeploymentImage.FIELD_IMAGE_LABEL, String::class.java).setRequired(DeploymentImage.FIELD_IMAGE_LABEL, true)
+            addField(DeploymentImage.FIELD_SYNC_STATE, Int::class.java)
+            addField(DeploymentImage.FIELD_CREATE_AT, Date::class.java).setRequired(DeploymentImage.FIELD_CREATE_AT, true)
         }
     }
 
