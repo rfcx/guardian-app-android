@@ -1,23 +1,19 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.mapbox.mapboxsdk.geometry.LatLng
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentMapPickerBinding
-import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
+import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class MapPickerFragment :
     Fragment() {

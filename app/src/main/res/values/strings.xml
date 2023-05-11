@@ -544,6 +544,7 @@
     <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
 
     <!-- Guardian Site -->
+    <string name="photo_title">Add Photo(s)</string>
     <string name="guardian_site_title">Guardian Installation Location</string>
     <string name="search_box_hint">Search place, address or lat/long</string>
     <string name="no_result_found">No result found</string>
@@ -553,5 +554,10 @@
     <string name="more_than">You are %s from the site</string>
     <string name="within">You are currently within 20m of the site</string>
     <string name="selected_location">Selected location</string>
+    <string name="take_other">Take any other photo that will be helpful in relocating the device or characterizing the site</string>
+    <string name="photo_taken">Photos taken: %d / %d</string>
+    <string name="missing_dialog_title">Are you sure you want to continue?</string>
+    <string name="button_continue">continue</string>
+    <string name="follow_missing">The following photos are missing:\n%s</string>
 
 </resources>

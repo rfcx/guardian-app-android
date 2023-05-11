@@ -291,4 +291,13 @@
         <item name="lineSpacing">0.5dp</item>
     </style>
 
+    <!-- Advise Photo -->
+    <style name="AdvisePhoto">
+        <item name="android:background">@drawable/bg_square_green</item>
+        <item name="android:textColor">@color/photo_advise_color</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

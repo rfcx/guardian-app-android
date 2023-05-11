@@ -5,6 +5,7 @@ import android.net.wifi.ScanResult
 import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.view.guardian.checklist.photos.Image
 
 interface GuardianDeploymentEventListener {
     fun setupToolbar()
@@ -28,4 +29,7 @@ interface GuardianDeploymentEventListener {
     fun getInitSocketState(): SharedFlow<Result<Boolean>>
     fun getSocketMessageState(): SharedFlow<Result<List<String>>>
     fun closeSocket()
+
+    fun getSavedImages(): List<Image>
+    fun setSavedImages(images: List<Image>)
 }

@@ -3,7 +3,6 @@ package org.rfcx.incidents.view.guardian.checklist.site
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mapbox.mapboxsdk.Mapbox
@@ -133,7 +132,6 @@ class MapView @JvmOverloads constructor(
     }
 
     fun moveCamera(latLng: LatLng) {
-        Log.d("GuardianApp", latLng.toString())
         mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 
