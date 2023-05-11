@@ -440,7 +440,7 @@ class StreamsFragment :
                 Pair(PROPERTY_MARKER_EVENT_SITE, it.name),
                 Pair(PROPERTY_MARKER_EVENT_COUNT, (it.lastIncident?.events?.size ?: 0).toString()),
                 Pair(PROPERTY_MARKER_EVENT_DISTANCE, distanceLabel(lastLocation, it)),
-                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.id)
+                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.id.toString())
             )
             Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
         }
@@ -485,7 +485,7 @@ class StreamsFragment :
                 if (clusterLeavesFeatureCollection != null) {
                     if (features?.groupBy { it }?.size == 1) {
                         val distance = features[0].getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
-                        val streamId = features[0].getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
+                        val streamId = features[0].getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asInt
                         val streamName = features[0].getProperty(PROPERTY_MARKER_EVENT_SITE).asString
                         firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, streamName)
                         listener.openStreamDetail(streamId, distance.toDouble())
@@ -496,7 +496,7 @@ class StreamsFragment :
             } else {
                 val selectedFeature = eventFeatures[0]
                 val distance = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_DISTANCE).asString
-                val streamId = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asString
+                val streamId = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_STREAM_ID).asInt
                 val streamName = selectedFeature.getProperty(PROPERTY_MARKER_EVENT_SITE).asString
                 firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, streamName)
                 listener.openStreamDetail(streamId, if (distance.isBlank()) null else distance.toDouble())

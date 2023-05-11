@@ -22,7 +22,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 24L
+        private const val schemaVersion = 25L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -87,6 +87,10 @@ private class Migrations : RealmMigration {
 
         if (oldVersion < 24L && newVersion >= 24) {
             migrateToV24(c)
+        }
+
+        if (oldVersion < 25L && newVersion >= 25) {
+            migrateToV25(c)
         }
     }
 
@@ -153,6 +157,15 @@ private class Migrations : RealmMigration {
             addField(GuardianRegistration.FIELD_API_MQTT_HOST, String::class.java).setRequired(GuardianRegistration.FIELD_API_MQTT_HOST, true)
             addField(GuardianRegistration.FIELD_API_SMS_ADDRESS, String::class.java).setRequired(GuardianRegistration.FIELD_API_SMS_ADDRESS, true)
             addField(GuardianRegistration.FIELD_ENV, String::class.java).setRequired(GuardianRegistration.FIELD_ENV, true)
+        }
+    }
+
+    private fun migrateToV25(realm: DynamicRealm) {
+        val stream = realm.schema.get(Stream.TABLE_NAME)
+        stream?.apply {
+            addField(Stream.FIELD_ALTITUDE, Double::class.java)
+            addField(Stream.FIELD_EXTERNAL_ID, String::class.java).setRequired(Stream.FIELD_EXTERNAL_ID, false)
+            addField(Stream.FIELD_SYNC_STATE, Int::class.java)
         }
     }
 

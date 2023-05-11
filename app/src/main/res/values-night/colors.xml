@@ -78,4 +78,6 @@
 
     <color name="signal_stroke">#5A6978</color>
     <color name="signal_filled">#2AA841</color>
+
+    <color name="searchColor">#3b3e53</color>
 </resources>

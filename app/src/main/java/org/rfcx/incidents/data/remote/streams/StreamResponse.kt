@@ -3,6 +3,7 @@ package org.rfcx.incidents.data.remote.streams
 import io.realm.RealmList
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
@@ -66,7 +67,6 @@ data class ProjectResponse(
 )
 
 fun StreamResponse.toStream(): Stream = Stream(
-    id = id,
     name = name,
     latitude = latitude,
     longitude = longitude,
@@ -74,7 +74,9 @@ fun StreamResponse.toStream(): Stream = Stream(
     projectId = project.id,
     tags = realmList(tags),
     lastIncident = lastIncident()?.toIncident(),
-    guardianType = guardianType
+    guardianType = guardianType,
+    externalId = id,
+    syncState = SyncState.SENT.value
 )
 
 private fun IncidentResponse.toIncident(): Incident = Incident(

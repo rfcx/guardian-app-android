@@ -18,15 +18,28 @@ class StreamDb(private val realm: Realm) {
             stream.lastIncident = existing
         }
         realm.executeTransaction {
-            it.insertOrUpdate(stream)
+            val existingStream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, stream.externalId).findFirst()
+            if (existingStream == null) {
+                val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                stream.id = id
+                it.insert(stream)
+            } else {
+                stream.id = existingStream.id
+                it.insertOrUpdate(stream)
+            }
         }
     }
 
-    fun get(id: String): Stream? =
+    fun get(id: Int): Stream? =
         realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()
 
-    fun getByProject(projectId: String): List<Stream> =
-        realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
+    fun get(id: String): Stream? =
+        realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst()
+
+    fun getByProject(projectId: String): List<Stream> {
+        val streams = realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
+        return realm.copyFromRealm(streams)
+    }
 
     fun deleteByProject(projectId: String, callback: (Boolean) -> Unit) {
         realm.executeTransaction {

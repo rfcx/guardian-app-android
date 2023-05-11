@@ -543,4 +543,15 @@
     <string name="in_queue">In queue</string>
     <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
 
+    <!-- Guardian Site -->
+    <string name="guardian_site_title">Guardian Installation Location</string>
+    <string name="search_box_hint">Search place, address or lat/long</string>
+    <string name="no_result_found">No result found</string>
+    <string name="search_or_create_box_hint">Search site or create new</string>
+    <string name="create_site">Create \"%s\"</string>
+    <string name="no_deployments">No deployments</string>
+    <string name="more_than">You are %s from the site</string>
+    <string name="within">You are currently within 20m of the site</string>
+    <string name="selected_location">Selected location</string>
+
 </resources>

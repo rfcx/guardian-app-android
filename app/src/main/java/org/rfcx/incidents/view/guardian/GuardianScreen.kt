@@ -12,5 +12,8 @@ enum class GuardianScreen(val value: Int) {
     AUDIO_PARAMETER(6),
     MICROPHONE(7),
     STORAGE(8),
+    SITE(9),
+    SITE_SET(-3),
+    MAP_PICKER(-4),
     CHECKIN(11)
 }

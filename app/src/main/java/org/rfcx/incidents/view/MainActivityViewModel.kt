@@ -54,7 +54,9 @@ class MainActivityViewModel(
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
-    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+    fun getStream(id: Int): Stream? = streamDb.get(id)
+
+    fun getStream(id: String): Stream? = streamDb.get(id)
 
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
@@ -101,6 +103,6 @@ class MainActivityViewModel(
     fun getStreamIdsInProjectId(): List<String> {
         val preferences = Preferences.getInstance(context)
         val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
-        return streamDb.getByProject(projectId).map { s -> s.id }
+        return streamDb.getByProject(projectId).mapNotNull { s -> s.externalId }
     }
 }

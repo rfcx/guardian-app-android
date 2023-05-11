@@ -8,6 +8,7 @@ import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
+import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.entity.stream.Stream
@@ -29,6 +30,10 @@ class StreamsRepositoryImp(
             return refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
+    }
+
+    override fun getLocal(params: GetLocalStreamsParams): List<Stream> {
+        return streamDb.getByProject(params.projectId)
     }
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {

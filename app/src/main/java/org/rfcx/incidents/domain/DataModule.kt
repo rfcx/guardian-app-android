@@ -82,6 +82,7 @@ import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.AudioSocket
 import org.rfcx.incidents.service.wifi.socket.FileSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
+import org.rfcx.incidents.util.location.LocationHelper
 import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
 import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
 import org.rfcx.incidents.view.UiThread
@@ -159,6 +160,9 @@ object DataModule {
         single { GuardianRegistrationRepositoryImpl(get(), get(), get()) } bind GuardianRegistrationRepository::class
         single { SaveRegistrationUseCase(get()) }
         single { SendRegistrationOnlineUseCase(get()) }
+
+        single { GetLocalStreamsUseCase(get()) }
+        single { GetLocalProjectUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -202,5 +206,6 @@ object DataModule {
         single { GuardianFileHelper(androidContext()) }
         single { MicrophoneTestUtils() }
         single { AudioSpectrogramUtils }
+        single { LocationHelper(androidContext()) }
     }
 }
