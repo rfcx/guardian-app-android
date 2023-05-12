@@ -1,6 +1,8 @@
 package org.rfcx.incidents.util.socket
 
+import android.content.Context
 import android.util.Base64
+import androidx.preference.Preference
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -284,6 +286,14 @@ object PingUtils {
         val splitSwm = swm.split("|").map { it.split("*") }
         val lastSwmObj = splitSwm.last()
         return lastSwmObj[lastSwmObj.size - 1].toIntOrNull()
+    }
+
+    fun GuardianPing.getPrefs(context: Context): List<Preference> {
+        if (this.prefs is JsonObject) {
+            val prefs = this.prefs.get("vals") ?: return listOf()
+            return PrefsUtils.stringToPrefs(context, Gson().toJson(prefs))
+        }
+        return listOf()
     }
 
     fun unGzipString(content: String?): String? {

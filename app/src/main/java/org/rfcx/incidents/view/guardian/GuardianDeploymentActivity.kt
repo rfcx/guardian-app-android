@@ -1,9 +1,12 @@
 package org.rfcx.incidents.view.guardian
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.ScanResult
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -11,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.entity.stream.Stream
@@ -24,6 +28,7 @@ import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.photos.AddPhotosFragment
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
+import org.rfcx.incidents.view.guardian.checklist.preference.GuardianPreferenceFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetFragment
@@ -45,6 +50,8 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     private var _savedImages = listOf<Image>()
 
+    private var menu: Menu? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Binding view
@@ -55,6 +62,26 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
         // Show guardian connect screen first
         changeScreen(GuardianScreen.CONNECT)
+    }
+
+    @SuppressLint("ResourceAsColor")
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        this.menu = menu
+        val inflater = menuInflater
+        inflater.inflate(R.menu.preference_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> back()
+            R.id.preference -> onThreeDotsClicked()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun onThreeDotsClicked() {
+        changeScreen(GuardianScreen.PREFERENCE)
     }
 
     private fun showScreen(screen: GuardianScreen) {
@@ -75,6 +102,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.MAP_PICKER -> startFragment(GuardianSiteSetFragment.newInstance())
             GuardianScreen.PHOTO -> startFragment(AddPhotosFragment.newInstance())
             GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
+            GuardianScreen.PREFERENCE -> startFragment(GuardianPreferenceFragment.newInstance())
         }
     }
 
@@ -140,6 +168,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
                 currentScreen = GuardianScreen.SITE_SET
                 startFragment(GuardianSiteSetFragment.newInstance(this.stream, this.isNewSite))
             }
+            GuardianScreen.PREFERENCE -> changeScreen(GuardianScreen.CHECKLIST)
         }
     }
 
