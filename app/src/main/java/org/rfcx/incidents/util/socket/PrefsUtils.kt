@@ -6,6 +6,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import org.rfcx.incidents.R
 import java.util.TimeZone
 
 object PrefsUtils {
@@ -41,6 +42,7 @@ object PrefsUtils {
 
             if (pref is EditTextPreference) {
                 pref.text = json.get(it).asString
+                pref.dialogLayoutResource = R.layout.layout_preference_edittext
             }
             pref.key = it
             pref.title = it

@@ -34,12 +34,12 @@ class GuardianPreferenceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.viewModel = viewModel
 
         mainEvent?.let {
             it.showToolbar()
             it.setToolbarTitle("Preference Settings")
+            it.hideThreeDots()
         }
 
         // start guardian prefs fragment once view created
@@ -61,7 +61,7 @@ class GuardianPreferenceFragment : Fragment() {
     }
 
     private fun syncConfig() {
-        viewModel.sync()
+        viewModel.sync(mainEvent?.getChangedPrefs() ?: "")
     }
 
     companion object {

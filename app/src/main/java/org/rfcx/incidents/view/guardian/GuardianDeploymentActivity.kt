@@ -3,6 +3,7 @@ package org.rfcx.incidents.view.guardian
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.wifi.ScanResult
 import android.os.Bundle
 import android.view.Menu
@@ -11,6 +12,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.Preference
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -52,6 +54,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     private var menu: Menu? = null
 
+    private var prefs: List<Preference> = listOf()
+    private var prefsChanges = ""
+    private var prefsEditor: SharedPreferences.Editor? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Binding view
@@ -74,7 +80,6 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> back()
             R.id.preference -> onThreeDotsClicked()
         }
         return super.onOptionsItemSelected(item)
@@ -129,6 +134,13 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         binding.toolbarLayout.toolbarDefault.visibility = View.GONE
     }
 
+    override fun showThreeDots() {
+        this.menu?.findItem(R.id.preference)?.isVisible = true
+    }
+    override fun hideThreeDots() {
+        this.menu?.findItem(R.id.preference)?.isVisible = false
+    }
+
     override fun setToolbarTitle(title: String) {
         supportActionBar?.apply {
             this.title = title
@@ -168,12 +180,20 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
                 currentScreen = GuardianScreen.SITE_SET
                 startFragment(GuardianSiteSetFragment.newInstance(this.stream, this.isNewSite))
             }
-            GuardianScreen.PREFERENCE -> changeScreen(GuardianScreen.CHECKLIST)
+            GuardianScreen.PREFERENCE -> {
+                // Need to remove guardian prefs before adding news
+                removeGuardianPrefs()
+                changeScreen(GuardianScreen.CHECKLIST)
+            }
         }
     }
 
     override fun next() {
         passedScreen.add(currentScreen)
+        // Need to remove guardian prefs before adding news
+        if (currentScreen == GuardianScreen.PREFERENCE) {
+            removeGuardianPrefs()
+        }
         changeScreen(GuardianScreen.CHECKLIST)
     }
 
@@ -233,9 +253,32 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         _savedImages = images
     }
 
+    override fun setGuardianPrefs(prefs: List<Preference>) {
+        this.prefs = prefs
+    }
+
+    override fun setChangedPrefs(prefs: String) {
+        this.prefsChanges = prefs
+    }
+
+    override fun getChangedPrefs(): String {
+        return this.prefsChanges
+    }
+
+    private fun removeGuardianPrefs() {
+        this.prefs.forEach {
+            this.prefsEditor!!.remove(it.key)!!.apply()
+        }
+    }
+
+    override fun setEditor(editor: SharedPreferences.Editor?) {
+        this.prefsEditor = editor
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+        this.prefsEditor?.clear()?.apply()
     }
 
     override fun onBackPressed() {

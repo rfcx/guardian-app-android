@@ -41,6 +41,7 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.software_title))
         }
 

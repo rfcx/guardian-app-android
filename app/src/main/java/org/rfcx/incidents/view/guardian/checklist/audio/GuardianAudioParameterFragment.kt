@@ -54,6 +54,7 @@ class GuardianAudioParameterFragment : Fragment(), NumberPickerButtonClickListen
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.audio_parameter_config))
         }
 

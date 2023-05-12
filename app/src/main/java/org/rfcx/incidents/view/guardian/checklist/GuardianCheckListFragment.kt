@@ -32,6 +32,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
 
         mainEvent?.showToolbar()
         mainEvent?.setToolbarTitle("Checklist")
+        mainEvent?.showThreeDots()
 
         binding.guardianCheckListRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

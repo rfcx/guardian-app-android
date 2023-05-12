@@ -50,7 +50,7 @@
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
             android:text="@string/next"
-            android:enabled="@{viewModel.syncState ? true : false}"
+            android:enabled="@{viewModel.syncButtonState ? true : false}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

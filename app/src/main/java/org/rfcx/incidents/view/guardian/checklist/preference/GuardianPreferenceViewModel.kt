@@ -28,7 +28,9 @@ class GuardianPreferenceViewModel(
     private val _preferenceState: MutableStateFlow<List<Preference>> = MutableStateFlow(emptyList())
     val preferenceState = _preferenceState.asStateFlow()
 
-    private val _syncState: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    private val _syncButtonState: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val syncButtonState = _syncButtonState.asStateFlow()
+    private val _syncState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val syncState = _syncState.asStateFlow()
 
     private val prefsChanges = mutableMapOf<String, String>()
@@ -77,11 +79,15 @@ class GuardianPreferenceViewModel(
         prefsChanges[key] = value
     }
 
-    fun sync() {
+    fun getPreferencesChanged(): String {
+        return prefsToGuardianFormat().toString()
+    }
+
+    fun sync(prefs: String) {
         needCheckSha1 = true
-        _syncState.tryEmit(false)
+        _syncButtonState.tryEmit(false)
         viewModelScope.launch(Dispatchers.IO) {
-            sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, prefsToGuardianFormat().toString()))
+            sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, prefs))
         }
     }
 

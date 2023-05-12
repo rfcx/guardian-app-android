@@ -35,6 +35,7 @@ class GuardianRegisterFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.register_guardian))
         }
 
