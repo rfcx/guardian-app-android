@@ -11,7 +11,7 @@ import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
 import org.rfcx.incidents.data.remote.guardian.software.DownloadFileEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 
 class GuardianFileRepositoryImpl(

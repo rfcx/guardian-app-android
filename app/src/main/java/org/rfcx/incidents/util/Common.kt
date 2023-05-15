@@ -75,5 +75,5 @@ fun Float.setFormatLabel(): String {
     return if (this >= 1000) "${String.format("%.1f", this / 1000)}km" else "${String.format("%.0f", this)}m"
 }
 
-private val chars = ('a'..'z') + ('0'..'9')
-fun randomStreamId(): String = List(12) { chars.random() }.joinToString("")
+private val chars = ('A'..'Z') + ('0'..'9')
+fun randomDeploymentId(): String = List(16) { chars.random() }.joinToString("")

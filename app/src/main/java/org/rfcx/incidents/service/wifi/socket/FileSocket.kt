@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileSendStatus
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileSendStatus
 import java.io.DataOutputStream
 import java.io.File
 import java.net.Socket

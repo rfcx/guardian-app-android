@@ -5,7 +5,7 @@ import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileReposito
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.GuardianFileResponse
 import org.rfcx.incidents.domain.base.FlowWithParamUseCase
-import org.rfcx.incidents.entity.guardian.GuardianFileType
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 
 class GetGuardianFileRemoteUseCase(private val repository: GuardianFileRepository) :
     FlowWithParamUseCase<GetGuardianFileParams, Result<List<GuardianFileResponse>>>() {

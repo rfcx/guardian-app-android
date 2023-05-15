@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentSoftwareUpdateBinding
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {

@@ -10,7 +10,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemGuardianFileChildSoftwareBinding
 import org.rfcx.incidents.databinding.ItemGuardianFileHeaderBinding
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.entity.guardian.SoftwareUpdateItem
 import org.rfcx.incidents.entity.guardian.UpdateStatus
 

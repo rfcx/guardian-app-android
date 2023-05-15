@@ -26,10 +26,10 @@ import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalParam
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileParams
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
-import org.rfcx.incidents.entity.guardian.FileStatus
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileItem
-import org.rfcx.incidents.entity.guardian.GuardianFileType
+import org.rfcx.incidents.entity.guardian.file.FileStatus
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileItem
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
 import org.rfcx.incidents.util.isNetworkAvailable
 import java.net.UnknownHostException

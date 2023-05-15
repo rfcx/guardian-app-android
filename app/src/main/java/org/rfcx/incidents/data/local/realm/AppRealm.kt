@@ -9,8 +9,9 @@ import io.realm.RealmConfiguration
 import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.entity.guardian.DeploymentImage
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import org.rfcx.incidents.entity.guardian.image.DeploymentImage
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
@@ -23,7 +24,7 @@ import java.util.Date
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 26L
+        private const val schemaVersion = 27L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -97,6 +98,10 @@ private class Migrations : RealmMigration {
         if (oldVersion < 26L && newVersion >= 26) {
             migrateToV26(c)
         }
+
+        if (oldVersion < 27L && newVersion >= 27) {
+            migrateToV27(c)
+        }
     }
 
     private fun migrateToV20(realm: DynamicRealm) {
@@ -136,7 +141,8 @@ private class Migrations : RealmMigration {
     private fun migrateToV22(realm: DynamicRealm) {
         val guardianFile = realm.schema.create(GuardianFile.TABLE)
         guardianFile?.apply {
-            addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(GuardianFile.FIELD_ID, true)
+            addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(
+                GuardianFile.FIELD_ID, true)
             addField(GuardianFile.FIELD_NAME, String::class.java).setRequired(GuardianFile.FIELD_NAME, true)
             addField(GuardianFile.FIELD_VERSION, String::class.java).setRequired(GuardianFile.FIELD_VERSION, true)
             addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
@@ -185,6 +191,21 @@ private class Migrations : RealmMigration {
             addField(DeploymentImage.FIELD_IMAGE_LABEL, String::class.java).setRequired(DeploymentImage.FIELD_IMAGE_LABEL, true)
             addField(DeploymentImage.FIELD_SYNC_STATE, Int::class.java)
             addField(DeploymentImage.FIELD_CREATE_AT, Date::class.java).setRequired(DeploymentImage.FIELD_CREATE_AT, true)
+        }
+    }
+
+    private fun migrateToV27(realm: DynamicRealm) {
+        val deployment = realm.schema.create(Deployment.TABLE_NAME)
+        deployment?.apply {
+            addField(Deployment.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
+            addField(Deployment.FIELD_EXTERNAL_ID, String::class.java)
+            addField(Deployment.FIELD_DEPLOYED_AT, Date::class.java)
+            addField(Deployment.FIELD_CREATED_AT, Date::class.java)
+            addField(Deployment.FIELD_DEPLOYMENT_KEY, String::class.java)
+            addField(Deployment.FIELD_STREAM, Stream::class.java)
+            addField(Deployment.FIELD_SYNC_STATE, Int::class.java)
+            addField(Deployment.FIELD_IS_ACTIVE, Boolean::class.java)
+            addField(Deployment.FIELD_DEVICE_PARAMETERS, String::class.java)
         }
     }
 

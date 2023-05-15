@@ -3,8 +3,8 @@ package org.rfcx.incidents.service.guardianfile
 import android.content.Context
 import okhttp3.ResponseBody
 import org.rfcx.incidents.data.remote.common.Result
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileType
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

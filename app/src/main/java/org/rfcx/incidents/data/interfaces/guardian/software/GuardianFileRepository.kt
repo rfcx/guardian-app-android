@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierResponse
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareResponse
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 
 interface GuardianFileRepository {
     fun getSoftwareRemote(): Flow<Result<List<SoftwareResponse>>>

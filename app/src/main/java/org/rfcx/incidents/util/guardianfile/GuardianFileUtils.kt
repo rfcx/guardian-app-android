@@ -1,6 +1,6 @@
 package org.rfcx.incidents.util.guardianfile
 
-import org.rfcx.incidents.entity.guardian.FileStatus
+import org.rfcx.incidents.entity.guardian.file.FileStatus
 import org.rfcx.incidents.entity.guardian.UpdateStatus
 
 object GuardianFileUtils {

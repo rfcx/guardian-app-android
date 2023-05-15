@@ -1,4 +1,4 @@
-package org.rfcx.incidents.entity.guardian
+package org.rfcx.incidents.entity.guardian.image
 
 import com.google.gson.annotations.Expose
 import io.realm.RealmModel

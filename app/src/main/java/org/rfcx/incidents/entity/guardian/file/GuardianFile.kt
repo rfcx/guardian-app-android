@@ -1,4 +1,4 @@
-package org.rfcx.incidents.entity.guardian
+package org.rfcx.incidents.entity.guardian.file
 
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey

@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityClassifierDownloadBinding
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 
 class ClassifierDownloadActivity : AppCompatActivity(), GuardianFileEventListener {
 

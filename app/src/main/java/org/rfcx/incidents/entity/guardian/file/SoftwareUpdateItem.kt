@@ -1,5 +1,7 @@
 package org.rfcx.incidents.entity.guardian
 
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+
 sealed class SoftwareUpdateItem {
     data class SoftwareUpdateHeader(val name: String) : SoftwareUpdateItem()
     data class SoftwareUpdateVersion(

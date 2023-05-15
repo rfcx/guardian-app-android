@@ -7,9 +7,9 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemGuardianFileDownloadBinding
-import org.rfcx.incidents.entity.guardian.FileStatus
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileItem
+import org.rfcx.incidents.entity.guardian.file.FileStatus
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileItem
 
 class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListener) :
     RecyclerView.Adapter<GuardianFileDownloadAdapter.FileDownloadViewHolder>() {

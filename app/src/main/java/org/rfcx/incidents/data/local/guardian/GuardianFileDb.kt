@@ -4,8 +4,8 @@ import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileType
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 
 class GuardianFileDb(private val realm: Realm) {
     fun getSoftwareAllAsync(): Flow<List<GuardianFile>> {

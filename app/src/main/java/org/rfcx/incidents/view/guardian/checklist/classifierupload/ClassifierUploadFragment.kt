@@ -20,7 +20,7 @@ import org.rfcx.incidents.data.remote.common.NoActiveClassifierException
 import org.rfcx.incidents.data.remote.common.OperationTimeoutException
 import org.rfcx.incidents.data.remote.common.SoftwareNotCompatibleException
 import org.rfcx.incidents.databinding.FragmentClassifierUploadBinding
-import org.rfcx.incidents.entity.guardian.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
 class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {

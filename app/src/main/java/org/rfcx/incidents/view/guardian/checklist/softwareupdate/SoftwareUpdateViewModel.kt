@@ -18,8 +18,8 @@ import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCa
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketParams
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
-import org.rfcx.incidents.entity.guardian.GuardianFile
-import org.rfcx.incidents.entity.guardian.GuardianFileType
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 import org.rfcx.incidents.entity.guardian.SoftwareUpdateItem
 import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.entity.guardian.socket.OperationType
