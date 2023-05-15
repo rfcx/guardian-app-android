@@ -16,5 +16,6 @@ enum class GuardianScreen(val value: Int) {
     SITE_SET(-3),
     MAP_PICKER(-4),
     PHOTO(10),
-    CHECKIN(11)
+    CHECKIN(11),
+    PREFERENCE(-5)
 }

@@ -1,16 +1,22 @@
 package org.rfcx.incidents.view.guardian
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.wifi.ScanResult
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.Preference
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.ActivityGuardianDeploymentBinding
 import org.rfcx.incidents.entity.stream.Stream
@@ -24,6 +30,7 @@ import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestFragment
 import org.rfcx.incidents.view.guardian.checklist.photos.AddPhotosFragment
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticFragment
+import org.rfcx.incidents.view.guardian.checklist.preference.GuardianPreferenceFragment
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectFragment
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetFragment
@@ -45,6 +52,12 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     private var _savedImages = listOf<Image>()
 
+    private var menu: Menu? = null
+
+    private var prefs: List<Preference> = listOf()
+    private var prefsChanges = ""
+    private var prefsEditor: SharedPreferences.Editor? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Binding view
@@ -55,6 +68,25 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
         // Show guardian connect screen first
         changeScreen(GuardianScreen.CONNECT)
+    }
+
+    @SuppressLint("ResourceAsColor")
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        this.menu = menu
+        val inflater = menuInflater
+        inflater.inflate(R.menu.preference_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.preference -> onThreeDotsClicked()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun onThreeDotsClicked() {
+        changeScreen(GuardianScreen.PREFERENCE)
     }
 
     private fun showScreen(screen: GuardianScreen) {
@@ -75,6 +107,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.MAP_PICKER -> startFragment(GuardianSiteSetFragment.newInstance())
             GuardianScreen.PHOTO -> startFragment(AddPhotosFragment.newInstance())
             GuardianScreen.CHECKIN -> startFragment(GuardianCheckInTestFragment.newInstance())
+            GuardianScreen.PREFERENCE -> startFragment(GuardianPreferenceFragment.newInstance())
         }
     }
 
@@ -99,6 +132,13 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
 
     override fun hideToolbar() {
         binding.toolbarLayout.toolbarDefault.visibility = View.GONE
+    }
+
+    override fun showThreeDots() {
+        this.menu?.findItem(R.id.preference)?.isVisible = true
+    }
+    override fun hideThreeDots() {
+        this.menu?.findItem(R.id.preference)?.isVisible = false
     }
 
     override fun setToolbarTitle(title: String) {
@@ -140,11 +180,20 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
                 currentScreen = GuardianScreen.SITE_SET
                 startFragment(GuardianSiteSetFragment.newInstance(this.stream, this.isNewSite))
             }
+            GuardianScreen.PREFERENCE -> {
+                // Need to remove guardian prefs before adding news
+                removeGuardianPrefs()
+                changeScreen(GuardianScreen.CHECKLIST)
+            }
         }
     }
 
     override fun next() {
         passedScreen.add(currentScreen)
+        // Need to remove guardian prefs before adding news
+        if (currentScreen == GuardianScreen.PREFERENCE) {
+            removeGuardianPrefs()
+        }
         changeScreen(GuardianScreen.CHECKLIST)
     }
 
@@ -204,9 +253,32 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         _savedImages = images
     }
 
+    override fun setGuardianPrefs(prefs: List<Preference>) {
+        this.prefs = prefs
+    }
+
+    override fun setChangedPrefs(prefs: String) {
+        this.prefsChanges = prefs
+    }
+
+    override fun getChangedPrefs(): String {
+        return this.prefsChanges
+    }
+
+    private fun removeGuardianPrefs() {
+        this.prefs.forEach {
+            this.prefsEditor!!.remove(it.key)!!.apply()
+        }
+    }
+
+    override fun setEditor(editor: SharedPreferences.Editor?) {
+        this.prefsEditor = editor
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+        this.prefsEditor?.clear()?.apply()
     }
 
     override fun onBackPressed() {

@@ -17,6 +17,7 @@ import org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneV
 import org.rfcx.incidents.view.guardian.checklist.network.NetworkTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.photos.AddPhotosViewModel
 import org.rfcx.incidents.view.guardian.checklist.powerdiagnostic.PowerDiagnosticViewModel
+import org.rfcx.incidents.view.guardian.checklist.preference.GuardianPreferenceViewModel
 import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSelectViewModel
 import org.rfcx.incidents.view.guardian.checklist.site.GuardianSiteSetViewModel
@@ -82,5 +83,6 @@ object UiModule {
         viewModel { GuardianSiteSelectViewModel(get(), get(), get()) }
         viewModel { GuardianSiteSetViewModel(get(), get(), get()) }
         viewModel { AddPhotosViewModel(get()) }
+        viewModel { GuardianPreferenceViewModel(androidContext(), get(), get()) }
     }
 }

@@ -56,6 +56,7 @@ class GuardianSiteSelectFragment :
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.guardian_site_title))
         }
 

@@ -34,6 +34,7 @@ class GuardianCheckInTestFragment : Fragment() {
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.checkin_title))
         }
 

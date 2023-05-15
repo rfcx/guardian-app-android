@@ -49,6 +49,7 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.classifier_title))
         }
 

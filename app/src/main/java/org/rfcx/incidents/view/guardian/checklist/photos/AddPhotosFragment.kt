@@ -102,6 +102,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
 
         mainEvent?.let {
             it.showToolbar()
+            it.hideThreeDots()
             it.setToolbarTitle(getString(R.string.photo_title))
         }
 

@@ -116,6 +116,7 @@ dependencies {
 
     implementation 'com.auth0.android:jwtdecode:1.2.0'
     implementation 'io.jsonwebtoken:jjwt-api:0.10.5'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
     runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
         exclude group: 'org.json', module: 'json' //provided by Android natively
