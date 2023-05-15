@@ -245,6 +245,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         viewModel.onDestroy()
     }
 
+    override fun getSavedStream(): Stream {
+        return stream
+    }
+
     override fun getSavedImages(): List<Image> {
         return _savedImages
     }

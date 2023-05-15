@@ -40,6 +40,12 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         }
         collectStates()
         viewModel.getAllCheckList(mainEvent?.getPassedScreen())
+
+        binding.checklistDeployButton.setOnClickListener {
+            mainEvent?.let {
+                viewModel.deploy(it.getSavedStream(), it.getSavedImages())
+            }
+        }
     }
 
     private fun collectStates() {

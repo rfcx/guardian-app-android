@@ -22,6 +22,7 @@ import org.rfcx.incidents.domain.guardian.socket.SendSocketMessageUseCase
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotParams
 import org.rfcx.incidents.domain.guardian.wifi.ConnectHotspotUseCase
 import org.rfcx.incidents.domain.guardian.wifi.DisconnectHotspotUseCase
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.wifi.socket.BaseSocketManager
 
 class GuardianDeploymentViewModel(

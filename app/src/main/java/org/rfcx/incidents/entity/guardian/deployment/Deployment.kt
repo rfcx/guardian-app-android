@@ -26,10 +26,6 @@ open class Deployment(
     var deviceParameters: String? = null
 ) : RealmModel, Serializable {
 
-    fun isUnsynced(): Boolean {
-        return isActive && syncState != SyncState.SENT.value
-    }
-
     companion object {
         const val TABLE_NAME = "Deployment"
         const val FIELD_ID = "id"
