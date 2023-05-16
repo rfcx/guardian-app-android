@@ -11,6 +11,7 @@ import io.realm.Realm
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -43,6 +44,8 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
         if (assetUnsent > 0) {
             AssetSyncWorker.enqueue()
         }
+
+        DeploymentSyncWorker.enqueue()
     }
 
     companion object {

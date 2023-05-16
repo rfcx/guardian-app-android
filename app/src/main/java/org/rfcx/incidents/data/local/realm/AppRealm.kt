@@ -194,16 +194,23 @@ private class Migrations : RealmMigration {
 
     private fun migrateToV27(realm: DynamicRealm) {
         val deployment = realm.schema.create(Deployment.TABLE_NAME)
+        val stream = realm.schema.get(Stream.TABLE_NAME)
+        val image = realm.schema.get(DeploymentImage.TABLE_NAME)
         deployment?.apply {
             addField(Deployment.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
             addField(Deployment.FIELD_EXTERNAL_ID, String::class.java)
-            addField(Deployment.FIELD_DEPLOYED_AT, Date::class.java)
-            addField(Deployment.FIELD_CREATED_AT, Date::class.java)
+            addField(Deployment.FIELD_DEPLOYED_AT, Date::class.java).setRequired(Deployment.FIELD_DEPLOYED_AT, true)
+            addField(Deployment.FIELD_CREATED_AT, Date::class.java).setRequired(Deployment.FIELD_CREATED_AT, true)
             addField(Deployment.FIELD_DEPLOYMENT_KEY, String::class.java)
-            addField(Deployment.FIELD_STREAM, Stream::class.java)
+            if (stream != null) {
+                addRealmObjectField(Deployment.FIELD_STREAM, stream)
+            }
             addField(Deployment.FIELD_SYNC_STATE, Int::class.java)
             addField(Deployment.FIELD_IS_ACTIVE, Boolean::class.java)
             addField(Deployment.FIELD_DEVICE_PARAMETERS, String::class.java)
+            if (image != null) {
+                addRealmObjectField(Deployment.FIELD_IMAGES, image)
+            }
         }
     }
 

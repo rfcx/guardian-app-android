@@ -22,6 +22,7 @@ interface GuardianDeploymentEventListener {
     fun setPassedScreen(screen: GuardianScreen)
     fun back()
     fun next()
+    fun finishDeploy()
     fun goToSiteSetScreen(stream: Stream, isNewSite: Boolean)
     fun goToMapPickerScreen(stream: Stream)
     fun getPassedScreen(): List<GuardianScreen>

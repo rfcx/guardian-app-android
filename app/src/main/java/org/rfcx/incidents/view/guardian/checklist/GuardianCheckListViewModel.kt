@@ -75,7 +75,7 @@ class GuardianCheckListViewModel(
         val deployment = Deployment(
             stream = stream,
             isActive = true,
-            images = realmList(images.map {
+            images = realmList(images.filter { it.path != null }.map {
                 DeploymentImage(
                     localPath = it.path!!,
                     imageLabel = it.name

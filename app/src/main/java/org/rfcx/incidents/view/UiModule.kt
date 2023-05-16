@@ -67,7 +67,7 @@ object UiModule {
     var guardianModule = module {
         viewModel { GuardianDeploymentViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { GuardianConnectViewModel(get()) }
-        viewModel { GuardianCheckListViewModel(get()) }
+        viewModel { GuardianCheckListViewModel(get(), get()) }
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }

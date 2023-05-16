@@ -60,6 +60,7 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
@@ -168,7 +169,8 @@ object DataModule {
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
 
-        single { DeploymentRepositoryImpl(get(), get()) } bind DeploymentRepository::class
+        single { DeploymentRepositoryImpl(get(), get(), get()) } bind DeploymentRepository::class
+        single { DeployDeploymentUseCase(get()) }
     }
 
     val remoteModule = module {

@@ -197,6 +197,10 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         changeScreen(GuardianScreen.CHECKLIST)
     }
 
+    override fun finishDeploy() {
+        super.finish()
+    }
+
     override fun goToSiteSetScreen(stream: Stream, isNewSite: Boolean) {
         currentScreen = GuardianScreen.SITE_SET
         this.stream = stream

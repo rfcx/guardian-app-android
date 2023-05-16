@@ -44,6 +44,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         binding.checklistDeployButton.setOnClickListener {
             mainEvent?.let {
                 viewModel.deploy(it.getSavedStream(), it.getSavedImages())
+                it.finishDeploy()
             }
         }
     }

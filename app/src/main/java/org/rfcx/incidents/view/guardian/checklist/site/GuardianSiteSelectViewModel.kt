@@ -23,14 +23,16 @@ class GuardianSiteSelectViewModel(
 
     private val _streams: MutableStateFlow<List<SiteWithDistanceItem>> = MutableStateFlow(emptyList())
     val streams = _streams.asStateFlow()
+    var selectedProject = ""
 
     init {
         getStreams()
     }
 
     private fun getStreams() {
+        selectedProject = preferences.getString(Preferences.SELECTED_PROJECT)!!
         viewModelScope.launch {
-            getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!)).catch {
+            getLocalStreamsUseCase.launch(GetLocalStreamsParams(selectedProject)).catch {
 
             }.collectLatest { result ->
                 val defaultLocation = Location(LocationManager.GPS_PROVIDER)

@@ -2,6 +2,7 @@ package org.rfcx.incidents.data.local
 
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -18,16 +19,37 @@ class StreamDb(private val realm: Realm) {
             stream.lastIncident = existing
         }
         realm.executeTransaction {
-            val existingStream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, stream.externalId).findFirst()
-            if (existingStream == null) {
-                val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
-                stream.id = id
-                it.insert(stream)
+            if (stream.externalId != null) {
+                val existingStream = realm.where(Stream::class.java)
+                    .equalTo(Stream.FIELD_EXTERNAL_ID, stream.externalId)
+                    .findFirst()
+                if (existingStream == null) {
+                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    stream.id = id
+                    it.insert(stream)
+                } else {
+                    stream.id = existingStream.id
+                    it.insertOrUpdate(stream)
+                }
             } else {
-                stream.id = existingStream.id
-                it.insertOrUpdate(stream)
+                if (stream.id == -1) {
+                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    stream.id = id
+                    it.insert(stream)
+                } else {
+                    val existingStream = realm.where(Stream::class.java)
+                        .equalTo(Stream.FIELD_ID, stream.id)
+                        .findFirst()
+                    stream.id = existingStream!!.id
+                    it.insertOrUpdate(stream)
+                }
             }
         }
+    }
+
+    fun insertWithResult(stream: Stream): Stream {
+        insertOrUpdate(stream)
+        return realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, stream.id).findFirst()!!
     }
 
     fun get(id: Int): Stream? =

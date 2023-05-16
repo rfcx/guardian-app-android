@@ -106,7 +106,8 @@ class GuardianSiteSelectFragment :
                                 id = -1,
                                 name = s.toString(),
                                 latitude = 0.0,
-                                longitude = 0.0
+                                longitude = 0.0,
+                                projectId = viewModel.selectedProject
                             ),
                             0F
                         )
