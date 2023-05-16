@@ -12,17 +12,44 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
+import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.data.remote.common.service.ServiceFactory
+import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
+import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 
 class DeploymentSyncWorker(private val context: Context, params: WorkerParameters) : Worker(context, params) {
     override fun doWork(): Result {
+        val service = ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, context)
         val db = DeploymentDb(Realm.getInstance(AppRealm.configuration()))
-        val deployments = db.get()
-        val streamDb = StreamDb(Realm.getInstance(AppRealm.configuration()))
-        val stream = streamDb.getByProject("3dvrocmagfiw")
-        Log.d(TAG, "doWork: found ${deployments.size} unsent and ${stream.size} all")
+        val deployments = db.lockUnsent()
+        Log.d(TAG, "doWork: found ${deployments.size} unsent")
+
+        deployments.forEach { dp ->
+            if (dp.externalId != null) {
+                val streamRequest = dp.stream!!.toRequestBody()
+                val result = service.editDeployment(dp.externalId!!, EditDeploymentRequest(streamRequest)).execute()
+                if (result.isSuccessful) {
+                    db.markSent(dp.externalId!!, dp.id)
+                }
+            } else {
+                val deploymentRequest = dp.toRequestBody()
+                val result = service.createDeployment(deploymentRequest).execute()
+                val error = result.errorBody()?.string()
+                when {
+                    result.isSuccessful -> {
+                        val fullId = result.headers()["Location"]
+                        val id = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length) ?: ""
+                        db.markSent(id, dp.id)
+                    }
+                    error?.contains("this deploymentKey is already existed") ?: false -> {
+                        db.markSent(dp.deploymentKey, dp.id)
+                    }
+                }
+            }
+        }
         return Result.success()
     }
 

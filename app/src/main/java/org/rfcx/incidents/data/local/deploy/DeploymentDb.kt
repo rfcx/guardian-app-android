@@ -42,4 +42,21 @@ class DeploymentDb(private val realm: Realm) {
         }
         return unsentCopied
     }
+
+    fun markSent(serverId: String, id: Int) {
+        mark(id, serverId, SyncState.SENT.value)
+    }
+
+    private fun mark(id: Int, serverId: String? = null, syncState: Int) {
+        realm.executeTransaction {
+            val deployment =
+                it.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, id)
+                    .findFirst()
+            if (deployment != null) {
+                deployment.externalId = serverId
+                deployment.syncState = syncState
+                it.insertOrUpdate(deployment)
+            }
+        }
+    }
 }

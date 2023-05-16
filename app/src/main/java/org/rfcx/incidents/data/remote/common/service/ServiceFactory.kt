@@ -9,6 +9,7 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.assets.AssetsEndpoint
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import org.rfcx.incidents.data.remote.detections.DetectionsEndpoint
+import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
 import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterProductionEndpoint
 import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterStagingEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
@@ -161,6 +162,14 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(GuardianRegisterStagingEndpoint::class.java)
+    }
+
+    fun makeDeploymentService(isDebug: Boolean, context: Context): DeploymentEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(DeploymentEndpoint::class.java)
     }
 
     private fun urlFromArgument(isDebug: Boolean, url: String): String {
