@@ -31,11 +31,11 @@ class ImageSyncWorker(private val context: Context, params: WorkerParameters) : 
         val service = ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, context)
         val db = DeploymentDb(Realm.getInstance(AppRealm.configuration()))
         val imageDb = DeploymentImageDb(Realm.getInstance(AppRealm.configuration()))
-        val images = db.get().filter { it.externalId != null }.map { dp ->
+        val images = db.getAllForWorker().filter { it.externalId != null }.map { dp ->
             Pair(dp.externalId, dp.images?.filter { it.remotePath == null }?.toList())
         }
 
-        Log.d(TAG, "doWork: found ${images.size} unsent")
+        Log.d(TAG, "doWork: found ${images.filter { it.second != null }.flatMap { it.second!! }.size} unsent")
         var someFailed = false
 
         images.forEach {

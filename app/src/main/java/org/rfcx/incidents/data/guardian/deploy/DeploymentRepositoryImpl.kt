@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.util.Log
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
@@ -22,7 +21,6 @@ class DeploymentRepositoryImpl(
             }
             deployment.images = realmList(images)
         }
-        Log.d("GuardianApp", deployment.stream?.projectId.toString())
         if (deployment.stream != null) {
             val stream = deployment.stream!!.let {
                 streamLocal.insertWithResult(it)

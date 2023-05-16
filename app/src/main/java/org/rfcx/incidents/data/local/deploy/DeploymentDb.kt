@@ -27,6 +27,16 @@ class DeploymentDb(private val realm: Realm) {
         return realm.copyFromRealm(deployments)
     }
 
+    fun getAllForWorker(): List<Deployment> {
+        var unsent: List<Deployment> = listOf()
+        realm.executeTransaction {
+            val registrations = realm.where(Deployment::class.java)
+                .findAll().createSnapshot()
+            unsent = registrations
+        }
+        return unsent
+    }
+
     fun lockUnsent(): List<Deployment> {
         var unsentCopied: List<Deployment> = listOf()
         realm.executeTransaction {
