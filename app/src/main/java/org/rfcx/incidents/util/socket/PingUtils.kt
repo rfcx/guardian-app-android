@@ -24,7 +24,10 @@ import org.rfcx.incidents.util.socket.PingUtils.getPrefsSha1
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URLEncoder
+import java.util.zip.Deflater
 import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 
 object PingUtils {
 
@@ -294,6 +297,49 @@ object PingUtils {
             return PrefsUtils.stringToPrefs(context, Gson().toJson(prefs))
         }
         return listOf()
+    }
+
+    fun GuardianPing.getGuardianToken(): String? {
+        val token = this.companion?.get("guardian")?.asJsonObject?.get("token") ?: return null
+        return token.asString
+    }
+
+    fun getGuardianVital(adminPing: AdminPing?, guardianPing: GuardianPing?): String? {
+        val admin = adminPing?.toJson()?.apply {
+            remove("companion")
+            remove("speed_test")
+            remove("i2c")
+            remove("sim_info")
+        } ?: return null
+        val guardian = guardianPing?.toJson()?.apply {
+            remove("companion")
+        } ?: return null
+        val combinedPing = JsonObject()
+        admin.keySet().forEach {
+            combinedPing.add(it, admin.get(it))
+        }
+        guardian.keySet().forEach {
+            combinedPing.add(it, guardian.get(it))
+        }
+
+        return gzip(Gson().toJson(combinedPing))
+    }
+
+    private fun gzip(content: String): String {
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+
+        val gZIPOutputStream: GZIPOutputStream?
+        gZIPOutputStream = object : GZIPOutputStream(byteArrayOutputStream) {
+            init {
+                def.setLevel(Deflater.BEST_COMPRESSION)
+            }
+        }
+        gZIPOutputStream.write(content.toByteArray(Charsets.UTF_8))
+
+        gZIPOutputStream.close()
+
+        return URLEncoder.encode(Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP), "UTF-8")
     }
 
     fun unGzipString(content: String?): String? {
