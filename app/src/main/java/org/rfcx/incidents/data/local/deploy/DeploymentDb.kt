@@ -2,9 +2,7 @@ package org.rfcx.incidents.data.local.deploy
 
 import io.realm.Realm
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
-import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentDb(private val realm: Realm) {
 
@@ -43,6 +41,10 @@ class DeploymentDb(private val realm: Realm) {
         return unsentCopied
     }
 
+    fun markUnsent(id: Int) {
+        mark(id = id, syncState = SyncState.UNSENT.value)
+    }
+
     fun markSent(serverId: String, id: Int) {
         mark(id, serverId, SyncState.SENT.value)
     }
@@ -58,5 +60,18 @@ class DeploymentDb(private val realm: Realm) {
                 it.insertOrUpdate(deployment)
             }
         }
+    }
+
+    fun unlockSending() {
+        realm.executeTransaction { it ->
+            val snapshot = it.where(Deployment::class.java).equalTo(Deployment.FIELD_SYNC_STATE, SyncState.SENDING.value).findAll().createSnapshot()
+            snapshot.forEach {
+                it.syncState = SyncState.UNSENT.value
+            }
+        }
+    }
+
+    fun unsentCount(): Long {
+        return realm.where(Deployment::class.java).notEqualTo(Deployment.FIELD_SYNC_STATE, SyncState.SENT.value).count()
     }
 }

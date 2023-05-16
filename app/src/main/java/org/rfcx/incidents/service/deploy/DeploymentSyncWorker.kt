@@ -13,7 +13,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.incidents.BuildConfig
-import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
@@ -26,6 +25,7 @@ class DeploymentSyncWorker(private val context: Context, params: WorkerParameter
         val db = DeploymentDb(Realm.getInstance(AppRealm.configuration()))
         val deployments = db.lockUnsent()
         Log.d(TAG, "doWork: found ${deployments.size} unsent")
+        var someFailed = false
 
         deployments.forEach { dp ->
             if (dp.externalId != null) {
@@ -33,6 +33,9 @@ class DeploymentSyncWorker(private val context: Context, params: WorkerParameter
                 val result = service.editDeployment(dp.externalId!!, EditDeploymentRequest(streamRequest)).execute()
                 if (result.isSuccessful) {
                     db.markSent(dp.externalId!!, dp.id)
+                } else {
+                    db.markUnsent(dp.id)
+                    someFailed = true
                 }
             } else {
                 val deploymentRequest = dp.toRequestBody()
@@ -47,10 +50,15 @@ class DeploymentSyncWorker(private val context: Context, params: WorkerParameter
                     error?.contains("this deploymentKey is already existed") ?: false -> {
                         db.markSent(dp.deploymentKey, dp.id)
                     }
+                    else -> {
+                        db.markUnsent(dp.id)
+                        someFailed = true
+                    }
                 }
             }
         }
-        return Result.success()
+        ImageSyncWorker.enqueue()
+        return if (someFailed) Result.retry() else Result.success()
     }
 
     companion object {

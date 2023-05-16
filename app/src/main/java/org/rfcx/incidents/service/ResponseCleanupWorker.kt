@@ -10,8 +10,11 @@ import androidx.work.WorkerParameters
 import io.realm.Realm
 import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.ResponseDb
+import org.rfcx.incidents.data.local.deploy.DeploymentDb
+import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
+import org.rfcx.incidents.service.deploy.ImageSyncWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -45,7 +48,19 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
             AssetSyncWorker.enqueue()
         }
 
-        DeploymentSyncWorker.enqueue()
+        val deploymentDb = DeploymentDb(realm)
+        val deploymentUnsent = deploymentDb.unsentCount()
+        deploymentDb.unlockSending()
+        if (deploymentUnsent > 0) {
+            DeploymentSyncWorker.enqueue()
+        }
+
+        val imageDb = DeploymentImageDb(realm)
+        val imageUnsent = imageDb.unsentCount()
+        imageDb.unlockSending()
+        if (imageUnsent > 0) {
+            ImageSyncWorker.enqueue()
+        }
     }
 
     companion object {

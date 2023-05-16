@@ -2,6 +2,7 @@ package org.rfcx.incidents.data.local.deploy
 
 import io.realm.Realm
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
+import org.rfcx.incidents.entity.response.SyncState
 
 class DeploymentImageDb(private val realm: Realm) {
 
@@ -32,5 +33,52 @@ class DeploymentImageDb(private val realm: Realm) {
     fun insertWithResult(image: DeploymentImage): DeploymentImage {
         insert(image)
         return realm.where(DeploymentImage::class.java).equalTo(DeploymentImage.FIELD_ID, image.id).findFirst()!!
+    }
+
+    fun markSent(id: Int, remotePath: String?) {
+        realm.executeTransaction {
+            val report = it.where(DeploymentImage::class.java).equalTo(DeploymentImage.FIELD_ID, id).findFirst()
+            if (report != null) {
+                report.syncState = SyncState.SENT.value
+                report.remotePath = remotePath
+            }
+        }
+    }
+
+    /**
+     * return DeploymentImage that not be sync to Firebase Storage
+     */
+    fun lockUnsent(id: Int) {
+        realm.executeTransaction {
+            val report = it.where(DeploymentImage::class.java).equalTo(DeploymentImage.FIELD_ID, id).findFirst()
+            if (report != null) {
+                report.syncState = SyncState.SENDING.value
+            }
+        }
+    }
+
+    /**
+     * Mark DeploymentImage.syncState to Unsent
+     */
+    fun markUnsent(id: Int) {
+        realm.executeTransaction {
+            val report = it.where(DeploymentImage::class.java).equalTo(DeploymentImage.FIELD_ID, id).findFirst()
+            if (report != null) {
+                report.syncState = SyncState.UNSENT.value
+            }
+        }
+    }
+
+    fun unlockSending() {
+        realm.executeTransaction { it ->
+            val snapshot = it.where(DeploymentImage::class.java).equalTo(DeploymentImage.FIELD_SYNC_STATE, SyncState.SENDING.value).findAll().createSnapshot()
+            snapshot.forEach {
+                it.syncState = SyncState.UNSENT.value
+            }
+        }
+    }
+
+    fun unsentCount(): Long {
+        return realm.where(DeploymentImage::class.java).notEqualTo(DeploymentImage.FIELD_SYNC_STATE, SyncState.SENT.value).count()
     }
 }
