@@ -49,6 +49,10 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
                 it.finishDeploy()
             }
         }
+
+        if (mainEvent?.isAbleToDeploy() == true) {
+            binding.checklistDeployButton.isEnabled = true
+        }
     }
 
     private fun collectStates() {

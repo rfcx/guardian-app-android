@@ -18,6 +18,7 @@ interface GuardianDeploymentEventListener {
     fun hideThreeDots()
     fun setToolbarTitle(title: String)
 
+    fun isAbleToDeploy(): Boolean
     fun changeScreen(screen: GuardianScreen)
     fun setPassedScreen(screen: GuardianScreen)
     fun back()

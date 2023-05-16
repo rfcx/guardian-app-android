@@ -147,6 +147,16 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         }
     }
 
+    override fun isAbleToDeploy(): Boolean {
+        if (!passedScreen.contains(GuardianScreen.REGISTER)) return false
+        if (!passedScreen.contains(GuardianScreen.NETWORK_TEST)) return false
+        if (!passedScreen.contains(GuardianScreen.AUDIO_PARAMETER)) return false
+        if (!passedScreen.contains(GuardianScreen.MICROPHONE)) return false
+        if (!passedScreen.contains(GuardianScreen.STORAGE)) return false
+        if (!passedScreen.contains(GuardianScreen.SITE)) return false
+        return true
+    }
+
     override fun changeScreen(screen: GuardianScreen) {
         currentScreen = screen
         showScreen(screen)
