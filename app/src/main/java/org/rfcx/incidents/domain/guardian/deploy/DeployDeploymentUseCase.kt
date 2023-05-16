@@ -6,7 +6,7 @@ import org.rfcx.incidents.entity.guardian.deployment.Deployment
 
 class DeployDeploymentUseCase(private val deploymentRepository: DeploymentRepository) : NoResultWithParamUseCase<DeploymentDeployParams>() {
     override fun performAction(param: DeploymentDeployParams) {
-        deploymentRepository.deploy(param.deployment)
+        deploymentRepository.save(param.deployment)
     }
 }
 

@@ -16,6 +16,7 @@ import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.GuardianRegistrationRepositoryImpl
+import org.rfcx.incidents.data.guardian.deploy.DeploymentRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AudioSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.FileSocketRepositoryImpl
@@ -34,6 +35,7 @@ import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.GuardianRegistrationRepository
+import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AudioSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.FileSocketRepository
@@ -48,6 +50,8 @@ import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.TrackingDb
+import org.rfcx.incidents.data.local.deploy.DeploymentDb
+import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
@@ -163,6 +167,8 @@ object DataModule {
 
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
+
+        single { DeploymentRepositoryImpl(get(), get()) } bind DeploymentRepository::class
     }
 
     val remoteModule = module {
@@ -195,6 +201,8 @@ object DataModule {
         factory { TrackingDb(get()) }
         factory { GuardianFileDb(get()) }
         factory { GuardianRegistrationDb(get()) }
+        factory { DeploymentDb(get()) }
+        factory { DeploymentImageDb(get()) }
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }

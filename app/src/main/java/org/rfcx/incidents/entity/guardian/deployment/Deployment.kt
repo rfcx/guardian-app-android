@@ -1,9 +1,11 @@
 package org.rfcx.incidents.entity.guardian.deployment
 
 import com.google.gson.annotations.Expose
+import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.randomDeploymentId
@@ -23,7 +25,8 @@ open class Deployment(
     var isActive: Boolean = false,
     @Expose(serialize = false)
     var syncState: Int = 0,
-    var deviceParameters: String? = null
+    var deviceParameters: String? = null,
+    var images: RealmList<DeploymentImage> = RealmList()
 ) : RealmModel, Serializable {
 
     companion object {
@@ -37,5 +40,6 @@ open class Deployment(
         const val FIELD_CREATED_AT = "createdAt"
         const val FIELD_DEPLOYMENT_KEY = "deploymentKey"
         const val FIELD_IS_ACTIVE = "isActive"
+        const val FIELD_IMAGES = "images"
     }
 }

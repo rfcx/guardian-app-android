@@ -4,7 +4,7 @@ abstract class NoResultWithParamUseCase<in Params> {
     /**
      * Triggers the execution of this use case
      */
-    suspend fun launch(param: Params) {
+    fun launch(param: Params) {
         return performAction(param)
     }
 

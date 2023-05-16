@@ -184,8 +184,6 @@ private class Migrations : RealmMigration {
         val image = realm.schema.create(DeploymentImage.TABLE_NAME)
         image?.apply {
             addField(DeploymentImage.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
-            addField(DeploymentImage.FIELD_DEPLOYMENT_ID, Int::class.java)
-            addField(DeploymentImage.FIELD_DEPLOYMENT_EXTERNAL_ID, String::class.java)
             addField(DeploymentImage.FIELD_LOCAL_PATH, String::class.java).setRequired(DeploymentImage.FIELD_LOCAL_PATH, true)
             addField(DeploymentImage.FIELD_REMOTE_PATH, String::class.java)
             addField(DeploymentImage.FIELD_IMAGE_LABEL, String::class.java).setRequired(DeploymentImage.FIELD_IMAGE_LABEL, true)

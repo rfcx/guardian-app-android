@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.guardian.checklist
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,12 +8,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.local.common.Constants
+import org.rfcx.incidents.data.remote.streams.realmList
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.util.socket.PingUtils.getGuid
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
 import org.rfcx.incidents.view.guardian.GuardianScreen
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
@@ -74,14 +74,14 @@ class GuardianCheckListViewModel(
     fun deploy(stream: Stream, images: List<Image>) {
         val deployment = Deployment(
             stream = stream,
-            isActive = true
+            isActive = true,
+            images = realmList(images.map {
+                DeploymentImage(
+                    localPath = it.path!!,
+                    imageLabel = it.name
+                )
+            })
         )
-        val image = images.map {
-            DeploymentImage(
-                deploymentId = deployment.id,
-                localPath = it.path!!,
-                imageLabel = it.name
-            )
-        }
+        deployDeploymentUseCase.launch(DeploymentDeployParams(deployment))
     }
 }
