@@ -1,6 +1,8 @@
 package org.rfcx.incidents.data.local.deploy
 
 import io.realm.Realm
+import io.realm.kotlin.toFlow
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
 
@@ -35,6 +37,10 @@ class DeploymentDb(private val realm: Realm) {
             unsent = registrations
         }
         return unsent
+    }
+
+    fun getAsFlow(): Flow<List<Deployment>> {
+        return realm.where(Deployment::class.java).findAllAsync().toFlow()
     }
 
     fun lockUnsent(): List<Deployment> {

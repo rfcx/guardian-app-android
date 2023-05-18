@@ -48,6 +48,7 @@ import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_ST
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.incidents.view.report.create.CreateReportActivity
 import org.rfcx.incidents.view.report.create.CreateReportActivity.Companion.RESULT_CODE
+import org.rfcx.incidents.view.report.deployment.DeploymentListFragment
 import org.rfcx.incidents.view.report.detail.ResponseDetailActivity
 import org.rfcx.incidents.view.report.draft.DraftReportsFragment
 import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
@@ -196,6 +197,9 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.navMenu.menuDraftReports.setOnClickListener {
             onBottomMenuClick(it)
         }
+        binding.navMenu.menuDeployments.setOnClickListener {
+            onBottomMenuClick(it)
+        }
         binding.navMenu.menuProfile.setOnClickListener {
             onBottomMenuClick(it)
         }
@@ -209,6 +213,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showStatus()
             }
@@ -217,6 +222,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = true
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showSubmittedReports()
             }
@@ -225,6 +231,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = true
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showDraftReports()
             }
@@ -234,8 +241,18 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = true
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showProfile()
+            }
+            binding.navMenu.menuDeployments.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = false
+                binding.navMenu.menuSubmittedReports.menuSelected = false
+                binding.navMenu.menuDraftReports.menuSelected = false
+                binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = true
+
+                showDeployment()
             }
         }
     }
@@ -337,6 +354,9 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
         as ProfileFragment? ?: ProfileFragment.newInstance()
 
+    private fun getDeployments(): DeploymentListFragment = supportFragmentManager.findFragmentByTag(DeploymentListFragment.tag)
+        as DeploymentListFragment? ?: DeploymentListFragment.newInstance()
+
     private fun showStatus() {
         showAboveAppbar(true)
         this.currentFragment = getNewEvents()
@@ -345,6 +365,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getSubmittedReports())
             .hide(getDraftReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
@@ -356,6 +377,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getNewEvents())
             .hide(getSubmittedReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
@@ -367,6 +389,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             .hide(getNewEvents())
             .hide(getDraftReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
@@ -375,6 +398,19 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         this.currentFragment = getProfile()
         supportFragmentManager.beginTransaction()
             .show(getProfile())
+            .hide(getNewEvents())
+            .hide(getDraftReports())
+            .hide(getSubmittedReports())
+            .hide(getDeployments())
+            .commit()
+    }
+
+    private fun showDeployment() {
+        showAboveAppbar(true)
+        this.currentFragment = getDeployments()
+        supportFragmentManager.beginTransaction()
+            .show(getDeployments())
+            .hide(getProfile())
             .hide(getNewEvents())
             .hide(getDraftReports())
             .hide(getSubmittedReports())

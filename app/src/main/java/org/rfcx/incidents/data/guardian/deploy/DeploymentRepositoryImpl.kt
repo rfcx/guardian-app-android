@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
@@ -28,5 +29,9 @@ class DeploymentRepositoryImpl(
             deployment.stream = stream
         }
         deploymentLocal.insert(deployment)
+    }
+
+    override fun get(): Flow<List<Deployment>> {
+        return deploymentLocal.getAsFlow()
     }
 }
