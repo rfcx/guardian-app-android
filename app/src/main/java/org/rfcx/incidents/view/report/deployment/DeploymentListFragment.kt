@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
 import org.rfcx.incidents.view.MainActivityEventListener
+import org.rfcx.incidents.view.report.draft.ReportsAdapter
 
 class DeploymentListFragment : Fragment() {
 
     private lateinit var binding: FragmentDeploymentListBinding
     private val viewModel: DeploymentListViewModel by viewModel()
     private lateinit var listener: MainActivityEventListener
+
+    private val deploymentAdapter by lazy { DeploymentListAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,9 +38,14 @@ class DeploymentListFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.deploymentsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deploymentAdapter
+        }
+
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
-                //TODO update deployment list
+                deploymentAdapter.items = it
             }
         }
     }
