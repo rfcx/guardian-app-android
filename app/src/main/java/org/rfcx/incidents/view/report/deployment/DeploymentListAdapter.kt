@@ -48,7 +48,7 @@ class DeploymentListAdapter() :
         private val dateTextView = binding.dateTextView
 
         fun bind(item: Deployment) {
-            siteName.text = item.stream?.name
+            siteName.text = item.stream?.name ?: "sss"
             guardianName.text = item.deploymentKey
             dateTextView.text = item.deployedAt.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
         }

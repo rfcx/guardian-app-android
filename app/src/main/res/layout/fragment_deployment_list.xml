@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor">
@@ -17,12 +17,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
-        tools:context=".view.report.submitted.SubmittedReportsFragment">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/toolbarLayout"
+            android:visibility="visible"
             layout="@layout/toolbar_project" />
 
         <androidx.recyclerview.widget.RecyclerView

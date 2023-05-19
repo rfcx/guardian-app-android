@@ -8,6 +8,7 @@ import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -251,7 +252,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
                 binding.navMenu.menuDeployments.menuSelected = true
-
+                Log.d("GuardianApp", "Deploy clicked")
                 showDeployment()
             }
         }
@@ -332,6 +333,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
             .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
+            .add(binding.contentContainer.id, getDeployments(), DeploymentListFragment.tag)
             .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
             .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
             .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)

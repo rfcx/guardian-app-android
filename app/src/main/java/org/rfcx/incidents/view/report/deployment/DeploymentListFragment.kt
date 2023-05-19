@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +36,10 @@ class DeploymentListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("GuardianApp", "show deployment")
         binding.viewModel = viewModel
+
+        binding.toolbarLayout.projectTitleTextView.text = "deployment"
 
         binding.deploymentsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -46,6 +49,12 @@ class DeploymentListFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
                 deploymentAdapter.items = it
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.selectedProject.collectLatest {
+                binding.toolbarLayout.projectTitleTextView.text = it
             }
         }
     }
