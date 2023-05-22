@@ -6,8 +6,8 @@ import okhttp3.ResponseBody
 import org.rfcx.incidents.entity.guardian.deployment.DeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -17,6 +17,9 @@ import retrofit2.http.Path
 interface DeploymentEndpoint {
     @POST("deployments")
     fun createDeployment(@Body deploymentRequest: DeploymentRequest): Call<ResponseBody>
+
+    @POST("deployments")
+    suspend fun createDeploymentBySuspend(@Body deploymentRequest: DeploymentRequest): Response<ResponseBody>
 
     @Multipart
     @POST("deployments/{id}/assets")

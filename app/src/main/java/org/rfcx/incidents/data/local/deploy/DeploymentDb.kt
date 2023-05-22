@@ -29,6 +29,11 @@ class DeploymentDb(private val realm: Realm) {
         return realm.copyFromRealm(deployments)
     }
 
+    fun getById(id: Int): Deployment? {
+        val deployment = realm.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, id).findFirst()
+        return realm.copyFromRealm(deployment)
+    }
+
     fun getAllForWorker(): List<Deployment> {
         var unsent: List<Deployment> = listOf()
         realm.executeTransaction {
@@ -63,6 +68,10 @@ class DeploymentDb(private val realm: Realm) {
 
     fun markSent(serverId: String, id: Int) {
         mark(id, serverId, SyncState.SENT.value)
+    }
+
+    fun markSending(id: Int) {
+        mark(id = id, syncState = SyncState.SENDING.value)
     }
 
     private fun mark(id: Int, serverId: String? = null, syncState: Int) {

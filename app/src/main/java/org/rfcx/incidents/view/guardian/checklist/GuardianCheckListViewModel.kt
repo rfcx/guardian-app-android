@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.local.common.Constants
 import org.rfcx.incidents.data.remote.streams.realmList
-import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
-import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
+import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.DeploymentSaveParams
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
@@ -29,7 +29,7 @@ import org.rfcx.incidents.view.guardian.checklist.photos.Image
 class GuardianCheckListViewModel(
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
     private val getAdminMessageUseCase: GetAdminMessageUseCase,
-    private val deployDeploymentUseCase: DeployDeploymentUseCase
+    private val saveDeploymentUseCase: SaveDeploymentUseCase
 ) : ViewModel() {
 
     private val _checklistItemState: MutableStateFlow<List<CheckListItem>> = MutableStateFlow(emptyList())
@@ -112,6 +112,6 @@ class GuardianCheckListViewModel(
             }),
             deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianVital))
         )
-        deployDeploymentUseCase.launch(DeploymentDeployParams(deployment))
+        saveDeploymentUseCase.launch(DeploymentSaveParams(deployment))
     }
 }

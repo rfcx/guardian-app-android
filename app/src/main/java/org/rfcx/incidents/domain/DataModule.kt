@@ -61,6 +61,7 @@ import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
@@ -170,9 +171,10 @@ object DataModule {
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
 
-        single { DeploymentRepositoryImpl(get(), get(), get()) } bind DeploymentRepository::class
-        single { DeployDeploymentUseCase(get()) }
+        single { DeploymentRepositoryImpl(get(), get(), get(), get()) } bind DeploymentRepository::class
+        single { SaveDeploymentUseCase(get()) }
         single { GetDeploymentsUseCase(get()) }
+        single { DeployDeploymentUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -192,6 +194,7 @@ object DataModule {
         factory { ServiceFactory.makeDownloadFileService(BuildConfig.DEBUG) }
         factory { ServiceFactory.makeGuardianRegisterProductionService(androidContext()) }
         factory { ServiceFactory.makeGuardianRegisterStagingService(androidContext()) }
+        factory { ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, androidContext()) }
     }
 
     val localModule = module {

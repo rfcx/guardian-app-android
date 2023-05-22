@@ -20,7 +20,7 @@ import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
 import org.rfcx.incidents.view.report.draft.ReportsAdapter
 import java.util.TimeZone
 
-class DeploymentListAdapter() :
+class DeploymentListAdapter(private val cloudListener: CloudListener) :
     RecyclerView.Adapter<DeploymentListAdapter.DeploymentListViewHolder>() {
 
     var items: List<Deployment> = arrayListOf()
@@ -46,11 +46,40 @@ class DeploymentListAdapter() :
         private val siteName = binding.siteNameTextView
         private val guardianName = binding.guardianNameTextView
         private val dateTextView = binding.dateTextView
+        private val syncIcon = binding.syncIcon
+        private val loading = binding.syncIconLoading
 
         fun bind(item: Deployment) {
-            siteName.text = item.stream?.name ?: "sss"
+            siteName.text = item.stream?.name ?: "None"
             guardianName.text = item.deploymentKey
             dateTextView.text = item.deployedAt.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
+
+            syncIcon.setOnClickListener {
+                if (item.syncState == SyncState.UNSENT.value) {
+                    cloudListener.onClicked(item.id)
+                }
+            }
+
+            when(item.syncState) {
+                SyncState.UNSENT.value -> {
+                    syncIcon.visibility = View.VISIBLE
+                    syncIcon.setBackgroundResource(R.drawable.ic_cloud_upload)
+                    loading.visibility = View.GONE
+                }
+                SyncState.SENDING.value -> {
+                    syncIcon.visibility = View.GONE
+                    loading.visibility = View.VISIBLE
+                }
+                SyncState.SENT.value -> {
+                    syncIcon.visibility = View.VISIBLE
+                    syncIcon.setBackgroundResource(R.drawable.ic_cloud_done)
+                    loading.visibility = View.GONE
+                }
+            }
         }
     }
+}
+
+interface CloudListener {
+    fun onClicked(id: Int)
 }

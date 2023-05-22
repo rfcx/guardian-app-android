@@ -1,15 +1,16 @@
 package org.rfcx.incidents.domain.guardian.deploy
 
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
-import org.rfcx.incidents.domain.base.NoResultWithParamUseCase
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 
-class DeployDeploymentUseCase(private val deploymentRepository: DeploymentRepository) : NoResultWithParamUseCase<DeploymentDeployParams>() {
-    override fun performAction(param: DeploymentDeployParams) {
-        deploymentRepository.save(param.deployment)
+class DeployDeploymentUseCase(private val deploymentRepository: DeploymentRepository) : FlowWithParamUseCase<DeploymentDeployParams, Result<Boolean>>() {
+    override fun performAction(param: DeploymentDeployParams): Flow<Result<Boolean>> {
+        return deploymentRepository.upload(param.id)
     }
 }
 
 data class DeploymentDeployParams(
-    val deployment: Deployment
+    val id: Int
 )

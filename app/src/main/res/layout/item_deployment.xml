@@ -63,4 +63,24 @@
         app:layout_constraintTop_toTopOf="@id/clockImageView"
         tools:text="Today, 14:00" />
 
+    <ImageView
+        android:id="@+id/syncIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_cloud_upload"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_small"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
+
+    <ProgressBar
+        android:id="@+id/syncIconLoading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:visibility="gone"
+        android:indeterminateTint="@color/text_primary"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

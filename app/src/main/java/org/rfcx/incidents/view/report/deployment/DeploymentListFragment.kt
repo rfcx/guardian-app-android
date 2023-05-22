@@ -14,16 +14,17 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.report.draft.ReportsAdapter
 
-class DeploymentListFragment : Fragment() {
+class DeploymentListFragment : Fragment(), CloudListener {
 
     private lateinit var binding: FragmentDeploymentListBinding
     private val viewModel: DeploymentListViewModel by viewModel()
     private lateinit var listener: MainActivityEventListener
 
-    private val deploymentAdapter by lazy { DeploymentListAdapter() }
+    private val deploymentAdapter by lazy { DeploymentListAdapter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -57,6 +58,11 @@ class DeploymentListFragment : Fragment() {
                 binding.toolbarLayout.projectTitleTextView.text = it
             }
         }
+    }
+
+
+    override fun onClicked(id: Int) {
+        viewModel.syncDeployment(id)
     }
 
     companion object {
