@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,8 +56,20 @@ class DeploymentListFragment : Fragment(), CloudListener {
                 binding.toolbarLayout.projectTitleTextView.text = it
             }
         }
-    }
 
+        binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            val selected = checkedIds.getOrNull(0)
+            when(selected) {
+                R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
+                R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
+                R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
+                null -> {
+                    val allChip = group.findViewById<Chip>(R.id.allSelectChip)
+                    allChip.isChecked = true
+                }
+            }
+        }
+    }
 
     override fun onClicked(id: Int) {
         viewModel.syncDeployment(id)

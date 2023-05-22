@@ -19,6 +19,7 @@ import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentSaveParams
 import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import org.rfcx.incidents.entity.response.SyncState
 
 class DeploymentListViewModel(
     private val getDeploymentsUseCase: GetDeploymentsUseCase,
@@ -33,6 +34,9 @@ class DeploymentListViewModel(
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
 
+    private var currentFilter = FilterDeployment.ALL
+    private var currentAllDeployments = listOf<Deployment>()
+
     init {
         getDeployments()
         getSelectedProject()
@@ -43,7 +47,22 @@ class DeploymentListViewModel(
             getDeploymentsUseCase.launch().catch {
 
             }.collectLatest { result ->
-                _deployments.tryEmit(result.map { it.freeze() })
+                currentAllDeployments = result
+                filterWithDeployment(result, currentFilter)
+            }
+        }
+    }
+
+    private fun filterWithDeployment(deployments: List<Deployment>, filter: FilterDeployment = FilterDeployment.ALL) {
+        when(filter) {
+            FilterDeployment.ALL -> {
+                _deployments.tryEmit(deployments.map { it.freeze() })
+            }
+            FilterDeployment.SYNCED -> {
+                _deployments.tryEmit(deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.SENT.value })
+            }
+            FilterDeployment.UNSYNCED -> {
+                _deployments.tryEmit(deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.UNSENT.value })
             }
         }
     }
@@ -58,6 +77,11 @@ class DeploymentListViewModel(
                 }
             }
         }
+    }
+
+    fun addFilter(filter: FilterDeployment) {
+        currentFilter = filter
+        filterWithDeployment(currentAllDeployments, filter)
     }
 
     fun syncDeployment(id: Int) {
@@ -76,5 +100,9 @@ class DeploymentListViewModel(
                 }
             }
         }
+    }
+
+    enum class FilterDeployment{
+        ALL, SYNCED, UNSYNCED
     }
 }
