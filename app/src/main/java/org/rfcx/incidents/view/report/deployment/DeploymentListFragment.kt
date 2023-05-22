@@ -37,10 +37,7 @@ class DeploymentListFragment : Fragment(), CloudListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("GuardianApp", "show deployment")
         binding.viewModel = viewModel
-
-        binding.toolbarLayout.projectTitleTextView.text = "deployment"
 
         binding.deploymentsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)

@@ -300,4 +300,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- Chip -->
+    <style name="FilterDeploymentChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_choice_color</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor">
 
@@ -24,6 +23,38 @@
             android:visibility="visible"
             layout="@layout/toolbar_project" />
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filterGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_small"
+            android:layout_marginStart="@dimen/margin_padding_small"
+            app:singleSelection="true"
+            app:checkedChip="@id/allSelectChip"
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/allSelectChip"
+                style="@style/FilterDeploymentChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/unSyncedSelectChip"
+                style="@style/FilterDeploymentChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="synced" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/sycnedSelectChip"
+                style="@style/FilterDeploymentChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="unsynced" />
+        </com.google.android.material.chip.ChipGroup>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/deploymentsRecyclerView"
             android:layout_width="match_parent"
@@ -34,7 +65,7 @@
             android:layout_marginTop="@dimen/margin_padding_small"
             android:layout_marginBottom="@dimen/margin_padding_small"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+            app:layout_constraintTop_toBottomOf="@id/filterGroup" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/projectSwipeRefreshView"
