@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
+import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.view.MainActivityEventListener
-import org.rfcx.incidents.view.report.draft.ReportsAdapter
 
 class DeploymentListFragment : Fragment(), CloudListener {
 
@@ -26,6 +24,8 @@ class DeploymentListFragment : Fragment(), CloudListener {
     private lateinit var listener: MainActivityEventListener
 
     private val deploymentAdapter by lazy { DeploymentListAdapter(this) }
+
+    private var state = DeploymentListState.LIST
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,6 +38,7 @@ class DeploymentListFragment : Fragment(), CloudListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setMap(savedInstanceState)
         binding.viewModel = viewModel
 
         binding.deploymentsRecyclerView.apply {
@@ -71,12 +72,38 @@ class DeploymentListFragment : Fragment(), CloudListener {
         }
     }
 
+    private fun setMap(savedInstanceState: Bundle?) {
+        binding.toolbarLayout.changePageImageView.setOnClickListener {
+            if (state == DeploymentListState.LIST) {
+                binding.mapLayout.visibility = View.VISIBLE
+                binding.listLayout.visibility = View.GONE
+                state = DeploymentListState.MAP
+            } else {
+                binding.mapLayout.visibility = View.GONE
+                binding.listLayout.visibility = View.VISIBLE
+                state = DeploymentListState.LIST
+            }
+        }
+
+        binding.mapBoxView.onCreate(savedInstanceState)
+        binding.mapBoxView.setParam()
+        lifecycleScope.launch {
+            viewModel.currentLocationState.collectLatest { currentLoc ->
+                currentLoc?.let {
+                    val curLoc = LatLng(it.latitude, it.longitude)
+                    binding.mapBoxView.setCurrentLocation(curLoc)
+                }
+            }
+        }
+    }
+
     override fun onClicked(id: Int) {
         viewModel.syncDeployment(id)
     }
 
     companion object {
         const val tag = "DeploymentListFragment"
+        enum class DeploymentListState { LIST, MAP}
         fun newInstance(): DeploymentListFragment = DeploymentListFragment()
     }
 }

@@ -38,7 +38,7 @@ class MapView @JvmOverloads constructor(
     private var currentLoc = LatLng()
     private var siteLoc = LatLng()
     private var canMove = false
-    private var createPin = false
+    private var createPinAtCurrentLoc = false
     private lateinit var callback: (LatLng) -> Unit
 
     init {
@@ -52,13 +52,12 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setupView() {
-        Mapbox.getInstance(context, context.getString(R.string.mapbox_token))
         getMapAsync(this)
     }
 
-    fun setParam(canMove: Boolean, createPin: Boolean) {
+    fun setParam(canMove: Boolean = true, createPinAtCurrentLoc: Boolean = false) {
         this.canMove = canMove
-        this.createPin = createPin
+        this.createPinAtCurrentLoc = createPinAtCurrentLoc
     }
 
     fun setCameraMoveCallback(callback: (LatLng) -> Unit) {
@@ -77,9 +76,13 @@ class MapView @JvmOverloads constructor(
             if (currentLoc.latitude == 0.0 && currentLoc.longitude == 0.0) {
                 moveCamera(siteLoc)
             } else {
-                moveCamera(currentLoc, siteLoc)
+                if (siteLoc.latitude == 0.0 && siteLoc.longitude == 0.0) {
+                    moveCamera(currentLoc)
+                } else {
+                    moveCamera(currentLoc, siteLoc)
+                }
             }
-            if (createPin) {
+            if (createPinAtCurrentLoc) {
                 setPinOnMap(currentLoc, siteLoc)
             }
         }
@@ -92,8 +95,11 @@ class MapView @JvmOverloads constructor(
         }
     }
 
-    fun setLocation(currentLoc: LatLng, siteLoc: LatLng) {
+    fun setCurrentLocation(currentLoc: LatLng) {
         this.currentLoc = currentLoc
+    }
+
+    fun setSiteLocation(siteLoc: LatLng) {
         this.siteLoc = siteLoc
     }
 
@@ -108,6 +114,10 @@ class MapView @JvmOverloads constructor(
 
     fun setPinOnMap(currentLoc: LatLng, pinLoc: LatLng) {
         moveCamera(currentLoc, pinLoc)
+        createSiteSymbol(pinLoc)
+    }
+
+    fun setPinOnMap(pinLoc: LatLng) {
         createSiteSymbol(pinLoc)
     }
 

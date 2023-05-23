@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
+import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.freeze
@@ -20,12 +21,15 @@ import org.rfcx.incidents.domain.guardian.deploy.DeploymentSaveParams
 import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.util.location.LocationHelper
+import org.rfcx.incidents.util.setFormatLabel
 
 class DeploymentListViewModel(
     private val getDeploymentsUseCase: GetDeploymentsUseCase,
     private val preferences: Preferences,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
-    private val deployDeploymentUseCase: DeployDeploymentUseCase
+    private val deployDeploymentUseCase: DeployDeploymentUseCase,
+    private val locationHelper: LocationHelper
 ) : ViewModel() {
 
     private val _deployments: MutableStateFlow<List<Deployment>> = MutableStateFlow(emptyList())
@@ -34,12 +38,24 @@ class DeploymentListViewModel(
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
 
+    private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
+    val currentLocationState = _currentLocationState.asStateFlow()
+
     private var currentFilter = FilterDeployment.ALL
     private var currentAllDeployments = listOf<Deployment>()
 
     init {
+        getLocationChanged()
         getDeployments()
         getSelectedProject()
+    }
+
+    private fun getLocationChanged() {
+        viewModelScope.launch {
+            locationHelper.getFlowLocationChanged().collectLatest {
+                _currentLocationState.tryEmit(it)
+            }
+        }
     }
 
     private fun getDeployments() {

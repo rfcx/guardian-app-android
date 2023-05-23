@@ -61,7 +61,7 @@ class GuardianSiteSetFragment : Fragment() {
         }
 
         binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, createPin = true)
+        binding.mapBoxView.setParam(canMove = false, createPinAtCurrentLoc = true)
 
         binding.nextButton.setOnClickListener {
             mainEvent?.nextWithStream(site)
@@ -91,7 +91,8 @@ class GuardianSiteSetFragment : Fragment() {
                     val siteLoc = LatLng(site.latitude, site.longitude)
                     setWithInText(curLoc, siteLoc)
 
-                    binding.mapBoxView.setLocation(curLoc, siteLoc)
+                    binding.mapBoxView.setCurrentLocation(curLoc)
+                    binding.mapBoxView.setSiteLocation(siteLoc)
                 }
             }
         }

@@ -23,49 +23,71 @@
             android:visibility="visible"
             layout="@layout/toolbar_project" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/filterGroup"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_padding_small"
-            android:layout_marginStart="@dimen/margin_padding_small"
-            app:singleSelection="true"
-            app:checkedChip="@id/allSelectChip"
+            android:layout_height="match_parent"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/allSelectChip"
-                style="@style/FilterDeploymentChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All" />
+            <org.rfcx.incidents.view.guardian.checklist.site.MapView
+                android:id="@+id/mapBoxView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/syncedSelectChip"
-                style="@style/FilterDeploymentChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="synced" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/unSyncedSelectChip"
-                style="@style/FilterDeploymentChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="unsynced" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/deploymentsRecyclerView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/listLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/backgroundColor"
-            android:dividerHeight="1dp"
-            android:overScrollMode="never"
-            android:layout_marginTop="@dimen/margin_padding_small"
-            android:layout_marginBottom="@dimen/margin_padding_small"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filterGroup" />
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filterGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_small"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                app:layout_constraintTop_toTopOf="parent"
+                app:singleSelection="true"
+                app:checkedChip="@id/allSelectChip">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/allSelectChip"
+                    style="@style/FilterDeploymentChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/syncedSelectChip"
+                    style="@style/FilterDeploymentChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="synced" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unSyncedSelectChip"
+                    style="@style/FilterDeploymentChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="unsynced" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/deploymentsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/backgroundColor"
+                android:dividerHeight="1dp"
+                android:overScrollMode="never"
+                android:layout_marginTop="@dimen/margin_padding_small"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filterGroup" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/projectSwipeRefreshView"

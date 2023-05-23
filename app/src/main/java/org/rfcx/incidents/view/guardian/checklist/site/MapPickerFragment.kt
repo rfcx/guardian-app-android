@@ -42,9 +42,10 @@ class MapPickerFragment :
         initIntent()
 
         binding.mapBoxPickerView.onCreate(savedInstanceState)
-        binding.mapBoxPickerView.setParam(canMove = true, createPin = false)
+        binding.mapBoxPickerView.setParam(canMove = true, createPinAtCurrentLoc = false)
         viewModel.currentLocationState.value.let {
-            binding.mapBoxPickerView.setLocation(LatLng(it?.latitude ?: 0.0, it?.longitude ?: 0.0), LatLng(site.latitude, site.longitude))
+            binding.mapBoxPickerView.setCurrentLocation(LatLng(it?.latitude ?: 0.0, it?.longitude ?: 0.0))
+            binding.mapBoxPickerView.setSiteLocation(LatLng(site.latitude, site.longitude))
         }
         binding.locationTextView.text = "${site.latitude.latitudeCoordinates()}, ${site.longitude.longitudeCoordinates()}"
         binding.mapBoxPickerView.setCameraMoveCallback {
