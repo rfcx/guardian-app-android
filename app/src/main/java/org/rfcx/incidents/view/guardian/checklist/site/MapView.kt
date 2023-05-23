@@ -361,11 +361,7 @@ class MapView @JvmOverloads constructor(
                         Pair(PROPERTY_SITE_MARKER_ID, "${it.name}.${it.id}"),
                         Pair(PROPERTY_SITE_MARKER_SITE_NAME, it.name),
                         Pair(PROPERTY_SITE_MARKER_SITE_LATITUDE, "${it.latitude}"),
-                        Pair(PROPERTY_SITE_MARKER_SITE_LONGITUDE, "${it.longitude}"),
-                        Pair(
-                            PROPERTY_SITE_MARKER_SITE_CREATED_AT,
-                            context?.let { context -> it.createdAt.toStringWithTimeZone(context, TimeZone.getDefault()) } ?: ""
-                        )
+                        Pair(PROPERTY_SITE_MARKER_SITE_LONGITUDE, "${it.longitude}")
                     )
 
                     Feature.fromGeometry(

@@ -9,7 +9,6 @@ sealed class MapMarker {
         val latitude: Double,
         val longitude: Double,
         val altitude: Double,
-        val createdAt: Date,
         val pin: String
     ) : MapMarker()
 

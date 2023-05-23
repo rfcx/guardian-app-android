@@ -99,7 +99,7 @@ class DeploymentListFragment : Fragment(), CloudListener {
         binding.mapBoxView.setMapReadyCallback {
             if (it) {
                 lifecycleScope.launch {
-                    viewModel.deploymentsMarker.collectLatest { markers ->
+                    viewModel.markers.collectLatest { markers ->
                         binding.mapBoxView.addSiteAndDeploymentToMarker(markers)
                     }
                 }
