@@ -1,5 +1,6 @@
 package org.rfcx.incidents.entity.guardian.deployment
 
+import android.content.Context
 import com.google.gson.annotations.Expose
 import io.realm.RealmList
 import io.realm.RealmModel
@@ -9,6 +10,7 @@ import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.randomDeploymentId
+import org.rfcx.incidents.view.report.deployment.MapMarker
 import java.io.Serializable
 import java.util.Date
 

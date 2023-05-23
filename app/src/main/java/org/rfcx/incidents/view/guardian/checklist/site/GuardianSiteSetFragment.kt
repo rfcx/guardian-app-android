@@ -61,7 +61,7 @@ class GuardianSiteSetFragment : Fragment() {
         }
 
         binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, createPinAtCurrentLoc = true)
+        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
 
         binding.nextButton.setOnClickListener {
             mainEvent?.nextWithStream(site)

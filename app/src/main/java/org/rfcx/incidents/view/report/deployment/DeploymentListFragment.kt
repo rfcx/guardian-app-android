@@ -86,12 +86,22 @@ class DeploymentListFragment : Fragment(), CloudListener {
         }
 
         binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam()
+        binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
         lifecycleScope.launch {
             viewModel.currentLocationState.collectLatest { currentLoc ->
                 currentLoc?.let {
                     val curLoc = LatLng(it.latitude, it.longitude)
                     binding.mapBoxView.setCurrentLocation(curLoc)
+                }
+            }
+        }
+
+        binding.mapBoxView.setMapReadyCallback {
+            if (it) {
+                lifecycleScope.launch {
+                    viewModel.deploymentsMarker.collectLatest { markers ->
+                        binding.mapBoxView.addSiteAndDeploymentToMarker(markers)
+                    }
                 }
             }
         }

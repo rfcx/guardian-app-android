@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
@@ -34,6 +35,9 @@ class DeploymentListViewModel(
 
     private val _deployments: MutableStateFlow<List<Deployment>> = MutableStateFlow(emptyList())
     val deployments = _deployments.asStateFlow()
+
+    private val _deploymentsMarker: MutableStateFlow<List<MapMarker>> = MutableStateFlow(emptyList())
+    val deploymentsMarker = _deploymentsMarker.asStateFlow()
 
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
@@ -72,13 +76,20 @@ class DeploymentListViewModel(
     private fun filterWithDeployment(deployments: List<Deployment>, filter: FilterDeployment = FilterDeployment.ALL) {
         when(filter) {
             FilterDeployment.ALL -> {
-                _deployments.tryEmit(deployments.map { it.freeze() })
+                val tempDeployments = deployments.map { it.freeze<Deployment>() }
+                _deployments.tryEmit(tempDeployments)
+                _deploymentsMarker.tryEmit(tempDeployments.map { it.toMark() })
             }
             FilterDeployment.SYNCED -> {
-                _deployments.tryEmit(deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.SENT.value })
+                val tempDeployments = deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.SENT.value }
+                _deployments.tryEmit(tempDeployments)
+                _deploymentsMarker.tryEmit(tempDeployments.map { it.toMark() })
+
             }
             FilterDeployment.UNSYNCED -> {
-                _deployments.tryEmit(deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.UNSENT.value })
+                val tempDeployments = deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.UNSENT.value }
+                _deployments.tryEmit(tempDeployments)
+                _deploymentsMarker.tryEmit(tempDeployments.map { it.toMark() })
             }
         }
     }
@@ -121,4 +132,22 @@ class DeploymentListViewModel(
     enum class FilterDeployment{
         ALL, SYNCED, UNSYNCED
     }
+}
+
+fun Deployment.toMark(): MapMarker.DeploymentMarker {
+    val pinImage = "PIN_GREEN"
+
+    val description = "deployed"
+
+    return MapMarker.DeploymentMarker(
+        id,
+        stream?.name ?: "",
+        stream?.longitude ?: 0.0,
+        stream?.latitude ?: 0.0,
+        pinImage,
+        description,
+        deploymentKey,
+        createdAt,
+        deployedAt
+    )
 }
