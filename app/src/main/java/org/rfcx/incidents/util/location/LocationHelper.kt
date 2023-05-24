@@ -34,30 +34,29 @@ class LocationHelper(private val context: Context) {
     @SuppressLint("MissingPermission")
     fun getFlowLocationChanged(): Flow<Location?> {
         return callbackFlow {
+            val callback = object : LocationEngineCallback<LocationEngineResult> {
+                override fun onSuccess(result: LocationEngineResult?) {
+                    trySendBlocking(result?.lastLocation)
+                }
+
+                override fun onFailure(exception: Exception) {
+                    // do nothing only allow correct location record
+                }
+            }
             if (hasLocationPermission()) {
                 val request =
                     LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
                         .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                         .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build()
-                val callback = object : LocationEngineCallback<LocationEngineResult> {
-                    override fun onSuccess(result: LocationEngineResult?) {
-                        trySendBlocking(result?.lastLocation)
-                    }
-
-                    override fun onFailure(exception: Exception) {
-                        // do nothing only allow correct location record
-                    }
-                }
                 locationEngine.requestLocationUpdates(
                     request,
                     callback,
                     Looper.getMainLooper()
                 )
                 locationEngine.getLastLocation(callback)
-
-                awaitClose {
-                    locationEngine.removeLocationUpdates(callback)
-                }
+            }
+            awaitClose {
+                locationEngine.removeLocationUpdates(callback)
             }
         }
     }

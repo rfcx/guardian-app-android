@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.freeze
@@ -35,8 +34,8 @@ class DeploymentListViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _deployments: MutableStateFlow<List<Deployment>> = MutableStateFlow(emptyList())
-    val deployments = _deployments.asStateFlow()
+    private val _streams: MutableStateFlow<List<Stream>> = MutableStateFlow(emptyList())
+    val streams = _streams.asStateFlow()
 
     private val _markers: MutableStateFlow<List<MapMarker>> = MutableStateFlow(emptyList())
     val markers = _markers.asStateFlow()
@@ -78,19 +77,19 @@ class DeploymentListViewModel(
     private fun filterWithDeployment(deployments: List<Deployment>, streams: List<Stream>, filter: FilterDeployment = FilterDeployment.ALL) {
         when (filter) {
             FilterDeployment.ALL -> {
-                val tempDeployments = deployments.map { it.freeze<Deployment>() }
-                _deployments.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toMark() } + streams.map { it.toMark() })
+                val tempDeployments = streams.filter { it.deployment != null }
+                _streams.tryEmit(tempDeployments)
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
-                val tempDeployments = deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.SENT.value }
-                _deployments.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toMark() } + streams.map { it.toMark() })
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
+                _streams.tryEmit(tempDeployments)
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
-                val tempDeployments = deployments.map<Deployment, Deployment> { it.freeze() }.filter { it.syncState == SyncState.UNSENT.value }
-                _deployments.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toMark() } + streams.map { it.toMark() })
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
+                _streams.tryEmit(tempDeployments)
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
             }
         }
     }
@@ -135,24 +134,24 @@ class DeploymentListViewModel(
     }
 }
 
-fun Deployment.toMark(): MapMarker.DeploymentMarker {
+fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
     val pinImage = "PIN_GREEN"
 
     val description = "deployed"
 
     return MapMarker.DeploymentMarker(
         id,
-        stream?.name ?: "",
-        stream?.longitude ?: 0.0,
-        stream?.latitude ?: 0.0,
+        name,
+        longitude,
+        latitude,
         pinImage,
         description,
-        deploymentKey,
-        createdAt,
-        deployedAt
+        deployment!!.deploymentKey,
+        deployment!!.createdAt,
+        deployment!!.deployedAt
     )
 }
 
-fun Stream.toMark(): MapMarker.SiteMarker {
+fun Stream.toSitePin(): MapMarker.SiteMarker {
     return MapMarker.SiteMarker(id, name, latitude, longitude, altitude, "SITE_MARKER")
 }

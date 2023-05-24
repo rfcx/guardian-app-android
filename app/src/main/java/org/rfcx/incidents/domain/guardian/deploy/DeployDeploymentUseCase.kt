@@ -7,10 +7,10 @@ import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 
 class DeployDeploymentUseCase(private val deploymentRepository: DeploymentRepository) : FlowWithParamUseCase<DeploymentDeployParams, Result<Boolean>>() {
     override fun performAction(param: DeploymentDeployParams): Flow<Result<Boolean>> {
-        return deploymentRepository.upload(param.id)
+        return deploymentRepository.upload(param.streamId)
     }
 }
 
 data class DeploymentDeployParams(
-    val id: Int
+    val streamId: Int
 )

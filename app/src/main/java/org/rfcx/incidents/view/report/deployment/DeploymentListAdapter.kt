@@ -7,23 +7,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDeploymentBinding
-import org.rfcx.incidents.databinding.ItemReportBinding
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
-import org.rfcx.incidents.entity.response.InvestigationType
-import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.entity.response.syncImage
-import org.rfcx.incidents.util.setDrawableImage
-import org.rfcx.incidents.util.setImage
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.toStringWithTimeZone
-import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
-import org.rfcx.incidents.view.report.draft.ReportsAdapter
 import java.util.TimeZone
 
 class DeploymentListAdapter(private val cloudListener: CloudListener) :
     RecyclerView.Adapter<DeploymentListAdapter.DeploymentListViewHolder>() {
 
-    var items: List<Deployment> = arrayListOf()
+    var items: List<Stream> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -49,10 +42,10 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
         private val syncIcon = binding.syncIcon
         private val loading = binding.syncIconLoading
 
-        fun bind(item: Deployment) {
-            siteName.text = item.stream?.name ?: "None"
-            guardianName.text = item.deploymentKey
-            dateTextView.text = item.deployedAt.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
+        fun bind(item: Stream) {
+            siteName.text = item.name
+            guardianName.text = item.deployment?.deploymentKey
+            dateTextView.text = item.deployment?.deployedAt?.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
 
             syncIcon.setOnClickListener {
                 if (item.syncState == SyncState.UNSENT.value) {
@@ -60,7 +53,7 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
                 }
             }
 
-            when(item.syncState) {
+            when (item.syncState) {
                 SyncState.UNSENT.value -> {
                     syncIcon.visibility = View.VISIBLE
                     syncIcon.setBackgroundResource(R.drawable.ic_cloud_upload)

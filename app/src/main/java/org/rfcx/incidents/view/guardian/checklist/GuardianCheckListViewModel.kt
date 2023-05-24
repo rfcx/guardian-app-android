@@ -3,6 +3,7 @@ package org.rfcx.incidents.view.guardian.checklist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import io.realm.kotlin.freeze
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -102,7 +103,6 @@ class GuardianCheckListViewModel(
 
     fun deploy(stream: Stream, images: List<Image>) {
         val deployment = Deployment(
-            stream = stream,
             isActive = true,
             images = realmList(images.filter { it.path != null }.map {
                 DeploymentImage(
@@ -112,6 +112,7 @@ class GuardianCheckListViewModel(
             }),
             deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianVital))
         )
-        saveDeploymentUseCase.launch(DeploymentSaveParams(deployment))
+        stream.deployment = deployment
+        saveDeploymentUseCase.launch(DeploymentSaveParams(stream))
     }
 }

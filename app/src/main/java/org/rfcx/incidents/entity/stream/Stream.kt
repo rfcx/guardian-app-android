@@ -5,6 +5,7 @@ import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
 import java.io.Serializable
 import java.util.TimeZone
@@ -25,6 +26,7 @@ open class Stream(
     var guardianType: String? = null,
     var order: Int = Int.MAX_VALUE,
     var externalId: String? = null,
+    var deployment: Deployment? = null,
     var syncState: Int = SyncState.UNSENT.value
 ) : RealmModel, Serializable {
 
@@ -41,5 +43,6 @@ open class Stream(
         const val FIELD_EXTERNAL_ID = "externalId"
         const val FIELD_SYNC_STATE = "syncState"
         const val FIELD_ALTITUDE = "altitude"
+        const val FIELD_DEPLOYMENT = "deployment"
     }
 }

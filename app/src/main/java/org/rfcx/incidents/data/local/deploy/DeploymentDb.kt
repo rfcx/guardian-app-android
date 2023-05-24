@@ -5,6 +5,7 @@ import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentDb(private val realm: Realm) {
 
@@ -22,6 +23,11 @@ class DeploymentDb(private val realm: Realm) {
                 it.insertOrUpdate(deployment)
             }
         }
+    }
+
+    fun insertWithResult(deployment: Deployment): Deployment {
+        insert(deployment)
+        return realm.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, deployment.id).findFirst()!!
     }
 
     fun get(): List<Deployment> {

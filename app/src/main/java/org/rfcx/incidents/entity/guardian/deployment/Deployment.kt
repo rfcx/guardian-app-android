@@ -22,7 +22,6 @@ open class Deployment(
     var deployedAt: Date = Date(),
     var deploymentKey: String = randomDeploymentId(),
     @Expose(serialize = false)
-    var stream: Stream? = null,
     var createdAt: Date = Date(),
     var isActive: Boolean = false,
     @Expose(serialize = false)

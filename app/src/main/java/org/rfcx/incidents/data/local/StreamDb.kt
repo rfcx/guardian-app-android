@@ -47,10 +47,23 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
-    fun insertWithResult(stream: Stream): Stream {
-        insertOrUpdate(stream)
-        return realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, stream.id).findFirst()!!
+    fun getAllForWorker(): List<Stream> {
+        var unsent: List<Stream> = listOf()
+        realm.executeTransaction {
+            val streams = realm.where(Stream::class.java)
+                .findAll().createSnapshot()
+            unsent = streams
+        }
+        return unsent
     }
+
+    fun updateSiteServerId(stream: Stream, externalId: String) {
+        realm.executeTransaction {
+            stream.externalId = externalId
+            realm.insertOrUpdate(stream)
+        }
+    }
+
 
     fun get(id: Int): Stream? =
         realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()

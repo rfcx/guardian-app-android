@@ -8,6 +8,7 @@ import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -18,8 +19,18 @@ interface DeploymentEndpoint {
     @POST("deployments")
     fun createDeployment(@Body deploymentRequest: DeploymentRequest): Call<ResponseBody>
 
+    @GET("deployments/{id}")
+    fun getDeployment(
+        @Path("id") id: String
+    ): Call<DeploymentResponse>
+
     @POST("deployments")
     suspend fun createDeploymentBySuspend(@Body deploymentRequest: DeploymentRequest): Response<ResponseBody>
+
+    @GET("deployments/{id}")
+    suspend fun getDeploymentBySuspend(
+        @Path("id") id: String
+    ): DeploymentResponse
 
     @Multipart
     @POST("deployments/{id}/assets")

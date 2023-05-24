@@ -11,6 +11,8 @@ import org.rfcx.incidents.data.remote.streams.realmList
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
+import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentRepositoryImpl(
     private val deploymentLocal: DeploymentDb,
@@ -19,45 +21,51 @@ class DeploymentRepositoryImpl(
     private val deploymentEndpoint: DeploymentEndpoint
 ) : DeploymentRepository {
 
-    override fun save(deployment: Deployment) {
+    override fun save(stream: Stream) {
         // Save image first before insert deployment
-        if (deployment.images != null) {
-            val images = deployment.images!!.map {
-                imageLocal.insertWithResult(it)
+        stream.deployment?.let { deployment ->
+            if (deployment.images != null) {
+                val images = deployment.images!!.map {
+                    imageLocal.insertWithResult(it)
+                }
+                deployment.images = realmList(images)
             }
-            deployment.images = realmList(images)
+            val tempDeployment = deploymentLocal.insertWithResult(deployment)
+            stream.deployment= tempDeployment
+            streamLocal.insertOrUpdate(stream)
         }
-        if (deployment.stream != null) {
-            val stream = deployment.stream!!.let {
-                streamLocal.insertWithResult(it)
-            }
-            deployment.stream = stream
-        }
-        deploymentLocal.insert(deployment)
     }
 
     override fun get(): Flow<List<Deployment>> {
         return deploymentLocal.getAsFlow()
     }
 
-    override fun upload(id: Int): Flow<Result<Boolean>> {
+    override fun upload(streamId: Int): Flow<Result<Boolean>> {
         return flow {
-            val deployment = deploymentLocal.getById(id)
-            deployment?.let { dp ->
+            val stream = streamLocal.get(streamId)
+            stream?.deployment?.let { dp ->
                 // try upload deployment
                 emit(Result.Loading)
-                deploymentLocal.markSending(id)
-                val result = deploymentEndpoint.createDeploymentBySuspend(dp.toRequestBody())
+                deploymentLocal.markSending(dp.id)
+                val result = deploymentEndpoint.createDeploymentBySuspend(stream.toDeploymentRequestBody())
                 val error = result.errorBody()?.string()
                 when {
                     result.isSuccessful -> {
                         val fullId = result.headers()["Location"]
                         val idDp = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length) ?: ""
                         deploymentLocal.markSent(idDp, dp.id)
+
+                        val updatedDp = deploymentEndpoint.getDeploymentBySuspend(idDp)
+                        streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
+
                         emit(Result.Success(true))
                     }
                     error?.contains("this deploymentKey is already existed") ?: false -> {
                         deploymentLocal.markSent(dp.deploymentKey, dp.id)
+
+                        val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
+                        streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
+
                         emit(Result.Success(true))
                     }
                     else -> {
@@ -65,8 +73,6 @@ class DeploymentRepositoryImpl(
                         emit(Result.Error(Throwable(error)))
                     }
                 }
-                // check for images
-
             }
         }
     }

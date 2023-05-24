@@ -2,6 +2,7 @@ package org.rfcx.incidents.entity.guardian.deployment
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.toISO8601Format
 import java.util.*
 
@@ -13,12 +14,12 @@ data class DeploymentRequest(
     var deviceParameters: JsonObject? = null
 )
 
-fun Deployment.toRequestBody(): DeploymentRequest {
+fun Stream.toDeploymentRequestBody(): DeploymentRequest {
     return DeploymentRequest(
-        deploymentKey = this.deploymentKey,
+        deploymentKey = this.deployment!!.deploymentKey,
         deploymentType = "guardian",
-        deployedAt = this.deployedAt.toISO8601Format(),
-        stream = if (this.stream?.name == null) null else this.stream?.toRequestBody(),
-        deviceParameters = Gson().fromJson(this.deviceParameters, JsonObject::class.java)
+        deployedAt = this.deployment!!.deployedAt.toISO8601Format(),
+        stream = this.toRequestBody(),
+        deviceParameters = Gson().fromJson(this.deployment!!.deviceParameters, JsonObject::class.java)
     )
 }
