@@ -4,6 +4,8 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +26,7 @@ import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.location.LocationHelper
+import java.util.Date
 
 class DeploymentListViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
@@ -33,7 +36,7 @@ class DeploymentListViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _deployments: MutableStateFlow<List<Stream>> = MutableStateFlow(emptyList())
+    private val _deployments: MutableStateFlow<List<DeploymentListItem>> = MutableStateFlow(emptyList())
     val deployments = _deployments.asStateFlow()
 
     private val _markers: MutableStateFlow<List<MapMarker>> = MutableStateFlow(emptyList())
@@ -76,19 +79,19 @@ class DeploymentListViewModel(
             FilterDeployment.ALL -> {
                 val tempDeployments = streams.filter { it.deployment != null }
                 Log.d("GuardianApp", "${tempDeployments.size}")
-                _deployments.tryEmit(tempDeployments)
+                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
-                _deployments.tryEmit(tempDeployments)
+                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
-                _deployments.tryEmit(tempDeployments)
+                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
@@ -133,6 +136,25 @@ class DeploymentListViewModel(
     enum class FilterDeployment {
         ALL, SYNCED, UNSYNCED
     }
+}
+
+data class DeploymentListItem(
+    val stream: Stream,
+    val guardianId: String
+)
+
+fun Stream.toDeploymentListItem(): DeploymentListItem {
+    val gson = Gson()
+    val params = this.deployment?.deviceParameters
+    var guid = ""
+    params?.let {
+        val json = gson.fromJson(it, JsonObject::class.java)
+        guid = json.get("guid").asString
+    }
+    return DeploymentListItem(
+        this,
+        guid
+    )
 }
 
 fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {

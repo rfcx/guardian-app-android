@@ -5,7 +5,3 @@ data class DeviceParameter(
     val guardianToken: String?,
     val ping: String?
 )
-
-data class SongMeterParameters(
-    val songMeterPrefixes: String?
-)

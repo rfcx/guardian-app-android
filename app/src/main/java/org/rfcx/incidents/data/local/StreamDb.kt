@@ -2,8 +2,11 @@ package org.rfcx.incidents.data.local
 
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
+import io.realm.kotlin.freeze
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 

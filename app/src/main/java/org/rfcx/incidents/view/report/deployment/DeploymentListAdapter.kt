@@ -16,7 +16,7 @@ import java.util.TimeZone
 class DeploymentListAdapter(private val cloudListener: CloudListener) :
     RecyclerView.Adapter<DeploymentListAdapter.DeploymentListViewHolder>() {
 
-    var items: List<Stream> = arrayListOf()
+    var items: List<DeploymentListItem> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -42,18 +42,18 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
         private val syncIcon = binding.syncIcon
         private val loading = binding.syncIconLoading
 
-        fun bind(item: Stream) {
-            siteName.text = item.name
-            guardianName.text = item.deployment?.deploymentKey
-            dateTextView.text = item.deployment?.deployedAt?.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
+        fun bind(item: DeploymentListItem) {
+            siteName.text = item.stream.name
+            guardianName.text = item.guardianId
+            dateTextView.text = item.stream.deployment?.deployedAt?.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
 
             syncIcon.setOnClickListener {
-                if (item.syncState == SyncState.UNSENT.value) {
-                    cloudListener.onClicked(item.id)
+                if (item.stream.deployment?.syncState == SyncState.UNSENT.value) {
+                    cloudListener.onClicked(item.stream.id)
                 }
             }
 
-            when (item.syncState) {
+            when (item.stream.deployment?.syncState) {
                 SyncState.UNSENT.value -> {
                     syncIcon.visibility = View.VISIBLE
                     syncIcon.setBackgroundResource(R.drawable.ic_cloud_upload)

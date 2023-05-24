@@ -40,7 +40,7 @@
         android:id="@+id/clockImageView"
         android:layout_width="@dimen/type_icon_size"
         android:layout_height="@dimen/type_icon_size"
-        android:src="@drawable/ic_schedule"
+        android:src="@drawable/ic_calendar"
         android:layout_marginTop="@dimen/margin_padding_small"
         android:layout_marginBottom="@dimen/margin_padding_normal"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -7,6 +8,7 @@ import io.realm.kotlin.freeze
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -60,7 +62,7 @@ class GuardianCheckListViewModel(
                 PingUtils.getGuardianVital(admin, guardian)?.let {
                     guardianVital = it
                 }
-            }
+            }.collect()
         }
     }
 
@@ -112,7 +114,23 @@ class GuardianCheckListViewModel(
             }),
             deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianVital))
         )
-        stream.deployment = deployment
-        saveDeploymentUseCase.launch(DeploymentSaveParams(stream))
+        Log.d("GuardianApp", "$guid $token")
+        val newStream = Stream(
+            id = stream.id,
+            name = stream.name,
+            latitude = stream.latitude,
+            longitude = stream.longitude,
+            altitude = stream.altitude,
+            timezoneRaw = stream.timezoneRaw,
+            projectId = stream.projectId,
+            tags = stream.tags,
+            lastIncident = stream.lastIncident,
+            guardianType = stream.guardianType,
+            order = stream.order,
+            externalId = stream.externalId,
+            syncState = stream.syncState,
+            deployment = deployment
+        )
+        saveDeploymentUseCase.launch(DeploymentSaveParams(newStream))
     }
 }
