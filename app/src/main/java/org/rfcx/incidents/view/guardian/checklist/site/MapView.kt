@@ -6,8 +6,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mapbox.geojson.Feature
@@ -37,8 +38,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.rfcx.incidents.R
-import org.rfcx.incidents.databinding.LayoutDeploymentWindowInfoBinding
-import org.rfcx.incidents.databinding.LayoutMapWindowInfoBinding
 import org.rfcx.incidents.util.MapboxCameraUtils
 import org.rfcx.incidents.util.deployment.SymbolGenerator
 import org.rfcx.incidents.util.latitudeCoordinates
@@ -68,13 +67,14 @@ class MapView @JvmOverloads constructor(
 
         private const val SOURCE_LINE = "source.line"
 
-        private const val PROPERTY_DEPLOYMENT_SELECTED = "deployment.selected"
+        private const val PROPERTY_MARKER_SELECTED = "marker.selected"
         private const val PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID = "deployment.location"
         private const val PROPERTY_DEPLOYMENT_MARKER_TITLE = "deployment.title"
         private const val PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID = "deployment.deployment"
         private const val PROPERTY_DEPLOYMENT_MARKER_IMAGE = "deployment.marker.image"
         private const val PROPERTY_DEPLOYMENT_MARKER_LATITUDE = "deployment.marker.latitude"
         private const val PROPERTY_DEPLOYMENT_MARKER_LONGITUDE = "deployment.marker.longitude"
+        private const val PROPERTY_DEPLOYMENT_MARKER_CREATED_AT = "deployment.marker.created_at"
         private const val WINDOW_MARKER_ID = "info.marker"
         private const val PROPERTY_WINDOW_INFO_ID = "window.info.id"
 
@@ -84,7 +84,6 @@ class MapView @JvmOverloads constructor(
         private const val PROPERTY_SITE_MARKER_SITE_NAME = "site.stream.name"
         private const val PROPERTY_SITE_MARKER_SITE_LATITUDE = "site.stream.latitude"
         private const val PROPERTY_SITE_MARKER_SITE_LONGITUDE = "site.stream.longitude"
-        private const val PROPERTY_SITE_MARKER_SITE_CREATED_AT = "site.stream.created.at"
 
         private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
 
@@ -165,11 +164,10 @@ class MapView @JvmOverloads constructor(
                 mapboxMap.addOnMapClickListener { latLng ->
                     val screenPoint = mapboxMap.projection.toScreenLocation(latLng)
                     val features = mapboxMap.queryRenderedFeatures(screenPoint, WINDOW_MARKER_ID)
-                    val symbolScreenPoint = mapboxMap.projection.toScreenLocation(latLng)
                     if (features.isNotEmpty()) {
                         handleClickSeeDetail(features[0])
                     } else {
-                        handleClickIcon(symbolScreenPoint)
+                        handleClickIcon(screenPoint)
                     }
                 }
             } else {
@@ -242,7 +240,7 @@ class MapView @JvmOverloads constructor(
                     Expression.match(
                         Expression.toString(
                             Expression.get(
-                                PROPERTY_DEPLOYMENT_SELECTED
+                                PROPERTY_MARKER_SELECTED
                             )
                         ),
                         Expression.literal(0.8f), Expression.stop("true", 1.0f)
@@ -310,7 +308,7 @@ class MapView @JvmOverloads constructor(
                     PropertyFactory.iconOffset(arrayOf(-2f, -20f)),
                     PropertyFactory.iconAllowOverlap(true)
                 )
-                withFilter(eq(Expression.get(PROPERTY_DEPLOYMENT_SELECTED), Expression.literal(true)))
+                withFilter(eq(Expression.get(PROPERTY_MARKER_SELECTED), Expression.literal(true)))
             }
         )
     }
@@ -334,9 +332,9 @@ class MapView @JvmOverloads constructor(
     fun addSiteAndDeploymentToMarker(
         mapMarker: List<MapMarker>
     ) {
-        val deploymentFeatures = this.mapFeatures?.features()
-        val deploymentSelecting = deploymentFeatures?.firstOrNull { feature ->
-            feature.getBooleanProperty(PROPERTY_DEPLOYMENT_SELECTED) ?: false
+        val currentFeatures = this.mapFeatures?.features()
+        val markerSelecting = currentFeatures?.firstOrNull { feature ->
+            feature.getBooleanProperty(PROPERTY_MARKER_SELECTED) ?: false
         }
 
         // Create point
@@ -345,9 +343,9 @@ class MapView @JvmOverloads constructor(
             when (it) {
                 is MapMarker.DeploymentMarker -> {
                     val deploymentId =
-                        deploymentSelecting?.getProperty(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID)
+                        markerSelecting?.getProperty(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID)
                     val isSelecting =
-                        if (deploymentSelecting == null || deploymentId == null) {
+                        if (markerSelecting == null || deploymentId == null) {
                             false
                         } else {
                             it.id.toString() == deploymentId.asString
@@ -361,16 +359,24 @@ class MapView @JvmOverloads constructor(
                         Pair(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE, it.longitude.toString()),
                         Pair(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID, it.id.toString()),
                         Pair(
-                            PROPERTY_SITE_MARKER_SITE_CREATED_AT,
+                            PROPERTY_DEPLOYMENT_MARKER_CREATED_AT,
                             context?.let { context -> it.deploymentAt.toStringWithTimeZone(context, TimeZone.getDefault()) } ?: ""
                         ),
-                        Pair(PROPERTY_DEPLOYMENT_SELECTED, isSelecting.toString())
+                        Pair(PROPERTY_MARKER_SELECTED, isSelecting.toString())
                     )
                     Feature.fromGeometry(
                         Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject()
                     )
                 }
                 is MapMarker.SiteMarker -> {
+                    val siteId =
+                        markerSelecting?.getProperty(PROPERTY_SITE_MARKER_ID)
+                    val isSelecting =
+                        if (markerSelecting == null || siteId == null) {
+                            false
+                        } else {
+                            it.id.toString() == siteId.asString
+                        }
                     val properties = mapOf(
                         Pair(PROPERTY_SITE_MARKER_IMAGE, it.pin),
                         Pair(PROPERTY_WINDOW_INFO_ID, "${it.name}.${it.id}"),
@@ -378,7 +384,8 @@ class MapView @JvmOverloads constructor(
                         Pair(PROPERTY_SITE_MARKER_ID, "${it.name}.${it.id}"),
                         Pair(PROPERTY_SITE_MARKER_SITE_NAME, it.name),
                         Pair(PROPERTY_SITE_MARKER_SITE_LATITUDE, "${it.latitude}"),
-                        Pair(PROPERTY_SITE_MARKER_SITE_LONGITUDE, "${it.longitude}")
+                        Pair(PROPERTY_SITE_MARKER_SITE_LONGITUDE, "${it.longitude}"),
+                        Pair(PROPERTY_MARKER_SELECTED, isSelecting.toString())
                     )
 
                     Feature.fromGeometry(
@@ -392,6 +399,7 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun refreshSource() {
+        Log.d("GuardianApp", "${mapFeatures?.features()}")
         mapSource!!.setGeoJson(mapFeatures)
     }
 
@@ -414,15 +422,22 @@ class MapView @JvmOverloads constructor(
         val siteFeatures = mapbox.queryRenderedFeatures(screenPoint, MARKER_SITE_ID)
         val deploymentClusterFeatures =
             mapbox.queryRenderedFeatures(screenPoint, "$DEPLOYMENT_CLUSTER-0")
+        Log.d("GuardianApp", "${deploymentFeatures.size} ${siteFeatures.size} ${deploymentClusterFeatures.size}")
         if (deploymentFeatures.isNotEmpty()) {
             val selectedFeature = deploymentFeatures[0]
             val features = this.mapFeatures!!.features()!!
             features.forEachIndexed { index, feature ->
                 if (selectedFeature.getProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) == feature.getProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID)) {
                     setDeploymentDetail(selectedFeature)
-                    setFeatureSelectState(selectedFeature, true)
+                    features[index]?.let {
+                        setDeploymentDetail(it)
+                        setFeatureSelectState(it, true)
+                    }
                 } else {
-                    setFeatureSelectState(feature, false)
+                    features[index]?.let {
+                        setDeploymentDetail(it)
+                        setFeatureSelectState(it, false)
+                    }
                 }
             }
             return true
@@ -438,9 +453,15 @@ class MapView @JvmOverloads constructor(
                 val markerId = selectedFeature.getProperty(PROPERTY_SITE_MARKER_ID)
                 if (markerId == feature.getProperty(PROPERTY_SITE_MARKER_ID)) {
                     setSiteDetail(selectedFeature)
-                    setFeatureSelectState(selectedFeature, true)
+                    features[index]?.let {
+                        setSiteDetail(it)
+                        setFeatureSelectState(it, true)
+                    }
                 } else {
-                    setFeatureSelectState(feature, false)
+                    features[index]?.let {
+                        setSiteDetail(it)
+                        setFeatureSelectState(it, false)
+                    }
                 }
             }
             return true
@@ -468,21 +489,24 @@ class MapView @JvmOverloads constructor(
     private fun setDeploymentDetail(feature: Feature) {
         val windowInfoImages = hashMapOf<String, Bitmap>()
         val inflater = LayoutInflater.from(context)
-        val layout = LayoutDeploymentWindowInfoBinding.inflate(inflater, null, false)
+        val layout = inflater.inflate(R.layout.layout_deployment_window_info, null) as BubbleLayout
+        val titleView = layout.findViewById<TextView>(R.id.deploymentSiteTitle)
+        val deployedAtView = layout.findViewById<TextView>(R.id.deployedAt)
+        val latLngView = layout.findViewById<TextView>(R.id.latLngTextView)
 
         val id = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) ?: ""
         val title = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_TITLE)
         val lat = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LATITUDE).toDouble()
         val lng = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE).toDouble()
 
-        layout.deploymentSiteTitle.text = title
-        val deployedAt = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_CREATED_AT)
-        layout.deployedAt.text = deployedAt
+        titleView.text = title
+        val deployedAt = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_CREATED_AT)
+        deployedAtView.text = deployedAt
         val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
-        layout.latLngTextView.text = latLng
+        latLngView.text = latLng
 
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        (layout as BubbleLayout).measure(measureSpec, measureSpec)
+        layout.measure(measureSpec, measureSpec)
         val measuredWidth = layout.measuredWidth
         layout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
         val bitmap = SymbolGenerator.generate(layout)
@@ -494,20 +518,20 @@ class MapView @JvmOverloads constructor(
     private fun setSiteDetail(feature: Feature) {
         val windowInfoImages = hashMapOf<String, Bitmap>()
         val inflater = LayoutInflater.from(context)
-        val layout = LayoutDeploymentWindowInfoBinding.inflate(inflater, null, false)
+        val layout = inflater.inflate(R.layout.layout_site_window_info, null) as BubbleLayout
+        val titleView = layout.findViewById<TextView>(R.id.deploymentSiteTitle)
+        val latLngView = layout.findViewById<TextView>(R.id.latLngTextView)
 
         val id = feature.getStringProperty(PROPERTY_SITE_MARKER_ID) ?: ""
         val title = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_NAME)
-        layout.deploymentSiteTitle.text = title
-        val createdAt = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_CREATED_AT)
-        layout.deployedAt.text = createdAt
+        titleView.text = title
         val lat = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LATITUDE).toDouble()
         val lng = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LONGITUDE).toDouble()
         val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
-        layout.latLngTextView.text = latLng
+        latLngView.text = latLng
 
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        (layout as BubbleLayout).measure(measureSpec, measureSpec)
+        layout.measure(measureSpec, measureSpec)
         val measuredWidth = layout.measuredWidth
         layout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
         val bitmap = SymbolGenerator.generate(layout)
@@ -517,13 +541,15 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setFeatureSelectState(feature: Feature, selectedState: Boolean) {
+        Log.d("SET", "SET")
         feature.properties()?.let {
-            it.addProperty(PROPERTY_DEPLOYMENT_SELECTED, selectedState)
+            it.addProperty(PROPERTY_MARKER_SELECTED, selectedState)
             refreshSource()
         }
     }
 
     private fun clearFeatureSelected() {
+        Log.d("CLEAR", "CLEAR")
         if (this.mapFeatures?.features() != null) {
             val features = this.mapFeatures!!.features()
             features?.forEach { setFeatureSelectState(it, false) }
@@ -562,6 +588,7 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setWindowInfoImageGenResults(windowInfoImages: HashMap<String, Bitmap>) {
+        Log.d("GUardianApp", "get image")
         mapbox.style?.addImages(windowInfoImages)
     }
 
