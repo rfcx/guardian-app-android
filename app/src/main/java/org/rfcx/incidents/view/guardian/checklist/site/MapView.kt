@@ -2,15 +2,21 @@ package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PointF
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
+import com.mapbox.mapboxsdk.annotations.BubbleLayout
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -31,10 +37,17 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.LayoutDeploymentWindowInfoBinding
+import org.rfcx.incidents.databinding.LayoutMapWindowInfoBinding
 import org.rfcx.incidents.util.MapboxCameraUtils
+import org.rfcx.incidents.util.deployment.SymbolGenerator
+import org.rfcx.incidents.util.latitudeCoordinates
+import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.view.report.deployment.MapMarker
+import java.util.ArrayList
+import java.util.HashMap
 import java.util.TimeZone
 
 class MapView @JvmOverloads constructor(
@@ -60,6 +73,8 @@ class MapView @JvmOverloads constructor(
         private const val PROPERTY_DEPLOYMENT_MARKER_TITLE = "deployment.title"
         private const val PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID = "deployment.deployment"
         private const val PROPERTY_DEPLOYMENT_MARKER_IMAGE = "deployment.marker.image"
+        private const val PROPERTY_DEPLOYMENT_MARKER_LATITUDE = "deployment.marker.latitude"
+        private const val PROPERTY_DEPLOYMENT_MARKER_LONGITUDE = "deployment.marker.longitude"
         private const val WINDOW_MARKER_ID = "info.marker"
         private const val PROPERTY_WINDOW_INFO_ID = "window.info.id"
 
@@ -152,9 +167,9 @@ class MapView @JvmOverloads constructor(
                     val features = mapboxMap.queryRenderedFeatures(screenPoint, WINDOW_MARKER_ID)
                     val symbolScreenPoint = mapboxMap.projection.toScreenLocation(latLng)
                     if (features.isNotEmpty()) {
-                        true
+                        handleClickSeeDetail(features[0])
                     } else {
-                        true
+                        handleClickIcon(symbolScreenPoint)
                     }
                 }
             } else {
@@ -338,10 +353,12 @@ class MapView @JvmOverloads constructor(
                             it.id.toString() == deploymentId.asString
                         }
                     val properties = mapOf(
-                        Pair(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID, "${it.locationName}.${it.id}"),
-                        Pair(PROPERTY_WINDOW_INFO_ID, "${it.locationName}.${it.id}"),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID, "${it.streamName}.${it.id}"),
+                        Pair(PROPERTY_WINDOW_INFO_ID, "${it.streamName}.${it.id}"),
                         Pair(PROPERTY_DEPLOYMENT_MARKER_IMAGE, it.pin),
-                        Pair(PROPERTY_DEPLOYMENT_MARKER_TITLE, it.locationName),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_TITLE, it.streamName),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_LATITUDE, it.latitude.toString()),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE, it.longitude.toString()),
                         Pair(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID, it.id.toString()),
                         Pair(
                             PROPERTY_SITE_MARKER_SITE_CREATED_AT,
@@ -376,6 +393,176 @@ class MapView @JvmOverloads constructor(
 
     private fun refreshSource() {
         mapSource!!.setGeoJson(mapFeatures)
+    }
+
+    private fun handleClickSeeDetail(feature: Feature): Boolean {
+        val deploymentId = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID)
+
+        if (deploymentId != null) {
+            context?.let {
+                // DeploymentDetailActivity.startActivity(it, deploymentId.toInt())
+                // analytics?.trackSeeDetailEvent()
+            }
+        } else {
+            setFeatureSelectState(feature, false)
+        }
+        return true
+    }
+
+    private fun handleClickIcon(screenPoint: PointF): Boolean {
+        val deploymentFeatures = mapbox.queryRenderedFeatures(screenPoint, MARKER_DEPLOYMENT_ID)
+        val siteFeatures = mapbox.queryRenderedFeatures(screenPoint, MARKER_SITE_ID)
+        val deploymentClusterFeatures =
+            mapbox.queryRenderedFeatures(screenPoint, "$DEPLOYMENT_CLUSTER-0")
+        if (deploymentFeatures.isNotEmpty()) {
+            val selectedFeature = deploymentFeatures[0]
+            val features = this.mapFeatures!!.features()!!
+            features.forEachIndexed { index, feature ->
+                if (selectedFeature.getProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) == feature.getProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID)) {
+                    setDeploymentDetail(selectedFeature)
+                    setFeatureSelectState(selectedFeature, true)
+                } else {
+                    setFeatureSelectState(feature, false)
+                }
+            }
+            return true
+        } else {
+            //TODO hide bottom bar ?
+        }
+
+        if (siteFeatures.isNotEmpty()) {
+
+            val selectedFeature = siteFeatures[0]
+            val features = this.mapFeatures!!.features()!!
+            features.forEachIndexed { index, feature ->
+                val markerId = selectedFeature.getProperty(PROPERTY_SITE_MARKER_ID)
+                if (markerId == feature.getProperty(PROPERTY_SITE_MARKER_ID)) {
+                    setSiteDetail(selectedFeature)
+                    setFeatureSelectState(selectedFeature, true)
+                } else {
+                    setFeatureSelectState(feature, false)
+                }
+            }
+            return true
+        } else {
+            //TODO track ?
+        }
+
+        if (deploymentClusterFeatures.isNotEmpty()) {
+            val pinCount =
+                if (deploymentClusterFeatures[0].getProperty(POINT_COUNT) != null) deploymentClusterFeatures[0].getProperty(
+                    POINT_COUNT
+                ).asInt else 0
+            if (pinCount > 0) {
+                val clusterLeavesFeatureCollection =
+                    mapSource?.getClusterLeaves(deploymentClusterFeatures[0], 8000, 0)
+                if (clusterLeavesFeatureCollection != null) {
+                    moveCameraToLeavesBounds(clusterLeavesFeatureCollection)
+                }
+            }
+        }
+        clearFeatureSelected()
+        return false
+    }
+
+    private fun setDeploymentDetail(feature: Feature) {
+        val windowInfoImages = hashMapOf<String, Bitmap>()
+        val inflater = LayoutInflater.from(context)
+        val layout = LayoutDeploymentWindowInfoBinding.inflate(inflater, null, false)
+
+        val id = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) ?: ""
+        val title = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_TITLE)
+        val lat = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LATITUDE).toDouble()
+        val lng = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE).toDouble()
+
+        layout.deploymentSiteTitle.text = title
+        val deployedAt = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_CREATED_AT)
+        layout.deployedAt.text = deployedAt
+        val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
+        layout.latLngTextView.text = latLng
+
+        val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        (layout as BubbleLayout).measure(measureSpec, measureSpec)
+        val measuredWidth = layout.measuredWidth
+        layout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
+        val bitmap = SymbolGenerator.generate(layout)
+        windowInfoImages[id] = bitmap
+
+        setWindowInfoImageGenResults(windowInfoImages)
+    }
+
+    private fun setSiteDetail(feature: Feature) {
+        val windowInfoImages = hashMapOf<String, Bitmap>()
+        val inflater = LayoutInflater.from(context)
+        val layout = LayoutDeploymentWindowInfoBinding.inflate(inflater, null, false)
+
+        val id = feature.getStringProperty(PROPERTY_SITE_MARKER_ID) ?: ""
+        val title = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_NAME)
+        layout.deploymentSiteTitle.text = title
+        val createdAt = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_CREATED_AT)
+        layout.deployedAt.text = createdAt
+        val lat = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LATITUDE).toDouble()
+        val lng = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LONGITUDE).toDouble()
+        val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
+        layout.latLngTextView.text = latLng
+
+        val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        (layout as BubbleLayout).measure(measureSpec, measureSpec)
+        val measuredWidth = layout.measuredWidth
+        layout.arrowPosition = (measuredWidth / 2 - 5).toFloat()
+        val bitmap = SymbolGenerator.generate(layout)
+        windowInfoImages[id] = bitmap
+
+        setWindowInfoImageGenResults(windowInfoImages)
+    }
+
+    private fun setFeatureSelectState(feature: Feature, selectedState: Boolean) {
+        feature.properties()?.let {
+            it.addProperty(PROPERTY_DEPLOYMENT_SELECTED, selectedState)
+            refreshSource()
+        }
+    }
+
+    private fun clearFeatureSelected() {
+        if (this.mapFeatures?.features() != null) {
+            val features = this.mapFeatures!!.features()
+            features?.forEach { setFeatureSelectState(it, false) }
+        }
+    }
+
+    private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
+        val latLngList: ArrayList<LatLng> = ArrayList()
+        if (featureCollectionToInspect.features() != null) {
+            for (singleClusterFeature in featureCollectionToInspect.features()!!) {
+                val clusterPoint = singleClusterFeature.geometry() as Point?
+                if (clusterPoint != null) {
+                    latLngList.add(LatLng(clusterPoint.latitude(), clusterPoint.longitude()))
+                }
+            }
+            if (latLngList.size > 1) {
+                moveCameraWithLatLngList(latLngList)
+            }
+        }
+    }
+
+    private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
+        val latLngBounds = LatLngBounds.Builder()
+            .includes(latLngList)
+            .build()
+        mapbox.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 230), 1300)
+    }
+
+    private fun moveToLatLngWithCurrentZoom(lat: Double, lng: Double) {
+        mapbox.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(lat, lng),
+                mapbox.cameraPosition.zoom
+            )
+        )
+    }
+
+    private fun setWindowInfoImageGenResults(windowInfoImages: HashMap<String, Bitmap>) {
+        mapbox.style?.addImages(windowInfoImages)
     }
 
     fun setCurrentLocation(currentLoc: LatLng) {

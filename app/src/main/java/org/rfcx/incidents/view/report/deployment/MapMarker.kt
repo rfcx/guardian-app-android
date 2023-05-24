@@ -14,7 +14,7 @@ sealed class MapMarker {
 
     data class DeploymentMarker(
         val id: Int,
-        val locationName: String,
+        val streamName: String,
         val longitude: Double,
         val latitude: Double,
         val pin: String,
