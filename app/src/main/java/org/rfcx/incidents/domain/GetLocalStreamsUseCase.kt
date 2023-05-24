@@ -10,9 +10,7 @@ class GetLocalStreamsUseCase(
     private val streamsRepository: StreamsRepository
 ) : FlowWithParamUseCase<GetLocalStreamsParams, List<Stream>>() {
     override fun performAction(param: GetLocalStreamsParams): Flow<List<Stream>> {
-        return flow {
-            emit(streamsRepository.getLocal(param))
-        }
+        return streamsRepository.getLocalAsFlow(param)
     }
 }
 

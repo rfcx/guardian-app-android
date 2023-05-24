@@ -1,6 +1,7 @@
 package org.rfcx.incidents.data
 
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
@@ -30,6 +31,10 @@ class StreamsRepositoryImp(
             return refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
+    }
+
+    override fun getLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>> {
+        return streamDb.getAllAsFlow()
     }
 
     override fun getLocal(params: GetLocalStreamsParams): List<Stream> {

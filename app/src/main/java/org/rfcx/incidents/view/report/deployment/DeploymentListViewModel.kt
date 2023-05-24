@@ -26,7 +26,6 @@ import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.location.LocationHelper
 
 class DeploymentListViewModel(
-    private val getDeploymentsUseCase: GetDeploymentsUseCase,
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
     private val preferences: Preferences,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
@@ -65,10 +64,10 @@ class DeploymentListViewModel(
 
     private fun getDeployments() {
         viewModelScope.launch(Dispatchers.Main) {
-            combine(getDeploymentsUseCase.launch(), getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!))) { dp, site ->
+            getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!)).collectLatest { site ->
                 currentAllStreams = site
                 filterWithDeployment(site, currentFilter)
-            }.collect()
+            }
         }
     }
 

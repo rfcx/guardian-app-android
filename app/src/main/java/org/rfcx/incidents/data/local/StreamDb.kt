@@ -2,7 +2,8 @@ package org.rfcx.incidents.data.local
 
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import io.realm.kotlin.toFlow
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -47,6 +48,10 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
+    fun getAllAsFlow(): Flow<List<Stream>> {
+        return realm.where(Stream::class.java).findAllAsync().toFlow()
+    }
+
     fun getAllForWorker(): List<Stream> {
         var unsent: List<Stream> = listOf()
         realm.executeTransaction {
@@ -63,7 +68,6 @@ class StreamDb(private val realm: Realm) {
             realm.insertOrUpdate(stream)
         }
     }
-
 
     fun get(id: Int): Stream? =
         realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()

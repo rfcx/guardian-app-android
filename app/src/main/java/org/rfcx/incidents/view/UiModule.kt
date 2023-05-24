@@ -85,6 +85,6 @@ object UiModule {
         viewModel { GuardianSiteSetViewModel(get(), get(), get()) }
         viewModel { AddPhotosViewModel(get()) }
         viewModel { GuardianPreferenceViewModel(androidContext(), get(), get()) }
-        viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get()) }
+        viewModel { DeploymentListViewModel(get(), get(), get(), get(), get()) }
     }
 }
