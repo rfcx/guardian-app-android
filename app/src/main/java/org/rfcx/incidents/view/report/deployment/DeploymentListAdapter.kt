@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDeploymentBinding
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.toStringWithTimeZone
 import java.util.TimeZone
 
@@ -41,6 +39,9 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
         private val dateTextView = binding.dateTextView
         private val syncIcon = binding.syncIcon
         private val loading = binding.syncIconLoading
+        private val guardianTypeLayout = binding.guardianTypeLayout
+        private val guardianTypeImage = binding.guardianTypeImageView
+        private val guardianTypeText = binding.guardianTypeTextView
 
         fun bind(item: DeploymentListItem) {
             siteName.text = item.stream.name
@@ -50,6 +51,15 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
             syncIcon.setOnClickListener {
                 if (item.stream.deployment?.syncState == SyncState.UNSENT.value) {
                     cloudListener.onClicked(item.stream.id)
+                }
+            }
+
+            guardianTypeLayout.visibility = if (item.guardianType == null) View.GONE else View.VISIBLE
+            if (item.guardianType != null) {
+                guardianTypeText.text = item.guardianType
+                when(item.guardianType) {
+                    "Cell" -> guardianTypeImage.setImageResource(R.drawable.ic_signal_cellular_alt)
+                    "Sat" -> guardianTypeImage.setImageResource(R.drawable.ic_satellite_alt)
                 }
             }
 

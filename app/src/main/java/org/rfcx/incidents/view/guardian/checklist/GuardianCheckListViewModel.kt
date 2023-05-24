@@ -23,6 +23,7 @@ import org.rfcx.incidents.entity.guardian.deployment.DeviceParameter
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.socket.PingUtils
+import org.rfcx.incidents.util.socket.PingUtils.getGuardianPlan
 import org.rfcx.incidents.util.socket.PingUtils.getGuardianToken
 import org.rfcx.incidents.util.socket.PingUtils.getGuid
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
@@ -44,6 +45,7 @@ class GuardianCheckListViewModel(
     private var guid = ""
     private var token = ""
     private var guardianVital = ""
+    private var guardianType = ""
 
     init {
         getDeviceParameter()
@@ -58,6 +60,9 @@ class GuardianCheckListViewModel(
                 }
                 guardian?.getGuardianToken()?.let {
                     token = it
+                }
+                guardian?.getGuardianPlan()?.let {
+                    guardianType = it.name
                 }
                 PingUtils.getGuardianVital(admin, guardian)?.let {
                     guardianVital = it
@@ -112,9 +117,8 @@ class GuardianCheckListViewModel(
                     imageLabel = it.name
                 )
             }),
-            deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianVital))
+            deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianType, guardianVital))
         )
-        Log.d("GuardianApp", "$guid $token")
         val newStream = Stream(
             id = stream.id,
             name = stream.name,

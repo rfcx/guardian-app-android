@@ -16,7 +16,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/siteNameTextView"
-        style="@style/RangerText.Label"
+        style="@style/RangerText.Subhead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -26,9 +26,36 @@
         app:layout_constraintTop_toTopOf="@id/bgView"
         tools:text="Site A" />
 
+    <LinearLayout
+        android:id="@+id/guardianTypeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/siteNameTextView"
+        app:layout_constraintStart_toEndOf="@id/siteNameTextView"
+        app:layout_constraintTop_toTopOf="@id/siteNameTextView">
+
+        <ImageView
+            android:id="@+id/guardianTypeImageView"
+            android:src="@drawable/ic_signal_cellular_alt"
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            app:tint="@color/iconColor" />
+
+        <TextView
+            android:id="@+id/guardianTypeTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_2_dp"
+            android:layout_gravity="center"
+            tools:text="Cell" />
+
+    </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/guardianNameTextView"
-        style="@style/RangerText.Label"
+        style="@style/RangerText.SubTitle.Secondary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -41,7 +68,7 @@
         android:layout_width="@dimen/type_icon_size"
         android:layout_height="@dimen/type_icon_size"
         android:src="@drawable/ic_calendar"
-        android:layout_marginTop="@dimen/margin_padding_small"
+        android:layout_marginTop="@dimen/margin_padding_normal"
         android:layout_marginBottom="@dimen/margin_padding_normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"

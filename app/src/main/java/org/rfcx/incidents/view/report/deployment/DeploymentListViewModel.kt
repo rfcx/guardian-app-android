@@ -24,6 +24,7 @@ import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
 import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.location.LocationHelper
 import java.util.Date
@@ -140,20 +141,33 @@ class DeploymentListViewModel(
 
 data class DeploymentListItem(
     val stream: Stream,
-    val guardianId: String
+    val guardianId: String?,
+    val guardianType: String?
 )
 
 fun Stream.toDeploymentListItem(): DeploymentListItem {
     val gson = Gson()
     val params = this.deployment?.deviceParameters
     var guid = ""
+    var type: String? = null
     params?.let {
         val json = gson.fromJson(it, JsonObject::class.java)
-        guid = json.get("guid").asString
+        if (json.has("guid")) {
+            guid = json.get("guid").asString
+        }
+        if (json.has("guardianType")) {
+            when(json.get("guardianType").asString) {
+                "CELL_ONLY" -> type = "Cell"
+                "CELL_SMS" -> type = "Cell"
+                "SAT_ONLY" -> type = "Sat"
+                "OFFLINE_MODE" -> type = "Cell"
+            }
+        }
     }
     return DeploymentListItem(
         this,
-        guid
+        guid,
+        type
     )
 }
 
