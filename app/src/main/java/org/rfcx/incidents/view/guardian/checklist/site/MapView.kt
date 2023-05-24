@@ -435,7 +435,6 @@ class MapView @JvmOverloads constructor(
                     }
                 } else {
                     features[index]?.let {
-                        setDeploymentDetail(it)
                         setFeatureSelectState(it, false)
                     }
                 }
@@ -459,7 +458,6 @@ class MapView @JvmOverloads constructor(
                     }
                 } else {
                     features[index]?.let {
-                        setSiteDetail(it)
                         setFeatureSelectState(it, false)
                     }
                 }
@@ -496,13 +494,13 @@ class MapView @JvmOverloads constructor(
 
         val id = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) ?: ""
         val title = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_TITLE)
-        val lat = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LATITUDE).toDouble()
-        val lng = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE).toDouble()
+        val lat = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LATITUDE)
+        val lng = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE)
 
         titleView.text = title
         val deployedAt = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_CREATED_AT)
         deployedAtView.text = deployedAt
-        val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
+        val latLng = "${lat.toDouble().latitudeCoordinates()}, ${lng.toDouble().longitudeCoordinates()}"
         latLngView.text = latLng
 
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
@@ -525,9 +523,9 @@ class MapView @JvmOverloads constructor(
         val id = feature.getStringProperty(PROPERTY_SITE_MARKER_ID) ?: ""
         val title = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_NAME)
         titleView.text = title
-        val lat = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LATITUDE).toDouble()
-        val lng = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LONGITUDE).toDouble()
-        val latLng = "${lat.latitudeCoordinates()}, ${lng.longitudeCoordinates()}"
+        val lat = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LATITUDE)
+        val lng = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_LONGITUDE)
+        val latLng = "${lat.toDouble().latitudeCoordinates()}, ${lng.toDouble().longitudeCoordinates()}"
         latLngView.text = latLng
 
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)

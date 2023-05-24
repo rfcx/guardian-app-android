@@ -47,7 +47,7 @@ class DeploymentListFragment : Fragment(), CloudListener {
         }
 
         lifecycleScope.launch {
-            viewModel.streams.collectLatest {
+            viewModel.deployments.collectLatest {
                 deploymentAdapter.items = it
             }
         }

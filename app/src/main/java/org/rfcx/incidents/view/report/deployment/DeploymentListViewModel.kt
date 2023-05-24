@@ -1,9 +1,9 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.kotlin.freeze
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +34,8 @@ class DeploymentListViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _streams: MutableStateFlow<List<Stream>> = MutableStateFlow(emptyList())
-    val streams = _streams.asStateFlow()
+    private val _deployments: MutableStateFlow<List<Stream>> = MutableStateFlow(emptyList())
+    val deployments = _deployments.asStateFlow()
 
     private val _markers: MutableStateFlow<List<MapMarker>> = MutableStateFlow(emptyList())
     val markers = _markers.asStateFlow()
@@ -47,7 +47,6 @@ class DeploymentListViewModel(
     val currentLocationState = _currentLocationState.asStateFlow()
 
     private var currentFilter = FilterDeployment.ALL
-    private var currentAllDeployments = listOf<Deployment>()
     private var currentAllStreams = listOf<Stream>()
 
     init {
@@ -67,29 +66,32 @@ class DeploymentListViewModel(
     private fun getDeployments() {
         viewModelScope.launch(Dispatchers.Main) {
             combine(getDeploymentsUseCase.launch(), getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!))) { dp, site ->
-                currentAllDeployments = dp
                 currentAllStreams = site
-                filterWithDeployment(dp, site, currentFilter)
+                filterWithDeployment(site, currentFilter)
             }.collect()
         }
     }
 
-    private fun filterWithDeployment(deployments: List<Deployment>, streams: List<Stream>, filter: FilterDeployment = FilterDeployment.ALL) {
+    private fun filterWithDeployment(streams: List<Stream>, filter: FilterDeployment = FilterDeployment.ALL) {
         when (filter) {
             FilterDeployment.ALL -> {
                 val tempDeployments = streams.filter { it.deployment != null }
-                _streams.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
+                Log.d("GuardianApp", "${tempDeployments.size}")
+                _deployments.tryEmit(tempDeployments)
+                val tempStream = streams.filter { it.deployment == null }
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
-                _streams.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
+                _deployments.tryEmit(tempDeployments)
+                val tempStream = streams.filter { it.deployment == null }
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
-                _streams.tryEmit(tempDeployments)
-                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + streams.map { it.toSitePin() })
+                _deployments.tryEmit(tempDeployments)
+                val tempStream = streams.filter { it.deployment == null }
+                _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
         }
     }
@@ -108,7 +110,7 @@ class DeploymentListViewModel(
 
     fun addFilter(filter: FilterDeployment) {
         currentFilter = filter
-        filterWithDeployment(currentAllDeployments, currentAllStreams, filter)
+        filterWithDeployment(currentAllStreams, filter)
     }
 
     fun syncDeployment(id: Int) {
@@ -139,6 +141,7 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
 
     val description = "deployed"
 
+    Log.d("GuardianApp D", "$latitude")
     return MapMarker.DeploymentMarker(
         id,
         name,
@@ -153,5 +156,6 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
 }
 
 fun Stream.toSitePin(): MapMarker.SiteMarker {
+    Log.d("GuardianApp S", "$latitude")
     return MapMarker.SiteMarker(id, name, latitude, longitude, altitude, "SITE_MARKER")
 }
