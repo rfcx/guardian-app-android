@@ -78,10 +78,12 @@ class DeploymentListFragment : Fragment(), CloudListener {
             if (state == DeploymentListState.LIST) {
                 binding.mapLayout.visibility = View.VISIBLE
                 binding.listLayout.visibility = View.GONE
+                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
                 state = DeploymentListState.MAP
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
+                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
                 state = DeploymentListState.LIST
             }
         }
