@@ -118,6 +118,36 @@ class DeploymentListFragment : Fragment(), CloudListener {
         viewModel.syncDeployment(id)
     }
 
+    override fun onStart() {
+        super.onStart()
+        binding.mapBoxView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapBoxView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapBoxView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapBoxView.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapBoxView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mapBoxView.onDestroy()
+    }
+
     companion object {
         const val tag = "DeploymentListFragment"
         enum class DeploymentListState { LIST, MAP}

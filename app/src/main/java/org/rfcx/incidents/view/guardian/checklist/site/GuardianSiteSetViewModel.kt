@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +68,7 @@ class GuardianSiteSetViewModel(
     private fun getLocationChanged() {
         viewModelScope.launch {
             locationHelper.getFlowLocationChanged().collectLatest {
+                Log.d("GUardianAPp 2", "${it}")
                 _currentLocationState.tryEmit(it)
                 if (isNewSite) {
                     updateSiteToCurrentLocation()

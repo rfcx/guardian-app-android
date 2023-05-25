@@ -147,6 +147,7 @@ class MapView @JvmOverloads constructor(
             style = it
             setupSymbolManager()
             enableLocationComponent()
+            Log.d("GuardianApp 3", "${currentLoc} ${siteLoc}")
             if (currentLoc.latitude == 0.0 && currentLoc.longitude == 0.0) {
                 moveCamera(siteLoc)
             } else {
@@ -172,7 +173,7 @@ class MapView @JvmOverloads constructor(
                     }
                 }
             } else {
-                setPinOnMap(currentLoc, siteLoc)
+                setPinOnMap(siteLoc)
             }
         }
 
@@ -540,7 +541,6 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setFeatureSelectState(feature: Feature, selectedState: Boolean) {
-        Log.d("SET", "SET")
         feature.properties()?.let {
             it.addProperty(PROPERTY_MARKER_SELECTED, selectedState)
             refreshSource()
@@ -548,7 +548,6 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun clearFeatureSelected() {
-        Log.d("CLEAR", "CLEAR")
         if (this.mapFeatures?.features() != null) {
             val features = this.mapFeatures!!.features()
             features?.forEach { setFeatureSelectState(it, false) }
@@ -608,8 +607,7 @@ class MapView @JvmOverloads constructor(
         )
     }
 
-    fun setPinOnMap(currentLoc: LatLng, pinLoc: LatLng) {
-        moveCamera(currentLoc, pinLoc)
+    fun setPinOnMap(pinLoc: LatLng) {
         createSiteSymbol(pinLoc)
     }
 
@@ -623,7 +621,7 @@ class MapView @JvmOverloads constructor(
         )
     }
 
-    private fun moveCamera(userPosition: LatLng, nearestSite: LatLng?) {
+    fun moveCamera(userPosition: LatLng, nearestSite: LatLng?) {
         mapbox.moveCamera(
             MapboxCameraUtils.calculateLatLngForZoom(
                 userPosition,
@@ -634,6 +632,7 @@ class MapView @JvmOverloads constructor(
     }
 
     fun moveCamera(latLng: LatLng) {
+        Log.d("GuaridanApp 3", "$latLng")
         mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 

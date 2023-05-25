@@ -70,8 +70,7 @@ class GuardianSiteSetFragment : Fragment() {
         binding.currentLocate.setOnClickListener {
             viewModel.updateSiteToCurrentLocation()
             val currentLoc = LatLng(viewModel.currentLocationState.value?.latitude ?: 0.0, viewModel.currentLocationState.value?.longitude ?: 0.0)
-            val siteLoc = LatLng(site.latitude, site.longitude)
-            binding.mapBoxView.setPinOnMap(siteLoc, currentLoc)
+            binding.mapBoxView.setPinOnMap(currentLoc)
         }
 
         binding.viewMapBox.setOnClickListener {

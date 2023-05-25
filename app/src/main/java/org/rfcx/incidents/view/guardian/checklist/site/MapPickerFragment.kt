@@ -1,12 +1,16 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.mapbox.mapboxsdk.geometry.LatLng
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentMapPickerBinding
@@ -44,6 +48,7 @@ class MapPickerFragment :
         binding.mapBoxPickerView.onCreate(savedInstanceState)
         binding.mapBoxPickerView.setParam(canMove = true, fromDeploymentList = false)
         viewModel.currentLocationState.value.let {
+            Log.d("GuardianApp", "$site")
             binding.mapBoxPickerView.setCurrentLocation(LatLng(it?.latitude ?: 0.0, it?.longitude ?: 0.0))
             binding.mapBoxPickerView.setSiteLocation(LatLng(site.latitude, site.longitude))
         }
