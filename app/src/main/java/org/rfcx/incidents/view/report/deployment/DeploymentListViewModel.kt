@@ -42,6 +42,12 @@ class DeploymentListViewModel(
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
 
+    private val _noDeploymentVisibilityState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val noDeploymentVisibilityState = _noDeploymentVisibilityState.asStateFlow()
+
+    private val _noDeploymentTextContent: MutableStateFlow<String> = MutableStateFlow("")
+    val noDeploymentTextContent = _noDeploymentTextContent.asStateFlow()
+
     private var currentFilter = FilterDeployment.ALL
     private var currentAllStreams = listOf<Stream>()
 
@@ -71,19 +77,25 @@ class DeploymentListViewModel(
     private fun filterWithDeployment(streams: List<Stream>, filter: FilterDeployment = FilterDeployment.ALL) {
         when (filter) {
             FilterDeployment.ALL -> {
+                _noDeploymentTextContent.tryEmit("you don't have any deployments")
                 val tempDeployments = streams.filter { it.deployment != null }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
+                _noDeploymentTextContent.tryEmit("you don't have any synced deployments")
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
+                _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments")
                 val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })

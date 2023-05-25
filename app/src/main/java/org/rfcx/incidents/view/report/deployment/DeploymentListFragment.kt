@@ -49,6 +49,11 @@ class DeploymentListFragment : Fragment(), CloudListener {
 
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
+                if (it.isEmpty()) {
+                    binding.noDeploymentLayout.visibility = View.VISIBLE
+                } else {
+                    binding.noDeploymentLayout.visibility = View.GONE
+                }
                 deploymentAdapter.items = it
             }
         }
