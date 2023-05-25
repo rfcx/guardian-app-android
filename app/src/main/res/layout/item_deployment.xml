@@ -30,6 +30,7 @@
         android:id="@+id/guardianTypeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/siteNameTextView"
         app:layout_constraintStart_toEndOf="@id/siteNameTextView"
         app:layout_constraintTop_toTopOf="@id/siteNameTextView">

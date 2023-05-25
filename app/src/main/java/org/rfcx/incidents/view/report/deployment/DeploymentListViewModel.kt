@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -9,9 +8,7 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
@@ -21,13 +18,9 @@ import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetLocalStreamsUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
-import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.entity.stream.GuardianType
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.location.LocationHelper
-import java.util.Date
 
 class DeploymentListViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
@@ -79,7 +72,6 @@ class DeploymentListViewModel(
         when (filter) {
             FilterDeployment.ALL -> {
                 val tempDeployments = streams.filter { it.deployment != null }
-                Log.d("GuardianApp", "${tempDeployments.size}")
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
@@ -156,7 +148,7 @@ fun Stream.toDeploymentListItem(): DeploymentListItem {
             guid = json.get("guid").asString
         }
         if (json.has("guardianType")) {
-            when(json.get("guardianType").asString) {
+            when (json.get("guardianType").asString) {
                 "CELL_ONLY" -> type = "Cell"
                 "CELL_SMS" -> type = "Cell"
                 "SAT_ONLY" -> type = "Sat"
@@ -176,7 +168,24 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
 
     val description = "deployed"
 
-    Log.d("GuardianApp D", "$latitude")
+    val gson = Gson()
+    val params = this.deployment?.deviceParameters
+    var guid = ""
+    var type: String? = null
+    params?.let {
+        val json = gson.fromJson(it, JsonObject::class.java)
+        if (json.has("guid")) {
+            guid = json.get("guid").asString
+        }
+        if (json.has("guardianType")) {
+            when (json.get("guardianType").asString) {
+                "CELL_ONLY" -> type = "Cell"
+                "CELL_SMS" -> type = "Cell"
+                "SAT_ONLY" -> type = "Sat"
+                "OFFLINE_MODE" -> type = "Cell"
+            }
+        }
+    }
     return MapMarker.DeploymentMarker(
         id,
         name,
@@ -186,11 +195,12 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
         description,
         deployment!!.deploymentKey,
         deployment!!.createdAt,
-        deployment!!.deployedAt
+        deployment!!.deployedAt,
+        guid,
+        type
     )
 }
 
 fun Stream.toSitePin(): MapMarker.SiteMarker {
-    Log.d("GuardianApp S", "$latitude")
     return MapMarker.SiteMarker(id, name, latitude, longitude, altitude, "SITE_MARKER")
 }

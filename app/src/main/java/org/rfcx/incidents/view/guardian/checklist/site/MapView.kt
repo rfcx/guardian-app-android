@@ -9,6 +9,9 @@ import android.location.Location
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -22,6 +25,7 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.RenderMode
+import com.mapbox.mapboxsdk.maps.Image
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -76,6 +80,8 @@ class MapView @JvmOverloads constructor(
         private const val PROPERTY_DEPLOYMENT_MARKER_LATITUDE = "deployment.marker.latitude"
         private const val PROPERTY_DEPLOYMENT_MARKER_LONGITUDE = "deployment.marker.longitude"
         private const val PROPERTY_DEPLOYMENT_MARKER_CREATED_AT = "deployment.marker.created_at"
+        private const val PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_ID = "deployment.marker.guardian_id"
+        private const val PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_TYPE = "deployment.marker.guardian_type"
         private const val WINDOW_MARKER_ID = "info.marker"
         private const val PROPERTY_WINDOW_INFO_ID = "window.info.id"
 
@@ -364,6 +370,8 @@ class MapView @JvmOverloads constructor(
                             PROPERTY_DEPLOYMENT_MARKER_CREATED_AT,
                             context?.let { context -> it.deploymentAt.toStringWithTimeZone(context, TimeZone.getDefault()) } ?: ""
                         ),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_ID, it.guardianName ?: "guid not found"),
+                        Pair(PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_TYPE, it.guardianType ?: ""),
                         Pair(PROPERTY_MARKER_SELECTED, isSelecting.toString())
                     )
                     Feature.fromGeometry(
@@ -401,7 +409,6 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun refreshSource() {
-        Log.d("GuardianApp", "${mapFeatures?.features()}")
         mapSource!!.setGeoJson(mapFeatures)
     }
 
@@ -424,7 +431,6 @@ class MapView @JvmOverloads constructor(
         val siteFeatures = mapbox.queryRenderedFeatures(screenPoint, MARKER_SITE_ID)
         val deploymentClusterFeatures =
             mapbox.queryRenderedFeatures(screenPoint, "$DEPLOYMENT_CLUSTER-0")
-        Log.d("GuardianApp", "${deploymentFeatures.size} ${siteFeatures.size} ${deploymentClusterFeatures.size}")
         if (deploymentFeatures.isNotEmpty()) {
             val selectedFeature = deploymentFeatures[0]
             val features = this.mapFeatures!!.features()!!
@@ -493,17 +499,34 @@ class MapView @JvmOverloads constructor(
         val titleView = layout.findViewById<TextView>(R.id.deploymentSiteTitle)
         val deployedAtView = layout.findViewById<TextView>(R.id.deployedAt)
         val latLngView = layout.findViewById<TextView>(R.id.latLngTextView)
+        val guardianName = layout.findViewById<TextView>(R.id.guardianNameTextView)
+        val guardianTypeLayout = layout.findViewById<LinearLayout>(R.id.guardianTypeLayout)
+        val guardianTypeImage = layout.findViewById<ImageView>(R.id.guardianTypeImageView)
+        val guardianTypeText = layout.findViewById<TextView>(R.id.guardianTypeTextView)
 
         val id = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID) ?: ""
         val title = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_TITLE)
         val lat = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LATITUDE)
         val lng = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_LONGITUDE)
+        val guid = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_ID)
+        val guardianType = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_GUARDIAN_TYPE)
 
         titleView.text = title
         val deployedAt = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_CREATED_AT)
         deployedAtView.text = deployedAt
         val latLng = "${lat.toDouble().latitudeCoordinates()}, ${lng.toDouble().longitudeCoordinates()}"
         latLngView.text = latLng
+        guardianName.text = guid
+        if (guardianType != "") {
+            guardianTypeLayout.visibility = View.VISIBLE
+            guardianTypeText.text = guardianType
+            when(guardianType) {
+                "Cell" -> guardianTypeImage.setImageResource(R.drawable.ic_signal_cellular_alt)
+                "Sat" -> guardianTypeImage.setImageResource(R.drawable.ic_satellite_alt)
+            }
+        } else {
+            guardianTypeLayout.visibility = View.GONE
+        }
 
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         layout.measure(measureSpec, measureSpec)
@@ -586,7 +609,6 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun setWindowInfoImageGenResults(windowInfoImages: HashMap<String, Bitmap>) {
-        Log.d("GUardianApp", "get image")
         mapbox.style?.addImages(windowInfoImages)
     }
 
@@ -632,7 +654,6 @@ class MapView @JvmOverloads constructor(
     }
 
     fun moveCamera(latLng: LatLng) {
-        Log.d("GuaridanApp 3", "$latLng")
         mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 

@@ -22,5 +22,7 @@ sealed class MapMarker {
         val deploymentKey: String,
         val createdAt: Date,
         val deploymentAt: Date,
+        val guardianName: String?,
+        val guardianType: String?
     ) : MapMarker()
 }
