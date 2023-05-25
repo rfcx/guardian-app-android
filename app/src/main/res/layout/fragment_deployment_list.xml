@@ -35,6 +35,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.9" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/currentLocationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_large"
+                android:src="@drawable/ic_current_location"
+                app:backgroundTint="@color/white"
+                app:fabCustomSize="@dimen/zoom_loc_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineVertical"
+                app:layout_constraintStart_toStartOf="@id/guidelineVertical"
+                app:tint="@color/colorPrimary" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PointF
+import android.location.Location
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -633,6 +634,12 @@ class MapView @JvmOverloads constructor(
     }
 
     fun moveCamera(latLng: LatLng) {
+        mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+    }
+
+    fun moveCamera(location: Location?) {
+        if (location == null) return
+        val latLng = LatLng(location.latitude, location.longitude)
         mapbox.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 

@@ -106,6 +106,10 @@ class DeploymentListFragment : Fragment(), CloudListener {
                 }
             }
         }
+
+        binding.currentLocationButton.setOnClickListener {
+            binding.mapBoxView.moveCamera(viewModel.currentLocationState.value)
+        }
     }
 
     override fun onClicked(id: Int) {
