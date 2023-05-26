@@ -42,19 +42,22 @@ class StreamsRepositoryImp(
     }
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
-        return endpoint.getStreams(projects = listOf(projectId), offset = offset).observeOn(postExecutionThread.scheduler).flatMap { rawStreams ->
-            rawStreams.forEachIndexed { index, streamRes ->
-                val stream = streamRes.toStream()
-                stream.order = offset + index
-                streamDb.insertOrUpdate(stream)
-                eventDb.deleteEventsByStreamId(streamRes.id)
-                streamRes.lastIncident()?.events?.forEach { event ->
-                    eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
+        return endpoint.getStreams(projects = listOf(projectId), offset = offset)
+            .observeOn(postExecutionThread.scheduler)
+            .flatMap { rawStreams ->
+                rawStreams.forEachIndexed { index, streamRes ->
+                    val stream = streamRes.toStream()
+                    stream.order = offset + index
+                    streamDb.insertOrUpdate(stream)
+                    eventDb.deleteEventsByStreamId(streamRes.id)
+                    streamRes.lastIncident()?.events?.forEach { event ->
+                        eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
+                    }
                 }
+
+                cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
+                getFromLocalDB(projectId)
             }
-            cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
-            getFromLocalDB(projectId)
-        }
     }
 
     private fun getFromLocalDB(projectId: String): Single<List<Stream>> {

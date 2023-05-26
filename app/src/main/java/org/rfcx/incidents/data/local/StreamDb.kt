@@ -85,7 +85,7 @@ class StreamDb(private val realm: Realm) {
 
     fun deleteByProject(projectId: String, callback: (Boolean) -> Unit) {
         realm.executeTransaction {
-            val streams = it.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll()
+            val streams = it.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).isNotNull(Stream.FIELD_EXTERNAL_ID).findAll()
             streams?.forEach { s ->
                 s.deleteFromRealm()
             }
