@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.remote.guardian.deploy
 
+import io.reactivex.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -14,6 +15,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface DeploymentEndpoint {
     @POST("deployments")
@@ -23,6 +25,11 @@ interface DeploymentEndpoint {
     fun getDeployment(
         @Path("id") id: String
     ): Call<DeploymentResponse>
+
+    @GET("deployments")
+    fun getDeployments(
+        @Query("streamIds") ids: List<String>?
+    ): Single<List<DeploymentsResponse>>
 
     @POST("deployments")
     suspend fun createDeploymentBySuspend(@Body deploymentRequest: DeploymentRequest): Response<ResponseBody>

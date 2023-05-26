@@ -1,11 +1,14 @@
 package org.rfcx.incidents.data
 
+import android.util.Log
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
+import org.rfcx.incidents.data.local.deploy.DeploymentDb
+import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
 import org.rfcx.incidents.data.remote.streams.Endpoint
 import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
@@ -16,7 +19,9 @@ import org.rfcx.incidents.entity.stream.Stream
 
 class StreamsRepositoryImp(
     private val endpoint: Endpoint,
+    private val deploymentEndpoint: DeploymentEndpoint,
     private val streamDb: StreamDb,
+    private val deploymentDb: DeploymentDb,
     private val eventDb: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
     private val postExecutionThread: PostExecutionThread
@@ -46,6 +51,7 @@ class StreamsRepositoryImp(
             .observeOn(postExecutionThread.scheduler)
             .flatMap { rawStreams ->
                 rawStreams.forEachIndexed { index, streamRes ->
+                    Log.d("Guardian", "downloaded streams")
                     val stream = streamRes.toStream()
                     stream.order = offset + index
                     streamDb.insertOrUpdate(stream)
@@ -54,7 +60,18 @@ class StreamsRepositoryImp(
                         eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                     }
                 }
-
+                deploymentEndpoint.getDeployments(rawStreams.map { it.id })
+            }
+            .flatMap { rawDeployments ->
+                Log.d("Guardian", "downloaded deployment")
+                rawDeployments.forEach {
+                    val stream = streamDb.get(it.streamId!!)
+                    val deployment = deploymentDb.insertWithResult(it.toDeployment())
+                    stream?.apply {
+                        this.deployment = deployment
+                        streamDb.insertOrUpdate(this)
+                    }
+                }
                 cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
                 getFromLocalDB(projectId)
             }
