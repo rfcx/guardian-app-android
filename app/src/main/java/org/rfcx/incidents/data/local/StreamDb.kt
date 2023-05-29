@@ -72,6 +72,13 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
+    fun updateDeployment(stream: Stream, deployment: Deployment) {
+        realm.executeTransaction {
+            stream.deployment = deployment
+            realm.insertOrUpdate(stream)
+        }
+    }
+
     fun get(id: Int): Stream? =
         realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()
 

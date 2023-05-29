@@ -25,7 +25,7 @@ data class DeploymentsResponse(
     var createdAt: Date? = null,
     var updatedAt: Date? = null,
     var deletedAt: Date? = null,
-    var deviceParameters: JsonElement? = null
+    var deviceParameters: String? = null
 ) {
     fun toDeployment(): Deployment {
         return Deployment(
@@ -34,7 +34,7 @@ data class DeploymentsResponse(
             deployedAt = deployedAt ?: Date(),
             createdAt = createdAt ?: Date(),
             syncState = SyncState.SENT.value,
-            deviceParameters = deviceParameters.toString()
+            deviceParameters = deviceParameters
         )
     }
 }

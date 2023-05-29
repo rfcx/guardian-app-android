@@ -2,6 +2,7 @@ package org.rfcx.incidents.data
 
 import android.util.Log
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
@@ -15,6 +16,7 @@ import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
+import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.entity.stream.Stream
 
 class StreamsRepositoryImp(
@@ -24,7 +26,8 @@ class StreamsRepositoryImp(
     private val deploymentDb: DeploymentDb,
     private val eventDb: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
-    private val postExecutionThread: PostExecutionThread
+    private val postExecutionThread: PostExecutionThread,
+    private val threadExecutor: ThreadExecutor
 ) : StreamsRepository {
     override fun get(params: GetStreamsParams): Single<List<Stream>> {
         if (params.streamRefresh) {
@@ -51,7 +54,6 @@ class StreamsRepositoryImp(
             .observeOn(postExecutionThread.scheduler)
             .flatMap { rawStreams ->
                 rawStreams.forEachIndexed { index, streamRes ->
-                    Log.d("Guardian", "downloaded streams")
                     val stream = streamRes.toStream()
                     stream.order = offset + index
                     streamDb.insertOrUpdate(stream)
@@ -61,17 +63,23 @@ class StreamsRepositoryImp(
                     }
                 }
                 deploymentEndpoint.getDeployments(rawStreams.map { it.id })
-            }
-            .flatMap { rawDeployments ->
-                Log.d("Guardian", "downloaded deployment")
-                rawDeployments.forEach {
-                    val stream = streamDb.get(it.streamId!!)
-                    val deployment = deploymentDb.insertWithResult(it.toDeployment())
-                    stream?.apply {
-                        this.deployment = deployment
-                        streamDb.insertOrUpdate(this)
+                    .subscribeOn(Schedulers.from(threadExecutor))
+                    .observeOn(postExecutionThread.scheduler)
+                    .flatMap { rawDeployments ->
+                        rawDeployments.forEach {
+                            val stream = streamDb.get(it.streamId!!)
+                            val deployment = deploymentDb.insertWithResult(it.toDeployment())
+                            Log.d("GuardianApp", "${deployment}")
+                            stream?.apply {
+                                streamDb.updateDeployment(this, deployment)
+                            }
+                        }
+                        cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
+                        getFromLocalDB(projectId)
                     }
-                }
+            }
+            .onErrorResumeNext {
+                Log.d("GuardianApp", it.toString())
                 cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
                 getFromLocalDB(projectId)
             }
