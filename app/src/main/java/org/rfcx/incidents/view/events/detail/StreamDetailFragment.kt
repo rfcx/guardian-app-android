@@ -200,10 +200,10 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         private const val ARG_STREAM_ID = "ARG_STREAM_ID"
 
         @JvmStatic
-        fun newInstance(streamId: Int, distance: Double?): StreamDetailFragment {
+        fun newInstance(streamId: String, distance: Double?): StreamDetailFragment {
             return StreamDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_STREAM_ID, streamId)
+                    putString(ARG_STREAM_ID, streamId)
                     if (distance != null) putDouble(ARG_DISTANCE, distance)
                 }
             }

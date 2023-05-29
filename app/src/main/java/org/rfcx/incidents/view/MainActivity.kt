@@ -272,7 +272,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.bottomBar.visibility = View.VISIBLE
     }
 
-    override fun openStreamDetail(id: Int, distance: Double?) {
+    override fun openStreamDetail(id: String, distance: Double?) {
         hideBottomAppBar()
         startFragment(
             StreamDetailFragment.newInstance(id, distance),
@@ -441,8 +441,8 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             dialog.setCancelable(false)
             dialog.show()
 
-            val streamId = intent.getIntExtra(EventNotification.INTENT_KEY_STREAM_ID, -1)
-            if (streamId == -1) {
+            val streamId = intent.getStringExtra(EventNotification.INTENT_KEY_STREAM_ID)
+            if (streamId == null) {
                 dialog.dismiss()
                 return
             }
@@ -455,7 +455,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             getSubscribedProject().forEach { id ->
                 mainViewModel.refreshStreams(id) { streams ->
                     if (streams.isNullOrEmpty()) return@refreshStreams
-                    if (streams.any { s -> s.id == streamId }) {
+                    if (streams.any { s -> s.externalId == streamId }) {
                         openStreamDetail(streamId, null)
                         dialog.dismiss()
                     }
@@ -490,7 +490,7 @@ interface MainActivityEventListener {
     fun hideBottomAppBar()
     fun showBottomAppBar()
     fun onBackPressed()
-    fun openStreamDetail(id: Int, distance: Double?)
+    fun openStreamDetail(id: String, distance: Double?)
     fun openCreateReportActivity(streamId: String)
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
