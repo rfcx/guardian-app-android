@@ -10,18 +10,20 @@ import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
-import org.rfcx.incidents.data.remote.streams.Endpoint
+import org.rfcx.incidents.data.remote.streams.IncidentEndpoint
+import org.rfcx.incidents.data.remote.streams.StreamEndpoint
 import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Stream
 
 class StreamsRepositoryImp(
-    private val endpoint: Endpoint,
-    private val deploymentEndpoint: DeploymentEndpoint,
+    private val incidentEndpoint: IncidentEndpoint,
+    private val streamEndpoint: StreamEndpoint,
     private val streamDb: StreamDb,
     private val deploymentDb: DeploymentDb,
     private val eventDb: EventDb,
@@ -50,36 +52,45 @@ class StreamsRepositoryImp(
     }
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
-        return endpoint.getStreams(projects = listOf(projectId), offset = offset)
-            .observeOn(postExecutionThread.scheduler)
+        // Save all streams in project
+        return streamEndpoint.getStreams(
+            projects = listOf(projectId),
+            offset = offset
+        ).observeOn(postExecutionThread.scheduler)
             .flatMap { rawStreams ->
                 rawStreams.forEachIndexed { index, streamRes ->
-                    val stream = streamRes.toStream()
-                    stream.order = offset + index
-                    streamDb.insertOrUpdate(stream)
-                    eventDb.deleteEventsByStreamId(streamRes.id)
-                    streamRes.lastIncident()?.events?.forEach { event ->
-                        eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
+                    var deployment: Deployment? = null
+                    streamRes.deployment?.let {
+                        deployment = deploymentDb.insertWithResult(it.toDeployment())
+                    }
+
+                    streamRes.toStream().apply {
+                        this.deployment = deployment
+                        streamDb.insertOrUpdate(this)
                     }
                 }
-                deploymentEndpoint.getDeployments(rawStreams.map { it.id })
+
+                // Load all possible stream with incident in project
+                incidentEndpoint.getStreams(projects = listOf(projectId),
+                    offset = offset
+                )
                     .subscribeOn(Schedulers.from(threadExecutor))
                     .observeOn(postExecutionThread.scheduler)
-                    .flatMap { rawDeployments ->
-                        rawDeployments.forEach {
-                            val stream = streamDb.get(it.streamId!!)
-                            val deployment = deploymentDb.insertWithResult(it.toDeployment())
-                            Log.d("GuardianApp", "${deployment}")
-                            stream?.apply {
-                                streamDb.updateDeployment(this, deployment)
+                    .flatMap { rawIncidents ->
+                        rawIncidents.forEachIndexed { index, streamRes ->
+                            val stream = streamRes.toStream()
+                            stream.order = offset + index
+                            streamDb.insertOrUpdate(stream)
+                            eventDb.deleteEventsByStreamId(streamRes.id)
+                            streamRes.lastIncident()?.events?.forEach { event ->
+                                eventDb.insertOrUpdate(event.toEvent(streamRes.id), streamRes.lastIncident()!!.id)
                             }
                         }
                         cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
                         getFromLocalDB(projectId)
                     }
-            }
-            .onErrorResumeNext {
-                Log.d("GuardianApp", it.toString())
+            }.onErrorResumeNext {
+                Log.d("GuardianApp", "$it")
                 cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
                 getFromLocalDB(projectId)
             }

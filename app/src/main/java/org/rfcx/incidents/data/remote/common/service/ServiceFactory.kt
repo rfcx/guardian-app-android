@@ -21,7 +21,8 @@ import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.data.remote.response.CreateResponseEndpoint
 import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
-import org.rfcx.incidents.data.remote.streams.Endpoint
+import org.rfcx.incidents.data.remote.streams.IncidentEndpoint
+import org.rfcx.incidents.data.remote.streams.StreamEndpoint
 import org.rfcx.incidents.data.remote.subscribe.SubscribeEndpoint
 import org.rfcx.incidents.data.remote.usertouch.UserTouchEndPoint
 import org.rfcx.incidents.util.common.StringUtils.insert
@@ -40,12 +41,12 @@ object ServiceFactory {
             .create(ProjectsEndpoint::class.java)
     }
 
-    fun makeStreamsService(isDebug: Boolean, context: Context): Endpoint {
+    fun makeStreamsService(isDebug: Boolean, context: Context): IncidentEndpoint {
         return createRetrofit(
             BuildConfig.RANGER_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
             GsonProvider.getInstance().gson
         )
-            .create(Endpoint::class.java)
+            .create(IncidentEndpoint::class.java)
     }
 
     fun makeDetectionsService(isDebug: Boolean, context: Context): DetectionsEndpoint {
@@ -170,6 +171,14 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(DeploymentEndpoint::class.java)
+    }
+
+    fun makeDeviceStreamsService(isDebug: Boolean, context: Context): StreamEndpoint {
+        return createRetrofit(
+            BuildConfig.DEVICE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
+            GsonProvider.getInstance().gson
+        )
+            .create(StreamEndpoint::class.java)
     }
 
     private fun urlFromArgument(isDebug: Boolean, url: String): String {

@@ -94,6 +94,8 @@ class StreamDb(private val realm: Realm) {
         realm.executeTransaction {
             val streams = it.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).isNotNull(Stream.FIELD_EXTERNAL_ID).findAll()
             streams?.forEach { s ->
+                // also delete deployment to update
+                s.deployment?.deleteFromRealm()
                 s.deleteFromRealm()
             }
             callback.invoke(true)

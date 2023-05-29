@@ -1,6 +1,7 @@
 package org.rfcx.incidents.data.remote.streams
 
 import io.realm.RealmList
+import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentsResponse
 import org.rfcx.incidents.entity.event.Classification
 import org.rfcx.incidents.entity.event.Event
 import org.rfcx.incidents.entity.response.SyncState
@@ -22,6 +23,16 @@ data class StreamResponse(
 ) {
     fun lastIncident(): IncidentResponse? = incidents.items.firstOrNull()
 }
+
+data class StreamDeviceAPIResponse(
+    var id: String,
+    var name: String,
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
+    var altitude: Double = 0.0,
+    var project: ProjectResponse = ProjectResponse(),
+    var deployment: DeploymentsResponse? = null
+)
 
 data class IncidentListResponse(
     var total: Int = 0,
@@ -77,6 +88,17 @@ fun StreamResponse.toStream(): Stream = Stream(
     guardianType = guardianType,
     externalId = id,
     syncState = SyncState.SENT.value
+)
+
+fun StreamDeviceAPIResponse.toStream(): Stream = Stream(
+    name = name,
+    latitude = latitude,
+    longitude = longitude,
+    altitude = altitude,
+    projectId = project.id,
+    externalId = id,
+    syncState = SyncState.SENT.value,
+    deployment = deployment?.toDeployment()
 )
 
 private fun IncidentResponse.toIncident(): Incident = Incident(

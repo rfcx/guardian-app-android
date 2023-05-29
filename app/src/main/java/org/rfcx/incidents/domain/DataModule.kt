@@ -195,6 +195,7 @@ object DataModule {
         factory { ServiceFactory.makeGuardianRegisterProductionService(androidContext()) }
         factory { ServiceFactory.makeGuardianRegisterStagingService(androidContext()) }
         factory { ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, androidContext()) }
+        factory { ServiceFactory.makeDeviceStreamsService(BuildConfig.DEBUG, androidContext()) }
     }
 
     val localModule = module {

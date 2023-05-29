@@ -255,7 +255,7 @@ class StreamsFragment :
                         (visibleItemCount + firstVisibleItemPosition) >= total &&
                         firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
                     ) {
-                        viewModel.refreshStreams(force = true, total)
+                        // viewModel.refreshStreams(force = true, total)
                     }
                 }
             })

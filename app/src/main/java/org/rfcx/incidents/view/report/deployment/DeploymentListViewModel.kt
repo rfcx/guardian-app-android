@@ -1,9 +1,11 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -154,8 +156,8 @@ fun Stream.toDeploymentListItem(): DeploymentListItem {
     val params = this.deployment?.deviceParameters
     var guid = ""
     var type: String? = null
-    params?.let {
-        val json = gson.fromJson(it, JsonObject::class.java)
+    if (params != null && params != "null") {
+        val json = gson.fromJson(params, JsonObject::class.java)
         if (json.has("guid")) {
             guid = json.get("guid").asString
         }
@@ -184,8 +186,8 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
     val params = this.deployment?.deviceParameters
     var guid = ""
     var type: String? = null
-    params?.let {
-        val json = gson.fromJson(it, JsonObject::class.java)
+    if (params != null && params != "null") {
+        val json = gson.fromJson(params, JsonObject::class.java)
         if (json.has("guid")) {
             guid = json.get("guid").asString
         }
