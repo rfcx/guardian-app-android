@@ -96,6 +96,7 @@ class StreamDb(private val realm: Realm) {
             streams?.forEach { s ->
                 // also delete deployment to update
                 s.deployment?.deleteFromRealm()
+                s.lastIncident?.deleteFromRealm()
                 s.deleteFromRealm()
             }
             callback.invoke(true)
