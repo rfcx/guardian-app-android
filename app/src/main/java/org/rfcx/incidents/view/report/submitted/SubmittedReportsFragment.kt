@@ -184,7 +184,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
         })
     }
 
-    override fun onClicked(project: Project) {
+    override fun onProjectClicked(project: Project) {
         binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
         listener.showBottomAppBar()

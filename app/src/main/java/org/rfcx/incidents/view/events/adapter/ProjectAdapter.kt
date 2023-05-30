@@ -31,7 +31,7 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
             if (items[position].permissions != Permissions.GUEST.value) {
                 selectedPosition = position
                 notifyDataSetChanged()
-                listener.onClicked(items[position])
+                listener.onProjectClicked(items[position])
             }
         }
     }
@@ -80,6 +80,6 @@ class ProjectAdapter(private val listener: ProjectOnClickListener) :
 }
 
 interface ProjectOnClickListener {
-    fun onClicked(project: Project)
+    fun onProjectClicked(project: Project)
     fun onLockImageClicked()
 }

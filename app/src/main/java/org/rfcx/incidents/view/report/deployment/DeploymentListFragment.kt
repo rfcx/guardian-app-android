@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -14,17 +15,25 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
+import org.rfcx.incidents.entity.CrashlyticsKey
+import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.util.isNetworkAvailable
+import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
+import org.rfcx.incidents.view.events.adapter.ProjectAdapter
+import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
 import java.util.Date
 
-class DeploymentListFragment : Fragment(), CloudListener {
+class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener {
 
     private lateinit var binding: FragmentDeploymentListBinding
     private val viewModel: DeploymentListViewModel by viewModel()
     private lateinit var listener: MainActivityEventListener
 
     private val deploymentAdapter by lazy { DeploymentListAdapter(this) }
+    private val projectAdapter by lazy { ProjectAdapter(this) }
 
     private var state = DeploymentListState.LIST
 
@@ -47,6 +56,12 @@ class DeploymentListFragment : Fragment(), CloudListener {
             adapter = deploymentAdapter
         }
 
+        binding.projectRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = projectAdapter
+            projectAdapter.items = emptyList()
+        }
+
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
                 if (it.isEmpty()) {
@@ -64,6 +79,27 @@ class DeploymentListFragment : Fragment(), CloudListener {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.projects.collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        binding.projectSwipeRefreshView.isRefreshing = false
+                        Toast.makeText(
+                            context,
+                            result.throwable.message
+                                ?: getString(R.string.something_is_wrong),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        binding.projectSwipeRefreshView.isRefreshing = false
+                        projectAdapter.items = result.data
+                    }
+                }
+            }
+        }
+
         binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val selected = checkedIds.getOrNull(0)
             when(selected) {
@@ -76,6 +112,18 @@ class DeploymentListFragment : Fragment(), CloudListener {
                 }
             }
         }
+
+        binding.toolbarLayout.projectTitleLayout.setOnClickListener {
+            if (binding.projectRecyclerView.visibility == View.VISIBLE) {
+                hideProjectList()
+            } else {
+                showProjectList()
+            }
+        }
+    }
+
+    private fun setSwipe() {
+
     }
 
     private fun setMap(savedInstanceState: Bundle?) {
@@ -117,6 +165,38 @@ class DeploymentListFragment : Fragment(), CloudListener {
         binding.currentLocationButton.setOnClickListener {
             binding.mapBoxView.moveCamera(viewModel.currentLocationState.value)
         }
+    }
+
+    private fun showProjectList() {
+        binding.toolbarLayout.expandMoreImageView.rotation = 180F
+        listener.hideBottomAppBar()
+        binding.projectRecyclerView.visibility = View.VISIBLE
+        binding.projectSwipeRefreshView.visibility = View.VISIBLE
+    }
+
+    private fun hideProjectList() {
+        binding.toolbarLayout.expandMoreImageView.rotation = 0F
+        listener.showBottomAppBar()
+        binding.projectRecyclerView.visibility = View.GONE
+        binding.projectSwipeRefreshView.visibility = View.GONE
+    }
+
+    override fun onProjectClicked(project: Project) {
+        hideProjectList()
+        viewModel.setSelectedProject(project.id)
+
+        when {
+            requireContext().isOnAirplaneMode() -> {
+                Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_LONG).show()
+            }
+            !requireContext().isNetworkAvailable() -> {
+                Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    override fun onLockImageClicked() {
+        Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
     }
 
     override fun onClicked(id: Int) {

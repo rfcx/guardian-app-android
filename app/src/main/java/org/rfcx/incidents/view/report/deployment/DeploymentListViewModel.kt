@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
+import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,15 +19,19 @@ import org.rfcx.incidents.domain.GetLocalProjectUseCase
 import org.rfcx.incidents.domain.GetLocalProjectsParams
 import org.rfcx.incidents.domain.GetLocalStreamsParams
 import org.rfcx.incidents.domain.GetLocalStreamsUseCase
+import org.rfcx.incidents.domain.GetProjectsParams
+import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.location.LocationHelper
 
 class DeploymentListViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
     private val preferences: Preferences,
+    private val getProjectsUseCase: GetProjectsUseCase,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
     private val locationHelper: LocationHelper
@@ -40,6 +45,9 @@ class DeploymentListViewModel(
 
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
+
+    private val _projects: MutableStateFlow<Result<List<Project>>> = MutableStateFlow(Result.Success(emptyList()))
+    val projects = _projects.asStateFlow()
 
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
@@ -55,8 +63,8 @@ class DeploymentListViewModel(
 
     init {
         getLocationChanged()
-        getDeployments()
         getSelectedProject()
+        fetchProject()
     }
 
     private fun getLocationChanged() {
@@ -67,9 +75,9 @@ class DeploymentListViewModel(
         }
     }
 
-    private fun getDeployments() {
+    private fun getDeployments(projectId: String) {
         viewModelScope.launch(Dispatchers.Main) {
-            getLocalStreamsUseCase.launch(GetLocalStreamsParams(preferences.getString(Preferences.SELECTED_PROJECT)!!)).collectLatest { site ->
+            getLocalStreamsUseCase.launch(GetLocalStreamsParams(projectId)).collectLatest { site ->
                 currentAllStreams = site
                 filterWithDeployment(site, currentFilter)
             }
@@ -105,16 +113,36 @@ class DeploymentListViewModel(
         }
     }
 
+    private fun fetchProject() {
+        getProjectsUseCase.execute(
+            object : DisposableSingleObserver<List<Project>>() {
+                override fun onSuccess(t: List<Project>) {
+                    _projects.tryEmit(Result.Success(t))
+                }
+
+                override fun onError(e: Throwable) {
+                    _projects.tryEmit(Result.Error(e))
+                }
+            },
+            GetProjectsParams()
+        )
+    }
+
     private fun getSelectedProject() {
-        preferences.getString(Preferences.SELECTED_PROJECT)?.let { projectId ->
-            viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Main) {
+            preferences.getFlowForKey(Preferences.SELECTED_PROJECT).collectLatest { projectId ->
                 getLocalProjectUseCase.launch(GetLocalProjectsParams(projectId)).collectLatest { project ->
                     project?.let {
                         _selectedProject.tryEmit(it.name)
+                        getDeployments(it.id)
                     }
                 }
             }
         }
+    }
+
+    fun setSelectedProject(projectId: String) {
+        preferences.putString(Preferences.SELECTED_PROJECT, projectId)
     }
 
     fun addFilter(filter: FilterDeployment) {

@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.callbackFlow
 import org.rfcx.incidents.data.remote.common.GsonProvider
 import java.lang.reflect.Type
 import java.util.Date
@@ -132,4 +136,18 @@ class Preferences(context: Context) {
     fun clear() {
         sharedPreferences.edit().clear().apply()
     }
+
+    fun getFlowForKey(targetKey: String) = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (targetKey == key) {
+                val value = getString(key, "")
+                trySend(value)
+            }
+        }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+        if (sharedPreferences.contains(targetKey)) {
+            send(getString(targetKey, ""))
+        }
+        awaitClose { sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener) }
+    }.buffer(Channel.UNLIMITED)
 }

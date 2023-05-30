@@ -302,7 +302,7 @@ class StreamsFragment :
         }
     }
 
-    override fun onClicked(project: Project) {
+    override fun onProjectClicked(project: Project) {
         viewModel.selectProject(project.id)
         firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnSelectedProject.key, project.id + " : " + project.name)
 
