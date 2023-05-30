@@ -52,8 +52,11 @@ class DeploymentListViewModel(
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
 
-    private val _projects= MutableSharedFlow<Result<List<Project>>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _projects = MutableSharedFlow<Result<List<Project>>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val projects = _projects.asSharedFlow()
+
+    private val _streams = MutableSharedFlow<Result<List<Stream>>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val streams = _streams.asSharedFlow()
 
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
@@ -140,9 +143,9 @@ class DeploymentListViewModel(
             val tempProjectId = projectId ?: selectedProjectId
             getStreamsWithDeploymentUseCase.launch(GetStreamWithDeploymentParams(tempProjectId, force)).collectLatest { result ->
                 when(result) {
-                    is Result.Error -> { }
-                    Result.Loading -> { }
-                    is Result.Success -> { }
+                    is Result.Error -> _streams.tryEmit(Result.Error(result.throwable))
+                    Result.Loading -> _streams.tryEmit(Result.Loading)
+                    is Result.Success -> _streams.tryEmit(Result.Success(result.data))
                 }
             }
         }

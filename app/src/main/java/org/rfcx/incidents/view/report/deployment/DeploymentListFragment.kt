@@ -17,14 +17,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
-import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
-import java.util.Date
 
 class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener {
 
@@ -57,7 +55,7 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
 
         binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val selected = checkedIds.getOrNull(0)
-            when(selected) {
+            when (selected) {
                 R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
                 R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
                 R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
@@ -110,7 +108,7 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
 
         lifecycleScope.launch {
             viewModel.projects.collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {
                         binding.projectSwipeRefreshView.isRefreshing = false
                         Toast.makeText(
@@ -128,6 +126,26 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.streams.collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        binding.deploymentRefreshView.isRefreshing = false
+                        Toast.makeText(
+                            context,
+                            result.throwable.message
+                                ?: getString(R.string.something_is_wrong),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        binding.deploymentRefreshView.isRefreshing = false
+                    }
+                }
+            }
+        }
     }
 
     private fun setSwipe() {
@@ -137,19 +155,11 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
                 when {
                     requireContext().isOnAirplaneMode() -> {
                         isRefreshing = false
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showSwipeAirplaneError()
                     }
                     !requireContext().isNetworkAvailable() -> {
                         isRefreshing = false
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showSwipeNoConnectionError()
                     }
                     else -> {
                         viewModel.fetchProject(true)
@@ -158,6 +168,42 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
             }
             setColorSchemeResources(R.color.colorPrimary)
         }
+
+        binding.deploymentRefreshView.apply {
+            setOnRefreshListener {
+                isRefreshing = true
+                when {
+                    requireContext().isOnAirplaneMode() -> {
+                        isRefreshing = false
+                        showSwipeAirplaneError()
+                    }
+                    !requireContext().isNetworkAvailable() -> {
+                        isRefreshing = false
+                        showSwipeNoConnectionError()
+                    }
+                    else -> {
+                        viewModel.fetchStream(null, true)
+                    }
+                }
+                setColorSchemeResources(R.color.colorPrimary)
+            }
+        }
+    }
+
+    private fun showSwipeAirplaneError() {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun showSwipeNoConnectionError() {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun setMap(savedInstanceState: Bundle?) {
@@ -269,7 +315,9 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
 
     companion object {
         const val tag = "DeploymentListFragment"
-        enum class DeploymentListState { LIST, MAP}
+
+        enum class DeploymentListState { LIST, MAP }
+
         fun newInstance(): DeploymentListFragment = DeploymentListFragment()
     }
 }
