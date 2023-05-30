@@ -61,8 +61,9 @@ import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
-import org.rfcx.incidents.domain.guardian.deploy.GetDeploymentsUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
@@ -104,7 +105,7 @@ object DataModule {
         single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
@@ -171,10 +172,10 @@ object DataModule {
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
 
-        single { DeploymentRepositoryImpl(get(), get(), get(), get()) } bind DeploymentRepository::class
+        single { DeploymentRepositoryImpl(get(), get(), get(), get(), get()) } bind DeploymentRepository::class
         single { SaveDeploymentUseCase(get()) }
-        single { GetDeploymentsUseCase(get()) }
         single { DeployDeploymentUseCase(get()) }
+        single { GetStreamsWithDeploymentUseCase(get()) }
     }
 
     val remoteModule = module {
@@ -195,7 +196,6 @@ object DataModule {
         factory { ServiceFactory.makeGuardianRegisterProductionService(androidContext()) }
         factory { ServiceFactory.makeGuardianRegisterStagingService(androidContext()) }
         factory { ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makeDeviceStreamsService(BuildConfig.DEBUG, androidContext()) }
     }
 
     val localModule = module {

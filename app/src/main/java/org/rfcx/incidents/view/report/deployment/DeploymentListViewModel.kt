@@ -26,6 +26,8 @@ import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -35,6 +37,7 @@ class DeploymentListViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
     private val preferences: Preferences,
     private val getProjectsUseCase: GetProjectsUseCase,
+    private val getStreamsWithDeploymentUseCase: GetStreamsWithDeploymentUseCase,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
     private val locationHelper: LocationHelper
@@ -63,6 +66,7 @@ class DeploymentListViewModel(
 
     private var currentFilter = FilterDeployment.ALL
     private var currentAllStreams = listOf<Stream>()
+    private var selectedProjectId = ""
 
     init {
         getLocationChanged()
@@ -131,12 +135,29 @@ class DeploymentListViewModel(
         )
     }
 
+    fun fetchStream(projectId: String? = null, force: Boolean = false) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val tempProjectId = projectId ?: selectedProjectId
+            getStreamsWithDeploymentUseCase.launch(GetStreamWithDeploymentParams(tempProjectId, force)).collectLatest { result ->
+                when(result) {
+                    is Result.Error -> { }
+                    Result.Loading -> { }
+                    is Result.Success -> { }
+                }
+            }
+        }
+    }
+
     private fun getSelectedProject() {
         viewModelScope.launch(Dispatchers.Main) {
             preferences.getFlowForKey(Preferences.SELECTED_PROJECT).collectLatest { projectId ->
                 getLocalProjectUseCase.launch(GetLocalProjectsParams(projectId)).collectLatest { project ->
                     project?.let {
+                        selectedProjectId = it.id
                         _selectedProject.tryEmit(it.name)
+                        // fetch streams after project changed
+                        fetchStream(projectId, false)
+                        // fetch deployments after project changed
                         getDeployments(it.id)
                     }
                 }

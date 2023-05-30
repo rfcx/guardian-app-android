@@ -4,6 +4,7 @@ import io.reactivex.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.rfcx.incidents.data.remote.streams.StreamDeviceAPIResponse
 import org.rfcx.incidents.entity.guardian.deployment.DeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import retrofit2.Call
@@ -30,6 +31,16 @@ interface DeploymentEndpoint {
     fun getDeployments(
         @Query("streamIds") ids: List<String>?
     ): Single<List<DeploymentsResponse>>
+
+    @GET("streams")
+    suspend fun getStreams(
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int = 0,
+        @Query("updated_after", encoded = true) updatedAfter: String? = null,
+        @Query("sort", encoded = true) sort: String? = null,
+        @Query("projects") projects: List<String>? = null,
+        @Query("type") type: String = "guardian"
+    ): List<StreamDeviceAPIResponse>
 
     @POST("deployments")
     suspend fun createDeploymentBySuspend(@Body deploymentRequest: DeploymentRequest): Response<ResponseBody>
