@@ -1,7 +1,5 @@
 package org.rfcx.incidents.data
 
-import android.os.Looper
-import android.util.Log
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
@@ -20,10 +18,8 @@ class ProjectsRepositoryImp(
 
     override fun getProjects(forceRefresh: Boolean): Single<List<Project>> {
         if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) {
-            Log.d("ProjectsRepo", "API")
             return refreshFromAPI()
         }
-        Log.d("ProjectsRepo", "DB")
         return getFromLocalDB()
     }
 
@@ -36,7 +32,6 @@ class ProjectsRepositoryImp(
     }
 
     private fun refreshFromAPI(): Single<List<Project>> {
-        Log.d("ProjectsRepo", "OUTSIDE: " + if (Looper.myLooper() == Looper.getMainLooper()) "MAIN THREAD" else "NOT MAIN!")
         return endpoint.getProjects().map { rawProjects ->
             rawProjects.forEach { projectRes ->
                 val offTimes = endpoint.getProjectOffTime(projectRes.id).blockingGet()
@@ -46,7 +41,6 @@ class ProjectsRepositoryImp(
             }
             rawProjects
         }.observeOn(postExecutionThread.scheduler).flatMap { computedProjects ->
-            Log.d("ProjectsRepo", "INSIDE: " + if (Looper.myLooper() == Looper.getMainLooper()) "MAIN THREAD" else "NOT MAIN!")
             computedProjects.forEach { project ->
                 projectDb.insertOrUpdate(project)
             }

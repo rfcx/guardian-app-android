@@ -51,6 +51,33 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
         setMap(savedInstanceState)
         binding.viewModel = viewModel
 
+        setSwipe()
+        setRecyclerView()
+        setCollectState()
+
+        binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            val selected = checkedIds.getOrNull(0)
+            when(selected) {
+                R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
+                R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
+                R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
+                null -> {
+                    val allChip = group.findViewById<Chip>(R.id.allSelectChip)
+                    allChip.isChecked = true
+                }
+            }
+        }
+
+        binding.toolbarLayout.projectTitleLayout.setOnClickListener {
+            if (binding.projectRecyclerView.visibility == View.VISIBLE) {
+                hideProjectList()
+            } else {
+                showProjectList()
+            }
+        }
+    }
+
+    private fun setRecyclerView() {
         binding.deploymentsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = deploymentAdapter
@@ -61,7 +88,9 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
             adapter = projectAdapter
             projectAdapter.items = emptyList()
         }
+    }
 
+    private fun setCollectState() {
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
                 if (it.isEmpty()) {
@@ -99,31 +128,36 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
                 }
             }
         }
-
-        binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-            val selected = checkedIds.getOrNull(0)
-            when(selected) {
-                R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
-                R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
-                R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
-                null -> {
-                    val allChip = group.findViewById<Chip>(R.id.allSelectChip)
-                    allChip.isChecked = true
-                }
-            }
-        }
-
-        binding.toolbarLayout.projectTitleLayout.setOnClickListener {
-            if (binding.projectRecyclerView.visibility == View.VISIBLE) {
-                hideProjectList()
-            } else {
-                showProjectList()
-            }
-        }
     }
 
     private fun setSwipe() {
-
+        binding.projectSwipeRefreshView.apply {
+            setOnRefreshListener {
+                isRefreshing = true
+                when {
+                    requireContext().isOnAirplaneMode() -> {
+                        isRefreshing = false
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.pls_off_air_plane_mode),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    !requireContext().isNetworkAvailable() -> {
+                        isRefreshing = false
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.project_could_not_refreshed) + " " + getString(R.string.no_internet_connection),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    else -> {
+                        viewModel.fetchProject(true)
+                    }
+                }
+            }
+            setColorSchemeResources(R.color.colorPrimary)
+        }
     }
 
     private fun setMap(savedInstanceState: Bundle?) {

@@ -9,7 +9,10 @@ import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,8 +49,8 @@ class DeploymentListViewModel(
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
 
-    private val _projects: MutableStateFlow<Result<List<Project>>> = MutableStateFlow(Result.Success(emptyList()))
-    val projects = _projects.asStateFlow()
+    private val _projects= MutableSharedFlow<Result<List<Project>>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val projects = _projects.asSharedFlow()
 
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
@@ -64,7 +67,7 @@ class DeploymentListViewModel(
     init {
         getLocationChanged()
         getSelectedProject()
-        fetchProject()
+        fetchProject(false)
     }
 
     private fun getLocationChanged() {
@@ -113,7 +116,7 @@ class DeploymentListViewModel(
         }
     }
 
-    private fun fetchProject() {
+    fun fetchProject(force: Boolean = false) {
         getProjectsUseCase.execute(
             object : DisposableSingleObserver<List<Project>>() {
                 override fun onSuccess(t: List<Project>) {
@@ -124,7 +127,7 @@ class DeploymentListViewModel(
                     _projects.tryEmit(Result.Error(e))
                 }
             },
-            GetProjectsParams()
+            GetProjectsParams(force)
         )
     }
 
