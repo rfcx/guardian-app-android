@@ -7,7 +7,7 @@ import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.entity.stream.Stream
 
-class GetStreamsUseCase(
+class GetStreamsWithIncidentUseCase(
     private val repository: StreamsRepository,
     threadExecutor: ThreadExecutor,
     postExecutionThread: PostExecutionThread

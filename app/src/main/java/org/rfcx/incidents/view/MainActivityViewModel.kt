@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
@@ -18,7 +21,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
-import org.rfcx.incidents.domain.GetStreamsUseCase
+import org.rfcx.incidents.domain.GetStreamsWithIncidentUseCase
 import org.rfcx.incidents.entity.location.Coordinate
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.Response
@@ -33,7 +36,7 @@ class MainActivityViewModel(
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
     private val getProjectsUseCase: GetProjectsUseCase,
-    private val getStreamsUseCase: GetStreamsUseCase,
+    private val getStreamsWithIncidentUseCase: GetStreamsWithIncidentUseCase,
     credentialKeeper: CredentialKeeper
 ) : ViewModel() {
 
@@ -81,7 +84,7 @@ class MainActivityViewModel(
     }
 
     fun refreshStreams(projectId: String, callback: (List<Stream>?) -> Unit) {
-        getStreamsUseCase.execute(
+        getStreamsWithIncidentUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
                     callback.invoke(t)

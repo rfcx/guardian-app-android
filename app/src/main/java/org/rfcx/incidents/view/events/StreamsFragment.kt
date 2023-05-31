@@ -255,7 +255,7 @@ class StreamsFragment :
                         (visibleItemCount + firstVisibleItemPosition) >= total &&
                         firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
                     ) {
-                        // viewModel.refreshStreams(force = true, total)
+                        viewModel.refreshStreams(force = true, total)
                     }
                 }
             })
@@ -804,7 +804,7 @@ class StreamsFragment :
 
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
-            viewModel.refreshStreams(streamRefresh = true)
+            viewModel.fetchFreshStreams(force = true)
         } else {
             binding.refreshView.isRefreshing = false
             Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()

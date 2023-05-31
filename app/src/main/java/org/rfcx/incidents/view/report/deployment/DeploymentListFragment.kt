@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
@@ -79,6 +81,21 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
         binding.deploymentsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = deploymentAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val linearLayoutManager = layoutManager!! as LinearLayoutManager
+                    val visibleItemCount = linearLayoutManager.childCount
+                    val total = layoutManager!!.itemCount
+                    val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+                    if (!binding.deploymentRefreshView.isRefreshing &&
+                        (visibleItemCount + firstVisibleItemPosition) >= total &&
+                        firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
+                    ) {
+                        viewModel.fetchStream(force = true, offset = total)
+                    }
+                }
+            })
         }
 
         binding.projectRecyclerView.apply {
@@ -96,6 +113,7 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
                 } else {
                     binding.noDeploymentLayout.visibility = View.GONE
                 }
+                Log.d("Guardian", "${it.size}")
                 deploymentAdapter.items = it
             }
         }
@@ -182,7 +200,7 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
                         showSwipeNoConnectionError()
                     }
                     else -> {
-                        viewModel.fetchStream(null, true)
+                        viewModel.fetchFreshStreams(force = true)
                     }
                 }
                 setColorSchemeResources(R.color.colorPrimary)

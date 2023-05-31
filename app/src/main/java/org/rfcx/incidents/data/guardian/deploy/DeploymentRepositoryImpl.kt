@@ -1,20 +1,23 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
+import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
-import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
-import org.rfcx.incidents.data.remote.streams.realmList
-import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.data.remote.common.Result
+import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
+import org.rfcx.incidents.data.remote.streams.IncidentEndpoint
+import org.rfcx.incidents.data.remote.streams.realmList
+import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncidentParams
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
+import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.stream.Stream
 
@@ -36,7 +39,7 @@ class DeploymentRepositoryImpl(
                 deployment.images = realmList(images)
             }
             val tempDeployment = deploymentLocal.insertWithResult(deployment)
-            stream.deployment= tempDeployment
+            stream.deployment = tempDeployment
             streamLocal.insertOrUpdate(stream)
         }
     }
@@ -47,7 +50,7 @@ class DeploymentRepositoryImpl(
 
     override fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>> {
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId ?: "null"))) {
-            return refreshFromAPI(params.projectId)
+            return refreshFromAPI(params.projectId, params.offset)
         }
         return flow { emit(Result.Success(getFromLocalDB(params.projectId))) }
     }
@@ -56,11 +59,11 @@ class DeploymentRepositoryImpl(
         return streamLocal.getByProject(projectId)
     }
 
-    private fun refreshFromAPI(projectId: String?): Flow<Result<List<Stream>>> {
+    private fun refreshFromAPI(projectId: String?, offset: Int = 0): Flow<Result<List<Stream>>> {
         return flow {
             emit(Result.Loading)
             val projects = if (projectId == null) null else listOf(projectId)
-            val rawStreams = deploymentEndpoint.getStreams(projects = projects)
+            val rawStreams = deploymentEndpoint.getStreams(projects = projects, offset = offset)
             rawStreams.forEach { raw ->
                 var deployment: Deployment? = null
                 raw.deployment?.let {

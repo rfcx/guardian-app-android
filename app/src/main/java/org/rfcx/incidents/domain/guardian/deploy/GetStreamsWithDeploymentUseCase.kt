@@ -16,5 +16,7 @@ class GetStreamsWithDeploymentUseCase(
 
 data class GetStreamWithDeploymentParams(
     val projectId: String?,
-    val forceRefresh: Boolean
+    val forceRefresh: Boolean = false,
+    val offset: Int = 0,
+    val streamRefresh: Boolean = false
 )

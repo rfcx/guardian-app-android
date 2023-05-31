@@ -5,7 +5,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.preferences.Preferences
@@ -13,7 +17,9 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
-import org.rfcx.incidents.domain.GetStreamsUseCase
+import org.rfcx.incidents.domain.GetStreamsWithIncidentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncidentParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndIncidentUseCase
 import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -21,7 +27,8 @@ import org.rfcx.incidents.entity.stream.Stream
 class StreamsViewModel(
     private val preferences: Preferences,
     private val getProjectsUseCase: GetProjectsUseCase,
-    private val getStreamsUseCase: GetStreamsUseCase,
+    private val getStreamsWithIncidentUseCase: GetStreamsWithIncidentUseCase,
+    private val getStreamsWithDeploymentAndIncidentUseCase: GetStreamsWithDeploymentAndIncidentUseCase,
     private val trackingDb: TrackingDb
 ) : ViewModel() {
 
@@ -40,7 +47,7 @@ class StreamsViewModel(
         // When the selected project changes, refresh the streams
         streams.addSource(selectedProject) { result ->
             if (result is Result.Success) {
-                refreshStreams()
+                fetchFreshStreams()
             }
         }
         streams.addSource(_streams) { result -> streams.value = result }
@@ -79,11 +86,33 @@ class StreamsViewModel(
             GetProjectsParams(force)
         )
     }
+    fun fetchFreshStreams(force: Boolean = false, offset: Int = 0) {
+        val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
+        viewModelScope.launch(Dispatchers.Main) {
+            getStreamsWithDeploymentAndIncidentUseCase.launch(GetStreamWithDeploymentAndIncidentParams(
+                projectId = projectId,
+                offset = offset,
+                forceRefresh = force
+            )).collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        isLoadingMore = false
+                        _streams.value = Result.Error(result.throwable)
+                    }
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        isLoadingMore = false
+                        _streams.value = Result.Success(result.data)
+                    }
+                }
+            }
+        }
+    }
 
     fun refreshStreams(force: Boolean = false, offset: Int = 0, streamRefresh: Boolean = false) {
         isLoadingMore = true
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
-        getStreamsUseCase.execute(
+        getStreamsWithIncidentUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
                     isLoadingMore = false

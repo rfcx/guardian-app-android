@@ -16,6 +16,7 @@ import org.rfcx.incidents.data.StreamsRepositoryImp
 import org.rfcx.incidents.data.SubscribeRepositoryImp
 import org.rfcx.incidents.data.UserTouchRepositoryImp
 import org.rfcx.incidents.data.guardian.GuardianRegistrationRepositoryImpl
+import org.rfcx.incidents.data.guardian.deploy.DeploymentAndIncidentRepositoryImpl
 import org.rfcx.incidents.data.guardian.deploy.DeploymentRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AdminSocketRepositoryImpl
 import org.rfcx.incidents.data.guardian.socket.AudioSocketRepositoryImpl
@@ -35,6 +36,7 @@ import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.data.interfaces.SubscribeRepository
 import org.rfcx.incidents.data.interfaces.UserTouchRepository
 import org.rfcx.incidents.data.interfaces.guardian.GuardianRegistrationRepository
+import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentAndIncidentRepository
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AdminSocketRepository
 import org.rfcx.incidents.data.interfaces.guardian.socket.AudioSocketRepository
@@ -61,7 +63,7 @@ import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
-import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndIncidentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
@@ -106,7 +108,7 @@ object DataModule {
         single { GetProjectsUseCase(get(), get(), get()) }
 
         single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
-        single { GetStreamsUseCase(get(), get(), get()) }
+        single { GetStreamsWithIncidentUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
         single { GetEventsUseCase(get(), get(), get()) }
@@ -173,9 +175,11 @@ object DataModule {
         single { GetLocalProjectUseCase(get()) }
 
         single { DeploymentRepositoryImpl(get(), get(), get(), get(), get()) } bind DeploymentRepository::class
+        single { DeploymentAndIncidentRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) } bind DeploymentAndIncidentRepository::class
         single { SaveDeploymentUseCase(get()) }
         single { DeployDeploymentUseCase(get()) }
         single { GetStreamsWithDeploymentUseCase(get()) }
+        single { GetStreamsWithDeploymentAndIncidentUseCase(get()) }
     }
 
     val remoteModule = module {

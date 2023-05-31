@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +25,9 @@ import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentDeployParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncidentParams
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
+import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndIncidentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
@@ -38,16 +39,17 @@ class DeploymentListViewModel(
     private val preferences: Preferences,
     private val getProjectsUseCase: GetProjectsUseCase,
     private val getStreamsWithDeploymentUseCase: GetStreamsWithDeploymentUseCase,
+    private val getStreamsWithDeploymentAndIncidentUseCase: GetStreamsWithDeploymentAndIncidentUseCase,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _deployments: MutableStateFlow<List<DeploymentListItem>> = MutableStateFlow(emptyList())
-    val deployments = _deployments.asStateFlow()
+    private val _deployments = MutableSharedFlow<List<DeploymentListItem>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val deployments = _deployments.asSharedFlow()
 
-    private val _markers: MutableStateFlow<List<MapMarker>> = MutableStateFlow(emptyList())
-    val markers = _markers.asStateFlow()
+    private val _markers = MutableSharedFlow<List<MapMarker>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val markers = _markers.asSharedFlow()
 
     private val _selectedProject: MutableStateFlow<String> = MutableStateFlow("")
     val selectedProject = _selectedProject.asStateFlow()
@@ -70,6 +72,8 @@ class DeploymentListViewModel(
     private var currentFilter = FilterDeployment.ALL
     private var currentAllStreams = listOf<Stream>()
     private var selectedProjectId = ""
+
+    var isLoadingMore = false
 
     init {
         getLocationChanged()
@@ -138,14 +142,57 @@ class DeploymentListViewModel(
         )
     }
 
-    fun fetchStream(projectId: String? = null, force: Boolean = false) {
+    fun fetchFreshStreams(projectId: String? = null, force: Boolean = false, offset: Int = 0) {
+        val tempProjectId = projectId ?: selectedProjectId
+        isLoadingMore = true
+        viewModelScope.launch(Dispatchers.Main) {
+            getStreamsWithDeploymentAndIncidentUseCase.launch(
+                GetStreamWithDeploymentAndIncidentParams(
+                    projectId = tempProjectId,
+                    offset = offset,
+                    forceRefresh = force
+                )
+            ).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        isLoadingMore = false
+                        _streams.tryEmit(Result.Error(result.throwable))
+                    }
+                    Result.Loading -> _streams.tryEmit(Result.Loading)
+                    is Result.Success -> {
+                        isLoadingMore = false
+                        _streams.tryEmit(Result.Success(result.data))
+                        filterWithDeployment(result.data)
+                    }
+                }
+            }
+        }
+    }
+
+    fun fetchStream(projectId: String? = null, force: Boolean = false, swipeRefresh: Boolean = false, offset: Int = 0) {
+        isLoadingMore = true
         viewModelScope.launch(Dispatchers.Main) {
             val tempProjectId = projectId ?: selectedProjectId
-            getStreamsWithDeploymentUseCase.launch(GetStreamWithDeploymentParams(tempProjectId, force)).collectLatest { result ->
-                when(result) {
-                    is Result.Error -> _streams.tryEmit(Result.Error(result.throwable))
+            getStreamsWithDeploymentUseCase.launch(
+                GetStreamWithDeploymentParams(
+                    projectId = tempProjectId,
+                    forceRefresh = force,
+                    offset = offset,
+                    streamRefresh = swipeRefresh
+                )
+            ).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        isLoadingMore = false
+                        _streams.tryEmit(Result.Error(result.throwable))
+                    }
                     Result.Loading -> _streams.tryEmit(Result.Loading)
-                    is Result.Success -> _streams.tryEmit(Result.Success(result.data))
+                    is Result.Success -> {
+                        isLoadingMore = false
+                        _streams.tryEmit(Result.Success(result.data))
+                        Log.d("Guardian A", "${result.data.filter { it.deployment != null }.size}")
+                        filterWithDeployment(result.data)
+                    }
                 }
             }
         }
@@ -159,7 +206,7 @@ class DeploymentListViewModel(
                         selectedProjectId = it.id
                         _selectedProject.tryEmit(it.name)
                         // fetch streams after project changed
-                        fetchStream(projectId, false)
+                        fetchFreshStreams(projectId = projectId)
                         // fetch deployments after project changed
                         getDeployments(it.id)
                     }

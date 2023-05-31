@@ -12,4 +12,12 @@ interface IncidentEndpoint {
         @Query("limit_incidents") limitIncidents: Int = 1,
         @Query("projects") projects: List<String>? = null
     ): Single<List<StreamResponse>>
+
+    @GET("streams")
+    suspend fun getStreamsSuspend(
+        @Query("limit") limit: Int = 10,
+        @Query("offset") offset: Int = 0,
+        @Query("limit_incidents") limitIncidents: Int = 1,
+        @Query("projects") projects: List<String>? = null
+    ): List<StreamResponse>
 }

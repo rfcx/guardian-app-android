@@ -43,7 +43,7 @@ object UiModule {
     }
 
     val eventsModule = module {
-        viewModel { StreamsViewModel(get(), get(), get(), get()) }
+        viewModel { StreamsViewModel(get(), get(), get(), get(), get()) }
         viewModel { EventViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { StreamDetailViewModel(get(), get(), get(), get()) }
     }
@@ -85,6 +85,6 @@ object UiModule {
         viewModel { GuardianSiteSetViewModel(get(), get(), get()) }
         viewModel { AddPhotosViewModel(get()) }
         viewModel { GuardianPreferenceViewModel(androidContext(), get(), get()) }
-        viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get(), get()) }
+        viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     }
 }
