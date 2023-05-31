@@ -174,7 +174,7 @@ object DataModule {
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
 
-        single { DeploymentRepositoryImpl(get(), get(), get(), get(), get()) } bind DeploymentRepository::class
+        single { DeploymentRepositoryImpl(get(), get(), get(), get(), get(), get()) } bind DeploymentRepository::class
         single { DeploymentAndIncidentRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) } bind DeploymentAndIncidentRepository::class
         single { SaveDeploymentUseCase(get()) }
         single { DeployDeploymentUseCase(get()) }

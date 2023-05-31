@@ -1,6 +1,7 @@
 package org.rfcx.incidents.service.guardianfile
 
 import android.content.Context
+import me.echodev.resizer.Resizer
 import okhttp3.ResponseBody
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.guardian.file.GuardianFile
@@ -61,5 +62,16 @@ class GuardianFileHelper(private val context: Context) {
         } else {
             throw Throwable("File not found")
         }
+    }
+
+    fun compressFile(file: File): File {
+        if (file.length() <= 0) {
+            return file
+        }
+        return Resizer(context)
+            .setTargetLength(1920)
+            .setQuality(80)
+            .setSourceImage(file)
+            .resizedFile
     }
 }

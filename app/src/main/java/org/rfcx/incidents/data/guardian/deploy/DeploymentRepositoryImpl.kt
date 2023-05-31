@@ -27,6 +27,7 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.util.FileUtils.getMimeType
 import java.io.File
 
@@ -35,7 +36,8 @@ class DeploymentRepositoryImpl(
     private val imageLocal: DeploymentImageDb,
     private val streamLocal: StreamDb,
     private val cachedEndpointDb: CachedEndpointDb,
-    private val deploymentEndpoint: DeploymentEndpoint
+    private val deploymentEndpoint: DeploymentEndpoint,
+    private val guardianFileHelper: GuardianFileHelper
 ) : DeploymentRepository {
 
     override fun save(stream: Stream) {
@@ -141,7 +143,7 @@ class DeploymentRepositoryImpl(
 
                 val file = File(image.localPath)
                 val mimeType = file.getMimeType()
-                val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), file)
+                val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), guardianFileHelper.compressFile(file))
                 val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
                 val gson = Gson()
                 val obj = JsonObject()
