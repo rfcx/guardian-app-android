@@ -58,6 +58,14 @@ interface DeploymentEndpoint {
         @Part("meta") params: RequestBody? = null,
     ): Call<ResponseBody>
 
+    @Multipart
+    @POST("deployments/{id}/assets")
+    suspend fun uploadImageSuspend(
+        @Path("id") id: String,
+        @Part file: MultipartBody.Part,
+        @Part("meta") params: RequestBody? = null,
+    ): Response<ResponseBody>
+
     @PATCH("deployments/{id}")
     fun editDeployment(
         @Path("id") id: String,

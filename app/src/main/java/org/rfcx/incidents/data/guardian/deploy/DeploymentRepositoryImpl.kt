@@ -1,8 +1,15 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import me.echodev.resizer.Resizer
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
@@ -20,6 +27,8 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.FileUtils.getMimeType
+import java.io.File
 
 class DeploymentRepositoryImpl(
     private val deploymentLocal: DeploymentDb,
@@ -117,6 +126,42 @@ class DeploymentRepositoryImpl(
                         emit(Result.Error(Throwable(error)))
                     }
                 }
+            }
+        }
+    }
+
+    fun uploadImages(deployment: Deployment): Flow<Result<Boolean>> {
+        return flow {
+            emit(Result.Loading)
+
+            var someFailed = false
+            val images = deployment.images?.filter { it.remotePath == null }
+            images?.forEach { image ->
+                imageLocal.lockUnsent(image.id)
+
+                val file = File(image.localPath)
+                val mimeType = file.getMimeType()
+                val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), file)
+                val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                val gson = Gson()
+                val obj = JsonObject()
+                obj.addProperty("label", image.imageLabel)
+                val label = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), gson.toJson(obj))
+                val result = deploymentEndpoint.uploadImageSuspend(deployment.deploymentKey, body, label)
+                if (result.isSuccessful) {
+                    val assetPath = result.headers()["Location"]
+                    assetPath?.let { path ->
+                        imageLocal.markSent(image.id, path.substring(1, path.length))
+                    }
+                } else {
+                    imageLocal.markUnsent(image.id)
+                    someFailed = true
+                }
+            }
+            if (someFailed) {
+                emit(Result.Error(Throwable("There is something wrong on uploading images")))
+            } else {
+                emit(Result.Success(true))
             }
         }
     }
