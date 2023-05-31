@@ -95,7 +95,7 @@ class DeploymentRepositoryImpl(
         }
     }
 
-    override fun upload(streamId: Int): Flow<Result<Boolean>> {
+    override fun upload(streamId: Int): Flow<Result<String>> {
         return flow {
             val stream = streamLocal.get(streamId)
             stream?.deployment?.let { dp ->
@@ -113,7 +113,7 @@ class DeploymentRepositoryImpl(
                         val updatedDp = deploymentEndpoint.getDeploymentBySuspend(idDp)
                         streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
 
-                        emit(Result.Success(true))
+                        emit(Result.Success(idDp))
                     }
                     error?.contains("this deploymentKey is already existed") ?: false -> {
                         deploymentLocal.markSent(dp.deploymentKey, dp.id)
@@ -121,7 +121,7 @@ class DeploymentRepositoryImpl(
                         val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
                         streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
 
-                        emit(Result.Success(true))
+                        emit(Result.Success(dp.deploymentKey))
                     }
                     else -> {
                         deploymentLocal.markUnsent(dp.id)
@@ -132,12 +132,13 @@ class DeploymentRepositoryImpl(
         }
     }
 
-    fun uploadImages(deployment: Deployment): Flow<Result<Boolean>> {
+    override fun uploadImages(deploymentId: String): Flow<Result<Boolean>> {
         return flow {
             emit(Result.Loading)
 
             var someFailed = false
-            val images = deployment.images?.filter { it.remotePath == null }
+            val deployment = deploymentLocal.getById(deploymentId)
+            val images = deployment?.images?.filter { it.remotePath == null }
             images?.forEach { image ->
                 imageLocal.lockUnsent(image.id)
 

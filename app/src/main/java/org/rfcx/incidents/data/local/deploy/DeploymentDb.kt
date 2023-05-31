@@ -40,6 +40,11 @@ class DeploymentDb(private val realm: Realm) {
         return realm.copyFromRealm(deployment)
     }
 
+    fun getById(id: String): Deployment? {
+        val deployment = realm.where(Deployment::class.java).equalTo(Deployment.FIELD_DEPLOYMENT_KEY, id).findFirst()
+        return realm.copyFromRealm(deployment)
+    }
+
     fun getAllForWorker(): List<Deployment> {
         var unsent: List<Deployment> = listOf()
         realm.executeTransaction {

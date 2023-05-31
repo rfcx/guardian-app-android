@@ -29,6 +29,8 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncid
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndIncidentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.UploadImagesParams
+import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -42,6 +44,7 @@ class DeploymentListViewModel(
     private val getStreamsWithDeploymentAndIncidentUseCase: GetStreamsWithDeploymentAndIncidentUseCase,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
+    private val uploadImagesUseCase: UploadImagesUseCase,
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
@@ -227,6 +230,24 @@ class DeploymentListViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             deployDeploymentUseCase.launch(DeploymentDeployParams(id)).collectLatest { result ->
                 when (result) {
+                    is Result.Error -> {
+                        //show error
+                    }
+                    Result.Loading -> {
+                        //show loading
+                    }
+                    is Result.Success -> {
+                        uploadImages(result.data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun uploadImages(deploymentId: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
+                when(result) {
                     is Result.Error -> {
                         //show error
                     }

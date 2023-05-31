@@ -13,5 +13,7 @@ interface DeploymentRepository {
 
     fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>>
 
-    fun upload(streamId: Int): Flow<Result<Boolean>>
+    fun upload(streamId: Int): Flow<Result<String>>
+
+    fun uploadImages(deploymentId: String): Flow<Result<Boolean>>
 }
