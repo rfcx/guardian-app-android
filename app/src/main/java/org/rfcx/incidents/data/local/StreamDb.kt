@@ -86,8 +86,8 @@ class StreamDb(private val realm: Realm) {
     }
 
     fun getAllAsFlowByProject(projectId: String): Flow<List<Stream>> {
-        // return realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAllAsync().toFlow()
-        return flow { emit(realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll()) }
+        return realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAllAsync().toFlow()
+        // return flow { emit(realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll()) }
     }
 
     fun getAllForWorker(): List<Stream> {

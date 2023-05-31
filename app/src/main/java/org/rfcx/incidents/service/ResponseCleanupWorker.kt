@@ -52,14 +52,14 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
         val deploymentUnsent = deploymentDb.unsentCount()
         deploymentDb.unlockSending()
         if (deploymentUnsent > 0) {
-            DeploymentSyncWorker.enqueue()
+            // DeploymentSyncWorker.enqueue()
         }
 
         val imageDb = DeploymentImageDb(realm)
         val imageUnsent = imageDb.unsentCount()
         imageDb.unlockSending()
         if (imageUnsent > 0) {
-            ImageSyncWorker.enqueue()
+            // ImageSyncWorker.enqueue()
         }
     }
 
