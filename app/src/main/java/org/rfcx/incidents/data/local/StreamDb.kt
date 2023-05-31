@@ -5,6 +5,7 @@ import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
 import io.realm.kotlin.toflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Incident
@@ -85,7 +86,8 @@ class StreamDb(private val realm: Realm) {
     }
 
     fun getAllAsFlowByProject(projectId: String): Flow<List<Stream>> {
-        return realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAllAsync().toFlow()
+        // return realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAllAsync().toFlow()
+        return flow { emit(realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll()) }
     }
 
     fun getAllForWorker(): List<Stream> {

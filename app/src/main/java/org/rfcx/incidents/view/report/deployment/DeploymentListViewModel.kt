@@ -102,7 +102,7 @@ class DeploymentListViewModel(
         when (filter) {
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments")
-                val tempDeployments = streams.filter { it.deployment != null }
+                val tempDeployments = streams.filter { it.deployment != null }.sortedByDescending { it.deployment!!.deployedAt }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
@@ -110,7 +110,7 @@ class DeploymentListViewModel(
             }
             FilterDeployment.SYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any synced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }.sortedByDescending { it.deployment!!.deployedAt }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
@@ -118,7 +118,7 @@ class DeploymentListViewModel(
             }
             FilterDeployment.UNSYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }.sortedByDescending { it.deployment!!.deployedAt }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
@@ -190,7 +190,6 @@ class DeploymentListViewModel(
                     is Result.Success -> {
                         isLoadingMore = false
                         _streams.tryEmit(Result.Success(result.data))
-                        Log.d("Guardian A", "${result.data.filter { it.deployment != null }.size}")
                         filterWithDeployment(result.data)
                     }
                 }
