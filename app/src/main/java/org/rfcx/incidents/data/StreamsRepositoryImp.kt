@@ -36,6 +36,10 @@ class StreamsRepositoryImp(
         return streamDb.getByProject(params.projectId)
     }
 
+    override fun getById(id: String): Stream? {
+        return streamDb.get(id)
+    }
+
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {
         // Save all streams in project
         return incidentEndpoint.getStreams(

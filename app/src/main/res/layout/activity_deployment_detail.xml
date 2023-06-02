@@ -12,13 +12,12 @@
 
         <variable
             name="viewModel"
-            type="org.rfcx.incidents.view.guardian.checklist.storage.HeatmapAudioCoverageViewModel" />
+            type="org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
         android:fitsSystemWindows="true">
 
         <include
