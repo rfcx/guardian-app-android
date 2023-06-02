@@ -11,7 +11,7 @@ import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.toStringWithTimeZone
 import java.util.TimeZone
 
-class DeploymentListAdapter(private val cloudListener: CloudListener) :
+class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemListener) :
     RecyclerView.Adapter<DeploymentListAdapter.DeploymentListViewHolder>() {
 
     var items: List<DeploymentListItem> = arrayListOf()
@@ -50,8 +50,12 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
 
             syncIcon.setOnClickListener {
                 if (item.stream.deployment?.syncState == SyncState.UNSENT.value) {
-                    cloudListener.onClicked(item.stream.id)
+                    deploymentItemListener.onCloudClicked(item.stream.id)
                 }
+            }
+
+            itemView.setOnClickListener {
+                deploymentItemListener.onItemClicked(item.stream.id)
             }
 
             guardianTypeLayout.visibility = if (item.guardianType == null) View.GONE else View.VISIBLE
@@ -83,6 +87,8 @@ class DeploymentListAdapter(private val cloudListener: CloudListener) :
     }
 }
 
-interface CloudListener {
-    fun onClicked(id: Int)
+interface DeploymentItemListener {
+    fun onCloudClicked(id: Int)
+
+    fun onItemClicked(streamId: Int)
 }

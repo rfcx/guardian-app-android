@@ -17,5 +17,5 @@ class GetLocalStreamUseCase(
 }
 
 data class GetLocalStreamParams(
-    val streamId: String
+    val streamId: Int
 )

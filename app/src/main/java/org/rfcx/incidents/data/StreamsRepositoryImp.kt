@@ -36,7 +36,7 @@ class StreamsRepositoryImp(
         return streamDb.getByProject(params.projectId)
     }
 
-    override fun getById(id: String): Stream? {
+    override fun getById(id: Int): Stream? {
         return streamDb.get(id)
     }
 

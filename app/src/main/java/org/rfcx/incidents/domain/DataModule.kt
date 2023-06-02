@@ -182,6 +182,8 @@ object DataModule {
         single { GetStreamsWithDeploymentUseCase(get()) }
         single { GetStreamsWithDeploymentAndIncidentUseCase(get()) }
         single { UploadImagesUseCase(get()) }
+
+        single { GetLocalStreamUseCase(get()) }
     }
 
     val remoteModule = module {

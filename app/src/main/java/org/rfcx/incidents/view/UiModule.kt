@@ -34,6 +34,7 @@ import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
 import org.rfcx.incidents.view.profile.guardian.GuardianFileDownloadViewModel
 import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.deployment.DeploymentListViewModel
+import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
 object UiModule {
@@ -86,5 +87,6 @@ object UiModule {
         viewModel { AddPhotosViewModel(get()) }
         viewModel { GuardianPreferenceViewModel(androidContext(), get(), get()) }
         viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+        viewModel { DeploymentDetailViewModel(get()) }
     }
 }

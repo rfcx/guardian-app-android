@@ -25,8 +25,9 @@ import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
+import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailActivity
 
-class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener {
+class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClickListener {
 
     private lateinit var binding: FragmentDeploymentListBinding
     private val viewModel: DeploymentListViewModel by viewModel()
@@ -297,8 +298,12 @@ class DeploymentListFragment : Fragment(), CloudListener, ProjectOnClickListener
         Toast.makeText(context, R.string.not_have_permission, Toast.LENGTH_LONG).show()
     }
 
-    override fun onClicked(id: Int) {
+    override fun onCloudClicked(id: Int) {
         viewModel.syncDeployment(id)
+    }
+
+    override fun onItemClicked(streamId: Int) {
+        DeploymentDetailActivity.startActivity(requireContext(), streamId)
     }
 
     override fun onStart() {

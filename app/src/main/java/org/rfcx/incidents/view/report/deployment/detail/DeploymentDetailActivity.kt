@@ -50,7 +50,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
     }
 
     private fun getExtra() {
-        intent.extras?.getString(EXTRA_STREAM_ID)?.let {
+        intent.extras?.getInt(EXTRA_STREAM_ID)?.let {
             viewModel.setStreamId(it)
         }
     }
@@ -124,9 +124,9 @@ class DeploymentDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_STREAM_ID = "EXTRA_STREAM_ID"
-        fun startActivity(context: Context, deploymentId: Int) {
+        fun startActivity(context: Context, streamId: Int) {
             val intent = Intent(context, DeploymentDetailActivity::class.java)
-            intent.putExtra(EXTRA_STREAM_ID, deploymentId)
+            intent.putExtra(EXTRA_STREAM_ID, streamId)
             context.startActivity(intent)
         }
     }

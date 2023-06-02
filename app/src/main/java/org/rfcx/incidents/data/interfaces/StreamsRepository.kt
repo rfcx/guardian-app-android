@@ -13,5 +13,5 @@ interface StreamsRepository {
 
     fun getLocal(params: GetLocalStreamsParams): List<Stream>
 
-    fun getById(id: String): Stream?
+    fun getById(id: Int): Stream?
 }

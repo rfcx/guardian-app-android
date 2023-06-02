@@ -19,11 +19,11 @@ class DeploymentDetailViewModel(
     private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
     val stream = _stream.asStateFlow()
 
-    fun setStreamId(id: String) {
+    fun setStreamId(id: Int) {
         getStream(id)
     }
 
-    private fun getStream(id: String) {
+    private fun getStream(id: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             getLocalStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest {
                 _stream.tryEmit(it)
