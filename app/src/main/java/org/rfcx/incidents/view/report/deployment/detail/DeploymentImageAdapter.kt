@@ -10,12 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_image.view.*
-import org.rfcx.companion.R
-import org.rfcx.companion.adapter.BaseListItem
-import org.rfcx.companion.entity.SyncState
-import org.rfcx.companion.extension.setDeploymentImage
-import org.rfcx.companion.util.getIdToken
+import org.rfcx.incidents.R
+import org.rfcx.incidents.adapter.entity.BaseListItem
+import org.rfcx.incidents.entity.response.SyncState
 
 class DeploymentImageAdapter :
     ListAdapter<BaseListItem, RecyclerView.ViewHolder>(DeploymentImageViewDiff()) {
@@ -44,7 +41,7 @@ class DeploymentImageAdapter :
                     LocalImageItem(
                         index,
                         it,
-                        it.syncState == SyncState.Unsent.key
+                        it.syncState == SyncState.UNSENT.value
                     )
                 )
             }
@@ -158,50 +155,50 @@ class DeploymentImageAdapter :
         itemView: View,
         private val onImageAdapterClickListener: OnImageAdapterClickListener?
     ) : RecyclerView.ViewHolder(itemView) {
-        private val imageView = itemView.image
-        private val deleteButton = itemView.deleteImageButton
-        private val syncImageView = itemView.syncImage
-        private val progress = itemView.progressBarOfImageView
+        // private val imageView = itemView.image
+        // private val deleteButton = itemView.deleteImageButton
+        // private val syncImageView = itemView.syncImage
+        // private val progress = itemView.progressBarOfImageView
 
         fun bind(item: DeploymentImageView, canDelete: Boolean) {
-            syncImageView.visibility = View.VISIBLE
-            syncImageView.setImageDrawable(
-                ContextCompat.getDrawable(
-                    itemView.context,
-                    item.syncImage
-                )
-            )
-
-            val token = itemView.context.getIdToken()
-            val fromServer = item.remotePath != null
-            imageView.setDeploymentImage(
-                url = item.remotePath ?: item.localPath,
-                blur = item.syncState != SyncState.Sent.key,
-                fromServer = fromServer,
-                token = token,
-                progressBar = progress
-            )
-
-            // handle hide syncing image view after sent in 2sec
-            if (item.syncState == SyncState.Sent.key) {
-                val handler = Handler()
-                handler.postDelayed({
-                    syncImageView.visibility = View.INVISIBLE
-                }, 2000) // 2s
-            }
-
-            itemView.setOnClickListener {
-                onImageAdapterClickListener?.onImageClick(item)
-            }
-
-            deleteButton.setOnClickListener {
-                onImageAdapterClickListener?.onDeleteImageClick(adapterPosition, item.localPath)
-            }
-            if (item.id == 0) {
-                deleteButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
-            } else {
-                deleteButton.visibility = View.INVISIBLE
-            }
+        //     syncImageView.visibility = View.VISIBLE
+        //     syncImageView.setImageDrawable(
+        //         ContextCompat.getDrawable(
+        //             itemView.context,
+        //             item.syncImage
+        //         )
+        //     )
+        //
+        //     val token = itemView.context.getIdToken()
+        //     val fromServer = item.remotePath != null
+        //     imageView.setDeploymentImage(
+        //         url = item.remotePath ?: item.localPath,
+        //         blur = item.syncState != SyncState.Sent.key,
+        //         fromServer = fromServer,
+        //         token = token,
+        //         progressBar = progress
+        //     )
+        //
+        //     // handle hide syncing image view after sent in 2sec
+        //     if (item.syncState == SyncState.Sent.key) {
+        //         val handler = Handler()
+        //         handler.postDelayed({
+        //             syncImageView.visibility = View.INVISIBLE
+        //         }, 2000) // 2s
+        //     }
+        //
+        //     itemView.setOnClickListener {
+        //         onImageAdapterClickListener?.onImageClick(item)
+        //     }
+        //
+        //     deleteButton.setOnClickListener {
+        //         onImageAdapterClickListener?.onDeleteImageClick(adapterPosition, item.localPath)
+        //     }
+        //     if (item.id == 0) {
+        //         deleteButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
+        //     } else {
+        //         deleteButton.visibility = View.INVISIBLE
+        //     }
         }
     }
 
@@ -232,9 +229,9 @@ class DeploymentImageAdapter :
         }
 
         override fun areContentsTheSame(oldItem: BaseListItem, newItem: BaseListItem): Boolean {
-            return if (newItem is org.rfcx.companion.adapter.LocalImageItem && oldItem is org.rfcx.companion.adapter.LocalImageItem) {
-                (newItem.imageId == oldItem.imageId && newItem.localPath == oldItem.localPath)
-            } else newItem is org.rfcx.companion.adapter.RemoteImageItem && oldItem is org.rfcx.companion.adapter.RemoteImageItem
+            return if (newItem is LocalImageItem && oldItem is LocalImageItem) {
+                (newItem.imageId == oldItem.imageId && newItem.deploymentImage.localPath == oldItem.deploymentImage.localPath)
+            } else newItem is RemoteImageItem && oldItem is RemoteImageItem
         }
     }
 }
