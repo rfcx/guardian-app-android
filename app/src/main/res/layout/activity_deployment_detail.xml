@@ -150,7 +150,7 @@
                         tools:text="ABCDEFGHIJKLM1234" />
                 </LinearLayout>
 
-                <com.mapbox.mapboxsdk.maps.MapView
+                <org.rfcx.incidents.view.guardian.checklist.site.MapView
                     android:id="@+id/mapBoxView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,6 +33,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        setMap(savedInstanceState)
         getExtra()
         setupToolbar()
         setupImageRecycler()
@@ -39,6 +41,10 @@ class DeploymentDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.stream.collectLatest {
                 updateDeploymentDetailView(it)
+                if (it != null) {
+                    val siteLoc = LatLng(it.latitude, it.longitude)
+                    binding.mapBoxView.setSiteLocation(siteLoc)
+                }
             }
         }
     }
@@ -47,6 +53,11 @@ class DeploymentDetailActivity : AppCompatActivity() {
         intent.extras?.getString(EXTRA_STREAM_ID)?.let {
             viewModel.setStreamId(it)
         }
+    }
+
+    private fun setMap(savedInstanceState: Bundle?) {
+        binding.mapBoxView.onCreate(savedInstanceState)
+        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
     }
 
     private fun updateDeploymentDetailView(stream: Stream?) {
