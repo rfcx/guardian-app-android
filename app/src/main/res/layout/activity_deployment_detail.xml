@@ -45,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/deploymentLocationTitle"
-                    style="@style/RangerText.Title"
+                    style="@style/RangerText.Title.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/location"
@@ -55,7 +55,7 @@
 
                 <TextView
                     android:id="@+id/latitudeLabel"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="latitude"
@@ -64,7 +64,7 @@
 
                 <TextView
                     android:id="@+id/latitudeValue"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="@id/latitudeLabel"
@@ -86,7 +86,7 @@
 
                 <TextView
                     android:id="@+id/longitudeLabel"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
@@ -96,7 +96,7 @@
 
                 <TextView
                     android:id="@+id/longitudeValue"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="@id/longitudeLabel"
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/altitudeLabel"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
@@ -115,7 +115,7 @@
 
                 <TextView
                     android:id="@+id/altitudeValue"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="@id/altitudeLabel"
@@ -124,7 +124,7 @@
 
                 <TextView
                     android:id="@+id/deploymentIdLabel"
-                    style="@style/RangerText.Label"
+                    style="@style/RangerText.Label.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
@@ -172,7 +172,7 @@
 
                 <TextView
                     android:id="@+id/photoLabel"
-                    style="@style/RangerText.Title"
+                    style="@style/RangerText.Title.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/photos"
