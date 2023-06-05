@@ -230,11 +230,13 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
             if (state == DeploymentListState.LIST) {
                 binding.mapLayout.visibility = View.VISIBLE
                 binding.listLayout.visibility = View.GONE
+                binding.deploymentRefreshView.visibility = View.GONE
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
                 state = DeploymentListState.MAP
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
+                binding.deploymentRefreshView.visibility = View.VISIBLE
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
                 state = DeploymentListState.LIST
             }
@@ -259,6 +261,10 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                     }
                 }
             }
+        }
+
+        binding.mapBoxView.setSeeDetailCallback {
+            DeploymentDetailActivity.startActivity(requireContext(), it)
         }
 
         binding.currentLocationButton.setOnClickListener {

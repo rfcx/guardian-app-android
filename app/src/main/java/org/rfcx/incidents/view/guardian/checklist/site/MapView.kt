@@ -116,6 +116,7 @@ class MapView @JvmOverloads constructor(
     private var fromDeploymentList = false
     private lateinit var callback: (LatLng) -> Unit
     private lateinit var mapReadyCallback: (Boolean) -> Unit
+    private lateinit var seeDetailCallback: (Int) -> Unit
 
     init {
         initAttrs(attrs)
@@ -132,6 +133,7 @@ class MapView @JvmOverloads constructor(
     }
 
     fun setParam(canMove: Boolean = true, fromDeploymentList: Boolean = false) {
+        Log.d("GuardianAoo", "$canMove $fromDeploymentList")
         this.canMove = canMove
         this.fromDeploymentList = fromDeploymentList
     }
@@ -142,6 +144,10 @@ class MapView @JvmOverloads constructor(
 
     fun setMapReadyCallback(callback: (Boolean) -> Unit) {
         this.mapReadyCallback = callback
+    }
+
+    fun setSeeDetailCallback(callback: (Int) -> Unit) {
+        this.seeDetailCallback = callback
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -359,6 +365,7 @@ class MapView @JvmOverloads constructor(
                             it.id.toString() == deploymentId.asString
                         }
                     val properties = mapOf(
+                        Pair(PROPERTY_SITE_MARKER_SITE_ID, it.id.toString()),
                         Pair(PROPERTY_DEPLOYMENT_MARKER_LOCATION_ID, "${it.streamName}.${it.id}"),
                         Pair(PROPERTY_WINDOW_INFO_ID, "${it.streamName}.${it.id}"),
                         Pair(PROPERTY_DEPLOYMENT_MARKER_IMAGE, it.pin),
@@ -413,12 +420,11 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun handleClickSeeDetail(feature: Feature): Boolean {
-        val deploymentId = feature.getStringProperty(PROPERTY_DEPLOYMENT_MARKER_DEPLOYMENT_ID)
+        val streamId = feature.getStringProperty(PROPERTY_SITE_MARKER_SITE_ID)
 
-        if (deploymentId != null) {
+        if (streamId != null) {
             context?.let {
-                // DeploymentDetailActivity.startActivity(it, deploymentId.toInt())
-                // analytics?.trackSeeDetailEvent()
+                seeDetailCallback.invoke(streamId.toInt())
             }
         } else {
             setFeatureSelectState(feature, false)
