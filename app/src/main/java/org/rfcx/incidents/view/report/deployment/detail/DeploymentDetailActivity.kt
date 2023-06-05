@@ -61,6 +61,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
     }
 
     private fun updateDeploymentDetailView(stream: Stream?) {
+        supportActionBar?.title = stream?.name
         binding.latitudeValue.text = stream?.latitude.latitudeCoordinates()
         binding.longitudeValue.text = stream?.longitude.longitudeCoordinates()
         binding.altitudeValue.text = stream?.altitude?.setFormatLabel()
@@ -83,7 +84,6 @@ class DeploymentDetailActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = "deployment detail of xxxxxx"
         }
     }
 

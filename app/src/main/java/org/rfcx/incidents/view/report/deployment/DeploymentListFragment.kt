@@ -114,7 +114,6 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 } else {
                     binding.noDeploymentLayout.visibility = View.GONE
                 }
-                Log.d("Guardian", "${it.size}")
                 deploymentAdapter.items = it
             }
         }
