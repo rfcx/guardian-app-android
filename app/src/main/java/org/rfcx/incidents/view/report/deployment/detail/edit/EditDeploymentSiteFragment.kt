@@ -12,6 +12,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.mapbox.mapboxsdk.geometry.LatLng
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
@@ -40,12 +44,22 @@ class EditDeploymentSiteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = viewModel
+        setMap(savedInstanceState)
 
         view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
         setHideKeyboard()
 
         binding.changeButton.setOnClickListener {
             //open map picker
+        }
+
+        lifecycleScope.launch {
+            viewModel.stream.collectLatest {
+                if (it != null) {
+                    val siteLoc = LatLng(it.latitude, it.longitude)
+                    binding.mapBoxView.setSiteLocation(siteLoc)
+                }
+            }
         }
 
         binding.saveButton.setOnClickListener {
@@ -59,6 +73,11 @@ class EditDeploymentSiteFragment : Fragment() {
                 //view model update site
             }
         }
+    }
+
+    private fun setMap(savedInstanceState: Bundle?) {
+        binding.mapBoxView.onCreate(savedInstanceState)
+        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
     }
 
     private fun setOnFocusEditText() {

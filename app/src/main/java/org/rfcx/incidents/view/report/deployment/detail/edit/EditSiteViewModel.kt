@@ -1,5 +1,7 @@
 package org.rfcx.incidents.view.report.deployment.detail.edit
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -9,12 +11,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.GetLocalStreamParams
 import org.rfcx.incidents.domain.GetLocalStreamUseCase
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 
 class EditSiteViewModel(
     private val getLocalStreamUseCase: GetLocalStreamUseCase
 ) : ViewModel() {
+
+    private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
+    val stream = _stream.asStateFlow()
 
     private val _siteName: MutableStateFlow<String> = MutableStateFlow("")
     val siteName = _siteName.asStateFlow()
@@ -29,6 +35,7 @@ class EditSiteViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getLocalStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest { stream ->
                 if (stream != null) {
+                    _stream.tryEmit(stream)
                     _siteName.tryEmit(stream.name)
                     _siteCoordinates.tryEmit("${stream.latitude.latitudeCoordinates()}, ${stream.longitude.longitudeCoordinates()}")
                     _siteAltitude.tryEmit(stream.altitude.toString())
