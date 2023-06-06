@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment.detail.edit
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,17 +12,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
-import org.rfcx.incidents.view.guardian.checklist.storage.GuardianStorageViewModel
 
 class EditDeploymentSiteFragment : Fragment() {
     private lateinit var binding: FragmentEditLocationBinding
-    private val viewModel: EditLocationViewModel by viewModel()
+    private val viewModel: EditSiteViewModel by viewModel()
 
     private var listener: EditDeploymentSiteListener? = null
 
@@ -136,10 +131,9 @@ class EditDeploymentSiteFragment : Fragment() {
 
     companion object {
         private const val ARG_STREAM_ID = "ARG_STREAM_ID"
-        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
         @JvmStatic
-        fun newInstance(lat: Double, lng: Double, altitude: Double, id: Int) =
+        fun newInstance(id: Int) =
             EditDeploymentSiteFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_STREAM_ID, id)

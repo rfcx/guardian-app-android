@@ -16,15 +16,8 @@ import org.rfcx.incidents.view.report.deployment.detail.MapPickerProtocol
 
 class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditDeploymentSiteListener {
     lateinit var binding: ActivityEditLocationBinding
-    private val viewModel: DeploymentDetailViewModel by viewModel()
 
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
-    private var altitude: Double = 0.0
     private var streamId: Int? = null
-    private var deploymentId: Int? = null
-    private var selectedProject: Int? = null
-    private var device: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,58 +29,22 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditD
         initIntent()
 
         startFragment(
-            MapPickerFragment.newInstance(
-                latitude,
-                longitude,
-                altitude,
-                streamId ?: -1
-            )
+            EditDeploymentSiteFragment.newInstance(streamId ?: -1)
         )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == DEPLOYMENT_REQUEST_CODE) {
-            when (resultCode) {
-                ProjectActivity.RESULT_OK -> {
-                    selectedProject =
-                        data?.getIntExtra(EXTRA_PROJECT_ID, -1)
-                }
-                ProjectActivity.RESULT_DELETE -> {
-                    selectedProject = data?.getIntExtra(EXTRA_PROJECT_ID, -1)
-                }
-            }
-        }
     }
 
     private fun initIntent() {
         intent.extras?.let {
             streamId = it.getInt(EXTRA_STREAM_ID)
-            val stream = viewModel.getStreamById(streamId ?: -1)
-            latitude = stream?.latitude ?: 0.0
-            longitude = stream?.longitude ?: 0.0
-            altitude = stream?.altitude ?: 0.0
-
-            deploymentId = it.getInt(EXTRA_DEPLOYMENT_ID)
-            selectedProject = it.getInt(EXTRA_PROJECT_ID)
-            device = it.getString(EXTRA_DEVICE)
         }
     }
-
-    private fun setLatLng(latitude: Double, longitude: Double, altitude: Double) {
-        this.latitude = latitude
-        this.longitude = longitude
-        this.altitude = altitude
-    }
-
     override fun onSelectedLocation(
         latitude: Double,
         longitude: Double,
         siteId: Int,
         name: String
     ) {
-        setLatLng(latitude, longitude, altitude)
-        startFragment(EditDeploymentSiteFragment.newInstance(latitude, longitude, altitude, siteId))
+        startFragment(EditDeploymentSiteFragment.newInstance(siteId))
     }
 
     override fun startMapPickerPage(
@@ -96,24 +53,11 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditD
         altitude: Double,
         streamId: Int
     ) {
-        setLatLng(latitude, longitude, altitude)
-        startFragment(MapPickerFragment.newInstance(latitude, longitude, altitude, streamId))
+        // startFragment(MapPickerFragment.newInstance(latitude, longitude, altitude, streamId))
     }
 
     override fun updateDeploymentDetail(name: String, altitude: Double) {
-        val stream = viewModel.getStreamById(streamId ?: -1)
-        stream?.let { it ->
-            viewModel.editStream(
-                id = it.id,
-                locationName = name,
-                latitude = latitude,
-                longitude = longitude,
-                altitude = altitude,
-                selectedProject ?: -1
-            )
-        }
-        viewModel.markDeploymentNeedUpdate(deploymentId ?: -1)
-        DeploymentSyncWorker.enqueue(this@EditDeploymentSiteActivity)
+        //viewmodel update site
         finish()
     }
 
@@ -144,24 +88,14 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditD
 
     companion object {
         const val EXTRA_STREAM_ID = "EXTRA_STREAM_ID"
-        const val EXTRA_DEPLOYMENT_ID = "EXTRA_DEPLOYMENT_ID"
-        const val EXTRA_PROJECT_ID = "EXTRA_PROJECT_ID"
-        const val EXTRA_DEVICE = "EXTRA_DEVICE"
 
         fun startActivity(
             context: Context,
-            streamId: Int,
-            deploymentId: Int,
-            projectId: Int,
-            device: String,
-            requestCode: Int
+            streamId: Int
         ) {
             val intent = Intent(context, EditDeploymentSiteActivity::class.java)
             intent.putExtra(EXTRA_STREAM_ID, streamId)
-            intent.putExtra(EXTRA_DEPLOYMENT_ID, deploymentId)
-            intent.putExtra(EXTRA_PROJECT_ID, projectId)
-            intent.putExtra(EXTRA_DEVICE, device)
-            (context as Activity).startActivityForResult(intent, requestCode)
+            (context as Activity).startActivity(intent)
         }
     }
 }

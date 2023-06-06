@@ -18,12 +18,15 @@ import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.setFormatLabel
+import org.rfcx.incidents.view.report.deployment.detail.edit.EditDeploymentSiteActivity
 
 class DeploymentDetailActivity : AppCompatActivity() {
 
     private val deploymentImageAdapter by lazy { DeploymentImageAdapter() }
     lateinit var binding: ActivityDeploymentDetailBinding
     private val viewModel: DeploymentDetailViewModel by viewModel()
+
+    private var streamId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +50,15 @@ class DeploymentDetailActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.editButton.setOnClickListener {
+            EditDeploymentSiteActivity.startActivity(this, streamId)
+        }
     }
 
     private fun getExtra() {
         intent.extras?.getInt(EXTRA_STREAM_ID)?.let {
+            streamId = it
             viewModel.setStreamId(it)
         }
     }
