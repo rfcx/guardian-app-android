@@ -68,7 +68,6 @@ class GuardianSiteSetViewModel(
     private fun getLocationChanged() {
         viewModelScope.launch {
             locationHelper.getFlowLocationChanged().collectLatest {
-                Log.d("GUardianAPp 2", "${it}")
                 _currentLocationState.tryEmit(it)
                 if (isNewSite) {
                     updateSiteToCurrentLocation()

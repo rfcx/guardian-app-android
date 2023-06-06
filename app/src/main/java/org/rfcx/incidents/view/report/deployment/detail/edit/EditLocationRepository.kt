@@ -1,4 +1,4 @@
-package org.rfcx.incidents.view.report.deployment.detail
+package org.rfcx.incidents.view.report.deployment.detail.edit
 
 import org.rfcx.companion.entity.Project
 import org.rfcx.companion.entity.Stream

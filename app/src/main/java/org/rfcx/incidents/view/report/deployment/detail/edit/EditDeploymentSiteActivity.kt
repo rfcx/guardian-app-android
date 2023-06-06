@@ -1,16 +1,22 @@
-package org.rfcx.incidents.view.report.deployment.detail
+package org.rfcx.incidents.view.report.deployment.detail.edit
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
+import org.rfcx.incidents.databinding.ActivityEditLocationBinding
+import org.rfcx.incidents.view.guardian.checklist.site.MapPickerFragment
+import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel
+import org.rfcx.incidents.view.report.deployment.detail.MapPickerProtocol
 
-class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditLocationActivityListener {
-    private lateinit var viewModel: EditLocationViewModel
+class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditDeploymentSiteListener {
+    lateinit var binding: ActivityEditLocationBinding
+    private val viewModel: DeploymentDetailViewModel by viewModel()
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
@@ -22,12 +28,12 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_location)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_location)
+        binding.lifecycleOwner = this
+        setContentView(binding.root)
 
-        setViewModel()
         setupToolbar()
         initIntent()
-        toolbarLayout.visibility = View.VISIBLE
 
         startFragment(
             MapPickerFragment.newInstance(
@@ -37,18 +43,6 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditL
                 streamId ?: -1
             )
         )
-    }
-
-    private fun setViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
-                application,
-                DeviceApiHelper(DeviceApiServiceImpl(this)),
-                CoreApiHelper(CoreApiServiceImpl(this)),
-                LocalDataHelper()
-            )
-        ).get(EditLocationViewModel::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,23 +80,14 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditL
         this.altitude = altitude
     }
 
-    override fun showAppbar() {
-        toolbarLayout.visibility = View.VISIBLE
-    }
-
-    override fun hideAppbar() {
-        toolbarLayout.visibility = View.GONE
-    }
-
     override fun onSelectedLocation(
         latitude: Double,
         longitude: Double,
         siteId: Int,
         name: String
     ) {
-        toolbarLayout.visibility = View.VISIBLE
         setLatLng(latitude, longitude, altitude)
-        startFragment(EditLocationFragment.newInstance(latitude, longitude, altitude, siteId))
+        startFragment(EditDeploymentSiteFragment.newInstance(latitude, longitude, altitude, siteId))
     }
 
     override fun startMapPickerPage(
@@ -111,7 +96,6 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditL
         altitude: Double,
         streamId: Int
     ) {
-        toolbarLayout.visibility = View.VISIBLE
         setLatLng(latitude, longitude, altitude)
         startFragment(MapPickerFragment.newInstance(latitude, longitude, altitude, streamId))
     }
@@ -133,38 +117,18 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditL
         finish()
     }
 
-    override fun getStream(id: Int): Stream {
-        return viewModel.getStreamById(id) ?: Stream()
-    }
-
-    override fun getProject(id: Int): Project {
-        return viewModel.getProjectById(id) ?: Project()
-    }
-
-    override fun startLocationGroupPage() {
-        intent.extras?.getInt(EXTRA_DEPLOYMENT_ID)?.let { deploymentId ->
-            ProjectActivity.startActivity(
-                this,
-                selectedProject ?: -1,
-                deploymentId,
-                Screen.EDIT_LOCATION.id,
-                DEPLOYMENT_REQUEST_CODE
-            )
-        }
-    }
-
     private fun startFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(editLocationContainer.id, fragment)
+            .replace(binding.container.id, fragment)
             .commit()
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbarLayout.toolbarDefault)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = getString(R.string.edit_location)
+            title = "Edit location"
         }
     }
 
