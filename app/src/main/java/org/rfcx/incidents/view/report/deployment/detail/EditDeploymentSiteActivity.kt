@@ -8,22 +8,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_edit_location.*
-import kotlinx.android.synthetic.main.toolbar_default.*
-import org.rfcx.companion.R
-import org.rfcx.companion.base.ViewModelFactory
-import org.rfcx.companion.entity.Project
-import org.rfcx.companion.entity.Screen
-import org.rfcx.companion.entity.Stream
-import org.rfcx.companion.repo.api.CoreApiHelper
-import org.rfcx.companion.repo.api.CoreApiServiceImpl
-import org.rfcx.companion.repo.api.DeviceApiHelper
-import org.rfcx.companion.repo.api.DeviceApiServiceImpl
-import org.rfcx.companion.repo.local.LocalDataHelper
-import org.rfcx.companion.service.DeploymentSyncWorker
-import org.rfcx.companion.view.deployment.locate.MapPickerFragment
-import org.rfcx.companion.view.detail.DeploymentDetailActivity.Companion.DEPLOYMENT_REQUEST_CODE
-import org.rfcx.companion.view.profile.locationgroup.ProjectActivity
 
 class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditLocationActivityListener {
     private lateinit var viewModel: EditLocationViewModel
