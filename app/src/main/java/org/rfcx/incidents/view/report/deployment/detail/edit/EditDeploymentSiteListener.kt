@@ -5,5 +5,5 @@ import org.rfcx.incidents.entity.stream.Stream
 interface EditDeploymentSiteListener {
     fun startMapPickerPage(site: Stream)
     fun backToEditPage(site: Stream)
-    fun updateDeploymentDetail(name: String, altitude: Double)
+    fun finishEdit()
 }

@@ -20,7 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.view.guardian.checklist.site.MapPickerFragment
 
 class EditDeploymentSiteFragment : Fragment() {
     private lateinit var binding: FragmentEditLocationBinding
@@ -29,8 +28,8 @@ class EditDeploymentSiteFragment : Fragment() {
     private var listener: EditDeploymentSiteListener? = null
 
     private lateinit var site: Stream
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+    private var siteLatitude: Double = 0.0
+    private var siteLongitude: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -57,6 +56,7 @@ class EditDeploymentSiteFragment : Fragment() {
 
         binding.changeButton.setOnClickListener {
             site.let {
+                it.name = binding.siteNameEditText.text.toString()
                 listener?.startMapPickerPage(it)
             }
         }
@@ -65,9 +65,9 @@ class EditDeploymentSiteFragment : Fragment() {
             viewModel.stream.collectLatest {
                 if (it != null) {
                     site = it
-                    if (latitude != 0.0 && longitude != 0.0) {
-                        site.latitude = latitude
-                        site.longitude = longitude
+                    if (siteLatitude != 0.0 && siteLongitude != 0.0) {
+                        site.latitude = siteLatitude
+                        site.longitude = siteLongitude
                     }
                     val siteLoc = LatLng(site.latitude, site.longitude)
                     binding.mapBoxView.setSiteLocation(siteLoc)
@@ -83,7 +83,14 @@ class EditDeploymentSiteFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                //view model update site
+                site.apply {
+                    name = binding.siteNameEditText.text.toString()
+                    this.latitude = siteLatitude
+                    this.longitude = siteLongitude
+                    altitude = binding.altitudeEditText.text.toString().toDouble()
+                }
+                viewModel.updateDeploymentSite(site)
+                listener?.finishEdit()
             }
         }
     }
@@ -122,11 +129,12 @@ class EditDeploymentSiteFragment : Fragment() {
     private fun initIntent() {
         arguments?.let {
             viewModel.getStreamById(it.getInt(ARG_STREAM_ID))
-            latitude = it.getDouble(ARG_LATITUDE)
-            longitude = it.getDouble(ARG_LONGITUDE)
-            viewModel.pickLatitudeLongitude(
-                latitude,
-                longitude
+            siteLatitude = it.getDouble(ARG_LATITUDE)
+            siteLongitude = it.getDouble(ARG_LONGITUDE)
+            viewModel.fromMapPickerData(
+                it.getString(ARG_NAME) ?: "None",
+                siteLatitude,
+                siteLongitude
             )
         }
     }
@@ -169,6 +177,7 @@ class EditDeploymentSiteFragment : Fragment() {
 
     companion object {
         private const val ARG_STREAM_ID = "ARG_STREAM_ID"
+        private const val ARG_NAME = "ARG_NAME"
         private const val ARG_LATITUDE = "ARG_LATITUDE"
         private const val ARG_LONGITUDE = "ARG_LONGITUDE"
 
@@ -181,10 +190,11 @@ class EditDeploymentSiteFragment : Fragment() {
             }
 
         @JvmStatic
-        fun newInstance(id: Int, latitude: Double, longitude: Double) =
+        fun newInstance(id: Int, name: String, latitude: Double, longitude: Double) =
             EditDeploymentSiteFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_STREAM_ID, id)
+                    putString(ARG_NAME, name)
                     putDouble(ARG_LATITUDE, latitude)
                     putDouble(ARG_LONGITUDE, longitude)
                 }

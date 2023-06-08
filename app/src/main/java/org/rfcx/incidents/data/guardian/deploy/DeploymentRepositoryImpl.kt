@@ -1,31 +1,27 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import me.echodev.resizer.Resizer
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
-import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.deploy.DeploymentEndpoint
-import org.rfcx.incidents.data.remote.streams.IncidentEndpoint
 import org.rfcx.incidents.data.remote.streams.realmList
-import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
-import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncidentParams
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentParams
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
+import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.util.FileUtils.getMimeType
@@ -102,30 +98,42 @@ class DeploymentRepositoryImpl(
                 // try upload deployment
                 emit(Result.Loading)
                 deploymentLocal.markSending(dp.id)
-                val result = deploymentEndpoint.createDeploymentBySuspend(stream.toDeploymentRequestBody())
-                val error = result.errorBody()?.string()
-                when {
-                    result.isSuccessful -> {
-                        val fullId = result.headers()["Location"]
-                        val idDp = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length) ?: ""
-                        deploymentLocal.markSent(idDp, dp.id)
-
-                        val updatedDp = deploymentEndpoint.getDeploymentBySuspend(idDp)
-                        streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
-
-                        emit(Result.Success(idDp))
-                    }
-                    error?.contains("this deploymentKey is already existed") ?: false -> {
-                        deploymentLocal.markSent(dp.deploymentKey, dp.id)
-
-                        val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
-                        streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
-
-                        emit(Result.Success(dp.deploymentKey))
-                    }
-                    else -> {
+                if (dp.externalId != null) {
+                    val result = deploymentEndpoint.editDeploymentBySuspend(dp.externalId!!, EditDeploymentRequest(stream.toRequestBody()))
+                    val error = result.errorBody()?.string()
+                    if (result.isSuccessful) {
+                        deploymentLocal.markSent(dp.externalId!!, dp.id)
+                        emit(Result.Success(dp.externalId!!))
+                    } else {
                         deploymentLocal.markUnsent(dp.id)
                         emit(Result.Error(Throwable(error)))
+                    }
+                } else {
+                    val result = deploymentEndpoint.createDeploymentBySuspend(stream.toDeploymentRequestBody())
+                    val error = result.errorBody()?.string()
+                    when {
+                        result.isSuccessful -> {
+                            val fullId = result.headers()["Location"]
+                            val idDp = fullId?.substring(fullId.lastIndexOf("/") + 1, fullId.length) ?: ""
+                            deploymentLocal.markSent(idDp, dp.id)
+
+                            val updatedDp = deploymentEndpoint.getDeploymentBySuspend(idDp)
+                            streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
+
+                            emit(Result.Success(idDp))
+                        }
+                        error?.contains("this deploymentKey is already existed") ?: false -> {
+                            deploymentLocal.markSent(dp.deploymentKey, dp.id)
+
+                            val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
+                            streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
+
+                            emit(Result.Success(dp.deploymentKey))
+                        }
+                        else -> {
+                            deploymentLocal.markUnsent(dp.id)
+                            emit(Result.Error(Throwable(error)))
+                        }
                     }
                 }
             }

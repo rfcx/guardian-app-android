@@ -45,6 +45,12 @@ interface DeploymentEndpoint {
     @POST("deployments")
     suspend fun createDeploymentBySuspend(@Body deploymentRequest: DeploymentRequest): Response<ResponseBody>
 
+    @PATCH("deployments/{id}")
+    suspend fun editDeploymentBySuspend(
+        @Path("id") id: String,
+        @Body editDeploymentRequest: EditDeploymentRequest
+    ): Response<ResponseBody>
+
     @GET("deployments/{id}")
     suspend fun getDeploymentBySuspend(
         @Path("id") id: String

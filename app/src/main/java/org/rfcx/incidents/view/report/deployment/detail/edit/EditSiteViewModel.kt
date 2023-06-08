@@ -9,12 +9,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.domain.GetLocalStreamParams
 import org.rfcx.incidents.domain.GetLocalStreamUseCase
+import org.rfcx.incidents.domain.guardian.deploy.DeploymentSaveParams
+import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 
 class EditSiteViewModel(
-    private val getLocalStreamUseCase: GetLocalStreamUseCase
+    private val getLocalStreamUseCase: GetLocalStreamUseCase,
+    private val saveDeploymentUseCase: SaveDeploymentUseCase,
 ) : ViewModel() {
 
     private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
@@ -36,8 +40,8 @@ class EditSiteViewModel(
             getLocalStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest { stream ->
                 if (stream != null) {
                     _stream.tryEmit(stream)
-                    _siteName.tryEmit(stream.name)
                     if (!fromMapPicker) {
+                        _siteName.tryEmit(stream.name)
                         _siteCoordinates.tryEmit("${stream.latitude.latitudeCoordinates()}, ${stream.longitude.longitudeCoordinates()}")
                     }
                     _siteAltitude.tryEmit(stream.altitude.toString())
@@ -46,10 +50,16 @@ class EditSiteViewModel(
         }
     }
 
-    fun pickLatitudeLongitude(latitude: Double?, longitude: Double?) {
+    fun fromMapPickerData(name: String, latitude: Double?, longitude: Double?) {
         if (latitude != 0.0 && longitude != 0.0) {
             fromMapPicker = true
+            _siteName.tryEmit(name)
             _siteCoordinates.tryEmit("${latitude.latitudeCoordinates()}, ${longitude.longitudeCoordinates()}")
         }
+    }
+
+    fun updateDeploymentSite(site: Stream) {
+        site.deployment?.syncState = SyncState.UNSENT.value
+        saveDeploymentUseCase.launch(DeploymentSaveParams(site))
     }
 }

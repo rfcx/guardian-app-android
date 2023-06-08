@@ -45,12 +45,11 @@ class EditDeploymentSiteActivity : AppCompatActivity(), EditDeploymentSiteListen
 
     override fun backToEditPage(site: Stream) {
         startFragment(
-            EditDeploymentSiteFragment.newInstance(site.id, site.latitude, site.longitude)
+            EditDeploymentSiteFragment.newInstance(site.id, site.name, site.latitude, site.longitude)
         )
     }
 
-    override fun updateDeploymentDetail(name: String, altitude: Double) {
-        //viewmodel update site
+    override fun finishEdit() {
         finish()
     }
 
