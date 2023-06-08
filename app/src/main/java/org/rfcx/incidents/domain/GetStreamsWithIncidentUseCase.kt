@@ -14,7 +14,7 @@ class GetStreamsWithIncidentUseCase(
 ) : SingleUseCase<GetStreamsParams, List<Stream>>(threadExecutor, postExecutionThread) {
 
     override fun buildUseCaseObservable(params: GetStreamsParams): Single<List<Stream>> {
-        return repository.get(params)
+        return repository.list(params)
     }
 }
 

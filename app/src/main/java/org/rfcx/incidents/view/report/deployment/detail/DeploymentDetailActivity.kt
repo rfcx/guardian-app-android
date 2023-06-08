@@ -65,7 +65,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
 
     private fun setMap(savedInstanceState: Bundle?) {
         binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
+        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false, showPin = false)
     }
 
     private fun updateDeploymentDetailView(stream: Stream?) {

@@ -184,6 +184,7 @@ object DataModule {
         single { UploadImagesUseCase(get()) }
 
         single { GetLocalStreamUseCase(get()) }
+        single { GetLocalLiveStreamUseCase(get()) }
     }
 
     val remoteModule = module {

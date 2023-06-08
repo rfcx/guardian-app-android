@@ -21,23 +21,27 @@ class StreamsRepositoryImp(
     private val cachedEndpointDb: CachedEndpointDb,
     private val postExecutionThread: PostExecutionThread
 ) : StreamsRepository {
-    override fun get(params: GetStreamsParams): Single<List<Stream>> {
+    override fun list(params: GetStreamsParams): Single<List<Stream>> {
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
             return refreshFromAPI(params.projectId, params.offset)
         }
         return getFromLocalDB(params.projectId)
     }
 
-    override fun getLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>> {
+    override fun listLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>> {
         return streamDb.getAllAsFlowByProject(params.projectId)
     }
 
-    override fun getLocal(params: GetLocalStreamsParams): List<Stream> {
+    override fun listLocal(params: GetLocalStreamsParams): List<Stream> {
         return streamDb.getByProject(params.projectId)
     }
 
     override fun getById(id: Int): Stream? {
         return streamDb.get(id)
+    }
+
+    override fun getByIdAsFlow(id: Int): Flow<Stream?> {
+        return streamDb.getByIdAsFlow(id)
     }
 
     private fun refreshFromAPI(projectId: String, offset: Int): Single<List<Stream>> {

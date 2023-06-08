@@ -119,6 +119,12 @@ class StreamDb(private val realm: Realm) {
         return realm.copyFromRealm(stream)
     }
 
+    fun getByIdAsFlow(id: Int): Flow<Stream?> {
+        val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id)
+        return stream.findFirstAsync().toFlow()
+    }
+
+
     fun get(id: String): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst() ?: return null
         return realm.copyFromRealm(stream)

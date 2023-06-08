@@ -108,9 +108,7 @@ class EditDeploymentSiteFragment : Fragment() {
         if (keypadHeight > screenHeight * 0.15) {
             binding.saveButton.visibility = View.GONE
         } else {
-            if (binding.saveButton != null) {
-                binding.saveButton.visibility = View.VISIBLE
-            }
+            binding.saveButton.visibility = View.VISIBLE
         }
     }
 

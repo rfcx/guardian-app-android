@@ -25,7 +25,6 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.Image
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -50,8 +49,6 @@ import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.view.report.deployment.MapMarker
-import java.util.ArrayList
-import java.util.HashMap
 import java.util.TimeZone
 
 class MapView @JvmOverloads constructor(
@@ -114,6 +111,7 @@ class MapView @JvmOverloads constructor(
     private var siteLoc = LatLng()
     private var canMove = false
     private var fromDeploymentList = false
+    private var showPin = true
     private lateinit var callback: (LatLng) -> Unit
     private lateinit var mapReadyCallback: (Boolean) -> Unit
     private lateinit var seeDetailCallback: (Int) -> Unit
@@ -132,10 +130,10 @@ class MapView @JvmOverloads constructor(
         getMapAsync(this)
     }
 
-    fun setParam(canMove: Boolean = true, fromDeploymentList: Boolean = false) {
-        Log.d("GuardianAoo", "$canMove $fromDeploymentList")
+    fun setParam(canMove: Boolean = true, fromDeploymentList: Boolean = false, showPin: Boolean = true) {
         this.canMove = canMove
         this.fromDeploymentList = fromDeploymentList
+        this.showPin = showPin
     }
 
     fun setCameraMoveCallback(callback: (LatLng) -> Unit) {
@@ -185,7 +183,9 @@ class MapView @JvmOverloads constructor(
                     }
                 }
             } else {
-                setPinOnMap(siteLoc)
+                if (showPin) {
+                    setPinOnMap(siteLoc)
+                }
             }
         }
 
@@ -526,7 +526,7 @@ class MapView @JvmOverloads constructor(
         if (guardianType != "") {
             guardianTypeLayout.visibility = View.VISIBLE
             guardianTypeText.text = guardianType
-            when(guardianType) {
+            when (guardianType) {
                 "Cell" -> guardianTypeImage.setImageResource(R.drawable.ic_signal_cellular_alt)
                 "Sat" -> guardianTypeImage.setImageResource(R.drawable.ic_satellite_alt)
             }
@@ -624,6 +624,9 @@ class MapView @JvmOverloads constructor(
 
     fun setSiteLocation(siteLoc: LatLng) {
         this.siteLoc = siteLoc
+        if (::mapbox.isInitialized) {
+            moveCamera(siteLoc)
+        }
     }
 
     private fun setupSymbolManager() {

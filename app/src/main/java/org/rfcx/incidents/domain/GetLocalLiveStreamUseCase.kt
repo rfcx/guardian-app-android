@@ -5,14 +5,10 @@ import org.rfcx.incidents.data.interfaces.StreamsRepository
 import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 import org.rfcx.incidents.entity.stream.Stream
 
-class GetLocalStreamsUseCase(
+class GetLocalLiveStreamUseCase(
     private val streamsRepository: StreamsRepository
-) : FlowWithParamUseCase<GetLocalStreamsParams, List<Stream>>() {
-    override fun performAction(param: GetLocalStreamsParams): Flow<List<Stream>> {
-        return streamsRepository.listLocalAsFlow(param)
+) : FlowWithParamUseCase<GetLocalStreamParams, Stream?>() {
+    override fun performAction(param: GetLocalStreamParams): Flow<Stream?> {
+        return streamsRepository.getByIdAsFlow(param.streamId)
     }
 }
-
-data class GetLocalStreamsParams(
-    val projectId: String
-)

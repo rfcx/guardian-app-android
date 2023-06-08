@@ -7,11 +7,13 @@ import org.rfcx.incidents.domain.GetStreamsParams
 import org.rfcx.incidents.entity.stream.Stream
 
 interface StreamsRepository {
-    fun get(params: GetStreamsParams): Single<List<Stream>>
+    fun list(params: GetStreamsParams): Single<List<Stream>>
 
-    fun getLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>>
+    fun listLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>>
 
-    fun getLocal(params: GetLocalStreamsParams): List<Stream>
+    fun listLocal(params: GetLocalStreamsParams): List<Stream>
 
     fun getById(id: Int): Stream?
+
+    fun getByIdAsFlow(id: Int): Flow<Stream?>
 }
