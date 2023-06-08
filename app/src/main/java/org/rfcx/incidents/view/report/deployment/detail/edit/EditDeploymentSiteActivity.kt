@@ -7,14 +7,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ActivityEditLocationBinding
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.view.guardian.checklist.site.MapPickerFragment
-import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel
-import org.rfcx.incidents.view.report.deployment.detail.MapPickerProtocol
 
-class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditDeploymentSiteListener {
+class EditDeploymentSiteActivity : AppCompatActivity(), EditDeploymentSiteListener {
     lateinit var binding: ActivityEditLocationBinding
 
     private var streamId: Int? = null
@@ -38,22 +36,17 @@ class EditDeploymentSiteActivity : AppCompatActivity(), MapPickerProtocol, EditD
             streamId = it.getInt(EXTRA_STREAM_ID)
         }
     }
-    override fun onSelectedLocation(
-        latitude: Double,
-        longitude: Double,
-        siteId: Int,
-        name: String
-    ) {
-        startFragment(EditDeploymentSiteFragment.newInstance(siteId))
-    }
 
     override fun startMapPickerPage(
-        latitude: Double,
-        longitude: Double,
-        altitude: Double,
-        streamId: Int
+        site: Stream
     ) {
-        // startFragment(MapPickerFragment.newInstance(latitude, longitude, altitude, streamId))
+        startFragment(MapPickerFragment.newInstance(site))
+    }
+
+    override fun backToEditPage(site: Stream) {
+        startFragment(
+            EditDeploymentSiteFragment.newInstance(site.id, site.latitude, site.longitude)
+        )
     }
 
     override fun updateDeploymentDetail(name: String, altitude: Double) {

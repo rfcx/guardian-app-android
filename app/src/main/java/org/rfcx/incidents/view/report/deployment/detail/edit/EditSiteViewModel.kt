@@ -1,7 +1,5 @@
 package org.rfcx.incidents.view.report.deployment.detail.edit
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -31,16 +29,27 @@ class EditSiteViewModel(
     private val _siteAltitude: MutableStateFlow<String> = MutableStateFlow("")
     val siteAltitude = _siteAltitude.asStateFlow()
 
+    private var fromMapPicker = false
+
     fun getStreamById(id: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             getLocalStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest { stream ->
                 if (stream != null) {
                     _stream.tryEmit(stream)
                     _siteName.tryEmit(stream.name)
-                    _siteCoordinates.tryEmit("${stream.latitude.latitudeCoordinates()}, ${stream.longitude.longitudeCoordinates()}")
+                    if (!fromMapPicker) {
+                        _siteCoordinates.tryEmit("${stream.latitude.latitudeCoordinates()}, ${stream.longitude.longitudeCoordinates()}")
+                    }
                     _siteAltitude.tryEmit(stream.altitude.toString())
                 }
             }
+        }
+    }
+
+    fun pickLatitudeLongitude(latitude: Double?, longitude: Double?) {
+        if (latitude != 0.0 && longitude != 0.0) {
+            fromMapPicker = true
+            _siteCoordinates.tryEmit("${latitude.latitudeCoordinates()}, ${longitude.longitudeCoordinates()}")
         }
     }
 }

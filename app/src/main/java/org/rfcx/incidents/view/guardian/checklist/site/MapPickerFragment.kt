@@ -18,6 +18,7 @@ import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
+import org.rfcx.incidents.view.report.deployment.detail.edit.EditDeploymentSiteListener
 
 class MapPickerFragment :
     Fragment() {
@@ -26,13 +27,17 @@ class MapPickerFragment :
     private lateinit var binding: FragmentMapPickerBinding
     private val viewModel: GuardianSiteSetViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
+    private var detailEvent: EditDeploymentSiteListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mainEvent = context as GuardianDeploymentEventListener
+        when(context) {
+            is GuardianDeploymentEventListener -> mainEvent = context as GuardianDeploymentEventListener
+            is EditDeploymentSiteListener -> detailEvent = context as EditDeploymentSiteListener
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map_picker, container, false)
         binding.lifecycleOwner = this
         return binding.root
@@ -62,6 +67,7 @@ class MapPickerFragment :
             site.latitude = currentCameraPosition.latitude
             site.longitude = currentCameraPosition.longitude
             mainEvent?.goToSiteSetScreen(site, isNewSite = false)
+            detailEvent?.backToEditPage(site)
         }
 
         binding.currentLocationButton.setOnClickListener {

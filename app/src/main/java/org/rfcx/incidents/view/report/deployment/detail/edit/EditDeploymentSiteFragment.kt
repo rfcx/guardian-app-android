@@ -19,12 +19,18 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
+import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.view.guardian.checklist.site.MapPickerFragment
 
 class EditDeploymentSiteFragment : Fragment() {
     private lateinit var binding: FragmentEditLocationBinding
     private val viewModel: EditSiteViewModel by viewModel()
 
     private var listener: EditDeploymentSiteListener? = null
+
+    private lateinit var site: Stream
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -50,13 +56,20 @@ class EditDeploymentSiteFragment : Fragment() {
         setHideKeyboard()
 
         binding.changeButton.setOnClickListener {
-            //open map picker
+            site.let {
+                listener?.startMapPickerPage(it)
+            }
         }
 
         lifecycleScope.launch {
             viewModel.stream.collectLatest {
                 if (it != null) {
-                    val siteLoc = LatLng(it.latitude, it.longitude)
+                    site = it
+                    if (latitude != 0.0 && longitude != 0.0) {
+                        site.latitude = latitude
+                        site.longitude = longitude
+                    }
+                    val siteLoc = LatLng(site.latitude, site.longitude)
                     binding.mapBoxView.setSiteLocation(siteLoc)
                 }
             }
@@ -109,6 +122,12 @@ class EditDeploymentSiteFragment : Fragment() {
     private fun initIntent() {
         arguments?.let {
             viewModel.getStreamById(it.getInt(ARG_STREAM_ID))
+            latitude = it.getDouble(ARG_LATITUDE)
+            longitude = it.getDouble(ARG_LONGITUDE)
+            viewModel.pickLatitudeLongitude(
+                latitude,
+                longitude
+            )
         }
     }
 
@@ -150,12 +169,24 @@ class EditDeploymentSiteFragment : Fragment() {
 
     companion object {
         private const val ARG_STREAM_ID = "ARG_STREAM_ID"
+        private const val ARG_LATITUDE = "ARG_LATITUDE"
+        private const val ARG_LONGITUDE = "ARG_LONGITUDE"
 
         @JvmStatic
         fun newInstance(id: Int) =
             EditDeploymentSiteFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_STREAM_ID, id)
+                }
+            }
+
+        @JvmStatic
+        fun newInstance(id: Int, latitude: Double, longitude: Double) =
+            EditDeploymentSiteFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_STREAM_ID, id)
+                    putDouble(ARG_LATITUDE, latitude)
+                    putDouble(ARG_LONGITUDE, longitude)
                 }
             }
     }

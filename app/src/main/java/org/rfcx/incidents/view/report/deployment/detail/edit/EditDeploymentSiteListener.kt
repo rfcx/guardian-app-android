@@ -1,6 +1,9 @@
 package org.rfcx.incidents.view.report.deployment.detail.edit
 
+import org.rfcx.incidents.entity.stream.Stream
+
 interface EditDeploymentSiteListener {
-    fun startMapPickerPage(latitude: Double, longitude: Double, altitude: Double, streamId: Int)
+    fun startMapPickerPage(site: Stream)
+    fun backToEditPage(site: Stream)
     fun updateDeploymentDetail(name: String, altitude: Double)
 }

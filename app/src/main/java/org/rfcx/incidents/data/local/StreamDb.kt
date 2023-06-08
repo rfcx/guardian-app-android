@@ -114,11 +114,15 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
-    fun get(id: Int): Stream? =
-        realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst()
+    fun get(id: Int): Stream? {
+        val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst() ?: return null
+        return realm.copyFromRealm(stream)
+    }
 
-    fun get(id: String): Stream? =
-        realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst()
+    fun get(id: String): Stream? {
+        val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst() ?: return null
+        return realm.copyFromRealm(stream)
+    }
 
     fun getByProject(projectId: String?): List<Stream> {
         if (projectId == null) {
