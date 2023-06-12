@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -49,6 +50,9 @@ class DeploymentDetailActivity : AppCompatActivity() {
                 if (it != null) {
                     val siteLoc = LatLng(it.latitude, it.longitude)
                     binding.mapBoxView.setSiteLocation(siteLoc)
+
+                    Log.d("GuardianApp", "${it.deployment?.images?.size }")
+                    deploymentImageAdapter.setImages(it.deployment?.images?.map { image -> image.toDeploymentImageView() } ?: listOf())
                 }
             }
         }

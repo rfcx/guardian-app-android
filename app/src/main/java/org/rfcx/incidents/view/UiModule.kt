@@ -36,6 +36,7 @@ import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.deployment.DeploymentListViewModel
 import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel
 import org.rfcx.incidents.view.report.deployment.detail.edit.EditSiteViewModel
+import org.rfcx.incidents.view.report.deployment.detail.image.AddImageViewModel
 import org.rfcx.incidents.view.report.detail.ResponseDetailViewModel
 
 object UiModule {
@@ -90,6 +91,6 @@ object UiModule {
         viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
         viewModel { DeploymentDetailViewModel(get()) }
         viewModel { EditSiteViewModel(get(), get()) }
-
+        viewModel { AddImageViewModel(get(), get()) }
     }
 }

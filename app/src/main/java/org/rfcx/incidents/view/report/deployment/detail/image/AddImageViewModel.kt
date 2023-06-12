@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.report.deployment.detail.image
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,7 @@ class AddImageViewModel(
     fun saveImages(images: List<Image>) {
         val id = _stream.value?.deployment?.id
         id?.let {
+            Log.d("GuardianApp", "Image saved ${images.filter { im -> im.path != null }}")
             addImageToDeploymentUseCase.launch(AddImageParams(it, images))
         }
     }

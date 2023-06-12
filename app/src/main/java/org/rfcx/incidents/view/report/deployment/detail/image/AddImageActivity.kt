@@ -80,7 +80,7 @@ class AddImageActivity : AppCompatActivity(), AddImageListener {
     }
 
     override fun saveImages(images: List<Image>) {
-        saveImages(images)
+        viewModel.saveImages(images)
     }
 
     override fun getImages(): List<Image> {
