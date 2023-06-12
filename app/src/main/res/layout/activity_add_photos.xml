@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="org.rfcx.incidents.view.report.deployment.detail.edit.EditSiteViewModel" />
+            type="org.rfcx.incidents.view.report.deployment.detail.image.AddImageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

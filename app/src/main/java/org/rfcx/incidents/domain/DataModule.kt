@@ -67,6 +67,7 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndInci
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
+import org.rfcx.incidents.domain.guardian.detail.AddImageToDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
@@ -185,6 +186,7 @@ object DataModule {
 
         single { GetLocalStreamUseCase(get()) }
         single { GetLocalLiveStreamUseCase(get()) }
+        single { AddImageToDeploymentUseCase(get()) }
     }
 
     val remoteModule = module {

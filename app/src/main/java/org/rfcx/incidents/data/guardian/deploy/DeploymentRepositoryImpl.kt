@@ -22,9 +22,11 @@ import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
+import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.util.FileUtils.getMimeType
+import org.rfcx.incidents.view.guardian.checklist.photos.Image
 import java.io.File
 
 class DeploymentRepositoryImpl(
@@ -174,6 +176,21 @@ class DeploymentRepositoryImpl(
             } else {
                 emit(Result.Success(true))
             }
+        }
+    }
+
+    override fun addImages(deploymentId: Int, images: List<Image>) {
+        val deployment = deploymentLocal.getById(deploymentId)
+        deployment?.let { dp ->
+            val newImages = images.filter { it.path != null }.map {
+                DeploymentImage(
+                    localPath = it.path!!, imageLabel = it.name
+                )
+            }.map {
+                imageLocal.insertWithResult(it)
+            }
+            dp.images = realmList(newImages)
+            deploymentLocal.insert(dp)
         }
     }
 

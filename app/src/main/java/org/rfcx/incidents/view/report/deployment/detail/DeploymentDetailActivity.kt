@@ -90,7 +90,8 @@ class DeploymentDetailActivity : AppCompatActivity() {
         deploymentImageAdapter.onImageAdapterClickListener = object : OnImageAdapterClickListener {
             override fun onAddImageClick() {
                 AddImageActivity.startActivity(
-                    this@DeploymentDetailActivity
+                    this@DeploymentDetailActivity,
+                    streamId
                 )
                 toAddImage = true
             }
