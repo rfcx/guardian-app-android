@@ -134,7 +134,11 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     private fun setupImages() {
-        val savedImages = mainEvent?.getSavedImages()
+        var savedImages: List<Image>? = listOf()
+        when(context) {
+            is GuardianDeploymentEventListener -> savedImages = mainEvent?.getSavedImages()
+            is AddImageListener -> savedImages = detailEvent?.getImages()
+        }
         getImageAdapter().setPlaceHolders(imagePlaceHolders)
         if (!savedImages.isNullOrEmpty()) {
             getImageAdapter().updateImagesFromSavedImages(savedImages)
@@ -281,8 +285,17 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     private fun handleNextStep() {
-        setCacheImages()
-        mainEvent?.next()
+        when(context) {
+            is GuardianDeploymentEventListener -> {
+                setCacheImages()
+                mainEvent?.next()
+            }
+            is AddImageListener -> {
+                val images = getImageAdapter().getCurrentImagePaths()
+                detailEvent?.saveImages(images)
+                detailEvent?.openDetailScreen()
+            }
+        }
     }
 
     companion object {
