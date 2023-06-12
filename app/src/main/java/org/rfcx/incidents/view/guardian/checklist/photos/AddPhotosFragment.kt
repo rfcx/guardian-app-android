@@ -22,6 +22,7 @@ import org.rfcx.incidents.util.ImageFileUtils
 import org.rfcx.incidents.util.ImageUtils
 import org.rfcx.incidents.util.socket.GuardianPlan
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
+import org.rfcx.incidents.view.report.deployment.detail.image.AddImageListener
 import java.io.File
 
 class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickListener {
@@ -41,6 +42,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     private lateinit var binding: FragmentGuardianAddPhotosBinding
     private val viewModel: AddPhotosViewModel by viewModel()
     private var mainEvent: GuardianDeploymentEventListener? = null
+    private var detailEvent: AddImageListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,7 +75,10 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mainEvent = context as GuardianDeploymentEventListener
+        when(context) {
+            is GuardianDeploymentEventListener -> mainEvent = context as GuardianDeploymentEventListener
+            is AddImageListener -> detailEvent = context as AddImageListener
+        }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guardian_add_photos, container, false)
         binding.lifecycleOwner = this
         return binding.root

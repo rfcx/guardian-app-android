@@ -91,6 +91,9 @@
         <activity android:name=".view.report.deployment.detail.edit.EditDeploymentSiteActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".view.report.deployment.detail.image.AddImageActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".service.LocationTrackerService"
             android:exported="false"

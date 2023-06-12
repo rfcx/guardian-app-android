@@ -19,6 +19,7 @@ import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.setFormatLabel
 import org.rfcx.incidents.view.report.deployment.detail.edit.EditDeploymentSiteActivity
+import org.rfcx.incidents.view.report.deployment.detail.image.AddImageActivity
 
 class DeploymentDetailActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
     private val viewModel: DeploymentDetailViewModel by viewModel()
 
     private var streamId = -1
+    private var toAddImage = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +86,24 @@ class DeploymentDetailActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
+
+        deploymentImageAdapter.onImageAdapterClickListener = object : OnImageAdapterClickListener {
+            override fun onAddImageClick() {
+                AddImageActivity.startActivity(
+                    this@DeploymentDetailActivity
+                )
+                toAddImage = true
+            }
+
+            override fun onImageClick(deploymentImageView: DeploymentImageView) {
+                //todo Show full image display
+            }
+
+            override fun onDeleteImageClick(position: Int, imagePath: String) {
+                deploymentImageAdapter.removeAt(position)
+            }
+        }
+
         deploymentImageAdapter.setImages(arrayListOf())
     }
 
