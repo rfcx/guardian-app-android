@@ -12,6 +12,8 @@ interface DeploymentRepository {
 
     fun getAsFlow(): Flow<List<Deployment>>
 
+    fun getByIdAsFlow(id: Int): Flow<Deployment?>
+
     fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>>
 
     fun upload(streamId: Int): Flow<Result<String>>

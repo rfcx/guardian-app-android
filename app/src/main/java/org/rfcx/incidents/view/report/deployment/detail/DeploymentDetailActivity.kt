@@ -50,10 +50,14 @@ class DeploymentDetailActivity : AppCompatActivity() {
                 if (it != null) {
                     val siteLoc = LatLng(it.latitude, it.longitude)
                     binding.mapBoxView.setSiteLocation(siteLoc)
-
-                    Log.d("GuardianApp", "${it.deployment?.images?.size }")
-                    deploymentImageAdapter.setImages(it.deployment?.images?.map { image -> image.toDeploymentImageView() } ?: listOf())
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.images.collectLatest {
+                Log.d("GuardianAppImage", "${it.size }")
+                deploymentImageAdapter.setImages(it)
             }
         }
 

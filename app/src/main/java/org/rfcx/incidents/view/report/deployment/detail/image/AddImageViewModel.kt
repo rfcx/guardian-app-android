@@ -31,8 +31,8 @@ class AddImageViewModel(
     fun saveImages(images: List<Image>) {
         val id = _stream.value?.deployment?.id
         id?.let {
-            Log.d("GuardianApp", "Image saved ${images.filter { im -> im.path != null }}")
-            addImageToDeploymentUseCase.launch(AddImageParams(it, images))
+            Log.d("GuardianAppImage", "Image saved ${images.filter { im -> im.path != null }}")
+            addImageToDeploymentUseCase.launch(AddImageParams(it, images.filter { im -> im.path != null }))
         }
     }
 

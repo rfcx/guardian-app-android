@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +56,10 @@ class DeploymentRepositoryImpl(
 
     override fun getAsFlow(): Flow<List<Deployment>> {
         return deploymentLocal.getAsFlow()
+    }
+
+    override fun getByIdAsFlow(id: Int): Flow<Deployment?> {
+        return deploymentLocal.getByIdAsFlow(id)
     }
 
     override fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>> {
@@ -182,14 +187,17 @@ class DeploymentRepositoryImpl(
     override fun addImages(deploymentId: Int, images: List<Image>) {
         val deployment = deploymentLocal.getById(deploymentId)
         deployment?.let { dp ->
-            val newImages = images.filter { it.path != null }.map {
+            val newImages = images.map {
                 DeploymentImage(
                     localPath = it.path!!, imageLabel = it.name
                 )
             }.map {
                 imageLocal.insertWithResult(it)
             }
-            dp.images = realmList(newImages)
+            Log.d("GuardianAppImage", "Saved ${newImages.size}")
+            Log.d("GuardianAppImage", "Saved ${newImages}")
+            val tempImages = (dp.images?.toList() ?: listOf())
+            dp.images = realmList(tempImages + newImages)
             deploymentLocal.insert(dp)
         }
     }

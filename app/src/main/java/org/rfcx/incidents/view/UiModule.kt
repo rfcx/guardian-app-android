@@ -89,7 +89,7 @@ object UiModule {
         viewModel { AddPhotosViewModel(get()) }
         viewModel { GuardianPreferenceViewModel(androidContext(), get(), get()) }
         viewModel { DeploymentListViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-        viewModel { DeploymentDetailViewModel(get()) }
+        viewModel { DeploymentDetailViewModel(get(), get()) }
         viewModel { EditSiteViewModel(get(), get()) }
         viewModel { AddImageViewModel(get(), get()) }
     }
