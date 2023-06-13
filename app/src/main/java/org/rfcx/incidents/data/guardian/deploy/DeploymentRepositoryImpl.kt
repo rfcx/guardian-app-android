@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -63,7 +62,7 @@ class DeploymentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId ?: "null"))) {
+        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(deploymentCacheKey(params.projectId ?: "null"))) {
             return refreshFromAPI(params.projectId, params.offset)
         }
         return flow { emit(Result.Success(getFromLocalDB(params.projectId))) }
@@ -89,11 +88,11 @@ class DeploymentRepositoryImpl(
                     streamLocal.insertOrUpdate(this)
                 }
             }
-            cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId ?: "null"))
+            cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
         }.catch {
             emit(Result.Error(it))
-            cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId ?: "null"))
+            cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
         }
     }
@@ -194,15 +193,42 @@ class DeploymentRepositoryImpl(
             }.map {
                 imageLocal.insertWithResult(it)
             }
-            Log.d("GuardianAppImage", "Saved ${newImages.size}")
-            Log.d("GuardianAppImage", "Saved ${newImages}")
             val tempImages = (dp.images?.toList() ?: listOf())
             dp.images = realmList(tempImages + newImages)
             deploymentLocal.insert(dp)
         }
     }
 
-    private fun cacheKey(projectId: String): String {
+    override fun listImages(deploymentId: Int): Flow<Result<List<DeploymentImage>>> {
+        return flow {
+            emit(Result.Loading)
+
+            val deployment = deploymentLocal.getById(deploymentId)
+            if (deployment?.externalId != null) {
+                val result = deploymentEndpoint.listImages(deployment.externalId!!)
+                val newImages = result.map { imageLocal.insertWithResult(it.toDeploymentImage()) }
+                val tempImages = (deployment.images?.toList() ?: listOf())
+                deployment.images = realmList(tempImages.filter { it.remotePath == null } + newImages)
+                deploymentLocal.insert(deployment)
+
+                emit(Result.Success(getLocalImages(deploymentId)))
+            } else {
+                emit(Result.Success(emptyList()))
+            }
+        }.catch {
+            // in case of any error
+            // eg. runtime, no internet
+            emit(Result.Error(it))
+            emit(Result.Success(getLocalImages(deploymentId)))
+        }
+    }
+
+    private fun getLocalImages(deploymentId: Int): List<DeploymentImage> {
+        val deployment = deploymentLocal.getById(deploymentId)
+        return deployment?.images?.toList() ?: emptyList()
+    }
+
+    private fun deploymentCacheKey(projectId: String): String {
         return "GetDeployments-$projectId"
     }
 }

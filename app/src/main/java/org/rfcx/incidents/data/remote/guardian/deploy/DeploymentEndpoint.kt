@@ -4,6 +4,7 @@ import io.reactivex.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.rfcx.incidents.data.remote.guardian.image.DeploymentAssetResponse
 import org.rfcx.incidents.data.remote.streams.StreamDeviceAPIResponse
 import org.rfcx.incidents.entity.guardian.deployment.DeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
@@ -55,6 +56,11 @@ interface DeploymentEndpoint {
     suspend fun getDeploymentBySuspend(
         @Path("id") id: String
     ): DeploymentResponse
+
+    @GET("deployments/{id}/assets")
+    suspend fun listImages(
+        @Path("id") id: String
+    ): List<DeploymentAssetResponse>
 
     @Multipart
     @POST("deployments/{id}/assets")

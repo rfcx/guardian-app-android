@@ -62,6 +62,7 @@ import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+import org.rfcx.incidents.domain.guardian.GetDeploymentImagesUseCase
 import org.rfcx.incidents.domain.guardian.GetLocalLiveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeployDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndIncidentUseCase
@@ -189,6 +190,7 @@ object DataModule {
         single { GetLocalLiveStreamUseCase(get()) }
         single { AddImageToDeploymentUseCase(get()) }
         single { GetLocalLiveDeploymentUseCase(get()) }
+        single { GetDeploymentImagesUseCase(get()) }
     }
 
     val remoteModule = module {

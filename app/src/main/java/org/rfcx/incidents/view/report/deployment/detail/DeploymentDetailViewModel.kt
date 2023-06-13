@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.report.deployment.detail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -8,15 +7,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetLocalLiveStreamUseCase
 import org.rfcx.incidents.domain.GetLocalStreamParams
+import org.rfcx.incidents.domain.guardian.GetDeploymentImagesParams
+import org.rfcx.incidents.domain.guardian.GetDeploymentImagesUseCase
 import org.rfcx.incidents.domain.guardian.GetLocalDeploymentParams
 import org.rfcx.incidents.domain.guardian.GetLocalLiveDeploymentUseCase
 import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentDetailViewModel(
     private val getLocalLiveStreamUseCase: GetLocalLiveStreamUseCase,
-    private val getLocalLiveDeploymentUseCase: GetLocalLiveDeploymentUseCase
+    private val getLocalLiveDeploymentUseCase: GetLocalLiveDeploymentUseCase,
+    private val getDeploymentImagesUseCase: GetDeploymentImagesUseCase,
 ) : ViewModel() {
 
     private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
@@ -25,6 +28,9 @@ class DeploymentDetailViewModel(
     private val _images: MutableStateFlow<List<DeploymentImageView>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
+    private val _errorFetching: MutableStateFlow<String?> = MutableStateFlow(null)
+    val errorFetching = _errorFetching.asStateFlow()
+
     fun setStreamId(id: Int) {
         getStream(id)
     }
@@ -32,10 +38,10 @@ class DeploymentDetailViewModel(
     private fun getStream(id: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             getLocalLiveStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest { result ->
-                Log.d("GuardianAppImage", "Stream update")
                 _stream.tryEmit(result)
                 if (result?.deployment != null) {
                     getDeployment(result.deployment!!.id)
+                    getImages(result.deployment!!.id)
                 }
             }
         }
@@ -46,6 +52,18 @@ class DeploymentDetailViewModel(
             getLocalLiveDeploymentUseCase.launch(GetLocalDeploymentParams(id)).collectLatest { result ->
                 if (result != null) {
                     _images.tryEmit(result.images?.map { it.toDeploymentImageView() } ?: listOf())
+                }
+            }
+        }
+    }
+
+    private fun getImages(deploymentId: Int) {
+        viewModelScope.launch(Dispatchers.Main) {
+            getDeploymentImagesUseCase.launch(GetDeploymentImagesParams(deploymentId)).collectLatest { result ->
+                // only expect error
+                // already get notify changed from deployment
+                if (result is Result.Error) {
+                    _errorFetching.tryEmit(result.throwable.message)
                 }
             }
         }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -56,8 +56,15 @@ class DeploymentDetailActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.images.collectLatest {
-                Log.d("GuardianAppImage", "${it.size }")
                 deploymentImageAdapter.setImages(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.errorFetching.collectLatest {
+                if (it != null) {
+                    Toast.makeText(this@DeploymentDetailActivity, it, Toast.LENGTH_LONG).show()
+                }
             }
         }
 
