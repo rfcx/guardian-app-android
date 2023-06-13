@@ -11,8 +11,11 @@ import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianAddPhotosBinding
@@ -134,14 +137,24 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     private fun setupImages() {
-        var savedImages: List<Image>? = listOf()
-        when(context) {
-            is GuardianDeploymentEventListener -> savedImages = mainEvent?.getSavedImages()
-            is AddImageListener -> savedImages = detailEvent?.getImages()
-        }
         getImageAdapter().setPlaceHolders(imagePlaceHolders)
-        if (!savedImages.isNullOrEmpty()) {
-            getImageAdapter().updateImagesFromSavedImages(savedImages)
+        when(context) {
+            is GuardianDeploymentEventListener -> {
+                val savedImages = mainEvent?.getSavedImages()
+                if (!savedImages.isNullOrEmpty()) {
+                    getImageAdapter().updateImagesFromSavedImages(savedImages)
+                }
+            }
+            is AddImageListener -> {
+                val imageState = detailEvent?.getImages()
+                lifecycleScope.launch {
+                    imageState?.collectLatest {
+                        if (it.isNotEmpty()) {
+                            getImageAdapter().updateImagesFromSavedImages(it)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -291,7 +304,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
                 mainEvent?.next()
             }
             is AddImageListener -> {
-                val images = getImageAdapter().getCurrentImagePaths()
+                val images = getImageAdapter().getCurrentNewImages()
                 detailEvent?.saveImages(images)
                 detailEvent?.openDetailScreen()
             }

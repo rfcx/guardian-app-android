@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.report.deployment.detail.image
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +23,9 @@ class AddImageViewModel(
     private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
     val stream = _stream.asStateFlow()
 
+    private val _images: MutableStateFlow<List<Image>> = MutableStateFlow(emptyList())
+    val images = _images.asStateFlow()
+
     fun setStreamId(id: Int) {
         getStream(id)
     }
@@ -31,19 +33,18 @@ class AddImageViewModel(
     fun saveImages(images: List<Image>) {
         val id = _stream.value?.deployment?.id
         id?.let {
-            Log.d("GuardianAppImage", "Image saved ${images.filter { im -> im.path != null }}")
             addImageToDeploymentUseCase.launch(AddImageParams(it, images.filter { im -> im.path != null }))
         }
     }
 
-    fun getImages(): List<Image>? {
-        return _stream.value?.deployment?.images?.map { it.toImage() }
-    }
-
     private fun getStream(id: Int) {
         viewModelScope.launch(Dispatchers.Main) {
-            getLocalLiveStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest {
-                _stream.tryEmit(it)
+            getLocalLiveStreamUseCase.launch(GetLocalStreamParams(id)).collectLatest { result ->
+                _stream.tryEmit(result)
+
+                if (result?.deployment?.images != null) {
+                    _images.tryEmit(result.deployment!!.images!!.map { it.toImage() })
+                }
             }
         }
     }

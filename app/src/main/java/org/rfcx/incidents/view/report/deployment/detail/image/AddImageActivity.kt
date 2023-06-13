@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -83,8 +84,8 @@ class AddImageActivity : AppCompatActivity(), AddImageListener {
         viewModel.saveImages(images)
     }
 
-    override fun getImages(): List<Image> {
-        return viewModel.getImages() ?: return listOf()
+    override fun getImages(): StateFlow<List<Image>> {
+        return viewModel.images
     }
 
     override fun openDetailScreen() {
