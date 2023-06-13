@@ -12,7 +12,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
+import org.rfcx.incidents.databinding.ItemAddImageBinding
+import org.rfcx.incidents.databinding.ItemImageBinding
+import org.rfcx.incidents.databinding.ItemPhotoAdviseBinding
 import org.rfcx.incidents.entity.response.SyncState
+import org.rfcx.incidents.util.getTokenID
+import org.rfcx.incidents.util.setDeploymentImage
 
 class DeploymentImageAdapter :
     ListAdapter<BaseListItem, RecyclerView.ViewHolder>(DeploymentImageViewDiff()) {
@@ -20,6 +25,9 @@ class DeploymentImageAdapter :
     private var imagesSource = arrayListOf<BaseListItem>()
     var onImageAdapterClickListener: OnImageAdapterClickListener? = null
     private var context: Context? = null
+
+    private lateinit var addBinding: ItemAddImageBinding
+    private lateinit var imageBinding: ItemImageBinding
 
     companion object {
         const val VIEW_TYPE_IMAGE = 1
@@ -138,74 +146,72 @@ class DeploymentImageAdapter :
         context = parent.context
         return when (viewType) {
             VIEW_TYPE_IMAGE -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image, parent, false)
-                ImageAdapterViewHolder(view, onImageAdapterClickListener)
+                imageBinding = ItemImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ImageAdapterViewHolder(imageBinding, onImageAdapterClickListener)
             }
             VIEW_TYPE_ADD_IMAGE -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_add_image, parent, false)
-                AddImageViewHolder(view, onImageAdapterClickListener)
+                addBinding = ItemAddImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                AddImageViewHolder(addBinding, onImageAdapterClickListener)
             }
             else -> throw IllegalAccessException("View type $viewType not found.")
         }
     }
 
     inner class ImageAdapterViewHolder(
-        itemView: View,
+        binding: ItemImageBinding,
         private val onImageAdapterClickListener: OnImageAdapterClickListener?
-    ) : RecyclerView.ViewHolder(itemView) {
-        // private val imageView = itemView.image
-        // private val deleteButton = itemView.deleteImageButton
-        // private val syncImageView = itemView.syncImage
-        // private val progress = itemView.progressBarOfImageView
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private val imageView = binding.image
+        private val deleteButton = binding.deleteImageButton
+        private val syncImageView = binding.syncImage
+        private val progress = binding.progressBarOfImageView
 
         fun bind(item: DeploymentImageView, canDelete: Boolean) {
-        //     syncImageView.visibility = View.VISIBLE
-        //     syncImageView.setImageDrawable(
-        //         ContextCompat.getDrawable(
-        //             itemView.context,
-        //             item.syncImage
-        //         )
-        //     )
-        //
-        //     val token = itemView.context.getIdToken()
-        //     val fromServer = item.remotePath != null
-        //     imageView.setDeploymentImage(
-        //         url = item.remotePath ?: item.localPath,
-        //         blur = item.syncState != SyncState.Sent.key,
-        //         fromServer = fromServer,
-        //         token = token,
-        //         progressBar = progress
-        //     )
-        //
-        //     // handle hide syncing image view after sent in 2sec
-        //     if (item.syncState == SyncState.Sent.key) {
-        //         val handler = Handler()
-        //         handler.postDelayed({
-        //             syncImageView.visibility = View.INVISIBLE
-        //         }, 2000) // 2s
-        //     }
-        //
-        //     itemView.setOnClickListener {
-        //         onImageAdapterClickListener?.onImageClick(item)
-        //     }
-        //
-        //     deleteButton.setOnClickListener {
-        //         onImageAdapterClickListener?.onDeleteImageClick(adapterPosition, item.localPath)
-        //     }
-        //     if (item.id == 0) {
-        //         deleteButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
-        //     } else {
-        //         deleteButton.visibility = View.INVISIBLE
-        //     }
+            syncImageView.visibility = View.VISIBLE
+            syncImageView.setImageDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    item.syncImage
+                )
+            )
+
+            val token = itemView.context.getTokenID()
+            val fromServer = item.remotePath != null
+            imageView.setDeploymentImage(
+                url = item.remotePath ?: item.localPath,
+                blur = item.syncState != SyncState.SENT.value,
+                fromServer = fromServer,
+                token = token,
+                progressBar = progress
+            )
+
+            // handle hide syncing image view after sent in 2sec
+            if (item.syncState == SyncState.SENT.value) {
+                val handler = Handler()
+                handler.postDelayed({
+                    syncImageView.visibility = View.INVISIBLE
+                }, 2000) // 2s
+            }
+
+            itemView.setOnClickListener {
+                onImageAdapterClickListener?.onImageClick(item)
+            }
+
+            deleteButton.setOnClickListener {
+                onImageAdapterClickListener?.onDeleteImageClick(adapterPosition, item.localPath)
+            }
+            if (item.id == 0) {
+                deleteButton.visibility = if (canDelete) View.VISIBLE else View.INVISIBLE
+            } else {
+                deleteButton.visibility = View.INVISIBLE
+            }
         }
     }
 
     inner class AddImageViewHolder(
-        itemView: View,
+        binding: ItemAddImageBinding,
         private val onImageAdapterClickListener: OnImageAdapterClickListener?
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
                 onImageAdapterClickListener?.onAddImageClick()
