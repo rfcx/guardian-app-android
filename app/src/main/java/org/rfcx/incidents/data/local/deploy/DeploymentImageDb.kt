@@ -6,6 +6,10 @@ import org.rfcx.incidents.entity.response.SyncState
 
 class DeploymentImageDb(private val realm: Realm) {
 
+    fun getByIds(ids: List<Int>): List<DeploymentImage> {
+        return realm.where(DeploymentImage::class.java).`in`(DeploymentImage.FIELD_ID, ids.toTypedArray()).findAll()
+    }
+
     fun insert(image: DeploymentImage) {
         realm.executeTransaction {
             if (image.remotePath != null) {
