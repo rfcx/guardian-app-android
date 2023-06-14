@@ -30,6 +30,9 @@ open class Deployment(
     var images: RealmList<DeploymentImage>? = null
 ) : RealmModel, Serializable {
 
+    fun areAllImagesSynced(): Boolean {
+        return images?.find { it.syncState != SyncState.SENT.value } == null
+    }
     companion object {
         const val TABLE_NAME = "Deployment"
         const val FIELD_ID = "id"

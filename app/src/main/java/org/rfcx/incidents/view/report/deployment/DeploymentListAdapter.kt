@@ -38,6 +38,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
         private val guardianName = binding.guardianNameTextView
         private val dateTextView = binding.dateTextView
         private val syncIcon = binding.syncIcon
+        private val imageIcon = binding.imageIcon
         private val loading = binding.syncIconLoading
         private val guardianTypeLayout = binding.guardianTypeLayout
         private val guardianTypeImage = binding.guardianTypeImageView
@@ -82,6 +83,12 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                     syncIcon.setBackgroundResource(R.drawable.ic_cloud_done)
                     loading.visibility = View.GONE
                 }
+            }
+
+            if (item.stream.deployment?.areAllImagesSynced() == true) {
+                imageIcon.setBackgroundResource(R.drawable.ic_image_synced)
+            } else {
+                imageIcon.setBackgroundResource(R.drawable.ic_image_ready)
             }
         }
     }

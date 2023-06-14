@@ -182,6 +182,8 @@ class DeploymentRepositoryImpl(
             } else {
                 emit(Result.Success(true))
             }
+        }.catch {
+            emit(Result.Error(Throwable("There is something wrong on uploading images")))
         }
     }
 

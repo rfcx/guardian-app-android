@@ -101,6 +101,17 @@
         app:layout_constraintTop_toTopOf="@id/bgView"
         app:layout_constraintEnd_toEndOf="@id/bgView"/>
 
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_image_ready"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_small"
+        app:layout_constraintTop_toTopOf="@id/syncIcon"
+        app:layout_constraintEnd_toStartOf="@id/syncIcon"
+        app:layout_constraintBottom_toBottomOf="@id/syncIcon"/>
+
     <ProgressBar
         android:id="@+id/syncIconLoading"
         android:layout_width="24dp"
