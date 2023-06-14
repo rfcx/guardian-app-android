@@ -122,4 +122,15 @@
         app:layout_constraintTop_toTopOf="@id/bgView"
         app:layout_constraintEnd_toEndOf="@id/bgView"/>
 
+    <ProgressBar
+        android:id="@+id/syncImageIconLoading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:visibility="gone"
+        android:indeterminateTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="@id/syncIcon"
+        app:layout_constraintEnd_toStartOf="@id/syncIcon"
+        app:layout_constraintBottom_toBottomOf="@id/syncIcon"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

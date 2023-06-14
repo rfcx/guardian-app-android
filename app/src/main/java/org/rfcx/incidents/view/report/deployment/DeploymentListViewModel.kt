@@ -245,7 +245,7 @@ class DeploymentListViewModel(
         }
     }
 
-    private fun uploadImages(deploymentId: String) {
+    fun uploadImages(deploymentId: String) {
         viewModelScope.launch(Dispatchers.Main) {
             uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
                 when(result) {

@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -305,6 +304,10 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     override fun onCloudClicked(id: Int) {
         viewModel.syncDeployment(id)
+    }
+
+    override fun onImageIconClicked(deploymentId: String) {
+        viewModel.uploadImages(deploymentId)
     }
 
     override fun onItemClicked(streamId: Int) {

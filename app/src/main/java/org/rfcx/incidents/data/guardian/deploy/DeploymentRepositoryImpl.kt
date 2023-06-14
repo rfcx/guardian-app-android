@@ -149,40 +149,47 @@ class DeploymentRepositoryImpl(
     }
 
     override fun uploadImages(deploymentId: String): Flow<Result<Boolean>> {
+        val deployment = deploymentLocal.getById(deploymentId)
         return flow {
             emit(Result.Loading)
             var someFailed = false
-            val deployment = deploymentLocal.getById(deploymentId)
-            val images = deployment?.images?.filter { it.remotePath == null }
-            images?.forEach { image ->
-                imageLocal.lockUnsent(image.id)
+            if (deployment == null) {
+                emit(Result.Error(Throwable("deployment not found")))
+            } else {
+                val images = deployment.images?.filter { it.remotePath == null }
+                images?.forEach { image ->
+                    imageLocal.lockUnsent(image.id)
 
-                val file = File(image.localPath)
-                val mimeType = file.getMimeType()
-                val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), guardianFileHelper.compressFile(file))
-                val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                val gson = Gson()
-                val obj = JsonObject()
-                obj.addProperty("label", image.imageLabel)
-                val label = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), gson.toJson(obj))
-                val result = deploymentEndpoint.uploadImageSuspend(deployment.deploymentKey, body, label)
-                if (result.isSuccessful) {
-                    val assetPath = result.headers()["Location"]
-                    assetPath?.let { path ->
-                        imageLocal.markSent(image.id, path.substring(1, path.length))
-                        refreshImagesInDeployment(deployment.id)
+                    val file = File(image.localPath)
+                    val mimeType = file.getMimeType()
+                    val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), guardianFileHelper.compressFile(file))
+                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                    val gson = Gson()
+                    val obj = JsonObject()
+                    obj.addProperty("label", image.imageLabel)
+                    val label = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), gson.toJson(obj))
+                    val result = deploymentEndpoint.uploadImageSuspend(deployment.deploymentKey, body, label)
+                    if (result.isSuccessful) {
+                        val assetPath = result.headers()["Location"]
+                        assetPath?.let { path ->
+                            imageLocal.markSent(image.id, path.substring(1, path.length))
+                            refreshImagesInDeployment(deployment.id)
+                        }
+                    } else {
+                        imageLocal.markUnsent(image.id)
+                        someFailed = true
                     }
+                }
+                if (someFailed) {
+                    emit(Result.Error(Throwable("There is something wrong on uploading images")))
                 } else {
-                    imageLocal.markUnsent(image.id)
-                    someFailed = true
+                    emit(Result.Success(true))
                 }
             }
-            if (someFailed) {
-                emit(Result.Error(Throwable("There is something wrong on uploading images")))
-            } else {
-                emit(Result.Success(true))
-            }
         }.catch {
+            deployment?.images?.forEach { image ->
+                imageLocal.markUnsent(image.id)
+            }
             emit(Result.Error(Throwable("There is something wrong on uploading images")))
         }
     }

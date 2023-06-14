@@ -40,6 +40,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
         private val syncIcon = binding.syncIcon
         private val imageIcon = binding.imageIcon
         private val loading = binding.syncIconLoading
+        private val imageLoading = binding.syncImageIconLoading
         private val guardianTypeLayout = binding.guardianTypeLayout
         private val guardianTypeImage = binding.guardianTypeImageView
         private val guardianTypeText = binding.guardianTypeTextView
@@ -52,6 +53,14 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
             syncIcon.setOnClickListener {
                 if (item.stream.deployment?.syncState == SyncState.UNSENT.value) {
                     deploymentItemListener.onCloudClicked(item.stream.id)
+                }
+            }
+
+            imageIcon.setOnClickListener {
+                if (item.stream.deployment?.getAllImagesState() == SyncState.UNSENT.value) {
+                    item.stream.deployment?.let {
+                        deploymentItemListener.onImageIconClicked(it.deploymentKey)
+                    }
                 }
             }
 
@@ -85,10 +94,21 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                 }
             }
 
-            if (item.stream.deployment?.areAllImagesSynced() == true) {
-                imageIcon.setBackgroundResource(R.drawable.ic_image_synced)
-            } else {
-                imageIcon.setBackgroundResource(R.drawable.ic_image_ready)
+            when(item.stream.deployment?.getAllImagesState()) {
+                SyncState.UNSENT.value -> {
+                    imageIcon.visibility = View.VISIBLE
+                    imageIcon.setBackgroundResource(R.drawable.ic_image_ready)
+                    imageLoading.visibility = View.GONE
+                }
+                SyncState.SENDING.value -> {
+                    imageIcon.visibility = View.GONE
+                    imageLoading.visibility = View.VISIBLE
+                }
+                SyncState.SENT.value -> {
+                    imageIcon.visibility = View.VISIBLE
+                    imageIcon.setBackgroundResource(R.drawable.ic_image_synced)
+                    imageLoading.visibility = View.GONE
+                }
             }
         }
     }
@@ -96,6 +116,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
 
 interface DeploymentItemListener {
     fun onCloudClicked(id: Int)
+    fun onImageIconClicked(deploymentId: String)
 
     fun onItemClicked(streamId: Int)
 }
