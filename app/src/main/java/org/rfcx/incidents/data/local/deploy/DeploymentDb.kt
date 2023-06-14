@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.local.deploy
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +11,22 @@ class DeploymentDb(private val realm: Realm) {
 
     fun insert(deployment: Deployment) {
         realm.executeTransaction {
-            if (deployment.id == 0) {
+            if (deployment.externalId != null) {
+                val externalDeployment = getById(deployment.externalId!!)
+                // do nothing if already have deployment in local
+                if (externalDeployment == null) {
+                    // create new if there is none
+                    val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
+                    deployment.id = id
+                    Log.d("GuardianApp", "Insert ${deployment.deploymentKey}")
+                    it.insert(deployment)
+                } else {
+                    externalDeployment.images = deployment.images
+                    externalDeployment.deployedAt = deployment.deployedAt
+                    externalDeployment.deviceParameters = deployment.deviceParameters
+                    it.insertOrUpdate(externalDeployment)
+                }
+            } else if (deployment.id == 0) {
                 val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                 deployment.id = id
                 it.insert(deployment)
@@ -26,7 +42,7 @@ class DeploymentDb(private val realm: Realm) {
 
     fun insertWithResult(deployment: Deployment): Deployment {
         insert(deployment)
-        return realm.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, deployment.id).findFirst()!!
+        return realm.where(Deployment::class.java).equalTo(Deployment.FIELD_DEPLOYMENT_KEY, deployment.deploymentKey).findFirst()!!
     }
 
     fun get(): List<Deployment> {
@@ -41,6 +57,11 @@ class DeploymentDb(private val realm: Realm) {
 
     fun getById(id: String): Deployment? {
         val deployment = realm.where(Deployment::class.java).equalTo(Deployment.FIELD_EXTERNAL_ID, id).findFirst() ?: return null
+        return realm.copyFromRealm(deployment)
+    }
+
+    fun getByIds(id: String): List<Deployment?> {
+        val deployment = realm.where(Deployment::class.java).equalTo(Deployment.FIELD_EXTERNAL_ID, id).findAll() ?: return listOf()
         return realm.copyFromRealm(deployment)
     }
 

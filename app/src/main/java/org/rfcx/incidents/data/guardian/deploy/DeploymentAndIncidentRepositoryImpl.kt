@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -29,6 +30,8 @@ class DeploymentAndIncidentRepositoryImpl(
     private val incidentEndpoint: IncidentEndpoint
 ) : DeploymentAndIncidentRepository {
 
+    private var currentRunning = ""
+
     private fun getLocal(projectId: String): List<Stream> {
         return streamLocal.getByProject(projectId)
     }
@@ -36,6 +39,8 @@ class DeploymentAndIncidentRepositoryImpl(
     private fun getRemote(projectId: String, offset: Int): Flow<Result<List<Stream>>> {
         return flow {
             emit(Result.Loading)
+            currentRunning = cacheKey(projectId)
+
             streamLocal.deleteByProject(projectId)
             val rawStreamsWithDeployment = deploymentEndpoint.getStreams(projects = listOf(projectId), offset = offset)
             val rawStreamsWithIncident = incidentEndpoint.getStreamsSuspend(projects = listOf(projectId), offset = offset)
@@ -65,16 +70,20 @@ class DeploymentAndIncidentRepositoryImpl(
                 }
             }
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
+            currentRunning = ""
             emit(Result.Success(getLocal(projectId)))
         }.catch {
             emit(Result.Error(it))
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
+            currentRunning = ""
             emit(Result.Success(getLocal(projectId)))
         }
     }
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId))) {
+        Log.d("GuardianImageApp", "run $currentRunning")
+        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty()) {
+            Log.d("GuardianImageApp", "run endpoint")
             return getRemote(params.projectId, params.offset)
         }
         return flow { emit(Result.Success(getLocal(params.projectId))) }

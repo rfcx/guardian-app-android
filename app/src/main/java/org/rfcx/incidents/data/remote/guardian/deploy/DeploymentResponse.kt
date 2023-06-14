@@ -31,6 +31,7 @@ data class DeploymentsResponse(
         return Deployment(
             id = 0,
             externalId = id,
+            deploymentKey = id!!,
             deployedAt = deployedAt ?: Date(),
             createdAt = createdAt ?: Date(),
             syncState = SyncState.SENT.value,

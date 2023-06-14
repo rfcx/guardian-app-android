@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.report.deployment.detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -14,12 +15,15 @@ import org.rfcx.incidents.domain.guardian.GetDeploymentImagesParams
 import org.rfcx.incidents.domain.guardian.GetDeploymentImagesUseCase
 import org.rfcx.incidents.domain.guardian.GetLocalDeploymentParams
 import org.rfcx.incidents.domain.guardian.GetLocalLiveDeploymentUseCase
+import org.rfcx.incidents.domain.guardian.deploy.UploadImagesParams
+import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
 import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentDetailViewModel(
     private val getLocalLiveStreamUseCase: GetLocalLiveStreamUseCase,
     private val getLocalLiveDeploymentUseCase: GetLocalLiveDeploymentUseCase,
     private val getDeploymentImagesUseCase: GetDeploymentImagesUseCase,
+    private val uploadImagesUseCase: UploadImagesUseCase
 ) : ViewModel() {
 
     private val _stream: MutableStateFlow<Stream?> = MutableStateFlow(null)
@@ -51,7 +55,9 @@ class DeploymentDetailViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getLocalLiveDeploymentUseCase.launch(GetLocalDeploymentParams(id)).collectLatest { result ->
                 if (result != null) {
+                    Log.d("GuardianAppImage", "Got $id")
                     _images.tryEmit(result.images?.map { it.toDeploymentImageView() } ?: listOf())
+                    uploadImages(result.externalId!!)
                 }
             }
         }
@@ -64,6 +70,24 @@ class DeploymentDetailViewModel(
                 // already get notify changed from deployment
                 if (result is Result.Error) {
                     _errorFetching.tryEmit(result.throwable.message)
+                }
+            }
+        }
+    }
+
+    private fun uploadImages(deploymentId: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        //show error
+                    }
+                    Result.Loading -> {
+                        //show loading
+                    }
+                    is Result.Success -> {
+                        //show success
+                    }
                 }
             }
         }

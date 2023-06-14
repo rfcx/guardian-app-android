@@ -3,10 +3,7 @@ package org.rfcx.incidents.data.local
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
-import io.realm.kotlin.toflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
@@ -123,7 +120,6 @@ class StreamDb(private val realm: Realm) {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id)
         return stream.findFirstAsync().toFlow()
     }
-
 
     fun get(id: String): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst() ?: return null

@@ -149,6 +149,7 @@ class DeploymentListViewModel(
         val tempProjectId = projectId ?: selectedProjectId
         isLoadingMore = true
         viewModelScope.launch(Dispatchers.Main) {
+            Log.d("GuardianImageApp", "From deployment")
             getStreamsWithDeploymentAndIncidentUseCase.launch(
                 GetStreamWithDeploymentAndIncidentParams(
                     projectId = tempProjectId,

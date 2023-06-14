@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -91,6 +92,7 @@ class DeploymentRepositoryImpl(
             cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
         }.catch {
+            Log.d("GuardianApp", "${it.stackTrace.toList()}")
             emit(Result.Error(it))
             cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
@@ -149,11 +151,15 @@ class DeploymentRepositoryImpl(
     override fun uploadImages(deploymentId: String): Flow<Result<Boolean>> {
         return flow {
             emit(Result.Loading)
-
+            Log.d("GuardianAppImage", "Getting unsynced images")
             var someFailed = false
             val deployment = deploymentLocal.getById(deploymentId)
+            val deployments = deploymentLocal.getByIds(deploymentId)
+            val newImages = getLocalImages(deployment!!.id)
+            Log.d("GuardianAppImage", "Got ${deployment?.id} ${deployments.size} ${newImages.size} ${newImages.toList()}")
             val images = deployment?.images?.filter { it.remotePath == null }
             images?.forEach { image ->
+                Log.d("GuardianAppImage", "Uploading image ${image.id}")
                 imageLocal.lockUnsent(image.id)
 
                 val file = File(image.localPath)
