@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -34,6 +33,7 @@ import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.ConnectivityUtils
 import org.rfcx.incidents.util.location.LocationHelper
 
 class DeploymentListViewModel(
@@ -113,7 +113,8 @@ class DeploymentListViewModel(
             }
             FilterDeployment.SYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any synced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }.sortedByDescending { it.deployment!!.deployedAt }
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
+                    .sortedByDescending { it.deployment!!.deployedAt }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
@@ -121,7 +122,8 @@ class DeploymentListViewModel(
             }
             FilterDeployment.UNSYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }.sortedByDescending { it.deployment!!.deployedAt }
+                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
+                    .sortedByDescending { it.deployment!!.deployedAt }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
                 _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
                 val tempStream = streams.filter { it.deployment == null }
@@ -149,7 +151,6 @@ class DeploymentListViewModel(
         val tempProjectId = projectId ?: selectedProjectId
         isLoadingMore = true
         viewModelScope.launch(Dispatchers.Main) {
-            Log.d("GuardianImageApp", "From deployment")
             getStreamsWithDeploymentAndIncidentUseCase.launch(
                 GetStreamWithDeploymentAndIncidentParams(
                     projectId = tempProjectId,
@@ -248,7 +249,7 @@ class DeploymentListViewModel(
     fun uploadImages(deploymentId: String) {
         viewModelScope.launch(Dispatchers.Main) {
             uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {
                         //show error
                     }

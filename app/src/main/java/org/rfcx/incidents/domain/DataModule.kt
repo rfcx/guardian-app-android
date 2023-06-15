@@ -96,6 +96,7 @@ import org.rfcx.incidents.service.wifi.socket.AdminSocket
 import org.rfcx.incidents.service.wifi.socket.AudioSocket
 import org.rfcx.incidents.service.wifi.socket.FileSocket
 import org.rfcx.incidents.service.wifi.socket.GuardianSocket
+import org.rfcx.incidents.util.ConnectivityUtils
 import org.rfcx.incidents.util.location.LocationHelper
 import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
 import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
@@ -178,7 +179,7 @@ object DataModule {
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
 
-        single { DeploymentRepositoryImpl(get(), get(), get(), get(), get(), get()) } bind DeploymentRepository::class
+        single { DeploymentRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) } bind DeploymentRepository::class
         single { DeploymentAndIncidentRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) } bind DeploymentAndIncidentRepository::class
         single { SaveDeploymentUseCase(get()) }
         single { DeployDeploymentUseCase(get()) }
@@ -238,5 +239,6 @@ object DataModule {
         single { MicrophoneTestUtils() }
         single { AudioSpectrogramUtils }
         single { LocationHelper(androidContext()) }
+        single { ConnectivityUtils(androidContext()) }
     }
 }

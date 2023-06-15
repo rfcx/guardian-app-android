@@ -26,6 +26,7 @@ import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
+import org.rfcx.incidents.util.ConnectivityUtils
 import org.rfcx.incidents.util.FileUtils.getMimeType
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
 import java.io.File
@@ -36,7 +37,8 @@ class DeploymentRepositoryImpl(
     private val streamLocal: StreamDb,
     private val cachedEndpointDb: CachedEndpointDb,
     private val deploymentEndpoint: DeploymentEndpoint,
-    private val guardianFileHelper: GuardianFileHelper
+    private val guardianFileHelper: GuardianFileHelper,
+    private val connectivityUtils: ConnectivityUtils
 ) : DeploymentRepository {
 
     override fun save(stream: Stream) {
@@ -63,7 +65,7 @@ class DeploymentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentParams): Flow<Result<List<Stream>>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(deploymentCacheKey(params.projectId ?: "null"))) {
+        if ((params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(deploymentCacheKey(params.projectId ?: "null"))) && connectivityUtils.isAvailable()) {
             return refreshFromAPI(params.projectId, params.offset)
         }
         return flow { emit(Result.Success(getFromLocalDB(params.projectId))) }
