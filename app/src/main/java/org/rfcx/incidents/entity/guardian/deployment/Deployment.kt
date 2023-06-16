@@ -38,7 +38,7 @@ open class Deployment(
         if (images == null) return SyncState.SENT.value
         if (images!!.none { it.syncState != SyncState.SENT.value }) return SyncState.SENT.value
         if (images!!.any { it.syncState == SyncState.SENDING.value }) return SyncState.SENDING.value
-        if (images!!.all { it.syncState == SyncState.UNSENT.value }) return SyncState.UNSENT.value
+        if (images!!.any { it.syncState == SyncState.UNSENT.value }) return SyncState.UNSENT.value
         return SyncState.SENT.value
     }
     companion object {
