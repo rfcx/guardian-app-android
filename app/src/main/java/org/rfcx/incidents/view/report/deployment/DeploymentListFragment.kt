@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,6 +37,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     private val deploymentAdapter by lazy { DeploymentListAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
 
+    private lateinit var unsyncedAlert: AlertDialog
     private var state = DeploymentListState.LIST
 
     override fun onCreateView(
@@ -175,6 +178,14 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.alertUnsynced.collectLatest {
+                if (it) {
+                    showUnsyncedAlert()
+                }
+            }
+        }
     }
 
     private fun setSwipe() {
@@ -217,6 +228,21 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 setColorSchemeResources(R.color.colorPrimary)
             }
         }
+    }
+
+    private fun showUnsyncedAlert() {
+        unsyncedAlert =
+            MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
+                setTitle("Are you sure to reload ?")
+                setMessage("if you proceed to reload, you will lose current unsynced deployments and images.")
+                setPositiveButton("Continue") { _, _ ->
+                    viewModel.fetchFreshStreams(force = true, fromAlertUnsynced = true)
+                }
+                setNegativeButton(R.string.back) { _, _ ->
+                    unsyncedAlert.dismiss()
+                }
+            }.create()
+        unsyncedAlert.show()
     }
 
     private fun showSwipeAirplaneError() {

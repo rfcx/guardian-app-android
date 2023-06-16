@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.guardian.deploy.UnSyncedExistException
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetLocalProjectUseCase
@@ -65,6 +66,9 @@ class DeploymentListViewModel(
 
     private val _uploadImageState = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val uploadImageState = _uploadImageState.asSharedFlow()
+
+    private val _alertUnsynced = MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val alertUnsynced = _alertUnsynced.asSharedFlow()
 
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
@@ -150,7 +154,7 @@ class DeploymentListViewModel(
         )
     }
 
-    fun fetchFreshStreams(projectId: String? = null, force: Boolean = false, offset: Int = 0) {
+    fun fetchFreshStreams(projectId: String? = null, force: Boolean = false, offset: Int = 0, fromAlertUnsynced: Boolean = false) {
         val tempProjectId = projectId ?: selectedProjectId
         isLoadingMore = true
         viewModelScope.launch(Dispatchers.Main) {
@@ -158,13 +162,20 @@ class DeploymentListViewModel(
                 GetStreamWithDeploymentAndIncidentParams(
                     projectId = tempProjectId,
                     offset = offset,
-                    forceRefresh = force
+                    forceRefresh = force,
+                    fromAlertUnsynced = fromAlertUnsynced
                 )
             ).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         isLoadingMore = false
-                        _streams.tryEmit(Result.Error(result.throwable))
+                        if (force) {
+                            if (result.throwable is UnSyncedExistException) {
+                                _alertUnsynced.tryEmit(true)
+                            }
+                        } else {
+                            _streams.tryEmit(Result.Error(result.throwable))
+                        }
                     }
                     Result.Loading -> _streams.tryEmit(Result.Loading)
                     is Result.Success -> {

@@ -81,9 +81,9 @@ class DeploymentAndIncidentRepositoryImpl(
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty()) {
-            if (getUnsyncedWorks()) {
+            if (getUnsyncedWorks() && !params.fromAlertUnsynced) {
                 return flow {
-                    emit(Result.Error(Throwable("Updating current data won't start due to unsynced deployments or images")))
+                    emit(Result.Error(UnSyncedExistException()))
                     emit(Result.Success(getLocal(params.projectId)))
                 }
             }
@@ -111,4 +111,9 @@ class DeploymentAndIncidentRepositoryImpl(
     private fun cacheKey(projectId: String): String {
         return "GetDeploymentsIncidents-$projectId"
     }
+}
+
+class UnSyncedExistException(): Throwable() {
+    override val message: String
+        get() = "Updating current data won't start due to unsynced deployments or images"
 }

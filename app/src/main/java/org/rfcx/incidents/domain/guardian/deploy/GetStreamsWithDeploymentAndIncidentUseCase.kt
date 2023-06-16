@@ -17,5 +17,6 @@ class GetStreamsWithDeploymentAndIncidentUseCase(
 data class GetStreamWithDeploymentAndIncidentParams(
     val projectId: String,
     val forceRefresh: Boolean = false,
-    val offset: Int = 0
+    val offset: Int = 0,
+    val fromAlertUnsynced: Boolean = false
 )
