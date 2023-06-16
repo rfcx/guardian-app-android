@@ -45,7 +45,7 @@ class DeploymentDb(private val realm: Realm) {
         return realm.where(Deployment::class.java).equalTo(Deployment.FIELD_DEPLOYMENT_KEY, deployment.deploymentKey).findFirst()!!
     }
 
-    fun get(): List<Deployment> {
+    fun list(): List<Deployment> {
         val deployments = realm.where(Deployment::class.java).findAll()
         return realm.copyFromRealm(deployments)
     }
@@ -65,17 +65,17 @@ class DeploymentDb(private val realm: Realm) {
         return realm.copyFromRealm(deployment)
     }
 
-    fun getAllForWorker(): List<Deployment> {
+    fun listForWorker(): List<Deployment> {
         var unsent: List<Deployment> = listOf()
         realm.executeTransaction {
-            val registrations = realm.where(Deployment::class.java)
+            val deployments = realm.where(Deployment::class.java)
                 .findAll().createSnapshot()
-            unsent = registrations
+            unsent = deployments
         }
         return unsent
     }
 
-    fun getAsFlow(): Flow<List<Deployment>> {
+    fun listAsFlow(): Flow<List<Deployment>> {
         return realm.where(Deployment::class.java).findAllAsync().toFlow()
     }
 

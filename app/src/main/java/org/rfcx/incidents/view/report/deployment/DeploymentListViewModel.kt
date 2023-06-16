@@ -63,6 +63,9 @@ class DeploymentListViewModel(
     private val _streams = MutableSharedFlow<Result<List<Stream>>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val streams = _streams.asSharedFlow()
 
+    private val _uploadImageState = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val uploadImageState = _uploadImageState.asSharedFlow()
+
     private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val currentLocationState = _currentLocationState.asStateFlow()
 
@@ -251,7 +254,7 @@ class DeploymentListViewModel(
             uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        //show error
+                        _uploadImageState.tryEmit(result.throwable.message ?: "")
                     }
                     Result.Loading -> {
                         //show loading

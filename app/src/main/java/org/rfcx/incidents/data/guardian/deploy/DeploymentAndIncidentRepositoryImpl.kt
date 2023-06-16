@@ -1,11 +1,9 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentAndIncidentRepository
-import org.rfcx.incidents.data.interfaces.guardian.deploy.DeploymentRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
@@ -18,6 +16,7 @@ import org.rfcx.incidents.data.remote.streams.toEvent
 import org.rfcx.incidents.data.remote.streams.toStream
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncidentParams
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 
 class DeploymentAndIncidentRepositoryImpl(
@@ -81,12 +80,32 @@ class DeploymentAndIncidentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
-        Log.d("GuardianImageApp", "run $currentRunning")
         if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty()) {
-            Log.d("GuardianImageApp", "run endpoint")
+            if (getUnsyncedWorks()) {
+                return flow {
+                    emit(Result.Error(Throwable("Updating current data won't start due to unsynced deployments or images")))
+                    emit(Result.Success(getLocal(params.projectId)))
+                }
+            }
             return getRemote(params.projectId, params.offset)
         }
         return flow { emit(Result.Success(getLocal(params.projectId))) }
+    }
+
+    private fun getUnsyncedWorks(): Boolean {
+        var hasUnsynced = false
+        val deployments = deploymentLocal.list()
+        deployments.forEach { dp ->
+            if (dp.syncState != SyncState.SENT.value) {
+                hasUnsynced = true
+            }
+            dp.images?.forEach { image ->
+                if (image.syncState != SyncState.SENT.value) {
+                    hasUnsynced = true
+                }
+            }
+        }
+        return hasUnsynced
     }
 
     private fun cacheKey(projectId: String): String {

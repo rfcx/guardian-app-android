@@ -163,6 +163,18 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.uploadImageState.collectLatest { result ->
+                if (result.isNotEmpty()) {
+                    Toast.makeText(
+                        context,
+                        result,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun setSwipe() {

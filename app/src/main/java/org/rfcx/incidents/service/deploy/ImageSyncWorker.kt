@@ -31,7 +31,7 @@ class ImageSyncWorker(private val context: Context, params: WorkerParameters) : 
         val service = ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, context)
         val db = DeploymentDb(Realm.getInstance(AppRealm.configuration()))
         val imageDb = DeploymentImageDb(Realm.getInstance(AppRealm.configuration()))
-        val images = db.getAllForWorker().filter { it.externalId != null }.map { dp ->
+        val images = db.listForWorker().filter { it.externalId != null }.map { dp ->
             Pair(dp.externalId, dp.images?.filter { it.remotePath == null }?.toList())
         }
 

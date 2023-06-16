@@ -24,6 +24,7 @@ import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.util.ConnectivityUtils
@@ -57,7 +58,7 @@ class DeploymentRepositoryImpl(
     }
 
     override fun getAsFlow(): Flow<List<Deployment>> {
-        return deploymentLocal.getAsFlow()
+        return deploymentLocal.listAsFlow()
     }
 
     override fun getByIdAsFlow(id: Int): Flow<Deployment?> {
@@ -94,7 +95,6 @@ class DeploymentRepositoryImpl(
             cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
         }.catch {
-            Log.d("GuardianApp", "${it.stackTrace.toList()}")
             emit(Result.Error(it))
             cachedEndpointDb.updateCachedEndpoint(deploymentCacheKey(projectId ?: "null"))
             emit(Result.Success(getFromLocalDB(projectId)))
@@ -147,52 +147,64 @@ class DeploymentRepositoryImpl(
                     }
                 }
             }
+        }.catch {
+            val stream = streamLocal.get(streamId)
+            stream?.deployment?.let { dp ->
+                deploymentLocal.markUnsent(dp.id)
+            }
+            emit(Result.Error(it))
         }
     }
 
     override fun uploadImages(deploymentId: String): Flow<Result<Boolean>> {
-        val deployment = deploymentLocal.getById(deploymentId)
-        return flow {
-            emit(Result.Loading)
-            var someFailed = false
-            if (deployment == null) {
-                emit(Result.Error(Throwable("deployment not found")))
-            } else {
-                val images = deployment.images?.filter { it.remotePath == null }
-                images?.forEach { image ->
-                    imageLocal.lockUnsent(image.id)
+        if (!connectivityUtils.isAvailable()) {
+            return flow {
+                emit(Result.Error(Throwable("Cannot upload images due to unavailable connectivity")))
+            }
+        } else {
+            val deployment = deploymentLocal.getById(deploymentId)
+            return flow {
+                emit(Result.Loading)
+                var someFailed = false
+                if (deployment == null) {
+                    emit(Result.Error(Throwable("deployment not found")))
+                } else {
+                    val images = deployment.images?.filter { it.remotePath == null }
+                    images?.forEach { image ->
+                        imageLocal.lockUnsent(image.id)
 
-                    val file = File(image.localPath)
-                    val mimeType = file.getMimeType()
-                    val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), guardianFileHelper.compressFile(file))
-                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                    val gson = Gson()
-                    val obj = JsonObject()
-                    obj.addProperty("label", image.imageLabel)
-                    val label = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), gson.toJson(obj))
-                    val result = deploymentEndpoint.uploadImageSuspend(deployment.deploymentKey, body, label)
-                    if (result.isSuccessful) {
-                        val assetPath = result.headers()["Location"]
-                        assetPath?.let { path ->
-                            imageLocal.markSent(image.id, path.substring(1, path.length))
-                            refreshImagesInDeployment(deployment.id)
+                        val file = File(image.localPath)
+                        val mimeType = file.getMimeType()
+                        val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), guardianFileHelper.compressFile(file))
+                        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                        val gson = Gson()
+                        val obj = JsonObject()
+                        obj.addProperty("label", image.imageLabel)
+                        val label = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), gson.toJson(obj))
+                        val result = deploymentEndpoint.uploadImageSuspend(deployment.deploymentKey, body, label)
+                        if (result.isSuccessful) {
+                            val assetPath = result.headers()["Location"]
+                            assetPath?.let { path ->
+                                imageLocal.markSent(image.id, path.substring(1, path.length))
+                                refreshImagesInDeployment(deployment.id)
+                            }
+                        } else {
+                            imageLocal.markUnsent(image.id)
+                            someFailed = true
                         }
+                    }
+                    if (someFailed) {
+                        emit(Result.Error(Throwable("There is something wrong on uploading images")))
                     } else {
-                        imageLocal.markUnsent(image.id)
-                        someFailed = true
+                        emit(Result.Success(true))
                     }
                 }
-                if (someFailed) {
-                    emit(Result.Error(Throwable("There is something wrong on uploading images")))
-                } else {
-                    emit(Result.Success(true))
+            }.catch {
+                deployment?.images?.forEach { image ->
+                    imageLocal.markUnsent(image.id)
                 }
+                emit(Result.Error(Throwable("There is something wrong on uploading images")))
             }
-        }.catch {
-            deployment?.images?.forEach { image ->
-                imageLocal.markUnsent(image.id)
-            }
-            emit(Result.Error(Throwable("There is something wrong on uploading images")))
         }
     }
 
@@ -241,7 +253,11 @@ class DeploymentRepositoryImpl(
         }.catch {
             // in case of any error
             // eg. runtime, no internet
-            emit(Result.Error(it))
+            if (!connectivityUtils.isAvailable()) {
+                emit(Result.Error(Throwable("Cannot get images due to unavailable connectivity")))
+            } else {
+                emit(Result.Error(it))
+            }
             emit(Result.Success(getLocalImages(deploymentId)))
         }
     }

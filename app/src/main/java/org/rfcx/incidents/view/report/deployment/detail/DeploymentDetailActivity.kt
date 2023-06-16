@@ -63,7 +63,7 @@ class DeploymentDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.errorFetching.collectLatest {
                 if (it != null) {
-                    Toast.makeText(this@DeploymentDetailActivity, it, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DeploymentDetailActivity, it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
