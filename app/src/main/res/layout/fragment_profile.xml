@@ -42,6 +42,10 @@
             type="android.view.View.OnClickListener"/>
 
         <variable
+            name="onClickRegistration"
+            type="android.view.View.OnClickListener"/>
+
+        <variable
             name="onClickMakeDeployment"
             type="android.view.View.OnClickListener"/>
     </data>
@@ -207,6 +211,16 @@
                 android:onClick="@{onClickClassifier}"
                 android:padding="@dimen/margin_padding_normal"
                 android:text="Download Classifier"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/unsentRegistrationTextView"
+                style="@style/RangerText.SubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{onClickRegistration}"
+                android:padding="@dimen/margin_padding_normal"
+                android:text="Unsent Guardian registration"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/makeDeploymentTextView"

@@ -29,6 +29,7 @@ import org.rfcx.incidents.view.base.BaseFragment
 import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.profile.guardian.ClassifierDownloadActivity
 import org.rfcx.incidents.view.profile.guardian.SoftwareDownloadActivity
+import org.rfcx.incidents.view.profile.guardian.UnsentGuardianRegistrationActivity
 
 class ProfileFragment : BaseFragment() {
 
@@ -159,6 +160,9 @@ class ProfileFragment : BaseFragment() {
         }
         viewDataBinding.onClickClassifier = View.OnClickListener {
             ClassifierDownloadActivity.startActivity(requireContext())
+        }
+        viewDataBinding.onClickRegistration = View.OnClickListener {
+            UnsentGuardianRegistrationActivity.startActivity(requireContext())
         }
         viewDataBinding.onClickMakeDeployment = View.OnClickListener {
             GuardianDeploymentActivity.startActivity(requireContext())
