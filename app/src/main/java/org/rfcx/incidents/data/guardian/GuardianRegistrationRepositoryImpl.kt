@@ -30,13 +30,21 @@ class GuardianRegistrationRepositoryImpl(
     override fun sendRegistrationOnline(env: String, registration: GuardianRegisterRequest): Flow<Result<GuardianRegisterResponse>> {
         return flow {
             emit(Result.Loading)
+            localDb.markSending(registration.guid)
             if (env == "production") {
                 emit(Result.Success(productionEndpoint.register(registration)))
+                localDb.markSent(registration.guid)
             } else {
                 emit(Result.Success(stagingEndpoint.register(registration)))
+                localDb.markSent(registration.guid)
             }
         }.catch { e ->
             emit(Result.Error(e))
+            localDb.markUnsent(registration.guid)
         }
+    }
+
+    override fun list(): Flow<List<GuardianRegistration>> {
+        return localDb.listAsFlow()
     }
 }

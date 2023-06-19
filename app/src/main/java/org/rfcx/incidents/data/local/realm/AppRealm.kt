@@ -168,6 +168,7 @@ private class Migrations : RealmMigration {
             addField(GuardianRegistration.FIELD_API_MQTT_HOST, String::class.java).setRequired(GuardianRegistration.FIELD_API_MQTT_HOST, true)
             addField(GuardianRegistration.FIELD_API_SMS_ADDRESS, String::class.java).setRequired(GuardianRegistration.FIELD_API_SMS_ADDRESS, true)
             addField(GuardianRegistration.FIELD_ENV, String::class.java).setRequired(GuardianRegistration.FIELD_ENV, true)
+            addField(GuardianRegistration.FIELD_SYNC_STATE, Int::class.java)
         }
     }
 

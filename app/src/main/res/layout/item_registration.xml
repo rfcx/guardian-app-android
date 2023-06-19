@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundColor">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/guidTextView"
+        style="@style/RangerText.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:padding="@dimen/margin_padding_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Site A" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/registerButton"
+        style="@style/RangerText.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:padding="@dimen/margin_padding_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="register" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/registeredText"
+        style="@style/RangerText.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/background_button_disable"
+        android:padding="@dimen/margin_padding_normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="registered" />
+
+    <ProgressBar
+        android:id="@+id/registerLoading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/registerButton"
+        app:layout_constraintEnd_toEndOf="@id/registerButton"
+        app:layout_constraintTop_toTopOf="@id/registerButton"
+        app:layout_constraintBottom_toBottomOf="@id/registerButton"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

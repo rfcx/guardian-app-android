@@ -9,4 +9,5 @@ import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 interface GuardianRegistrationRepository {
     fun saveRegistration(registration: GuardianRegistration): Flow<Boolean>
     fun sendRegistrationOnline(env: String, registration: GuardianRegisterRequest): Flow<Result<GuardianRegisterResponse>>
+    fun list(): Flow<List<GuardianRegistration>>
 }

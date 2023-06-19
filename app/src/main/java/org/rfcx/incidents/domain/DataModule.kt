@@ -74,6 +74,7 @@ import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileRemoteUseCase
+import org.rfcx.incidents.domain.guardian.registration.GetRegistrationUseCase
 import org.rfcx.incidents.domain.guardian.registration.SaveRegistrationUseCase
 import org.rfcx.incidents.domain.guardian.registration.SendRegistrationOnlineUseCase
 import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
@@ -192,6 +193,8 @@ object DataModule {
         single { AddImageToDeploymentUseCase(get()) }
         single { GetLocalLiveDeploymentUseCase(get()) }
         single { GetDeploymentImagesUseCase(get()) }
+
+        single { GetRegistrationUseCase(get()) }
     }
 
     val remoteModule = module {
