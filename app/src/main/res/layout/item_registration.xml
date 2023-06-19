@@ -8,18 +8,19 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/guidTextView"
-        style="@style/RangerText.Subhead"
+        style="@style/RangerText.SubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:padding="@dimen/margin_padding_normal"
+        android:textColor="@color/text_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Site A" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/registerButton"
-        style="@style/RangerText.Subhead"
+        style="@style/RangerText.SubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
@@ -30,10 +31,10 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/registeredText"
-        style="@style/RangerText.Subhead"
+        style="@style/RangerText.SubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/background_button_disable"
+        android:textColor="@color/text_secondary"
         android:padding="@dimen/margin_padding_normal"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
