@@ -40,6 +40,9 @@ class ProfileViewModel(
     private val _registrationsCount: MutableStateFlow<String> = MutableStateFlow("")
     val registrationsCount = _registrationsCount.asStateFlow()
 
+    private val _registrationsCountVisibility: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val registrationsCountVisibility = _registrationsCountVisibility.asStateFlow()
+
     private val _logoutState = MutableLiveData<Boolean>()
     private var _streams: List<Stream> = listOf()
 
@@ -91,7 +94,9 @@ class ProfileViewModel(
     private fun getRegistrations() {
         viewModelScope.launch(Dispatchers.Main) {
             getRegistrationUseCase.launch().collectLatest {
-                _registrationsCount.tryEmit(it.filter { rg -> rg.syncState == SyncState.UNSENT.value }.size.toString())
+                val count = it.filter { rg -> rg.syncState == SyncState.UNSENT.value }.size
+                _registrationsCount.tryEmit(count.toString())
+                _registrationsCountVisibility.tryEmit(count != 0)
             }
         }
     }
