@@ -38,7 +38,7 @@ class UnsentRegistrationViewModel(
     private fun getUnsentRegistrations() {
         viewModelScope.launch(Dispatchers.Main) {
             getRegistrationUseCase.launch().collectLatest {
-                _registrations.tryEmit(it)
+                _registrations.tryEmit(it.sortedBy { rg -> rg.syncState })
                 if (it.isEmpty()) {
                     _noContentState.tryEmit(true)
                 } else {
