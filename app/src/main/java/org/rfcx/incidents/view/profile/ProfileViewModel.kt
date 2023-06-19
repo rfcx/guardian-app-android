@@ -4,12 +4,21 @@ import android.content.Context
 import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProfileData
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.domain.guardian.registration.GetRegistrationUseCase
+import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.logout
 import kotlin.random.Random
@@ -18,7 +27,8 @@ class ProfileViewModel(
     private val context: Context,
     profileData: ProfileData,
     private val projectDb: ProjectDb,
-    private val streamDb: StreamDb
+    private val streamDb: StreamDb,
+    private val getRegistrationUseCase: GetRegistrationUseCase
 ) : ViewModel() {
 
     val appVersion = MutableLiveData<String>()
@@ -26,6 +36,9 @@ class ProfileViewModel(
     val eventSubtitle = MutableLiveData<String>()
     val showSystemOptions = MutableLiveData<Boolean>()
     val preferences = Preferences.getInstance(context)
+
+    private val _registrationsCount: MutableStateFlow<String> = MutableStateFlow("")
+    val registrationsCount = _registrationsCount.asStateFlow()
 
     private val _logoutState = MutableLiveData<Boolean>()
     private var _streams: List<Stream> = listOf()
@@ -35,6 +48,7 @@ class ProfileViewModel(
         userName.value = profileData.getUserNickname()
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
+        getRegistrations()
     }
 
     fun resumed() {
@@ -72,6 +86,14 @@ class ProfileViewModel(
             }
         }
         eventSubtitle.value = subtitle
+    }
+
+    private fun getRegistrations() {
+        viewModelScope.launch(Dispatchers.Main) {
+            getRegistrationUseCase.launch().collectLatest {
+                _registrationsCount.tryEmit(it.filter { rg -> rg.syncState == SyncState.UNSENT.value }.size.toString())
+            }
+        }
     }
 
     private fun getSubscribedProject(): List<String>? {

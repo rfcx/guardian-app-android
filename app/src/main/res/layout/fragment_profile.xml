@@ -212,15 +212,28 @@
                 android:padding="@dimen/margin_padding_normal"
                 android:text="Download Classifier"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/unsentRegistrationTextView"
-                style="@style/RangerText.SubTitle"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{onClickRegistration}"
-                android:padding="@dimen/margin_padding_normal"
-                android:text="Unsent Guardian registration"/>
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/unsentRegistrationTextView"
+                    style="@style/RangerText.SubTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="@{onClickRegistration}"
+                    android:padding="@dimen/margin_padding_normal"
+                    android:text="Unsent Guardian registration"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/unsentRegistrationNumber"
+                    style="@style/RangerText.SubTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    android:text="@{viewModel.registrationsCount}"/>
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/makeDeploymentTextView"

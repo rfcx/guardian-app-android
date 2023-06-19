@@ -58,7 +58,7 @@ object UiModule {
     }
 
     val profileModule = module {
-        viewModel { ProfileViewModel(androidContext(), get(), get(), get()) }
+        viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SubscribeProjectsViewModel(get()) }
         viewModel { FeedbackViewModel(androidContext()) }
     }
