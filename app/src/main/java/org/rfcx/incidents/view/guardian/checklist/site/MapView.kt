@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.location.Location
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -157,7 +156,6 @@ class MapView @JvmOverloads constructor(
             style = it
             setupSymbolManager()
             enableLocationComponent()
-            Log.d("GuardianApp 3", "${currentLoc} ${siteLoc}")
             if (currentLoc.latitude == 0.0 && currentLoc.longitude == 0.0) {
                 moveCamera(siteLoc)
             } else {

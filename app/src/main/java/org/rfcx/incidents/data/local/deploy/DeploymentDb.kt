@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.local.deploy
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,6 @@ class DeploymentDb(private val realm: Realm) {
                     // create new if there is none
                     val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                     deployment.id = id
-                    Log.d("GuardianApp", "Insert ${deployment.deploymentKey}")
                     it.insert(deployment)
                 } else {
                     externalDeployment.images = deployment.images

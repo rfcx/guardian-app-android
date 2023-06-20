@@ -8,7 +8,6 @@ import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -43,7 +42,6 @@ import org.rfcx.incidents.view.base.BaseActivity
 import org.rfcx.incidents.view.events.StreamsFragment
 import org.rfcx.incidents.view.events.detail.EventActivity
 import org.rfcx.incidents.view.events.detail.StreamDetailFragment
-import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.profile.ProfileFragment
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_STATE
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
@@ -252,7 +250,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
                 binding.navMenu.menuDeployments.menuSelected = true
-                Log.d("GuardianApp", "Deploy clicked")
                 showDeployment()
             }
         }

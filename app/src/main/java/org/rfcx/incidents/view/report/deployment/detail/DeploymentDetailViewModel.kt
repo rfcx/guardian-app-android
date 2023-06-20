@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.report.deployment.detail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +54,6 @@ class DeploymentDetailViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getLocalLiveDeploymentUseCase.launch(GetLocalDeploymentParams(id)).collectLatest { result ->
                 if (result != null) {
-                    Log.d("GuardianAppImage", "Got $id")
                     _images.tryEmit(result.images?.map { it.toDeploymentImageView() } ?: listOf())
                     uploadImages(result.externalId!!)
                 }
@@ -78,7 +76,7 @@ class DeploymentDetailViewModel(
     private fun uploadImages(deploymentId: String) {
         viewModelScope.launch(Dispatchers.Main) {
             uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {
                         //show error
                     }
