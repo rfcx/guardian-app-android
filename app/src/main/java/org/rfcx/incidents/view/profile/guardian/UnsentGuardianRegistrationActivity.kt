@@ -54,7 +54,7 @@ class UnsentGuardianRegistrationActivity : AppCompatActivity(), RegisterButtonLi
             setDisplayShowTitleEnabled(true)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            this.title = "Unsent Guardian registration"
+            this.title = getString(R.string.unsent_title)
         }
     }
 

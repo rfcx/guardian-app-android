@@ -560,4 +560,30 @@
     <string name="button_continue">continue</string>
     <string name="follow_missing">The following photos are missing:\n%s</string>
 
+    <!-- Unsent Registration -->
+    <string name="unsent_title">Unsent Guardian registration</string>
+    <string name="there_is_no_unsent_registration">There is no unsent registration.</string>
+
+    <!-- Deployment List -->
+    <string name="refresh_title">Are you sure to reload ?</string>
+    <string name="refresh_message">If you proceed to reload, you will lose current unsynced deployments and images.</string>
+    <string name="continue_name">Continue</string>
+    <string name="unsynced">unsynced</string>
+    <string name="synced">synced</string>
+    <string name="all">all</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="altitude">altitude</string>
+    <string name="deployment_key">deployment key</string>
+    <string name="delete">delete</string>
+
+    <!-- Deployment Detail -->
+
+    <!-- Add Image -->
+    <string name="add_photos_title">Add photos</string>
+
+    <!-- Edit Location -->
+    <string name="edit_location_title">Edit location</string>
+    <string name="fill_name">Please fill the name</string>
+
 </resources>

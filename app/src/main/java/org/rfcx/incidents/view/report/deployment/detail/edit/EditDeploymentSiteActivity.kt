@@ -64,7 +64,7 @@ class EditDeploymentSiteActivity : AppCompatActivity(), EditDeploymentSiteListen
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = "Edit location"
+            title = getString(R.string.edit_location_title)
         }
     }
 

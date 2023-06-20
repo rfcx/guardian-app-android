@@ -84,21 +84,21 @@
                         style="@style/FilterDeploymentChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="unsynced" />
+                        android:text="@string/unsynced" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/syncedSelectChip"
                         style="@style/FilterDeploymentChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="synced" />
+                        android:text="@string/synced" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/allSelectChip"
                         style="@style/FilterDeploymentChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All" />
+                        android:text="@string/all" />
                 </com.google.android.material.chip.ChipGroup>
 
                 <androidx.recyclerview.widget.RecyclerView

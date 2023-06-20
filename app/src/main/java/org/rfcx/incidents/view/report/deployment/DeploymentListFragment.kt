@@ -233,9 +233,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     private fun showUnsyncedAlert() {
         unsyncedAlert =
             MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
-                setTitle("Are you sure to reload ?")
-                setMessage("if you proceed to reload, you will lose current unsynced deployments and images.")
-                setPositiveButton("Continue") { _, _ ->
+                setTitle(getString(R.string.refresh_title))
+                setMessage(getString(R.string.refresh_message))
+                setPositiveButton(getString(R.string.continue_name)) { _, _ ->
                     viewModel.fetchFreshStreams(force = true, fromAlertUnsynced = true)
                 }
                 setNegativeButton(R.string.back) { _, _ ->

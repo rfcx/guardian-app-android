@@ -66,7 +66,7 @@ class AddImageActivity : AppCompatActivity(), AddImageListener {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = "Add photos"
+            title = getString(R.string.add_photos_title)
         }
     }
 

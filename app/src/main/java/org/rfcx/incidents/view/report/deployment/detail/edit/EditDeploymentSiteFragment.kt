@@ -79,7 +79,7 @@ class EditDeploymentSiteFragment : Fragment() {
             if (binding.siteNameEditText.text.isNullOrBlank()) {
                 Toast.makeText(
                     context,
-                    "Please fill the name",
+                    getString(R.string.fill_name),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -130,7 +130,7 @@ class EditDeploymentSiteFragment : Fragment() {
             siteLatitude = it.getDouble(ARG_LATITUDE)
             siteLongitude = it.getDouble(ARG_LONGITUDE)
             viewModel.fromMapPickerData(
-                it.getString(ARG_NAME) ?: "None",
+                it.getString(ARG_NAME) ?: getString(R.string.common_none),
                 siteLatitude,
                 siteLongitude
             )
