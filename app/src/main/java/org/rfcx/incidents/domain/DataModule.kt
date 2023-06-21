@@ -111,10 +111,10 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsWithIncidentUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
