@@ -59,6 +59,7 @@ import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
@@ -195,6 +196,7 @@ object DataModule {
         single { GetDeploymentImagesUseCase(get()) }
 
         single { GetRegistrationUseCase(get()) }
+        single { ConnectivityUtils(androidContext()) }
     }
 
     val remoteModule = module {
@@ -243,5 +245,6 @@ object DataModule {
         single { AudioSpectrogramUtils }
         single { LocationHelper(androidContext()) }
         single { ConnectivityUtils(androidContext()) }
+        single { CredentialVerifier(androidContext()) }
     }
 }

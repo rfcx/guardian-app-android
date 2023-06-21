@@ -29,7 +29,9 @@ import org.rfcx.incidents.view.login.LoginFragment.Companion.SUCCESS
 class LoginViewModel(
     private val context: Context,
     private val checkUserTouchUseCase: CheckUserTouchUseCase,
-    private val getProjectsUseCase: GetProjectsUseCase
+    private val getProjectsUseCase: GetProjectsUseCase,
+    private val credentialKeeper: CredentialKeeper,
+    private val credentialVerifier: CredentialVerifier
 ) : ViewModel() {
 
     private val auth0 by lazy {
@@ -108,7 +110,7 @@ class LoginViewModel(
             .setAudience(context.getString(R.string.auth0_audience))
             .start(object : BaseCallback<Credentials, AuthenticationException> {
                 override fun onSuccess(credentials: Credentials) {
-                    when (val result = CredentialVerifier(context).verify(credentials)) {
+                    when (val result = credentialVerifier.verify(credentials)) {
                         is Err -> {
                             _loginFailure.postValue(result.error)
                         }
@@ -131,7 +133,7 @@ class LoginViewModel(
     }
 
     fun checkUserDetail(userAuthResponse: UserAuthResponse) {
-        CredentialKeeper(context).save(userAuthResponse)
+        credentialKeeper.save(userAuthResponse)
 
         checkUserTouchUseCase.execute(
             object : DisposableSingleObserver<Boolean>() {

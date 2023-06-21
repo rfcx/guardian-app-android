@@ -12,8 +12,8 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.mapbox.android.core.permissions.PermissionsManager
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -56,7 +56,7 @@ import org.rfcx.incidents.widget.BottomNavigationMenuItem
 class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.NetworkStateLister {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainActivityViewModel by viewModel()
-    private val preferences = Preferences.getInstance(this)
+    private val preferences by lazy { Preferences.getInstance(this) }
     private val firebaseCrashlytics by lazy { Crashlytics() }
 
     private val locationPermissions by lazy { LocationPermissions(this) }
@@ -72,6 +72,16 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             when (it.data?.getStringExtra(CreateReportActivity.EXTRA_SCREEN)) {
                 Screen.DRAFT_REPORTS.id -> binding.navMenu.menuDraftReports.performClick()
                 Screen.SUBMITTED_REPORTS.id -> binding.navMenu.menuSubmittedReports.performClick()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Check token before doing anything
+        runBlocking {
+            if (mainViewModel.shouldBackToLogin()) {
+                logout()
             }
         }
     }
@@ -97,7 +107,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             setupFragments()
         }
         this.saveUserLoginWith()
-        observeMain()
         getEventFromIntentIfHave(intent)
         this.startLocationChange()
     }
@@ -420,15 +429,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         val contentContainerPaddingBottom =
             if (show) resources.getDimensionPixelSize(R.dimen.bottom_bar_height) else 0
         binding.contentContainer.setPadding(0, 0, 0, contentContainerPaddingBottom)
-    }
-
-    private fun observeMain() {
-        mainViewModel.isRequireToLogin.observe(
-            this,
-            Observer {
-                if (it) logout()
-            }
-        )
     }
 
     private fun getEventFromIntentIfHave(intent: Intent?) {
