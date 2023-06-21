@@ -59,6 +59,7 @@ import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
@@ -110,11 +111,12 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsWithIncidentUseCase(get(), get(), get()) }
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
         single { GetEventsUseCase(get(), get(), get()) }
@@ -195,6 +197,7 @@ object DataModule {
         single { GetDeploymentImagesUseCase(get()) }
 
         single { GetRegistrationUseCase(get()) }
+        single { ConnectivityUtils(androidContext()) }
     }
 
     val remoteModule = module {
@@ -243,5 +246,6 @@ object DataModule {
         single { AudioSpectrogramUtils }
         single { LocationHelper(androidContext()) }
         single { ConnectivityUtils(androidContext()) }
+        single { CredentialVerifier(androidContext()) }
     }
 }

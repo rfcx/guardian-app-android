@@ -41,7 +41,7 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
     private val reportsAdapter by lazy { ReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
     lateinit var listener: MainActivityEventListener
-    lateinit var preferences: Preferences
+    private val preferences by lazy { Preferences.getInstance(requireContext()) }
     private var streams = listOf<String>()
 
     override fun onAttach(context: Context) {
@@ -79,7 +79,6 @@ class SubmittedReportsFragment : Fragment(), ReportOnClickListener, ProjectOnCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        preferences = Preferences.getInstance(requireContext())
         setRecyclerView()
         setObserve()
         setOnClickListener()
