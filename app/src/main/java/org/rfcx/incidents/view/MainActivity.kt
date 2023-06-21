@@ -338,10 +338,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
-            .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
-            .add(binding.contentContainer.id, getDeployments(), DeploymentListFragment.tag)
-            .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
-            .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
             .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
             .commit()
 
@@ -368,6 +364,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showStatus() {
         showAboveAppbar(true)
         this.currentFragment = getNewEvents()
+        if (supportFragmentManager.findFragmentByTag(StreamsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getNewEvents())
             .hide(getSubmittedReports())
@@ -380,6 +381,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showDraftReports() {
         showAboveAppbar(true)
         this.currentFragment = getDraftReports()
+        if (supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getDraftReports())
             .hide(getNewEvents())
@@ -392,6 +398,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showSubmittedReports() {
         showAboveAppbar(true)
         this.currentFragment = getSubmittedReports()
+        if (supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getSubmittedReports())
             .hide(getNewEvents())
@@ -404,6 +415,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showProfile() {
         showAboveAppbar(true)
         this.currentFragment = getProfile()
+        if (supportFragmentManager.findFragmentByTag(ProfileFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getProfile())
             .hide(getNewEvents())
@@ -416,6 +432,11 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun showDeployment() {
         showAboveAppbar(true)
         this.currentFragment = getDeployments()
+        if (supportFragmentManager.findFragmentByTag(DeploymentListFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getDeployments(), DeploymentListFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getDeployments())
             .hide(getProfile())
