@@ -196,7 +196,6 @@ object DataModule {
         single { GetDeploymentImagesUseCase(get()) }
 
         single { GetRegistrationUseCase(get()) }
-        single { ConnectivityUtils(androidContext()) }
     }
 
     val remoteModule = module {
