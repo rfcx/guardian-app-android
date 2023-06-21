@@ -53,9 +53,11 @@ import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.data.preferences.CredentialKeeper
 import org.rfcx.incidents.data.preferences.Preferences
+import org.rfcx.incidents.data.remote.common.CredentialVerifier
 import org.rfcx.incidents.data.remote.common.service.ServiceFactory
 import org.rfcx.incidents.domain.executor.PostExecutionThread
 import org.rfcx.incidents.domain.executor.ThreadExecutor
+<<<<<<< HEAD
 import org.rfcx.incidents.domain.guardian.guardianfile.DeleteFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.DownloadFileUseCase
 import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCase
@@ -85,6 +87,9 @@ import org.rfcx.incidents.service.wifi.socket.GuardianSocket
 import org.rfcx.incidents.util.location.LocationHelper
 import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
 import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
+=======
+import org.rfcx.incidents.util.ConnectivityUtils
+>>>>>>> master
 import org.rfcx.incidents.view.UiThread
 
 object DataModule {
@@ -94,10 +99,10 @@ object DataModule {
         factory { JobExecutor() } bind ThreadExecutor::class
         factory { UiThread() } bind PostExecutionThread::class
 
-        single { ProjectsRepositoryImp(get(), get(), get(), get()) } bind ProjectsRepository::class
+        single { ProjectsRepositoryImp(get(), get(), get(), get(), get()) } bind ProjectsRepository::class
         single { GetProjectsUseCase(get(), get(), get()) }
 
-        single { StreamsRepositoryImp(get(), get(), get(), get(), get()) } bind StreamsRepository::class
+        single { StreamsRepositoryImp(get(), get(), get(), get(), get(), get()) } bind StreamsRepository::class
         single { GetStreamsUseCase(get(), get(), get()) }
 
         single { EventsRepositoryImpl(get()) } bind EventsRepository::class
@@ -127,6 +132,7 @@ object DataModule {
         single { MediaRepositoryImp(get()) } bind MediaRepository::class
         single { MediaUseCase(get(), get(), get()) }
 
+<<<<<<< HEAD
         single { WifiHotspotRepositoryImpl(get()) } bind WifiHotspotRepository::class
         single { GetNearbyHotspotUseCase(get()) }
         single { ConnectHotspotUseCase(get()) }
@@ -163,6 +169,9 @@ object DataModule {
 
         single { GetLocalStreamsUseCase(get()) }
         single { GetLocalProjectUseCase(get()) }
+=======
+        single { ConnectivityUtils(androidContext()) }
+>>>>>>> master
     }
 
     val remoteModule = module {
@@ -198,6 +207,7 @@ object DataModule {
         factory { ProfileData(get()) }
         factory { Preferences.getInstance(androidContext()) }
         single { CredentialKeeper(androidContext()) }
+<<<<<<< HEAD
         single { WifiHotspotManager(androidContext()) }
         single { GuardianSocket }
         single { AdminSocket }
@@ -207,5 +217,8 @@ object DataModule {
         single { MicrophoneTestUtils() }
         single { AudioSpectrogramUtils }
         single { LocationHelper(androidContext()) }
+=======
+        single { CredentialVerifier(androidContext()) }
+>>>>>>> master
     }
 }

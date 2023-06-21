@@ -356,7 +356,6 @@ class StreamsFragment :
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
                 streamAdapter.items = streams
-                streamAdapter.notifyDataSetChanged()
                 setEventFeatures(streams)
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false

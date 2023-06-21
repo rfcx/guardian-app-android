@@ -31,6 +31,9 @@ class CredentialKeeper(val context: Context) {
         if (user.picture != null) {
             preferences.putString(Preferences.IMAGE_PROFILE, user.picture)
         }
+        if (user.expiredAt != null) {
+            preferences.putLong(Preferences.TOKEN_EXPIRES_AT, (user.expiredAt * 1000) - (1000 * 60 * 60 * 24 * 7 * 2)) // minus 2 weeks
+        }
     }
 
     fun clear() {
@@ -41,5 +44,10 @@ class CredentialKeeper(val context: Context) {
     fun hasValidCredentials(): Boolean {
         val preferences = Preferences.getInstance(context)
         return preferences.getString(Preferences.ID_TOKEN, "").isNotEmpty()
+    }
+
+    fun isTokenExpired(): Boolean {
+        val preferences = Preferences.getInstance(context)
+        return System.currentTimeMillis() > preferences.getLong(Preferences.TOKEN_EXPIRES_AT, 0)
     }
 }

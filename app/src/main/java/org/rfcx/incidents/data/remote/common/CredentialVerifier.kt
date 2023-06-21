@@ -49,6 +49,7 @@ class CredentialVerifier(val context: Context) {
             val picture: String? = untrusted.body["picture"] as String?
             val nickname: String? = name
             val defaultSite: String? = metadata["defaultSite"] as String?
+            val expiresAt = untrusted.body["exp"] as Int?
 
             var accessibleSites: Set<String> = setOf()
             val accessibleSitesRaw = metadata["accessibleSites"]
@@ -82,7 +83,8 @@ class CredentialVerifier(val context: Context) {
                             roles,
                             accessibleSites,
                             defaultSite,
-                            picture
+                            picture,
+                            expiresAt?.toLong()
                         )
                     )
                 }
