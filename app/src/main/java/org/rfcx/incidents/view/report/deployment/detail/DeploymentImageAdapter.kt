@@ -14,7 +14,6 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.adapter.entity.BaseListItem
 import org.rfcx.incidents.databinding.ItemAddImageBinding
 import org.rfcx.incidents.databinding.ItemImageBinding
-import org.rfcx.incidents.databinding.ItemPhotoAdviseBinding
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setDeploymentImage
@@ -166,7 +165,7 @@ class DeploymentImageAdapter :
         private val syncImageView = binding.syncImage
         private val progress = binding.progressBarOfImageView
 
-        fun bind(item: DeploymentImageView, canDelete: Boolean) {
+        fun bind(index: Int, item: DeploymentImageView, canDelete: Boolean) {
             syncImageView.visibility = View.VISIBLE
             syncImageView.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -194,7 +193,7 @@ class DeploymentImageAdapter :
             }
 
             itemView.setOnClickListener {
-                onImageAdapterClickListener?.onImageClick(item)
+                onImageAdapterClickListener?.onImageClick(index)
             }
 
             deleteButton.setOnClickListener {
@@ -222,10 +221,10 @@ class DeploymentImageAdapter :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ImageAdapterViewHolder && getItem(position) is LocalImageItem) {
             val itemImage = getItem(position) as LocalImageItem
-            holder.bind(itemImage.deploymentImage, itemImage.canDelete)
+            holder.bind(position, itemImage.deploymentImage, itemImage.canDelete)
         } else if (holder is ImageAdapterViewHolder && getItem(position) is RemoteImageItem) {
             val itemImage = getItem(position) as RemoteImageItem
-            holder.bind(itemImage.deploymentImage, false)
+            holder.bind(position, itemImage.deploymentImage, false)
         }
     }
 
@@ -258,6 +257,6 @@ data class AddImageItem(val any: Any? = null) : BaseListItem {
 
 interface OnImageAdapterClickListener {
     fun onAddImageClick()
-    fun onImageClick(deploymentImageView: DeploymentImageView)
+    fun onImageClick(position: Int)
     fun onDeleteImageClick(position: Int, imagePath: String)
 }

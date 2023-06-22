@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetLocalLiveStreamUseCase
 import org.rfcx.incidents.domain.GetLocalStreamParams
@@ -89,5 +90,21 @@ class DeploymentDetailViewModel(
                 }
             }
         }
+    }
+
+    fun getListOfPathForDisplay(index: Int): Pair<ArrayList<String>, ArrayList<String>> {
+        val list = (
+            _images.value.map {
+                it.remotePath ?: "file://${it.localPath}"
+            }) as ArrayList
+
+        val labelList = (_images.value.map { it.label }) as ArrayList
+        val selectedImage = _images.value[index].remotePath ?: "file://${_images.value[index].localPath}"
+        val selectedLabel = labelList[index]
+        list.removeAt(index)
+        labelList.removeAt(index)
+        list.add(0, selectedImage)
+        labelList.add(0, selectedLabel)
+        return Pair(list, labelList)
     }
 }

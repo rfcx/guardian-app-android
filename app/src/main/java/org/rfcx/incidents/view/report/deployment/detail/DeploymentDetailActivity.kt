@@ -19,6 +19,7 @@ import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.setFormatLabel
+import org.rfcx.incidents.view.report.deployment.detail.display.DisplayImageActivity
 import org.rfcx.incidents.view.report.deployment.detail.edit.EditDeploymentSiteActivity
 import org.rfcx.incidents.view.report.deployment.detail.image.AddImageActivity
 
@@ -111,8 +112,13 @@ class DeploymentDetailActivity : AppCompatActivity() {
                 toAddImage = true
             }
 
-            override fun onImageClick(deploymentImageView: DeploymentImageView) {
-                //todo Show full image display
+            override fun onImageClick(position: Int) {
+                val pair = viewModel.getListOfPathForDisplay(position)
+                DisplayImageActivity.startActivity(
+                    this@DeploymentDetailActivity,
+                    pair.first.toTypedArray(),
+                    pair.second.toTypedArray()
+                )
             }
 
             override fun onDeleteImageClick(position: Int, imagePath: String) {

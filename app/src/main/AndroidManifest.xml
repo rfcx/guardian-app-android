@@ -97,6 +97,9 @@
         <activity android:name=".view.profile.guardian.UnsentGuardianRegistrationActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".view.report.deployment.detail.display.DisplayImageActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".service.LocationTrackerService"
             android:exported="false"
