@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDeploymentBinding
 import org.rfcx.incidents.databinding.ItemRegistrationBinding
+import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.toStringWithTimeZone
-import org.rfcx.incidents.view.guardian.checklist.CheckListAdapter
-import org.rfcx.incidents.view.guardian.checklist.CheckListItem
 import java.util.TimeZone
 
 class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemListener) :
@@ -147,6 +146,10 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
         fun bind(item: ListItem.RegistrationItem) {
             guardianName.text = item.guardianId
 
+            syncIcon.setOnClickListener {
+                deploymentItemListener.onRegisterClicked(item.registration)
+            }
+
             when (item.registration.syncState) {
                 SyncState.UNSENT.value -> {
                     syncIcon.visibility = View.VISIBLE
@@ -170,6 +173,6 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
 interface DeploymentItemListener {
     fun onCloudClicked(id: Int)
     fun onImageIconClicked(deploymentId: String)
-
+    fun onRegisterClicked(registration: GuardianRegistration)
     fun onItemClicked(streamId: Int)
 }

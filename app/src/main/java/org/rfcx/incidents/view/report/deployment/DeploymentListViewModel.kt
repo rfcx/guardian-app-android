@@ -34,7 +34,10 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesParams
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
 import org.rfcx.incidents.domain.guardian.registration.GetRegistrationUseCase
+import org.rfcx.incidents.domain.guardian.registration.OnlineRegistrationParams
+import org.rfcx.incidents.domain.guardian.registration.SendRegistrationOnlineUseCase
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
+import org.rfcx.incidents.entity.guardian.registration.toRequest
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -51,6 +54,7 @@ class DeploymentListViewModel(
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
     private val uploadImagesUseCase: UploadImagesUseCase,
     private val getRegistrationUseCase: GetRegistrationUseCase,
+    private val sendRegistrationOnlineUseCase: SendRegistrationOnlineUseCase,
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
@@ -71,6 +75,9 @@ class DeploymentListViewModel(
 
     private val _uploadImageState = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val uploadImageState = _uploadImageState.asSharedFlow()
+
+    private val _registerState = MutableSharedFlow<String>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val registerState = _registerState.asSharedFlow()
 
     private val _alertUnsynced = MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val alertUnsynced = _alertUnsynced.asSharedFlow()
@@ -293,6 +300,19 @@ class DeploymentListViewModel(
             }
         }
     }
+
+    fun register(registration: GuardianRegistration) {
+        viewModelScope.launch {
+            sendRegistrationOnlineUseCase.launch(OnlineRegistrationParams(registration.env, registration.toRequest())).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> _registerState.tryEmit(result.throwable.message ?: "")
+                    Result.Loading -> {}
+                    is Result.Success -> {}
+                }
+            }
+        }
+    }
+
 
     enum class FilterDeployment {
         ALL, SYNCED, UNSYNCED

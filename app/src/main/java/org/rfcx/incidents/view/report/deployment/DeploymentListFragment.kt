@@ -20,6 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
+import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -169,6 +170,18 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
         lifecycleScope.launch {
             viewModel.uploadImageState.collectLatest { result ->
+                if (result.isNotEmpty()) {
+                    Toast.makeText(
+                        context,
+                        result,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.registerState.collectLatest { result ->
                 if (result.isNotEmpty()) {
                     Toast.makeText(
                         context,
@@ -346,6 +359,10 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     override fun onImageIconClicked(deploymentId: String) {
         viewModel.uploadImages(deploymentId)
+    }
+
+    override fun onRegisterClicked(registration: GuardianRegistration) {
+        viewModel.register(registration)
     }
 
     override fun onItemClicked(streamId: Int) {
