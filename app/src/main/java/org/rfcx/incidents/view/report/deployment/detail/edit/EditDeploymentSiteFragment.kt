@@ -32,7 +32,9 @@ class EditDeploymentSiteFragment : Fragment() {
     private var siteLongitude: Double = 0.0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         listener = context as EditDeploymentSiteListener
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_location, container, false)

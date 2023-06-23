@@ -1,8 +1,8 @@
 package org.rfcx.incidents.util.audiocoverage
 
 import com.google.gson.JsonObject
-import org.rfcx.incidents.view.guardian.checklist.storage.HeatmapItem
 import org.rfcx.incidents.entity.guardian.socket.GuardianArchivedCoverage
+import org.rfcx.incidents.view.guardian.checklist.storage.HeatmapItem
 import java.util.Calendar
 import java.util.Date
 
@@ -31,7 +31,7 @@ object AudioCoverageUtils {
                     tree.getAsJsonObject(year).getAsJsonObject(month).add(day, JsonObject())
                 }
                 if (!tree.getAsJsonObject(year).getAsJsonObject(month).getAsJsonObject(day)
-                        .has("maximum")
+                    .has("maximum")
                 ) {
                     tree.getAsJsonObject(year).getAsJsonObject(month).getAsJsonObject(day)
                         .addProperty("maximum", file.maximumFileCount)
@@ -43,7 +43,7 @@ object AudioCoverageUtils {
                         .addProperty("maximum", (file.maximumFileCount + currentMaximum) / 2)
                 }
                 if (!tree.getAsJsonObject(year).getAsJsonObject(month).getAsJsonObject(day)
-                        .has(hour)
+                    .has(hour)
                 ) {
                     tree.getAsJsonObject(year).getAsJsonObject(month).getAsJsonObject(day)
                         .addProperty(hour, 0)

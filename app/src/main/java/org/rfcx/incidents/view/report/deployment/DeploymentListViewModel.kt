@@ -126,37 +126,40 @@ class DeploymentListViewModel(
         when (filter) {
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
-                val tempDeployments = streams
-                    .filter { it.deployment != null }
+                val tempDeployments = streams.filter { it.deployment != null }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
-                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + registration.map { it.toRegistrationListItem() })
-                    .sortedByDescending { it.date }
+                val tempListItem =
+                    (tempDeployments.map { it.toDeploymentListItem() } + registration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any synced deployments or registrations")
-                val tempDeployments = streams
-                    .filter { it.deployment != null }
-                    .filter { it.deployment!!.syncState == SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false }
+                val tempDeployments = streams.filter { it.deployment != null }
+                    .filter {
+                        it.deployment!!.syncState ==
+                            SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false
+                    }
                 val tempRegistration = registration.filter { it.syncState == SyncState.SENT.value }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
-                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() })
-                    .sortedByDescending { it.date }
+                val tempListItem =
+                    (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
                 _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments or registrations")
-                val tempDeployments = streams
-                    .filter { it.deployment != null }
-                    .filter { it.deployment!!.syncState == SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false }
+                val tempDeployments = streams.filter { it.deployment != null }
+                    .filter {
+                        it.deployment!!.syncState ==
+                            SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
+                    }
                 val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
                 _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
-                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() })
-                    .sortedByDescending { it.date }
+                val tempListItem =
+                    (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
@@ -185,10 +188,7 @@ class DeploymentListViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             getStreamsWithDeploymentAndIncidentUseCase.launch(
                 GetStreamWithDeploymentAndIncidentParams(
-                    projectId = tempProjectId,
-                    offset = offset,
-                    forceRefresh = force,
-                    fromAlertUnsynced = fromAlertUnsynced
+                    projectId = tempProjectId, offset = offset, forceRefresh = force, fromAlertUnsynced = fromAlertUnsynced
                 )
             ).collectLatest { result ->
                 when (result) {
@@ -218,10 +218,7 @@ class DeploymentListViewModel(
             val tempProjectId = projectId ?: selectedProjectId
             getStreamsWithDeploymentUseCase.launch(
                 GetStreamWithDeploymentParams(
-                    projectId = tempProjectId,
-                    forceRefresh = force,
-                    offset = offset,
-                    streamRefresh = swipeRefresh
+                    projectId = tempProjectId, forceRefresh = force, offset = offset, streamRefresh = swipeRefresh
                 )
             ).collectLatest { result ->
                 when (result) {
@@ -270,10 +267,10 @@ class DeploymentListViewModel(
             deployDeploymentUseCase.launch(DeploymentDeployParams(id)).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        //show error
+                        // show error
                     }
                     Result.Loading -> {
-                        //show loading
+                        // show loading
                     }
                     is Result.Success -> {
                         uploadImages(result.data)
@@ -291,10 +288,10 @@ class DeploymentListViewModel(
                         _uploadImageState.tryEmit(result.throwable.message ?: "")
                     }
                     Result.Loading -> {
-                        //show loading
+                        // show loading
                     }
                     is Result.Success -> {
-                        //show success
+                        // show success
                     }
                 }
             }
@@ -313,7 +310,6 @@ class DeploymentListViewModel(
         }
     }
 
-
     enum class FilterDeployment {
         ALL, SYNCED, UNSYNCED
     }
@@ -322,6 +318,7 @@ class DeploymentListViewModel(
 sealed class ListItem {
 
     open val date: Date = Date()
+
     data class DeploymentListItem(
         val stream: Stream,
         val guardianId: String?,
@@ -356,18 +353,13 @@ fun Stream.toDeploymentListItem(): ListItem.DeploymentListItem {
         }
     }
     return ListItem.DeploymentListItem(
-        this,
-        guid,
-        type,
-        this.deployment?.deployedAt ?: Date()
+        this, guid, type, this.deployment?.deployedAt ?: Date()
     )
 }
 
 fun GuardianRegistration.toRegistrationListItem(): ListItem.RegistrationItem {
     return ListItem.RegistrationItem(
-        this,
-        this.guid,
-        this.createdAt
+        this, this.guid, this.createdAt
     )
 }
 
@@ -395,17 +387,7 @@ fun Stream.toDeploymentPin(): MapMarker.DeploymentMarker {
         }
     }
     return MapMarker.DeploymentMarker(
-        id,
-        name,
-        longitude,
-        latitude,
-        pinImage,
-        description,
-        deployment!!.deploymentKey,
-        deployment!!.createdAt,
-        deployment!!.deployedAt,
-        guid,
-        type
+        id, name, longitude, latitude, pinImage, description, deployment!!.deploymentKey, deployment!!.createdAt, deployment!!.deployedAt, guid, type
     )
 }
 

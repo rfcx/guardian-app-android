@@ -56,7 +56,7 @@ class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class NormalHeatmapViewHolder(private val binding: ItemHeatmapNormalBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HeatmapItem.Normal) {
             val countAsPercent = (item.value.toFloat() / item.maximum.toFloat()) * 100
-            when{
+            when {
                 countAsPercent >= 96 -> {
                     itemView.setBackgroundResource(R.color.colorPrimary)
                 }
@@ -84,7 +84,6 @@ class ArchivedHeatmapAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.yLabelTextView.text = item.label
         }
     }
-
 }
 
 sealed class HeatmapItem {

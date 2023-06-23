@@ -1,10 +1,8 @@
 package org.rfcx.incidents.view.guardian.checklist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import io.realm.kotlin.freeze
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -14,8 +12,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.local.common.Constants
 import org.rfcx.incidents.data.remote.streams.realmList
-import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.DeploymentSaveParams
+import org.rfcx.incidents.domain.guardian.deploy.SaveDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
@@ -74,7 +72,6 @@ class GuardianCheckListViewModel(
     private fun getGuardianRegistration() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.isRegistered()?.let {
                     _registrationState.tryEmit(it)
@@ -111,12 +108,14 @@ class GuardianCheckListViewModel(
     fun deploy(stream: Stream, images: List<Image>) {
         val deployment = Deployment(
             isActive = true,
-            images = realmList(images.filter { it.path != null }.map {
-                DeploymentImage(
-                    localPath = it.path!!,
-                    imageLabel = it.name
-                )
-            }),
+            images = realmList(
+                images.filter { it.path != null }.map {
+                    DeploymentImage(
+                        localPath = it.path!!,
+                        imageLabel = it.name
+                    )
+                }
+            ),
             deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianType, guardianVital))
         )
         val newStream = Stream(

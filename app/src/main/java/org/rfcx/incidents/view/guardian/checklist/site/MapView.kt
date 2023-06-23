@@ -453,7 +453,7 @@ class MapView @JvmOverloads constructor(
             }
             return true
         } else {
-            //TODO hide bottom bar ?
+            // TODO hide bottom bar ?
         }
 
         if (siteFeatures.isNotEmpty()) {
@@ -476,7 +476,7 @@ class MapView @JvmOverloads constructor(
             }
             return true
         } else {
-            //TODO track ?
+            // TODO track ?
         }
 
         if (deploymentClusterFeatures.isNotEmpty()) {

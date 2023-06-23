@@ -6,7 +6,7 @@ import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 import org.rfcx.incidents.entity.stream.Project
 
-class GetLocalProjectUseCase (
+class GetLocalProjectUseCase(
     private val projectsRepository: ProjectsRepository
 ) : FlowWithParamUseCase<GetLocalProjectsParams, Project?>() {
     override fun performAction(param: GetLocalProjectsParams): Flow<Project?> {

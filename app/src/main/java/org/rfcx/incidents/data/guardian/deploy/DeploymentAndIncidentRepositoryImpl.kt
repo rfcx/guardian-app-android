@@ -113,7 +113,7 @@ class DeploymentAndIncidentRepositoryImpl(
     }
 }
 
-class UnSyncedExistException(): Throwable() {
+class UnSyncedExistException() : Throwable() {
     override val message: String
         get() = "Updating current data won't start due to unsynced deployments or images"
 }

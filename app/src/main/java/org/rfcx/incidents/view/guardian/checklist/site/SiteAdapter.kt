@@ -75,4 +75,3 @@ class SiteAdapter(private val itemClickListener: (Stream, Boolean) -> Unit) :
 }
 
 data class SiteWithDistanceItem(val stream: Stream, val distance: Float? = 0F)
-

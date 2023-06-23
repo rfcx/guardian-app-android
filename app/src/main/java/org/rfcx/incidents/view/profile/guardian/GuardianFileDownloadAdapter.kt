@@ -37,7 +37,8 @@ class GuardianFileDownloadAdapter(private val listener: GuardianFileEventListene
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
+        parent: ViewGroup,
+        viewType: Int
     ): FileDownloadViewHolder {
         binding = ItemGuardianFileDownloadBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FileDownloadViewHolder(binding)

@@ -114,7 +114,6 @@ class GuardianSiteSetFragment : Fragment() {
             0
         )
         binding.withinTextView.text = getString(R.string.within)
-
     }
 
     private fun setNotWithinText(distance: String) {

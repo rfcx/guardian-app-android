@@ -2,14 +2,12 @@ package org.rfcx.incidents.view.guardian.checklist.microphone
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
@@ -17,10 +15,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianMicrophoneBinding
-import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
-import org.rfcx.incidents.util.spectrogram.SpectrogramListener
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
-import org.rfcx.incidents.view.guardian.checklist.registration.GuardianRegisterViewModel
 import java.util.*
 
 class GuardianMicrophoneFragment : Fragment() {

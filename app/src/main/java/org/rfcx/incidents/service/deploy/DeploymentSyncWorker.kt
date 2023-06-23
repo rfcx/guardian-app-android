@@ -27,7 +27,7 @@ class DeploymentSyncWorker(private val context: Context, params: WorkerParameter
         val service = ServiceFactory.makeDeploymentService(BuildConfig.DEBUG, context)
         val streamDb = StreamDb(Realm.getInstance(AppRealm.configuration()))
         val deploymentDb = DeploymentDb(Realm.getInstance(AppRealm.configuration()))
-        val streams = streamDb.getAllForWorker().filter { it.deployment != null && it.deployment!!.syncState == SyncState.UNSENT.value}
+        val streams = streamDb.getAllForWorker().filter { it.deployment != null && it.deployment!!.syncState == SyncState.UNSENT.value }
 
         Log.d(TAG, "doWork: found ${streams.size} unsent")
         var someFailed = false

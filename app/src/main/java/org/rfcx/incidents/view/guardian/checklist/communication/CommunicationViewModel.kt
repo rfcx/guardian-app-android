@@ -107,7 +107,6 @@ class CommunicationViewModel(
     private fun getPrefSha1() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getPrefsSha1()?.let {
                     if (needCheckSha1) {
@@ -125,7 +124,6 @@ class CommunicationViewModel(
     private fun getSimModule() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSimDetected()?.let {
                     _simModuleState.tryEmit(it)
@@ -140,7 +138,6 @@ class CommunicationViewModel(
     private fun getSatModule() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSwarmId()?.let {
                     _satModuleState.tryEmit(it.isNotEmpty())
@@ -156,7 +153,6 @@ class CommunicationViewModel(
     private fun getGuardianTime() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 var localTime = 0L
                 result?.getGuardianLocalTime()?.let {
@@ -180,11 +176,10 @@ class CommunicationViewModel(
     private fun getGuardianPlan() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getGuardianPlan()?.let {
                     currentGuardianPlan = it
-                    when(it) {
+                    when (it) {
                         GuardianPlan.CELL_ONLY -> {
                             _guardianPlanCellState.tryEmit(true)
                             _guardianPlanSMSState.tryEmit(false)
@@ -218,7 +213,6 @@ class CommunicationViewModel(
     private fun getOffTimes() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSatTimeOff()?.let {
                     if (isFirstTime) {
@@ -231,7 +225,6 @@ class CommunicationViewModel(
         }
         viewModelScope.launch {
             getProjectOffTimesUseCase.launch(GetProjectOffTimesParams(preferences.getString(Preferences.SELECTED_PROJECT, ""))).catch {
-
             }.collectLatest { result ->
                 currentProjectOffTimes = result
                 if (currentProjectOffTimes.isEmpty()) {
@@ -252,17 +245,29 @@ class CommunicationViewModel(
     }
 
     fun onNextClicked(plan: GuardianPlan, offTimes: List<TimeRange>? = null, isManual: Boolean = true) {
-        when(plan) {
+        when (plan) {
             GuardianPlan.CELL_ONLY -> {
                 if (currentGuardianPlan != GuardianPlan.CELL_ONLY) needCheckSha1 = true
                 viewModelScope.launch(Dispatchers.IO) {
-                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getCellOnlyPrefs().toString()))
+                    sendInstructionCommandUseCase.launch(
+                        InstructionParams(
+                            InstructionType.SET,
+                            InstructionCommand.PREFS,
+                            PrefsUtils.getCellOnlyPrefs().toString()
+                        )
+                    )
                 }
             }
             GuardianPlan.CELL_SMS -> {
                 if (currentGuardianPlan != GuardianPlan.CELL_SMS) needCheckSha1 = true
                 viewModelScope.launch(Dispatchers.IO) {
-                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getCellSMSPrefs().toString()))
+                    sendInstructionCommandUseCase.launch(
+                        InstructionParams(
+                            InstructionType.SET,
+                            InstructionCommand.PREFS,
+                            PrefsUtils.getCellSMSPrefs().toString()
+                        )
+                    )
                 }
             }
             GuardianPlan.SAT_ONLY -> {
@@ -270,17 +275,35 @@ class CommunicationViewModel(
                 if (isManual) {
                     if (currentGuardianOffTimes != offTimes?.joinToString(",") { it.toStringFormat() }) needCheckSha1 = true
                     viewModelScope.launch(Dispatchers.IO) {
-                        sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getSatOnlyPrefs(offTimes?.joinToString(",") { it.toStringFormat() } ?: "").toString()))
+                        sendInstructionCommandUseCase.launch(
+                            InstructionParams(
+                                InstructionType.SET,
+                                InstructionCommand.PREFS,
+                                PrefsUtils.getSatOnlyPrefs(offTimes?.joinToString(",") { it.toStringFormat() } ?: "").toString()
+                            )
+                        )
                     }
                 } else {
                     if (currentProjectOffTimes.isNotEmpty()) {
                         if (currentGuardianOffTimes != currentProjectOffTimes) needCheckSha1 = true
                         viewModelScope.launch(Dispatchers.IO) {
-                            sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getSatOnlyPrefs(currentProjectOffTimes).toString()))
+                            sendInstructionCommandUseCase.launch(
+                                InstructionParams(
+                                    InstructionType.SET,
+                                    InstructionCommand.PREFS,
+                                    PrefsUtils.getSatOnlyPrefs(currentProjectOffTimes).toString()
+                                )
+                            )
                         }
                     } else {
                         viewModelScope.launch(Dispatchers.IO) {
-                            sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getSatOnlyPrefs().toString()))
+                            sendInstructionCommandUseCase.launch(
+                                InstructionParams(
+                                    InstructionType.SET,
+                                    InstructionCommand.PREFS,
+                                    PrefsUtils.getSatOnlyPrefs().toString()
+                                )
+                            )
                         }
                     }
                 }
@@ -288,7 +311,13 @@ class CommunicationViewModel(
             GuardianPlan.OFFLINE_MODE -> {
                 if (currentGuardianPlan != GuardianPlan.OFFLINE_MODE) needCheckSha1 = true
                 viewModelScope.launch(Dispatchers.IO) {
-                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.PREFS, PrefsUtils.getOfflineModePrefs().toString()))
+                    sendInstructionCommandUseCase.launch(
+                        InstructionParams(
+                            InstructionType.SET,
+                            InstructionCommand.PREFS,
+                            PrefsUtils.getOfflineModePrefs().toString()
+                        )
+                    )
                 }
             }
         }

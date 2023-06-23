@@ -86,7 +86,6 @@ class NetworkTestViewModel(
     private fun getSimModule() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSimDetected()?.let {
                     _simModuleState.tryEmit(it)
@@ -106,7 +105,6 @@ class NetworkTestViewModel(
     private fun getSatModule() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSwarmId()?.let {
                     _satModuleState.tryEmit(it.isNotEmpty())
@@ -115,7 +113,6 @@ class NetworkTestViewModel(
         }
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSwarmNetwork()?.let {
                     _satSignalState.tryEmit(it)

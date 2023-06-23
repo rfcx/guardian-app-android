@@ -6,7 +6,7 @@ import org.rfcx.incidents.view.guardian.checklist.photos.Image
 
 class AddImageToDeploymentUseCase(
     private val deploymentRepository: DeploymentRepository
-): NoResultWithParamUseCase<AddImageParams>() {
+) : NoResultWithParamUseCase<AddImageParams>() {
     override fun performAction(param: AddImageParams) {
         deploymentRepository.addImages(param.deploymentId, param.images)
     }

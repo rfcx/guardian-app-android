@@ -16,7 +16,8 @@ import org.rfcx.incidents.util.socket.PingUtils.getInternalBattery
 import org.rfcx.incidents.util.socket.PingUtils.getSentinelPower
 
 class PowerDiagnosticViewModel(
-    private val getGuardianMessageUseCase: GetGuardianMessageUseCase, private val getAdminMessageUseCase: GetAdminMessageUseCase
+    private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
+    private val getAdminMessageUseCase: GetAdminMessageUseCase
 ) : ViewModel() {
 
     private val _i2cAccessibilityState: MutableStateFlow<I2CAccessibility> = MutableStateFlow(I2CAccessibility())
@@ -55,7 +56,6 @@ class PowerDiagnosticViewModel(
     private fun getI2CAvailability() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 if (result != null) {
                     result.getI2cAccessibility()?.let { accessibility ->
@@ -70,7 +70,6 @@ class PowerDiagnosticViewModel(
         viewModelScope.launch {
             var entryIndex = 0
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSentinelPower()?.let { sentinelPower ->
                     _voltageState.tryEmit("${sentinelPower.input.voltage}mV")
@@ -90,7 +89,6 @@ class PowerDiagnosticViewModel(
     private fun getInternalBattery() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getInternalBattery()?.let { btt ->
                     _internalBttState.tryEmit("$btt%")

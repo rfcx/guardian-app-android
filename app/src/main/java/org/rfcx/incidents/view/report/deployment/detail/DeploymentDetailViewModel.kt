@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetLocalLiveStreamUseCase
 import org.rfcx.incidents.domain.GetLocalStreamParams
@@ -79,13 +78,13 @@ class DeploymentDetailViewModel(
             uploadImagesUseCase.launch(UploadImagesParams(deploymentId)).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        //show error
+                        // show error
                     }
                     Result.Loading -> {
-                        //show loading
+                        // show loading
                     }
                     is Result.Success -> {
-                        //show success
+                        // show success
                     }
                 }
             }
@@ -96,7 +95,8 @@ class DeploymentDetailViewModel(
         val list = (
             _images.value.map {
                 it.remotePath ?: "file://${it.localPath}"
-            }) as ArrayList
+            }
+            ) as ArrayList
 
         val labelList = (_images.value.map { it.label }) as ArrayList
         val selectedImage = _images.value[index].remotePath ?: "file://${_images.value[index].localPath}"

@@ -55,7 +55,6 @@ class GuardianRegisterViewModel(
     private fun getRegistration() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getGuid()?.let {
                     guid = it
@@ -105,7 +104,13 @@ class GuardianRegisterViewModel(
                     waitingForRegistration = true
                     _registerButtonState.tryEmit(false)
                     _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
-                    sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.IDENTITY, convertToRegistrationFormat(registration)))
+                    sendInstructionCommandUseCase.launch(
+                        InstructionParams(
+                            InstructionType.SET,
+                            InstructionCommand.IDENTITY,
+                            convertToRegistrationFormat(registration)
+                        )
+                    )
                 }
             }
         }
@@ -119,12 +124,18 @@ class GuardianRegisterViewModel(
                 waitingForRegistration = true
                 _registerButtonState.tryEmit(false)
                 sendRegistrationOnlineUseCase.launch(OnlineRegistrationParams(env, GuardianRegisterRequest(guid, null, null))).collectLatest { result ->
-                    when(result) {
+                    when (result) {
                         is Result.Error -> _registerTextState.tryEmit("Register failed: ${result.throwable.message}")
                         Result.Loading -> _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
                         is Result.Success -> {
                             withContext(Dispatchers.IO) {
-                                sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.SET, InstructionCommand.IDENTITY, convertToRegistrationFormat(result.data)))
+                                sendInstructionCommandUseCase.launch(
+                                    InstructionParams(
+                                        InstructionType.SET,
+                                        InstructionCommand.IDENTITY,
+                                        convertToRegistrationFormat(result.data)
+                                    )
+                                )
                             }
                         }
                     }
@@ -136,6 +147,7 @@ class GuardianRegisterViewModel(
     private fun convertToRegistrationFormat(registration: GuardianRegistration): String {
         return convertToRegistrationFormat(registration.toSocketFormat())
     }
+
     private fun convertToRegistrationFormat(registration: GuardianRegisterResponse): String {
         val renamedJson = JsonObject()
         renamedJson.addProperty("guid", registration.guid)

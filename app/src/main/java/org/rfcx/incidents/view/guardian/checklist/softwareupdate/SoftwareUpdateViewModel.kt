@@ -18,10 +18,10 @@ import org.rfcx.incidents.domain.guardian.guardianfile.GetGuardianFileLocalUseCa
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketParams
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
-import org.rfcx.incidents.entity.guardian.file.GuardianFile
-import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 import org.rfcx.incidents.entity.guardian.SoftwareUpdateItem
 import org.rfcx.incidents.entity.guardian.UpdateStatus
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.file.GuardianFileType
 import org.rfcx.incidents.entity.guardian.socket.OperationType
 import org.rfcx.incidents.util.guardianfile.GuardianFileUtils
 import org.rfcx.incidents.util.socket.PingUtils.getSoftware
@@ -59,7 +59,6 @@ class SoftwareUpdateViewModel(
                     _guardianSoftwareState.tryEmit(getSoftwareUpdateItem(downloadedSoftware, installedSoftware, targetProgress))
                 }
             }.catch {
-
             }.collect()
         }
     }

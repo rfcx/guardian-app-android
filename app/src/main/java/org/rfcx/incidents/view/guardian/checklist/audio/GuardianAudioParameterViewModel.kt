@@ -61,7 +61,6 @@ class GuardianAudioParameterViewModel(
     private fun getAudioParameter() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getAudioParameter()?.let {
                     if (isFirstTime) {
@@ -87,7 +86,6 @@ class GuardianAudioParameterViewModel(
     private fun getPrefsSha1() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getPrefsSha1()?.let {
                     if (needCheckSha1 && currentGuardianSha1 != it) {

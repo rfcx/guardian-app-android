@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,6 @@ import org.rfcx.incidents.entity.guardian.deployment.EditDeploymentRequest
 import org.rfcx.incidents.entity.guardian.deployment.toDeploymentRequestBody
 import org.rfcx.incidents.entity.guardian.deployment.toRequestBody
 import org.rfcx.incidents.entity.guardian.image.DeploymentImage
-import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.guardianfile.GuardianFileHelper
 import org.rfcx.incidents.util.ConnectivityUtils

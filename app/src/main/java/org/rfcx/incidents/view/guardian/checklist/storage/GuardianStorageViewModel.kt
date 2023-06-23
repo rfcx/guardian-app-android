@@ -43,7 +43,6 @@ class GuardianStorageViewModel(
     private fun getStorage() {
         viewModelScope.launch {
             getAdminMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getStorage()?.let {
                     it.internal?.let { internal ->
@@ -64,7 +63,6 @@ class GuardianStorageViewModel(
     private fun getArchived() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getGuardianArchivedAudios()?.let {
                     archived = it

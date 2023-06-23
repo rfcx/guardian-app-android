@@ -8,7 +8,6 @@ import org.rfcx.incidents.view.events.detail.EventViewModel
 import org.rfcx.incidents.view.events.detail.StreamDetailViewModel
 import org.rfcx.incidents.view.guardian.GuardianDeploymentViewModel
 import org.rfcx.incidents.view.guardian.checklist.GuardianCheckListViewModel
-import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterFragment
 import org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterViewModel
 import org.rfcx.incidents.view.guardian.checklist.checkin.GuardianCheckinTestViewModel
 import org.rfcx.incidents.view.guardian.checklist.classifierupload.ClassifierUploadViewModel

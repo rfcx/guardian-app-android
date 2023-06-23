@@ -47,7 +47,6 @@ class GuardianPreferenceViewModel(
     private fun getCurrentPreferences() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getPrefs(context)?.let {
                     if (isFirstTime) {
@@ -62,7 +61,6 @@ class GuardianPreferenceViewModel(
     private fun getPrefsSha1() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getPrefsSha1()?.let {
                     if (needCheckSha1 && currentGuardianSha1 != it) {

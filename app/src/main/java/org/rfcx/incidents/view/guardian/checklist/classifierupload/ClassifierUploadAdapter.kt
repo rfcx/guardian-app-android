@@ -11,8 +11,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemGuardianFileChildClassifierBinding
 import org.rfcx.incidents.databinding.ItemGuardianFileHeaderBinding
 import org.rfcx.incidents.entity.guardian.ClassifierUploadItem
-import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.entity.guardian.UpdateStatus
+import org.rfcx.incidents.entity.guardian.file.GuardianFile
 
 class ClassifierUploadAdapter(
     private var childrenClickedListener: ChildrenClickedListener

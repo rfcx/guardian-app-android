@@ -7,7 +7,7 @@ import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 
 class GetRegistrationUseCase(
     private val registrationRepository: GuardianRegistrationRepository
-): FlowUseCase<List<GuardianRegistration>>() {
+) : FlowUseCase<List<GuardianRegistration>>() {
     override fun performAction(): Flow<List<GuardianRegistration>> {
         return registrationRepository.list()
     }

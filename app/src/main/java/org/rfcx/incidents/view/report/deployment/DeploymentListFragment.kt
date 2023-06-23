@@ -42,7 +42,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     private var state = DeploymentListState.LIST
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         listener = context as MainActivityEventListener
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_deployment_list, container, false)

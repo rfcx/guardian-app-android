@@ -1,7 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist.site
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +20,7 @@ class GuardianSiteSetViewModel(
     private val locationHelper: LocationHelper,
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val preferences: Preferences
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _coordinateState: MutableStateFlow<String> = MutableStateFlow("")
     val coordinateState = _coordinateState.asStateFlow()
@@ -94,5 +93,4 @@ class GuardianSiteSetViewModel(
         _coordinateState.tryEmit("${site.latitude.latitudeCoordinates()}, ${site.longitude.longitudeCoordinates()}")
         _siteState.tryEmit(site.name)
     }
-
 }

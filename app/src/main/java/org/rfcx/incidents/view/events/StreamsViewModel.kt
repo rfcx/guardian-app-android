@@ -1,6 +1,5 @@
 package org.rfcx.incidents.view.events
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -90,12 +89,14 @@ class StreamsViewModel(
     fun fetchFreshStreams(force: Boolean = false, offset: Int = 0) {
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
         viewModelScope.launch(Dispatchers.Main) {
-            getStreamsWithDeploymentAndIncidentUseCase.launch(GetStreamWithDeploymentAndIncidentParams(
-                projectId = projectId,
-                offset = offset,
-                forceRefresh = force
-            )).collectLatest { result ->
-                when(result) {
+            getStreamsWithDeploymentAndIncidentUseCase.launch(
+                GetStreamWithDeploymentAndIncidentParams(
+                    projectId = projectId,
+                    offset = offset,
+                    forceRefresh = force
+                )
+            ).collectLatest { result ->
+                when (result) {
                     is Result.Error -> {
                         isLoadingMore = false
                         _streams.value = Result.Error(result.throwable)

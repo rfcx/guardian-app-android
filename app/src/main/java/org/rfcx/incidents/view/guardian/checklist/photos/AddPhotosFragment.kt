@@ -78,7 +78,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        when(context) {
+        when (context) {
             is GuardianDeploymentEventListener -> mainEvent = context as GuardianDeploymentEventListener
             is AddImageListener -> detailEvent = context as AddImageListener
         }
@@ -138,7 +138,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
 
     private fun setupImages() {
         getImageAdapter().setPlaceHolders(imagePlaceHolders)
-        when(context) {
+        when (context) {
             is GuardianDeploymentEventListener -> {
                 val savedImages = mainEvent?.getSavedImages()
                 if (!savedImages.isNullOrEmpty()) {
@@ -298,7 +298,7 @@ class AddPhotosFragment : Fragment(), ImageClickListener, GuidelineButtonClickLi
     }
 
     private fun handleNextStep() {
-        when(context) {
+        when (context) {
             is GuardianDeploymentEventListener -> {
                 setCacheImages()
                 mainEvent?.next()

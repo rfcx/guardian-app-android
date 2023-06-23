@@ -18,7 +18,6 @@ import org.rfcx.incidents.domain.guardian.socket.CloseSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetAudioMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InitAudioSocketUseCase
-import org.rfcx.incidents.domain.guardian.socket.InitSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.InstructionParams
 import org.rfcx.incidents.domain.guardian.socket.ReadAudioSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
@@ -26,15 +25,12 @@ import org.rfcx.incidents.entity.guardian.socket.InstructionCommand
 import org.rfcx.incidents.entity.guardian.socket.InstructionType
 import org.rfcx.incidents.service.wifi.socket.BaseSocketManager
 import org.rfcx.incidents.util.socket.PingUtils.getAudioCaptureStatus
-import org.rfcx.incidents.util.socket.PingUtils.getAudioParameter
 import org.rfcx.incidents.util.socket.PingUtils.getSampleRate
 import org.rfcx.incidents.util.spectrogram.AudioSpectrogramUtils
 import org.rfcx.incidents.util.spectrogram.MicrophoneTestUtils
 import org.rfcx.incidents.util.spectrogram.SpectrogramListener
 import org.rfcx.incidents.util.spectrogram.toShortArray
 import org.rfcx.incidents.util.spectrogram.toSmallChunk
-import org.rfcx.incidents.view.guardian.checklist.CheckListItem
-import java.util.PrimitiveIterator
 import java.util.Timer
 import java.util.TimerTask
 
@@ -47,7 +43,7 @@ class GuardianMicrophoneViewModel(
     private val closeSocketUseCase: CloseSocketUseCase,
     private val microphoneTestUtils: MicrophoneTestUtils,
     private val audioSpectrogramUtils: AudioSpectrogramUtils
-): ViewModel() {
+) : ViewModel() {
 
     private var audioChunks = arrayListOf<String>()
     private var tempAudio = ByteArray(0)
@@ -80,7 +76,7 @@ class GuardianMicrophoneViewModel(
     private fun initAudioSocket() {
         viewModelScope.launch(Dispatchers.IO) {
             initSocketUseCase.launch().collectLatest { result ->
-                when(result) {
+                when (result) {
                     is Result.Error -> {}
                     Result.Loading -> {}
                     is Result.Success -> {
@@ -118,7 +114,6 @@ class GuardianMicrophoneViewModel(
     fun getAudioConfig() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getSampleRate()?.let {
                     if (_sampleRateState.value == -1) {
@@ -139,7 +134,6 @@ class GuardianMicrophoneViewModel(
         notifySpectrogram()
         viewModelScope.launch {
             getAudioMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.let { audio ->
                     audioChunks.add(audio.buffer)
@@ -178,11 +172,14 @@ class GuardianMicrophoneViewModel(
                 setSpectrogramSize(buffer.size)
                 val audioChunks = buffer.toShortArray().toSmallChunk(1)
                 for (chunk in audioChunks) {
-                    audioSpectrogramUtils.getTrunks(chunk, object: SpectrogramListener {
-                        override fun onProcessed(mag: FloatArray) {
-                            spectrogramStack.add(mag)
+                    audioSpectrogramUtils.getTrunks(
+                        chunk,
+                        object : SpectrogramListener {
+                            override fun onProcessed(mag: FloatArray) {
+                                spectrogramStack.add(mag)
+                            }
                         }
-                    })
+                    )
                 }
                 stopSocketTimer()
                 scheduleSocketTimer()

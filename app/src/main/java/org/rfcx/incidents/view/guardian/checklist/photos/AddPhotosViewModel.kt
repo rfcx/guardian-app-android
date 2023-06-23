@@ -22,7 +22,6 @@ class AddPhotosViewModel(
     private fun getGuardianPlan() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getGuardianPlan()?.let {
                     guardianPlan = it

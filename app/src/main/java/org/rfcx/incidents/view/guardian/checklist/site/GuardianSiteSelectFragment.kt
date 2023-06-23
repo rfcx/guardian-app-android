@@ -145,7 +145,7 @@ class GuardianSiteSelectFragment :
     }
 
     override fun invoke(site: Stream, isNewSite: Boolean) {
-        mainEvent?.goToSiteSetScreen(site,isNewSite)
+        mainEvent?.goToSiteSetScreen(site, isNewSite)
     }
 
     companion object {

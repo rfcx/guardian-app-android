@@ -96,7 +96,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
             guardianTypeLayout.visibility = if (item.guardianType == null) View.GONE else View.VISIBLE
             if (item.guardianType != null) {
                 guardianTypeText.text = item.guardianType
-                when(item.guardianType) {
+                when (item.guardianType) {
                     "Cell" -> guardianTypeImage.setImageResource(R.drawable.ic_signal_cellular_alt)
                     "Sat" -> guardianTypeImage.setImageResource(R.drawable.ic_satellite_alt)
                 }
@@ -119,7 +119,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                 }
             }
 
-            when(item.stream.deployment?.getAllImagesState()) {
+            when (item.stream.deployment?.getAllImagesState()) {
                 SyncState.UNSENT.value -> {
                     imageIcon.visibility = View.VISIBLE
                     imageIcon.setBackgroundResource(R.drawable.ic_image_ready)

@@ -1,7 +1,7 @@
 package org.rfcx.incidents.util.guardianfile
 
-import org.rfcx.incidents.entity.guardian.file.FileStatus
 import org.rfcx.incidents.entity.guardian.UpdateStatus
+import org.rfcx.incidents.entity.guardian.file.FileStatus
 
 object GuardianFileUtils {
     fun compareIfNeedToDownload(version1: String?, version2: String?): FileStatus {

@@ -29,9 +29,9 @@ import org.rfcx.incidents.domain.guardian.socket.SendFileSocketParams
 import org.rfcx.incidents.domain.guardian.socket.SendFileSocketUseCase
 import org.rfcx.incidents.domain.guardian.socket.SendInstructionCommandUseCase
 import org.rfcx.incidents.entity.guardian.ClassifierUploadItem
+import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.entity.guardian.file.GuardianFile
 import org.rfcx.incidents.entity.guardian.file.GuardianFileType
-import org.rfcx.incidents.entity.guardian.UpdateStatus
 import org.rfcx.incidents.entity.guardian.socket.ClassifierSet
 import org.rfcx.incidents.entity.guardian.socket.GuardianPing
 import org.rfcx.incidents.entity.guardian.socket.InstructionCommand

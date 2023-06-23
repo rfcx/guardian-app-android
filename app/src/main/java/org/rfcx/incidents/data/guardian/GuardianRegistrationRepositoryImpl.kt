@@ -17,7 +17,7 @@ class GuardianRegistrationRepositoryImpl(
     private val productionEndpoint: GuardianRegisterProductionEndpoint,
     private val stagingEndpoint: GuardianRegisterStagingEndpoint,
     private val localDb: GuardianRegistrationDb
-): GuardianRegistrationRepository {
+) : GuardianRegistrationRepository {
     override fun saveRegistration(registration: GuardianRegistration): Flow<Boolean> {
         return try {
             localDb.save(registration)

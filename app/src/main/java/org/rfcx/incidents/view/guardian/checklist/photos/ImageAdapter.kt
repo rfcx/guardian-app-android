@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.databinding.ItemPhotoAdviseBinding
-import org.rfcx.incidents.databinding.ItemSiteBinding
 import org.rfcx.incidents.util.getTokenID
 import org.rfcx.incidents.util.setDeploymentImage
 import java.io.Serializable

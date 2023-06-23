@@ -38,7 +38,6 @@ class GuardianCheckinTestViewModel(
     private fun getCheckinData() {
         viewModelScope.launch {
             getGuardianMessageUseCase.launch().catch {
-
             }.collectLatest { result ->
                 result?.getLatestCheckIn()?.let {
                     when {

@@ -57,7 +57,6 @@ abstract class BaseSocketManager {
             writeChannel?.writeUTF(message)
             writeChannel?.flush()
         } catch (_: Exception) {
-
         }
     }
 

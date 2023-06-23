@@ -1,10 +1,8 @@
 package org.rfcx.incidents.view.guardian
 
 import android.content.SharedPreferences
-import android.location.Location
 import android.net.wifi.ScanResult
 import androidx.preference.Preference
-import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.SharedFlow
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.stream.Stream

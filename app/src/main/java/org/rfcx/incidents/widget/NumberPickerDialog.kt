@@ -24,7 +24,9 @@ class NumberPickerDialog(private val callback: NumberPickerButtonClickListener) 
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         prefsNumberValue = arguments?.getInt(ARG_VALUE) ?: 0
         binding = DialogNumberPickerBinding.inflate(inflater, container, false)

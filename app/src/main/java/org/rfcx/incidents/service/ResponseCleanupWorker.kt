@@ -13,8 +13,6 @@ import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
 import org.rfcx.incidents.data.local.realm.AppRealm
-import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
-import org.rfcx.incidents.service.deploy.ImageSyncWorker
 import java.util.concurrent.TimeUnit
 
 /**

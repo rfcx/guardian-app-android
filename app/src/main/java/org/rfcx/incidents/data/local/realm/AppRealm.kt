@@ -10,8 +10,8 @@ import io.realm.RealmMigration
 import io.realm.exceptions.RealmMigrationNeededException
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
-import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.guardian.file.GuardianFile
+import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
@@ -142,7 +142,8 @@ private class Migrations : RealmMigration {
         val guardianFile = realm.schema.create(GuardianFile.TABLE)
         guardianFile?.apply {
             addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(
-                GuardianFile.FIELD_ID, true)
+                GuardianFile.FIELD_ID, true
+            )
             addField(GuardianFile.FIELD_NAME, String::class.java).setRequired(GuardianFile.FIELD_NAME, true)
             addField(GuardianFile.FIELD_VERSION, String::class.java).setRequired(GuardianFile.FIELD_VERSION, true)
             addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)

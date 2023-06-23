@@ -20,7 +20,9 @@ class GuardianRegisterFragment : Fragment() {
     private var mainEvent: GuardianDeploymentEventListener? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         mainEvent = context as GuardianDeploymentEventListener
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_guardian_register, container, false)
