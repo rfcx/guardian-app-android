@@ -5,6 +5,7 @@ import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterResponse
 import org.rfcx.incidents.entity.response.SyncState
+import java.util.Date
 
 @RealmClass
 open class GuardianRegistration(
@@ -15,7 +16,8 @@ open class GuardianRegistration(
     var apiMqttHost: String = "staging-api-mqtt.rfcx.org",
     var apiSmsAddress: String = "+14154803657",
     var env: String = "staging",
-    var syncState: Int = SyncState.UNSENT.value
+    var syncState: Int = SyncState.UNSENT.value,
+    var createdAt: Date = Date()
 ) : RealmModel {
 
     companion object {
@@ -28,6 +30,7 @@ open class GuardianRegistration(
         const val FIELD_API_SMS_ADDRESS = "apiSmsAddress"
         const val FIELD_ENV = "env"
         const val FIELD_SYNC_STATE = "syncState"
+        const val FIELD_CREATED_AT = "createdAt"
     }
 }
 

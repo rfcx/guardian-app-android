@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.guardian.deploy.UnSyncedExistException
 import org.rfcx.incidents.data.preferences.Preferences
@@ -31,12 +33,13 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndInci
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesParams
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
+import org.rfcx.incidents.domain.guardian.registration.GetRegistrationUseCase
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
-import org.rfcx.incidents.util.ConnectivityUtils
 import org.rfcx.incidents.util.location.LocationHelper
+import java.util.Date
 
 class DeploymentListViewModel(
     private val getLocalStreamsUseCase: GetLocalStreamsUseCase,
@@ -47,10 +50,11 @@ class DeploymentListViewModel(
     private val getLocalProjectUseCase: GetLocalProjectUseCase,
     private val deployDeploymentUseCase: DeployDeploymentUseCase,
     private val uploadImagesUseCase: UploadImagesUseCase,
+    private val getRegistrationUseCase: GetRegistrationUseCase,
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _deployments = MutableSharedFlow<List<ListItem.DeploymentListItem>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _deployments = MutableSharedFlow<List<ListItem>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val deployments = _deployments.asSharedFlow()
 
     private val _markers = MutableSharedFlow<List<MapMarker>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -82,6 +86,7 @@ class DeploymentListViewModel(
 
     private var currentFilter = FilterDeployment.ALL
     private var currentAllStreams = listOf<Stream>()
+    private var currentAllRegistration = listOf<GuardianRegistration>()
     private var selectedProjectId = ""
 
     var isLoadingMore = false
@@ -102,38 +107,50 @@ class DeploymentListViewModel(
 
     private fun getDeployments(projectId: String) {
         viewModelScope.launch(Dispatchers.Main) {
-            getLocalStreamsUseCase.launch(GetLocalStreamsParams(projectId)).collectLatest { site ->
+            combine(getRegistrationUseCase.launch(), getLocalStreamsUseCase.launch(GetLocalStreamsParams(projectId))) { reg, site ->
                 currentAllStreams = site
-                filterWithDeployment(site, currentFilter)
-            }
+                currentAllRegistration = reg
+                filterWithDeployment(site, reg, currentFilter)
+            }.collect()
         }
     }
 
-    private fun filterWithDeployment(streams: List<Stream>, filter: FilterDeployment = FilterDeployment.ALL) {
+    private fun filterWithDeployment(streams: List<Stream>, registration: List<GuardianRegistration>, filter: FilterDeployment = FilterDeployment.ALL) {
         when (filter) {
             FilterDeployment.ALL -> {
-                _noDeploymentTextContent.tryEmit("you don't have any deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.sortedByDescending { it.deployment!!.deployedAt }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
-                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
+                _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
+                val tempDeployments = streams
+                    .filter { it.deployment != null }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + registration.map { it.toRegistrationListItem() })
+                    .sortedByDescending { it.date }
+                _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
-                _noDeploymentTextContent.tryEmit("you don't have any synced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.SENT.value }
-                    .sortedByDescending { it.deployment!!.deployedAt }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
-                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
+                _noDeploymentTextContent.tryEmit("you don't have any synced deployments or registrations")
+                val tempDeployments = streams
+                    .filter { it.deployment != null }
+                    .filter { it.deployment!!.syncState == SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false }
+                val tempRegistration = registration.filter { it.syncState == SyncState.SENT.value }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() })
+                    .sortedByDescending { it.date }
+                _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
-                _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments")
-                val tempDeployments = streams.filter { it.deployment != null }.filter { it.deployment!!.syncState == SyncState.UNSENT.value }
-                    .sortedByDescending { it.deployment!!.deployedAt }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty())
-                _deployments.tryEmit(tempDeployments.map { it.toDeploymentListItem() })
+                _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments or registrations")
+                val tempDeployments = streams
+                    .filter { it.deployment != null }
+                    .filter { it.deployment!!.syncState == SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false }
+                val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
+                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                val tempListItem = (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() })
+                    .sortedByDescending { it.date }
+                _deployments.tryEmit(tempListItem)
                 val tempStream = streams.filter { it.deployment == null }
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
@@ -182,7 +199,6 @@ class DeploymentListViewModel(
                     is Result.Success -> {
                         isLoadingMore = false
                         _streams.tryEmit(Result.Success(result.data))
-                        filterWithDeployment(result.data)
                     }
                 }
             }
@@ -210,7 +226,6 @@ class DeploymentListViewModel(
                     is Result.Success -> {
                         isLoadingMore = false
                         _streams.tryEmit(Result.Success(result.data))
-                        filterWithDeployment(result.data)
                     }
                 }
             }
@@ -240,7 +255,7 @@ class DeploymentListViewModel(
 
     fun addFilter(filter: FilterDeployment) {
         currentFilter = filter
-        filterWithDeployment(currentAllStreams, filter)
+        filterWithDeployment(currentAllStreams, currentAllRegistration, filter)
     }
 
     fun syncDeployment(id: Int) {
@@ -285,15 +300,19 @@ class DeploymentListViewModel(
 }
 
 sealed class ListItem {
+
+    open val date: Date = Date()
     data class DeploymentListItem(
         val stream: Stream,
         val guardianId: String?,
-        val guardianType: String?
+        val guardianType: String?,
+        override val date: Date
     ) : ListItem()
 
     data class RegistrationItem(
         val registration: GuardianRegistration,
-        val guardianId: String
+        val guardianId: String,
+        override val date: Date
     ) : ListItem()
 }
 
@@ -319,7 +338,16 @@ fun Stream.toDeploymentListItem(): ListItem.DeploymentListItem {
     return ListItem.DeploymentListItem(
         this,
         guid,
-        type
+        type,
+        this.deployment?.deployedAt ?: Date()
+    )
+}
+
+fun GuardianRegistration.toRegistrationListItem(): ListItem.RegistrationItem {
+    return ListItem.RegistrationItem(
+        this,
+        this.guid,
+        this.createdAt
     )
 }
 
