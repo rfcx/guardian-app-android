@@ -31,6 +31,7 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentAndInci
 import org.rfcx.incidents.domain.guardian.deploy.GetStreamsWithDeploymentUseCase
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesParams
 import org.rfcx.incidents.domain.guardian.deploy.UploadImagesUseCase
+import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -49,7 +50,7 @@ class DeploymentListViewModel(
     private val locationHelper: LocationHelper
 ) : ViewModel() {
 
-    private val _deployments = MutableSharedFlow<List<DeploymentListItem>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _deployments = MutableSharedFlow<List<ListItem.DeploymentListItem>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val deployments = _deployments.asSharedFlow()
 
     private val _markers = MutableSharedFlow<List<MapMarker>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -283,13 +284,20 @@ class DeploymentListViewModel(
     }
 }
 
-data class DeploymentListItem(
-    val stream: Stream,
-    val guardianId: String?,
-    val guardianType: String?
-)
+sealed class ListItem {
+    data class DeploymentListItem(
+        val stream: Stream,
+        val guardianId: String?,
+        val guardianType: String?
+    ) : ListItem()
 
-fun Stream.toDeploymentListItem(): DeploymentListItem {
+    data class RegistrationItem(
+        val registration: GuardianRegistration,
+        val guardianId: String
+    ) : ListItem()
+}
+
+fun Stream.toDeploymentListItem(): ListItem.DeploymentListItem {
     val gson = Gson()
     val params = this.deployment?.deviceParameters
     var guid = ""
@@ -308,7 +316,7 @@ fun Stream.toDeploymentListItem(): DeploymentListItem {
             }
         }
     }
-    return DeploymentListItem(
+    return ListItem.DeploymentListItem(
         this,
         guid,
         type

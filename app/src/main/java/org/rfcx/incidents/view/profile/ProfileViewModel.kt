@@ -17,7 +17,6 @@ import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.StreamDb
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.domain.guardian.registration.GetRegistrationUseCase
-import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.logout
@@ -27,8 +26,7 @@ class ProfileViewModel(
     private val context: Context,
     profileData: ProfileData,
     private val projectDb: ProjectDb,
-    private val streamDb: StreamDb,
-    private val getRegistrationUseCase: GetRegistrationUseCase
+    private val streamDb: StreamDb
 ) : ViewModel() {
 
     val appVersion = MutableLiveData<String>()
@@ -36,12 +34,6 @@ class ProfileViewModel(
     val eventSubtitle = MutableLiveData<String>()
     val showSystemOptions = MutableLiveData<Boolean>()
     val preferences = Preferences.getInstance(context)
-
-    private val _registrationsCount: MutableStateFlow<String> = MutableStateFlow("")
-    val registrationsCount = _registrationsCount.asStateFlow()
-
-    private val _registrationsCountVisibility: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val registrationsCountVisibility = _registrationsCountVisibility.asStateFlow()
 
     private val _logoutState = MutableLiveData<Boolean>()
     private var _streams: List<Stream> = listOf()
@@ -51,7 +43,6 @@ class ProfileViewModel(
         userName.value = profileData.getUserNickname()
         showSystemOptions.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         updateEventSubtitle()
-        getRegistrations()
     }
 
     fun resumed() {
@@ -89,16 +80,6 @@ class ProfileViewModel(
             }
         }
         eventSubtitle.value = subtitle
-    }
-
-    private fun getRegistrations() {
-        viewModelScope.launch(Dispatchers.Main) {
-            getRegistrationUseCase.launch().collectLatest {
-                val count = it.filter { rg -> rg.syncState == SyncState.UNSENT.value }.size
-                _registrationsCount.tryEmit(count.toString())
-                _registrationsCountVisibility.tryEmit(count != 0)
-            }
-        }
     }
 
     private fun getSubscribedProject(): List<String>? {

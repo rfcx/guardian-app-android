@@ -32,7 +32,6 @@ import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
 import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
 import org.rfcx.incidents.view.profile.guardian.GuardianFileDownloadViewModel
-import org.rfcx.incidents.view.profile.guardian.UnsentRegistrationViewModel
 import org.rfcx.incidents.view.report.create.CreateReportViewModel
 import org.rfcx.incidents.view.report.deployment.DeploymentListViewModel
 import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel
@@ -58,7 +57,7 @@ object UiModule {
     }
 
     val profileModule = module {
-        viewModel { ProfileViewModel(androidContext(), get(), get(), get(), get()) }
+        viewModel { ProfileViewModel(androidContext(), get(), get(), get()) }
         viewModel { SubscribeProjectsViewModel(get()) }
         viewModel { FeedbackViewModel(androidContext()) }
     }
@@ -93,6 +92,5 @@ object UiModule {
         viewModel { DeploymentDetailViewModel(get(), get(), get(), get()) }
         viewModel { EditSiteViewModel(get(), get()) }
         viewModel { AddImageViewModel(get(), get()) }
-        viewModel { UnsentRegistrationViewModel(get(), get()) }
     }
 }

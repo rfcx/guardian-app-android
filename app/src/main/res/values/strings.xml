@@ -576,6 +576,7 @@
     <string name="altitude">altitude</string>
     <string name="deployment_key">deployment key</string>
     <string name="delete">delete</string>
+    <string name="registration">Registration</string>
 
     <!-- Deployment Detail -->
 

@@ -7,27 +7,53 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.ItemDeploymentBinding
+import org.rfcx.incidents.databinding.ItemRegistrationBinding
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.util.toStringWithTimeZone
+import org.rfcx.incidents.view.guardian.checklist.CheckListAdapter
+import org.rfcx.incidents.view.guardian.checklist.CheckListItem
 import java.util.TimeZone
 
 class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemListener) :
-    RecyclerView.Adapter<DeploymentListAdapter.DeploymentListViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var items: List<DeploymentListItem> = arrayListOf()
+    companion object {
+        const val DEPLOYMENT_ITEM = 1
+        const val REGISTRATION_ITEM = 2
+    }
+
+    var items: List<ListItem> = arrayListOf()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeploymentListAdapter.DeploymentListViewHolder {
-        val binding = ItemDeploymentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DeploymentListViewHolder(binding)
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position]) {
+            is ListItem.DeploymentListItem -> DEPLOYMENT_ITEM
+            else -> REGISTRATION_ITEM
+        }
     }
 
-    override fun onBindViewHolder(holder: DeploymentListAdapter.DeploymentListViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            DEPLOYMENT_ITEM -> {
+                val binding = ItemDeploymentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return DeploymentListViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemRegistrationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return RegistrationListViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            DEPLOYMENT_ITEM -> (holder as DeploymentListViewHolder).bind(items[position] as ListItem.DeploymentListItem)
+            else -> (holder as RegistrationListViewHolder).bind(items[position] as ListItem.RegistrationItem)
+        }
     }
 
     override fun getItemCount(): Int = items.size
@@ -45,7 +71,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
         private val guardianTypeImage = binding.guardianTypeImageView
         private val guardianTypeText = binding.guardianTypeTextView
 
-        fun bind(item: DeploymentListItem) {
+        fun bind(item: ListItem.DeploymentListItem) {
             siteName.text = item.stream.name
             guardianName.text = item.guardianId
             dateTextView.text = item.stream.deployment?.deployedAt?.toStringWithTimeZone(itemView.context, TimeZone.getDefault())
@@ -108,6 +134,33 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                     imageIcon.visibility = View.VISIBLE
                     imageIcon.setBackgroundResource(R.drawable.ic_image_synced)
                     imageLoading.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    inner class RegistrationListViewHolder(binding: ItemRegistrationBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val guardianName = binding.guardianNameTextView
+        private val syncIcon = binding.syncIcon
+        private val loading = binding.syncIconLoading
+
+        fun bind(item: ListItem.RegistrationItem) {
+            guardianName.text = item.guardianId
+
+            when (item.registration.syncState) {
+                SyncState.UNSENT.value -> {
+                    syncIcon.visibility = View.VISIBLE
+                    syncIcon.setBackgroundResource(R.drawable.ic_cloud_upload)
+                    loading.visibility = View.GONE
+                }
+                SyncState.SENDING.value -> {
+                    syncIcon.visibility = View.GONE
+                    loading.visibility = View.VISIBLE
+                }
+                SyncState.SENT.value -> {
+                    syncIcon.visibility = View.VISIBLE
+                    syncIcon.setBackgroundResource(R.drawable.ic_cloud_done)
+                    loading.visibility = View.GONE
                 }
             }
         }

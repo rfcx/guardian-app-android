@@ -43,10 +43,6 @@
             type="android.view.View.OnClickListener"/>
 
         <variable
-            name="onClickRegistration"
-            type="android.view.View.OnClickListener"/>
-
-        <variable
             name="onClickMakeDeployment"
             type="android.view.View.OnClickListener"/>
     </data>
@@ -212,36 +208,6 @@
                 android:onClick="@{onClickClassifier}"
                 android:padding="@dimen/margin_padding_normal"
                 android:text="Download Classifier"/>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/unsentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{onClickRegistration}">
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/unsentRegistrationTextView"
-                    style="@style/RangerText.SubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_padding_normal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:text="Unsent Guardian registration"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/unsentRegistrationNumber"
-                    style="@style/RangerText.SubTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/red"
-                    android:visibility="@{viewModel.registrationsCountVisibility ? view.VISIBLE : view.GONE}"
-                    android:text="@{viewModel.registrationsCount}"
-                    app:layout_constraintStart_toEndOf="@id/unsentRegistrationTextView"
-                    app:layout_constraintTop_toTopOf="@id/unsentRegistrationTextView"
-                    app:layout_constraintBottom_toBottomOf="@id/unsentRegistrationTextView"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/makeDeploymentTextView"

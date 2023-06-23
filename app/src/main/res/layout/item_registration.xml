@@ -3,52 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/backgroundColor">
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/bgView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:background="@drawable/bg_stream_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/guidTextView"
-        style="@style/RangerText.SubTitle"
+        android:id="@+id/registrationLabelTextView"
+        style="@style/RangerText.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:padding="@dimen/margin_padding_normal"
-        android:textColor="@color/text_primary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Site A" />
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:text="@string/registration"
+        app:layout_constraintStart_toStartOf="@id/bgView"
+        app:layout_constraintTop_toTopOf="@id/bgView" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/registerButton"
-        style="@style/RangerText.SubTitle"
-        android:layout_width="wrap_content"
+        android:id="@+id/guardianNameTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:padding="@dimen/margin_padding_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="register" />
+        android:maxLines="1"
+        android:layout_marginBottom="@dimen/margin_padding_small"
+        app:layout_constraintBottom_toBottomOf="@id/bgView"
+        app:layout_constraintTop_toBottomOf="@id/registrationLabelTextView"
+        app:layout_constraintStart_toStartOf="@id/registrationLabelTextView"
+        tools:text="Guardian A" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/registeredText"
-        style="@style/RangerText.SubTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_secondary"
-        android:padding="@dimen/margin_padding_normal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="registered" />
+
+    <ImageView
+        android:id="@+id/syncIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_cloud_upload"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_small"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
 
     <ProgressBar
-        android:id="@+id/registerLoading"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:id="@+id/syncIconLoading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/margin_padding_small"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/registerButton"
-        app:layout_constraintEnd_toEndOf="@id/registerButton"
-        app:layout_constraintTop_toTopOf="@id/registerButton"
-        app:layout_constraintBottom_toBottomOf="@id/registerButton"/>
+        android:indeterminateTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

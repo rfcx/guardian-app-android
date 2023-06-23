@@ -94,9 +94,6 @@
         <activity android:name=".view.report.deployment.detail.image.AddImageActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".view.profile.guardian.UnsentGuardianRegistrationActivity"
-            android:screenOrientation="portrait" />
-
         <activity android:name=".view.report.deployment.detail.display.DisplayImageActivity"
             android:screenOrientation="portrait" />
 
