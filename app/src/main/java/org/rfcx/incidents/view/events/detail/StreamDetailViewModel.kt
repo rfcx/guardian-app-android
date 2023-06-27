@@ -27,7 +27,7 @@ class StreamDetailViewModel(
 
     fun getEventsCount(streamId: String): Long = eventDb.getEventCount(streamId)
 
-    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+    fun getStream(serverId: String): Stream? = streamDb.get(serverId, false)
 
     fun getEventsByStream(streamId: String): LiveData<List<Event>> {
         return Transformations.map(eventDb.getEventsAsync(streamId).asLiveData()) { it }

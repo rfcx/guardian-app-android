@@ -52,7 +52,7 @@ class EventViewModel(
         getAudio(event)
     }
 
-    fun getStream(streamId: String): Stream? = streamDb.get(streamId)
+    fun getStream(streamId: String): Stream? = streamDb.get(streamId, false)
 
     private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
     private var _playerState: MutableLiveData<Int> = MutableLiveData()

@@ -32,7 +32,7 @@ class DeploymentAndIncidentRepositoryImpl(
     private var currentRunning = ""
 
     private fun getLocal(projectId: String): List<Stream> {
-        return streamLocal.getByProject(projectId)
+        return streamLocal.getByProject(projectId, false)
     }
 
     private fun getRemote(projectId: String, offset: Int): Flow<Result<List<Stream>>> {

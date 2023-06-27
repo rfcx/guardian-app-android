@@ -106,16 +106,16 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                 SyncState.UNSENT.value -> {
                     syncIcon.visibility = View.VISIBLE
                     syncIcon.setBackgroundResource(R.drawable.ic_cloud_upload)
-                    loading.visibility = View.GONE
+                    loading.visibility = View.INVISIBLE
                 }
                 SyncState.SENDING.value -> {
-                    syncIcon.visibility = View.GONE
+                    syncIcon.visibility = View.INVISIBLE
                     loading.visibility = View.VISIBLE
                 }
                 SyncState.SENT.value -> {
                     syncIcon.visibility = View.VISIBLE
                     syncIcon.setBackgroundResource(R.drawable.ic_cloud_done)
-                    loading.visibility = View.GONE
+                    loading.visibility = View.INVISIBLE
                 }
             }
 
@@ -123,16 +123,16 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                 SyncState.UNSENT.value -> {
                     imageIcon.visibility = View.VISIBLE
                     imageIcon.setBackgroundResource(R.drawable.ic_image_ready)
-                    imageLoading.visibility = View.GONE
+                    imageLoading.visibility = View.INVISIBLE
                 }
                 SyncState.SENDING.value -> {
-                    imageIcon.visibility = View.GONE
+                    imageIcon.visibility = View.INVISIBLE
                     imageLoading.visibility = View.VISIBLE
                 }
                 SyncState.SENT.value -> {
                     imageIcon.visibility = View.VISIBLE
                     imageIcon.setBackgroundResource(R.drawable.ic_image_synced)
-                    imageLoading.visibility = View.GONE
+                    imageLoading.visibility = View.INVISIBLE
                 }
             }
         }

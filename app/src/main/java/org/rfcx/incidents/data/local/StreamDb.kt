@@ -111,8 +111,9 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
-    fun get(id: Int): Stream? {
+    fun get(id: Int, needCopy: Boolean = true): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst() ?: return null
+        if (needCopy) return realm.copyFromRealm(stream)
         return stream
     }
 
@@ -121,17 +122,20 @@ class StreamDb(private val realm: Realm) {
         return stream.findFirstAsync().toFlow()
     }
 
-    fun get(id: String): Stream? {
+    fun get(id: String, needCopy: Boolean = true): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst() ?: return null
+        if (needCopy) return realm.copyFromRealm(stream)
         return stream
     }
 
-    fun getByProject(projectId: String?): List<Stream> {
+    fun getByProject(projectId: String?, needCopy: Boolean = true): List<Stream> {
         if (projectId == null) {
             val streams = realm.where(Stream::class.java).sort(Stream.FIELD_ORDER).findAll()
+            if (needCopy) return realm.copyFromRealm(streams)
             return streams
         }
         val streams = realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
+        if (needCopy) return realm.copyFromRealm(streams)
         return streams
     }
 

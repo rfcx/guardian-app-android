@@ -72,7 +72,7 @@ class StreamsRepositoryImp(
     }
 
     private fun getFromLocalDB(projectId: String): Single<List<Stream>> {
-        return Single.just(streamDb.getByProject(projectId))
+        return Single.just(streamDb.getByProject(projectId, false))
     }
 
     private fun cacheKey(projectId: String): String {
