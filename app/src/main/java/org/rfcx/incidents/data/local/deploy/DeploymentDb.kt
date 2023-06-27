@@ -22,6 +22,7 @@ class DeploymentDb(private val realm: Realm) {
                     externalDeployment.images = deployment.images
                     externalDeployment.deployedAt = deployment.deployedAt
                     externalDeployment.deviceParameters = deployment.deviceParameters
+                    externalDeployment.syncState = deployment.syncState
                     it.insertOrUpdate(externalDeployment)
                 }
             } else if (deployment.id == 0) {
