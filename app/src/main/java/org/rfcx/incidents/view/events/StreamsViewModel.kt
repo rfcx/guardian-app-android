@@ -63,16 +63,13 @@ class StreamsViewModel(
     }
 
     private fun getSelectedProject() {
-        Log.d("Guardian", "Get Project changed")
         viewModelScope.launch(Dispatchers.Main) {
             preferences.getFlowForKey(Preferences.SELECTED_PROJECT).collectLatest { projectId ->
                 getLocalProjectUseCase.launch(GetLocalProjectsParams(projectId)).collectLatest { project ->
                     project?.let {
-                        Log.d("Guardian", it.name)
                         selectedProjectId = it.id
                         _selectedProject.tryEmit(it.name)
                         // fetch streams after project changed
-                        Log.d("Guardian", "project changed")
                         fetchFreshStreams()
                         // fetch incidents after project changed
                         getIncidents(it.id)
@@ -89,7 +86,6 @@ class StreamsViewModel(
     private fun getIncidents(projectId: String) {
         viewModelScope.launch(Dispatchers.Main) {
             getLocalStreamsUseCase.launch(GetLocalStreamsParams(projectId)).collectLatest { result ->
-                Log.d("GuardianApp", "get incident $result")
                 _streams.tryEmit(Result.Success(result))
             }
         }
@@ -111,7 +107,6 @@ class StreamsViewModel(
     }
 
     fun fetchFreshStreams(force: Boolean = false, offset: Int = 0) {
-        Log.d("Guardian", "here 2")
         val projectId = selectedProjectId
         viewModelScope.launch(Dispatchers.Main) {
             getStreamsWithDeploymentAndIncidentUseCase.launch(
@@ -124,7 +119,7 @@ class StreamsViewModel(
                 when (result) {
                     is Result.Error -> {
                         isLoadingMore = false
-                        _streams.tryEmit(result)
+                        // _streams.tryEmit(result)
                     }
                     Result.Loading -> {}
                     is Result.Success -> {
@@ -137,14 +132,13 @@ class StreamsViewModel(
     }
 
     fun refreshStreams(force: Boolean = false, offset: Int = 0, streamRefresh: Boolean = false) {
-        Log.d("Guardian", "here 1")
         isLoadingMore = true
         val projectId = selectedProjectId
         getStreamsWithIncidentUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
                     isLoadingMore = false
-                    _streams.tryEmit(Result.Success(t))
+                    // _streams.tryEmit(Result.Success(t))
                 }
 
                 override fun onError(e: Throwable) {

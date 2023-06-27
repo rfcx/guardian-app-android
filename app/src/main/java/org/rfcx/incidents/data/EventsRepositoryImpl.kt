@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data
 
+import android.util.Log
 import io.reactivex.Single
 import org.rfcx.incidents.data.interfaces.EventsRepository
 import org.rfcx.incidents.data.local.StreamDb
@@ -10,6 +11,7 @@ class EventsRepositoryImpl(
 ) : EventsRepository {
     override fun get(streamId: String): Single<List<Event>> {
         val stream = streamDb.get(streamId)
+        Log.d("GuardianAPp", "${stream?.lastIncident?.events?.toString()}")
         return Single.just(stream?.lastIncident?.events)
     }
 }

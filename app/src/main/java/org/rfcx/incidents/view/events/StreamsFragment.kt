@@ -171,7 +171,6 @@ class StreamsFragment :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.d("GuardianApp", "on Attach")
         listener = (context as MainActivityEventListener)
         localBroadcastManager = LocalBroadcastManager.getInstance(context)
         val actionReceiver = IntentFilter()
