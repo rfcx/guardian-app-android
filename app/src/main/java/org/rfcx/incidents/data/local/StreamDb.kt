@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.local
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
@@ -74,6 +75,17 @@ class StreamDb(private val realm: Realm) {
                     stream.id = existingStream!!.id
                     it.insertOrUpdate(stream)
                 }
+            }
+        }
+    }
+
+    fun updateIncident(incidentId: String, streamId: String) {
+        realm.executeTransaction {
+            val stream = get(streamId)
+            if (stream != null) {
+                val incident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, incidentId).findFirst()
+                stream.lastIncident = incident
+                it.insertOrUpdate(stream)
             }
         }
     }

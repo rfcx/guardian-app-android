@@ -67,6 +67,7 @@ class DeploymentAndIncidentRepositoryImpl(
                 rawICD.lastIncident()?.events?.forEach { event ->
                     eventLocal.insertOrUpdate(event.toEvent(rawICD.id), rawICD.lastIncident()!!.id)
                 }
+                streamLocal.updateIncident(rawICD.lastIncident()!!.id, rawICD.id)
             }
             cachedEndpointDb.updateCachedEndpoint(cacheKey(projectId))
             currentRunning = ""

@@ -13,6 +13,7 @@ import android.graphics.RectF
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +54,8 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -167,6 +171,7 @@ class StreamsFragment :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        Log.d("GuardianApp", "on Attach")
         listener = (context as MainActivityEventListener)
         localBroadcastManager = LocalBroadcastManager.getInstance(context)
         val actionReceiver = IntentFilter()
@@ -329,45 +334,53 @@ class StreamsFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun setObserver() {
 
-        viewModel.selectedProject.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Success -> binding.toolbarLayout.projectTitleTextView.text = result.data.name
-                else -> binding.toolbarLayout.projectTitleTextView.text = ""
+        lifecycleScope.launch {
+            viewModel.selectedProject.collectLatest {
+                binding.toolbarLayout.projectTitleTextView.text = it
             }
         }
 
-        viewModel.projects.observe(viewLifecycleOwner) { result ->
-            result.success({ projects ->
-                binding.projectSwipeRefreshView.isRefreshing = false
-                projectAdapter.items = projects
-                projectAdapter.notifyDataSetChanged()
-            }, {
-                binding.projectSwipeRefreshView.isRefreshing = false
-                Toast.makeText(
-                    context,
-                    it.message
-                        ?: getString(R.string.something_is_wrong),
-                    Toast.LENGTH_LONG
-                ).show()
-            }, {
-            })
+        lifecycleScope.launch {
+            viewModel.projects.collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        binding.projectSwipeRefreshView.isRefreshing = false
+                        Toast.makeText(
+                            context,
+                            result.throwable.message
+                                ?: getString(R.string.something_is_wrong),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        binding.projectSwipeRefreshView.isRefreshing = false
+                        projectAdapter.items = result.data
+                        projectAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
         }
 
-        viewModel.streams.observe(viewLifecycleOwner) { it ->
-            it.success({ streams ->
-                streamAdapter.items = streams.filter { it.lastIncident != null }
-                streamAdapter.notifyDataSetChanged()
-                setEventFeatures(streams)
-                binding.streamLayout.visibility = View.VISIBLE
-                binding.refreshView.isRefreshing = false
-                isShowProgressBar(false)
-                isShowNotHaveStreams(streams.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
-            }, {
-                binding.refreshView.isRefreshing = false
-                isShowProgressBar(false)
-            }, {
-                isShowProgressBar()
-            })
+        lifecycleScope.launch {
+            viewModel.streams.collectLatest { result ->
+                when(result) {
+                    is Result.Error -> {
+                        binding.refreshView.isRefreshing = false
+                        isShowProgressBar(false)
+                    }
+                    Result.Loading -> isShowProgressBar()
+                    is Result.Success -> {
+                        streamAdapter.items = result.data.filter { it.lastIncident != null }
+                        streamAdapter.notifyDataSetChanged()
+                        setEventFeatures(result.data)
+                        binding.streamLayout.visibility = View.VISIBLE
+                        binding.refreshView.isRefreshing = false
+                        isShowProgressBar(false)
+                        isShowNotHaveStreams(result.data.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                    }
+                }
+            }
         }
 
         viewModel.getTrackingFromLocal().observe(viewLifecycleOwner) { trackings ->
@@ -745,16 +758,6 @@ class StreamsFragment :
         mapBoxMap?.locationComponent?.lastKnownLocation?.let { curLoc ->
             val currentLatLng = LatLng(curLoc.latitude, curLoc.longitude)
             moveCameraTo(currentLatLng, mapBoxMap?.cameraPosition?.zoom ?: DEFAULT_MAP_ZOOM)
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            viewModel.refreshStreams()
-
-            val projectId = preferences.getString(Preferences.SELECTED_PROJECT)
-            projectId?.let { viewModel.selectProject(it) }
         }
     }
 

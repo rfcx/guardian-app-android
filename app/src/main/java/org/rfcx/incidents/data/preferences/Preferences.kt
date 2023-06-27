@@ -2,6 +2,7 @@ package org.rfcx.incidents.data.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.channels.Channel
@@ -139,15 +140,21 @@ class Preferences(context: Context) {
     }
 
     fun getFlowForKey(targetKey: String) = callbackFlow {
+        var previousValue = getString(targetKey, "")
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (targetKey == key) {
                 val value = getString(key, "")
-                trySend(value)
+                if (value != previousValue) {
+                    Log.d("GuardianApp", "On pref changed")
+                    previousValue = value
+                    trySend(value)
+                }
             }
         }
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         if (sharedPreferences.contains(targetKey)) {
-            send(getString(targetKey, ""))
+            Log.d("GuardianApp", "On pref default")
+            send(previousValue)
         }
         awaitClose { sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener) }
     }.buffer(Channel.UNLIMITED)

@@ -45,7 +45,7 @@ object UiModule {
     }
 
     val eventsModule = module {
-        viewModel { StreamsViewModel(get(), get(), get(), get(), get()) }
+        viewModel { StreamsViewModel(get(), get(), get(), get(), get(), get(), get()) }
         viewModel { EventViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { StreamDetailViewModel(get(), get(), get(), get()) }
     }

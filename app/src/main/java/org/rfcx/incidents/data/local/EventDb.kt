@@ -9,6 +9,9 @@ import org.rfcx.incidents.entity.stream.Incident
 
 class EventDb(private val realm: Realm) {
 
+    fun getIncident(streamId: String): Incident? {
+        return realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, streamId).findFirst()
+    }
     fun insertOrUpdate(event: Event, attachedToIncidentId: String) {
         realm.executeTransaction {
             event.incident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, attachedToIncidentId).findFirst()

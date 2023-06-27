@@ -337,10 +337,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     }
 
     private fun setupFragments() {
-        supportFragmentManager.beginTransaction()
-            .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
-            .commit()
-
         binding.navMenu.menuNewEvents.performClick()
     }
 
