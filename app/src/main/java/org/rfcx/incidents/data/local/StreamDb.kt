@@ -45,7 +45,7 @@ class StreamDb(private val realm: Realm) {
                     if (stream.projectId == "") {
                         stream.projectId = existingStream.projectId
                     }
-                    if (stream.tags == null) {
+                    if (stream.tags.isNullOrEmpty()) {
                         stream.tags = existingStream.tags
                     }
                     if (stream.lastIncident == null) {

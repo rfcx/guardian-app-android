@@ -1,8 +1,11 @@
 package org.rfcx.incidents.data.guardian.software
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import org.rfcx.incidents.data.interfaces.guardian.software.GuardianFileRepository
 import org.rfcx.incidents.data.local.guardian.GuardianFileDb
 import org.rfcx.incidents.data.remote.common.Result
@@ -51,14 +54,16 @@ class GuardianFileRepositoryImpl(
         return flow {
             emit(Result.Loading)
             // Any endpoint is file for download
-            val result = downloadFileEndpoint.downloadFile(targetFile.url)
-            val writeResult = helper.saveToDisk(result, targetFile)
-            val file = targetFile
-            file.path = writeResult
-            localDb.save(file)
+            withContext(Dispatchers.IO) {
+                val result = downloadFileEndpoint.downloadFile(targetFile.url)
+                val writeResult = helper.saveToDisk(result, targetFile)
+                targetFile.path = writeResult
+            }
+            localDb.save(targetFile)
             emit(Result.Success(true))
         }.catch { e ->
-            emit(Result.Error(e))
+            FirebaseCrashlytics.getInstance().recordException(e)
+            emit(Result.Error(Throwable(e.stackTraceToString())))
         }
     }
 
