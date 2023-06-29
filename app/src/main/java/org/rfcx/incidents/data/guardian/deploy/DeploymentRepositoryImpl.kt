@@ -102,7 +102,7 @@ class DeploymentRepositoryImpl(
 
     override fun upload(streamId: Int): Flow<Result<String>> {
         return flow {
-            val stream = streamLocal.get(streamId)
+            val stream = streamLocal.get(streamId, false)
             stream?.deployment?.let { dp ->
                 // try upload deployment
                 emit(Result.Loading)
@@ -114,7 +114,7 @@ class DeploymentRepositoryImpl(
                         deploymentLocal.markSent(dp.externalId!!, dp.id)
                         emit(Result.Success(dp.externalId!!))
                     } else {
-                        // deploymentLocal.markUnsent(dp.id)
+                        deploymentLocal.markUnsent(dp.id)
                         emit(Result.Error(Throwable(error)))
                     }
                 } else {
