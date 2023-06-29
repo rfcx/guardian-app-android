@@ -14,7 +14,7 @@ class StreamDb(private val realm: Realm) {
     fun insertOrUpdate(stream: Stream) {
         stream.lastIncident?.let {
             realm.executeTransaction { r ->
-                val existingIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst()
+                val existingIncident = r.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst()
                 existingIncident?.deleteFromRealm()
                 r.insertOrUpdate(it)
             }
@@ -23,11 +23,11 @@ class StreamDb(private val realm: Realm) {
         }
         realm.executeTransaction {
             if (stream.externalId != null) {
-                val existingStream = realm.where(Stream::class.java)
+                val existingStream = it.where(Stream::class.java)
                     .equalTo(Stream.FIELD_EXTERNAL_ID, stream.externalId)
                     .findFirst()
                 if (existingStream == null) {
-                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    val id = (it.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
                     stream.id = id
                     it.insert(stream)
                 } else {
@@ -62,19 +62,19 @@ class StreamDb(private val realm: Realm) {
                     if (stream.deployment == null) {
                         stream.deployment = existingStream.deployment
                     }
-                    it.copyToRealmOrUpdate(stream)
+                    it.insertOrUpdate(stream)
                 }
             } else {
                 if (stream.id == -1) {
-                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    val id = (it.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
                     stream.id = id
-                    it.copyToRealmOrUpdate(stream)
+                    it.insertOrUpdate(stream)
                 } else {
-                    val existingStream = realm.where(Stream::class.java)
+                    val existingStream = it.where(Stream::class.java)
                         .equalTo(Stream.FIELD_ID, stream.id)
                         .findFirst()
                     stream.id = existingStream!!.id
-                    it.copyToRealmOrUpdate(stream)
+                    it.insertOrUpdate(stream)
                 }
             }
         }
@@ -95,7 +95,7 @@ class StreamDb(private val realm: Realm) {
     fun getAllForWorker(): List<Stream> {
         var unsent: List<Stream> = listOf()
         realm.executeTransaction {
-            val streams = realm.where(Stream::class.java)
+            val streams = it.where(Stream::class.java)
                 .findAll().createSnapshot()
             unsent = streams
         }
@@ -105,14 +105,14 @@ class StreamDb(private val realm: Realm) {
     fun updateSiteServerId(stream: Stream, externalId: String) {
         realm.executeTransaction {
             stream.externalId = externalId
-            realm.copyToRealmOrUpdate(stream)
+            it.insertOrUpdate(stream)
         }
     }
 
     fun updateDeployment(stream: Stream, deployment: Deployment) {
         realm.executeTransaction {
             stream.deployment = deployment
-            realm.copyToRealmOrUpdate(stream)
+            realm.insertOrUpdate(stream)
         }
     }
 

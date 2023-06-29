@@ -18,24 +18,25 @@ class DeploymentDb(private val realm: Realm) {
                     // create new if there is none
                     val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                     deployment.id = id
-                    it.copyToRealmOrUpdate(deployment)
+                    it.insertOrUpdate(deployment)
                 } else {
                     externalDeployment.images = deployment.images
                     externalDeployment.deployedAt = deployment.deployedAt
                     externalDeployment.deviceParameters = deployment.deviceParameters
                     externalDeployment.syncState = deployment.syncState
-                    it.copyToRealmOrUpdate(externalDeployment)
+                    externalDeployment.externalId = deployment.externalId
+                    it.insertOrUpdate(externalDeployment)
                 }
             } else if (deployment.id == 0) {
                 val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                 deployment.id = id
-                it.copyToRealmOrUpdate(deployment)
+                it.insertOrUpdate(deployment)
             } else {
                 val existingDeployment = realm.where(Deployment::class.java)
                     .equalTo(Deployment.FIELD_ID, deployment.id)
                     .findFirst()
                 deployment.id = existingDeployment!!.id
-                it.copyToRealmOrUpdate(deployment)
+                it.insertOrUpdate(deployment)
             }
         }
     }
@@ -116,9 +117,12 @@ class DeploymentDb(private val realm: Realm) {
                 it.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, id)
                     .findFirst()
             if (deployment != null) {
-                deployment.externalId = serverId
+                if (serverId != null) {
+                    Log.d("GuardianApp", "set ex id")
+                    deployment.externalId = serverId
+                }
                 deployment.syncState = syncState
-                it.copyToRealmOrUpdate(deployment)
+                it.insertOrUpdate(deployment)
             }
         }
     }

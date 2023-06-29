@@ -164,9 +164,7 @@ class DeploymentRepositoryImpl(
             return flow {
                 emit(Result.Loading)
                 var someFailed = false
-                if (deployment == null) {
-                    emit(Result.Error(Throwable("deployment not found")))
-                } else {
+                if (deployment != null) {
                     val images = deployment.images?.filter { it.remotePath == null }
                     images?.forEach { image ->
                         imageLocal.lockUnsent(image.id)

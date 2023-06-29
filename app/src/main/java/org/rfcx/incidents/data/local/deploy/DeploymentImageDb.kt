@@ -17,18 +17,18 @@ class DeploymentImageDb(private val realm: Realm) {
                 if (existingImage == null) {
                     val id = (realm.where(DeploymentImage::class.java).max(DeploymentImage.FIELD_ID)?.toInt() ?: 0) + 1
                     image.id = id
-                    it.copyToRealmOrUpdate(image)
+                    it.insertOrUpdate(image)
                 } else {
                     image.id = existingImage.id
-                    it.copyToRealmOrUpdate(image)
+                    it.insertOrUpdate(image)
                 }
             } else {
                 if (image.id == 0) {
                     val id = (realm.where(DeploymentImage::class.java).max(DeploymentImage.FIELD_ID)?.toInt() ?: 0) + 1
                     image.id = id
-                    it.copyToRealmOrUpdate(image)
+                    it.insertOrUpdate(image)
                 } else {
-                    it.copyToRealmOrUpdate(image)
+                    it.insertOrUpdate(image)
                 }
             }
         }
