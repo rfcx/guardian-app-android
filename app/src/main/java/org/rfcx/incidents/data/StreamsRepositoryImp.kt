@@ -34,6 +34,10 @@ class StreamsRepositoryImp(
         return streamDb.getAllAsFlowByProject(params.projectId)
     }
 
+    override fun listLocalCopyAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>> {
+        return streamDb.getAllCopyAsFlowByProject(params.projectId)
+    }
+
     override fun listLocal(params: GetLocalStreamsParams): List<Stream> {
         return streamDb.getByProject(params.projectId)
     }

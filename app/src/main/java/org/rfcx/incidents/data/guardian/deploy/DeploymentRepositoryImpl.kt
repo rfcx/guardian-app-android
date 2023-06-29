@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.guardian.deploy
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -113,7 +114,7 @@ class DeploymentRepositoryImpl(
                         deploymentLocal.markSent(dp.externalId!!, dp.id)
                         emit(Result.Success(dp.externalId!!))
                     } else {
-                        deploymentLocal.markUnsent(dp.id)
+                        // deploymentLocal.markUnsent(dp.id)
                         emit(Result.Error(Throwable(error)))
                     }
                 } else {
@@ -135,7 +136,6 @@ class DeploymentRepositoryImpl(
 
                             val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
                             streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
-
                             emit(Result.Success(dp.deploymentKey))
                         }
                         else -> {

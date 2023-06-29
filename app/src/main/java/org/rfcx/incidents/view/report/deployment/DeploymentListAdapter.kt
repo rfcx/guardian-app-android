@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,6 +103,7 @@ class DeploymentListAdapter(private val deploymentItemListener: DeploymentItemLi
                 }
             }
 
+            Log.d("GuardianApp", "bbb ${item.stream.deployment?.syncState}")
             when (item.stream.deployment?.syncState) {
                 SyncState.UNSENT.value -> {
                     syncIcon.visibility = View.VISIBLE

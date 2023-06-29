@@ -11,6 +11,8 @@ interface StreamsRepository {
 
     fun listLocalAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>>
 
+    fun listLocalCopyAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>>
+
     fun listLocal(params: GetLocalStreamsParams): List<Stream>
 
     fun getById(id: Int): Stream?

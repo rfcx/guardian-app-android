@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.report.deployment
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -123,6 +124,7 @@ class DeploymentListViewModel(
     }
 
     private fun filterWithDeployment(streams: List<Stream>, registration: List<GuardianRegistration>, filter: FilterDeployment = FilterDeployment.ALL) {
+        Log.d("GuardianApp", "aaa ${streams.map { it.deployment?.syncState }}")
         when (filter) {
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")

@@ -32,7 +32,7 @@ class GuardianSiteSelectViewModel(
     private fun getStreams() {
         selectedProject = preferences.getString(Preferences.SELECTED_PROJECT)!!
         viewModelScope.launch {
-            getLocalStreamsUseCase.launch(GetLocalStreamsParams(selectedProject)).catch {
+            getLocalStreamsUseCase.launch(GetLocalStreamsParams(selectedProject, true)).catch {
             }.collectLatest { result ->
                 val defaultLocation = Location(LocationManager.GPS_PROVIDER)
                 defaultLocation.latitude = 0.0

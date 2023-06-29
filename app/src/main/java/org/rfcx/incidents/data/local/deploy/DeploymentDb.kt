@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.local.deploy
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
@@ -117,7 +118,7 @@ class DeploymentDb(private val realm: Realm) {
             if (deployment != null) {
                 deployment.externalId = serverId
                 deployment.syncState = syncState
-                it.insertOrUpdate(deployment)
+                it.copyToRealmOrUpdate(deployment)
             }
         }
     }
