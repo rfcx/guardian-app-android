@@ -17,24 +17,24 @@ class DeploymentDb(private val realm: Realm) {
                     // create new if there is none
                     val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                     deployment.id = id
-                    it.insert(deployment)
+                    it.copyToRealmOrUpdate(deployment)
                 } else {
                     externalDeployment.images = deployment.images
                     externalDeployment.deployedAt = deployment.deployedAt
                     externalDeployment.deviceParameters = deployment.deviceParameters
                     externalDeployment.syncState = deployment.syncState
-                    it.insertOrUpdate(externalDeployment)
+                    it.copyToRealmOrUpdate(externalDeployment)
                 }
             } else if (deployment.id == 0) {
                 val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                 deployment.id = id
-                it.insert(deployment)
+                it.copyToRealmOrUpdate(deployment)
             } else {
                 val existingDeployment = realm.where(Deployment::class.java)
                     .equalTo(Deployment.FIELD_ID, deployment.id)
                     .findFirst()
                 deployment.id = existingDeployment!!.id
-                it.insertOrUpdate(deployment)
+                it.copyToRealmOrUpdate(deployment)
             }
         }
     }

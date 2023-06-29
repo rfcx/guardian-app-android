@@ -1,5 +1,6 @@
 package org.rfcx.incidents.data.local
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
@@ -60,19 +61,19 @@ class StreamDb(private val realm: Realm) {
                     if (stream.deployment == null) {
                         stream.deployment = existingStream.deployment
                     }
-                    it.insertOrUpdate(stream)
+                    it.copyToRealmOrUpdate(stream)
                 }
             } else {
                 if (stream.id == -1) {
                     val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
                     stream.id = id
-                    it.insert(stream)
+                    it.copyToRealmOrUpdate(stream)
                 } else {
                     val existingStream = realm.where(Stream::class.java)
                         .equalTo(Stream.FIELD_ID, stream.id)
                         .findFirst()
                     stream.id = existingStream!!.id
-                    it.insertOrUpdate(stream)
+                    it.copyToRealmOrUpdate(stream)
                 }
             }
         }
@@ -100,14 +101,14 @@ class StreamDb(private val realm: Realm) {
     fun updateSiteServerId(stream: Stream, externalId: String) {
         realm.executeTransaction {
             stream.externalId = externalId
-            realm.insertOrUpdate(stream)
+            realm.copyToRealmOrUpdate(stream)
         }
     }
 
     fun updateDeployment(stream: Stream, deployment: Deployment) {
         realm.executeTransaction {
             stream.deployment = deployment
-            realm.insertOrUpdate(stream)
+            realm.copyToRealmOrUpdate(stream)
         }
     }
 

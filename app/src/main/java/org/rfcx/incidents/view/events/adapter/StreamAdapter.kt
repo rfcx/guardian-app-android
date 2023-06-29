@@ -2,6 +2,7 @@ package org.rfcx.incidents.view.events.adapter
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -162,7 +163,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 number += notInDefaultType.size
                 numOfOtherTextView.text = (number).toString()
             }
-
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE

@@ -13,6 +13,7 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
+import android.util.Log
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onFailure
@@ -51,6 +52,7 @@ class WifiHotspotManager(private val context: Context) {
                 override fun onReceive(context: Context?, intent: Intent) {
                     if (intent.action == WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) {
                         val scanResult = wifiManager.scanResults
+                        Log.d("GuardianApp", "${scanResult.size}")
                         val guardianWifiHotspot = scanResult.filter {
                             it.SSID.contains(SSID_PREFIX)
                         }
