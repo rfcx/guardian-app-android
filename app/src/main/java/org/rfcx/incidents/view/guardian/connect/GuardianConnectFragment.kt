@@ -2,7 +2,6 @@ package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,7 +98,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             mainEvent?.getHotspotConnectionState()?.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        Toast.makeText(requireContext(), "from hotspot connect", Toast.LENGTH_SHORT).show()
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                         binding.connectGuardianLoading.visibility = View.GONE
                         binding.connectGuardianButton.isEnabled = true
@@ -111,8 +109,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data) {
-                            Toast.makeText(requireContext(), "from hotspot connect 2", Toast.LENGTH_SHORT).show()
-                            Log.d("GuardianApp", "from hotspot connect 2")
                             launch { mainEvent?.initSocket() }
                             launch { collectSocketInitial() }
                         }
@@ -129,8 +125,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
-                            Toast.makeText(requireContext(), "from init", Toast.LENGTH_SHORT).show()
-                            Log.d("GuardianApp", "from init")
                             mainEvent?.sendHeartBeatSocket()
                             collectSocketRead()
                         }
@@ -147,7 +141,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
-                        Toast.makeText(requireContext(), "from socket read", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                         binding.connectGuardianButton.isEnabled = true
                     }
@@ -158,7 +151,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
-                            Toast.makeText(requireContext(), "from socket read 2", Toast.LENGTH_LONG).show()
                             mainEvent?.changeScreen(GuardianScreen.CHECKLIST)
                         }
                     }

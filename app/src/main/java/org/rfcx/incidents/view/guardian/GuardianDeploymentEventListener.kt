@@ -3,7 +3,6 @@ package org.rfcx.incidents.view.guardian
 import android.content.SharedPreferences
 import android.net.wifi.ScanResult
 import androidx.preference.Preference
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.stream.Stream

@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.guardian.deploy
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow

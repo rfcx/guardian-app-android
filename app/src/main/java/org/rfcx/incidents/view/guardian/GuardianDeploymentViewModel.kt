@@ -1,16 +1,12 @@
 package org.rfcx.incidents.view.guardian
 
 import android.net.wifi.ScanResult
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -61,7 +57,6 @@ class GuardianDeploymentViewModel(
                     is Result.Error -> _connectionState.tryEmit(Result.Error(result.throwable))
                     Result.Loading -> _connectionState.tryEmit(Result.Loading)
                     is Result.Success -> {
-                        Log.d("GuardianApp", "connect")
                         _connectionState.tryEmit(Result.Success(result.data))
                     }
                 }
@@ -83,15 +78,12 @@ class GuardianDeploymentViewModel(
             initSocketUseCase.launch().collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        Log.d("GuardianApp", "init failed")
                         _initSocketState.tryEmit(result)
                     }
                     Result.Loading -> {
-                        Log.d("GuardianApp", "init loading")
                         _initSocketState.tryEmit(Result.Loading)
                     }
                     is Result.Success -> {
-                        Log.d("GuardianApp", "init success")
                         _initSocketState.tryEmit(result)
                     }
                 }
@@ -103,9 +95,7 @@ class GuardianDeploymentViewModel(
         heartBeatJob?.cancel()
         heartBeatJob = null
         heartBeatJob = viewModelScope.launch(Dispatchers.IO) {
-            Log.d("GuardianApp", "send heart beat")
             while (true) {
-                Log.d("GuardianApp", "send heart beat2")
                 sendSocketMessageUseCase.launch(SendMessageParams(BaseSocketManager.Type.ALL, "{command:\"connection\"}"))
                 // To re-reference new socket
                 readSocket()

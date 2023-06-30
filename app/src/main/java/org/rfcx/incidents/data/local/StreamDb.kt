@@ -1,6 +1,5 @@
 package org.rfcx.incidents.data.local
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
