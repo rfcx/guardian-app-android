@@ -2,9 +2,11 @@ package org.rfcx.incidents.view.guardian.connect
 
 import android.net.wifi.ScanResult
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,23 +44,21 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             adapter = hotspotAdapter
         }
 
-        lifecycleScope.launchWhenStarted { viewModel.nearbyHotspots() }
-
         binding.connectGuardianButton.setOnClickListener {
-            lifecycleScope.launchWhenStarted {
-                mainEvent?.connectHotspot(viewModel.getSelectedHotspot())
+            mainEvent?.connectHotspot(viewModel.getSelectedHotspot())
+            lifecycleScope.launch {
                 launch { collectHotspotConnect() }
             }
         }
 
         binding.retryGuardianButton.setOnClickListener {
-            lifecycleScope.launchWhenStarted { viewModel.nearbyHotspots() }
+            viewModel.nearbyHotspots()
         }
     }
 
     // Observe all UI StateFlow
     private fun collectStates() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             launch { collectNearbyHotspot() }
         }
     }
@@ -68,6 +68,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             viewModel.hotspotsState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
+                        Toast.makeText(requireContext(), "from nearby 1", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                     }
                     Result.Loading -> {
@@ -85,6 +86,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             binding.retryGuardianButton.visibility = View.GONE
                             hotspotAdapter.items = result.data
                         }
+                        Toast.makeText(requireContext(), "from nearby 2", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                     }
                 }
@@ -97,6 +99,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             mainEvent?.getHotspotConnectionState()?.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
+                        Toast.makeText(requireContext(), "from hotspot connect", Toast.LENGTH_SHORT).show()
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
                         binding.connectGuardianLoading.visibility = View.GONE
                         binding.connectGuardianButton.isEnabled = true
@@ -108,10 +111,13 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data) {
+                            Toast.makeText(requireContext(), "from hotspot connect 2", Toast.LENGTH_SHORT).show()
+                            Log.d("GuardianApp", "from hotspot connect 2")
                             launch { mainEvent?.initSocket() }
                             launch { collectSocketInitial() }
                         }
                     }
+                    else -> {}
                 }
             }
         }
@@ -123,8 +129,10 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
-                            launch { mainEvent?.sendHeartBeatSocket() }
-                            launch { collectSocketRead() }
+                            Toast.makeText(requireContext(), "from init", Toast.LENGTH_SHORT).show()
+                            Log.d("GuardianApp", "from init")
+                            mainEvent?.sendHeartBeatSocket()
+                            collectSocketRead()
                         }
                     }
                     else -> {}
@@ -139,6 +147,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Error -> {
                         binding.guardianHotspotRecyclerView.visibility = View.VISIBLE
+                        Toast.makeText(requireContext(), "from socket read", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                         binding.connectGuardianButton.isEnabled = true
                     }
@@ -149,9 +158,11 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                     }
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
+                            Toast.makeText(requireContext(), "from socket read 2", Toast.LENGTH_LONG).show()
                             mainEvent?.changeScreen(GuardianScreen.CHECKLIST)
                         }
                     }
+                    else -> {}
                 }
             }
         }

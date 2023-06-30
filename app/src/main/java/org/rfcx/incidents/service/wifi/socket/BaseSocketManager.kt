@@ -1,5 +1,6 @@
 package org.rfcx.incidents.service.wifi.socket
 
+import android.util.Log
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -36,9 +37,11 @@ abstract class BaseSocketManager {
             try {
                 // Need to send a message to establish the connection
                 // To emit loading to UI
+                Log.d("GuardianApp", "init $port")
                 fromInit = true
                 send("{\"command\":\"connection0\"}")
                 emit(Result.Success(true))
+                Log.d("GuardianApp", "sent init $port")
             } catch (e: Exception) {
                 if (isErrorNeedReset(e)) {
                     emit(Result.Error(e))

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
@@ -171,6 +172,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             GuardianScreen.CONNECT -> finish()
             GuardianScreen.CHECKLIST -> {
                 viewModel.disconnectWifi()
+                viewModel.onDestroy()
                 changeScreen(GuardianScreen.CONNECT)
             }
             GuardianScreen.SOFTWARE_UPDATE -> changeScreen(GuardianScreen.CHECKLIST)
@@ -236,7 +238,7 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
             viewModel.connectWifi(hotspot)
         }
     }
-    override fun getHotspotConnectionState(): SharedFlow<Result<Boolean>> {
+    override fun getHotspotConnectionState(): StateFlow<Result<Boolean>?> {
         return viewModel.connectionState
     }
     override fun initSocket() {
@@ -247,11 +249,11 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         viewModel.sendHeartbeatSignalPeriodic()
     }
 
-    override fun getInitSocketState(): SharedFlow<Result<Boolean>> {
+    override fun getInitSocketState(): StateFlow<Result<Boolean>?> {
         return viewModel.initSocketState
     }
 
-    override fun getSocketMessageState(): SharedFlow<Result<List<String>>> {
+    override fun getSocketMessageState(): StateFlow<Result<List<String>>?> {
         return viewModel.socketMessageState
     }
 

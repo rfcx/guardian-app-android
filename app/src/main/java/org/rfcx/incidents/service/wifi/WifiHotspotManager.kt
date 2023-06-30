@@ -130,7 +130,7 @@ class WifiHotspotManager(private val context: Context) {
                     }
                 )
                 awaitClose {
-                    disconnect()
+                    // disconnect()
                 }
             }
         } else {
