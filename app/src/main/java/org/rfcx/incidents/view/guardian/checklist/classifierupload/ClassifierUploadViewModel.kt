@@ -78,13 +78,12 @@ class ClassifierUploadViewModel(
             getGuardianFileLocalUseCase.launch(GetGuardianFileLocalParams(GuardianFileType.CLASSIFIER)).combine(getGuardianMessageUseCase.launch()) { f1, f2 ->
                 downloadedClassifiers = f1
                 if (f2 != null) {
-                    checkClassifyRequirement(f2)
                     val classifier = f2.getClassifiers()
                     val activeClassifier = f2.getActiveClassifiers()
                     installedClassifiers = classifier
                     activeClassifiers = activeClassifier
-
                     handleLoadingAndSetting()
+                    checkClassifyRequirement(f2)
                     _guardianClassifierState.tryEmit(getClassifierUpdateItem(downloadedClassifiers, installedClassifiers, activeClassifiers, targetProgress))
                 }
             }.catch { }.collect()

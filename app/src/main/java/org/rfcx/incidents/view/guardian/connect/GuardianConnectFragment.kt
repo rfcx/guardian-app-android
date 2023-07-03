@@ -67,7 +67,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             viewModel.hotspotsState.collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        Toast.makeText(requireContext(), "from nearby 1", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                     }
                     Result.Loading -> {
@@ -85,7 +84,6 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             binding.retryGuardianButton.visibility = View.GONE
                             hotspotAdapter.items = result.data
                         }
-                        Toast.makeText(requireContext(), "from nearby 2", Toast.LENGTH_SHORT).show()
                         binding.connectGuardianLoading.visibility = View.GONE
                     }
                 }
