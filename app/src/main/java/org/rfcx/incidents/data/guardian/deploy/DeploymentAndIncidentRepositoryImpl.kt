@@ -18,6 +18,7 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncid
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.ConnectivityUtils
 
 class DeploymentAndIncidentRepositoryImpl(
     private val deploymentLocal: DeploymentDb,
@@ -26,7 +27,8 @@ class DeploymentAndIncidentRepositoryImpl(
     private val eventLocal: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
     private val deploymentEndpoint: DeploymentEndpoint,
-    private val incidentEndpoint: IncidentEndpoint
+    private val incidentEndpoint: IncidentEndpoint,
+    private val connectivityUtils: ConnectivityUtils
 ) : DeploymentAndIncidentRepository {
 
     private var currentRunning = ""
@@ -80,7 +82,7 @@ class DeploymentAndIncidentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty()) {
+        if (connectivityUtils.isAvailable() && (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty())) {
             if (getUnsyncedWorks() && !params.fromAlertUnsynced) {
                 return flow {
                     emit(Result.Error(UnSyncedExistException()))
