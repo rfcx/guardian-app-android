@@ -41,7 +41,7 @@ class HeatmapAudioCoverageViewModel() : ViewModel() {
             val months = arrayOf(
                 "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             )
-            _dateState.tryEmit("Audio coverage on ${months[month]} $year")
+            _dateState.tryEmit("Audio coverage in ${months[month]} $year")
             _archivedItemsState.tryEmit(items)
         }
     }
