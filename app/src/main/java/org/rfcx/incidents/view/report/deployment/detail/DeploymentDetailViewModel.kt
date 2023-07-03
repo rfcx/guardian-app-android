@@ -55,9 +55,6 @@ class DeploymentDetailViewModel(
             getLocalLiveDeploymentUseCase.launch(GetLocalDeploymentParams(id)).collectLatest { result ->
                 if (result != null) {
                     _images.tryEmit(result.images?.map { it.toDeploymentImageView() } ?: listOf())
-                    if (result.externalId != null) {
-                        uploadImages(result.externalId!!)
-                    }
                 }
             }
         }
