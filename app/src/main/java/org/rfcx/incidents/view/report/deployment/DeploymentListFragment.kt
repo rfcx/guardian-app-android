@@ -136,8 +136,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         binding.projectSwipeRefreshView.isRefreshing = false
                         Toast.makeText(
                             context,
-                            result.throwable.message
-                                ?: getString(R.string.something_is_wrong),
+                            getString(R.string.something_is_wrong),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -157,8 +156,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         binding.deploymentRefreshView.isRefreshing = false
                         Toast.makeText(
                             context,
-                            result.throwable.message
-                                ?: getString(R.string.something_is_wrong),
+                            getString(R.string.something_is_wrong),
                             Toast.LENGTH_LONG
                         ).show()
                     }
