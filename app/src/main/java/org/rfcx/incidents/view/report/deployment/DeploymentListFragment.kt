@@ -288,6 +288,8 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 state = DeploymentListState.LIST
             }
         }
+        // Start with Map screen
+        binding.toolbarLayout.changePageImageView.performClick()
 
         binding.mapBoxView.onCreate(savedInstanceState)
         binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
