@@ -195,6 +195,16 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.unsyncedAlertState.collectLatest {
+                if (it) {
+                    binding.toolbarLayout.unsyncedAlertText.visibility = View.VISIBLE
+                } else {
+                    binding.toolbarLayout.unsyncedAlertText.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun setSwipe() {
