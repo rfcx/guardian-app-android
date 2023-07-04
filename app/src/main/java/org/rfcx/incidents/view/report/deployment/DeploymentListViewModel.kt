@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.rfcx.incidents.data.guardian.deploy.UnSyncedExistException
 import org.rfcx.incidents.data.preferences.Preferences
@@ -127,7 +128,11 @@ class DeploymentListViewModel(
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
                 val tempDeployments = streams.filter { it.deployment != null }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + registration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
@@ -142,7 +147,11 @@ class DeploymentListViewModel(
                             SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.SENT.value }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
@@ -157,7 +166,11 @@ class DeploymentListViewModel(
                             SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)

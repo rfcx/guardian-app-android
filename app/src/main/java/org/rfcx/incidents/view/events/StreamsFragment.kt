@@ -81,7 +81,7 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-    (Stream) -> Unit {
+        (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -366,6 +366,8 @@ class StreamsFragment :
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
+                binding.refreshView.isRefreshing = false
+                binding.streamLayout.visibility = View.GONE
                 isShowProgressBar()
             })
         }

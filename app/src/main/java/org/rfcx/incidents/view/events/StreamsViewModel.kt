@@ -101,7 +101,7 @@ class StreamsViewModel(
                         isLoadingMore = false
                         _streams.value = Result.Error(result.throwable)
                     }
-                    Result.Loading -> {}
+                    Result.Loading -> _streams.value = Result.Loading
                     is Result.Success -> {
                         isLoadingMore = false
                         _streams.value = Result.Success(result.data)

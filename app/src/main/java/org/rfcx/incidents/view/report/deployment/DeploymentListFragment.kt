@@ -89,13 +89,12 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
             adapter = deploymentAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
+                    // super.onScrolled(recyclerView, dx, dy)
                     val linearLayoutManager = layoutManager!! as LinearLayoutManager
                     val visibleItemCount = linearLayoutManager.childCount
                     val total = layoutManager!!.itemCount
                     val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
-                    if (!binding.deploymentRefreshView.isRefreshing &&
-                        (visibleItemCount + firstVisibleItemPosition) >= total &&
+                    if ((visibleItemCount + firstVisibleItemPosition) >= total &&
                         firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
                     ) {
                         viewModel.fetchStream(force = true, offset = total)
@@ -114,11 +113,6 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     private fun setCollectState() {
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
-                if (it.isEmpty()) {
-                    binding.noDeploymentLayout.visibility = View.VISIBLE
-                } else {
-                    binding.noDeploymentLayout.visibility = View.GONE
-                }
                 deploymentAdapter.items = it
             }
         }
@@ -160,9 +154,11 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                    Result.Loading -> {}
+                    Result.Loading -> binding.deploymentRefreshView.isRefreshing = false
                     is Result.Success -> {
                         binding.deploymentRefreshView.isRefreshing = false
+                        binding.deploymentsRecyclerView.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -225,6 +221,8 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         binding.deploymentRefreshView.apply {
             setOnRefreshListener {
                 isRefreshing = true
+                binding.progressBar.visibility = View.VISIBLE
+                binding.deploymentsRecyclerView.visibility = View.GONE
                 when {
                     requireContext().isOnAirplaneMode() -> {
                         isRefreshing = false
