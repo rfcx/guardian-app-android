@@ -82,7 +82,13 @@ class DeploymentAndIncidentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
-        if (connectivityUtils.isAvailable() && (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty())) {
+        if (
+            connectivityUtils.isAvailable() &&
+            (
+                params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) &&
+                    currentRunning.isEmpty()
+                )
+        ) {
             if (getUnsyncedWorks() && !params.fromAlertUnsynced) {
                 return flow {
                     emit(Result.Error(UnSyncedExistException()))
