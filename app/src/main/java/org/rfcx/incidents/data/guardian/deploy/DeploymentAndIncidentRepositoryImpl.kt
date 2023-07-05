@@ -89,7 +89,7 @@ class DeploymentAndIncidentRepositoryImpl(
                     currentRunning.isEmpty()
                 )
         ) {
-            if (getUnsyncedWorks() && !params.fromAlertUnsynced) {
+            if (getUnsyncedWorks(params.projectId) && !params.fromAlertUnsynced) {
                 return flow {
                     emit(Result.Error(UnSyncedExistException()))
                     emit(Result.Success(getLocal(params.projectId)))
@@ -100,9 +100,9 @@ class DeploymentAndIncidentRepositoryImpl(
         return flow { emit(Result.Success(getLocal(params.projectId))) }
     }
 
-    private fun getUnsyncedWorks(): Boolean {
+    private fun getUnsyncedWorks(projectId: String): Boolean {
         var hasUnsynced = false
-        val deployments = deploymentLocal.list()
+        val deployments = streamLocal.getByProject(projectId, true).mapNotNull { it.deployment }
         deployments.forEach { dp ->
             if (dp.syncState != SyncState.SENT.value) {
                 hasUnsynced = true
