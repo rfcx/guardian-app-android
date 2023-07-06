@@ -73,7 +73,11 @@ class MainActivityViewModel(
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
     fun getStream(serverId: String): Stream? = streamDb.get(serverId)
-
+    fun getStreams(): List<Stream> {
+        val preferences = Preferences.getInstance(context)
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+        return streamDb.getByProject(projectId)
+    }
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
 

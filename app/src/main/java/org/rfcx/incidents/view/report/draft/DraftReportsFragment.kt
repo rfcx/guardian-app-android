@@ -1,6 +1,7 @@
 package org.rfcx.incidents.view.report.draft
 
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,15 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.databinding.FragmentDraftReportsBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
+import org.rfcx.incidents.entity.location.Coordinate
+import org.rfcx.incidents.entity.location.Tracking
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Project
+import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Crashlytics
+import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -26,7 +31,7 @@ import org.rfcx.incidents.view.MainActivityViewModel
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
 
-class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener {
+class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickListener, SelectSiteListener {
     private var _binding: FragmentDraftReportsBinding? = null
     private val binding get() = _binding!!
 
@@ -36,6 +41,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     private val viewModel: MainActivityViewModel by viewModel() // TODO should have its own view model
     private val reportsAdapter by lazy { ReportsAdapter(this) }
     private val projectAdapter by lazy { ProjectAdapter(this) }
+    private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
 
     lateinit var listener: MainActivityEventListener
     lateinit var preferences: Preferences
@@ -122,6 +128,32 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
             }
             setColorSchemeResources(R.color.colorPrimary)
         }
+
+        binding.createReportButton.setOnClickListener {
+            showDialogSelectSite()
+        }
+    }
+
+    private fun showDialogSelectSite() {
+        SelectSiteDialog(this).show(childFragmentManager, SelectSiteDialog::class.java.name)
+    }
+
+    override fun onSiteSelected(site: Stream) {
+        if (requireContext().isOnAirplaneMode()) {
+            Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
+            showDialogSelectSite()
+            listener.openCreateReportActivity(site.id)
+        }
+
+        locationPermissions.check {
+            if (it) {
+                listener.getCurrentLocation()?.let { loc ->
+                    saveLocation(loc)
+                }
+                showDialogSelectSite()
+                listener.openCreateReportActivity(site.id)
+            }
+        }
     }
 
     private fun setObserve() {
@@ -206,6 +238,18 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
 
     private fun setProjectTitle(str: String) {
         binding.toolbarLayout.projectTitleTextView.text = str
+    }
+
+    private fun saveLocation(location: Location) {
+        val tracking = Tracking(id = 1)
+        val coordinate = Coordinate(
+            latitude = location.latitude,
+            longitude = location.longitude,
+            altitude = location.altitude
+        )
+        viewModel.saveLocation(tracking, coordinate)
+        Preferences.getInstance(requireContext())
+            .putLong(Preferences.LATEST_GET_LOCATION_TIME, System.currentTimeMillis())
     }
 
     companion object {
