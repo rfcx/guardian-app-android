@@ -50,6 +50,13 @@ android {
             buildConfigField 'String', 'CORE_API_BASE_URL', '"https://staging-api.rfcx.org/"'
             buildConfigField 'String', 'RANGER_API_BASE_URL', '"https://staging-ranger-api.rfcx.org/"'
         }
+        local {
+            applicationIdSuffix ".local"
+            manifestPlaceholders = [icon: "@mipmap/ic_launcher_dev", roundIcon: "@mipmap/ic_launcher_round_dev"]
+            buildConfigField 'String', 'CORE_API_BASE_URL', '"https://staging-api.rfcx.org/"'
+            buildConfigField 'String', 'RANGER_API_BASE_URL', '"http://10.0.2.2:3000/"'
+            buildConfigField 'String', 'DEVICE_API_BASE_URL', '"http://10.0.2.2:3000/"'
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
