@@ -24,6 +24,7 @@ open class Response(
     var poachingScale: Int = PoachingScale.DEFAULT.value,
     var poachingEvidence: RealmList<Int> = RealmList(),
     var note: String? = null,
+    var isUnexpected: Boolean = false,
     var streamId: String = "",
     var streamName: String = "",
     var audioLocation: String? = null,
@@ -57,6 +58,7 @@ open class Response(
         const val RESPONSE_POACHING_EVIDENCE = "poachingEvidence"
         const val RESPONSE_ANSWERS = "answers"
         const val RESPONSE_ASSETS = "assets"
+        const val RESPONSE_IS_UNEXPECTED = "isUnexpected"
     }
 }
 
@@ -114,6 +116,7 @@ fun Response.toCreateResponseRequest(): CreateResponseRequest =
         this.submittedAt?.toIsoString() ?: "",
         this.answers,
         this.note,
+        this.isUnexpected,
         this.streamId
     )
 

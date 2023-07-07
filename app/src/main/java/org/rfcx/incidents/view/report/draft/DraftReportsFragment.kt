@@ -142,7 +142,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
         if (requireContext().isOnAirplaneMode()) {
             Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
             showDialogSelectSite()
-            listener.openCreateReportActivity(site.id)
+            listener.openCreateReportActivity(site.id, isUnexpected = true)
         }
 
         locationPermissions.check {
@@ -151,7 +151,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                     saveLocation(loc)
                 }
                 showDialogSelectSite()
-                listener.openCreateReportActivity(site.id)
+                listener.openCreateReportActivity(site.id, isUnexpected = true)
             }
         }
     }
