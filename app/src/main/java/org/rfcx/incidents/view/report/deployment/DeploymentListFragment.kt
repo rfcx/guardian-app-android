@@ -28,6 +28,7 @@ import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
+import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailActivity
 
 class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClickListener {
@@ -81,6 +82,10 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
             } else {
                 showProjectList()
             }
+        }
+
+        binding.deployGuardianButton.setOnClickListener {
+            GuardianDeploymentActivity.startActivity(requireContext())
         }
     }
 
@@ -290,12 +295,14 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 binding.mapLayout.visibility = View.VISIBLE
                 binding.listLayout.visibility = View.GONE
                 binding.deploymentRefreshView.visibility = View.GONE
+                binding.deployGuardianButton.visibility = View.GONE
                 binding.toolbarLayout.screenName.text = getString(R.string.deployments)
                 state = DeploymentListState.MAP
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
                 binding.deploymentRefreshView.visibility = View.VISIBLE
+                binding.deployGuardianButton.visibility = View.VISIBLE
                 binding.toolbarLayout.screenName.text = getString(R.string.map)
                 state = DeploymentListState.LIST
             }

@@ -106,10 +106,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:background="@color/backgroundColor"
-                    android:dividerHeight="1dp"
-                    android:overScrollMode="never"
                     android:layout_marginTop="@dimen/margin_padding_small"
-                    android:layout_marginBottom="@dimen/margin_padding_small"
+                    android:clipToPadding="false"
+                    android:paddingBottom="72dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filterGroup" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -173,6 +172,15 @@
                 android:visibility="gone" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deployGuardianButton"
+            style="@style/RangerButton.GreenButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/deploy_new_guardian"
+            android:layout_margin="@dimen/margin_padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
