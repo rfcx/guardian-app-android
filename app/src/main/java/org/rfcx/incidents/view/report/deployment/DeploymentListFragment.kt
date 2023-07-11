@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -198,11 +199,12 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
         lifecycleScope.launch {
             viewModel.unsyncedAlertState.collectLatest {
-                if (it) {
-                    binding.toolbarLayout.unsyncedAlertText.visibility = View.VISIBLE
+                if (it == 0) {
+                    binding.toolbarLayout.unsyncedCountText.visibility = View.GONE
                 } else {
-                    binding.toolbarLayout.unsyncedAlertText.visibility = View.GONE
+                    binding.toolbarLayout.unsyncedCountText.visibility = View.VISIBLE
                 }
+                binding.toolbarLayout.unsyncedCountText.text = it.toString()
             }
         }
     }
@@ -283,23 +285,23 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     }
 
     private fun setMap(savedInstanceState: Bundle?) {
-        binding.toolbarLayout.changePageImageView.setOnClickListener {
+        binding.toolbarLayout.changePageButton.setOnClickListener {
             if (state == DeploymentListState.LIST) {
                 binding.mapLayout.visibility = View.VISIBLE
                 binding.listLayout.visibility = View.GONE
                 binding.deploymentRefreshView.visibility = View.GONE
-                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
+                binding.toolbarLayout.screenName.text = getString(R.string.deployments)
                 state = DeploymentListState.MAP
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
                 binding.deploymentRefreshView.visibility = View.VISIBLE
-                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
+                binding.toolbarLayout.screenName.text = getString(R.string.map)
                 state = DeploymentListState.LIST
             }
         }
         // Start with Map screen
-        binding.toolbarLayout.changePageImageView.performClick()
+        binding.toolbarLayout.changePageButton.performClick()
 
         binding.mapBoxView.onCreate(savedInstanceState)
         binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.Toolbar">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/topBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/projectLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/projectTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/projectTitleTextView"
+                    style="@style/RangerText.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/menu_new_events"
+                    android:textColor="@color/text_secondary" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/expandMoreImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_expand_more"
+                    android:tint="@color/text_secondary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/changePageButton"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="@drawable/bg_color_primary_button"
+                android:layout_marginEnd="@dimen/margin_padding_small"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/unsyncedCountText"
+                    style="@style/RangerText.Subhead.Small"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_xxsmall"
+                    android:layout_weight="0"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_color_white_button"
+                    android:layout_marginStart="@dimen/margin_padding_xsmall"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/screenName"
+                    style="@style/RangerText.Subhead.Small"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_xsmall"
+                    android:layout_gravity="center"
+                    android:text="@string/map" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+</com.google.android.material.appbar.AppBarLayout>

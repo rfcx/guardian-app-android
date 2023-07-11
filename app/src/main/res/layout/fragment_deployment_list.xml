@@ -21,7 +21,7 @@
         <include
             android:id="@+id/toolbarLayout"
             android:visibility="visible"
-            layout="@layout/toolbar_project" />
+            layout="@layout/toolbar_deployment" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mapLayout"

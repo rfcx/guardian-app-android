@@ -91,7 +91,7 @@ class DeploymentListViewModel(
     private val _noDeploymentTextContent: MutableStateFlow<String> = MutableStateFlow("")
     val noDeploymentTextContent = _noDeploymentTextContent.asStateFlow()
 
-    private val _unsyncedAlertState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _unsyncedAlertState: MutableStateFlow<Int> = MutableStateFlow(0)
     val unsyncedAlertState = _unsyncedAlertState.asStateFlow()
 
     private var currentFilter = FilterDeployment.ALL
@@ -190,11 +190,7 @@ class DeploymentListViewModel(
                     SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
             }
         val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
-        if (tempDeployments.isNotEmpty() || tempRegistration.isNotEmpty()) {
-            _unsyncedAlertState.tryEmit(true)
-        } else {
-            _unsyncedAlertState.tryEmit(false)
-        }
+        _unsyncedAlertState.tryEmit(tempDeployments.size + tempRegistration.size)
     }
 
     fun fetchProject(force: Boolean = false) {

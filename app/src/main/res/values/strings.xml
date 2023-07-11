@@ -577,6 +577,8 @@
     <string name="deployment_key">deployment key</string>
     <string name="delete">delete</string>
     <string name="registration">Registration</string>
+    <string name="deployments">Deployments</string>
+    <string name="map">Map</string>
 
     <!-- Deployment Detail -->
 
