@@ -578,7 +578,7 @@
     <string name="delete">delete</string>
     <string name="registration">Registration</string>
     <string name="deployments">Deployments</string>
-    <string name="map">Map</string>
+    <string name="map">Map View</string>
     <string name="deploy_new_guardian">Deploy new Guardian</string>
 
     <!-- Deployment Detail -->
