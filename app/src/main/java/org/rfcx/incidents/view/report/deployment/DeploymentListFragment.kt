@@ -42,6 +42,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     private lateinit var unsyncedAlert: AlertDialog
     private var state = DeploymentListState.LIST
+    private var currentFilter = DeploymentListViewModel.FilterDeployment.ALL
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,9 +67,18 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val selected = checkedIds.getOrNull(0)
             when (selected) {
-                R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
-                R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
-                R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
+                R.id.allSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.ALL
+                    viewModel.addFilter(currentFilter)
+                }
+                R.id.unSyncedSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
+                    viewModel.addFilter(currentFilter)
+                }
+                R.id.syncedSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.SYNCED
+                    viewModel.addFilter(currentFilter)
+                }
                 null -> {
                     val allChip = group.findViewById<Chip>(R.id.allSelectChip)
                     allChip.isChecked = true
@@ -298,6 +308,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 binding.deployGuardianButton.visibility = View.GONE
                 binding.toolbarLayout.screenName.text = getString(R.string.deployments)
                 state = DeploymentListState.MAP
+                viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
@@ -305,6 +316,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 binding.deployGuardianButton.visibility = View.VISIBLE
                 binding.toolbarLayout.screenName.text = getString(R.string.map)
                 state = DeploymentListState.LIST
+                viewModel.addFilter(currentFilter)
             }
         }
         // Start with Map screen
