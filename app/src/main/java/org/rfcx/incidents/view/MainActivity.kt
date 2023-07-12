@@ -281,8 +281,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     override fun openStreamDetail(id: String, distance: Double?) {
         hideBottomAppBar()
         startFragment(
-            StreamDetailFragment.newInstance(id, distance),
-            StreamDetailFragment.tag
+            StreamDetailFragment.newInstance(id, distance)
         )
     }
 

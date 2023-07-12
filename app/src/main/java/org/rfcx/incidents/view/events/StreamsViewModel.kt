@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.data.guardian.deploy.UnSyncedExistException
 import org.rfcx.incidents.data.local.TrackingDb
 import org.rfcx.incidents.data.local.realm.asLiveData
 import org.rfcx.incidents.data.preferences.Preferences
@@ -40,6 +44,9 @@ class StreamsViewModel(
 
     private val _streams = MutableLiveData<Result<List<Stream>>>()
     val streams = MediatorLiveData<Result<List<Stream>>>()
+
+    private val _alertUnsynced = MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val alertUnsynced = _alertUnsynced.asSharedFlow()
 
     var isLoadingMore = false
 
@@ -86,22 +93,32 @@ class StreamsViewModel(
             GetProjectsParams(force)
         )
     }
-    fun fetchFreshStreams(force: Boolean = false, offset: Int = 0) {
+
+    fun fetchFreshStreams(force: Boolean = false, offset: Int = 0, fromAlertUnsynced: Boolean = false) {
         val projectId = selectedProject.value?.let { if (it is Result.Success) it.data.id else null } ?: return
         viewModelScope.launch(Dispatchers.Main) {
             getStreamsWithDeploymentAndIncidentUseCase.launch(
                 GetStreamWithDeploymentAndIncidentParams(
                     projectId = projectId,
                     offset = offset,
-                    forceRefresh = force
+                    forceRefresh = force,
+                    fromAlertUnsynced = fromAlertUnsynced
                 )
             ).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         isLoadingMore = false
-                        _streams.value = Result.Error(result.throwable)
+                        if (force) {
+                            if (result.throwable is UnSyncedExistException) {
+                                _alertUnsynced.tryEmit(true)
+                            }
+                        } else {
+                            _streams.value = Result.Error(result.throwable)
+                        }
                     }
-                    Result.Loading -> _streams.value = Result.Loading
+                    Result.Loading -> {
+                        _streams.value = Result.Loading
+                    }
                     is Result.Success -> {
                         isLoadingMore = false
                         _streams.value = Result.Success(result.data)

@@ -17,15 +17,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -52,6 +55,8 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -81,7 +86,7 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-    (Stream) -> Unit {
+        (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -155,6 +160,8 @@ class StreamsFragment :
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
+    private lateinit var unsyncedAlert: AlertDialog
+
     private val streamIdReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
@@ -220,7 +227,30 @@ class StreamsFragment :
             setColorSchemeResources(R.color.colorPrimary)
         }
 
+        lifecycleScope.launch {
+            viewModel.alertUnsynced.collectLatest {
+                if (it) {
+                    showUnsyncedAlert()
+                }
+            }
+        }
+
         viewModel.refreshProjects()
+    }
+
+    private fun showUnsyncedAlert() {
+        unsyncedAlert =
+            MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
+                setTitle(getString(R.string.refresh_title))
+                setMessage(getString(R.string.refresh_message))
+                setPositiveButton(getString(R.string.continue_name)) { _, _ ->
+                    viewModel.fetchFreshStreams(force = true, fromAlertUnsynced = true)
+                }
+                setNegativeButton(R.string.back) { _, _ ->
+                    unsyncedAlert.dismiss()
+                }
+            }.create()
+        unsyncedAlert.show()
     }
 
     private fun onClickCurrentLocationButton() {
