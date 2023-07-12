@@ -307,6 +307,7 @@ class StreamsFragment :
         firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnSelectedProject.key, project.id + " : " + project.name)
 
         isShowNotHaveStreams(false)
+        isShowNotHaveIncident(false)
         binding.streamLayout.visibility = View.GONE
         binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
@@ -361,7 +362,13 @@ class StreamsFragment :
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
-                isShowNotHaveStreams(streams.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                if (streams.isEmpty()) {
+                    isShowNotHaveIncident(false)
+                    isShowNotHaveStreams(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                } else if (streams.none { it.lastIncident != null }) {
+                    isShowNotHaveStreams(false)
+                    isShowNotHaveIncident(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                }
             }, {
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
@@ -393,6 +400,7 @@ class StreamsFragment :
             if (isShowMapIcon) {
                 analytics?.trackScreen(Screen.MAP)
                 isShowNotHaveStreams(false)
+                isShowNotHaveIncident(false)
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
                 mapView.visibility = View.VISIBLE
                 binding.refreshView.visibility = View.GONE
@@ -414,6 +422,10 @@ class StreamsFragment :
 
     private fun isShowNotHaveStreams(show: Boolean) {
         binding.notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    private fun isShowNotHaveIncident(show: Boolean) {
+        binding.notHaveIncidentGroupView.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     /* ------------------- vv Setup Map vv ------------------- */

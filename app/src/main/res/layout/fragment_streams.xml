@@ -104,6 +104,39 @@
         app:layout_constraintTop_toBottomOf="@+id/notHaveStreamsImageView"
         app:layout_constraintVertical_chainStyle="packed" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/notHaveIncidentGroupView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="notHaveIncidentImageView, emptyIncidentTextView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/notHaveIncidentImageView"
+        android:layout_width="@dimen/ic_empty_list_size"
+        android:layout_height="@dimen/ic_empty_list_size"
+        android:src="@drawable/ic_menu_alert"
+        app:layout_constraintBottom_toTopOf="@+id/emptyIncidentTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/iconColor" />
+
+    <TextView
+        android:id="@+id/emptyIncidentTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:gravity="center"
+        android:text="No incident in this project"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notHaveIncidentImageView"
+        app:layout_constraintVertical_chainStyle="packed" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
