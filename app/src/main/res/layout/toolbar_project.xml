@@ -30,11 +30,14 @@
                     android:id="@+id/projectTitleTextView"
                     style="@style/RangerText.Body"
                     android:layout_width="wrap_content"
+                    android:maxWidth="150dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_padding_xsmall"
                     android:gravity="center"
                     android:text="@string/menu_new_events"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/expandMoreImageView"
