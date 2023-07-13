@@ -100,6 +100,7 @@ class DeploymentListViewModel(
     private var selectedProjectId = ""
 
     var isLoadingMore = false
+    private var isMapScreen = true
 
     init {
         getLocationChanged()
@@ -131,7 +132,7 @@ class DeploymentListViewModel(
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
                 val tempDeployments = streams.filter { it.deployment != null }
-                if (!isLoadingMore) {
+                if (!isLoadingMore && !isMapScreen) {
                     _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
                 } else {
                     _noDeploymentVisibilityState.tryEmit(false)
@@ -150,7 +151,7 @@ class DeploymentListViewModel(
                             SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.SENT.value }
-                if (!isLoadingMore) {
+                if (!isLoadingMore && !isMapScreen) {
                     _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
                 } else {
                     _noDeploymentVisibilityState.tryEmit(false)
@@ -169,8 +170,8 @@ class DeploymentListViewModel(
                             SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
-                if (!isLoadingMore) {
-                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore && !isMapScreen) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && tempRegistration.isEmpty())
                 } else {
                     _noDeploymentVisibilityState.tryEmit(false)
                 }
@@ -286,6 +287,10 @@ class DeploymentListViewModel(
     fun addFilter(filter: FilterDeployment) {
         currentFilter = filter
         filterWithDeployment(currentAllStreams, currentAllRegistration, filter)
+    }
+
+    fun setScreen(isMapScreen: Boolean) {
+        this.isMapScreen = isMapScreen
     }
 
     fun syncDeployment(id: Int) {

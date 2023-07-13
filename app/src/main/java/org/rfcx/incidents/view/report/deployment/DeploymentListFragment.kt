@@ -307,6 +307,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 binding.deployGuardianButton.visibility = View.GONE
                 binding.toolbarLayout.screenName.text = getString(R.string.deployments)
                 state = DeploymentListState.MAP
+                viewModel.setScreen(true)
                 viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
             } else {
                 binding.mapLayout.visibility = View.GONE
@@ -315,6 +316,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 binding.deployGuardianButton.visibility = View.VISIBLE
                 binding.toolbarLayout.screenName.text = getString(R.string.map)
                 state = DeploymentListState.LIST
+                viewModel.setScreen(false)
                 viewModel.addFilter(currentFilter)
             }
         }
