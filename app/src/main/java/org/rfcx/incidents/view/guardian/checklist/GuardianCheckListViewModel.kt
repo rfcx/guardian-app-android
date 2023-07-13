@@ -27,6 +27,7 @@ import org.rfcx.incidents.util.socket.PingUtils.getGuid
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
 import org.rfcx.incidents.view.guardian.GuardianScreen
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
+import java.util.Date
 
 class GuardianCheckListViewModel(
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
@@ -116,6 +117,7 @@ class GuardianCheckListViewModel(
                     )
                 }
             ),
+            deployedAt = Date(),
             deviceParameters = Gson().toJson(DeviceParameter(guid, token, guardianType, guardianVital))
         )
         val newStream = Stream(
