@@ -19,12 +19,15 @@ class DeploymentDb(private val realm: Realm) {
                     deployment.id = id
                     it.insertOrUpdate(deployment)
                 } else {
-                    externalDeployment.images = deployment.images
-                    externalDeployment.deployedAt = deployment.deployedAt
-                    externalDeployment.deviceParameters = deployment.deviceParameters
-                    externalDeployment.syncState = deployment.syncState
-                    externalDeployment.externalId = deployment.externalId
-                    it.insertOrUpdate(externalDeployment)
+                    // Only update deployment that not need for syncing
+                    if (externalDeployment.syncState == SyncState.SENT.value) {
+                        externalDeployment.images = deployment.images
+                        externalDeployment.deployedAt = deployment.deployedAt
+                        externalDeployment.deviceParameters = deployment.deviceParameters
+                        externalDeployment.syncState = deployment.syncState
+                        externalDeployment.externalId = deployment.externalId
+                        it.insertOrUpdate(externalDeployment)
+                    }
                 }
             } else if (deployment.id == 0) {
                 val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1

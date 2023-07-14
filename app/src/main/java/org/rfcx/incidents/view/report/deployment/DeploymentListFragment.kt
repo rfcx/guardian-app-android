@@ -358,6 +358,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         listener.hideBottomAppBar()
         binding.projectRecyclerView.visibility = View.VISIBLE
         binding.projectSwipeRefreshView.visibility = View.VISIBLE
+        if (state == DeploymentListState.LIST) {
+            binding.deployGuardianButton.visibility = View.GONE
+        }
     }
 
     private fun hideProjectList() {
@@ -365,6 +368,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         listener.showBottomAppBar()
         binding.projectRecyclerView.visibility = View.GONE
         binding.projectSwipeRefreshView.visibility = View.GONE
+        if (state == DeploymentListState.LIST) {
+            binding.deployGuardianButton.visibility = View.VISIBLE
+        }
     }
 
     override fun onProjectClicked(project: Project) {
