@@ -132,7 +132,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
-                    super.onBackPressed()
+                    showStatus()
                 }
                 showBottomAppBar()
             }
