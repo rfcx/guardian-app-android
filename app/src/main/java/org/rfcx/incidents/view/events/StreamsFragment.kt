@@ -398,6 +398,9 @@ class StreamsFragment :
                 } else if (streams.none { it.lastIncident != null }) {
                     isShowNotHaveStreams(false)
                     isShowNotHaveIncident(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                } else {
+                    isShowNotHaveStreams(false)
+                    isShowNotHaveIncident(false)
                 }
             }, {
                 binding.refreshView.isRefreshing = false
