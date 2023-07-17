@@ -34,6 +34,10 @@ class StreamsRepositoryImp(
         return streamDb.getAllAsFlowByProject(params.projectId)
     }
 
+    override fun listLocalCopyAsFlow(params: GetLocalStreamsParams): Flow<List<Stream>> {
+        return streamDb.getAllCopyAsFlowByProject(params.projectId)
+    }
+
     override fun listLocal(params: GetLocalStreamsParams): List<Stream> {
         return streamDb.getByProject(params.projectId)
     }
@@ -72,7 +76,7 @@ class StreamsRepositoryImp(
     }
 
     private fun getFromLocalDB(projectId: String): Single<List<Stream>> {
-        return Single.just(streamDb.getByProject(projectId))
+        return Single.just(streamDb.getByProject(projectId, false))
     }
 
     private fun cacheKey(projectId: String): String {

@@ -160,9 +160,6 @@ class ProfileFragment : BaseFragment() {
         viewDataBinding.onClickClassifier = View.OnClickListener {
             ClassifierDownloadActivity.startActivity(requireContext())
         }
-        viewDataBinding.onClickMakeDeployment = View.OnClickListener {
-            GuardianDeploymentActivity.startActivity(requireContext())
-        }
     }
 
     override fun onPause() {

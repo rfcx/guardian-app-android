@@ -8,7 +8,7 @@ class CachedEndpointDb(val realm: Realm) {
 
     fun updateCachedEndpoint(endpoint: String) {
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(CachedEndpoint(endpoint, Date()))
+            it.insertOrUpdate(CachedEndpoint(endpoint, Date()))
         }
     }
 

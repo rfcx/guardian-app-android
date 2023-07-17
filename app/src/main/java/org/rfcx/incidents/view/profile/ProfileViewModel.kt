@@ -39,7 +39,7 @@ class ProfileViewModel(
 
     fun resumed() {
         updateEventSubtitle()
-        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, "")).filter { it.lastIncident?.events?.size != 0 }
+        _streams = streamDb.getByProject(preferences.getString(Preferences.SELECTED_PROJECT, ""), false).filter { it.lastIncident?.events?.size != 0 }
     }
 
     fun onLogout() {

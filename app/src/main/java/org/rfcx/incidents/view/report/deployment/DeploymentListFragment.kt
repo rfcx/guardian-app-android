@@ -27,6 +27,7 @@ import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
+import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailActivity
 
 class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClickListener {
@@ -40,6 +41,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     private lateinit var unsyncedAlert: AlertDialog
     private var state = DeploymentListState.LIST
+    private var currentFilter = DeploymentListViewModel.FilterDeployment.ALL
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,9 +66,18 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         binding.filterGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val selected = checkedIds.getOrNull(0)
             when (selected) {
-                R.id.allSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
-                R.id.unSyncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.UNSYNCED)
-                R.id.syncedSelectChip -> viewModel.addFilter(DeploymentListViewModel.FilterDeployment.SYNCED)
+                R.id.allSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.ALL
+                    viewModel.addFilter(currentFilter)
+                }
+                R.id.unSyncedSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
+                    viewModel.addFilter(currentFilter)
+                }
+                R.id.syncedSelectChip -> {
+                    currentFilter = DeploymentListViewModel.FilterDeployment.SYNCED
+                    viewModel.addFilter(currentFilter)
+                }
                 null -> {
                     val allChip = group.findViewById<Chip>(R.id.allSelectChip)
                     allChip.isChecked = true
@@ -81,6 +92,10 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 showProjectList()
             }
         }
+
+        binding.deployGuardianButton.setOnClickListener {
+            GuardianDeploymentActivity.startActivity(requireContext())
+        }
     }
 
     private fun setRecyclerView() {
@@ -89,13 +104,12 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
             adapter = deploymentAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
+                    // super.onScrolled(recyclerView, dx, dy)
                     val linearLayoutManager = layoutManager!! as LinearLayoutManager
                     val visibleItemCount = linearLayoutManager.childCount
                     val total = layoutManager!!.itemCount
                     val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
-                    if (!binding.deploymentRefreshView.isRefreshing &&
-                        (visibleItemCount + firstVisibleItemPosition) >= total &&
+                    if ((visibleItemCount + firstVisibleItemPosition) >= total &&
                         firstVisibleItemPosition >= 0 && !viewModel.isLoadingMore
                     ) {
                         viewModel.fetchStream(force = true, offset = total)
@@ -114,11 +128,6 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     private fun setCollectState() {
         lifecycleScope.launch {
             viewModel.deployments.collectLatest {
-                if (it.isEmpty()) {
-                    binding.noDeploymentLayout.visibility = View.VISIBLE
-                } else {
-                    binding.noDeploymentLayout.visibility = View.GONE
-                }
                 deploymentAdapter.items = it
             }
         }
@@ -136,8 +145,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         binding.projectSwipeRefreshView.isRefreshing = false
                         Toast.makeText(
                             context,
-                            result.throwable.message
-                                ?: getString(R.string.something_is_wrong),
+                            getString(R.string.something_is_wrong),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -157,14 +165,15 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         binding.deploymentRefreshView.isRefreshing = false
                         Toast.makeText(
                             context,
-                            result.throwable.message
-                                ?: getString(R.string.something_is_wrong),
+                            getString(R.string.something_is_wrong),
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                    Result.Loading -> {}
+                    Result.Loading -> binding.deploymentRefreshView.isRefreshing = false
                     is Result.Success -> {
                         binding.deploymentRefreshView.isRefreshing = false
+                        binding.deploymentsRecyclerView.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -201,6 +210,17 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.unsyncedAlertState.collectLatest {
+                if (it == 0) {
+                    binding.toolbarLayout.unsyncedCountText.visibility = View.GONE
+                } else {
+                    binding.toolbarLayout.unsyncedCountText.visibility = View.VISIBLE
+                }
+                binding.toolbarLayout.unsyncedCountText.text = it.toString()
+            }
+        }
     }
 
     private fun setSwipe() {
@@ -227,6 +247,8 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         binding.deploymentRefreshView.apply {
             setOnRefreshListener {
                 isRefreshing = true
+                binding.progressBar.visibility = View.VISIBLE
+                binding.deploymentsRecyclerView.visibility = View.GONE
                 when {
                     requireContext().isOnAirplaneMode() -> {
                         isRefreshing = false
@@ -277,21 +299,29 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
     }
 
     private fun setMap(savedInstanceState: Bundle?) {
-        binding.toolbarLayout.changePageImageView.setOnClickListener {
+        binding.toolbarLayout.changePageButton.setOnClickListener {
             if (state == DeploymentListState.LIST) {
                 binding.mapLayout.visibility = View.VISIBLE
                 binding.listLayout.visibility = View.GONE
                 binding.deploymentRefreshView.visibility = View.GONE
-                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
+                binding.deployGuardianButton.visibility = View.GONE
+                binding.toolbarLayout.screenName.text = getString(R.string.deployments)
                 state = DeploymentListState.MAP
+                viewModel.setScreen(true)
+                viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
             } else {
                 binding.mapLayout.visibility = View.GONE
                 binding.listLayout.visibility = View.VISIBLE
                 binding.deploymentRefreshView.visibility = View.VISIBLE
-                binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
+                binding.deployGuardianButton.visibility = View.VISIBLE
+                binding.toolbarLayout.screenName.text = getString(R.string.map)
                 state = DeploymentListState.LIST
+                viewModel.setScreen(false)
+                viewModel.addFilter(currentFilter)
             }
         }
+        // Start with Map screen
+        binding.toolbarLayout.changePageButton.performClick()
 
         binding.mapBoxView.onCreate(savedInstanceState)
         binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
@@ -328,6 +358,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         listener.hideBottomAppBar()
         binding.projectRecyclerView.visibility = View.VISIBLE
         binding.projectSwipeRefreshView.visibility = View.VISIBLE
+        if (state == DeploymentListState.LIST) {
+            binding.deployGuardianButton.visibility = View.GONE
+        }
     }
 
     private fun hideProjectList() {
@@ -335,6 +368,9 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         listener.showBottomAppBar()
         binding.projectRecyclerView.visibility = View.GONE
         binding.projectSwipeRefreshView.visibility = View.GONE
+        if (state == DeploymentListState.LIST) {
+            binding.deployGuardianButton.visibility = View.VISIBLE
+        }
     }
 
     override fun onProjectClicked(project: Project) {

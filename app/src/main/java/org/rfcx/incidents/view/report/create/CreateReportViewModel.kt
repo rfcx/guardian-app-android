@@ -26,7 +26,7 @@ class CreateReportViewModel(
 ) : ViewModel() {
 
     fun getStream(id: String): Stream? {
-        return streamDb.get(id)
+        return streamDb.get(id, false)
     }
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {

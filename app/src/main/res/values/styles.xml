@@ -333,4 +333,8 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="RangerEditText.Background.White" parent="Widget.AppCompat.EditText">
+        <item name="android:backgroundTint">@color/backgroundColor</item>
+    </style>
+
 </resources>

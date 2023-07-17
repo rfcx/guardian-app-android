@@ -4,6 +4,7 @@ import io.realm.Realm
 import io.realm.kotlin.deleteFromRealm
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Stream
@@ -12,7 +13,7 @@ class StreamDb(private val realm: Realm) {
     fun insertOrUpdate(stream: Stream) {
         stream.lastIncident?.let {
             realm.executeTransaction { r ->
-                val existingIncident = realm.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst()
+                val existingIncident = r.where(Incident::class.java).equalTo(Incident.FIELD_ID, it.id).findFirst()
                 existingIncident?.deleteFromRealm()
                 r.insertOrUpdate(it)
             }
@@ -21,11 +22,11 @@ class StreamDb(private val realm: Realm) {
         }
         realm.executeTransaction {
             if (stream.externalId != null) {
-                val existingStream = realm.where(Stream::class.java)
+                val existingStream = it.where(Stream::class.java)
                     .equalTo(Stream.FIELD_EXTERNAL_ID, stream.externalId)
                     .findFirst()
                 if (existingStream == null) {
-                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    val id = (it.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
                     stream.id = id
                     it.insert(stream)
                 } else {
@@ -45,7 +46,7 @@ class StreamDb(private val realm: Realm) {
                     if (stream.projectId == "") {
                         stream.projectId = existingStream.projectId
                     }
-                    if (stream.tags == null) {
+                    if (stream.tags.isNullOrEmpty()) {
                         stream.tags = existingStream.tags
                     }
                     if (stream.lastIncident == null) {
@@ -64,11 +65,11 @@ class StreamDb(private val realm: Realm) {
                 }
             } else {
                 if (stream.id == -1) {
-                    val id = (realm.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
+                    val id = (it.where(Stream::class.java).max(Stream.FIELD_ID)?.toInt() ?: 0) + 1
                     stream.id = id
-                    it.insert(stream)
+                    it.insertOrUpdate(stream)
                 } else {
-                    val existingStream = realm.where(Stream::class.java)
+                    val existingStream = it.where(Stream::class.java)
                         .equalTo(Stream.FIELD_ID, stream.id)
                         .findFirst()
                     stream.id = existingStream!!.id
@@ -84,13 +85,16 @@ class StreamDb(private val realm: Realm) {
 
     fun getAllAsFlowByProject(projectId: String): Flow<List<Stream>> {
         return realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAllAsync().toFlow()
-        // return flow { emit(realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll()) }
+    }
+
+    fun getAllCopyAsFlowByProject(projectId: String): Flow<List<Stream>> {
+        return flow { emit(realm.copyFromRealm(realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).findAll())) }
     }
 
     fun getAllForWorker(): List<Stream> {
         var unsent: List<Stream> = listOf()
         realm.executeTransaction {
-            val streams = realm.where(Stream::class.java)
+            val streams = it.where(Stream::class.java)
                 .findAll().createSnapshot()
             unsent = streams
         }
@@ -100,7 +104,7 @@ class StreamDb(private val realm: Realm) {
     fun updateSiteServerId(stream: Stream, externalId: String) {
         realm.executeTransaction {
             stream.externalId = externalId
-            realm.insertOrUpdate(stream)
+            it.insertOrUpdate(stream)
         }
     }
 
@@ -111,9 +115,10 @@ class StreamDb(private val realm: Realm) {
         }
     }
 
-    fun get(id: Int): Stream? {
+    fun get(id: Int, needCopy: Boolean = true): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_ID, id).findFirst() ?: return null
-        return realm.copyFromRealm(stream)
+        if (needCopy) return realm.copyFromRealm(stream)
+        return stream
     }
 
     fun getByIdAsFlow(id: Int): Flow<Stream?> {
@@ -121,18 +126,21 @@ class StreamDb(private val realm: Realm) {
         return stream.findFirstAsync().toFlow()
     }
 
-    fun get(id: String): Stream? {
+    fun get(id: String, needCopy: Boolean = true): Stream? {
         val stream = realm.where(Stream::class.java).equalTo(Stream.FIELD_EXTERNAL_ID, id).findFirst() ?: return null
-        return realm.copyFromRealm(stream)
+        if (needCopy) return realm.copyFromRealm(stream)
+        return stream
     }
 
-    fun getByProject(projectId: String?): List<Stream> {
+    fun getByProject(projectId: String?, needCopy: Boolean = true): List<Stream> {
         if (projectId == null) {
             val streams = realm.where(Stream::class.java).sort(Stream.FIELD_ORDER).findAll()
-            return realm.copyFromRealm(streams)
+            if (needCopy) return realm.copyFromRealm(streams)
+            return streams
         }
         val streams = realm.where(Stream::class.java).equalTo(Stream.FIELD_PROJECT_ID, projectId).sort(Stream.FIELD_ORDER).findAll()
-        return realm.copyFromRealm(streams)
+        if (needCopy) return realm.copyFromRealm(streams)
+        return streams
     }
 
     fun deleteByProject(projectId: String, callback: (Boolean) -> Unit) {

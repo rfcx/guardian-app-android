@@ -13,6 +13,7 @@ import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
 import org.rfcx.incidents.data.local.realm.AppRealm
+import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -50,7 +51,7 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
         val deploymentUnsent = deploymentDb.unsentCount()
         deploymentDb.unlockSending()
         if (deploymentUnsent > 0) {
-            // DeploymentSyncWorker.enqueue()
+            DeploymentSyncWorker.enqueue()
         }
 
         val imageDb = DeploymentImageDb(realm)

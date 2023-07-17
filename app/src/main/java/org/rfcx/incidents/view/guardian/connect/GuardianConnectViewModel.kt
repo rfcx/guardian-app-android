@@ -25,14 +25,21 @@ class GuardianConnectViewModel(
     // These coroutines are running definitely so better keep them in job for cancellation
     private var getNearbyJob: Job? = null
 
-    suspend fun nearbyHotspots() {
+    init {
+        nearbyHotspots()
+    }
+
+    fun nearbyHotspots() {
         getNearbyJob?.cancel()
         getNearbyJob = viewModelScope.launch(Dispatchers.IO) {
             getNearbyHotspotUseCase.launch().collectLatest { result ->
                 when (result) {
                     is Result.Error -> _hotspotsState.tryEmit(Result.Error(result.throwable))
                     Result.Loading -> _hotspotsState.tryEmit(Result.Loading)
-                    is Result.Success -> _hotspotsState.tryEmit(Result.Success(result.data))
+                    is Result.Success -> {
+                        getNearbyJob?.cancel()
+                        _hotspotsState.tryEmit(Result.Success(result.data))
+                    }
                 }
             }
         }

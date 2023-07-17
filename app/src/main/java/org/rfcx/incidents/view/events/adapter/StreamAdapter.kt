@@ -162,7 +162,6 @@ class StreamAdapter(private val onClickListener: (Stream) -> Unit) :
                 number += notInDefaultType.size
                 numOfOtherTextView.text = (number).toString()
             }
-
             stream.tags?.let { tags ->
                 if (tags.contains(Stream.TAG_RECENT) && events.isNotEmpty()) recentTextView.visibility = View.VISIBLE
                 if (tags.contains(Stream.TAG_HOT) && events.isNotEmpty()) hotTextView.visibility = View.VISIBLE

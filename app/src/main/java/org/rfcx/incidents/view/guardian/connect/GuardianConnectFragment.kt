@@ -42,23 +42,21 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
             adapter = hotspotAdapter
         }
 
-        lifecycleScope.launchWhenStarted { viewModel.nearbyHotspots() }
-
         binding.connectGuardianButton.setOnClickListener {
-            lifecycleScope.launchWhenStarted {
-                mainEvent?.connectHotspot(viewModel.getSelectedHotspot())
+            mainEvent?.connectHotspot(viewModel.getSelectedHotspot())
+            lifecycleScope.launch {
                 launch { collectHotspotConnect() }
             }
         }
 
         binding.retryGuardianButton.setOnClickListener {
-            lifecycleScope.launchWhenStarted { viewModel.nearbyHotspots() }
+            viewModel.nearbyHotspots()
         }
     }
 
     // Observe all UI StateFlow
     private fun collectStates() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             launch { collectNearbyHotspot() }
         }
     }
@@ -112,6 +110,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             launch { collectSocketInitial() }
                         }
                     }
+                    else -> {}
                 }
             }
         }
@@ -123,8 +122,8 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                 when (result) {
                     is Result.Success -> {
                         if (result.data) {
-                            launch { mainEvent?.sendHeartBeatSocket() }
-                            launch { collectSocketRead() }
+                            mainEvent?.sendHeartBeatSocket()
+                            collectSocketRead()
                         }
                     }
                     else -> {}
@@ -152,6 +151,7 @@ class GuardianConnectFragment : Fragment(), (ScanResult) -> Unit {
                             mainEvent?.changeScreen(GuardianScreen.CHECKLIST)
                         }
                     }
+                    else -> {}
                 }
             }
         }

@@ -9,10 +9,14 @@ class GetLocalStreamsUseCase(
     private val streamsRepository: StreamsRepository
 ) : FlowWithParamUseCase<GetLocalStreamsParams, List<Stream>>() {
     override fun performAction(param: GetLocalStreamsParams): Flow<List<Stream>> {
+        if (param.needCopy) {
+            return streamsRepository.listLocalCopyAsFlow(param)
+        }
         return streamsRepository.listLocalAsFlow(param)
     }
 }
 
 data class GetLocalStreamsParams(
-    val projectId: String
+    val projectId: String,
+    val needCopy: Boolean = false
 )

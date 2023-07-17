@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -33,14 +32,14 @@ class GuardianDeploymentViewModel(
     private val closeSocketUseCase: CloseSocketUseCase
 ) : ViewModel() {
 
-    private val _connectionState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val connectionState = _connectionState.asSharedFlow()
+    private val _connectionState: MutableStateFlow<Result<Boolean>?> = MutableStateFlow(null)
+    val connectionState = _connectionState.asStateFlow()
 
-    private val _socketMessageState: MutableSharedFlow<Result<List<String>>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val socketMessageState = _socketMessageState.asSharedFlow()
+    private val _socketMessageState: MutableStateFlow<Result<List<String>>?> = MutableStateFlow(null)
+    val socketMessageState = _socketMessageState.asStateFlow()
 
-    private val _initSocketState: MutableSharedFlow<Result<Boolean>> = MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val initSocketState = _initSocketState.asSharedFlow()
+    private val _initSocketState: MutableStateFlow<Result<Boolean>?> = MutableStateFlow(null)
+    val initSocketState = _initSocketState.asStateFlow()
 
     // These coroutines are running definitely so better keep them in job for cancellation
     private var connectJob: Job? = null
@@ -48,13 +47,18 @@ class GuardianDeploymentViewModel(
     private var heartBeatJob: Job? = null
 
     suspend fun connectWifi(selectedHotspot: ScanResult?) {
+        _connectionState.tryEmit(null)
+        _socketMessageState.tryEmit(null)
+        _initSocketState.tryEmit(null)
         connectJob?.cancel()
         connectJob = viewModelScope.launch(Dispatchers.IO) {
             connectHotspotUseCase.launch(ConnectHotspotParams(selectedHotspot)).collectLatest { result ->
                 when (result) {
                     is Result.Error -> _connectionState.tryEmit(Result.Error(result.throwable))
                     Result.Loading -> _connectionState.tryEmit(Result.Loading)
-                    is Result.Success -> _connectionState.tryEmit(Result.Success(result.data))
+                    is Result.Success -> {
+                        _connectionState.tryEmit(Result.Success(result.data))
+                    }
                 }
             }
         }
@@ -62,7 +66,10 @@ class GuardianDeploymentViewModel(
 
     fun disconnectWifi() {
         viewModelScope.launch {
-            disconnectHotspotUseCase.launch()
+            // disconnectHotspotUseCase.launch()
+            heartBeatJob?.cancel()
+            readChannelJob?.cancel()
+            connectJob?.cancel()
         }
     }
 
@@ -70,9 +77,15 @@ class GuardianDeploymentViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             initSocketUseCase.launch().collectLatest { result ->
                 when (result) {
-                    is Result.Error -> _initSocketState.tryEmit(result)
-                    Result.Loading -> _initSocketState.tryEmit(Result.Loading)
-                    is Result.Success -> _initSocketState.tryEmit(result)
+                    is Result.Error -> {
+                        _initSocketState.tryEmit(result)
+                    }
+                    Result.Loading -> {
+                        _initSocketState.tryEmit(Result.Loading)
+                    }
+                    is Result.Success -> {
+                        _initSocketState.tryEmit(result)
+                    }
                 }
             }
         }
@@ -80,6 +93,7 @@ class GuardianDeploymentViewModel(
 
     fun sendHeartbeatSignalPeriodic() {
         heartBeatJob?.cancel()
+        heartBeatJob = null
         heartBeatJob = viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 sendSocketMessageUseCase.launch(SendMessageParams(BaseSocketManager.Type.ALL, "{command:\"connection\"}"))

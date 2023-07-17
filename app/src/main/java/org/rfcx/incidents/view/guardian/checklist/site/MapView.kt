@@ -414,7 +414,7 @@ class MapView @JvmOverloads constructor(
     }
 
     private fun refreshSource() {
-        mapSource!!.setGeoJson(mapFeatures)
+        mapSource?.setGeoJson(mapFeatures)
     }
 
     private fun handleClickSeeDetail(feature: Feature): Boolean {

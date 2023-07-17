@@ -18,6 +18,7 @@ import org.rfcx.incidents.domain.guardian.deploy.GetStreamWithDeploymentAndIncid
 import org.rfcx.incidents.entity.guardian.deployment.Deployment
 import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.ConnectivityUtils
 
 class DeploymentAndIncidentRepositoryImpl(
     private val deploymentLocal: DeploymentDb,
@@ -26,13 +27,14 @@ class DeploymentAndIncidentRepositoryImpl(
     private val eventLocal: EventDb,
     private val cachedEndpointDb: CachedEndpointDb,
     private val deploymentEndpoint: DeploymentEndpoint,
-    private val incidentEndpoint: IncidentEndpoint
+    private val incidentEndpoint: IncidentEndpoint,
+    private val connectivityUtils: ConnectivityUtils
 ) : DeploymentAndIncidentRepository {
 
     private var currentRunning = ""
 
     private fun getLocal(projectId: String): List<Stream> {
-        return streamLocal.getByProject(projectId)
+        return streamLocal.getByProject(projectId, false)
     }
 
     private fun getRemote(projectId: String, offset: Int): Flow<Result<List<Stream>>> {
@@ -80,8 +82,14 @@ class DeploymentAndIncidentRepositoryImpl(
     }
 
     override fun get(params: GetStreamWithDeploymentAndIncidentParams): Flow<Result<List<Stream>>> {
-        if (params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) && currentRunning.isEmpty()) {
-            if (getUnsyncedWorks() && !params.fromAlertUnsynced) {
+        if (
+            connectivityUtils.isAvailable() &&
+            (
+                params.forceRefresh || !cachedEndpointDb.hasCachedEndpoint(cacheKey(params.projectId)) &&
+                    currentRunning.isEmpty()
+                )
+        ) {
+            if (getUnsyncedWorks(params.projectId) && !params.fromAlertUnsynced) {
                 return flow {
                     emit(Result.Error(UnSyncedExistException()))
                     emit(Result.Success(getLocal(params.projectId)))
@@ -92,9 +100,9 @@ class DeploymentAndIncidentRepositoryImpl(
         return flow { emit(Result.Success(getLocal(params.projectId))) }
     }
 
-    private fun getUnsyncedWorks(): Boolean {
+    private fun getUnsyncedWorks(projectId: String): Boolean {
         var hasUnsynced = false
-        val deployments = deploymentLocal.list()
+        val deployments = streamLocal.getByProject(projectId, true).mapNotNull { it.deployment }
         deployments.forEach { dp ->
             if (dp.syncState != SyncState.SENT.value) {
                 hasUnsynced = true

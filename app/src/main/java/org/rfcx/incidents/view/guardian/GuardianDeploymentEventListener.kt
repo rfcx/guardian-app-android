@@ -3,7 +3,7 @@ package org.rfcx.incidents.view.guardian
 import android.content.SharedPreferences
 import android.net.wifi.ScanResult
 import androidx.preference.Preference
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.view.guardian.checklist.photos.Image
@@ -28,11 +28,11 @@ interface GuardianDeploymentEventListener {
     fun nextWithStream(stream: Stream)
 
     fun connectHotspot(hotspot: ScanResult?)
-    fun getHotspotConnectionState(): SharedFlow<Result<Boolean>>
+    fun getHotspotConnectionState(): StateFlow<Result<Boolean>?>
     fun initSocket()
     fun sendHeartBeatSocket()
-    fun getInitSocketState(): SharedFlow<Result<Boolean>>
-    fun getSocketMessageState(): SharedFlow<Result<List<String>>>
+    fun getInitSocketState(): StateFlow<Result<Boolean>?>
+    fun getSocketMessageState(): StateFlow<Result<List<String>>?>
     fun closeSocket()
 
     fun getSavedStream(): Stream

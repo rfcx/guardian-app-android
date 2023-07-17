@@ -71,7 +71,14 @@ class ClassifierUploadFragment : Fragment(), ChildrenClickedListener {
         viewModel.getGuardianClassifier()
         lifecycleScope.launch {
             viewModel.guardianClassifierState.collectLatest {
-                classifierUploadAdapter.files = it
+                if (it.isEmpty()) {
+                    binding.noClassifierText.visibility = View.VISIBLE
+                    binding.classifierRecyclerView.visibility = View.GONE
+                } else {
+                    binding.noClassifierText.visibility = View.GONE
+                    binding.classifierRecyclerView.visibility = View.VISIBLE
+                    classifierUploadAdapter.files = it
+                }
             }
         }
 

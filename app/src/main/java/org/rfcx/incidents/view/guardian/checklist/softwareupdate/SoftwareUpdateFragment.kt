@@ -63,7 +63,14 @@ class SoftwareUpdateFragment : Fragment(), ChildrenClickedListener {
         viewModel.getGuardianSoftware()
         lifecycleScope.launch {
             viewModel.guardianSoftwareState.collectLatest {
-                softwareUpdateAdapter.files = it
+                if (it.isEmpty()) {
+                    binding.noSoftwareText.visibility = View.VISIBLE
+                    binding.apkRecyclerView.visibility = View.GONE
+                } else {
+                    binding.noSoftwareText.visibility = View.GONE
+                    binding.apkRecyclerView.visibility = View.VISIBLE
+                    softwareUpdateAdapter.files = it
+                }
             }
         }
     }

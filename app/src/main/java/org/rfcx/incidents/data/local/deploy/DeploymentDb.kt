@@ -17,17 +17,22 @@ class DeploymentDb(private val realm: Realm) {
                     // create new if there is none
                     val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                     deployment.id = id
-                    it.insert(deployment)
+                    it.insertOrUpdate(deployment)
                 } else {
-                    externalDeployment.images = deployment.images
-                    externalDeployment.deployedAt = deployment.deployedAt
-                    externalDeployment.deviceParameters = deployment.deviceParameters
-                    it.insertOrUpdate(externalDeployment)
+                    // Only update deployment that not need for syncing
+                    if (externalDeployment.syncState == SyncState.SENT.value) {
+                        externalDeployment.images = deployment.images
+                        externalDeployment.deployedAt = deployment.deployedAt
+                        externalDeployment.deviceParameters = deployment.deviceParameters
+                        externalDeployment.syncState = deployment.syncState
+                        externalDeployment.externalId = deployment.externalId
+                        it.insertOrUpdate(externalDeployment)
+                    }
                 }
             } else if (deployment.id == 0) {
                 val id = (realm.where(Deployment::class.java).max(Deployment.FIELD_ID)?.toInt() ?: 0) + 1
                 deployment.id = id
-                it.insert(deployment)
+                it.insertOrUpdate(deployment)
             } else {
                 val existingDeployment = realm.where(Deployment::class.java)
                     .equalTo(Deployment.FIELD_ID, deployment.id)
@@ -114,7 +119,9 @@ class DeploymentDb(private val realm: Realm) {
                 it.where(Deployment::class.java).equalTo(Deployment.FIELD_ID, id)
                     .findFirst()
             if (deployment != null) {
-                deployment.externalId = serverId
+                if (serverId != null) {
+                    deployment.externalId = serverId
+                }
                 deployment.syncState = syncState
                 it.insertOrUpdate(deployment)
             }

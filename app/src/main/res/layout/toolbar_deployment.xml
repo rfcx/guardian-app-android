@@ -15,6 +15,7 @@
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/projectLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -22,9 +23,9 @@
                 android:id="@+id/projectTitleLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/margin_padding_normal"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/projectTitleTextView"
@@ -48,43 +49,42 @@
                     android:tint="@color/text_secondary" />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/changePageImageLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/margin_padding_normal"
+            <LinearLayout
+                android:id="@+id/changePageButton"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="@drawable/bg_color_primary_button"
+                android:layout_marginEnd="@dimen/margin_padding_small"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/unsyncedAlertText"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/unsyncedCountText"
+                    style="@style/RangerText.Subhead.Small"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_xxsmall"
+                    android:layout_weight="0"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_color_white_button"
+                    android:layout_marginStart="@dimen/margin_padding_xsmall"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/screenName"
+                    style="@style/RangerText.Subhead.Small"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="!"
-                    android:visibility="gone"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginTop="5dp"
-                    android:translationZ="1dp"
-                    android:textColor="@color/red"
-                    app:layout_constraintTop_toTopOf="@id/changePageImageView"
-                    app:layout_constraintBottom_toBottomOf="@id/changePageImageView"
-                    app:layout_constraintEnd_toEndOf="@id/changePageImageView" />
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_xsmall"
+                    android:layout_gravity="center"
+                    android:text="@string/map" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/changePageImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_map"
-                    android:tint="@color/text_secondary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.MaterialToolbar>

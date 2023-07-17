@@ -101,7 +101,7 @@ class DeploymentRepositoryImpl(
 
     override fun upload(streamId: Int): Flow<Result<String>> {
         return flow {
-            val stream = streamLocal.get(streamId)
+            val stream = streamLocal.get(streamId, false)
             stream?.deployment?.let { dp ->
                 // try upload deployment
                 emit(Result.Loading)
@@ -135,7 +135,6 @@ class DeploymentRepositoryImpl(
 
                             val updatedDp = deploymentEndpoint.getDeploymentBySuspend(dp.deploymentKey)
                             streamLocal.updateSiteServerId(stream, updatedDp.stream!!.id)
-
                             emit(Result.Success(dp.deploymentKey))
                         }
                         else -> {
@@ -164,9 +163,7 @@ class DeploymentRepositoryImpl(
             return flow {
                 emit(Result.Loading)
                 var someFailed = false
-                if (deployment == null) {
-                    emit(Result.Error(Throwable("deployment not found")))
-                } else {
+                if (deployment != null) {
                     val images = deployment.images?.filter { it.remotePath == null }
                     images?.forEach { image ->
                         imageLocal.lockUnsent(image.id)

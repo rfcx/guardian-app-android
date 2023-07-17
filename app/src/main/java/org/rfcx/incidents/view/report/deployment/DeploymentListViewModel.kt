@@ -91,12 +91,16 @@ class DeploymentListViewModel(
     private val _noDeploymentTextContent: MutableStateFlow<String> = MutableStateFlow("")
     val noDeploymentTextContent = _noDeploymentTextContent.asStateFlow()
 
+    private val _unsyncedAlertState: MutableStateFlow<Int> = MutableStateFlow(0)
+    val unsyncedAlertState = _unsyncedAlertState.asStateFlow()
+
     private var currentFilter = FilterDeployment.ALL
     private var currentAllStreams = listOf<Stream>()
     private var currentAllRegistration = listOf<GuardianRegistration>()
     private var selectedProjectId = ""
 
     var isLoadingMore = false
+    private var isMapScreen = true
 
     init {
         getLocationChanged()
@@ -118,6 +122,7 @@ class DeploymentListViewModel(
                 currentAllStreams = site
                 currentAllRegistration = reg
                 filterWithDeployment(site, reg, currentFilter)
+                checkForUnSyncedWorks(site, reg)
             }.collect()
         }
     }
@@ -127,7 +132,11 @@ class DeploymentListViewModel(
             FilterDeployment.ALL -> {
                 _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
                 val tempDeployments = streams.filter { it.deployment != null }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore && !isMapScreen) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + registration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
@@ -142,7 +151,11 @@ class DeploymentListViewModel(
                             SyncState.SENT.value && it.deployment!!.images?.all { im -> im.syncState == SyncState.SENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.SENT.value }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore && !isMapScreen) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
@@ -157,7 +170,11 @@ class DeploymentListViewModel(
                             SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
                     }
                 val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
-                _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
+                if (!isLoadingMore && !isMapScreen) {
+                    _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && tempRegistration.isEmpty())
+                } else {
+                    _noDeploymentVisibilityState.tryEmit(false)
+                }
                 val tempListItem =
                     (tempDeployments.map { it.toDeploymentListItem() } + tempRegistration.map { it.toRegistrationListItem() }).sortedByDescending { it.date }
                 _deployments.tryEmit(tempListItem)
@@ -165,6 +182,16 @@ class DeploymentListViewModel(
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
         }
+    }
+
+    private fun checkForUnSyncedWorks(streams: List<Stream>, registration: List<GuardianRegistration>) {
+        val tempDeployments = streams.filter { it.deployment != null }
+            .filter {
+                it.deployment!!.syncState ==
+                    SyncState.UNSENT.value || it.deployment!!.images?.any { im -> im.syncState == SyncState.UNSENT.value } ?: false
+            }
+        val tempRegistration = registration.filter { it.syncState == SyncState.UNSENT.value }
+        _unsyncedAlertState.tryEmit(tempDeployments.size + tempRegistration.size)
     }
 
     fun fetchProject(force: Boolean = false) {
@@ -260,6 +287,10 @@ class DeploymentListViewModel(
     fun addFilter(filter: FilterDeployment) {
         currentFilter = filter
         filterWithDeployment(currentAllStreams, currentAllRegistration, filter)
+    }
+
+    fun setScreen(isMapScreen: Boolean) {
+        this.isMapScreen = isMapScreen
     }
 
     fun syncDeployment(id: Int) {
