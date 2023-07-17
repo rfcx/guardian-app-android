@@ -19,7 +19,6 @@ data class CreateResponseRequest(
     val submittedAt: String,
     val answers: List<Int>,
     val note: String?,
-    val isUnexpected: Boolean,
     val streamId: String
 )
 

@@ -139,20 +139,16 @@ private class Migrations : RealmMigration {
     }
 
     private fun migrateToV22(realm: DynamicRealm) {
-        val response = realm.schema.get(Response.TABLE_NAME)
-        response?.apply {
-            addField(Response.RESPONSE_IS_UNEXPECTED, Boolean::class.java)
-            val guardianFile = realm.schema.create(GuardianFile.TABLE)
-            guardianFile?.apply {
-                addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(
-                    GuardianFile.FIELD_ID, true
-                )
-                addField(GuardianFile.FIELD_NAME, String::class.java).setRequired(GuardianFile.FIELD_NAME, true)
-                addField(GuardianFile.FIELD_VERSION, String::class.java).setRequired(GuardianFile.FIELD_VERSION, true)
-                addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
-                addField(GuardianFile.FIELD_TYPE, String::class.java).setRequired(GuardianFile.FIELD_TYPE, true)
-                addField(GuardianFile.FIELD_META, String::class.java).setRequired(GuardianFile.FIELD_META, true)
-            }
+        val guardianFile = realm.schema.create(GuardianFile.TABLE)
+        guardianFile?.apply {
+            addField(GuardianFile.FIELD_ID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(
+                GuardianFile.FIELD_ID, true
+            )
+            addField(GuardianFile.FIELD_NAME, String::class.java).setRequired(GuardianFile.FIELD_NAME, true)
+            addField(GuardianFile.FIELD_VERSION, String::class.java).setRequired(GuardianFile.FIELD_VERSION, true)
+            addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
+            addField(GuardianFile.FIELD_TYPE, String::class.java).setRequired(GuardianFile.FIELD_TYPE, true)
+            addField(GuardianFile.FIELD_META, String::class.java).setRequired(GuardianFile.FIELD_META, true)
         }
     }
 

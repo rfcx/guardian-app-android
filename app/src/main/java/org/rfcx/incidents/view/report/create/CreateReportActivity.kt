@@ -291,9 +291,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
     override fun onSaveDraftButtonClick() {
         val response = _response ?: Response()
-        if (!response.isUnexpected && isUnexpected == true) {
-            response.isUnexpected = true
-        }
         viewModel.saveResponseInLocalDb(response, _images)
 
         val intent = Intent()
@@ -307,9 +304,6 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         val response = _response ?: Response()
         response.submittedAt = Date()
         response.answers = response.saveToAnswers()
-        if (!response.isUnexpected && isUnexpected == true) {
-            response.isUnexpected = true
-        }
         // Check if permissions are enabled
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
             locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
