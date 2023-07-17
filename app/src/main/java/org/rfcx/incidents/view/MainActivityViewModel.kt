@@ -14,6 +14,7 @@ import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
 import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -66,6 +67,9 @@ class MainActivityViewModel(
     private val _streams = MutableLiveData<List<Stream>?>()
     val streams = _streams
 
+    private val _responses: MutableStateFlow<List<Response>> = MutableStateFlow(emptyList())
+    val responses = _responses.asStateFlow()
+
     private val auth0 by lazy {
         val auth0 = Auth0(context.getString(R.string.auth0_client_id), context.getString(R.string.auth0_domain))
         // auth0.isLoggingEnabled = true
@@ -79,6 +83,7 @@ class MainActivityViewModel(
 
     init {
         getLocationChanged()
+        getResponsesFlow()
     }
 
     private fun getLocationChanged() {
@@ -91,6 +96,14 @@ class MainActivityViewModel(
 
     fun getResponses(): LiveData<List<Response>> {
         return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
+    }
+
+    fun getResponsesFlow() {
+        viewModelScope.launch(Dispatchers.Main) {
+            responseDb.getAllResultAsFlow().collectLatest {
+                _responses.tryEmit(it)
+            }
+        }
     }
 
     fun getProjectsFromLocal(): List<Project> = projectDb.getProjects()

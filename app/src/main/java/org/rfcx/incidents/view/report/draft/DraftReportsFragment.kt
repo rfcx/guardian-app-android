@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -159,12 +161,14 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     }
 
     private fun setObserve() {
-        viewModel.getResponses().observe(viewLifecycleOwner) { responses ->
-            streams = viewModel.getStreamIdsInProjectId()
-            val items = responses.sortedByDescending { r -> r.startedAt }.filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
-            binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-            reportsAdapter.items =
-                items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+        lifecycleScope.launchWhenStarted {
+            viewModel.responses.collectLatest { responses ->
+                streams = viewModel.getStreamIdsInProjectId()
+                val items = responses.sortedByDescending { r -> r.startedAt }.filter { r -> r.submittedAt == null && streams.contains(r.streamId) }
+                binding.notHaveDraftReportsGroupView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+                reportsAdapter.items =
+                    items.map { Pair(it, viewModel.getStream(it.streamId)?.timezone) }
+            }
         }
     }
 

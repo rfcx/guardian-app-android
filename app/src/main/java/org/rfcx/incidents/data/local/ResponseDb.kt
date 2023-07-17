@@ -2,6 +2,8 @@ package org.rfcx.incidents.data.local
 
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.kotlin.toFlow
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.response.SyncState
 
@@ -81,6 +83,10 @@ class ResponseDb(val realm: Realm) {
 
     fun getAllResultsAsync(): RealmResults<Response> {
         return realm.where(Response::class.java).findAllAsync()
+    }
+
+    fun getAllResultAsFlow(): Flow<List<Response>> {
+        return realm.where(Response::class.java).findAllAsync().toFlow()
     }
 
     fun getResponses(): List<Response> = realm.where(Response::class.java).findAll() ?: arrayListOf()
