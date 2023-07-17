@@ -34,19 +34,17 @@ import kotlin.math.roundToInt
 class SpectrogramView : View {
 
     companion object {
-        private val colorRainbow =
-            intArrayOf(
-                -0x1, -0xff01, -0x10000, -0x100, -0xff0100, -0xff0001, -0xffff01, -0x1000000
-            )
-        private val colorFire =
-            intArrayOf(-0x1, -0x100, -0x10000, -0x1000000)
-        private val colorIce =
-            intArrayOf(-0x1, -0xff0001, -0xffff01, -0x1000000)
+        private val colorRainbow = intArrayOf(
+            -0x1, -0xff01, -0x10000, -0x100, -0xff0100, -0xff0001, -0xffff01, -0x1000000
+        )
+        private val colorFire = intArrayOf(-0x1, -0x100, -0x10000, -0x1000000)
+        private val colorIce = intArrayOf(-0x1, -0xff0001, -0xffff01, -0x1000000)
         private val colorGrey = intArrayOf(-0x1, -0x1000000)
 
         private const val RAINBOW = "Rainbow"
         private const val LINEAR = "Linear"
     }
+
     // Attributes
     private var activity: Activity
     private val paint = Paint()
@@ -66,8 +64,7 @@ class SpectrogramView : View {
     }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(
-        context,
-        attrs
+        context, attrs
     ) {
         activity = context as Activity
     }
@@ -119,25 +116,17 @@ class SpectrogramView : View {
         // Update buffer bitmap
         paint.color = Color.BLACK
         this.canvas!!.drawLine(
-            pos % rWidth.toFloat(),
-            0f,
-            pos % rWidth.toFloat(),
-            _height.toFloat(),
-            paint
+            pos % rWidth.toFloat(), 0f, pos % rWidth.toFloat(), _height.toFloat(), paint
         )
         for (i in 0 until _height) {
             var j = getValueFromRelativePosition(
-                (_height - i).toFloat() / _height,
-                1f,
-                samplingRate.toFloat() / 2,
-                logFrequency
+                (_height - i).toFloat() / _height, 1f, samplingRate.toFloat() / 2, logFrequency
             )
             j /= samplingRate.toFloat() / 2
             if (_magnitudes != null && _magnitudes!!.isNotEmpty()) {
                 val mag = _magnitudes!!.getOrNull((j * _magnitudes!!.size / 2).toInt())
                 mag?.let {
-                    val db =
-                        max(0.0, -20 * log10(it.toDouble())).toFloat()
+                    val db = max(0.0, -20 * log10(it.toDouble())).toFloat()
                     val c = getInterpolatedColor(colors, db * 0.009f)
                     paint.color = c
                     val x = pos % rWidth
@@ -175,10 +164,7 @@ class SpectrogramView : View {
         if (logFrequency) {
             for (i in 1..4) {
                 val y: Float = getRelativePosition(
-                    Math.pow(10.0, i.toDouble()).toFloat(),
-                    1f,
-                    samplingRate.toFloat(),
-                    logFrequency
+                    Math.pow(10.0, i.toDouble()).toFloat(), 1f, samplingRate.toFloat(), logFrequency
                 )
                 canvas.drawText("1e$i", rWidth + wColor.toFloat(), (1f - y) * height, paint)
             }
@@ -186,10 +172,7 @@ class SpectrogramView : View {
             var i = 0
             while (i < (samplingRate - 500)) {
                 canvas.drawText(
-                    " " + i / 1000,
-                    rWidth + wColor.toFloat(),
-                    height * (1f - i.toFloat() / (samplingRate)),
-                    paint
+                    " " + i / 1000, rWidth + wColor.toFloat(), height * (1f - i.toFloat() / (samplingRate)), paint
                 )
                 i += 1000
             }
@@ -222,7 +205,11 @@ class SpectrogramView : View {
         maxValue: Float,
         log: Boolean
     ): Float {
-        return if (log) (10.0.pow(position * log10(1 + maxValue - minValue.toDouble())) + minValue - 1).toFloat() else minValue + position * (maxValue - minValue)
+        return if (log) {
+            (10.0.pow(position * log10(1 + maxValue - minValue.toDouble())) + minValue - 1).toFloat()
+        } else {
+            minValue + position * (maxValue - minValue)
+        }
     }
 
     /**
