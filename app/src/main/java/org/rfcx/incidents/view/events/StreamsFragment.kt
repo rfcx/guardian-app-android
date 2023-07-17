@@ -86,7 +86,7 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
-        (Stream) -> Unit {
+    (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
