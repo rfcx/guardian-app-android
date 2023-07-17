@@ -24,7 +24,7 @@ import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.domain.GetProjectsParams
 import org.rfcx.incidents.domain.GetProjectsUseCase
 import org.rfcx.incidents.domain.GetStreamsParams
-import org.rfcx.incidents.domain.GetStreamsUseCase
+import org.rfcx.incidents.domain.GetStreamsWithIncidentUseCase
 import org.rfcx.incidents.entity.common.Err
 import org.rfcx.incidents.entity.common.Ok
 import org.rfcx.incidents.entity.location.Coordinate
@@ -44,7 +44,8 @@ class MainActivityViewModel(
     private val streamDb: StreamDb,
     private val trackingDb: TrackingDb,
     private val getProjectsUseCase: GetProjectsUseCase,
-    private val getStreamsUseCase: GetStreamsUseCase
+    private val getStreamsWithIncidentUseCase: GetStreamsWithIncidentUseCase,
+    credentialKeeper: CredentialKeeper
 ) : ViewModel() {
 
     private val _projects = MutableLiveData<Result<List<Project>>>()
@@ -72,7 +73,9 @@ class MainActivityViewModel(
 
     fun getResponsesFromLocal(): List<Response> = responseDb.getResponses()
 
-    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+    fun getStream(id: Int): Stream? = streamDb.get(id, false)
+
+    fun getStream(id: String): Stream? = streamDb.get(id, false)
 
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
@@ -97,7 +100,7 @@ class MainActivityViewModel(
     }
 
     fun refreshStreams(projectId: String, callback: (List<Stream>?) -> Unit) {
-        getStreamsUseCase.execute(
+        getStreamsWithIncidentUseCase.execute(
             object : DisposableSingleObserver<List<Stream>>() {
                 override fun onSuccess(t: List<Stream>) {
                     callback.invoke(t)
@@ -105,21 +108,6 @@ class MainActivityViewModel(
 
                 override fun onError(e: Throwable) {
                     callback.invoke(null)
-                }
-            },
-            GetStreamsParams(projectId, true, 0)
-        )
-    }
-
-    fun refreshStreams(projectId: String) {
-        getStreamsUseCase.execute(
-            object : DisposableSingleObserver<List<Stream>>() {
-                override fun onSuccess(t: List<Stream>) {
-                    streams.postValue(t)
-                }
-
-                override fun onError(e: Throwable) {
-                    streams.postValue(null)
                 }
             },
             GetStreamsParams(projectId, true, 0)
@@ -134,7 +122,7 @@ class MainActivityViewModel(
     fun getStreamIdsInProjectId(): List<String> {
         val preferences = Preferences.getInstance(context)
         val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
-        return streamDb.getByProject(projectId).map { s -> s.id }
+        return streamDb.getByProject(projectId, false).mapNotNull { s -> s.externalId }
     }
 
     suspend fun shouldBackToLogin(): Boolean {

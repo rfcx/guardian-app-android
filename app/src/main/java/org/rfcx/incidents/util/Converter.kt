@@ -17,7 +17,11 @@ fun Date.isToday(): Boolean {
 fun Map<String, String>.toJsonObject(): JsonObject {
     val jsonObject = JsonObject()
     this.forEach {
-        jsonObject.addProperty(it.key, it.value)
+        if (it.value == "true" || it.value == "false") {
+            jsonObject.addProperty(it.key, it.value.toBoolean())
+        } else {
+            jsonObject.addProperty(it.key, it.value)
+        }
     }
     return jsonObject
 }

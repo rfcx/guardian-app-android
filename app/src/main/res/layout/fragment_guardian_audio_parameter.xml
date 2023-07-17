@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundColor">
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.guardian.checklist.audio.GuardianAudioParameterViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.deployment.guardian.configure.GuardianConfigureFragment">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/nextButton"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/configureLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/fileFormatTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/file_format" />
+
+                    <TextView
+                        android:id="@+id/fileFormatValueTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        android:text="@{viewModel.fileFormatTextState}"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+
+                    <TextView
+                        android:id="@+id/sampleRateTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/sample_rate" />
+
+                    <TextView
+                        android:id="@+id/sampleRateValueTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        android:text="@{viewModel.sampleRateTextState}"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+
+                    <TextView
+                        android:id="@+id/bitrateTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/bitrate" />
+
+                    <TextView
+                        android:id="@+id/bitrateValueTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        android:text="@{viewModel.bitrateTextState}"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+
+                    <TextView
+                        android:id="@+id/durationTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/duration" />
+
+                    <TextView
+                        android:id="@+id/durationValueTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        android:text="@{viewModel.durationTextState}"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+
+                    <TextView
+                        android:id="@+id/samplingTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/sample_ratio" />
+
+                    <TextView
+                        android:id="@+id/samplingValueTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        android:text="@{viewModel.samplingTextState}" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+
+                    <TextView
+                        android:id="@+id/scheduleTextView"
+                        style="@style/RangerText.Subhead.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_large"
+                        android:layout_marginEnd="@dimen/margin_padding_large"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/recording_schedule" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <org.rfcx.incidents.widget.StartStopTimePicker
+                            android:id="@+id/scheduleChipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/margin_padding_normal"
+                            android:paddingEnd="@dimen/margin_padding_large"
+                            android:paddingBottom="@dimen/margin_padding_small"
+                            app:startTitle="@string/schedule_start_time"
+                            app:stopTitle="@string/schedule_stop_time"
+                            app:allowAdd="true" />
+                    </HorizontalScrollView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separateLine" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/nextButton"
+            style="@style/RangerButton.GreenButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:text="@string/next"
+            android:visibility="@{viewModel.loadingState ? view.GONE : view.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/configProgressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scrollView" />
+
+        <ProgressBar
+            android:id="@+id/configProgressBar"
+            android:layout_width="@dimen/progress_bar"
+            android:layout_height="@dimen/progress_bar"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:visibility="@{viewModel.loadingState ? view.VISIBLE : view.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nextButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

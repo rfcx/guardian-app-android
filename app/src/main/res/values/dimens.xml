@@ -3,6 +3,7 @@
 	<dimen name="margin_padding_xsmall">4dp</dimen>
 	<dimen name="margin_padding_small">8dp</dimen>
 	<dimen name="margin_padding_normal">16dp</dimen>
+    <dimen name="margin_padding_xnormal">12dp</dimen>
 	<dimen name="margin_padding_large">24dp</dimen>
 	<dimen name="margin_padding_xlarge">32dp</dimen>
 	
@@ -14,6 +15,7 @@
 	<dimen name="text_small">14sp</dimen>
 	<dimen name="text_xsmall">12sp</dimen>
 	<dimen name="text_xxsmall">10sp</dimen>
+    <dimen name="text_xxxsmall">8sp</dimen>
 	
 	<dimen name="profile_photo_size">60dp</dimen>
 	<dimen name="edit_profile_photo_size">150dp</dimen>
@@ -51,5 +53,7 @@
 
     <dimen name="image_width">120dp</dimen>
     <dimen name="ic_40_dp_size">40dp</dimen>
+
+    <dimen name="progress_bar">40dp</dimen>
 
 </resources>

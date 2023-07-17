@@ -47,6 +47,7 @@ import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOADING_ST
 import org.rfcx.incidents.view.profile.ProfileViewModel.Companion.DOWNLOAD_CANCEL_STATE
 import org.rfcx.incidents.view.report.create.CreateReportActivity
 import org.rfcx.incidents.view.report.create.CreateReportActivity.Companion.RESULT_CODE
+import org.rfcx.incidents.view.report.deployment.DeploymentListFragment
 import org.rfcx.incidents.view.report.detail.ResponseDetailActivity
 import org.rfcx.incidents.view.report.draft.DraftReportsFragment
 import org.rfcx.incidents.view.report.submitted.SubmittedReportsFragment
@@ -131,7 +132,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
-                    super.onBackPressed()
+                    showStatus()
                 }
                 showBottomAppBar()
             }
@@ -164,6 +165,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         locationPermissions.handleActivityResult(requestCode, resultCode)
@@ -203,6 +205,9 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.navMenu.menuDraftReports.setOnClickListener {
             onBottomMenuClick(it)
         }
+        binding.navMenu.menuDeployments.setOnClickListener {
+            onBottomMenuClick(it)
+        }
         binding.navMenu.menuProfile.setOnClickListener {
             onBottomMenuClick(it)
         }
@@ -216,6 +221,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showStatus()
             }
@@ -224,6 +230,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = true
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showSubmittedReports()
             }
@@ -232,6 +239,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = true
                 binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showDraftReports()
             }
@@ -241,8 +249,17 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
                 binding.navMenu.menuSubmittedReports.menuSelected = false
                 binding.navMenu.menuDraftReports.menuSelected = false
                 binding.navMenu.menuProfile.menuSelected = true
+                binding.navMenu.menuDeployments.menuSelected = false
 
                 showProfile()
+            }
+            binding.navMenu.menuDeployments.id -> {
+                binding.navMenu.menuNewEvents.menuSelected = false
+                binding.navMenu.menuSubmittedReports.menuSelected = false
+                binding.navMenu.menuDraftReports.menuSelected = false
+                binding.navMenu.menuProfile.menuSelected = false
+                binding.navMenu.menuDeployments.menuSelected = true
+                showDeployment()
             }
         }
     }
@@ -261,11 +278,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         binding.bottomBar.visibility = View.VISIBLE
     }
 
-    override fun openStreamDetail(streamId: String, distance: Double?) {
+    override fun openStreamDetail(id: String, distance: Double?) {
         hideBottomAppBar()
         startFragment(
-            StreamDetailFragment.newInstance(streamId, distance),
-            StreamDetailFragment.tag
+            StreamDetailFragment.newInstance(id, distance)
         )
     }
 
@@ -321,9 +337,6 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
 
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
-            .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
-            .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
-            .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
             .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
             .commit()
 
@@ -344,44 +357,88 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
     private fun getProfile(): ProfileFragment = supportFragmentManager.findFragmentByTag(ProfileFragment.tag)
         as ProfileFragment? ?: ProfileFragment.newInstance()
 
+    private fun getDeployments(): DeploymentListFragment = supportFragmentManager.findFragmentByTag(DeploymentListFragment.tag)
+        as DeploymentListFragment? ?: DeploymentListFragment.newInstance()
+
     private fun showStatus() {
         showAboveAppbar(true)
         this.currentFragment = getNewEvents()
+        if (supportFragmentManager.findFragmentByTag(StreamsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getNewEvents(), StreamsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getNewEvents())
             .hide(getSubmittedReports())
             .hide(getDraftReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
     private fun showDraftReports() {
         showAboveAppbar(true)
         this.currentFragment = getDraftReports()
+        if (supportFragmentManager.findFragmentByTag(DraftReportsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getDraftReports(), DraftReportsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getDraftReports())
             .hide(getNewEvents())
             .hide(getSubmittedReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
     private fun showSubmittedReports() {
         showAboveAppbar(true)
         this.currentFragment = getSubmittedReports()
+        if (supportFragmentManager.findFragmentByTag(SubmittedReportsFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getSubmittedReports(), SubmittedReportsFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getSubmittedReports())
             .hide(getNewEvents())
             .hide(getDraftReports())
             .hide(getProfile())
+            .hide(getDeployments())
             .commit()
     }
 
     private fun showProfile() {
         showAboveAppbar(true)
         this.currentFragment = getProfile()
+        if (supportFragmentManager.findFragmentByTag(ProfileFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getProfile(), ProfileFragment.tag)
+                .commit()
+        }
         supportFragmentManager.beginTransaction()
             .show(getProfile())
+            .hide(getNewEvents())
+            .hide(getDraftReports())
+            .hide(getSubmittedReports())
+            .hide(getDeployments())
+            .commit()
+    }
+
+    private fun showDeployment() {
+        showAboveAppbar(true)
+        this.currentFragment = getDeployments()
+        if (supportFragmentManager.findFragmentByTag(DeploymentListFragment.tag) == null) {
+            supportFragmentManager.beginTransaction()
+                .add(binding.contentContainer.id, getDeployments(), DeploymentListFragment.tag)
+                .commit()
+        }
+        supportFragmentManager.beginTransaction()
+            .show(getDeployments())
+            .hide(getProfile())
             .hide(getNewEvents())
             .hide(getDraftReports())
             .hide(getSubmittedReports())
@@ -410,13 +467,12 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
             if (mainViewModel.getStream(streamId) != null) {
                 openStreamDetail(streamId, null)
                 dialog.dismiss()
-            } else {
-                getSubscribedProject().forEach { id ->
-                    mainViewModel.refreshStreams(id)
-                }
-                mainViewModel.streams.observe(this) { streams ->
-                    if (streams.isNullOrEmpty()) return@observe
-                    if (streams.any { s -> s.id == streamId }) {
+            }
+
+            getSubscribedProject().forEach { id ->
+                mainViewModel.refreshStreams(id) { streams ->
+                    if (streams.isNullOrEmpty()) return@refreshStreams
+                    if (streams.any { s -> s.externalId == streamId }) {
                         openStreamDetail(streamId, null)
                         dialog.dismiss()
                     }
@@ -451,7 +507,7 @@ interface MainActivityEventListener {
     fun hideBottomAppBar()
     fun showBottomAppBar()
     fun onBackPressed()
-    fun openStreamDetail(name: String, distance: Double?)
+    fun openStreamDetail(id: String, distance: Double?)
     fun openCreateReportActivity(streamId: String)
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)

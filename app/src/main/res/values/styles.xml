@@ -63,6 +63,23 @@
 		<item name="android:textSize">@dimen/text_large</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
+
+    <style name="RangerText.Subhead.Bold" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RangerText.Subhead.Small" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="RangerText.Subhead.Secondary" parent="Base.TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="RangerText.Subhead.Secondary.xSmall" parent="RangerText.Subhead.Secondary">
+        <item name="android:textSize">10sp</item>
+    </style>
 	
 	<style name="RangerText.Tutorial" parent="RangerText">
 		<item name="android:textColor">@android:color/white</item>
@@ -75,6 +92,18 @@
 		<item name="android:textSize">@dimen/text_medium</item>
 		<item name="android:fontFamily">sans-serif</item>
 	</style>
+
+    <style name="RangerText.Body.Small" parent="RangerText.Body">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
+    <style name="RangerText.Body.Secondary" parent="RangerText.Body">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="RangerText.Body.Headline" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
 	
 	<style name="RangerText.Label" parent="TextAppearance.AppCompat.Body2">
 		<item name="android:textColor">@color/text_primary</item>
@@ -93,11 +122,42 @@
 		<item name="android:textSize">@dimen/text_small</item>
 		<item name="android:textAllCaps">true</item>
 	</style>
+
+    <style name="RangerText.Title.Bold" parent="Base.TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/margin_padding_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_padding_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_padding_large</item>
+    </style>
+
+    <style name="RangerText.Label.Bold" parent="RangerText.Title.Bold">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/margin_padding_normal</item>
+        <item name="android:layout_marginStart">@dimen/margin_padding_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_padding_normal</item>
+    </style>
+
+    <style name="RangerText.Label.Value" parent="RangerText.Label.Bold">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginTop">@dimen/margin_padding_xsmall</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_padding_small</item>
+    </style>
 	
 	<style name="RangerText.SubTitle" parent="Base.TextAppearance.AppCompat.Title">
 		<item name="android:textColor">@color/text_black</item>
 		<item name="android:textSize">@dimen/text_small</item>
 	</style>
+
+    <style name="RangerText.SubTitle.Bold" parent="RangerText.SubTitle">
+        <item name="android:textStyle">bold</item>
+    </style>
 	
 	<style name="RangerText.SubTitle.Secondary" parent="TextAppearance.AppCompat.Body1">
 		<item name="android:textColor">@color/text_secondary</item>
@@ -117,17 +177,79 @@
 		<item name="android:background">@drawable/bg_button_green_outline</item>
 		<item name="android:textColor">@color/color_button_outline_text</item>
 	</style>
+
+    <style name="RangerButton.GreenButton.Line.Small" parent="RangerButton.GreenButton.Line">
+        <item name="android:background">@drawable/bg_button_green_static_outline</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="textAllCaps">false</item>
+    </style>
 	
 	<style name="RangerButton.GreenButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_color_primary_button</item>
 		<item name="android:textColor">@color/color_button_text</item>
 	</style>
+
+    <style name="RangerButton.GreenButton.TextSmall" parent="RangerButton.GreenButton">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="RangerButton.RedButton" parent="RangerButton">
+        <item name="android:background">@drawable/bg_color_red_button</item>
+        <item name="android:textColor">@color/color_button_text</item>
+    </style>
+
+    <style name="RangerButton.RedButton.Line.Small" parent="RangerButton">
+        <item name="android:background">@drawable/bg_button_red_outline</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="textAllCaps">false</item>
+    </style>
 	
 	<style name="RangerButton.FacebookButton" parent="RangerButton">
 		<item name="android:background">@drawable/bg_facebook_login_button</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textColor">@android:color/white</item>
 	</style>
+
+    <style name="RangerButton.File.DeActive" parent="RangerButton">
+        <item name="android:background">@drawable/bg_color_deactive_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_deactive_text</item>
+        <item name="android:textSize">@dimen/text_xxsmall</item>
+    </style>
+
+    <style name="RangerButton.File.Active" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_color_active_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_activate_text</item>
+        <item name="android:textSize">@dimen/text_xxsmall</item>
+    </style>
+
+
+    <style name="GuardianButton.YellowButton.Line.Small" parent="RangerButton">
+        <item name="android:background">@drawable/bg_button_yellow_outline</item>
+        <item name="android:textColor">@color/yellow</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="GuardianButton.OrangeButton.Line.Small" parent="RangerButton">
+        <item name="android:background">@drawable/bg_button_orange_outline</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="GuardianButton.RedButton.Line.Small" parent="RangerButton">
+        <item name="android:background">@drawable/bg_button_red_outline</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <!-- RadioButton -->
+    <style name="RangerRadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
 	
 	<!-- Toolbar -->
 	<style name="AppTheme.Toolbar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
@@ -165,5 +287,54 @@
 		<item name="android:textColor">@color/colorPrimary</item>
 		<item name="lineSpacing">0.5dp</item>
 	</style>
+
+    <style name="BaseAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/BaseAlertTitle</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:background">@color/dialogColor</item>
+        <item name="buttonBarPositiveButtonStyle">@style/BaseAlertButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/BaseAlertButton</item>
+    </style>
+    <style name="BaseAlertTitle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textAppearance">@style/BaseAlertSub</item>
+    </style>
+    <style name="BaseAlertSub" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="BaseAlertButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BannerButton" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="lineSpacing">0.5dp</item>
+    </style>
+
+    <!-- Advise Photo -->
+    <style name="AdvisePhoto">
+        <item name="android:background">@drawable/bg_square_green</item>
+        <item name="android:textColor">@color/photo_advise_color</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Chip -->
+    <style name="FilterDeploymentChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_choice_color</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="RangerEditText.Background.White" parent="Widget.AppCompat.EditText">
+        <item name="android:backgroundTint">@color/backgroundColor</item>
+    </style>
 
 </resources>

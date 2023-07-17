@@ -36,6 +36,7 @@ private const val dateFormat = "d MMM yyyy, HH:mm"
 private const val dateFormatWithoutYear = "d MMM, HH:mm"
 private const val dateWithTimeZoneFormat = "d MMM yyyy, HH:mm (zzz)"
 private const val dateWithTimeZoneWithoutYear = "d MMM, HH:mm (zzz)"
+private const val iso8601Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
 private const val SECONDS_TEXT = "seconds"
 private const val MINUTES_TEXT = "minutes"
@@ -102,6 +103,23 @@ private val outputTimeZoneWithoutYearSdf by lazy {
     sdf
 }
 
+private val outputStandardDateSdfEng by lazy {
+    val sdf = SimpleDateFormat(standardDateFormat, Locale.ENGLISH)
+    sdf.timeZone = TimeZone.getDefault()
+    sdf
+}
+
+private val iso8601DateSdf by lazy {
+    val sdf = SimpleDateFormat(iso8601Format, Locale.getDefault())
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    sdf
+}
+
+fun timestampToDateString(timestamp: Long?): String {
+    if (timestamp == null) return "-"
+    return outputStandardDateSdfEng.format(Date(timestamp))
+}
+
 fun Date.toIsoFormatString(): String {
     return isoFormat.format(this) // pattern 20211128T153441279Z
 }
@@ -124,6 +142,13 @@ fun Date.toFullDateTimeString(): String {
 
 fun Date.toDateTimeString(): String {
     return outputDateSdf.format(this)
+}
+
+fun Date.toDateTimeString(timeZone: String? = null): String {
+    if (timeZone != null) {
+        outputStandardDateSdf.timeZone = TimeZone.getTimeZone(timeZone)
+    }
+    return outputStandardDateSdf.format(this)
 }
 
 fun Date.millisecondsSince(): Long {
@@ -306,4 +331,8 @@ fun String.monthTranslate(context: Context): String {
             this
         }
     }
+}
+
+fun Date.toISO8601Format(): String {
+    return iso8601DateSdf.format(this)
 }

@@ -1,6 +1,7 @@
 package org.rfcx.incidents.data
 
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.local.CachedEndpointDb
 import org.rfcx.incidents.data.local.ProjectDb
@@ -18,7 +19,7 @@ class ProjectsRepositoryImp(
 ) : ProjectsRepository {
 
     override fun getProjects(forceRefresh: Boolean): Single<List<Project>> {
-        if (forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects") && connectivityUtils.isNetworkAvailable()) {
+        if ((forceRefresh || !cachedEndpointDb.hasCachedEndpoint("GetProjects")) && connectivityUtils.isAvailable()) {
             return refreshFromAPI()
         }
         return getFromLocalDB()
@@ -28,10 +29,22 @@ class ProjectsRepositoryImp(
         return projectDb.getProject(id)
     }
 
+    override fun getProjectAsFlow(id: String): Flow<Project?> {
+        return projectDb.getProjectAsFlow(id)
+    }
+
     private fun refreshFromAPI(): Single<List<Project>> {
-        return endpoint.getProjects().observeOn(postExecutionThread.scheduler).flatMap { rawProjects ->
-            rawProjects.forEach {
-                projectDb.insertOrUpdate(it)
+        return endpoint.getProjects().map { rawProjects ->
+            rawProjects.forEach { projectRes ->
+                val offTimes = endpoint.getProjectOffTime(projectRes.id).blockingGet()
+                if (offTimes.offTimes != null) {
+                    projectRes.offTimes = offTimes.offTimes
+                }
+            }
+            rawProjects
+        }.observeOn(postExecutionThread.scheduler).flatMap { computedProjects ->
+            computedProjects.forEach { project ->
+                projectDb.insertOrUpdate(project)
             }
             cachedEndpointDb.updateCachedEndpoint("GetProjects")
             getFromLocalDB()
