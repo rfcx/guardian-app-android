@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/backgroundColor">
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbarLayout"
+            layout="@layout/toolbar_default" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_bottom">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.50" />
+
+                <TextView
+                    android:id="@+id/deploymentLocationTitle"
+                    style="@style/RangerText.Title.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location"
+                    android:textColor="@color/text_secondary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/latitudeLabel"
+                    style="@style/RangerText.Label.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/latitude"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/deploymentLocationTitle" />
+
+                <TextView
+                    android:id="@+id/latitudeValue"
+                    style="@style/RangerText.Label.Value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/latitudeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/latitudeLabel"
+                    tools:text="50.00" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_small"
+                    app:layout_constraintBottom_toBottomOf="@id/deploymentLocationTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/deploymentLocationTitle" />
+
+                <TextView
+                    android:id="@+id/longitudeLabel"
+                    style="@style/RangerText.Label.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/longitude"
+                    app:layout_constraintStart_toEndOf="@id/guidelineVertical"
+                    app:layout_constraintTop_toBottomOf="@id/deploymentLocationTitle" />
+
+                <TextView
+                    android:id="@+id/longitudeValue"
+                    style="@style/RangerText.Label.Value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/longitudeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/longitudeLabel"
+                    tools:text="50.00" />
+
+                <TextView
+                    android:id="@+id/altitudeLabel"
+                    style="@style/RangerText.Label.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/altitude"
+                    app:layout_constraintStart_toStartOf="@id/latitudeValue"
+                    app:layout_constraintTop_toBottomOf="@id/latitudeValue" />
+
+                <TextView
+                    android:id="@+id/altitudeValue"
+                    style="@style/RangerText.Label.Value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/altitudeLabel"
+                    app:layout_constraintTop_toBottomOf="@id/altitudeLabel"
+                    tools:text="50.00" />
+
+                <TextView
+                    android:id="@+id/deploymentIdLabel"
+                    style="@style/RangerText.Label.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:text="@string/deployment_key"
+                    app:layout_constraintStart_toStartOf="@id/altitudeValue"
+                    app:layout_constraintTop_toBottomOf="@id/altitudeValue" />
+
+                <LinearLayout
+                    android:id="@+id/deploymentIdLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_small"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="@id/deploymentIdLabel"
+                    app:layout_constraintTop_toBottomOf="@id/deploymentIdLabel">
+
+                    <TextView
+                        android:id="@+id/deploymentIdTextView"
+                        style="@style/RangerText.Body.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="ABCDEFGHIJKLM1234" />
+                </LinearLayout>
+
+                <org.rfcx.incidents.view.guardian.checklist.site.MapView
+                    android:id="@+id/mapBoxView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="@dimen/margin_padding_large"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:layout_marginEnd="@dimen/margin_padding_large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/deploymentIdLayout" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/pinDetailDeploymentImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pin_map"
+                    app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
+                    app:layout_constraintEnd_toEndOf="@id/mapBoxView"
+                    app:layout_constraintStart_toStartOf="@id/mapBoxView"
+                    app:layout_constraintTop_toTopOf="@id/mapBoxView" />
+
+                <TextView
+                    android:id="@+id/photoLabel"
+                    style="@style/RangerText.Title.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photos"
+                    android:textColor="@color/text_secondary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mapBoxView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/deploymentImageRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_large"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:layout_marginEnd="@dimen/margin_padding_large"
+                    android:clipToPadding="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/photoLabel"
+                    tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_image"
+                    tools:orientation="horizontal" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deleteButton"
+            style="@style/RangerButton.GreenButton.Line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_normal"
+            android:text="@string/delete" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

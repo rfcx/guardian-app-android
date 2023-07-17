@@ -2,7 +2,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/bottom_bar_height"
-	android:weightSum="4">
+	android:weightSum="5">
 	
 	<org.rfcx.incidents.widget.BottomNavigationMenuItem
 		android:id="@+id/menuNewEvents"
@@ -41,6 +41,18 @@
 		app:title="@string/menu_submitted_reports"
 		app:titleColor="@color/bottom_bar_icon_default_tint"
 		app:titleColorSelected="@color/color_bottom_icon_tint" />
+
+    <org.rfcx.incidents.widget.BottomNavigationMenuItem
+        android:id="@+id/menuDeployments"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?selectableItemBackgroundBorderless"
+        app:icon="@drawable/ic_clipboard_check_outline"
+        app:iconTintColor="@color/color_bottom_icon_tint"
+        app:title="Deployments"
+        app:titleColor="@color/bottom_bar_icon_default_tint"
+        app:titleColorSelected="@color/color_bottom_icon_tint" />
 	
 	<org.rfcx.incidents.widget.BottomNavigationMenuItem
 		android:id="@+id/menuProfile"

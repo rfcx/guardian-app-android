@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundColor">
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.guardian.checklist.microphone.GuardianMicrophoneViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/microphoneTitle"
+            style="@style/RangerText.Subhead.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:text="@string/microphone_test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <org.rfcx.incidents.widget.SpectrogramView
+            android:id="@+id/spectrogramView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_xlarge"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            app:layout_constraintTop_toBottomOf="@id/microphoneTitle" />
+
+        <LinearLayout
+            android:id="@+id/adjustSpecLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/spectrogramView">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/speedTextView"
+                    style="@style/RangerText.Body.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/speed" />
+
+                <TextView
+                    android:id="@+id/speedValueTextView"
+                    style="@style/RangerText.Body.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/margin_padding_small"
+                    tools:text="Fast" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/freqScaleTextView"
+                    style="@style/RangerText.Body.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frequency_scale" />
+
+                <TextView
+                    android:id="@+id/freqScaleValueTextView"
+                    style="@style/RangerText.Body.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/margin_padding_small"
+                    tools:text="Linear" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/colorSpecTextView"
+                    style="@style/RangerText.Body.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/color" />
+
+                <TextView
+                    android:id="@+id/colorSpecValueTextView"
+                    style="@style/RangerText.Body.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/margin_padding_small"
+                    tools:text="Rainbow" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/playbackTextView"
+                    style="@style/RangerText.Body.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/playback" />
+
+                <TextView
+                    android:id="@+id/playbackValueTextView"
+                    style="@style/RangerText.Body.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/margin_padding_small"
+                    tools:text="On" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/micMenuSeparator"
+            style="@style/RangerText.Body.Headline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_padding_large"
+            android:layout_marginEnd="@dimen/margin_padding_large"
+            android:layout_marginBottom="@dimen/margin_padding_small"
+            android:background="@color/gray_30"
+            app:layout_constraintTop_toBottomOf="@id/adjustSpecLayout" />
+
+        <TextView
+            android:id="@+id/micWarningText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:text="@string/mic_recorder_warn"
+            android:textAlignment="center"
+            android:textColor="@color/text_error"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@id/micMenuSeparator" />
+
+        <LinearLayout
+            android:id="@+id/audioButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/listenAudioButton"
+                style="@style/RangerButton.GreenButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_large"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                android:text="@string/begin_mic_test"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancelAudioButton"
+                style="@style/RangerButton.GreenButton.Line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_large"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                android:text="@string/halt_mic_test"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/listenAgainAudioButton"
+                style="@style/RangerButton.GreenButton.Line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_large"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                android:text="@string/restart_mic_test"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/finishButton"
+                style="@style/RangerButton.GreenButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_large"
+                android:layout_marginEnd="@dimen/margin_padding_large"
+                android:layout_marginBottom="@dimen/margin_padding_normal"
+                android:text="@string/next"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

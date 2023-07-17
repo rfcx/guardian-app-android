@@ -70,3 +70,10 @@ fun Context.startLocationChange() {
 fun setupDisplayTheme() {
     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 }
+
+fun Float.setFormatLabel(): String {
+    return if (this >= 1000) "${String.format("%.1f", this / 1000)}km" else "${String.format("%.0f", this)}m"
+}
+
+private val chars = ('A'..'Z') + ('0'..'9')
+fun randomDeploymentId(): String = List(16) { chars.random() }.joinToString("")

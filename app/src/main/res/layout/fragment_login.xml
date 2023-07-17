@@ -18,7 +18,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:visibility="visible"
-		app:constraint_referenced_ids="loginEmailEditText,loginPasswordEditText,signInButton,poweredByTextView,rfcxLogoImageView,forgotYourPasswordTextView" />
+		app:constraint_referenced_ids="loginEmailLayout,loginPasswordLayout,signInButton,poweredByTextView,rfcxLogoImageView,forgotYourPasswordTextView" />
 	
 	<androidx.appcompat.widget.AppCompatImageView
 		android:id="@+id/bellLogoImageView"
@@ -45,35 +45,50 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/bellLogoImageView"
 		tools:text="RFCx Responder" />
-	
-	<androidx.appcompat.widget.AppCompatEditText
-		android:id="@+id/loginEmailEditText"
-		style="@style/RangerEditText.Background"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginTop="@dimen/margin_padding_normal"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:hint="@string/email"
-		android:imeOptions="actionNext"
-		android:inputType="textEmailAddress"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/protectingRainforestsTextView" />
-	
-	<androidx.appcompat.widget.AppCompatEditText
-		android:id="@+id/loginPasswordEditText"
-		style="@style/RangerEditText.Background"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_padding_normal"
-		android:layout_marginEnd="@dimen/margin_padding_normal"
-		android:hint="@string/password"
-		android:imeOptions="actionDone"
-		android:inputType="textPassword"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginEmailEditText" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/loginEmailLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/protectingRainforestsTextView">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginEmailEditText"
+            style="@style/RangerEditText.Background.White"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginTop="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:hint="@string/email"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/loginPasswordLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginEmailLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPasswordEditText"
+            style="@style/RangerEditText.Background.White"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_normal"
+            android:layout_marginEnd="@dimen/margin_padding_normal"
+            android:hint="@string/password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/forgotYourPasswordTextView"
@@ -98,7 +113,7 @@
 		android:text="@string/login_sign_in_button_label"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loginPasswordEditText" />
+		app:layout_constraintTop_toBottomOf="@+id/loginPasswordLayout" />
 	
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/poweredByTextView"

@@ -17,15 +17,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -52,6 +55,8 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.preferences.Preferences
@@ -155,6 +160,8 @@ class StreamsFragment :
     lateinit var listener: MainActivityEventListener
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
+    private lateinit var unsyncedAlert: AlertDialog
+
     private val streamIdReceived = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null) return
@@ -220,7 +227,30 @@ class StreamsFragment :
             setColorSchemeResources(R.color.colorPrimary)
         }
 
+        lifecycleScope.launch {
+            viewModel.alertUnsynced.collectLatest {
+                if (it) {
+                    showUnsyncedAlert()
+                }
+            }
+        }
+
         viewModel.refreshProjects()
+    }
+
+    private fun showUnsyncedAlert() {
+        unsyncedAlert =
+            MaterialAlertDialogBuilder(requireContext(), R.style.BaseAlertDialog).apply {
+                setTitle(getString(R.string.refresh_title))
+                setMessage(getString(R.string.refresh_message))
+                setPositiveButton(getString(R.string.continue_name)) { _, _ ->
+                    viewModel.fetchFreshStreams(force = true, fromAlertUnsynced = true)
+                }
+                setNegativeButton(R.string.back) { _, _ ->
+                    unsyncedAlert.dismiss()
+                }
+            }.create()
+        unsyncedAlert.show()
     }
 
     private fun onClickCurrentLocationButton() {
@@ -302,11 +332,12 @@ class StreamsFragment :
         }
     }
 
-    override fun onClicked(project: Project) {
+    override fun onProjectClicked(project: Project) {
         viewModel.selectProject(project.id)
         firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnSelectedProject.key, project.id + " : " + project.name)
 
         isShowNotHaveStreams(false)
+        isShowNotHaveIncident(false)
         binding.streamLayout.visibility = View.GONE
         binding.toolbarLayout.expandMoreImageView.rotation = 0F
 
@@ -355,16 +386,28 @@ class StreamsFragment :
 
         viewModel.streams.observe(viewLifecycleOwner) { it ->
             it.success({ streams ->
-                streamAdapter.items = streams
+                streamAdapter.items = streams.filter { it.lastIncident != null }
+                streamAdapter.notifyDataSetChanged()
                 setEventFeatures(streams)
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
-                isShowNotHaveStreams(streams.isEmpty() && binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                if (streams.isEmpty()) {
+                    isShowNotHaveIncident(false)
+                    isShowNotHaveStreams(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                } else if (streams.none { it.lastIncident != null }) {
+                    isShowNotHaveStreams(false)
+                    isShowNotHaveIncident(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
+                } else {
+                    isShowNotHaveStreams(false)
+                    isShowNotHaveIncident(false)
+                }
             }, {
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
             }, {
+                binding.refreshView.isRefreshing = false
+                binding.streamLayout.visibility = View.GONE
                 isShowProgressBar()
             })
         }
@@ -380,7 +423,7 @@ class StreamsFragment :
 
     override fun invoke(stream: Stream) {
         firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamNewEventPage.key, "Stream name: " + stream.name + "/ Project id: " + stream.projectId)
-        listener.openStreamDetail(stream.id, null)
+        listener.openStreamDetail(stream.externalId ?: "", null)
     }
 
     private fun setupToolbar() {
@@ -390,6 +433,7 @@ class StreamsFragment :
             if (isShowMapIcon) {
                 analytics?.trackScreen(Screen.MAP)
                 isShowNotHaveStreams(false)
+                isShowNotHaveIncident(false)
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
                 mapView.visibility = View.VISIBLE
                 binding.refreshView.visibility = View.GONE
@@ -411,6 +455,10 @@ class StreamsFragment :
 
     private fun isShowNotHaveStreams(show: Boolean) {
         binding.notHaveStreamsGroupView.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    private fun isShowNotHaveIncident(show: Boolean) {
+        binding.notHaveIncidentGroupView.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     /* ------------------- vv Setup Map vv ------------------- */
@@ -439,7 +487,7 @@ class StreamsFragment :
                 Pair(PROPERTY_MARKER_EVENT_SITE, it.name),
                 Pair(PROPERTY_MARKER_EVENT_COUNT, (it.lastIncident?.events?.size ?: 0).toString()),
                 Pair(PROPERTY_MARKER_EVENT_DISTANCE, distanceLabel(lastLocation, it)),
-                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.id)
+                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.externalId.toString())
             )
             Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
         }
@@ -803,7 +851,7 @@ class StreamsFragment :
 
     override fun onRefresh() {
         if (context.isNetworkAvailable()) {
-            viewModel.refreshStreams(streamRefresh = true)
+            viewModel.fetchFreshStreams(force = true)
         } else {
             binding.refreshView.isRefreshing = false
             Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()

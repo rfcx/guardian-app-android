@@ -2,7 +2,7 @@ package org.rfcx.incidents.util
 
 import android.webkit.MimeTypeMap
 import java.io.File
-import java.util.*
+import java.util.Locale
 
 object FileUtils {
     // default for json file

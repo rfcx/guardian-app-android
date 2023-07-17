@@ -6,7 +6,8 @@ import org.rfcx.incidents.entity.stream.Project
 data class ProjectResponse(
     var id: String = "",
     var name: String = "",
-    var permissions: List<String> = listOf()
+    var permissions: List<String> = listOf(),
+    var offTimes: String = ""
 )
 
 fun ProjectResponse.permissionsLabel(): String {
@@ -26,6 +27,7 @@ fun ProjectResponse.toProject(): Project {
     return Project(
         id = this.id,
         name = this.name,
-        permissions = this.permissionsLabel()
+        permissions = this.permissionsLabel(),
+        offTimes = this.offTimes
     )
 }

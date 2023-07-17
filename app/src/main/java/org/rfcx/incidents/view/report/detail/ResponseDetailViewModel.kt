@@ -12,5 +12,5 @@ class ResponseDetailViewModel(
 ) : ViewModel() {
     fun getResponseByCoreId(coreId: String): Response? = responseDb.getResponseByCoreId(coreId)
 
-    fun getStream(serverId: String): Stream? = streamDb.get(serverId)
+    fun getStream(serverId: String): Stream? = streamDb.get(serverId, false)
 }

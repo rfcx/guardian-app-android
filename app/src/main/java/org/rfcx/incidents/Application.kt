@@ -10,6 +10,7 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.mapboxsdk.Mapbox
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -52,6 +53,8 @@ class Application : MultiDexApplication(), LifecycleObserver {
                     .build()
             )
         }
+
+        Mapbox.getInstance(applicationContext, applicationContext.getString(R.string.mapbox_token))
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -73,6 +76,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
             UiModule.reportsModule,
             UiModule.profileModule,
             UiModule.loginModule,
+            UiModule.guardianModule,
             DataModule.localModule,
             DataModule.remoteModule,
             DataModule.dataModule

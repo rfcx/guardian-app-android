@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundColor">
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.report.deployment.DeploymentListViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbarLayout"
+            android:visibility="visible"
+            layout="@layout/toolbar_deployment" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mapLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+
+            <org.rfcx.incidents.view.guardian.checklist.site.MapView
+                android:id="@+id/mapBoxView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.9" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/currentLocationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_large"
+                android:src="@drawable/ic_current_location"
+                app:backgroundTint="@color/white"
+                app:fabCustomSize="@dimen/zoom_loc_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineVertical"
+                app:layout_constraintStart_toStartOf="@id/guidelineVertical"
+                app:tint="@color/colorPrimary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/deploymentRefreshView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/listLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/filterGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_small"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:singleSelection="true"
+                    app:checkedChip="@id/allSelectChip">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/unSyncedSelectChip"
+                        style="@style/FilterDeploymentChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unsynced" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/syncedSelectChip"
+                        style="@style/FilterDeploymentChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/synced" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/allSelectChip"
+                        style="@style/FilterDeploymentChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/all" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/deploymentsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/backgroundColor"
+                    android:layout_marginTop="@dimen/margin_padding_small"
+                    android:clipToPadding="false"
+                    android:paddingBottom="72dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/filterGroup" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
+
+        <LinearLayout
+            android:id="@+id/noDeploymentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="@{viewModel.noDeploymentVisibilityState ? view.VISIBLE : view.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/noDeploymentImageView"
+                android:layout_width="@dimen/ic_empty_list_size"
+                android:layout_height="@dimen/ic_empty_list_size"
+                android:src="@drawable/ic_content_paste"
+                app:tint="@color/iconColor" />
+
+            <TextView
+                android:id="@+id/noDeploymentTextView"
+                style="@style/RangerText.SubTitle.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_small"
+                android:gravity="center"
+                android:text="@{viewModel.noDeploymentTextContent}" />
+
+        </LinearLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/projectSwipeRefreshView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/projectRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/backgroundColor"
+                android:dividerHeight="1dp"
+                android:visibility="gone" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deployGuardianButton"
+            style="@style/RangerButton.GreenButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/deploy_new_guardian"
+            android:layout_margin="@dimen/margin_padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

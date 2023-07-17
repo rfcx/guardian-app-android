@@ -17,6 +17,7 @@
 	<color name="text_white">#000000</color>
 	<color name="text_black">#ffffff</color>
 	<color name="text_green">#2FB04A</color>
+    <color name="red_disable">#831111</color>
 	
 	<color name="text_button_outline_enable">#ffffff</color>
 	<color name="text_button_outline_disable">#626685</color>
@@ -35,7 +36,8 @@
 	<color name="transparent">@android:color/transparent</color>
 	
 	<color name="white">#FFF</color>
-	<color name="grey">#D3D9E0</color>
+    <color name="black">#000000</color>
+    <color name="grey">#D3D9E0</color>
 	<color name="gray_30">#FFD6D6D6</color>
 	<color name="grey_light">#F0F0F0</color>
 	<color name="grey_default">#98a0a9</color>
@@ -66,4 +68,18 @@
 	
 	<color name="tracking_line">#e55e5e</color>
 	<color name="background_placeholder">#141525</color>
+
+    <color name="blue">#1E8CAB</color>
+    <color name="blue_disable">#165A6E</color>
+
+    <color name="red">#e41a1a</color>
+    <color name="orange">#FF9800</color>
+    <color name="yellow">#FFEB3B</color>
+
+    <color name="signal_stroke">#5A6978</color>
+    <color name="signal_filled">#2AA841</color>
+
+    <color name="searchColor">#3b3e53</color>
+    <!-- photo advise -->
+    <color name="photo_advise_color">@color/white</color>
 </resources>

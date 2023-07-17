@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/bgView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:background="@drawable/bg_stream_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/siteNameTextView"
+        style="@style/RangerText.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/margin_padding_normal"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        app:layout_constraintStart_toStartOf="@id/bgView"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        tools:text="Site A" />
+
+    <LinearLayout
+        android:id="@+id/guardianTypeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/siteNameTextView"
+        app:layout_constraintStart_toEndOf="@id/siteNameTextView"
+        app:layout_constraintTop_toTopOf="@id/siteNameTextView">
+
+        <ImageView
+            android:id="@+id/guardianTypeImageView"
+            android:src="@drawable/ic_signal_cellular_alt"
+            android:layout_width="@dimen/type_icon_size"
+            android:layout_height="@dimen/type_icon_size"
+            android:layout_marginStart="@dimen/margin_padding_xsmall"
+            app:tint="@color/iconColor" />
+
+        <TextView
+            android:id="@+id/guardianTypeTextView"
+            style="@style/RangerText.Label.Secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_2_dp"
+            android:layout_gravity="center"
+            tools:text="Cell" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/guardianNameTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/siteNameTextView"
+        app:layout_constraintStart_toStartOf="@id/siteNameTextView"
+        tools:text="Guardian A" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/clockImageView"
+        android:layout_width="@dimen/type_icon_size"
+        android:layout_height="@dimen/type_icon_size"
+        android:src="@drawable/ic_calendar"
+        android:layout_marginTop="@dimen/margin_padding_normal"
+        android:layout_marginBottom="@dimen/margin_padding_normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guardianNameTextView"
+        app:layout_constraintStart_toStartOf="@id/guardianNameTextView"
+        app:tint="@color/iconColor" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dateTextView"
+        style="@style/RangerText.SubTitle.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:layout_marginEnd="@dimen/margin_padding_normal"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/clockImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/clockImageView"
+        app:layout_constraintTop_toTopOf="@id/clockImageView"
+        tools:text="Today, 14:00" />
+
+    <ImageView
+        android:id="@+id/syncIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_cloud_upload"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_small"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
+
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_image_ready"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:padding="@dimen/margin_padding_small"
+        app:layout_constraintTop_toTopOf="@id/syncIcon"
+        app:layout_constraintEnd_toStartOf="@id/syncIcon"
+        app:layout_constraintBottom_toBottomOf="@id/syncIcon"/>
+
+    <ProgressBar
+        android:id="@+id/syncIconLoading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:visibility="gone"
+        android:indeterminateTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="@id/bgView"
+        app:layout_constraintEnd_toEndOf="@id/bgView"/>
+
+    <ProgressBar
+        android:id="@+id/syncImageIconLoading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/margin_padding_small"
+        android:visibility="gone"
+        android:indeterminateTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="@id/syncIcon"
+        app:layout_constraintEnd_toStartOf="@id/syncIcon"
+        app:layout_constraintBottom_toBottomOf="@id/syncIcon"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

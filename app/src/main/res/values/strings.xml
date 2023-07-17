@@ -407,4 +407,187 @@
     <string name="responses">responses</string>
     <string name="and">and</string>
 
+    <!-- ClassifierDownloadActivity -->
+    <string name="classifier_download_title">Classifier Download</string>
+
+    <!-- SoftwareDownloadActivity -->
+    <string name="software_download_title">Software Download</string>
+    <string name="download">Download</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="file_delete">delete v%s</string>
+
+    <!-- GuardianFileUpdateAdapter -->
+    <string name="installed_guardian_file">(current v%s installed)</string>
+    <string name="up_to_date">up to date</string>
+    <string name="file_update">update v%s</string>
+    <string name="file_install">install v%s</string>
+    <string name="file_version">v%s (%s installed)</string>
+
+    <!-- SoftwareUpdateFragment -->
+    <string name="software_title">Software Update</string>
+    <string name="software_no_item">Download softwares from Guardian softwares page first\nProfile -> Guardian software -> Download APKs you needed</string>
+
+    <!-- ClassifierUploadFragment -->
+    <string name="classifier_title">Classifier Upload</string>
+    <string name="classifier_service_reboot_message">Look like you have a trouble with uploading,\nTry restarting service?</string>
+    <string name="restart">Restart</string>
+    <string name="no">No</string>
+    <string name="go_back">Go Back</string>
+    <string name="classifier_no_item"><![CDATA[Download classifiers from Guardian classifiers page first\nProfile -> Classifier -> Download classifiers you needed]]></string>
+    <string name="classifier_no_active">Please activate a classifier to proceed to the next step</string>
+
+    <!-- PowerDiagnosticFragment -->
+    <string name="power_diagnostic">Power Diagnostic</string>
+    <string name="sentinel_module_detect">Sentinel module detected</string>
+    <string name="sentinel_module_not_detect">Sentinel module not detected</string>
+    <string name="power_diag_warning_solar">Please Begin Attaching the Solar Panels\nto Observe Feedback</string>
+    <string name="system_voltage">System Voltage</string>
+    <string name="battery_voltage">Battery Voltage</string>
+    <string name="internal_battery">Internal Battery</string>
+    <string name="main_battery">Main Battery</string>
+    <string name="power">Power</string>
+    <string name="current">Current</string>
+    <string name="voltage">Voltage</string>
+    <string name="sentinel_module_detected">Sentinel module detected</string>
+    <string name="power_diag_label">Solar panel input values</string>
+
+    <!-- NetworkTestFragment -->
+    <string name="network_test">Network test</string>
+    <string name="lt_93_bad"><![CDATA[< -93 Bad]]></string>
+    <string name="lt_97_ok"><![CDATA[< -97 OK]]></string>
+    <string name="lt_100_ok"><![CDATA[< -100 Good]]></string>
+    <string name="lt_104_perfect"><![CDATA[< -104 Perfect]]></string>
+    <string name="lt_110_error"><![CDATA[< -110 Error]]></string>
+    <string name="cell_data_transfer">Cell data transfer</string>
+    <string name="no_internet_connection_guardian">No internet connection</string>
+    <string name="cell_signal_strength">Cell signal strength</string>
+    <string name="test">test</string>
+    <string name="background_noise">Background noise</string>
+    <string name="error">error</string>
+    <string name="perfect">Perfect</string>
+    <string name="good">Good</string>
+    <string name="ok">OK</string>
+    <string name="bad">Bad</string>
+    <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
+
+    <!-- Communication Configuration -->
+    <string name="communication_configuration">Communication Configuration</string>
+    <string name="back">back</string>
+    <string name="plus">+</string>
+    <string name="sim_card_detected">SIM Card detected</string>
+    <string name="phone_number">phone number:</string>
+    <string name="satellite_module_detected">Satellite module detected</string>
+    <string name="swarm_id">swarm id:</string>
+    <string name="satellite_gps_detected">Satellite GPS detected</string>
+    <string name="guardian_local_time">Guardian local time:</string>
+    <string name="guardian_timezone">Guardian timezone:</string>
+    <string name="cell_data_only">Cell data only</string>
+    <string name="cell_data_sms_fallback_experimental">Cell data + SMS fallback (experimental)</string>
+    <string name="satellite_only">Satellite only</string>
+    <string name="off_times_local_times">Off times (local times)</string>
+    <string name="manual">Manual</string>
+    <string name="auto">Auto</string>
+    <string name="there_is_no_off_time_in_this_project">There is no off time in this project</string>
+
+    <!-- Guardian Registration -->
+    <string name="register_guardian">Register Guardian with RFCx</string>
+    <string name="let_s_register_your_guardian">Let\'s register your Guardian</string>
+    <string name="production">Production</string>
+    <string name="staging">Staging</string>
+    <string name="register">Register</string>
+
+    <!-- Guardian Audio Parameter -->
+    <string name="audio_parameter_config">Audio Parameter Config</string>
+    <string name="file_format">File format</string>
+    <string name="sample_rate">Sample Rate</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="duration">Recording cycle duration (per file)</string>
+    <string name="sample_ratio">Cycle(s) skipped between recordings</string>
+    <string name="recording_schedule">Recording schedule</string>
+    <string name="schedule_start_time">Select start time</string>
+    <string name="schedule_stop_time">Select stop time</string>
+    <string name="select_cycle_s_to_skip_between_recordings">Select cycle(s) to skip between recordings</string>
+
+    <!-- Guardian Microphone -->
+    <string name="microphone_title">Microphone Capture Test</string>
+    <string name="unknown_error">unknown error</string>
+    <string name="choose_speed">Choose spectrogram speed</string>
+    <string name="choose_freq">Choose spectrogram frequency scale</string>
+    <string name="choose_color">Choose spectrogram color</string>
+    <string name="choose_play_back">Choose audio playback</string>
+    <string name="mic_recorder_warn">Recorder service is not started yet.\nPlease try again later.</string>
+    <string name="microphone_test">Microphone Test</string>
+    <string name="speed">Speed</string>
+    <string name="frequency_scale">Frequency Scale</string>
+    <string name="color">Color</string>
+    <string name="playback">Playback</string>
+    <string name="begin_mic_test">Begin Mic Test</string>
+    <string name="halt_mic_test">Halt Mic Test</string>
+    <string name="restart_mic_test">Restart Mic Test</string>
+    <string name="dialog_start_service_mic">Look like you have a trouble with microphone.\nTry restarting service?</string>
+
+    <!-- Guardian Storage -->
+    <string name="storage_title">Storage Inspector</string>
+    <string name="audio_coverage">Audio Coverage</string>
+    <string name="hour_less_than_10">0%d</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="external_storage">External Storage</string>
+    <string name="see_audio_coverage">See Audio Coverage</string>
+
+    <!-- Guardian Checkin Check -->
+    <string name="checkin_title">Confirm CheckIn Status</string>
+    <string name="guardian_checkin_check">Guardian Checkin Check</string>
+    <string name="protocol">Protocol</string>
+    <string name="dash">-</string>
+    <string name="last_checkin">Last checkin</string>
+    <string name="in_queue">In queue</string>
+    <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
+
+    <!-- Guardian Site -->
+    <string name="photo_title">Add Photo(s)</string>
+    <string name="guardian_site_title">Guardian Installation Location</string>
+    <string name="search_box_hint">Search place, address or lat/long</string>
+    <string name="no_result_found">No result found</string>
+    <string name="search_or_create_box_hint">Search site or create new</string>
+    <string name="create_site">Create \"%s\"</string>
+    <string name="no_deployments">No deployments</string>
+    <string name="more_than">You are %s from the site</string>
+    <string name="within">You are currently within 20m of the site</string>
+    <string name="selected_location">Selected location</string>
+    <string name="take_other">Take any other photo that will be helpful in relocating the device or characterizing the site</string>
+    <string name="photo_taken">Photos taken: %d / %d</string>
+    <string name="missing_dialog_title">Are you sure you want to continue?</string>
+    <string name="button_continue">continue</string>
+    <string name="follow_missing">The following photos are missing:\n%s</string>
+
+    <!-- Unsent Registration -->
+    <string name="unsent_title">Unsent Guardian registration</string>
+    <string name="there_is_no_unsent_registration">There is no unsent registration.</string>
+
+    <!-- Deployment List -->
+    <string name="refresh_title">Are you sure to reload ?</string>
+    <string name="refresh_message">If you proceed to reload, you will lose current unsynced deployments and images.</string>
+    <string name="continue_name">Continue</string>
+    <string name="unsynced">unsynced</string>
+    <string name="synced">synced</string>
+    <string name="all">all</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="altitude">altitude</string>
+    <string name="deployment_key">deployment key</string>
+    <string name="delete">delete</string>
+    <string name="registration">Registration</string>
+    <string name="deployments">Deployments</string>
+    <string name="map">Map View</string>
+    <string name="deploy_new_guardian">Deploy new Guardian</string>
+
+    <!-- Deployment Detail -->
+
+    <!-- Add Image -->
+    <string name="add_photos_title">Add photos</string>
+
+    <!-- Edit Location -->
+    <string name="edit_location_title">Edit location</string>
+    <string name="fill_name">Please fill the name</string>
+
 </resources>
