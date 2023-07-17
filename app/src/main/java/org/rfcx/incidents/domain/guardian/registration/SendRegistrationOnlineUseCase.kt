@@ -7,7 +7,8 @@ import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterResp
 import org.rfcx.incidents.domain.base.FlowWithParamUseCase
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegisterRequest
 
-class SendRegistrationOnlineUseCase(private val repository: GuardianRegistrationRepository) : FlowWithParamUseCase<OnlineRegistrationParams, Result<GuardianRegisterResponse>>() {
+class SendRegistrationOnlineUseCase(private val repository: GuardianRegistrationRepository) :
+    FlowWithParamUseCase<OnlineRegistrationParams, Result<GuardianRegisterResponse>>() {
     override fun performAction(param: OnlineRegistrationParams): Flow<Result<GuardianRegisterResponse>> {
         return repository.sendRegistrationOnline(param.env, param.registration)
     }

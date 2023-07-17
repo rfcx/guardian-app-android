@@ -77,11 +77,22 @@ object TimeRangeUtils {
     }
 
     private fun isWithinRange(one: TimeRange, two: TimeRange): Boolean {
-        return one.start.toIntValue() >= two.start.toIntValue() && one.start.toIntValue() <= two.stop.toIntValue() && one.stop.toIntValue() <= two.stop.toIntValue()
+        return one.start.toIntValue() >=
+            two.start.toIntValue() &&
+            one.start.toIntValue() <=
+            two.stop.toIntValue() &&
+            one.stop.toIntValue() <=
+            two.stop.toIntValue()
     }
 
     private fun isOutOfRange(one: TimeRange, two: TimeRange): Boolean {
-        return (one.start.toIntValue() < two.start.toIntValue() && one.stop.toIntValue() < two.start.toIntValue()) || ((one.start.toIntValue() > two.stop.toIntValue()))
+        return (
+            one.start.toIntValue() <
+                two.start.toIntValue() &&
+                one.stop.toIntValue() <
+                two.start.toIntValue()
+            ) ||
+            ((one.start.toIntValue() > two.stop.toIntValue()))
     }
 
     private fun concatTimes(one: TimeRange, two: TimeRange): TimeRange {
@@ -126,15 +137,12 @@ fun List<TimeRange>.toGuardianFormat(): String {
 
 fun String.toListTimeRange(): List<TimeRange> {
     val list = arrayListOf<TimeRange>()
-    val time =
-        "(?<starthh>\\d{1,2}):(?<startmm>\\d{1,2})-(?<stophh>\\d{1,2}):(?<stopmm>\\d{1,2})+,?".toRegex()
-            .findAll(this)
+    val time = "(?<starthh>\\d{1,2}):(?<startmm>\\d{1,2})-(?<stophh>\\d{1,2}):(?<stopmm>\\d{1,2})+,?".toRegex().findAll(this)
     time.forEach {
         val (startHH, startMM, stopHH, stopMM) = it.destructured
         list.add(
             TimeRange(
-                Time(startHH.toInt(), startMM.toInt()),
-                Time(stopHH.toInt(), stopMM.toInt())
+                Time(startHH.toInt(), startMM.toInt()), Time(stopHH.toInt(), stopMM.toInt())
             )
         )
     }
@@ -142,9 +150,7 @@ fun String.toListTimeRange(): List<TimeRange> {
 }
 
 fun String.toTimeRange(): TimeRange? {
-    val time =
-        "(?<starthh>\\d{1,2}):(?<startmm>\\d{1,2})-(?<stophh>\\d{1,2}):(?<stopmm>\\d{1,2})+,?".toRegex()
-            .find(this)
+    val time = "(?<starthh>\\d{1,2}):(?<startmm>\\d{1,2})-(?<stophh>\\d{1,2}):(?<stopmm>\\d{1,2})+,?".toRegex().find(this)
     val (startHH, startMM, stopHH, stopMM) = time?.destructured ?: return null
     return TimeRange(Time(startHH.toInt(), startMM.toInt()), Time(stopHH.toInt(), stopMM.toInt()))
 }
