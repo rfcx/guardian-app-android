@@ -78,6 +78,12 @@ class MainActivityViewModel(
         val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
         return streamDb.getByProject(projectId)
     }
+
+    fun getStreamsByDistance(): List<Stream> {
+        val preferences = Preferences.getInstance(context)
+        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
+        return streamDb.getByProject(projectId)
+    }
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)
 

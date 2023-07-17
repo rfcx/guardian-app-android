@@ -46,6 +46,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     lateinit var listener: MainActivityEventListener
     lateinit var preferences: Preferences
     private var streams = listOf<String>()
+    private lateinit var dialog: SelectSiteDialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -135,14 +136,15 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     }
 
     private fun showDialogSelectSite() {
-        SelectSiteDialog(this).show(childFragmentManager, SelectSiteDialog::class.java.name)
+        dialog = SelectSiteDialog(this)
+        dialog.show(childFragmentManager, SelectSiteDialog::class.java.name)
     }
 
     override fun onSiteSelected(site: Stream) {
         if (requireContext().isOnAirplaneMode()) {
             Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
-            showDialogSelectSite()
             listener.openCreateReportActivity(site.id, isUnexpected = true)
+            dialog.dismiss()
         }
 
         locationPermissions.check {
@@ -150,8 +152,8 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                 listener.getCurrentLocation()?.let { loc ->
                     saveLocation(loc)
                 }
-                showDialogSelectSite()
                 listener.openCreateReportActivity(site.id, isUnexpected = true)
+                dialog.dismiss()
             }
         }
     }
