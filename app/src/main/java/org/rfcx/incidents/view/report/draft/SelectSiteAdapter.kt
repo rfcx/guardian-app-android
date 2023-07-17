@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.rfcx.incidents.databinding.ItemSelectSiteBinding
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.util.setFormatLabel
+import org.rfcx.incidents.view.SelectSiteItem
 
 class SelectSiteAdapter(private val listener: SelectSiteListener) : RecyclerView.Adapter<SelectSiteAdapter.SelectSiteViewHolder>() {
 
-    var items: List<Stream> = arrayListOf()
+    var items: List<SelectSiteItem> = arrayListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -16,9 +18,10 @@ class SelectSiteAdapter(private val listener: SelectSiteListener) : RecyclerView
 
     inner class SelectSiteViewHolder(binding: ItemSelectSiteBinding) : RecyclerView.ViewHolder(binding.root) {
         private val siteName = binding.selectSiteName
-
-        fun bind(site: Stream) {
-            siteName.text = site.name
+        private val siteDistance = binding.selectSiteDistance
+        fun bind(item: SelectSiteItem) {
+            siteName.text = item.site.name
+            siteDistance.text = item.distance.setFormatLabel()
         }
     }
 
@@ -32,7 +35,7 @@ class SelectSiteAdapter(private val listener: SelectSiteListener) : RecyclerView
     override fun onBindViewHolder(holder: SelectSiteViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
-            listener.onSiteSelected(items[position])
+            listener.onSiteSelected(items[position].site)
         }
     }
 }

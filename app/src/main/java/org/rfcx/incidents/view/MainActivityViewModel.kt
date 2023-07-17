@@ -1,16 +1,23 @@
 package org.rfcx.incidents.view
 
 import android.content.Context
+import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
+import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.local.ProjectDb
 import org.rfcx.incidents.data.local.ResponseDb
@@ -33,6 +40,7 @@ import org.rfcx.incidents.entity.response.Response
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.getUserNickname
+import org.rfcx.incidents.util.location.LocationHelper
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -45,11 +53,15 @@ class MainActivityViewModel(
     private val trackingDb: TrackingDb,
     private val getProjectsUseCase: GetProjectsUseCase,
     private val getStreamsWithIncidentUseCase: GetStreamsWithIncidentUseCase,
+    private val locationHelper: LocationHelper,
     credentialKeeper: CredentialKeeper
 ) : ViewModel() {
 
     private val _projects = MutableLiveData<Result<List<Project>>>()
     val getProjectsFromRemote: LiveData<Result<List<Project>>> get() = _projects
+
+    private val _currentLocationState: MutableStateFlow<Location?> = MutableStateFlow(null)
+    val currentLocationState = _currentLocationState.asStateFlow()
 
     private val _streams = MutableLiveData<List<Stream>?>()
     val streams = _streams
@@ -63,6 +75,18 @@ class MainActivityViewModel(
 
     private val authentication by lazy {
         AuthenticationAPIClient(auth0)
+    }
+
+    init {
+        getLocationChanged()
+    }
+
+    private fun getLocationChanged() {
+        viewModelScope.launch {
+            locationHelper.getFlowLocationChanged().collectLatest {
+                _currentLocationState.tryEmit(it)
+            }
+        }
     }
 
     fun getResponses(): LiveData<List<Response>> {
@@ -83,11 +107,11 @@ class MainActivityViewModel(
 
     fun getStream(id: String): Stream? = streamDb.get(id, false)
 
-    fun getStreamsByDistance(): List<Stream> {
-        return getStreams().filter { it.externalId != null }
+    fun getStreamsByDistance(): List<SelectSiteItem> {
+        return getStreams().filter { it.externalId != null }.map { SelectSiteItem(it, distanceLabel(_currentLocationState.value, it) ?: 0.0) }.sortedBy { it.distance }
     }
-    fun getProjectName(id: String): String = projectDb.getProject(id)?.name
-        ?: context.getString(R.string.all_projects)
+
+    fun getProjectName(id: String): String = projectDb.getProject(id)?.name ?: context.getString(R.string.all_projects)
 
     fun fetchProjects() {
         getProjectsUseCase.execute(
@@ -99,8 +123,7 @@ class MainActivityViewModel(
                 override fun onError(e: Throwable) {
                     _projects.value = Result.Error(e)
                 }
-            },
-            GetProjectsParams()
+            }, GetProjectsParams()
         )
     }
 
@@ -118,8 +141,7 @@ class MainActivityViewModel(
                 override fun onError(e: Throwable) {
                     callback.invoke(null)
                 }
-            },
-            GetStreamsParams(projectId, true, 0)
+            }, GetStreamsParams(projectId, true, 0)
         )
     }
 
@@ -140,7 +162,7 @@ class MainActivityViewModel(
         val credentialKeeper = CredentialKeeper(context)
 
         if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname()
-            .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
+                .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
         ) {
             return false
         }
@@ -181,4 +203,13 @@ class MainActivityViewModel(
             })
         }
     }
+
+    private fun distanceLabel(origin: Location?, destination: Stream): Double? {
+        if (origin == null) return null
+        return LatLng(origin.latitude, origin.longitude).distanceTo(LatLng(destination.latitude, destination.longitude))
+    }
 }
+
+data class SelectSiteItem(
+    val site: Stream, val distance: Double
+)

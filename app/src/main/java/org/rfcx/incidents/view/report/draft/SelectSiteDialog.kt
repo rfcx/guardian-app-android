@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.WidgetSelectSiteDialogBinding
 import org.rfcx.incidents.entity.stream.Stream
@@ -18,6 +20,8 @@ class SelectSiteDialog(private val listener: SelectSiteListener) : DialogFragmen
     private lateinit var _binding: WidgetSelectSiteDialogBinding
     private val viewModel: MainActivityViewModel by viewModel()
     private val selectSiteAdapter by lazy { SelectSiteAdapter(listener) }
+
+    private var isFirstTime = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = WidgetSelectSiteDialogBinding.inflate(inflater, container, false)
@@ -38,7 +42,13 @@ class SelectSiteDialog(private val listener: SelectSiteListener) : DialogFragmen
             )
         }
 
-
-        selectSiteAdapter.items = viewModel.getStreamsByDistance()
+        lifecycleScope.launchWhenStarted {
+            viewModel.currentLocationState.collectLatest {
+                if (it != null && isFirstTime) {
+                    selectSiteAdapter.items = viewModel.getStreamsByDistance()
+                    isFirstTime = false
+                }
+            }
+        }
     }
 }
