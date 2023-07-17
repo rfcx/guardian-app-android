@@ -78,14 +78,13 @@ class MainActivityViewModel(
         val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
         return streamDb.getByProject(projectId)
     }
+
     fun getStream(id: Int): Stream? = streamDb.get(id, false)
 
     fun getStream(id: String): Stream? = streamDb.get(id, false)
 
     fun getStreamsByDistance(): List<Stream> {
-        val preferences = Preferences.getInstance(context)
-        val projectId = preferences.getString(Preferences.SELECTED_PROJECT, "")
-        return streamDb.getByProject(projectId)
+        return getStreams().filter { it.externalId != null }
     }
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name
         ?: context.getString(R.string.all_projects)

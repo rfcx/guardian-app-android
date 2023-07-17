@@ -39,6 +39,6 @@ class SelectSiteDialog(private val listener: SelectSiteListener) : DialogFragmen
         }
 
 
-        selectSiteAdapter.items = viewModel.getStreams()
+        selectSiteAdapter.items = viewModel.getStreamsByDistance()
     }
 }

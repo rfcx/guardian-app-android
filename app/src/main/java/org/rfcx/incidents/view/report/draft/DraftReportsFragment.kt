@@ -143,7 +143,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
     override fun onSiteSelected(site: Stream) {
         if (requireContext().isOnAirplaneMode()) {
             Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_SHORT).show()
-            listener.openCreateReportActivity(site.id, isUnexpected = true)
+            listener.openCreateReportActivity(site.externalId!!, isUnexpected = true)
             dialog.dismiss()
         }
 
@@ -152,7 +152,7 @@ class DraftReportsFragment : Fragment(), ReportOnClickListener, ProjectOnClickLi
                 listener.getCurrentLocation()?.let { loc ->
                     saveLocation(loc)
                 }
-                listener.openCreateReportActivity(site.id, isUnexpected = true)
+                listener.openCreateReportActivity(site.externalId!!, isUnexpected = true)
                 dialog.dismiss()
             }
         }
