@@ -121,7 +121,8 @@ class MainActivityViewModel(
     fun getStream(id: String): Stream? = streamDb.get(id, false)
 
     fun getStreamsByDistance(): List<SelectSiteItem> {
-        return getStreams().filter { it.externalId != null }.map { SelectSiteItem(it, distanceLabel(_currentLocationState.value, it) ?: 0.0) }.sortedBy { it.distance }
+        return getStreams().filter { it.externalId != null }.map { SelectSiteItem(it, distanceLabel(_currentLocationState.value, it) ?: 0.0) }
+            .sortedBy { it.distance }
     }
 
     fun getProjectName(id: String): String = projectDb.getProject(id)?.name ?: context.getString(R.string.all_projects)
@@ -136,7 +137,8 @@ class MainActivityViewModel(
                 override fun onError(e: Throwable) {
                     _projects.value = Result.Error(e)
                 }
-            }, GetProjectsParams()
+            },
+            GetProjectsParams()
         )
     }
 
@@ -154,7 +156,8 @@ class MainActivityViewModel(
                 override fun onError(e: Throwable) {
                     callback.invoke(null)
                 }
-            }, GetStreamsParams(projectId, true, 0)
+            },
+            GetStreamsParams(projectId, true, 0)
         )
     }
 
@@ -175,7 +178,7 @@ class MainActivityViewModel(
         val credentialKeeper = CredentialKeeper(context)
 
         if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname()
-                .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
+            .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
         ) {
             return false
         }
@@ -224,5 +227,6 @@ class MainActivityViewModel(
 }
 
 data class SelectSiteItem(
-    val site: Stream, val distance: Double
+    val site: Stream,
+    val distance: Double
 )

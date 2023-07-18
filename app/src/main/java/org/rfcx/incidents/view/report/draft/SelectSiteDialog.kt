@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.WidgetSelectSiteDialogBinding
-import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.view.MainActivityViewModel
 
 class SelectSiteDialog(private val listener: SelectSiteListener) : DialogFragment() {
