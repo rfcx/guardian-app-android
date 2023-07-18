@@ -18,6 +18,7 @@ import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.domain.DataModule
 import org.rfcx.incidents.service.AirplaneModeReceiver
 import org.rfcx.incidents.service.ResponseCleanupWorker
+import org.rfcx.incidents.util.logout
 import org.rfcx.incidents.util.removeLocationUpdates
 import org.rfcx.incidents.util.startLocationChange
 import org.rfcx.incidents.view.UiModule

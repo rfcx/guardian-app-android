@@ -15,10 +15,12 @@ import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
+import org.rfcx.incidents.util.logout
 import java.util.Date
 
 class AppRealm {
@@ -46,6 +48,7 @@ class AppRealm {
                     val realm = Realm.getInstance(fallbackConfiguration())
                     realm.close()
                 } catch (_: RealmMigrationNeededException) {
+                    context.logout()
                 }
             }
 
@@ -171,7 +174,7 @@ private class Migrations : RealmMigration {
             addField(Deployment.FIELD_IS_ACTIVE, Boolean::class.java)
             addField(Deployment.FIELD_DEVICE_PARAMETERS, String::class.java)
             if (image != null) {
-                addRealmObjectField(Deployment.FIELD_IMAGES, image)
+                addRealmListField(Deployment.FIELD_IMAGES, image)
             }
         }
 
@@ -181,6 +184,18 @@ private class Migrations : RealmMigration {
             addField(Stream.FIELD_EXTERNAL_ID, String::class.java)
             addField(Stream.FIELD_SYNC_STATE, Int::class.java)
             addRealmObjectField(Stream.FIELD_DEPLOYMENT, deployment)
+
+            // Change id type to Int
+            addField("id_tmp", Int::class.java)
+            var tmpId = 0
+            transform {
+                it.setString(Stream.FIELD_EXTERNAL_ID, it.getString(Stream.FIELD_ID))
+                it.setInt(Stream.FIELD_SYNC_STATE, SyncState.SENT.value)
+                it.setInt("id_tmp", tmpId++)
+            }
+            removeField(Stream.FIELD_ID)
+            renameField("id_tmp", Stream.FIELD_ID)
+            addPrimaryKey(Stream.FIELD_ID)
         }
     }
 
