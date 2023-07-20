@@ -45,6 +45,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     companion object {
         const val EXTRA_STREAM_ID = "EXTRA_STREAM_ID"
         const val EXTRA_RESPONSE_ID = "EXTRA_RESPONSE_ID"
+        const val EXTRA_IS_UNEXPECTED = "EXTRA_IS_UNEXPECTED"
 
         const val RESULT_CODE = 20
         const val EXTRA_SCREEN = "EXTRA_SCREEN"
@@ -64,6 +65,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
     private lateinit var streamId: String
     private var streamName: String? = null
     private var responseId: Int? = null
+    private var isUnexpected: Boolean? = null
 
     private var _response: Response? = null
     private var _images: ArrayList<String> = arrayListOf()
@@ -77,6 +79,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
 
         streamId = intent?.getStringExtra(EXTRA_STREAM_ID) ?: throw Error("Stream not set")
         responseId = intent?.getIntExtra(EXTRA_RESPONSE_ID, -1)
+        isUnexpected = intent?.getBooleanExtra(EXTRA_IS_UNEXPECTED, false)
 
         responseId?.let {
             val response = viewModel.getResponseById(it)

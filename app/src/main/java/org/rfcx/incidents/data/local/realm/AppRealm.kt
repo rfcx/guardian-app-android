@@ -15,16 +15,18 @@ import org.rfcx.incidents.entity.guardian.image.DeploymentImage
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.Asset
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.response.SyncState
 import org.rfcx.incidents.entity.stream.Incident
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.entity.stream.User
+import org.rfcx.incidents.util.logout
 import java.util.Date
 
 class AppRealm {
 
     companion object {
-        private const val schemaVersion = 27L
+        private const val schemaVersion = 22L
 
         fun init(context: Context) {
             Realm.init(context)
@@ -46,6 +48,7 @@ class AppRealm {
                     val realm = Realm.getInstance(fallbackConfiguration())
                     realm.close()
                 } catch (_: RealmMigrationNeededException) {
+                    context.logout()
                 }
             }
 
@@ -81,26 +84,6 @@ private class Migrations : RealmMigration {
 
         if (oldVersion < 22L && newVersion >= 22) {
             migrateToV22(c)
-        }
-
-        if (oldVersion < 23L && newVersion >= 23) {
-            migrateToV23(c)
-        }
-
-        if (oldVersion < 24L && newVersion >= 24) {
-            migrateToV24(c)
-        }
-
-        if (oldVersion < 25L && newVersion >= 25) {
-            migrateToV25(c)
-        }
-
-        if (oldVersion < 26L && newVersion >= 26) {
-            migrateToV26(c)
-        }
-
-        if (oldVersion < 27L && newVersion >= 27) {
-            migrateToV27(c)
         }
     }
 
@@ -149,17 +132,14 @@ private class Migrations : RealmMigration {
             addField(GuardianFile.FIELD_PATH, String::class.java).setRequired(GuardianFile.FIELD_PATH, true)
             addField(GuardianFile.FIELD_TYPE, String::class.java).setRequired(GuardianFile.FIELD_TYPE, true)
             addField(GuardianFile.FIELD_META, String::class.java).setRequired(GuardianFile.FIELD_META, true)
+            addField(GuardianFile.FIELD_URL, String::class.java).setRequired(GuardianFile.FIELD_URL, true)
         }
-    }
 
-    private fun migrateToV23(realm: DynamicRealm) {
         val project = realm.schema.get(Project.TABLE_NAME)
         project?.apply {
             addField(Project.PROJECT_OFFTIMES, String::class.java).setRequired(Project.PROJECT_OFFTIMES, true)
         }
-    }
 
-    private fun migrateToV24(realm: DynamicRealm) {
         val registration = realm.schema.create(GuardianRegistration.TABLE_NAME)
         registration?.apply {
             addField(GuardianRegistration.FIELD_GUID, String::class.java, FieldAttribute.PRIMARY_KEY).setRequired(GuardianRegistration.FIELD_GUID, true)
@@ -172,18 +152,7 @@ private class Migrations : RealmMigration {
             addField(GuardianRegistration.FIELD_SYNC_STATE, Int::class.java)
             addField(GuardianRegistration.FIELD_CREATED_AT, Date::class.java).setRequired(GuardianRegistration.FIELD_CREATED_AT, true)
         }
-    }
 
-    private fun migrateToV25(realm: DynamicRealm) {
-        val stream = realm.schema.get(Stream.TABLE_NAME)
-        stream?.apply {
-            addField(Stream.FIELD_ALTITUDE, Double::class.java)
-            addField(Stream.FIELD_EXTERNAL_ID, String::class.java).setRequired(Stream.FIELD_EXTERNAL_ID, false)
-            addField(Stream.FIELD_SYNC_STATE, Int::class.java)
-        }
-    }
-
-    private fun migrateToV26(realm: DynamicRealm) {
         val image = realm.schema.create(DeploymentImage.TABLE_NAME)
         image?.apply {
             addField(DeploymentImage.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
@@ -193,28 +162,40 @@ private class Migrations : RealmMigration {
             addField(DeploymentImage.FIELD_SYNC_STATE, Int::class.java)
             addField(DeploymentImage.FIELD_CREATE_AT, Date::class.java).setRequired(DeploymentImage.FIELD_CREATE_AT, true)
         }
-    }
 
-    private fun migrateToV27(realm: DynamicRealm) {
         val deployment = realm.schema.create(Deployment.TABLE_NAME)
-        val stream = realm.schema.get(Stream.TABLE_NAME)
-        val image = realm.schema.get(DeploymentImage.TABLE_NAME)
         deployment?.apply {
             addField(Deployment.FIELD_ID, Int::class.java, FieldAttribute.PRIMARY_KEY)
             addField(Deployment.FIELD_EXTERNAL_ID, String::class.java)
             addField(Deployment.FIELD_DEPLOYED_AT, Date::class.java).setRequired(Deployment.FIELD_DEPLOYED_AT, true)
             addField(Deployment.FIELD_CREATED_AT, Date::class.java).setRequired(Deployment.FIELD_CREATED_AT, true)
-            addField(Deployment.FIELD_DEPLOYMENT_KEY, String::class.java)
+            addField(Deployment.FIELD_DEPLOYMENT_KEY, String::class.java).setRequired(Deployment.FIELD_DEPLOYMENT_KEY, true)
             addField(Deployment.FIELD_SYNC_STATE, Int::class.java)
             addField(Deployment.FIELD_IS_ACTIVE, Boolean::class.java)
             addField(Deployment.FIELD_DEVICE_PARAMETERS, String::class.java)
             if (image != null) {
-                addRealmObjectField(Deployment.FIELD_IMAGES, image)
+                addRealmListField(Deployment.FIELD_IMAGES, image)
             }
         }
 
+        val stream = realm.schema.get(Stream.TABLE_NAME)
         stream?.apply {
+            addField(Stream.FIELD_ALTITUDE, Double::class.java)
+            addField(Stream.FIELD_EXTERNAL_ID, String::class.java)
+            addField(Stream.FIELD_SYNC_STATE, Int::class.java)
             addRealmObjectField(Stream.FIELD_DEPLOYMENT, deployment)
+
+            // Change id type to Int
+            addField("id_tmp", Int::class.java)
+            var tmpId = 0
+            transform {
+                it.setString(Stream.FIELD_EXTERNAL_ID, it.getString(Stream.FIELD_ID))
+                it.setInt(Stream.FIELD_SYNC_STATE, SyncState.SENT.value)
+                it.setInt("id_tmp", tmpId++)
+            }
+            removeField(Stream.FIELD_ID)
+            renameField("id_tmp", Stream.FIELD_ID)
+            addPrimaryKey(Stream.FIELD_ID)
         }
     }
 

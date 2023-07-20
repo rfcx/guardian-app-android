@@ -298,9 +298,10 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         }
     }
 
-    override fun openCreateReportActivity(streamId: String) {
+    override fun openCreateReportActivity(streamId: String, isUnexpected: Boolean) {
         val intent = Intent(this, CreateReportActivity::class.java)
         intent.putExtra(CreateReportActivity.EXTRA_STREAM_ID, streamId)
+        intent.putExtra(CreateReportActivity.EXTRA_IS_UNEXPECTED, isUnexpected)
         getResult.launch(intent)
     }
 
@@ -507,8 +508,9 @@ interface MainActivityEventListener {
     fun hideBottomAppBar()
     fun showBottomAppBar()
     fun onBackPressed()
-    fun openStreamDetail(id: String, distance: Double?)
-    fun openCreateReportActivity(streamId: String)
+    fun openStreamDetail(name: String, distance: Double?)
+    fun openCreateReportActivity(streamId: String, isUnexpected: Boolean = false)
+
     fun openDetailResponse(coreId: String)
     fun openCreateResponse(response: Response)
     fun openGoogleMap(stream: Stream)
