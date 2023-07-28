@@ -74,7 +74,7 @@ class SoftwareUpdateViewModel(
 
     private fun getSoftwareUpdateItem(downloaded: List<GuardianFile>, installed: Map<String, String>, progress: Int): List<SoftwareUpdateItem> {
         val list = arrayListOf<SoftwareUpdateItem>()
-        downloaded.forEach {
+        downloaded.sortedBy { it.name }.forEach {
             val header = SoftwareUpdateItem.SoftwareUpdateHeader(it.name)
             val child = SoftwareUpdateItem.SoftwareUpdateVersion(
                 it.name,
