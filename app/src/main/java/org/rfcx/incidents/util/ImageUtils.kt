@@ -55,7 +55,7 @@ object ImageUtils {
         val contentResolver = context.contentResolver ?: return null
         val filePath = (
             context.applicationInfo.dataDir + File.separator +
-                System.currentTimeMillis()
+                System.currentTimeMillis() + ".jpg"
             )
 
         val file = File(filePath)
