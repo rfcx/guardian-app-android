@@ -10,6 +10,6 @@ class EventsRepositoryImpl(
 ) : EventsRepository {
     override fun get(streamId: String): Single<List<Event>> {
         val stream = streamDb.get(streamId, false)
-        return Single.just(stream?.lastIncident?.events)
+        return Single.just(stream?.lastIncident?.events ?: listOf())
     }
 }
