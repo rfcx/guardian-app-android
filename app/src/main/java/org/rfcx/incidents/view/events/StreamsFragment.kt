@@ -36,7 +36,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import com.google.maps.android.SphericalUtil
+import com.google.maps.android.clustering.Cluster
+import com.google.maps.android.clustering.ClusterManager
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -63,6 +66,7 @@ import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentStreamsBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.entity.stream.MarkerItem
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.EventNotification
@@ -85,6 +89,9 @@ class StreamsFragment :
     PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
+    ClusterManager.OnClusterClickListener<MarkerItem>,
+    ClusterManager.OnClusterItemClickListener<MarkerItem>,
+    ClusterManager.OnClusterItemInfoWindowClickListener<MarkerItem>,
     (Stream) -> Unit {
 
     companion object {
@@ -127,6 +134,7 @@ class StreamsFragment :
     private lateinit var map: GoogleMap
     private lateinit var mapView: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mClusterManager: ClusterManager<MarkerItem>
 
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
@@ -385,10 +393,11 @@ class StreamsFragment :
             it.success({ streams ->
                 streamAdapter.items = streams.filter { it.lastIncident != null }
                 streamAdapter.notifyDataSetChanged()
-                setEventFeatures(streams)
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
+
+                setMarker(streams)
                 if (streams.isEmpty()) {
                     isShowNotHaveIncident(false)
                     isShowNotHaveStreams(binding.mapView.visibility == View.GONE && binding.progressBar.visibility == View.GONE)
@@ -463,7 +472,7 @@ class StreamsFragment :
     override fun onMapReady(p0: GoogleMap) {
         map = p0
         fusedLocationClient()
-
+        setUpClusterer()
         // mapBoxMap = mapboxMap
         // mapboxMap.setStyle(Style.OUTDOORS) { style ->
         //     mapboxMap.uiSettings.isAttributionEnabled = false
@@ -479,6 +488,46 @@ class StreamsFragment :
         // mapboxMap.addOnMapClickListener { latLng ->
         //     handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
         // }
+    }
+
+    private fun setUpClusterer() {
+        // Create the ClusterManager class and set the custom renderer.
+        mClusterManager = ClusterManager<MarkerItem>(requireContext(), map)
+        mClusterManager.renderer =
+            MarkerRenderer(
+                requireContext(),
+                map,
+                mClusterManager
+            )
+        // can re-cluster when zooming in and out.
+        map.setOnCameraIdleListener {
+            mClusterManager.onCameraIdle()
+        }
+
+        map.setOnMarkerClickListener(mClusterManager)
+        map.setInfoWindowAdapter(mClusterManager.markerManager)
+        map.setOnInfoWindowClickListener(mClusterManager)
+        mClusterManager.setOnClusterClickListener(this)
+        mClusterManager.setOnClusterItemClickListener(this)
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this)
+
+        map.setOnMapClickListener {
+            // lastSelectedId = -1
+            // polyline?.remove()
+        }
+    }
+
+    private fun setMarker(streams: List<Stream>) {
+        streams.forEach { stream ->
+            val item = MarkerItem(
+                stream.latitude,
+                stream.longitude,
+                stream.name,
+                ""
+            )
+            mClusterManager.addItem(item)
+        }
+        mClusterManager.cluster()
     }
 
     private fun setEventFeatures(streams: List<Stream>) {
@@ -820,6 +869,17 @@ class StreamsFragment :
             binding.refreshView.isRefreshing = false
             Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onClusterClick(cluster: Cluster<MarkerItem>?): Boolean {
+        return true
+    }
+
+    override fun onClusterItemClick(item: MarkerItem?): Boolean {
+        return false
+    }
+
+    override fun onClusterItemInfoWindowClick(item: MarkerItem?) {
     }
 }
 
