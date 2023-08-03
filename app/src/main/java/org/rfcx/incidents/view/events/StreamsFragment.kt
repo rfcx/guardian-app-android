@@ -66,6 +66,7 @@ import org.rfcx.incidents.data.remote.common.success
 import org.rfcx.incidents.databinding.FragmentStreamsBinding
 import org.rfcx.incidents.entity.CrashlyticsKey
 import org.rfcx.incidents.entity.location.Tracking
+import org.rfcx.incidents.entity.stream.MarkerDetail
 import org.rfcx.incidents.entity.stream.MarkerItem
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.entity.stream.Stream
@@ -91,7 +92,6 @@ class StreamsFragment :
     SwipeRefreshLayout.OnRefreshListener,
     ClusterManager.OnClusterClickListener<MarkerItem>,
     ClusterManager.OnClusterItemClickListener<MarkerItem>,
-    ClusterManager.OnClusterItemInfoWindowClickListener<MarkerItem>,
     (Stream) -> Unit {
 
     companion object {
@@ -473,6 +473,12 @@ class StreamsFragment :
         map = p0
         fusedLocationClient()
         setUpClusterer()
+
+        map.setOnMapClickListener {
+            mClusterManager.clusterMarkerCollection.markers.forEach { marker ->
+                marker.hideInfoWindow()
+            }
+        }
         // mapBoxMap = mapboxMap
         // mapboxMap.setStyle(Style.OUTDOORS) { style ->
         //     mapboxMap.uiSettings.isAttributionEnabled = false
@@ -509,7 +515,6 @@ class StreamsFragment :
         map.setOnInfoWindowClickListener(mClusterManager)
         mClusterManager.setOnClusterClickListener(this)
         mClusterManager.setOnClusterItemClickListener(this)
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this)
 
         map.setOnMapClickListener {
             // lastSelectedId = -1
@@ -519,11 +524,12 @@ class StreamsFragment :
 
     private fun setMarker(streams: List<Stream>) {
         streams.forEach { stream ->
+            val data = MarkerDetail(stream.name, stream.id.toString(), distanceLabel(lastLocation, stream), (stream.lastIncident?.events?.size ?: 0).toString())
             val item = MarkerItem(
                 stream.latitude,
                 stream.longitude,
                 stream.name,
-                ""
+                Gson().toJson(data)
             )
             mClusterManager.addItem(item)
         }
@@ -876,10 +882,8 @@ class StreamsFragment :
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
-        return false
-    }
 
-    override fun onClusterItemInfoWindowClick(item: MarkerItem?) {
+        return false
     }
 }
 
