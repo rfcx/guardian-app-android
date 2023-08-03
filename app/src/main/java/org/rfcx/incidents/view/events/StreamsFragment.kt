@@ -396,7 +396,8 @@ class StreamsFragment :
                 binding.streamLayout.visibility = View.VISIBLE
                 binding.refreshView.isRefreshing = false
                 isShowProgressBar(false)
-
+                mClusterManager.clearItems()
+                mClusterManager.cluster()
                 setMarker(streams)
                 if (streams.isEmpty()) {
                     isShowNotHaveIncident(false)
@@ -524,7 +525,7 @@ class StreamsFragment :
 
     private fun setMarker(streams: List<Stream>) {
         streams.forEach { stream ->
-            val data = MarkerDetail(stream.name, stream.id.toString(), distanceLabel(lastLocation, stream), (stream.lastIncident?.events?.size ?: 0).toString())
+            val data = MarkerDetail(stream.id, stream.name, stream.externalId ?: "",distanceLabel(lastLocation, stream), stream.lastIncident?.events?.size ?: 0)
             val item = MarkerItem(
                 stream.latitude,
                 stream.longitude,
@@ -544,9 +545,9 @@ class StreamsFragment :
                 Pair(PROPERTY_MARKER_EVENT_DISTANCE, distanceLabel(lastLocation, it)),
                 Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.externalId.toString())
             )
-            Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
+            // Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
         }
-        eventFeatures = FeatureCollection.fromFeatures(features)
+        // eventFeatures = FeatureCollection.fromFeatures(features)
         eventFeatures?.let { moveCameraToLeavesBounds(it) }
         refreshSource()
     }
@@ -878,16 +879,36 @@ class StreamsFragment :
     }
 
     override fun onClusterClick(cluster: Cluster<MarkerItem>?): Boolean {
+        val builder = LatLngBounds.builder()
+        val markers: Collection<MarkerItem> = cluster!!.items
+
+        for (item in markers) {
+            val position = item.position
+            builder.include(position)
+        }
+
+        val bounds = builder.build()
+
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+        } catch (error: Exception) {
+            return true
+        }
         return true
     }
 
-    override fun onClusterItemClick(item: MarkerItem?): Boolean {
+    override fun onClusterItemClick(item: MarkerItem): Boolean {
+        if (item.snippet.isNotBlank()) {
+            val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
 
+            firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, data.name)
+            listener.openStreamDetail(data.serverId, data.distance)
+        }
         return false
     }
 }
 
-fun distanceLabel(origin: Location?, destination: Stream): String {
-    if (origin == null) return ""
-    return SphericalUtil.computeDistanceBetween(LatLng(origin.latitude, origin.longitude), LatLng(destination.latitude, destination.longitude)).toString()
+fun distanceLabel(origin: Location?, destination: Stream): Double {
+    if (origin == null) return 0.0
+    return SphericalUtil.computeDistanceBetween(LatLng(origin.latitude, origin.longitude), LatLng(destination.latitude, destination.longitude))
 }
