@@ -28,6 +28,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -42,9 +46,7 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.CircleLayer
@@ -126,7 +128,8 @@ class StreamsFragment :
     private val streamAdapter by lazy { StreamAdapter(this) }
     lateinit var preferences: Preferences
 
-    private lateinit var mapView: MapView
+    private lateinit var map: GoogleMap
+    private lateinit var mapView: SupportMapFragment
     private var mapBoxMap: MapboxMap? = null
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
@@ -207,8 +210,7 @@ class StreamsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = view.findViewById(R.id.mapView)
-        mapView.onCreate(savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         mapView.getMapAsync(this)
         preferences = Preferences.getInstance(requireContext())
 
@@ -435,13 +437,13 @@ class StreamsFragment :
                 isShowNotHaveStreams(false)
                 isShowNotHaveIncident(false)
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_view_list)
-                mapView.visibility = View.VISIBLE
+                binding.mapView.visibility = View.VISIBLE
                 binding.refreshView.visibility = View.GONE
                 binding.currentLocationButton.visibility = View.VISIBLE
                 mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
             } else {
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
-                mapView.visibility = View.GONE
+                binding.mapView.visibility = View.GONE
                 binding.refreshView.visibility = View.VISIBLE
                 binding.currentLocationButton.visibility = View.GONE
             }
@@ -463,22 +465,23 @@ class StreamsFragment :
 
     /* ------------------- vv Setup Map vv ------------------- */
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        mapBoxMap = mapboxMap
-        mapboxMap.setStyle(Style.OUTDOORS) { style ->
-            mapboxMap.uiSettings.isAttributionEnabled = false
-            mapboxMap.uiSettings.isLogoEnabled = false
-            getLocation()
-            setupSources(style)
-            refreshSource()
-            addClusteredGeoJsonSource(style)
-            addLineLayer(style)
-            eventFeatures?.let { moveCameraToLeavesBounds(it) }
-        }
-
-        mapboxMap.addOnMapClickListener { latLng ->
-            handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
-        }
+    override fun onMapReady(p0: GoogleMap) {
+        map = p0
+        // mapBoxMap = mapboxMap
+        // mapboxMap.setStyle(Style.OUTDOORS) { style ->
+        //     mapboxMap.uiSettings.isAttributionEnabled = false
+        //     mapboxMap.uiSettings.isLogoEnabled = false
+        //     getLocation()
+        //     setupSources(style)
+        //     refreshSource()
+        //     addClusteredGeoJsonSource(style)
+        //     addLineLayer(style)
+        //     eventFeatures?.let { moveCameraToLeavesBounds(it) }
+        // }
+        //
+        // mapboxMap.addOnMapClickListener { latLng ->
+        //     handleClickIcon(mapboxMap.projection.toScreenLocation(latLng))
+        // }
     }
 
     private fun setEventFeatures(streams: List<Stream>) {
@@ -807,34 +810,7 @@ class StreamsFragment :
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
         analytics?.trackScreen(Screen.NEW_EVENTS)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-
-        // if (!context.isNetworkAvailable()) {
-        //     isShowProgressBar(false)
-        // } else {
-        //     viewModel.refreshStreams()
-        // }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView.onStop()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}
