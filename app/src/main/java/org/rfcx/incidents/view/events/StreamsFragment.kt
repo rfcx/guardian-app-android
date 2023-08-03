@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -28,25 +27,22 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.maps.android.SphericalUtil
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.CircleLayer
@@ -72,6 +68,7 @@ import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.service.EventNotification
 import org.rfcx.incidents.util.Analytics
 import org.rfcx.incidents.util.Crashlytics
+import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -108,9 +105,7 @@ class StreamsFragment :
         private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
         private const val MARKER_CHECK_IN_ID = "marker.checkin"
 
-        private const val DEFAULT_MAP_ZOOM = 15.0
-        private const val PADDING_BOUNDS = 230
-        private const val DURATION_MS = 1300
+        private const val DEFAULT_MAP_ZOOM = 15.0F
         private const val THREE_HOURS = 3 * 60 * 60 * 1000
 
         @JvmStatic
@@ -127,20 +122,21 @@ class StreamsFragment :
     private val projectAdapter by lazy { ProjectAdapter(this) }
     private val streamAdapter by lazy { StreamAdapter(this) }
     lateinit var preferences: Preferences
+    private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
 
     private lateinit var map: GoogleMap
     private lateinit var mapView: SupportMapFragment
-    private var mapBoxMap: MapboxMap? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private val locationListener = object : android.location.LocationListener {
         override fun onLocationChanged(p0: Location) {
-            moveCameraToCurrentLocation(p0)
             viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
 
             if (PermissionsManager.areLocationPermissionsGranted(context)) {
-                mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
+                fusedLocationClient()
             }
         }
 
@@ -191,7 +187,7 @@ class StreamsFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        context?.let { Mapbox.getInstance(it, getString(R.string.mapbox_token)) }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     override fun onCreateView(
@@ -217,7 +213,6 @@ class StreamsFragment :
         // Show loading indicator for first time
         isShowProgressBar()
 
-        getLocation()
         setupToolbar()
         setOnClickListener()
         setObserver()
@@ -257,9 +252,9 @@ class StreamsFragment :
 
     private fun onClickCurrentLocationButton() {
         binding.currentLocationButton.setOnClickListener {
-            mapBoxMap?.locationComponent?.isLocationComponentActivated?.let {
-                if (it) {
-                    moveCameraToCurrentLocation()
+            locationPermissions.check { allow ->
+                if (allow) {
+                    fusedLocationClient()
                 } else {
                     getLocation()
                 }
@@ -440,7 +435,7 @@ class StreamsFragment :
                 binding.mapView.visibility = View.VISIBLE
                 binding.refreshView.visibility = View.GONE
                 binding.currentLocationButton.visibility = View.VISIBLE
-                mapBoxMap?.style?.let { style -> enableLocationComponent(style) }
+                fusedLocationClient()
             } else {
                 binding.toolbarLayout.changePageImageView.setImageResource(R.drawable.ic_map)
                 binding.mapView.visibility = View.GONE
@@ -467,6 +462,8 @@ class StreamsFragment :
 
     override fun onMapReady(p0: GoogleMap) {
         map = p0
+        fusedLocationClient()
+
         // mapBoxMap = mapboxMap
         // mapboxMap.setStyle(Style.OUTDOORS) { style ->
         //     mapboxMap.uiSettings.isAttributionEnabled = false
@@ -520,10 +517,10 @@ class StreamsFragment :
         val rectF = RectF(screenPoint.x - 10, screenPoint.y - 10, screenPoint.x + 10, screenPoint.y + 10)
         var eventFeatures = listOf<Feature>()
         queryLayerIds.forEach {
-            val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
-            if (features.isNotEmpty()) {
-                eventFeatures = features
-            }
+            // val features = mapBoxMap?.queryRenderedFeatures(rectF, it) ?: listOf()
+            // if (features.isNotEmpty()) {
+            //     eventFeatures = features
+            // }
         }
 
         if (eventFeatures.isNotEmpty()) {
@@ -696,42 +693,34 @@ class StreamsFragment :
         style.addLayer(eventsSize)
     }
 
-    private fun enableLocationComponent(style: Style) {
-        val context = context ?: return
-        val mapboxMap = mapBoxMap ?: return
-
-        // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(context)) {
-
-            // Create and customize the LocationComponent's options
-            val customLocationComponentOptions = LocationComponentOptions.builder(context)
-                .trackingGesturesManagement(true)
-                .accuracyColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .build()
-
-            val locationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
-                .locationComponentOptions(customLocationComponentOptions)
-                .build()
-
-            // Get an instance of the LocationComponent and then adjust its settings
-            mapboxMap.locationComponent.apply {
-                // Activate the LocationComponent with options
-                activateLocationComponent(locationComponentActivationOptions)
-                // Enable to make the LocationComponent visible
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return
-                }
-                isLocationComponentEnabled = true
-
-                // Set the LocationComponent's render mode
-                renderMode = RenderMode.COMPASS
-            }
-        } else {
-            permissionsManager = PermissionsManager(this)
-            permissionsManager.requestLocationPermissions(activity)
+    private fun fusedLocationClient() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissions.check {  }
+            return
         }
+
+        map.isMyLocationEnabled = true
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                map.moveCamera(
+                    com.google.android.gms.maps.CameraUpdateFactory.newLatLng(
+                        com.google.android.gms.maps.model.LatLng(
+                            location?.latitude ?: 0.0,
+                            location?.longitude ?: 0.0
+                        )
+                    )
+                )
+                map.uiSettings.isZoomControlsEnabled = true
+                map.uiSettings.isMyLocationButtonEnabled = false
+                lastLocation = location
+            }
     }
 
     private fun getLocation() {
@@ -748,7 +737,7 @@ class StreamsFragment :
                     moveCameraToCurrentLocation(it)
                     viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
                 }
-                mapBoxMap?.style?.let { enableLocationComponent(it) }
+                fusedLocationClient()
             } catch (ex: SecurityException) {
                 ex.printStackTrace()
             } catch (ex: IllegalArgumentException) {
@@ -765,8 +754,8 @@ class StreamsFragment :
         moveCameraTo(LatLng(location.latitude, location.longitude))
     }
 
-    private fun moveCameraTo(latLng: LatLng, zoom: Double = DEFAULT_MAP_ZOOM) {
-        mapBoxMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+    private fun moveCameraTo(latLng: LatLng, zoom: Float = DEFAULT_MAP_ZOOM) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
     }
 
     private fun moveCameraToLeavesBounds(featureCollectionToInspect: FeatureCollection) {
@@ -785,16 +774,16 @@ class StreamsFragment :
     }
 
     private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
-        val latLngBounds = LatLngBounds.Builder()
-            .includes(latLngList)
-            .build()
-        mapBoxMap?.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, PADDING_BOUNDS), DURATION_MS)
-    }
+        val builder = LatLngBounds.builder()
+        for (item in latLngList) {
+            builder.include(item)
+        }
+        val bounds = builder.build()
 
-    private fun moveCameraToCurrentLocation() {
-        mapBoxMap?.locationComponent?.lastKnownLocation?.let { curLoc ->
-            val currentLatLng = LatLng(curLoc.latitude, curLoc.longitude)
-            moveCameraTo(currentLatLng, mapBoxMap?.cameraPosition?.zoom ?: DEFAULT_MAP_ZOOM)
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -816,10 +805,9 @@ class StreamsFragment :
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}
 
     override fun onPermissionResult(granted: Boolean) {
-        val style = mapBoxMap?.style ?: return
         val context = context ?: return
         if (granted) {
-            enableLocationComponent(style)
+            fusedLocationClient()
         } else {
             Toast.makeText(context, R.string.location_permission_msg, Toast.LENGTH_LONG).show()
         }
@@ -837,5 +825,5 @@ class StreamsFragment :
 
 fun distanceLabel(origin: Location?, destination: Stream): String {
     if (origin == null) return ""
-    return LatLng(origin.latitude, origin.longitude).distanceTo(LatLng(destination.latitude, destination.longitude)).toString()
+    return SphericalUtil.computeDistanceBetween(LatLng(origin.latitude, origin.longitude), LatLng(destination.latitude, destination.longitude)).toString()
 }
