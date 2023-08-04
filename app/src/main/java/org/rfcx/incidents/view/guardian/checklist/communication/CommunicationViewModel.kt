@@ -94,6 +94,7 @@ class CommunicationViewModel(
     private var needCheckSha1 = false
     private var isFirstTime = true
     private var currentGuardianSha1 = ""
+    private var isManual = true
 
     init {
         getPrefSha1()
@@ -227,21 +228,29 @@ class CommunicationViewModel(
             getProjectOffTimesUseCase.launch(GetProjectOffTimesParams(preferences.getString(Preferences.SELECTED_PROJECT, ""))).catch {
             }.collectLatest { result ->
                 currentProjectOffTimes = result
-                if (currentProjectOffTimes.isEmpty()) {
-                    _guardianSatOffTimeEmptyTextState.tryEmit(true)
-                } else {
-                    _guardianSatOffTimeEmptyTextState.tryEmit(false)
-                }
+                determineEmptyProjectOffTimes()
             }
         }
     }
 
+    private fun determineEmptyProjectOffTimes() {
+        if (currentProjectOffTimes.isEmpty() && !isManual) {
+            _guardianSatOffTimeEmptyTextState.tryEmit(true)
+        } else {
+            _guardianSatOffTimeEmptyTextState.tryEmit(false)
+        }
+    }
+
     fun onManualClicked() {
+        isManual = true
         _guardianSatTimeOffState.tryEmit(currentGuardianOffTimes)
+        determineEmptyProjectOffTimes()
     }
 
     fun onAutoClicked() {
+        isManual = false
         _guardianSatTimeOffState.tryEmit(currentProjectOffTimes)
+        determineEmptyProjectOffTimes()
     }
 
     fun onNextClicked(plan: GuardianPlan, offTimes: List<TimeRange>? = null, isManual: Boolean = true) {
