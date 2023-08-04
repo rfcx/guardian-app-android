@@ -77,7 +77,7 @@
                     android:layout_marginStart="@dimen/margin_padding_small"
                     app:layout_constraintTop_toTopOf="parent"
                     app:singleSelection="true"
-                    app:checkedChip="@id/allSelectChip">
+                    app:checkedChip="@id/unSyncedSelectChip">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/unSyncedSelectChip"

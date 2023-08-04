@@ -94,13 +94,13 @@ class DeploymentListViewModel(
     private val _unsyncedAlertState: MutableStateFlow<Int> = MutableStateFlow(0)
     val unsyncedAlertState = _unsyncedAlertState.asStateFlow()
 
-    private var currentFilter = FilterDeployment.ALL
+    private var currentFilter = FilterDeployment.UNSYNCED
     private var currentAllStreams = listOf<Stream>()
     private var currentAllRegistration = listOf<GuardianRegistration>()
     private var selectedProjectId = ""
 
     var isLoadingMore = false
-    private var isMapScreen = true
+    private var isMapScreen = false
 
     init {
         getLocationChanged()
