@@ -579,7 +579,7 @@
     <string name="registration">Registration</string>
     <string name="deployments">Deployments</string>
     <string name="map">Map View</string>
-    <string name="deploy_new_guardian">Deploy new Guardian</string>
+    <string name="deploy_new_guardian">Connect to Guardian</string>
 
     <!-- Deployment Detail -->
 
