@@ -320,8 +320,6 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 viewModel.addFilter(currentFilter)
             }
         }
-        // Start with Map screen
-        binding.toolbarLayout.changePageButton.performClick()
 
         binding.mapBoxView.onCreate(savedInstanceState)
         binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
