@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.databinding.FragmentGuardianChecklistBinding
 import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
+import org.rfcx.incidents.service.deploy.RegistrationSyncWorker
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 import org.rfcx.incidents.view.guardian.GuardianScreen
 
@@ -46,6 +47,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             mainEvent?.let {
                 viewModel.deploy(it.getSavedStream(), it.getSavedImages())
                 DeploymentSyncWorker.enqueue()
+                RegistrationSyncWorker.enqueue()
                 it.finishDeploy()
             }
         }

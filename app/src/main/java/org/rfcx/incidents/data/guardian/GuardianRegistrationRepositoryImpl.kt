@@ -32,10 +32,10 @@ class GuardianRegistrationRepositoryImpl(
             emit(Result.Loading)
             localDb.markSending(registration.guid)
             if (env == "production") {
-                emit(Result.Success(productionEndpoint.register(registration)))
+                emit(Result.Success(productionEndpoint.registerSuspend(registration)))
                 localDb.markSent(registration.guid)
             } else {
-                emit(Result.Success(stagingEndpoint.register(registration)))
+                emit(Result.Success(stagingEndpoint.registerSuspend(registration)))
                 localDb.markSent(registration.guid)
             }
         }.catch { e ->

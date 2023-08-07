@@ -12,8 +12,10 @@ import org.rfcx.incidents.data.local.AssetDb
 import org.rfcx.incidents.data.local.ResponseDb
 import org.rfcx.incidents.data.local.deploy.DeploymentDb
 import org.rfcx.incidents.data.local.deploy.DeploymentImageDb
+import org.rfcx.incidents.data.local.guardian.GuardianRegistrationDb
 import org.rfcx.incidents.data.local.realm.AppRealm
 import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
+import org.rfcx.incidents.service.deploy.RegistrationSyncWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -53,6 +55,14 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
         if (deploymentUnsent > 0) {
             DeploymentSyncWorker.enqueue()
         }
+
+        val registrationDb = GuardianRegistrationDb(realm)
+        val registerUnsent = registrationDb.unsentCount()
+        registrationDb.unlockSending()
+        if (registerUnsent > 0) {
+            RegistrationSyncWorker.enqueue()
+        }
+
 
         val imageDb = DeploymentImageDb(realm)
         val imageUnsent = imageDb.unsentCount()
