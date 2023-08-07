@@ -25,6 +25,7 @@ import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.guardian.registration.toSocketFormat
 import org.rfcx.incidents.entity.guardian.socket.InstructionCommand
 import org.rfcx.incidents.entity.guardian.socket.InstructionType
+import org.rfcx.incidents.service.deploy.RegistrationSyncWorker
 import org.rfcx.incidents.util.common.StringUtils
 import org.rfcx.incidents.util.socket.PingUtils.getGuid
 import org.rfcx.incidents.util.socket.PingUtils.isRegistered
@@ -68,6 +69,7 @@ class GuardianRegisterViewModel(
                     }
                     if (waitingForRegistration && it) {
                         waitingForRegistration = false
+                        RegistrationSyncWorker.enqueue()
                     }
                     if (it && !waitingForRegistration) {
                         _registerTextState.tryEmit("Your Guardian is already registered")

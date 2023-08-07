@@ -47,7 +47,6 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
             mainEvent?.let {
                 viewModel.deploy(it.getSavedStream(), it.getSavedImages())
                 DeploymentSyncWorker.enqueue()
-                RegistrationSyncWorker.enqueue()
                 it.finishDeploy()
             }
         }
