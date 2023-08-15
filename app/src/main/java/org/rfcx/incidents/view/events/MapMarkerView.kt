@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import org.rfcx.incidents.databinding.ItemClusterBinding
 
 class MapMarkerView @JvmOverloads constructor(
@@ -18,7 +19,8 @@ class MapMarkerView @JvmOverloads constructor(
         addView(binding.root)
     }
 
-    fun setContent(number: String) {
+    fun setContent(number: String, idDrawable: Int) {
         binding.numberText.text = number
+        binding.bgView.setImageDrawable(ContextCompat.getDrawable(context, idDrawable))
     }
 }

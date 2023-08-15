@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -20,13 +19,12 @@ import com.google.gson.Gson
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
+import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.stream.MarkerDetail
 import org.rfcx.incidents.entity.stream.MarkerItem
 
 class MarkerRenderer(
-    private val context: Context,
-    map: GoogleMap,
-    clusterManager: ClusterManager<MarkerItem>
+    private val context: Context, map: GoogleMap, clusterManager: ClusterManager<MarkerItem>
 ) : DefaultClusterRenderer<MarkerItem>(context, map, clusterManager) {
     private val mapMarkerView: MapMarkerView = MapMarkerView(context)
     private val markerIconGenerator = IconGenerator(context)
@@ -41,15 +39,16 @@ class MarkerRenderer(
      * This is where marker options should be set.
      */
     override fun onBeforeClusterItemRendered(
-        item: MarkerItem,
-        markerOptions: MarkerOptions
+        item: MarkerItem, markerOptions: MarkerOptions
     ) {
-        Log.d("markerOptions", "${item.snippet}")
         val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
-        mapMarkerView.setContent(data.id.toString()) // Change
-        markerOptions.title(item.title)
-            .position(item.position)
-            .snippet(item.snippet)
+        val drawable = if (data.countEvents == 0) {
+            R.drawable.bg_circle_green
+        } else {
+            R.drawable.bg_circle_red
+        }
+        mapMarkerView.setContent(data.countEvents.toString(), drawable)
+        markerOptions.title(item.title).position(item.position).snippet(item.snippet)
             .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, mapMarkerView)))
     }
 
@@ -60,17 +59,11 @@ class MarkerRenderer(
     private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
         val vectorDrawable: Drawable = ContextCompat.getDrawable(context, vectorResId)!!
         vectorDrawable.setBounds(
-            0,
-            0,
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight
+            0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight
         )
-        val bitmap: Bitmap =
-            Bitmap.createBitmap(
-                vectorDrawable.intrinsicWidth,
-                vectorDrawable.intrinsicHeight,
-                Bitmap.Config.ARGB_8888
-            )
+        val bitmap: Bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
 
         val canvas: Canvas = Canvas(bitmap)
         vectorDrawable.draw(canvas)
