@@ -41,7 +41,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     private lateinit var unsyncedAlert: AlertDialog
     private var state = DeploymentListState.LIST
-    private var currentFilter = DeploymentListViewModel.FilterDeployment.ALL
+    private var currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -320,8 +320,6 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                 viewModel.addFilter(currentFilter)
             }
         }
-        // Start with Map screen
-        binding.toolbarLayout.changePageButton.performClick()
 
         binding.mapBoxView.onCreate(savedInstanceState)
         binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
