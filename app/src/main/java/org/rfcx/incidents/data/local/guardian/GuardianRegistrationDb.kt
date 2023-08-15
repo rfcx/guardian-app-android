@@ -5,7 +5,6 @@ import io.realm.kotlin.toFlow
 import kotlinx.coroutines.flow.Flow
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
 import org.rfcx.incidents.entity.response.SyncState
-import org.rfcx.incidents.entity.stream.Stream
 
 class GuardianRegistrationDb(private val realm: Realm) {
 

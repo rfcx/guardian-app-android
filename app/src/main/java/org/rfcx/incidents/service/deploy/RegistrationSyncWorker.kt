@@ -27,7 +27,7 @@ class RegistrationSyncWorker(private val context: Context, params: WorkerParamet
         Log.d(TAG, "doWork: found ${unsent.size} unsent")
         var someFailed = false
         unsent.forEach {
-            when(it.env) {
+            when (it.env) {
                 "production" -> {
                     val result = prodService.register(it.toRequest()).execute()
                     if (result.isSuccessful) {

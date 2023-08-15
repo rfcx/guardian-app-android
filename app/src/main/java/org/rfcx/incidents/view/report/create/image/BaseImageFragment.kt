@@ -3,17 +3,9 @@ package org.rfcx.incidents.view.report.create.image
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.LayoutInflater
-import androidx.core.content.FileProvider
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.opensooq.supernova.gligar.GligarPicker
-import org.rfcx.incidents.databinding.ButtomSheetAttachImageLayoutBinding
 import org.rfcx.incidents.util.CameraPermissions
 import org.rfcx.incidents.util.GalleryPermissions
-import org.rfcx.incidents.util.ImageFileUtils
 import org.rfcx.incidents.util.ImageUtils
-import org.rfcx.incidents.util.ReportUtils
 import org.rfcx.incidents.view.base.BaseFragment
 import java.io.File
 

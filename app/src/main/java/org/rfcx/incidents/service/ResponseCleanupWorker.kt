@@ -63,7 +63,6 @@ class ResponseCleanupWorker(context: Context, params: WorkerParameters) : Worker
             RegistrationSyncWorker.enqueue()
         }
 
-
         val imageDb = DeploymentImageDb(realm)
         val imageUnsent = imageDb.unsentCount()
         imageDb.unlockSending()
