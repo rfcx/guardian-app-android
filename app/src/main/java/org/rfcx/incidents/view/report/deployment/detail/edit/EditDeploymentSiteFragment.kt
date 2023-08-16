@@ -12,8 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.SupportMapFragment
-import com.mapbox.mapboxsdk.geometry.LatLng
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,7 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         initIntent()
     }
 
@@ -54,7 +56,6 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
         mapView!!.getMapAsync(this)
 
         binding.viewModel = viewModel
-        setMap(savedInstanceState)
 
         view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
         setHideKeyboard()
@@ -75,8 +76,8 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
                         site.longitude = siteLongitude
                     }
                     val siteLoc = LatLng(site.latitude, site.longitude)
-
-                    // binding.mapBoxView.setSiteLocation(siteLoc)
+                    setSiteLocation(siteLoc)
+                    addMarker(siteLoc)
                 }
             }
         }
@@ -99,11 +100,6 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
                 listener?.finishEdit()
             }
         }
-    }
-
-    private fun setMap(savedInstanceState: Bundle?) {
-        // binding.mapBoxView.onCreate(savedInstanceState)
-        // binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
     }
 
     private fun setOnFocusEditText() {
@@ -147,36 +143,6 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
         val inputManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // binding.mapBoxView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // binding.mapBoxView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // binding.mapBoxView.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // binding.mapBoxView.onStop()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        // binding.mapBoxView.onLowMemory()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // binding.mapBoxView.onDestroy()
     }
 
     companion object {
