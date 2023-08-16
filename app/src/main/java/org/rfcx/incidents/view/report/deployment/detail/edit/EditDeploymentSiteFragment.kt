@@ -11,8 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,8 +20,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.view.base.BaseMapFragment
 
-class EditDeploymentSiteFragment : Fragment() {
+class EditDeploymentSiteFragment : BaseMapFragment() {
     private lateinit var binding: FragmentEditLocationBinding
     private val viewModel: EditSiteViewModel by viewModel()
 
@@ -49,6 +50,8 @@ class EditDeploymentSiteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        mapView!!.getMapAsync(this)
 
         binding.viewModel = viewModel
         setMap(savedInstanceState)
@@ -72,7 +75,8 @@ class EditDeploymentSiteFragment : Fragment() {
                         site.longitude = siteLongitude
                     }
                     val siteLoc = LatLng(site.latitude, site.longitude)
-                    binding.mapBoxView.setSiteLocation(siteLoc)
+
+                    // binding.mapBoxView.setSiteLocation(siteLoc)
                 }
             }
         }
@@ -98,8 +102,8 @@ class EditDeploymentSiteFragment : Fragment() {
     }
 
     private fun setMap(savedInstanceState: Bundle?) {
-        binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
+        // binding.mapBoxView.onCreate(savedInstanceState)
+        // binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
     }
 
     private fun setOnFocusEditText() {
@@ -147,32 +151,32 @@ class EditDeploymentSiteFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.mapBoxView.onStart()
+        // binding.mapBoxView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.mapBoxView.onResume()
+        // binding.mapBoxView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        binding.mapBoxView.onPause()
+        // binding.mapBoxView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        binding.mapBoxView.onStop()
+        // binding.mapBoxView.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        binding.mapBoxView.onLowMemory()
+        // binding.mapBoxView.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.mapBoxView.onDestroy()
+        // binding.mapBoxView.onDestroy()
     }
 
     companion object {
