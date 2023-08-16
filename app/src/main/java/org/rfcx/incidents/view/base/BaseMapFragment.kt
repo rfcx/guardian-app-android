@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.location.Location
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,26 +28,25 @@ abstract class BaseMapFragment : BaseFragment(),
     OnMapReadyCallback,
     ClusterManager.OnClusterClickListener<MarkerItem>,
     ClusterManager.OnClusterItemClickListener<MarkerItem> {
+
     var map: GoogleMap? = null
     var mapView: SupportMapFragment? = null
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
+    
     private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
     private var lastLocation: Location? = null
     private var siteLoc = LatLng(0.0, 0.0)
 
     override fun onMapReady(p0: GoogleMap) {
         map = p0
-        Log.d("mapView", "onMapReady")
     }
 
     override fun onClusterClick(cluster: Cluster<MarkerItem>?): Boolean {
-        Log.d("mapView", "onClusterClick")
         return true
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
-        Log.d("mapView", "onClusterItemClick")
         return false
     }
 
