@@ -63,7 +63,7 @@ abstract class BaseMapFragment : BaseFragment(),
         return false
     }
 
-    private fun fusedLocationClient() {
+    fun fusedLocationClient() {
         if (map == null) return
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -80,14 +80,6 @@ abstract class BaseMapFragment : BaseFragment(),
         map?.isMyLocationEnabled = true
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
-                map?.moveCamera(
-                    CameraUpdateFactory.newLatLng(
-                        LatLng(
-                            location?.latitude ?: 0.0,
-                            location?.longitude ?: 0.0
-                        )
-                    )
-                )
                 map?.uiSettings?.isZoomControlsEnabled = true
                 map?.uiSettings?.isMyLocationButtonEnabled = false
                 lastLocation = location
@@ -102,6 +94,7 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     fun addMarker(latLng: LatLng) {
+        map?.clear()
         map?.addMarker(
             MarkerOptions()
                 .position(latLng)

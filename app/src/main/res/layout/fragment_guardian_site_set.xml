@@ -37,8 +37,9 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.7" />
 
-                <org.rfcx.incidents.view.guardian.checklist.site.MapView
-                    android:id="@+id/mapBoxView"
+                <androidx.fragment.app.FragmentContainerView
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/mapView"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -49,10 +50,10 @@
                     android:id="@+id/viewMapBox"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
-                    app:layout_constraintEnd_toEndOf="@id/mapBoxView"
-                    app:layout_constraintStart_toStartOf="@id/mapBoxView"
-                    app:layout_constraintTop_toTopOf="@id/mapBoxView" />
+                    app:layout_constraintBottom_toBottomOf="@id/mapView"
+                    app:layout_constraintEnd_toEndOf="@id/mapView"
+                    app:layout_constraintStart_toStartOf="@id/mapView"
+                    app:layout_constraintTop_toTopOf="@id/mapView" />
 
                 <LinearLayout
                     android:id="@+id/currentLocate"
@@ -62,7 +63,7 @@
                     android:background="@drawable/bg_button_green_outline"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
+                    app:layout_constraintBottom_toBottomOf="@id/mapView"
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -108,7 +109,7 @@
                     android:text="You are currently within 20m of the site"
                     android:textSize="@dimen/text_xsmall"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/mapBoxView" />
+                    app:layout_constraintTop_toBottomOf="@id/mapView" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/siteTitleTextView"

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -41,6 +42,11 @@ class MapPickerFragment :
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map_picker, container, false)
         binding.lifecycleOwner = this
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,6 +92,7 @@ class MapPickerFragment :
         setGoogleMap(p0, true)
         setCallback(p0)
         moveCamera(LatLng(site.latitude, site.longitude))
+        fusedLocationClient()
     }
 
     private fun initIntent() {
