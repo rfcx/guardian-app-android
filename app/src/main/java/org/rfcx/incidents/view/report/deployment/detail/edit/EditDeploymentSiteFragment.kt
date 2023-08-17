@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.collectLatest
@@ -100,6 +101,10 @@ class EditDeploymentSiteFragment : BaseMapFragment() {
                 listener?.finishEdit()
             }
         }
+    }
+
+    override fun onMapReady(p0: GoogleMap) {
+        setGoogleMap(p0, false)
     }
 
     private fun setOnFocusEditText() {

@@ -31,15 +31,28 @@ abstract class BaseMapFragment : BaseFragment(),
 
     var map: GoogleMap? = null
     var mapView: SupportMapFragment? = null
+
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
-    
     private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
     private var lastLocation: Location? = null
     private var siteLoc = LatLng(0.0, 0.0)
+    private var currentLoc = LatLng(0.0, 0.0)
 
-    override fun onMapReady(p0: GoogleMap) {
-        map = p0
+    private lateinit var callback: (LatLng) -> Unit
+
+    fun setGoogleMap(mMap: GoogleMap, canMove: Boolean) {
+        map = mMap
+        mMap.uiSettings.setAllGesturesEnabled(canMove)
+    }
+
+    fun setCallback(mMap: GoogleMap) {
+        mMap.setOnCameraMoveListener {
+            val currentCameraPosition = mMap.cameraPosition.target
+            if (::callback.isInitialized) {
+                this.callback.invoke(LatLng(currentCameraPosition.latitude, currentCameraPosition.longitude))
+            }
+        }
     }
 
     override fun onClusterClick(cluster: Cluster<MarkerItem>?): Boolean {
@@ -96,7 +109,7 @@ abstract class BaseMapFragment : BaseFragment(),
         )
     }
 
-    private fun moveCamera(latLng: LatLng) {
+    fun moveCamera(latLng: LatLng) {
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 
@@ -104,6 +117,14 @@ abstract class BaseMapFragment : BaseFragment(),
         if (location == null) return
         val latLng = LatLng(location.latitude, location.longitude)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+    }
+
+    fun setCameraMoveCallback(callback: (LatLng) -> Unit) {
+        this.callback = callback
+    }
+
+    fun setCurrentLocation(currentLoc: LatLng) {
+        this.currentLoc = currentLoc
     }
 
     fun getCurrentPosition(): LatLng? {
@@ -125,6 +146,6 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     companion object {
-        private const val DEFAULT_ZOOM = 16.0f
+        private const val DEFAULT_ZOOM = 15.0f
     }
 }
