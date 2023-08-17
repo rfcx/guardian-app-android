@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,12 +27,13 @@ import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
 import org.rfcx.incidents.view.MainActivityEventListener
+import org.rfcx.incidents.view.base.BaseMapFragment
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
 import org.rfcx.incidents.view.guardian.GuardianDeploymentActivity
 import org.rfcx.incidents.view.report.deployment.detail.DeploymentDetailActivity
 
-class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClickListener {
+class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, ProjectOnClickListener {
 
     private lateinit var binding: FragmentDeploymentListBinding
     private val viewModel: DeploymentListViewModel by viewModel()
@@ -56,7 +59,8 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setMap(savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        mapView!!.getMapAsync(this)
         binding.viewModel = viewModel
 
         setSwipe()
@@ -70,14 +74,17 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                     currentFilter = DeploymentListViewModel.FilterDeployment.ALL
                     viewModel.addFilter(currentFilter)
                 }
+
                 R.id.unSyncedSelectChip -> {
                     currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
                     viewModel.addFilter(currentFilter)
                 }
+
                 R.id.syncedSelectChip -> {
                     currentFilter = DeploymentListViewModel.FilterDeployment.SYNCED
                     viewModel.addFilter(currentFilter)
                 }
+
                 null -> {
                     val allChip = group.findViewById<Chip>(R.id.allSelectChip)
                     allChip.isChecked = true
@@ -96,6 +103,11 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         binding.deployGuardianButton.setOnClickListener {
             GuardianDeploymentActivity.startActivity(requireContext())
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     private fun setRecyclerView() {
@@ -149,6 +161,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
                     Result.Loading -> {}
                     is Result.Success -> {
                         binding.projectSwipeRefreshView.isRefreshing = false
@@ -169,6 +182,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
                     Result.Loading -> binding.deploymentRefreshView.isRefreshing = false
                     is Result.Success -> {
                         binding.deploymentRefreshView.isRefreshing = false
@@ -232,10 +246,12 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         isRefreshing = false
                         showSwipeAirplaneError()
                     }
+
                     !requireContext().isNetworkAvailable() -> {
                         isRefreshing = false
                         showSwipeNoConnectionError()
                     }
+
                     else -> {
                         viewModel.fetchProject(true)
                     }
@@ -254,10 +270,12 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
                         isRefreshing = false
                         showSwipeAirplaneError()
                     }
+
                     !requireContext().isNetworkAvailable() -> {
                         isRefreshing = false
                         showSwipeNoConnectionError()
                     }
+
                     else -> {
                         viewModel.fetchFreshStreams(force = true)
                     }
@@ -298,60 +316,60 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         ).show()
     }
 
-    private fun setMap(savedInstanceState: Bundle?) {
-        binding.toolbarLayout.changePageButton.setOnClickListener {
-            if (state == DeploymentListState.LIST) {
-                binding.mapLayout.visibility = View.VISIBLE
-                binding.listLayout.visibility = View.GONE
-                binding.deploymentRefreshView.visibility = View.GONE
-                binding.deployGuardianButton.visibility = View.GONE
-                binding.toolbarLayout.screenName.text = getString(R.string.deployments)
-                state = DeploymentListState.MAP
-                viewModel.setScreen(true)
-                viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
-            } else {
-                binding.mapLayout.visibility = View.GONE
-                binding.listLayout.visibility = View.VISIBLE
-                binding.deploymentRefreshView.visibility = View.VISIBLE
-                binding.deployGuardianButton.visibility = View.VISIBLE
-                binding.toolbarLayout.screenName.text = getString(R.string.map)
-                state = DeploymentListState.LIST
-                viewModel.setScreen(false)
-                viewModel.addFilter(currentFilter)
-            }
-        }
-        // Start with Map screen
-        binding.toolbarLayout.changePageButton.performClick()
-
-        binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
-        lifecycleScope.launch {
-            viewModel.currentLocationState.collectLatest { currentLoc ->
-                currentLoc?.let {
-                    val curLoc = LatLng(it.latitude, it.longitude)
-                    binding.mapBoxView.setCurrentLocation(curLoc)
-                }
-            }
-        }
-
-        binding.mapBoxView.setMapReadyCallback {
-            if (it) {
-                lifecycleScope.launch {
-                    viewModel.markers.collectLatest { markers ->
-                        binding.mapBoxView.addSiteAndDeploymentToMarker(markers)
-                    }
-                }
-            }
-        }
-
-        binding.mapBoxView.setSeeDetailCallback {
-            DeploymentDetailActivity.startActivity(requireContext(), it)
-        }
-
-        binding.currentLocationButton.setOnClickListener {
-            binding.mapBoxView.moveCamera(viewModel.currentLocationState.value)
-        }
-    }
+    // private fun setMap(savedInstanceState: Bundle?) {
+    //     binding.toolbarLayout.changePageButton.setOnClickListener {
+    //         if (state == DeploymentListState.LIST) {
+    //             binding.mapLayout.visibility = View.VISIBLE
+    //             binding.listLayout.visibility = View.GONE
+    //             binding.deploymentRefreshView.visibility = View.GONE
+    //             binding.deployGuardianButton.visibility = View.GONE
+    //             binding.toolbarLayout.screenName.text = getString(R.string.deployments)
+    //             state = DeploymentListState.MAP
+    //             viewModel.setScreen(true)
+    //             viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
+    //         } else {
+    //             binding.mapLayout.visibility = View.GONE
+    //             binding.listLayout.visibility = View.VISIBLE
+    //             binding.deploymentRefreshView.visibility = View.VISIBLE
+    //             binding.deployGuardianButton.visibility = View.VISIBLE
+    //             binding.toolbarLayout.screenName.text = getString(R.string.map)
+    //             state = DeploymentListState.LIST
+    //             viewModel.setScreen(false)
+    //             viewModel.addFilter(currentFilter)
+    //         }
+    //     }
+    //     // Start with Map screen
+    //     binding.toolbarLayout.changePageButton.performClick()
+    //
+    //     binding.mapBoxView.onCreate(savedInstanceState)
+    //     binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
+    //     lifecycleScope.launch {
+    //         viewModel.currentLocationState.collectLatest { currentLoc ->
+    //             currentLoc?.let {
+    //                 val curLoc = LatLng(it.latitude, it.longitude)
+    //                 binding.mapBoxView.setCurrentLocation(curLoc)
+    //             }
+    //         }
+    //     }
+    //
+    //     binding.mapBoxView.setMapReadyCallback {
+    //         if (it) {
+    //             lifecycleScope.launch {
+    //                 viewModel.markers.collectLatest { markers ->
+    //                     binding.mapBoxView.addSiteAndDeploymentToMarker(markers)
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     binding.mapBoxView.setSeeDetailCallback {
+    //         DeploymentDetailActivity.startActivity(requireContext(), it)
+    //     }
+    //
+    //     binding.currentLocationButton.setOnClickListener {
+    //         binding.mapBoxView.moveCamera(viewModel.currentLocationState.value)
+    //     }
+    // }
 
     private fun showProjectList() {
         binding.toolbarLayout.expandMoreImageView.rotation = 180F
@@ -381,6 +399,7 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
             requireContext().isOnAirplaneMode() -> {
                 Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_LONG).show()
             }
+
             !requireContext().isNetworkAvailable() -> {
                 Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
             }
@@ -407,34 +426,57 @@ class DeploymentListFragment : Fragment(), DeploymentItemListener, ProjectOnClic
         DeploymentDetailActivity.startActivity(requireContext(), streamId)
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.mapBoxView.onStart()
-    }
+    override fun onMapReady(p0: GoogleMap) {
+        setGoogleMap(p0, true)
+        p0.uiSettings.isZoomControlsEnabled = false
+        fusedLocationClient()
 
-    override fun onResume() {
-        super.onResume()
-        binding.mapBoxView.onResume()
-    }
+        binding.toolbarLayout.changePageButton.setOnClickListener {
+            if (state == DeploymentListState.LIST) {
+                binding.mapLayout.visibility = View.VISIBLE
+                binding.listLayout.visibility = View.GONE
+                binding.deploymentRefreshView.visibility = View.GONE
+                binding.deployGuardianButton.visibility = View.GONE
+                binding.toolbarLayout.screenName.text = getString(R.string.deployments)
+                state = DeploymentListState.MAP
+                viewModel.setScreen(true)
+                viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
+            } else {
+                binding.mapLayout.visibility = View.GONE
+                binding.listLayout.visibility = View.VISIBLE
+                binding.deploymentRefreshView.visibility = View.VISIBLE
+                binding.deployGuardianButton.visibility = View.VISIBLE
+                binding.toolbarLayout.screenName.text = getString(R.string.map)
+                state = DeploymentListState.LIST
+                viewModel.setScreen(false)
+                viewModel.addFilter(currentFilter)
+            }
+        }
 
-    override fun onPause() {
-        super.onPause()
-        binding.mapBoxView.onPause()
-    }
+        binding.toolbarLayout.changePageButton.performClick()
 
-    override fun onStop() {
-        super.onStop()
-        binding.mapBoxView.onStop()
-    }
+        lifecycleScope.launch {
+            viewModel.currentLocationState.collectLatest { currentLoc ->
+                currentLoc?.let {
+                    val curLoc = LatLng(it.latitude, it.longitude)
+                    setCurrentLocation(curLoc)
+                }
+            }
+        }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        binding.mapBoxView.onLowMemory()
-    }
+        // lifecycleScope.launch {
+        //     viewModel.markers.collectLatest { markers ->
+        //         addSiteAndDeploymentToMarker(markers)
+        //     }
+        // }
+        //
+        // binding.mapBoxView.setSeeDetailCallback {
+        //     DeploymentDetailActivity.startActivity(requireContext(), it)
+        // }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.mapBoxView.onDestroy()
+        binding.currentLocationButton.setOnClickListener {
+            moveCamera(viewModel.currentLocationState.value)
+        }
     }
 
     companion object {
