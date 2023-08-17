@@ -3,6 +3,7 @@ package org.rfcx.incidents.view.base
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -44,6 +46,17 @@ abstract class BaseMapFragment : BaseFragment(),
     fun setGoogleMap(mMap: GoogleMap, canMove: Boolean) {
         map = mMap
         mMap.uiSettings.setAllGesturesEnabled(canMove)
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireContext(), R.raw.style_json
+                )
+            )
+        } catch (_: Resources.NotFoundException) {
+        }
     }
 
     fun setCallback(mMap: GoogleMap) {
