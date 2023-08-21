@@ -105,7 +105,7 @@ abstract class BaseMapFragment : BaseFragment(),
         addSiteAndDeploymentToMarker(mapMarker)
     }
 
-    fun addSiteAndDeploymentToMarker(mapMarker: List<MapMarker>) {
+    private fun addSiteAndDeploymentToMarker(mapMarker: List<MapMarker>) {
         mapMarker.map {
             when (it) {
                 is MapMarker.DeploymentMarker -> {
@@ -121,28 +121,30 @@ abstract class BaseMapFragment : BaseFragment(),
 
     private fun setMarker(data: MapMarker.SiteMarker) {
         // Add Marker
-        val latlng = LatLng(data.latitude, data.longitude)
+        val latLng = LatLng(data.latitude, data.longitude)
+        val dataInfo = MarkerDetail(data.id, data.name, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
             data.latitude,
             data.longitude,
             data.name,
-            Gson().toJson(data.toInfoWindowMarker())
+            Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()
 
         // Move Camera
-        moveCamera(latlng)
+        moveCamera(latLng)
     }
 
     private fun setMarker(data: MapMarker.DeploymentMarker) {
         // Add Marker
         val latlng = LatLng(data.latitude, data.longitude)
+        val dataInfo = MarkerDetail(data.id, data.streamName, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
             data.latitude,
             data.longitude,
             data.streamName,
-            Gson().toJson(data.toInfoWindowMarker())
+            Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()

@@ -42,14 +42,29 @@ class MarkerRenderer(
         item: MarkerItem, markerOptions: MarkerOptions
     ) {
         val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
-        val drawable = if (data.countEvents == 0) {
+        var drawable = if (data.countEvents == 0) {
             R.drawable.bg_circle_green
         } else {
             R.drawable.bg_circle_red
         }
-        mapMarkerView.setContent(data.countEvents.toString(), drawable)
-        markerOptions.title(item.title).position(item.position).snippet(item.snippet)
-            .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, mapMarkerView)))
+
+        if (data.fromDeployment) {
+            if (data.infoWindowMarker == null) return
+            drawable = if (data.infoWindowMarker.isDeployment) {
+                R.drawable.ic_pin_map
+            } else {
+                R.drawable.ic_pin_map_grey
+            }
+        }
+
+        if (data.fromDeployment) {
+            markerOptions.title(item.title).position(item.position).snippet(item.snippet)
+                .icon(bitmapFromVector(context, drawable))
+        } else {
+            mapMarkerView.setContent(data.countEvents.toString(), drawable)
+            markerOptions.title(item.title).position(item.position).snippet(item.snippet)
+                .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, mapMarkerView)))
+        }
     }
 
     override fun getColor(clusterSize: Int): Int {

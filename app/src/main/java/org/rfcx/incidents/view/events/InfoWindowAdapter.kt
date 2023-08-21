@@ -29,6 +29,8 @@ class InfoWindowAdapter(var mContext: Context) : GoogleMap.InfoWindowAdapter {
         val latLngTextView = mWindow.findViewById<TextView>(R.id.latLngTextView)
         val seeDeploymentDetail = mWindow.findViewById<LinearLayout>(R.id.seeDeploymentDetail)
         seeDeploymentDetail.visibility = if (data.isDeployment) View.VISIBLE else View.GONE
+        val guardianNameTextView = mWindow.findViewById<TextView>(R.id.guardianNameTextView)
+        guardianNameTextView.visibility = View.GONE
 
         deploymentSiteTitle.text = data.locationName
         if (data.isDeployment) {
