@@ -22,6 +22,17 @@ class GuardianRegistrationDb(private val realm: Realm) {
         return realm.where(GuardianRegistration::class.java).findAll().toFlow()
     }
 
+    fun getAllUnsentForWorker(): List<GuardianRegistration> {
+        var unsent: List<GuardianRegistration> = listOf()
+        realm.executeTransaction {
+            val registrations = it.where(GuardianRegistration::class.java)
+                .notEqualTo(GuardianRegistration.FIELD_SYNC_STATE, SyncState.SENT.value)
+                .findAll().createSnapshot()
+            unsent = registrations
+        }
+        return unsent
+    }
+
     fun markUnsent(guid: String) {
         mark(guid, SyncState.UNSENT.value)
     }
@@ -32,6 +43,20 @@ class GuardianRegistrationDb(private val realm: Realm) {
 
     fun markSending(guid: String) {
         mark(guid, SyncState.SENDING.value)
+    }
+
+    fun unsentCount(): Long {
+        return realm.where(GuardianRegistration::class.java).notEqualTo(GuardianRegistration.FIELD_SYNC_STATE, SyncState.SENT.value).count()
+    }
+
+    fun unlockSending() {
+        realm.executeTransaction { it ->
+            val snapshot =
+                it.where(GuardianRegistration::class.java).equalTo(GuardianRegistration.FIELD_SYNC_STATE, SyncState.SENDING.value).findAll().createSnapshot()
+            snapshot.forEach {
+                it.syncState = SyncState.UNSENT.value
+            }
+        }
     }
 
     private fun mark(guid: String, syncState: Int) {

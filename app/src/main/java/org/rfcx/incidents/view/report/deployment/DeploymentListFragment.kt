@@ -44,7 +44,7 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
 
     private lateinit var unsyncedAlert: AlertDialog
     private var state = DeploymentListState.LIST
-    private var currentFilter = DeploymentListViewModel.FilterDeployment.ALL
+    private var currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
 
     override fun onCreateView(
         inflater: LayoutInflater,
