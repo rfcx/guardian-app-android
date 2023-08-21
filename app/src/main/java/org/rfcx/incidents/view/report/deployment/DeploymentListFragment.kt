@@ -428,6 +428,13 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
 
     override fun onMapReady(p0: GoogleMap) {
         setGoogleMap(p0, true)
+
+        lifecycleScope.launch {
+            viewModel.markers.collectLatest { markers ->
+                setGoogleMap(p0, true, markers)
+            }
+        }
+
         p0.uiSettings.isZoomControlsEnabled = false
         fusedLocationClient()
 
@@ -464,15 +471,9 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
             }
         }
 
-        // lifecycleScope.launch {
-        //     viewModel.markers.collectLatest { markers ->
-        //         addSiteAndDeploymentToMarker(markers)
-        //     }
-        // }
-        //
-        // binding.mapBoxView.setSeeDetailCallback {
-        //     DeploymentDetailActivity.startActivity(requireContext(), it)
-        // }
+        setSeeDetailCallback {
+            DeploymentDetailActivity.startActivity(requireContext(), it)
+        }
 
         binding.currentLocationButton.setOnClickListener {
             moveCamera(viewModel.currentLocationState.value)
