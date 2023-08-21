@@ -44,6 +44,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
+    private lateinit var myClusterRenderer: MarkerRenderer
     private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
     private var lastLocation: Location? = null
     private var siteLoc = LatLng(0.0, 0.0)
@@ -55,6 +56,8 @@ abstract class BaseMapFragment : BaseFragment(),
     fun setGoogleMap(mMap: GoogleMap, canMove: Boolean, mapMarker: List<MapMarker>? = null) {
         map = mMap
         mMap.uiSettings.setAllGesturesEnabled(canMove)
+        mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.uiSettings.isZoomControlsEnabled = false
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -75,12 +78,9 @@ abstract class BaseMapFragment : BaseFragment(),
     private fun setUpClusterer(mMap: GoogleMap, mapMarker: List<MapMarker>) {
         // Create the ClusterManager class and set the custom renderer.
         mClusterManager = ClusterManager<MarkerItem>(requireContext(), map)
-        mClusterManager.renderer =
-            MarkerRenderer(
-                requireContext(),
-                mMap,
-                mClusterManager
-            )
+        myClusterRenderer = MarkerRenderer(requireContext(), mMap, mClusterManager)
+        mClusterManager.renderer = myClusterRenderer
+
         // Set custom info window adapter
         mClusterManager.markerCollection.setInfoWindowAdapter(InfoWindowAdapter(requireContext()))
         // can re-cluster when zooming in and out.
@@ -124,10 +124,7 @@ abstract class BaseMapFragment : BaseFragment(),
         val latLng = LatLng(data.latitude, data.longitude)
         val dataInfo = MarkerDetail(data.id, data.name, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
-            data.latitude,
-            data.longitude,
-            data.name,
-            Gson().toJson(dataInfo)
+            data.latitude, data.longitude, data.name, Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()
@@ -141,10 +138,7 @@ abstract class BaseMapFragment : BaseFragment(),
         val latlng = LatLng(data.latitude, data.longitude)
         val dataInfo = MarkerDetail(data.id, data.streamName, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
-            data.latitude,
-            data.longitude,
-            data.streamName,
-            Gson().toJson(dataInfo)
+            data.latitude, data.longitude, data.streamName, Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()
@@ -182,7 +176,7 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
-        return false
+        return true
     }
 
     override fun onClusterItemInfoWindowClick(item: MarkerItem?) {
@@ -195,11 +189,9 @@ abstract class BaseMapFragment : BaseFragment(),
     fun fusedLocationClient() {
         if (map == null) return
         if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             locationPermissions.check { }
@@ -207,12 +199,11 @@ abstract class BaseMapFragment : BaseFragment(),
         }
 
         map?.isMyLocationEnabled = true
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                map?.uiSettings?.isZoomControlsEnabled = true
-                map?.uiSettings?.isMyLocationButtonEnabled = false
-                lastLocation = location
-            }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            map?.uiSettings?.isZoomControlsEnabled = false
+            map?.uiSettings?.isMyLocationButtonEnabled = false
+            lastLocation = location
+        }
     }
 
     fun setSiteLocation(siteLoc: LatLng) {
@@ -225,9 +216,7 @@ abstract class BaseMapFragment : BaseFragment(),
     fun addMarker(latLng: LatLng) {
         map?.clear()
         map?.addMarker(
-            MarkerOptions()
-                .position(latLng)
-                .icon(bitmapFromVector(requireContext(), R.drawable.ic_pin_map))
+            MarkerOptions().position(latLng).icon(bitmapFromVector(requireContext(), R.drawable.ic_pin_map))
         )
     }
 

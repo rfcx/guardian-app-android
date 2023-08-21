@@ -77,7 +77,6 @@ import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.util.Screen
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
-import org.rfcx.incidents.util.toJsonObject
 import org.rfcx.incidents.view.MainActivityEventListener
 import org.rfcx.incidents.view.events.adapter.ProjectAdapter
 import org.rfcx.incidents.view.events.adapter.ProjectOnClickListener
@@ -92,7 +91,7 @@ class StreamsFragment :
     SwipeRefreshLayout.OnRefreshListener,
     ClusterManager.OnClusterClickListener<MarkerItem>,
     ClusterManager.OnClusterItemClickListener<MarkerItem>,
-    (Stream) -> Unit {
+        (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
@@ -135,6 +134,7 @@ class StreamsFragment :
     private lateinit var mapView: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
+    private lateinit var myClusterRenderer: MarkerRenderer
 
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
@@ -314,6 +314,7 @@ class StreamsFragment :
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
                     else -> {
                         viewModel.refreshProjects(true)
                     }
@@ -356,6 +357,7 @@ class StreamsFragment :
             requireContext().isOnAirplaneMode() -> {
                 Toast.makeText(requireContext(), getString(R.string.pls_off_air_plane_mode), Toast.LENGTH_LONG).show()
             }
+
             !requireContext().isNetworkAvailable() -> {
                 Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
             }
@@ -470,8 +472,11 @@ class StreamsFragment :
 
     /* ------------------- vv Setup Map vv ------------------- */
 
-    override fun onMapReady(p0: GoogleMap) {
-        map = p0
+    override fun onMapReady(mMap: GoogleMap) {
+        map = mMap
+        mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.uiSettings.isZoomControlsEnabled = false
+
         fusedLocationClient()
         setUpClusterer()
 
@@ -500,12 +505,9 @@ class StreamsFragment :
     private fun setUpClusterer() {
         // Create the ClusterManager class and set the custom renderer.
         mClusterManager = ClusterManager<MarkerItem>(requireContext(), map)
-        mClusterManager.renderer =
-            MarkerRenderer(
-                requireContext(),
-                map,
-                mClusterManager
-            )
+        myClusterRenderer = MarkerRenderer(requireContext(), map, mClusterManager)
+        mClusterManager.renderer = myClusterRenderer
+
         // can re-cluster when zooming in and out.
         map.setOnCameraIdleListener {
             mClusterManager.onCameraIdle()
@@ -525,7 +527,8 @@ class StreamsFragment :
 
     private fun setMarker(streams: List<Stream>) {
         streams.forEach { stream ->
-            val data = MarkerDetail(stream.id, stream.name, stream.externalId ?: "",distanceLabel(lastLocation, stream), stream.lastIncident?.events?.size ?: 0)
+            val data =
+                MarkerDetail(stream.id, stream.name, stream.externalId ?: "", distanceLabel(lastLocation, stream), stream.lastIncident?.events?.size ?: 0)
             val item = MarkerItem(
                 stream.latitude,
                 stream.longitude,
@@ -535,21 +538,6 @@ class StreamsFragment :
             mClusterManager.addItem(item)
         }
         mClusterManager.cluster()
-    }
-
-    private fun setEventFeatures(streams: List<Stream>) {
-        val features = streams.map {
-            val properties = mapOf(
-                Pair(PROPERTY_MARKER_EVENT_SITE, it.name),
-                Pair(PROPERTY_MARKER_EVENT_COUNT, (it.lastIncident?.events?.size ?: 0).toString()),
-                Pair(PROPERTY_MARKER_EVENT_DISTANCE, distanceLabel(lastLocation, it)),
-                Pair(PROPERTY_MARKER_EVENT_STREAM_ID, it.externalId.toString())
-            )
-            // Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude), properties.toJsonObject())
-        }
-        // eventFeatures = FeatureCollection.fromFeatures(features)
-        eventFeatures?.let { moveCameraToLeavesBounds(it) }
-        refreshSource()
     }
 
     private fun setTrackingFeatures(trackingList: List<Tracking>) {
@@ -758,7 +746,7 @@ class StreamsFragment :
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            locationPermissions.check {  }
+            locationPermissions.check { }
             return
         }
 
@@ -773,8 +761,6 @@ class StreamsFragment :
                         )
                     )
                 )
-                map.uiSettings.isZoomControlsEnabled = true
-                map.uiSettings.isMyLocationButtonEnabled = false
                 lastLocation = location
             }
     }
@@ -899,12 +885,13 @@ class StreamsFragment :
 
     override fun onClusterItemClick(item: MarkerItem): Boolean {
         if (item.snippet.isNotBlank()) {
-            val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
+            myClusterRenderer.getMarker(item).hideInfoWindow()
 
+            val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
             firebaseCrashlytics.setCustomKey(CrashlyticsKey.OnClickStreamMapPage.key, data.name)
             listener.openStreamDetail(data.serverId, data.distance)
         }
-        return false
+        return true
     }
 }
 
