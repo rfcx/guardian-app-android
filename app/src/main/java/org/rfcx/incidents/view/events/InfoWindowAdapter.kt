@@ -37,6 +37,7 @@ class InfoWindowAdapter(var mContext: Context) : GoogleMap.InfoWindowAdapter {
 
         deploymentSiteTitle.text = data.locationName
         if (data.isDeployment) {
+            dateLayout.visibility = View.VISIBLE
             dateAt.text = data.deploymentAt?.toStringWithTimeZone(mContext, TimeZone.getDefault()) ?: ""
         } else {
             dateLayout.visibility = View.GONE
