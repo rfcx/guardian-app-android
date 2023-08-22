@@ -47,7 +47,7 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
     private val projectAdapter by lazy { ProjectAdapter(this) }
 
     private lateinit var unsyncedAlert: AlertDialog
-    private var state = DeploymentListState.LIST
+    private var state = DeploymentListState.MAP
     private var currentFilter = DeploymentListViewModel.FilterDeployment.UNSYNCED
 
     override fun onCreateView(
