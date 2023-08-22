@@ -106,6 +106,10 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     private fun addSiteAndDeploymentToMarker(mapMarker: List<MapMarker>) {
+        if (mapMarker.isEmpty()) return
+        map?.clear()
+        mClusterManager.cluster()
+
         mapMarker.map {
             when (it) {
                 is MapMarker.DeploymentMarker -> {
@@ -117,34 +121,40 @@ abstract class BaseMapFragment : BaseFragment(),
                 }
             }
         }
+        
+        mapMarker.last().let {
+            when (it) {
+                is MapMarker.DeploymentMarker -> {
+                    val latLng = LatLng(it.latitude, it.longitude)
+                    moveCamera(latLng)
+                }
+
+                is MapMarker.SiteMarker -> {
+                    val latLng = LatLng(it.latitude, it.longitude)
+                    moveCamera(latLng)
+                }
+            }
+        }
     }
 
     private fun setMarker(data: MapMarker.SiteMarker) {
         // Add Marker
-        val latLng = LatLng(data.latitude, data.longitude)
         val dataInfo = MarkerDetail(data.id, data.name, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
             data.latitude, data.longitude, data.name, Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()
-
-        // Move Camera
-        moveCamera(latLng)
     }
 
     private fun setMarker(data: MapMarker.DeploymentMarker) {
         // Add Marker
-        val latlng = LatLng(data.latitude, data.longitude)
         val dataInfo = MarkerDetail(data.id, data.streamName, "", 0.0, 0, true, data.toInfoWindowMarker())
         val item = MarkerItem(
             data.latitude, data.longitude, data.streamName, Gson().toJson(dataInfo)
         )
         mClusterManager.addItem(item)
         mClusterManager.cluster()
-
-        // Move Camera
-        moveCamera(latlng)
     }
 
     fun setCallback(mMap: GoogleMap) {
@@ -176,7 +186,7 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
-        return true
+        return false
     }
 
     override fun onClusterItemInfoWindowClick(item: MarkerItem?) {

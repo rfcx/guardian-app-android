@@ -10,7 +10,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import com.google.gson.Gson
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.guardian.deployment.InfoWindowMarker
+import org.rfcx.incidents.entity.stream.MarkerDetail
 import org.rfcx.incidents.util.latitudeCoordinates
 import org.rfcx.incidents.util.longitudeCoordinates
 import org.rfcx.incidents.util.toStringWithTimeZone
@@ -22,10 +22,13 @@ class InfoWindowAdapter(var mContext: Context) : GoogleMap.InfoWindowAdapter {
     @SuppressLint("SetTextI18n")
     private fun setInfoWindowText(marker: Marker) {
         if (marker.snippet == null) return
-        val data = Gson().fromJson(marker.snippet, InfoWindowMarker::class.java)
+        val markerDetail = Gson().fromJson(marker.snippet, MarkerDetail::class.java)
+        if (markerDetail.infoWindowMarker == null) return
+        val data = markerDetail.infoWindowMarker
 
         val deploymentSiteTitle = mWindow.findViewById<TextView>(R.id.deploymentSiteTitle)
         val dateAt = mWindow.findViewById<TextView>(R.id.deployedAt)
+        val dateLayout = mWindow.findViewById<LinearLayout>(R.id.dateLayout)
         val latLngTextView = mWindow.findViewById<TextView>(R.id.latLngTextView)
         val seeDeploymentDetail = mWindow.findViewById<LinearLayout>(R.id.seeDeploymentDetail)
         seeDeploymentDetail.visibility = if (data.isDeployment) View.VISIBLE else View.GONE
@@ -35,6 +38,8 @@ class InfoWindowAdapter(var mContext: Context) : GoogleMap.InfoWindowAdapter {
         deploymentSiteTitle.text = data.locationName
         if (data.isDeployment) {
             dateAt.text = data.deploymentAt?.toStringWithTimeZone(mContext, TimeZone.getDefault()) ?: ""
+        } else {
+            dateLayout.visibility = View.GONE
         }
         val latLngText = "${data.latitude.latitudeCoordinates()}, ${data.longitude.longitudeCoordinates()}"
         latLngTextView.text = latLngText
