@@ -16,13 +16,17 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.databinding.FragmentDeploymentListBinding
+import org.rfcx.incidents.entity.guardian.deployment.toInfoWindowMarker
 import org.rfcx.incidents.entity.guardian.registration.GuardianRegistration
+import org.rfcx.incidents.entity.stream.MarkerDetail
+import org.rfcx.incidents.entity.stream.MarkerItem
 import org.rfcx.incidents.entity.stream.Project
 import org.rfcx.incidents.util.isNetworkAvailable
 import org.rfcx.incidents.util.isOnAirplaneMode
@@ -378,7 +382,26 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
         lifecycleScope.launch {
             viewModel.markers.collectLatest { markers ->
                 map?.clear()
-                setMarker(markers)
+                val list = mutableListOf<MarkerItem>()
+                markers.map {
+                    val item = when (it) {
+                        is MapMarker.DeploymentMarker -> {
+                            val dataInfo = MarkerDetail(it.id, it.streamName, "", 0.0, 0, true, it.toInfoWindowMarker())
+                            MarkerItem(
+                                it.latitude, it.longitude, it.streamName, Gson().toJson(dataInfo)
+                            )
+                        }
+
+                        is MapMarker.SiteMarker -> {
+                            val dataInfo = MarkerDetail(it.id, it.name, "", 0.0, 0, true, it.toInfoWindowMarker())
+                            MarkerItem(
+                                it.latitude, it.longitude, it.name, Gson().toJson(dataInfo)
+                            )
+                        }
+                    }
+                    list.add(item)
+                }
+                setMarker(list)
             }
         }
 

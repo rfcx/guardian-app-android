@@ -25,13 +25,11 @@ import com.google.gson.Gson
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import org.rfcx.incidents.R
-import org.rfcx.incidents.entity.guardian.deployment.toInfoWindowMarker
 import org.rfcx.incidents.entity.stream.MarkerDetail
 import org.rfcx.incidents.entity.stream.MarkerItem
 import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.view.events.InfoWindowAdapter
 import org.rfcx.incidents.view.events.MarkerRenderer
-import org.rfcx.incidents.view.report.deployment.MapMarker
 
 abstract class BaseMapFragment : BaseFragment(),
     OnMapReadyCallback,
@@ -44,6 +42,8 @@ abstract class BaseMapFragment : BaseFragment(),
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
+    private lateinit var myClusterRenderer: MarkerRenderer
+
     private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
     private var lastLocation: Location? = null
     private var siteLoc = LatLng(0.0, 0.0)
@@ -51,6 +51,7 @@ abstract class BaseMapFragment : BaseFragment(),
 
     private lateinit var callback: (LatLng) -> Unit
     private lateinit var seeDetailCallback: (Int) -> Unit
+    private lateinit var openStreamDetailCallback: (String, String, Double) -> Unit
 
     fun setGoogleMap(mMap: GoogleMap, canMove: Boolean) {
         map = mMap
@@ -74,12 +75,12 @@ abstract class BaseMapFragment : BaseFragment(),
     private fun addClusteredMarkers(googleMap: GoogleMap) {
         // Create the ClusterManager class and set the custom renderer.
         mClusterManager = ClusterManager<MarkerItem>(requireContext(), googleMap)
-        mClusterManager.renderer =
-            MarkerRenderer(
-                requireContext(),
-                googleMap,
-                mClusterManager
-            )
+        myClusterRenderer = MarkerRenderer(
+            requireContext(),
+            googleMap,
+            mClusterManager
+        )
+        mClusterManager.renderer = myClusterRenderer
 
         // Set custom info window adapter
         mClusterManager.markerCollection.setInfoWindowAdapter(InfoWindowAdapter(requireContext()))
@@ -98,49 +99,15 @@ abstract class BaseMapFragment : BaseFragment(),
         mClusterManager.setOnClusterItemInfoWindowClickListener(this)
     }
 
-    fun setMarker(mapMarker: List<MapMarker>) {
+    fun setMarker(mapMarker: MutableList<MarkerItem>) {
         mClusterManager.clearItems()
         mClusterManager.cluster()
 
-        // Add the places to the ClusterManager.
-        val list = mutableListOf<MarkerItem>()
-        mapMarker.map {
-            val item = when (it) {
-                is MapMarker.DeploymentMarker -> {
-                    val dataInfo = MarkerDetail(it.id, it.streamName, "", 0.0, 0, true, it.toInfoWindowMarker())
-                    MarkerItem(
-                        it.latitude, it.longitude, it.streamName, Gson().toJson(dataInfo)
-                    )
-                }
-
-                is MapMarker.SiteMarker -> {
-                    val dataInfo = MarkerDetail(it.id, it.name, "", 0.0, 0, true, it.toInfoWindowMarker())
-                    MarkerItem(
-                        it.latitude, it.longitude, it.name, Gson().toJson(dataInfo)
-                    )
-                }
-            }
-            list.add(item)
-        }
-        mClusterManager.addItems(list)
+        mClusterManager.addItems(mapMarker)
         mClusterManager.cluster()
 
         if (mapMarker.isEmpty()) return
-        moveCameraToLastMarker(mapMarker.last())
-    }
-
-    private fun moveCameraToLastMarker(marker: MapMarker) {
-        when (marker) {
-            is MapMarker.DeploymentMarker -> {
-                val latLng = LatLng(marker.latitude, marker.longitude)
-                moveCamera(latLng)
-            }
-
-            is MapMarker.SiteMarker -> {
-                val latLng = LatLng(marker.latitude, marker.longitude)
-                moveCamera(latLng)
-            }
-        }
+        moveCamera(mapMarker.last().position)
     }
 
     fun setCallback(mMap: GoogleMap) {
@@ -172,13 +139,24 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
+        if (item?.snippet?.isNotBlank() == true) {
+            val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
+            if (!data.fromDeployment) {
+                myClusterRenderer.getMarker(item).hideInfoWindow()
+                openStreamDetailCallback.invoke(data.name, data.serverId, data.distance)
+            }
+        }
         return false
     }
 
     override fun onClusterItemInfoWindowClick(item: MarkerItem?) {
         if (item?.snippet?.isNotBlank() == true) {
             val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
-            seeDetailCallback.invoke(data.id)
+            if (data.fromDeployment) {
+                if (data.infoWindowMarker?.isDeployment == true) {
+                    seeDetailCallback.invoke(data.id)
+                }
+            }
         }
     }
 
@@ -222,6 +200,10 @@ abstract class BaseMapFragment : BaseFragment(),
 
     fun setSeeDetailCallback(callback: (Int) -> Unit) {
         this.seeDetailCallback = callback
+    }
+
+    fun setOpenStreamDetailCallback(callback: (String, String, Double) -> Unit) {
+        this.openStreamDetailCallback = callback
     }
 
     fun moveCamera(location: Location?) {
