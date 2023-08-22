@@ -316,61 +316,6 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
         ).show()
     }
 
-    // private fun setMap(savedInstanceState: Bundle?) {
-    //     binding.toolbarLayout.changePageButton.setOnClickListener {
-    //         if (state == DeploymentListState.LIST) {
-    //             binding.mapLayout.visibility = View.VISIBLE
-    //             binding.listLayout.visibility = View.GONE
-    //             binding.deploymentRefreshView.visibility = View.GONE
-    //             binding.deployGuardianButton.visibility = View.GONE
-    //             binding.toolbarLayout.screenName.text = getString(R.string.deployments)
-    //             state = DeploymentListState.MAP
-    //             viewModel.setScreen(true)
-    //             viewModel.addFilter(DeploymentListViewModel.FilterDeployment.ALL)
-    //         } else {
-    //             binding.mapLayout.visibility = View.GONE
-    //             binding.listLayout.visibility = View.VISIBLE
-    //             binding.deploymentRefreshView.visibility = View.VISIBLE
-    //             binding.deployGuardianButton.visibility = View.VISIBLE
-    //             binding.toolbarLayout.screenName.text = getString(R.string.map)
-    //             state = DeploymentListState.LIST
-    //             viewModel.setScreen(false)
-    //             viewModel.addFilter(currentFilter)
-    //         }
-    //     }
-    //     // Start with Map screen
-    //     binding.toolbarLayout.changePageButton.performClick()
-    //
-    //     binding.mapBoxView.onCreate(savedInstanceState)
-    //     binding.mapBoxView.setParam(canMove = true, fromDeploymentList = true)
-    //     lifecycleScope.launch {
-    //         viewModel.currentLocationState.collectLatest { currentLoc ->
-    //             currentLoc?.let {
-    //                 val curLoc = LatLng(it.latitude, it.longitude)
-    //                 binding.mapBoxView.setCurrentLocation(curLoc)
-    //             }
-    //         }
-    //     }
-    //
-    //     binding.mapBoxView.setMapReadyCallback {
-    //         if (it) {
-    //             lifecycleScope.launch {
-    //                 viewModel.markers.collectLatest { markers ->
-    //                     binding.mapBoxView.addSiteAndDeploymentToMarker(markers)
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     binding.mapBoxView.setSeeDetailCallback {
-    //         DeploymentDetailActivity.startActivity(requireContext(), it)
-    //     }
-    //
-    //     binding.currentLocationButton.setOnClickListener {
-    //         binding.mapBoxView.moveCamera(viewModel.currentLocationState.value)
-    //     }
-    // }
-
     private fun showProjectList() {
         binding.toolbarLayout.expandMoreImageView.rotation = 180F
         listener.hideBottomAppBar()
@@ -392,6 +337,7 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
     }
 
     override fun onProjectClicked(project: Project) {
+        map?.clear()
         hideProjectList()
         viewModel.setSelectedProject(project.id)
 
@@ -431,7 +377,8 @@ class DeploymentListFragment : BaseMapFragment(), DeploymentItemListener, Projec
 
         lifecycleScope.launch {
             viewModel.markers.collectLatest { markers ->
-                setGoogleMap(p0, true, markers)
+                map?.clear()
+                setMarker(markers)
             }
         }
 

@@ -44,7 +44,6 @@ abstract class BaseMapFragment : BaseFragment(),
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mClusterManager: ClusterManager<MarkerItem>
-    private lateinit var myClusterRenderer: MarkerRenderer
     private val locationPermissions by lazy { LocationPermissions(requireActivity()) }
     private var lastLocation: Location? = null
     private var siteLoc = LatLng(0.0, 0.0)
@@ -53,11 +52,12 @@ abstract class BaseMapFragment : BaseFragment(),
     private lateinit var callback: (LatLng) -> Unit
     private lateinit var seeDetailCallback: (Int) -> Unit
 
-    fun setGoogleMap(mMap: GoogleMap, canMove: Boolean, mapMarker: List<MapMarker>? = null) {
+    fun setGoogleMap(mMap: GoogleMap, canMove: Boolean) {
         map = mMap
         mMap.uiSettings.setAllGesturesEnabled(canMove)
         mMap.uiSettings.isMapToolbarEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = false
+        addClusteredMarkers(mMap)
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -69,92 +69,78 @@ abstract class BaseMapFragment : BaseFragment(),
             )
         } catch (_: Resources.NotFoundException) {
         }
-
-        if (mapMarker != null) {
-            setUpClusterer(mMap, mapMarker)
-        }
     }
 
-    private fun setUpClusterer(mMap: GoogleMap, mapMarker: List<MapMarker>) {
+    private fun addClusteredMarkers(googleMap: GoogleMap) {
         // Create the ClusterManager class and set the custom renderer.
-        mClusterManager = ClusterManager<MarkerItem>(requireContext(), map)
-        myClusterRenderer = MarkerRenderer(requireContext(), mMap, mClusterManager)
-        mClusterManager.renderer = myClusterRenderer
+        mClusterManager = ClusterManager<MarkerItem>(requireContext(), googleMap)
+        mClusterManager.renderer =
+            MarkerRenderer(
+                requireContext(),
+                googleMap,
+                mClusterManager
+            )
 
         // Set custom info window adapter
         mClusterManager.markerCollection.setInfoWindowAdapter(InfoWindowAdapter(requireContext()))
+
+        // Set ClusterManager as the OnCameraIdleListener so that it
         // can re-cluster when zooming in and out.
-        mMap.setOnCameraIdleListener {
+        googleMap.setOnCameraIdleListener {
             mClusterManager.onCameraIdle()
         }
 
-        mMap.setOnMarkerClickListener(mClusterManager)
-        mMap.setInfoWindowAdapter(mClusterManager.markerManager)
-        mMap.setOnInfoWindowClickListener(mClusterManager)
+        googleMap.setOnMarkerClickListener(mClusterManager)
+        googleMap.setInfoWindowAdapter(mClusterManager.markerManager)
+        googleMap.setOnInfoWindowClickListener(mClusterManager)
         mClusterManager.setOnClusterClickListener(this)
         mClusterManager.setOnClusterItemClickListener(this)
         mClusterManager.setOnClusterItemInfoWindowClickListener(this)
-
-        combinedData(mapMarker)
     }
 
-    private fun combinedData(mapMarker: List<MapMarker>) {
+    fun setMarker(mapMarker: List<MapMarker>) {
         mClusterManager.clearItems()
         mClusterManager.cluster()
 
-        addSiteAndDeploymentToMarker(mapMarker)
-    }
-
-    private fun addSiteAndDeploymentToMarker(mapMarker: List<MapMarker>) {
-        if (mapMarker.isEmpty()) return
-        map?.clear()
-        mClusterManager.cluster()
-
+        // Add the places to the ClusterManager.
+        val list = mutableListOf<MarkerItem>()
         mapMarker.map {
-            when (it) {
+            val item = when (it) {
                 is MapMarker.DeploymentMarker -> {
-                    setMarker(it)
+                    val dataInfo = MarkerDetail(it.id, it.streamName, "", 0.0, 0, true, it.toInfoWindowMarker())
+                    MarkerItem(
+                        it.latitude, it.longitude, it.streamName, Gson().toJson(dataInfo)
+                    )
                 }
 
                 is MapMarker.SiteMarker -> {
-                    setMarker(it)
+                    val dataInfo = MarkerDetail(it.id, it.name, "", 0.0, 0, true, it.toInfoWindowMarker())
+                    MarkerItem(
+                        it.latitude, it.longitude, it.name, Gson().toJson(dataInfo)
+                    )
                 }
             }
+            list.add(item)
         }
-        
-        mapMarker.last().let {
-            when (it) {
-                is MapMarker.DeploymentMarker -> {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    moveCamera(latLng)
-                }
+        mClusterManager.addItems(list)
+        mClusterManager.cluster()
 
-                is MapMarker.SiteMarker -> {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    moveCamera(latLng)
-                }
+        if (mapMarker.isEmpty()) return
+        moveCameraToLastMarker(mapMarker.last())
+    }
+
+    private fun moveCameraToLastMarker(marker: MapMarker) {
+        when (marker) {
+            is MapMarker.DeploymentMarker -> {
+                val latLng = LatLng(marker.latitude, marker.longitude)
+                moveCamera(latLng)
+            }
+
+            is MapMarker.SiteMarker -> {
+                val latLng = LatLng(marker.latitude, marker.longitude)
+                moveCamera(latLng)
             }
         }
-    }
-
-    private fun setMarker(data: MapMarker.SiteMarker) {
-        // Add Marker
-        val dataInfo = MarkerDetail(data.id, data.name, "", 0.0, 0, true, data.toInfoWindowMarker())
-        val item = MarkerItem(
-            data.latitude, data.longitude, data.name, Gson().toJson(dataInfo)
-        )
-        mClusterManager.addItem(item)
-        mClusterManager.cluster()
-    }
-
-    private fun setMarker(data: MapMarker.DeploymentMarker) {
-        // Add Marker
-        val dataInfo = MarkerDetail(data.id, data.streamName, "", 0.0, 0, true, data.toInfoWindowMarker())
-        val item = MarkerItem(
-            data.latitude, data.longitude, data.streamName, Gson().toJson(dataInfo)
-        )
-        mClusterManager.addItem(item)
-        mClusterManager.cluster()
     }
 
     fun setCallback(mMap: GoogleMap) {
