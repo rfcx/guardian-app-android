@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/backgroundColor">
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="org.rfcx.incidents.view.report.detail.ResponseDetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/guardianListScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/answerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_normal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/timeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:background="@drawable/bg_stream_item"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/investigatedAtTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/investigated_at" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/investigatedAtValueTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/investigatedAtTextView"
+                        app:layout_constraintEnd_toStartOf="@id/receivedValueTextView"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_small"
+                        android:paddingEnd="@dimen/margin_padding_xsmall"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        tools:text="28 0ct 2021, 15:45" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/receivedAtTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingEnd="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/received_at" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/receivedValueTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:gravity="end"
+                        app:layout_constraintTop_toBottomOf="@id/investigatedAtTextView"
+                        app:layout_constraintStart_toEndOf="@id/investigatedAtValueTextView"
+                        android:paddingEnd="@dimen/margin_padding_normal"
+                        android:paddingStart="@dimen/margin_padding_xsmall"
+                        android:paddingTop="@dimen/margin_padding_small"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        tools:text="28 0ct 2021, 15:45" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/loggingLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:background="@drawable/bg_stream_item"
+                    app:layout_constraintTop_toBottomOf="@id/timeLayout">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/loggingTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/logging" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/loggingValueTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/loggingTextView"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_small"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        tools:text="Cut down tree, Cleared areas" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/scaleLoggingTextView"
+                        style="@style/RangerText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/bg_type_tag"
+                        android:padding="@dimen/margin_padding_xsmall"
+                        android:textAllCaps="true"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_xxsmall"
+                        android:layout_marginEnd="@dimen/margin_padding_normal"
+                        android:layout_marginTop="@dimen/margin_padding_normal"
+                        android:text="@string/small_scale_text" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/poachingLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:background="@drawable/bg_stream_item"
+                    app:layout_constraintTop_toBottomOf="@id/loggingLayout">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/poachingTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/poaching" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/poachingValueTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/poachingTextView"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_small"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        tools:text="Bullet shells/gun remains, Other" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/scalePoachingTextView"
+                        style="@style/RangerText.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/bg_type_tag"
+                        android:padding="@dimen/margin_padding_xsmall"
+                        android:textAllCaps="true"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_xxsmall"
+                        android:layout_marginEnd="@dimen/margin_padding_normal"
+                        android:layout_marginTop="@dimen/margin_padding_normal"
+                        android:text="@string/large_scale_text" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/actionLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:background="@drawable/bg_stream_item"
+                    app:layout_constraintTop_toBottomOf="@id/poachingLayout">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/actionTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/action" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/actionValueTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/actionTextView"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_small"
+                        android:paddingBottom="@dimen/margin_padding_normal"
+                        tools:text="Issue a warning" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/additionalEvidenceLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:paddingBottom="@dimen/margin_padding_normal"
+                    android:background="@drawable/bg_stream_item"
+                    app:layout_constraintTop_toBottomOf="@id/actionLayout">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/additionalEvidenceTextView"
+                        style="@style/RangerText.Label.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="@dimen/text_small"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingTop="@dimen/margin_padding_normal"
+                        android:text="@string/additional_evidence" />
+
+                    <org.rfcx.incidents.widget.SoundRecordProgressView
+                        android:id="@+id/soundRecordProgressView"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/sound_record_progress_height"
+                        android:layout_marginStart="@dimen/margin_padding_normal"
+                        android:layout_marginEnd="@dimen/margin_padding_normal"
+                        android:layout_marginTop="@dimen/margin_padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/additionalEvidenceTextView" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/noteTextView"
+                        style="@style/RangerText.Label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/soundRecordProgressView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:paddingStart="@dimen/margin_padding_normal"
+                        android:paddingEnd="@dimen/margin_padding_normal"
+                        android:layout_marginTop="@dimen/margin_padding_small"
+                        tools:text="Many trees were cut down" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/attachImageRecycler"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_normal"
+                        android:layout_marginTop="@dimen/margin_padding_small"
+                        android:layout_marginEnd="@dimen/margin_padding_normal"
+                        android:clipToPadding="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/noteTextView"
+                        tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                        tools:listitem="@layout/adapter_report_image"
+                        tools:orientation="horizontal" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/mapBoxCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/map_height"
+                    android:background="@color/statusColor"
+                    android:elevation="0dp"
+                    app:cardCornerRadius="6dp"
+                    android:layout_marginTop="@dimen/margin_padding_normal"
+                    android:layout_marginStart="@dimen/margin_padding_small"
+                    android:layout_marginEnd="@dimen/margin_padding_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/additionalEvidenceLayout">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/map_height" />
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
