@@ -216,7 +216,6 @@ class StreamsFragment :
             locationPermissions.check { allow ->
                 if (allow) {
                     fusedLocationClient()
-                    if (getLastLocation() != null)
                     moveCamera(getLastLocation())
                 } else {
                     getLocation()
@@ -466,6 +465,7 @@ class StreamsFragment :
                 lastLocation?.let {
                     listener.setCurrentLocation(it)
                     viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
+                    moveCamera(it)
                 }
                 fusedLocationClient()
             } catch (ex: SecurityException) {
