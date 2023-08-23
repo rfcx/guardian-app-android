@@ -1,10 +1,12 @@
 package org.rfcx.incidents.view.events
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -14,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,8 +29,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.maps.android.SphericalUtil
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,31 +58,12 @@ import java.util.Date
 
 class StreamsFragment :
     BaseMapFragment(),
-    PermissionsListener,
     ProjectOnClickListener,
     SwipeRefreshLayout.OnRefreshListener,
         (Stream) -> Unit {
 
     companion object {
         const val tag = "EventsFragment"
-
-        private const val COUNT = "count"
-        private const val COUNT_EVENTS = "count.events"
-        private const val POINT_COUNT = "point_count"
-        private const val SOURCE_EVENT = "source.event"
-        private const val SOURCE_LINE = "source.line"
-        private const val PROPERTY_MARKER_EVENT_SITE = "event.site"
-        private const val PROPERTY_MARKER_EVENT_DISTANCE = "event.distance"
-        private const val PROPERTY_MARKER_EVENT_STREAM_ID = "event.stream.id"
-        private const val PROPERTY_MARKER_EVENT_COUNT = "event.count"
-        private const val PROPERTY_CLUSTER_TYPE = "cluster.type"
-        private const val PROPERTY_CLUSTER_COUNT_EVENTS = "cluster.count.events"
-        private const val SOURCE_CHECK_IN = "source.checkin"
-        private const val MARKER_CHECK_IN_IMAGE = "marker.checkin.pin"
-        private const val MARKER_CHECK_IN_ID = "marker.checkin"
-
-        private const val DEFAULT_MAP_ZOOM = 15.0F
-        private const val THREE_HOURS = 3 * 60 * 60 * 1000
 
         @JvmStatic
         fun newInstance() = StreamsFragment()
@@ -101,12 +83,11 @@ class StreamsFragment :
 
     private var locationManager: LocationManager? = null
     private var lastLocation: Location? = null
-    private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private val locationListener = object : android.location.LocationListener {
         override fun onLocationChanged(p0: Location) {
             viewModel.saveLastTimeToKnowTheCurrentLocation(Date().time)
 
-            if (PermissionsManager.areLocationPermissionsGranted(context)) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 fusedLocationClient()
             }
         }
@@ -361,7 +342,9 @@ class StreamsFragment :
                             stream.name,
                             stream.externalId ?: "",
                             distanceLabel(lastLocation, stream),
-                            stream.lastIncident?.events?.size ?: 0
+                            stream.lastIncident?.events?.size ?: 0,
+                            false,
+                            null
                         )
                     val item = MarkerItem(
                         stream.latitude,
@@ -457,7 +440,7 @@ class StreamsFragment :
         if (!isAdded || isDetached) return
 
         // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(context)) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager?.removeUpdates(locationListener)
             locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
             try {
@@ -474,8 +457,7 @@ class StreamsFragment :
                 ex.printStackTrace()
             }
         } else {
-            permissionsManager = PermissionsManager(this)
-            permissionsManager.requestLocationPermissions(activity)
+            locationPermissions.check { }
         }
     }
 
@@ -492,17 +474,6 @@ class StreamsFragment :
     override fun onResume() {
         super.onResume()
         analytics?.trackScreen(Screen.NEW_EVENTS)
-    }
-
-    override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {}
-
-    override fun onPermissionResult(granted: Boolean) {
-        val context = context ?: return
-        if (granted) {
-            fusedLocationClient()
-        } else {
-            Toast.makeText(context, R.string.location_permission_msg, Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onRefresh() {

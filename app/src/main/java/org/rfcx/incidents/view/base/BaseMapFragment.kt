@@ -139,14 +139,16 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     override fun onClusterItemClick(item: MarkerItem?): Boolean {
+        var state = false
         if (item?.snippet?.isNotBlank() == true) {
             val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
             if (!data.fromDeployment) {
+                state = true
                 myClusterRenderer.getMarker(item).hideInfoWindow()
                 openStreamDetailCallback.invoke(data.name, data.serverId, data.distance)
             }
         }
-        return false
+        return state
     }
 
     override fun onClusterItemInfoWindowClick(item: MarkerItem?) {

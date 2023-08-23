@@ -12,7 +12,8 @@ import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.BaseCallback
 import com.auth0.android.result.Credentials
-import com.mapbox.mapboxsdk.geometry.LatLng
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -178,7 +179,7 @@ class MainActivityViewModel(
         val credentialKeeper = CredentialKeeper(context)
 
         if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname()
-            .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
+                .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
         ) {
             return false
         }
@@ -205,6 +206,7 @@ class MainActivityViewModel(
                         is Err -> {
                             cont.resume(true)
                         }
+
                         is Ok -> {
                             val userAuthResponse = result.value
                             credentialKeeper.save(userAuthResponse)
@@ -222,7 +224,7 @@ class MainActivityViewModel(
 
     private fun distanceLabel(origin: Location?, destination: Stream): Double? {
         if (origin == null) return null
-        return LatLng(origin.latitude, origin.longitude).distanceTo(LatLng(destination.latitude, destination.longitude))
+        return SphericalUtil.computeDistanceBetween(LatLng(origin.latitude, origin.longitude), LatLng(destination.latitude, destination.longitude))
     }
 }
 
