@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -29,9 +30,6 @@ class LocationHelper(private val context: Context) {
     @SuppressLint("MissingPermission")
     fun getFlowLocationChanged(): Flow<Location?> {
         return callbackFlow {
-            val locationRequest = LocationRequest.create();
-            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
-            locationRequest.interval = DEFAULT_MAX_WAIT_TIME
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {
                     for (location in locationResult.locations) {
@@ -40,6 +38,17 @@ class LocationHelper(private val context: Context) {
                         }
                     }
                 }
+            }
+
+            if (hasLocationPermission()) {
+                val locationRequest = LocationRequest.create();
+                locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
+                locationRequest.interval = DEFAULT_MAX_WAIT_TIME
+                fusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
             }
             awaitClose {
                 fusedLocationClient.removeLocationUpdates(locationCallback)
