@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.location.Location
 import androidx.core.app.ActivityCompat
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.Gson
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -108,6 +110,24 @@ abstract class BaseMapFragment : BaseFragment(),
 
         if (mapMarker.isEmpty()) return
         moveCamera(mapMarker.last().position)
+    }
+
+    fun setPolyline(latLngList: MutableList<LatLng>, color: String) {
+        map?.addPolyline(
+            PolylineOptions()
+                .clickable(false)
+                .addAll(latLngList)
+                .color(Color.parseColor(color))
+        )
+        latLngList.forEach {
+            map?.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .icon(bitmapFromVector(requireContext(), R.drawable.bg_circle_tracking))
+
+            )
+        }
+        moveCameraToLeavesBounds(latLngList)
     }
 
     fun setCallback(mMap: GoogleMap) {
@@ -212,6 +232,27 @@ abstract class BaseMapFragment : BaseFragment(),
         if (location == null) return
         val latLng = LatLng(location.latitude, location.longitude)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+    }
+
+    private fun moveCameraToLeavesBounds(features: MutableList<LatLng>) {
+        val latLngList: ArrayList<LatLng> = ArrayList()
+        for (singleClusterFeature in features) {
+            latLngList.add(LatLng(singleClusterFeature.latitude, singleClusterFeature.longitude))
+        }
+        if (latLngList.size > 1) {
+            moveCameraWithLatLngList(latLngList)
+        } else {
+            moveCamera(latLngList[0])
+        }
+    }
+
+    private fun moveCameraWithLatLngList(latLngList: List<LatLng>) {
+        val builder = LatLngBounds.builder()
+        for (item in latLngList) {
+            builder.include(item)
+        }
+        val bounds = builder.build()
+        map?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
     }
 
     fun setCameraMoveCallback(callback: (LatLng) -> Unit) {

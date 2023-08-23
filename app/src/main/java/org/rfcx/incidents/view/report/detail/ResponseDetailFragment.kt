@@ -6,24 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentResponseDetailBinding
 import org.rfcx.incidents.entity.response.LoggingScale
 import org.rfcx.incidents.entity.response.PoachingScale
 import org.rfcx.incidents.entity.response.Response
+import org.rfcx.incidents.entity.stream.FeatureCollection
 import org.rfcx.incidents.util.toStringWithTimeZone
 import org.rfcx.incidents.util.toTimeSinceStringAlternativeTimeAgo
+import org.rfcx.incidents.view.base.BaseMapFragment
 import org.rfcx.incidents.view.report.create.image.ReportImageAdapter
 import org.rfcx.incidents.widget.SoundRecordState
 import java.io.File
 import java.io.IOException
 import java.util.TimeZone
 
-class ResponseDetailFragment : Fragment() {
+class ResponseDetailFragment : BaseMapFragment() {
 
     lateinit var binding: FragmentResponseDetailBinding
 
@@ -58,6 +63,8 @@ class ResponseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        mapView!!.getMapAsync(this)
 
         response = responseCoreId?.let { viewModel.getResponseByCoreId(it) }
         setupRecordSoundProgressView()
@@ -67,6 +74,31 @@ class ResponseDetailFragment : Fragment() {
             adapter = reportImageAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
+        }
+    }
+
+    override fun onMapReady(p0: GoogleMap) {
+        setGoogleMap(p0, false)
+        setTrack()
+    }
+
+    private fun setTrack() {
+        response?.let { res ->
+            val track = res.trackingAssets.firstOrNull()
+            if (track != null) {
+                val json = File(track.localPath).readText()
+                val featureCollection = Gson().fromJson(json, FeatureCollection::class.java)
+
+                val latLngList = mutableListOf<LatLng>()
+                featureCollection.features.forEach {
+                    it.geometry.coordinates.forEach { c ->
+                        latLngList.add(LatLng(c[1], c[0]))
+                    }
+                }
+                setPolyline(latLngList, featureCollection.features[0].properties.color)
+            } else {
+                binding.mapBoxCardView.visibility = View.GONE
+            }
         }
     }
 
