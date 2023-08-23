@@ -113,18 +113,19 @@ abstract class BaseMapFragment : BaseFragment(),
     }
 
     fun setPolyline(latLngList: MutableList<LatLng>, color: String) {
+        if (latLngList.isEmpty()) return
         map?.addPolyline(
             PolylineOptions()
                 .clickable(false)
                 .addAll(latLngList)
                 .color(Color.parseColor(color))
         )
-        latLngList.forEach {
+
+        if (latLngList.size == 1) {
             map?.addMarker(
                 MarkerOptions()
-                    .position(it)
+                    .position(latLngList.first())
                     .icon(bitmapFromVector(requireContext(), R.drawable.bg_circle_tracking))
-
             )
         }
         moveCameraToLeavesBounds(latLngList)

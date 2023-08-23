@@ -25,7 +25,7 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/answerLayout"
@@ -305,9 +305,8 @@
                         tools:orientation="horizontal" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/mapBoxCardView"
+                    android:id="@+id/mapCardView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/map_height"
                     android:background="@color/statusColor"

@@ -97,7 +97,7 @@ class ResponseDetailFragment : BaseMapFragment() {
                 }
                 setPolyline(latLngList, featureCollection.features[0].properties.color)
             } else {
-                binding.mapBoxCardView.visibility = View.GONE
+                binding.mapCardView.visibility = View.GONE
             }
         }
     }
