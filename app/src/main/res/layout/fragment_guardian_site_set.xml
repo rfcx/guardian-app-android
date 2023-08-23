@@ -72,7 +72,7 @@
                         android:layout_height="20dp"
                         android:src="@drawable/ic_pin_map"
                         android:tint="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
+                        app:layout_constraintBottom_toBottomOf="@id/mapView"
                         app:layout_constraintEnd_toStartOf="@id/arrowIcon" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -82,7 +82,7 @@
                         android:rotation="180"
                         android:src="@drawable/ic_baseline_arrow_back_24"
                         android:tint="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
+                        app:layout_constraintBottom_toBottomOf="@id/mapView"
                         app:layout_constraintEnd_toStartOf="@id/currentLocationIcon" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -91,7 +91,7 @@
                         android:layout_height="20dp"
                         android:src="@drawable/ic_current_location"
                         android:tint="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="@id/mapBoxView"
+                        app:layout_constraintBottom_toBottomOf="@id/mapView"
                         app:layout_constraintEnd_toEndOf="parent" />
 
                 </LinearLayout>
