@@ -220,6 +220,10 @@ abstract class BaseMapFragment : BaseFragment(),
         this.currentLoc = currentLoc
     }
 
+    fun getLastLocation(): Location? {
+        return this.lastLocation
+    }
+
     fun getCurrentPosition(): LatLng? {
         return map?.cameraPosition?.target
     }

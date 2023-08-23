@@ -216,6 +216,8 @@ class StreamsFragment :
             locationPermissions.check { allow ->
                 if (allow) {
                     fusedLocationClient()
+                    if (getLastLocation() != null)
+                    moveCamera(getLastLocation())
                 } else {
                     getLocation()
                 }
