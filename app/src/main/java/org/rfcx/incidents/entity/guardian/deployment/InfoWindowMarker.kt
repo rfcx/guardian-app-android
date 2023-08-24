@@ -42,4 +42,3 @@ fun MapMarker.DeploymentMarker.toInfoWindowMarker(): InfoWindowMarker {
         true
     )
 }
-

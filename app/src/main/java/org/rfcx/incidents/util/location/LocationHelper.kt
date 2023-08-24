@@ -41,8 +41,8 @@ class LocationHelper(private val context: Context) {
             }
 
             if (hasLocationPermission()) {
-                val locationRequest = LocationRequest.create();
-                locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
+                val locationRequest = LocationRequest.create()
+                locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
                 locationRequest.interval = DEFAULT_MAX_WAIT_TIME
                 fusedLocationClient.requestLocationUpdates(
                     locationRequest,

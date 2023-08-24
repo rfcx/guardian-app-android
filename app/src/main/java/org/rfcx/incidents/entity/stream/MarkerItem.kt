@@ -32,4 +32,3 @@ class MarkerItem : ClusterItem {
         return mSnippet
     }
 }
-

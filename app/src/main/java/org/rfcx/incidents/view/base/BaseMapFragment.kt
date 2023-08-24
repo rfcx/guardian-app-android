@@ -33,7 +33,8 @@ import org.rfcx.incidents.util.LocationPermissions
 import org.rfcx.incidents.view.events.InfoWindowAdapter
 import org.rfcx.incidents.view.events.MarkerRenderer
 
-abstract class BaseMapFragment : BaseFragment(),
+abstract class BaseMapFragment :
+    BaseFragment(),
     OnMapReadyCallback,
     ClusterManager.OnClusterClickListener<MarkerItem>,
     ClusterManager.OnClusterItemClickListener<MarkerItem>,
@@ -185,12 +186,9 @@ abstract class BaseMapFragment : BaseFragment(),
 
     fun fusedLocationClient() {
         if (map == null) return
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        val accessFindLocation = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        val accessCoarseLocation = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (accessFindLocation != PackageManager.PERMISSION_GRANTED && accessCoarseLocation != PackageManager.PERMISSION_GRANTED) {
             locationPermissions.check { }
             return
         }
