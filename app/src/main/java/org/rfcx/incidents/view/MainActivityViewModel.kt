@@ -178,8 +178,9 @@ class MainActivityViewModel(
         val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
         val credentialKeeper = CredentialKeeper(context)
 
-        if (credentialKeeper.hasValidCredentials() && selectedProject != "" && context.getUserNickname()
-                .substring(0, 1) != "+" && !credentialKeeper.isTokenExpired()
+        if (credentialKeeper.hasValidCredentials() && selectedProject != "" &&
+            context.getUserNickname().substring(0, 1) != "+" &&
+            !credentialKeeper.isTokenExpired()
         ) {
             return false
         }

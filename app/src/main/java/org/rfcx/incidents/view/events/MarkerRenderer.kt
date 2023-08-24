@@ -23,9 +23,8 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.entity.stream.MarkerDetail
 import org.rfcx.incidents.entity.stream.MarkerItem
 
-class MarkerRenderer(
-    private val context: Context, map: GoogleMap, clusterManager: ClusterManager<MarkerItem>
-) : DefaultClusterRenderer<MarkerItem>(context, map, clusterManager) {
+class MarkerRenderer(private val context: Context, map: GoogleMap, clusterManager: ClusterManager<MarkerItem>) :
+    DefaultClusterRenderer<MarkerItem>(context, map, clusterManager) {
     private val mapMarkerView: MapMarkerView = MapMarkerView(context)
     private val markerIconGenerator = IconGenerator(context)
 
@@ -38,9 +37,7 @@ class MarkerRenderer(
      * Method called before the cluster item (the marker) is rendered.
      * This is where marker options should be set.
      */
-    override fun onBeforeClusterItemRendered(
-        item: MarkerItem, markerOptions: MarkerOptions
-    ) {
+    override fun onBeforeClusterItemRendered(item: MarkerItem, markerOptions: MarkerOptions) {
         val data = Gson().fromJson(item.snippet, MarkerDetail::class.java)
         var drawable = if (data.countEvents == 0) {
             R.drawable.bg_circle_green
@@ -58,11 +55,17 @@ class MarkerRenderer(
         }
 
         if (data.fromDeployment) {
-            markerOptions.title(item.title).position(item.position).snippet(item.snippet)
+            markerOptions
+                .title(item.title)
+                .position(item.position)
+                .snippet(item.snippet)
                 .icon(bitmapFromVector(context, drawable))
         } else {
             mapMarkerView.setContent(data.countEvents.toString(), drawable)
-            markerOptions.title(item.title).position(item.position).snippet(item.snippet)
+            markerOptions
+                .title(item.title)
+                .position(item.position)
+                .snippet(item.snippet)
                 .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, mapMarkerView)))
         }
     }

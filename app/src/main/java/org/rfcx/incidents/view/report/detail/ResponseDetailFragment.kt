@@ -45,9 +45,7 @@ class ResponseDetailFragment : BaseMapFragment() {
         initIntent()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_response_detail, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
