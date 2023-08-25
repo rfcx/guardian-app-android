@@ -1,8 +1,10 @@
 package org.rfcx.incidents.view.report.create
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
@@ -17,9 +19,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mapbox.android.core.permissions.PermissionsManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.R
@@ -305,7 +307,7 @@ class CreateReportActivity : AppCompatActivity(), CreateReportListener {
         response.submittedAt = Date()
         response.answers = response.saveToAnswers()
         // Check if permissions are enabled
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
             val lastLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             lastLocation?.let { saveLocation(it) }

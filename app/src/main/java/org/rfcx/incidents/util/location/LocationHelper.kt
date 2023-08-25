@@ -8,17 +8,14 @@ import android.location.Location
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineCallback
-import com.mapbox.android.core.location.LocationEngineProvider
-import com.mapbox.android.core.location.LocationEngineRequest
-import com.mapbox.android.core.location.LocationEngineResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -27,35 +24,34 @@ class LocationHelper(private val context: Context) {
         const val DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L
         const val DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5
     }
+
     private var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-    private var locationEngine: LocationEngine = LocationEngineProvider.getBestLocationEngine(context)
 
     @SuppressLint("MissingPermission")
     fun getFlowLocationChanged(): Flow<Location?> {
         return callbackFlow {
-            val callback = object : LocationEngineCallback<LocationEngineResult> {
-                override fun onSuccess(result: LocationEngineResult?) {
-                    trySendBlocking(result?.lastLocation)
-                }
-
-                override fun onFailure(exception: Exception) {
-                    // do nothing only allow correct location record
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    for (location in locationResult.locations) {
+                        if (location != null) {
+                            trySendBlocking(location)
+                        }
+                    }
                 }
             }
+
             if (hasLocationPermission()) {
-                val request =
-                    LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                        .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                        .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build()
-                locationEngine.requestLocationUpdates(
-                    request,
-                    callback,
+                val locationRequest = LocationRequest.create()
+                locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                locationRequest.interval = DEFAULT_MAX_WAIT_TIME
+                fusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
                     Looper.getMainLooper()
                 )
-                locationEngine.getLastLocation(callback)
             }
             awaitClose {
-                locationEngine.removeLocationUpdates(callback)
+                fusedLocationClient.removeLocationUpdates(locationCallback)
             }
         }
     }

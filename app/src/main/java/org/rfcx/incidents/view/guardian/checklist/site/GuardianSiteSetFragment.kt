@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.mapbox.mapboxsdk.geometry.LatLng
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -15,9 +18,10 @@ import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianSiteSetBinding
 import org.rfcx.incidents.entity.stream.Stream
 import org.rfcx.incidents.util.setFormatLabel
+import org.rfcx.incidents.view.base.BaseMapFragment
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
 
-class GuardianSiteSetFragment : Fragment() {
+class GuardianSiteSetFragment : BaseMapFragment() {
 
     private lateinit var binding: FragmentGuardianSiteSetBinding
     private val viewModel: GuardianSiteSetViewModel by viewModel()
@@ -29,6 +33,7 @@ class GuardianSiteSetFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         initIntent()
     }
 
@@ -52,6 +57,8 @@ class GuardianSiteSetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        mapView!!.getMapAsync(this)
 
         binding.viewModel = viewModel
 
@@ -60,9 +67,6 @@ class GuardianSiteSetFragment : Fragment() {
             it.setToolbarTitle(getString(R.string.guardian_site_title))
         }
 
-        binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
-
         binding.nextButton.setOnClickListener {
             mainEvent?.nextWithStream(site)
         }
@@ -70,7 +74,8 @@ class GuardianSiteSetFragment : Fragment() {
         binding.currentLocate.setOnClickListener {
             viewModel.updateSiteToCurrentLocation()
             val currentLoc = LatLng(viewModel.currentLocationState.value?.latitude ?: 0.0, viewModel.currentLocationState.value?.longitude ?: 0.0)
-            binding.mapBoxView.setPinOnMap(currentLoc)
+            addMarker(currentLoc)
+            moveCamera(currentLoc)
         }
 
         binding.viewMapBox.setOnClickListener {
@@ -90,15 +95,15 @@ class GuardianSiteSetFragment : Fragment() {
                     val siteLoc = LatLng(site.latitude, site.longitude)
                     setWithInText(curLoc, siteLoc)
 
-                    binding.mapBoxView.setCurrentLocation(curLoc)
-                    binding.mapBoxView.setSiteLocation(siteLoc)
+                    setCurrentLocation(curLoc)
+                    setSiteLocation(siteLoc)
                 }
             }
         }
     }
 
     private fun setWithInText(curLoc: LatLng, target: LatLng) {
-        val distance = curLoc.distanceTo(target)
+        val distance = SphericalUtil.computeDistanceBetween(curLoc, target)
         if (distance <= 20) {
             setWithinText()
         } else {
@@ -126,34 +131,13 @@ class GuardianSiteSetFragment : Fragment() {
         binding.withinTextView.text = getString(R.string.more_than, distance)
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.mapBoxView.onStart()
-    }
+    override fun onMapReady(p0: GoogleMap) {
+        setGoogleMap(p0, false)
 
-    override fun onResume() {
-        super.onResume()
-        binding.mapBoxView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mapBoxView.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.mapBoxView.onStop()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        binding.mapBoxView.onLowMemory()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.mapBoxView.onDestroy()
+        val latLng = LatLng(site.latitude, site.longitude)
+        addMarker(latLng)
+        moveCamera(latLng)
+        fusedLocationClient()
     }
 
     companion object {

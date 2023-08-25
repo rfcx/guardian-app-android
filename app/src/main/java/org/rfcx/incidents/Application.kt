@@ -1,7 +1,10 @@
 package org.rfcx.incidents
 
+import android.Manifest
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -9,8 +12,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
-import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.mapboxsdk.Mapbox
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -53,13 +54,11 @@ class Application : MultiDexApplication(), LifecycleObserver {
                     .build()
             )
         }
-
-        Mapbox.getInstance(applicationContext, applicationContext.getString(R.string.mapbox_token))
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onAppInForeground() {
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             this.startLocationChange()
         }
     }

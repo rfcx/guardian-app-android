@@ -23,8 +23,8 @@ android {
     defaultConfig {
         applicationId 'org.rfcx.incidents'
         manifestPlaceholders = [auth0Domain: "@string/auth0_domain", auth0Scheme: "@string/auth0_scheme"]
-        versionCode 57
-        versionName '1.1.2'
+        versionCode 58
+        versionName '1.1.3'
         minSdkVersion 21
         targetSdkVersion 33
         multiDexEnabled true
@@ -160,13 +160,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
     implementation "com.squareup.okio:okio:2.4.0"
-
-    // MapBox
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline-v9:0.7.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:6.1.0'
-
+//    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
     /* Chart */
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
@@ -186,6 +180,10 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     /* FFT */
     implementation 'com.github.wendykierp:JTransforms:3.1'
+
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:1.0.2'
+
 }
 
 ktlint {

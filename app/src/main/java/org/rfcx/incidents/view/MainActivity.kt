@@ -1,18 +1,20 @@
 package org.rfcx.incidents.view
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mapbox.android.core.permissions.PermissionsManager
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
@@ -158,7 +160,7 @@ class MainActivity : BaseActivity(), MainActivityEventListener, NetworkReceiver.
         currentFragment?.let {
             if (it is StreamsFragment) {
                 it.onRequestPermissionsResult(requestCode, permissions, grantResults)
-                if (PermissionsManager.areLocationPermissionsGranted(this)) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     this.startLocationChange()
                 }
             }

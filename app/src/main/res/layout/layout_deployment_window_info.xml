@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mapbox.mapboxsdk.annotations.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_padding_large"
-    android:layout_marginEnd="@dimen/margin_padding_large"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_info_window"
     android:orientation="vertical"
-    android:paddingStart="@dimen/margin_padding_small"
-    android:paddingLeft="@dimen/margin_padding_small"
-    android:paddingEnd="@dimen/margin_padding_small"
-    android:paddingRight="@dimen/margin_padding_small"
-    android:paddingBottom="6dp"
-    app:mapbox_bl_arrowDirection="bottom"
-    app:mapbox_bl_arrowHeight="8dp"
-    app:mapbox_bl_arrowPosition="90dp"
-    app:mapbox_bl_arrowWidth="8dp"
-    app:mapbox_bl_bubbleColor="@color/backgroundColor"
-    app:mapbox_bl_cornersRadius="8dp"
-    app:mapbox_bl_strokeColor="@android:color/darker_gray"
-    app:mapbox_bl_strokeWidth="1dp">
+    android:padding="@dimen/margin_padding_small">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,8 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_normal"
-                android:gravity="end"
-                tools:text="Puerto Rico" />
+                android:gravity="end" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,6 +79,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_normal"
@@ -144,6 +131,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/seeDeploymentDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_normal"
@@ -161,5 +149,4 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-</com.mapbox.mapboxsdk.annotations.BubbleLayout>
-
+</LinearLayout>

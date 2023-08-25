@@ -11,17 +11,20 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.mapbox.mapboxsdk.geometry.LatLng
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentEditLocationBinding
 import org.rfcx.incidents.entity.stream.Stream
+import org.rfcx.incidents.view.base.BaseMapFragment
 
-class EditDeploymentSiteFragment : Fragment() {
+class EditDeploymentSiteFragment : BaseMapFragment() {
     private lateinit var binding: FragmentEditLocationBinding
     private val viewModel: EditSiteViewModel by viewModel()
 
@@ -44,14 +47,16 @@ class EditDeploymentSiteFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         initIntent()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mapView = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        mapView!!.getMapAsync(this)
 
         binding.viewModel = viewModel
-        setMap(savedInstanceState)
 
         view.viewTreeObserver.addOnGlobalLayoutListener { setOnFocusEditText() }
         setHideKeyboard()
@@ -72,7 +77,8 @@ class EditDeploymentSiteFragment : Fragment() {
                         site.longitude = siteLongitude
                     }
                     val siteLoc = LatLng(site.latitude, site.longitude)
-                    binding.mapBoxView.setSiteLocation(siteLoc)
+                    setSiteLocation(siteLoc)
+                    addMarker(siteLoc)
                 }
             }
         }
@@ -97,9 +103,8 @@ class EditDeploymentSiteFragment : Fragment() {
         }
     }
 
-    private fun setMap(savedInstanceState: Bundle?) {
-        binding.mapBoxView.onCreate(savedInstanceState)
-        binding.mapBoxView.setParam(canMove = false, fromDeploymentList = false)
+    override fun onMapReady(p0: GoogleMap) {
+        setGoogleMap(p0, false)
     }
 
     private fun setOnFocusEditText() {
@@ -143,36 +148,6 @@ class EditDeploymentSiteFragment : Fragment() {
         val inputManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        binding.mapBoxView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.mapBoxView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mapBoxView.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.mapBoxView.onStop()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        binding.mapBoxView.onLowMemory()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.mapBoxView.onDestroy()
     }
 
     companion object {
