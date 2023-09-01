@@ -115,8 +115,12 @@ class GuardianSiteSelectFragment :
                     val filteredNameSite = sitesAdapter.filter {
                         it.stream.name.lowercase().contains(text)
                     }
-                    existedSiteAdapter.setFilter(ArrayList(createNew + filteredNameSite))
-                    existedSiteAdapter.isNewSite = true
+                    if (filteredNameSite.map { it.stream.name }.contains(s.toString())) {
+                        existedSiteAdapter.setFilter(ArrayList(filteredNameSite))
+                    } else {
+                        existedSiteAdapter.setFilter(ArrayList(createNew + filteredNameSite))
+                        existedSiteAdapter.isNewSite = true
+                    }
                 }
             }
 
