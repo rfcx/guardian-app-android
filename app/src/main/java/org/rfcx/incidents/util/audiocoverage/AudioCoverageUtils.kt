@@ -96,7 +96,9 @@ object AudioCoverageUtils {
     fun getLatestMonthYear(item: List<GuardianArchivedCoverage>): Pair<Int, Int> {
         val cal = Calendar.getInstance()
         if (item.isNotEmpty()) {
-            cal.time = Date(item.last().listOfFile.last())
+            if (item.last().listOfFile.isNotEmpty()) {
+                cal.time = Date(item.last().listOfFile.last())
+            }
         }
         return Pair(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
     }
