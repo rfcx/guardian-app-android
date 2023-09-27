@@ -86,9 +86,9 @@ class GuardianRegisterViewModel(
             val guid = this@GuardianRegisterViewModel.guid
             val token = StringUtils.generateSecureRandomHash(40)
             val pinCode = StringUtils.generateSecureRandomHash(4)
-            val apiMqttHost = if (isProduction) "api-mqtt.rfcx.org" else "staging-api-mqtt.rfcx.org"
+            val apiMqttHost = if (isProduction) "api-mqtt.rfcx.org" else "staging-rabbit.rfcx.org"
             val apiSmsAddress = if (isProduction) "+13467870964" else "+14154803657"
-            val keystorePassphrase = if (isProduction) "x3bJwhSQ83A5ddkh" else "L2Cevkmc9W5fFCKn"
+            val keystorePassphrase = if (isProduction) "x3bJwhSQ83A5ddkh" else "wYP29XLXRYJR"
             if (guid.isNotEmpty()) {
                 val registration = GuardianRegistration(
                     guid = guid,

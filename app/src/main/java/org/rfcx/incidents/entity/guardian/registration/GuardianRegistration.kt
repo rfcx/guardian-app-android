@@ -11,9 +11,9 @@ import java.util.Date
 open class GuardianRegistration(
     @PrimaryKey var guid: String = "",
     var token: String = "",
-    var keystorePassphrase: String = "L2Cevkmc9W5fFCKn",
+    var keystorePassphrase: String = "wYP29XLXRYJR",
     var pinCode: String = "",
-    var apiMqttHost: String = "staging-api-mqtt.rfcx.org",
+    var apiMqttHost: String = "staging-rabbit.rfcx.org",
     var apiSmsAddress: String = "+14154803657",
     var env: String = "staging",
     var syncState: Int = SyncState.UNSENT.value,
