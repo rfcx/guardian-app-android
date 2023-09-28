@@ -86,7 +86,12 @@ class StreamDetailFragment : Fragment(), (Event) -> Unit, SwipeRefreshLayout.OnR
         binding.eventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = eventItemAdapter
-            eventItemAdapter.timeZone = TimeZone.getTimeZone(viewModel.getStream(streamId)?.timezoneRaw)
+            val timezone = viewModel.getStream(streamId)?.timezoneRaw
+            if (timezone == null) {
+                eventItemAdapter.timeZone = TimeZone.getDefault()
+            } else {
+                eventItemAdapter.timeZone = TimeZone.getTimeZone(timezone)
+            }
 
             binding.createReportButton.setOnClickListener {
                 analytics?.trackCreateResponseEvent()
