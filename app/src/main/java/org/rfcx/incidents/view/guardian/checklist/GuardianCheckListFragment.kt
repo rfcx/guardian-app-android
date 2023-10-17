@@ -59,6 +59,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         lifecycleScope.launchWhenStarted {
             launch { collectCheckListItem() }
             launch { collectRegistration() }
+            launch { collectGuardianId() }
         }
     }
 
@@ -76,6 +77,16 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
                 if (it) {
                     mainEvent?.setPassedScreen(GuardianScreen.REGISTER)
                     viewModel.getAllCheckList(mainEvent?.getPassedScreen())
+                }
+            }
+        }
+    }
+
+    private fun collectGuardianId() {
+        lifecycleScope.launch {
+            viewModel.guardianIdState.collectLatest {
+                if (it.isNotEmpty()) {
+                    mainEvent?.setToolbarSubTitle(it)
                 }
             }
         }

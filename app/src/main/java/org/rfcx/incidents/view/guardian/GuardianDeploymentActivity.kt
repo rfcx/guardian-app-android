@@ -147,6 +147,12 @@ class GuardianDeploymentActivity : AppCompatActivity(), GuardianDeploymentEventL
         }
     }
 
+    override fun setToolbarSubTitle(subTitle: String) {
+        supportActionBar?.apply {
+            this.subtitle = subTitle
+        }
+    }
+
     override fun isAbleToDeploy(): Boolean {
         if (!passedScreen.contains(GuardianScreen.REGISTER)) return false
         if (!passedScreen.contains(GuardianScreen.NETWORK_TEST)) return false
