@@ -41,6 +41,9 @@ class GuardianCheckListViewModel(
     private val _registrationState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val registrationState = _registrationState.asStateFlow()
 
+    private val _guardianIdState: MutableStateFlow<String> = MutableStateFlow("")
+    val guardianIdState = _guardianIdState.asStateFlow()
+
     private var guid = ""
     private var token = ""
     private var guardianVital = ""
@@ -56,6 +59,7 @@ class GuardianCheckListViewModel(
             getAdminMessageUseCase.launch().combine(getGuardianMessageUseCase.launch()) { admin, guardian ->
                 guardian?.getGuid()?.let {
                     guid = it
+                    _guardianIdState.tryEmit(it)
                 }
                 guardian?.getGuardianToken()?.let {
                     token = it
