@@ -197,8 +197,6 @@ object DataModule {
         factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }

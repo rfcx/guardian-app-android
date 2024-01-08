@@ -16,8 +16,6 @@ import org.rfcx.incidents.data.remote.guardian.software.ClassifierEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.DownloadFileEndpoint
 import org.rfcx.incidents.data.remote.guardian.software.SoftwareEndpoint
 import org.rfcx.incidents.data.remote.media.MediaEndpoint
-import org.rfcx.incidents.data.remote.password.PasswordChangeEndpoint
-import org.rfcx.incidents.data.remote.profilephoto.ProfilePhotoEndpoint
 import org.rfcx.incidents.data.remote.project.ProjectsEndpoint
 import org.rfcx.incidents.data.remote.response.CreateResponseEndpoint
 import org.rfcx.incidents.data.remote.setusername.SetNameEndpoint
@@ -98,22 +96,6 @@ object ServiceFactory {
             GsonProvider.getInstance().gson
         )
             .create(SetNameEndpoint::class.java)
-    }
-
-    fun makePasswordService(isDebug: Boolean, context: Context): PasswordChangeEndpoint {
-        return createRetrofit(
-            BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-            GsonProvider.getInstance().gson
-        )
-            .create(PasswordChangeEndpoint::class.java)
-    }
-
-    fun makeProfilePhotoService(isDebug: Boolean, context: Context): ProfilePhotoEndpoint {
-        return createRetrofit(
-            BuildConfig.CORE_API_BASE_URL, createAuthTokenOkHttpClient(isDebug, AuthTokenInterceptor(context)),
-            GsonProvider.getInstance().gson
-        )
-            .create(ProfilePhotoEndpoint::class.java)
     }
 
     fun makeSubscribeService(isDebug: Boolean, context: Context): SubscribeEndpoint {
