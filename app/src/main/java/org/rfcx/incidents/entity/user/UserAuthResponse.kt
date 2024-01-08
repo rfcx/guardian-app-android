@@ -16,7 +16,4 @@ data class UserAuthResponse(
     val defaultSite: String? = null,
     val picture: String?,
     val expiredAt: Long?
-) {
-
-    val isRanger: Boolean get() = roles.contains("rfcxUser") && defaultSite != null
-}
+)
