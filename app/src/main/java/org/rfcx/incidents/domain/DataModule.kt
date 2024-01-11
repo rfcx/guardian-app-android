@@ -8,8 +8,6 @@ import org.rfcx.incidents.BuildConfig
 import org.rfcx.incidents.data.DetectionsRepositoryImp
 import org.rfcx.incidents.data.EventsRepositoryImpl
 import org.rfcx.incidents.data.MediaRepositoryImp
-import org.rfcx.incidents.data.PasswordChangeRepositoryImp
-import org.rfcx.incidents.data.ProfilePhotoRepositoryImp
 import org.rfcx.incidents.data.ProjectsRepositoryImp
 import org.rfcx.incidents.data.SetNameRepositoryImp
 import org.rfcx.incidents.data.StreamsRepositoryImp
@@ -28,8 +26,6 @@ import org.rfcx.incidents.data.interfaces.CreateResponseRepository
 import org.rfcx.incidents.data.interfaces.DetectionsRepository
 import org.rfcx.incidents.data.interfaces.EventsRepository
 import org.rfcx.incidents.data.interfaces.MediaRepository
-import org.rfcx.incidents.data.interfaces.PasswordChangeRepository
-import org.rfcx.incidents.data.interfaces.ProfilePhotoRepository
 import org.rfcx.incidents.data.interfaces.ProjectsRepository
 import org.rfcx.incidents.data.interfaces.SetNameRepository
 import org.rfcx.incidents.data.interfaces.StreamsRepository
@@ -123,9 +119,6 @@ object DataModule {
         single { DetectionsRepositoryImp(get()) } bind DetectionsRepository::class
         single { GetDetectionsUseCase(get(), get(), get()) }
 
-        single { PasswordChangeRepositoryImp(get()) } bind PasswordChangeRepository::class
-        single { PasswordChangeUseCase(get(), get(), get()) }
-
         single { UserTouchRepositoryImp(get()) } bind UserTouchRepository::class
         single { CheckUserTouchUseCase(get(), get(), get()) }
 
@@ -134,9 +127,6 @@ object DataModule {
 
         single { org.rfcx.incidents.data.CreateResponseRepositoryImpl(get()) } bind CreateResponseRepository::class
         single { CreateResponseUseCase(get(), get(), get()) }
-
-        single { ProfilePhotoRepositoryImp(get()) } bind ProfilePhotoRepository::class
-        single { ProfilePhotoUseCase(get(), get(), get()) }
 
         single { SubscribeRepositoryImp(get()) } bind SubscribeRepository::class
         single { SubscribeUseCase(get(), get(), get()) }
@@ -207,8 +197,6 @@ object DataModule {
         factory { ServiceFactory.makeAssetsService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeUserTouchService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSetNameService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makePasswordService(BuildConfig.DEBUG, androidContext()) }
-        factory { ServiceFactory.makeProfilePhotoService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSubscribeService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeSoftwareService(BuildConfig.DEBUG, androidContext()) }
         factory { ServiceFactory.makeClassifierService(BuildConfig.DEBUG, androidContext()) }

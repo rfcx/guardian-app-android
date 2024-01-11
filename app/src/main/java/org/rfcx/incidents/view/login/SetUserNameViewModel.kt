@@ -78,10 +78,8 @@ class SetUserNameViewModel(private val context: Context, private val sendNameUse
                     }
                     is Ok -> {
                         val userAuthResponse = result.value
-                        if (userAuthResponse.isRanger) {
-                            CredentialKeeper(context).save(userAuthResponse)
-                        }
-                        callback(userAuthResponse.isRanger)
+                        CredentialKeeper(context).save(userAuthResponse)
+                        callback(true)
                     }
                 }
             }
