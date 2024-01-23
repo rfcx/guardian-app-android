@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">Courriel</string>
+    <string name="password">Mot de passe</string>
+    <string name="login">Se connecter</string>
+    <string name="pls_fill_email">Veuillez écrire votre courriel</string>
+    <string name="pls_fill_password">Veuillez écrire votre mot de passe</string>
+</resources>

@@ -4,8 +4,6 @@
     <string name="email">อีเมล</string>
     <string name="password">รหัสผ่าน</string>
     <string name="login">เข้าสู่ระบบ</string>
-    <string name="connect_with_facebook">เชื่อมต่อกับบัญชี Facebook</string>
-    <string name="connect_with_sms">เชื่อมต่อกับเบอร์โทรศัพท์</string>
     <string name="pls_fill_email">กรุณากรอกอีเมล</string>
     <string name="pls_fill_password">กรุุณากรอกรหัสผ่าน</string>
     <string name="incorrect_username_password">อีเมลหรือรหัสผ่านไม่ถูกต้อง</string>
@@ -17,17 +15,6 @@
     <string name="next">ต่อไป</string>
     <string name="skip">ข้าม</string>
     <string name="done">เสร็จสิ้น</string>
-    <string name="available_in_settings">คุณยังสามารถค้นหาคู่มือการใช้งานนี้ได้ในหน้าโปรไฟล์</string>
-    <string name="name_of_guardian">ชื่อ Site</string>
-    <string name="enable_tracking_when">เปิดใช้งานการติดตามตำแหน่งเมื่อลาดตระเวน เพื่อรายงานตำแหน่งของคุณ</string>
-    <string name="when_the_event">การแจ้งเตือนเหตุการณ์เมื่อตรวจพบเสียงต้องสงสัย</string>
-    <string name="number_of_reviews">จำนวนรีวิวที่ยืนยันว่าเป็นเสียงนั้น</string>
-    <string name="boxes_indicate_possible">กล่องแสดงตำแหน่งที่คาดว่าจะเป็นเสียงเลื่อยไฟฟ้า</string>
-    <string name="confirm_it">ยืนยันว่าเป็นเสียงเลื่อย</string>
-    <string name="reject_it">ปฏิเสธ เมื่อไม่ใช่เสียงเลื่อย</string>
-    <string name="create_new_reports">สร้างรายงานใหม่</string>
-    <string name="view_reports">ดูรายงานตามพื้นที่</string>
-    <string name="app_intro">คู่มือการใช้งานแอป</string>
     <string name="coordinates">รูปแบบพิกัด GPS</string>
     
     <string name="dd_coordinates">DD</string>
@@ -39,58 +26,34 @@
     <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">เข้าสู่ระบบ</string>
-    <string name="invitation_submit_button_label">บันทึก</string>
     <string name="forgot_your_password">ลืมรหัสผ่าน</string>
     <string name="reset_password"> รีเซ็ตรหัสผ่านของคุณ</string>
     <string name="enter_email">ป้อนอีเมลของคุณเพื่อรับลิงค์ในการรีเซ็ตรหัสผ่าน</string>
     <string name="cancel">ยกเลิก</string>
     <string name="reset_link_send">รีเซ็ตลิงค์ส่งไปยังอีเมลของคุณแล้ว</string>
     <string name="reset">รีเซ็ต</string>
-    
-    <string name="what_we_call_you">ให้เราเรียกคุณว่าอะไรดี</string>
-    <string name="please_tell_name">กรุณาบอกชื่อคุณกับเรา</string>
-    <string name="hint_name">ชื่อ</string>
-    
-    <string name="terms_and_service">ข้าพเจ้าได้อ่านและยอมรับข้อกำหนดในการให้บริการดังกล่าว</string>
+
     <string name="continue_text">ถัดไป</string>
     
     <!-- common error -->
     <string name="error_common">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
-    <string name="location_permission_msg">แอป Ranger ต้องการใช้ตำแหน่งของคุณ</string>
     <string name="record_audio_permission_msg">แอป Ranger ต้องการบันทึกเสียง</string>
     <string name="camera_permission_msg">แอป Ranger ต้องการที่จะใช้กล้องของคุณ</string>
     <string name="read_storage_permission_msg">แอป Ranger ต้องการที่จะอ่านการจัดเก็บข้อมูลของคุณ</string>
     <string name="go_to_setting">ตั้งค่า</string>
 	
 	<!-- message list -->
-	<string name="please_set_guardian_group">กรุณาตั้งค่าโปรเจค</string>
-    <string name="sent_to">ส่งไปยัง</string>
 
     <!-- report -->
-    <string name="report_title">รายงาน</string>
-	<string name="report_what_label">เสียง</string>
-    <string name="report_when_label">เมื่อ</string>
     <string name="report_submit_button_label">บันทึก</string>
-    <string name="report_record_label">บันทึกเสียง</string>
-    <string name="report_attach_image_label">ภาพถ่าย</string>
-    <string name="report_location_null">ไม่พบตำแหน่ง กรุณาลองอีกครั้ง</string>
-    <string name="report_note_label">หมายเหตุ</string>
-    <string name="report_note">หมายเหตุ</string>
     <string name="report_note_hint">บันทึกข้อมูลเพิ่มเติมที่นี่</string>
     <string name="some_photo_already_exists">ภาพบางส่วนมีอยู่แล้ว</string>
     <string name="these_photos_already_exists">ภาพเหล่านี้มีอยู่แล้ว</string>
     <string name="this_photo_already_exists">ภาพนี้มีอยู่แล้ว</string>
-    <string name="expires_in_24h">หมดอายุภายใน 24 ชม</string>
     <!-- Notification -->
-	<string name="notification_location_loading">กำลังโหลดตำแหน่ง…</string>
-    <string name="notification_location_not_availability">กรุณาเปิดตำแหน่งอุปกรณ์</string>
 
     <!-- Settings -->
     <string name="dialog_loading">กำลังโหลด...</string>
-	<string name="location_tracking_label">การติดตามตำแหน่ง</string>
-    <string name="location_tracking_on_label">เปิด</string>
-    <string name="location_tracking_off_label">ปิด</string>
-	<string name="guardian_group_label">โปรเจค</string>
     <string name="notifications">การแจ้งเตือน</string>
     <string name="start_demo">ทดสอบส่งการแจ้งเตือน</string>
     <string name="notification_will_sent">การแจ้งเตือนจะถูกส่งภายใน 30 วินาทีเพื่อยืนยันว่าคุณสามารถรับการแจ้งเตือนได้</string>
@@ -101,43 +64,24 @@
     <string name="last_week">อาทิตย์ที่แล้ว</string>
     <string name="last_24_hours">24 ชั่วโมง\nก่อนหน้านี้</string>
     <string name="now">ขณะนี้</string>
-    <string name="within_month">ภายในหนึ่งเดือน</string>
-    <string name="within_week">ภายในหนึ่งสัปดาห์</string>
-    <string name="within_24_hours">ภายใน 24 ชั่วโมง</string>
-    <string name="at_that_time">ขณะนั้น</string>
 
     <string name="tab_to_record_label">แตะปุ่มค้างไว้เพื่อบันทึกเสียง</string>
-    <string name="new_password">รหัสผ่านใหม่</string>
-    <string name="new_password_again">ยืนยันรหัสผ่านใหม่</string>
-    <string name="change_password">เปลี่ยนรหัสผ่าน</string>
-    
-	<!-- Invitation -->
-    <string name="invitation_title">เชื่่อมต่อกับพื้นที่ของคุณ</string>
-    <string name="invitation_desc">กรุณากรอกรหัสเชิญ (invitation code)</string>
-    <string name="hint_code">รหัส</string>
-    <string name="invalid_invite_code">รหัสเชิญไม่ถูกต้อง</string>
-    <string name="switch_account">สลับบัญชี</string>
+
+    <!-- Invitation -->
     <!-- Report -->
-	<string name="empty_list_description">ยังไม่มีเหตุการณ์ใดๆเกิดขึ้นในขณะนี้</string>
-	
-	<!-- Symbols -->
+
+    <!-- Symbols -->
     <string name="menu_camera">กล้อง</string>
     <string name="menu_gallery">แกลลอรี่</string>
     
     <!-- Report list -->
-    <string name="report_list_title">ประวัติการรายงาน</string>
-    <string name="report_list_empty_message">คุณยังไม่มีรายงานใดๆ</string>
-    <string name="images_sync_format">%d ภาพ (อัปโหลดแล้ว)</string>
-    <string name="images_unsync_format">%1d ภาพ (%2d ยังไม่ได้อัปโหลด)</string>
-    <string name="report_detail_title">รายละเอียดรายงาน</string>
-    
+
     <string name="in_air_plane_mode">การติดตามตำแหน่งถูกปิดใช้งานเมื่ออยู่ในโหมดเครื่องบิน</string>
     <string name="pls_off_air_plane_mode">กรุณาปิดโหมดเครื่องบิน</string>
     <string name="common_ok">ตกลง</string>
     
     <string name="location">ตำแหน่ง</string>
-    <string name="audio_notes">เสียงที่บันทึก</string>
-    
+
     <string name="menu_profile">โปรไฟล์</string>
     
     <string name="see_report_detail">ดูรายละเอียด</string>
@@ -162,19 +106,14 @@
     <string name="chainsaw">เลื่อย</string>
     <string name="gunshot">กระสุนปืน</string>
     <string name="vehicle">ยานพาหนะ</string>
-    <string name="trespasser">ผู้บุกรุก</string>
     <string name="other">อื่นๆ</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">แจ้งเตือนผ่านแอป</string>
-    <string name="profile_receive_noti_by_email">แจ้งเตือนผ่านอีเมล</string>
     <string name="profile_sign_out_label">ออกจากระบบ</string>
     <string name="profile_aditional_label">เพิ่มเติม</string>
     <string name="profile_app_version_label">เวอร์ชั่น</string>
     <string name="profile_feedback_label">ฟีดแบค</string>
-    <string name="profile_rate_app_label">ให้คะแนนแอป</string>
-    <string name="save_changed">บันทึกการเปลี่ยนแปลง</string>
-    
+
     <string name="feedback_submitted">ขอขอบคุณสำหรับความคิดเห็นของคุณ :)</string>
     <string name="feedback_submission_failed">การส่งความคิดเห็นล้มเหลว กรุณาลองใหม่อีกครั้ง</string>
     <string name="snackbar_retry">ลองใหม่</string>
@@ -182,29 +121,19 @@
     <string name="from">จาก</string>
     <string name="app_feedback_share_ideas">แสดงความคิดเห็นหรือข้อเสนอแนะเกี่ยวกับแอป</string>
     <string name="maximum_number_of_attachments">คุณมีไฟล์ที่สามารถเลือกได้ถึงจำนวนสูงสุดแล้ว ลองลบบางรายการเพื่อเพิ่มไฟล์อื่น</string>
-    
-    <string name="please_enter_your_new_password">กรุณากรอกรหัสผ่านใหม่ของคุณ</string>
-    <string name="please_confirm_your_new_password">กรุณายืนยันรหัสผ่านใหม่ของคุณ</string>
-    <string name="password_must_have_at_least_6_characters">รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร</string>
-    <string name="confirm_password_does_not_match">การยืนยันรหัสผ่านไม่ตรงกัน</string>
-    <string name="password_changed_successfully">การเปลี่ยนรหัสผ่านสำเร็จ</string>
+
     <string name="something_is_wrong">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
     <string name="account">บัญชีผู้ใช้</string>
     <string name="please_try_again_later">มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง</string>
-    
-    <string name="change_profile_photo">เปลี่ยนรูปโปรไฟล์</string>
-    <string name="edit_profile">แก้ไขโปรไฟล์</string>
-	
-	<!--Guardian Group List-->
-    <string name="guardian_group_list">โปรเจค</string>
-	<string name="photos">ภาพถ่าย</string>
+
+    <!--Guardian Group List-->
+    <string name="photos">ภาพถ่าย</string>
 	<string name="common_none">ไม่มี</string>
     
     <string name="notification_tracking_title">กำลังปฏิบัติหน้าที่และติดตามตำแหน่ง</string>
     <string name="notification_traking_message_format">%d นาทีในการปฏิบัติหน้าที่</string>
 	
 	<string name="required">จำเป็นต้องกรอก!</string>
-    <string name="error_unsubscribe_by_email">ยกเลิกการรับข้อมูลจาก %s ล้มเหลว</string>
     <string name="detected_at">ตรวจพบที่</string>
     
     <!-- SetProjectsFragment -->

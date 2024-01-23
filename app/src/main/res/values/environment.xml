@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" translatable="false">
-    <string name="app_name">Guardian</string>
+    <string name="app_name" translatable="false">Guardian</string>
 
-    <string name="auth0_client_id">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
-    <string name="auth0_domain">auth.rfcx.org</string>
-    <string name="auth0_scheme">rfcx</string>
-    <string name="auth0_audience">https://rfcx.eu.auth0.com/userinfo</string>
-    <string name="auth0_scopes">openid email profile offline_access</string>
-    <string name="auth0_metadata_key">https://rfcx.org/app_metadata</string>
-    <string name="auth0_user_metadata_key">https://rfcx.org/user_metadata</string>
+    <string name="auth0_client_id" translatable="false">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
+    <string name="auth0_domain" translatable="false">auth.rfcx.org</string>
+    <string name="auth0_scheme" translatable="false">rfcx</string>
+    <string name="auth0_audience" translatable="false">https://rfcx.eu.auth0.com/userinfo</string>
+    <string name="auth0_scopes" translatable="false">openid email profile offline_access</string>
+    <string name="auth0_metadata_key" translatable="false">https://rfcx.org/app_metadata</string>
+    <string name="auth0_user_metadata_key" translatable="false">https://rfcx.org/user_metadata</string>
 
-    <string name="google_maps_key">AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s</string>
+    <string name="google_maps_key" translatable="false">AIzaSyC-NLZPDq0jl8G5ZOvX48OeTylK8XR0M0s</string>
 </resources>

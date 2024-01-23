@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- LoginActivity -->
-	<string name="email">Correo electrónico</string>
-	<string name="password">Clave</string>
+    <string name="email">Correo electrónico</string>
+	<string name="password">Contraseña</string>
 	<string name="login">Entrar</string>
-	<string name="connect_with_facebook">Continuar con facebook</string>
-	<string name="connect_with_sms">Continuar con el número de teléfono</string>
-	<string name="pls_fill_email">Escriba su correo electrónico</string>
-	<string name="pls_fill_password">Escriba su clave</string>
+    <string name="pls_fill_email">Llenar correo electrónico</string>
+	<string name="pls_fill_password">Llenar contraseña</string>
 	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
 	<string name="an_error_occurred">Servicio no disponible</string>
 	<string name="or">O</string>
@@ -17,18 +15,7 @@
 	<string name="next">Próximo</string>
 	<string name="skip">Omitir</string>
 	<string name="done">Hecho</string>
-	<string name="available_in_settings">También se puede encontrar este tutorial en la ficha Perfil</string>
-	<string name="name_of_guardian">Nombre del sitio</string>
-	<string name="enable_tracking_when">Habilitar el seguimiento cuando se está en la patrulla para reportar su posición</string>
-	<string name="when_the_event">Cuando se detecta el evento</string>
-	<string name="number_of_reviews">Número de comentarios confirmados</string>
-	<string name="boxes_indicate_possible">Las cajas indican los posibles eventos de motosierra</string>
-	<string name="confirm_it">Confirmar que es una motosierra</string>
-	<string name="reject_it">Rechazar no es una motosierra</string>
-	<string name="create_new_reports">Crear nuevos informes</string>
-	<string name="view_reports">Ver informes de ubicación</string>
-	<string name="app_intro">Aplicación Introducción</string>
-	<string name="coordinates">Coordenadas</string>
+    <string name="coordinates">Coordenadas</string>
 	
 	<string name="dd_coordinates">DD</string>
 	<string name="ddm_coordinates">DDM</string>
@@ -40,60 +27,36 @@
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Entrar</string>
-	<string name="invitation_submit_button_label">Enviar</string>
-	<string name="forgot_your_password">Olvidaste tu contraseña</string>
+    <string name="forgot_your_password">Olvidaste tu contraseña</string>
 	<string name="reset_password">Restablecer su contraseña</string>
 	<string name="enter_email">Introduzca su email para recibir enlace de restablecimiento</string>
 	<string name="cancel">Cancelar</string>
 	<string name="reset_link_send">Restablecer enlace de enviar a su correo electrónico.</string>
 	<string name="reset">Reiniciar</string>
-	
-	<string name="what_we_call_you">¿Como deberíamos llamarte?</string>
-	<string name="please_tell_name">Por favor, díganos su nombre</string>
-	<string name="hint_name">Nombre</string>
-	
-	<string name="terms_and_service">He leído y estoy de acuerdo con estos Términos de Servicio</string>
-	<string name="continue_text">Seguir</string>
+
+    <string name="continue_text">Seguir</string>
 	
 	<!-- common error -->
 	<string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
-	<string name="location_permission_msg">A Ranger App le gustaría usar tu ubicación</string>
-	<string name="record_audio_permission_msg">A Ranger App le gustaria grabar un audio</string>
+    <string name="record_audio_permission_msg">A Ranger App le gustaria grabar un audio</string>
 	<string name="camera_permission_msg">A Ranger app le gustaria usar su cámara</string>
 	<string name="read_storage_permission_msg">A Ranger app quiere leer tu almacenamiento</string>
 	<string name="go_to_setting">Configuración</string>
 	
 	<!-- message list -->
-	<string name="please_set_guardian_group">Por favor, proyecto conjunto</string>
-	<string name="sent_to">enviar a</string>
-	
-	<!-- report -->
-	<string name="report_title">Reportar</string>
-	<string name="report_what_label">¿QUÉ?</string>
-	<string name="report_when_label">¿CUÁNDO?</string>
-	<string name="report_submit_button_label">Enviar</string>
-	<string name="report_record_label">REGISTRO DE NOTAS (Opcional)</string>
-	<string name="report_attach_image_label">FOTOS (Opcional)</string>
-	<string name="report_location_null">Ubicación no encontrada. Por favor intente de nuevo.</string>
-	<string name="report_note_label">Notas (Opcional)</string>
-	<string name="report_note">Notas</string>
-	<string name="report_note_hint">Poner algunas notas aquí</string>
+
+    <!-- report -->
+    <string name="report_submit_button_label">Enviar</string>
+    <string name="report_note_hint">Poner algunas notas aquí</string>
 	<string name="some_photo_already_exists">Algunos foto ya existe</string>
 	<string name="these_photos_already_exists">Estas fotos ya existen</string>
 	<string name="this_photo_already_exists">Esta foto ya existe</string>
-	<string name="expires_in_24h">expira en 24h</string>
-	
-	<!-- Notification -->
-	<string name="notification_location_loading">Cargando ubicación…</string>
-	
-	<!-- Settings -->
+
+    <!-- Notification -->
+
+    <!-- Settings -->
 	<string name="dialog_loading">Cargando…</string>
-	<string name="notification_location_not_availability">!Por favor active la ubicación de su dispositivo!</string>
-	<string name="location_tracking_label">Seguimiento de la ubicación</string>
-	<string name="location_tracking_on_label">Encendido</string>
-	<string name="location_tracking_off_label">Apagando</string>
-	<string name="guardian_group_label">Proyectos</string>
-	<string name="notifications">Notificaciones</string>
+    <string name="notifications">Notificaciones</string>
 	<string name="start_demo">Enviar una notificación de prueba</string>
 	<string name="notification_will_sent">Una notificación será enviada dentro de los 30 segundos para comprobar que puede recibir alertas</string>
 	<string name="perform_test">Realizar la prueba</string>
@@ -103,38 +66,20 @@
 	<string name="last_week">Ultima\nSemana</string>
 	<string name="last_24_hours">Ultimas\n24 horas</string>
 	<string name="now">Ahora</string>
-	<string name="within_month">Dentro de un mes</string>
-	<string name="within_week">Dentro de una semana</string>
-	<string name="within_24_hours">En 24 horas</string>
-	<string name="at_that_time">En ese momento</string>
-	
-	<string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
-	<string name="new_password">Nueva contraseña</string>
-	<string name="new_password_again">Confirmar nueva contraseña</string>
-	<string name="change_password">Cambia la contraseña</string>
-	
-	<!-- Invitation -->
-	<string name="invitation_title">Conectarse a un sitio.</string>
-	<string name="invitation_desc">Por favor inserte su código de invitacion</string>
-	<string name="hint_code">Código</string>
-	<string name="invalid_invite_code">código de invitación no válido</string>
-	<string name="switch_account">cambiar cuenta</string>
-	
-	<!-- Report -->
-	<string name="empty_list_description">No hay incidentes recientemente.\nDisfrute su día :)</string>
-	
-	<!-- Symbols -->
+
+    <string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
+
+    <!-- Invitation -->
+
+    <!-- Report -->
+
+    <!-- Symbols -->
 	<string name="menu_camera">Cámara</string>
 	<string name="menu_gallery">Galeria</string>
 	
 	<!-- Report list -->
-	<string name="report_list_title">Historial de Informes </string>
-	<string name="report_list_empty_message">No tienes ningún informe</string>
-	<string name="images_sync_format">%d Imagenes (cargada)</string>
-	<string name="images_unsync_format">%1d Imagenes (%2d no cargada)</string>
-	<string name="report_detail_title">informe detallado</string>
-	
-	<string name="in_air_plane_mode">No se puede determinar tu ubicación</string>
+
+    <string name="in_air_plane_mode">No se puede determinar tu ubicación</string>
 	<string name="pls_off_air_plane_mode">Por favor apague el modo avión</string>
 	<string name="common_ok">OK</string>
 	
@@ -164,51 +109,35 @@
 	<string name="chainsaw">motosierra</string>
 	<string name="gunshot">bala</string>
 	<string name="vehicle">vehículo</string>
-	<string name="trespasser">intruso</string>
-	<string name="other">otro</string>
+    <string name="other">otro</string>
 	
 	<!--Profile -->
-	<string name="profile_receive_noti_label">mediante notificación de inserción</string>
-	<string name="profile_receive_noti_by_email">Por correo electrónico</string>
-	<string name="profile_sign_out_label">desconectar</string>
+    <string name="profile_sign_out_label">desconectar</string>
 	<string name="profile_aditional_label">Adicional</string>
 	<string name="profile_app_version_label">Version de aplicacion</string>
 	<string name="profile_feedback_label">Realimentación</string>
-	<string name="profile_rate_app_label">Califica la aplicación</string>
-	<string name="save_changed">Guardar cambios</string>
-	
-	<string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
+
+    <string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
 	<string name="feedback_submission_failed">envío de comentarios no! Inténtalo de nuevo.</string>
 	<string name="snackbar_retry">Procesar de nuevo</string>
 	<string name="profile_send_feedback">Enviar comentarios</string>
 	<string name="from">De:</string>
 	<string name="app_feedback_share_ideas">Votar aplicación o compartir sus ideas</string>
 	<string name="maximum_number_of_attachments">Usted ha llegado seleccionable máx. Trate de eliminar algunos artículos antes de añadir más elementos adjuntos.</string>
-	
-	<string name="please_enter_your_new_password">Por favor, introduzca su nueva contraseña</string>
-	<string name="please_confirm_your_new_password">Por favor confirme su nueva contraseña</string>
-	<string name="password_must_have_at_least_6_characters">La contraseña debe tener al menos 6 caracteres</string>
-	<string name="confirm_password_does_not_match">Confirmar contraseña no coincide</string>
-	<string name="password_changed_successfully">La contraseña ha sido cambiada con éxito.</string>
-	<string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
+
+    <string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
 	<string name="account">Cuenta</string>
 	<string name="please_try_again_later">inténtelo de nuevo más tarde</string>
-	
-	<string name="change_profile_photo">Cambio de perfil de fotos</string>
-	<string name="edit_profile">Editar perfil</string>
-	
-	<!--Guardian Group List-->
-	<string name="guardian_group_list">Lista de proyectos</string>
-	<string name="audio_notes">Notas de audio</string>
-	<string name="photos">Foto</string>
+
+    <!--Guardian Group List-->
+    <string name="photos">Foto</string>
 	<string name="common_none">Nada</string>
 	
 	<string name="notification_tracking_title">De guardia y el seguimiento habilitado</string>
 	<string name="notification_traking_message_format">%d minutos registraron</string>
 	
 	<string name="required">Necesario!</string>
-	<string name="error_unsubscribe_by_email">Darse de baja de %s falla.</string>
-	<string name="detected_at">detectado en</string>
+    <string name="detected_at">detectado en</string>
 	
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Establecer alertas</string>

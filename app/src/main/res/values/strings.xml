@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name_label">RFCx Guardian</string>
+    <string name="app_name_label" translatable="false">RFCx Guardian</string>
 
     <!-- LoginActivity -->
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="connect_with_facebook">Continue with facebook</string>
-    <string name="connect_with_sms">Continue with phone number</string>
     <string name="pls_fill_email">Please fill email</string>
     <string name="pls_fill_password">Please fill password</string>
     <string name="incorrect_username_password">Incorrect username or password</string>
@@ -20,22 +18,10 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
-    <string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
-    <string name="name_of_guardian">Name of site</string>
-    <string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
-    <string name="when_the_event">When the event was detected</string>
-    <string name="number_of_reviews">Number of confirmed reviews</string>
-    <string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
-    <string name="confirm_it">Confirm it is  a chainsaw</string>
-    <string name="reject_it">Reject it is NOT a chainsaw</string>
-    <string name="create_new_reports">Create new reports</string>
-    <string name="view_reports">View reports by location</string>
-    <string name="app_intro">App intro</string>
     <string name="coordinates">Coordinates</string>
 
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Sign in</string>
-    <string name="invitation_submit_button_label">Submit</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="reset_password">Reset your password</string>
     <string name="enter_email">Enter your email to receive reset link</string>
@@ -43,51 +29,28 @@
     <string name="reset_link_send">Reset link send to your email.</string>
     <string name="reset">Reset</string>
 
-    <string name="what_we_call_you">What should we call you?</string>
-    <string name="please_tell_name">Please tell us your name</string>
-    <string name="hint_name">Name</string>
-
-    <string name="terms_and_service">I have read and agree to these Terms of Service</string>
     <string name="continue_text">Continue</string>
 
     <!-- common error -->
     <string name="error_common">An error occurred. Please try again.</string>
-    <string name="location_permission_msg">Ranger App would like to use your location</string>
-    <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
-    <string name="camera_permission_msg">Ranger App would like to use your camera</string>
-    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
+    <string name="record_audio_permission_msg">Guardian App would like to record audio</string>
+    <string name="camera_permission_msg">Guardian App would like to use your camera</string>
+    <string name="read_storage_permission_msg">Guardian App would like to read your storage</string>
     <string name="go_to_setting">Settings</string>
 
     <!-- message list -->
-    <string name="please_set_guardian_group">Please set projects</string>
-    <string name="sent_to">sent to</string>
 
     <!-- report -->
-    <string name="report_title">Report</string>
-    <string name="report_what_label">WHAT?</string>
-    <string name="report_when_label">WHEN?</string>
     <string name="report_submit_button_label">Submit</string>
-    <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
-    <string name="report_attach_image_label">PHOTOS (Optional)</string>
-    <string name="report_location_null">Location not found. Please try again.</string>
-    <string name="report_note_label">Notes (Optional)</string>
-    <string name="report_note">Notes</string>
     <string name="report_note_hint">Put some notes here</string>
     <string name="some_photo_already_exists">Some photo already exists</string>
     <string name="these_photos_already_exists">These photos already exist</string>
     <string name="this_photo_already_exists">This photo already exists</string>
-    <string name="expires_in_24h">expires in 24h</string>
 
     <!-- Notification -->
-    <string name="notification_location_loading">Loading location…</string>
-    <string name="notification_location_not_availability">Please enable your device\'s location settings</string>
 
     <!-- Settings -->
     <string name="dialog_loading">Loading…</string>
-    <string name="location_tracking_label">Location tracking</string>
-    <string name="location_tracking_on_label">On</string>
-    <string name="location_tracking_off_label">Off</string>
-    <string name="guardian_group_label">Projects</string>
     <string name="receive_alert_notification">Receive alert notification</string>
     <string name="system_options">System Options</string>
     <string name="system_options_subtitle">Choose sounds, vibration, and importance</string>
@@ -113,42 +76,23 @@
     <string name="last_week">Last\nWeek</string>
     <string name="last_24_hours">Last\n24 hours</string>
     <string name="now">Now</string>
-    <string name="within_month">Within a month</string>
-    <string name="within_week">Within a week</string>
-    <string name="within_24_hours">Within 24 hours</string>
-    <string name="at_that_time">At that moment</string>
 
     <string name="tab_to_record_label">Tap and hold the button to record notes</string>
-    <string name="new_password">New password</string>
-    <string name="new_password_again">Confirm new password</string>
-    <string name="change_password">Change password</string>
 
     <!-- Invitation -->
-    <string name="invitation_title">Connect to a site</string>
-    <string name="invitation_desc">Please enter your invitation code</string>
-    <string name="hint_code">Code</string>
-    <string name="invalid_invite_code">Invalid invite code</string>
-    <string name="switch_account">switch account</string>
 
     <!-- Report -->
-    <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
 
     <string name="menu_camera">Camera</string>
     <string name="menu_gallery">Gallery</string>
 
     <!-- Report list -->
-    <string name="report_list_title">Report History</string>
-    <string name="report_list_empty_message">You do not have any reports</string>
-    <string name="images_sync_format">%d photos (synced)</string>
-    <string name="images_unsync_format">%1d photos (%2d unsynced)</string>
-    <string name="report_detail_title">Report detail</string>
 
     <string name="in_air_plane_mode">Unable to determine your location</string>
     <string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
 
     <string name="location">Location</string>
     <string name="photos">Photos</string>
-    <string name="audio_notes">Audio notes</string>
 
     <string name="menu_new_events">New Events</string>
     <string name="menu_submitted_reports">Submitted Reports</string>
@@ -185,24 +129,14 @@
     <string name="dog_bark">Bark</string>
     <string name="elephant">Elephant</string>
     <string name="fire">Fire</string>
-    <string name="trespasser">trespasser</string>
     <string name="other">other</string>
 
     <!--Profile -->
-    <string name="profile_receive_noti_label">by push notification</string>
-    <string name="profile_receive_noti_by_email">by email</string>
     <string name="profile_sign_out_label">Sign out</string>
-    <string name="please_enter_your_new_password">Please enter your new password</string>
-    <string name="please_confirm_your_new_password">Please confirm your new password</string>
-    <string name="password_must_have_at_least_6_characters">Password must have at least 6 characters</string>
-    <string name="confirm_password_does_not_match">Confirm password does not match</string>
-    <string name="password_changed_successfully">The password has been changed successfully.</string>
     <string name="something_is_wrong">Something went wrong. Please try again later.</string>
     <string name="profile_aditional_label">Additional</string>
     <string name="profile_app_version_label">App version</string>
     <string name="profile_feedback_label">Feedback</string>
-    <string name="profile_rate_app_label">Rate the app</string>
-    <string name="save_changed">Save Changes</string>
     <string name="please_try_again_later">Please try again later</string>
 
     <string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
@@ -214,17 +148,12 @@
     <string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
     <string name="account">Account</string>
 
-    <string name="change_profile_photo">Change profile photo</string>
-    <string name="edit_profile">Edit Profile</string>
-
     <!--Guardian Group List-->
-    <string name="guardian_group_list">Project List</string>
 
     <string name="notification_tracking_title">On-duty and tracking enabled</string>
     <string name="notification_traking_message_format">%d minutes recorded</string>
 
     <string name="required">Required!</string>
-    <string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
     <string name="detected_at">detected at</string>
 
     <!-- SetProjectsFragment -->
