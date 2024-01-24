@@ -14,24 +14,24 @@
 
     <!--  Guardian  -->
     <string-array name="guardian_assembly_checks">
-        <item>Software Update</item>
-        <item>Classifier Upload</item>
-        <item>Power Diagnostics</item>
-        <item>Communication Configuration</item>
+        <item>@string/software_title</item>
+        <item>@string/classifier_title</item>
+        <item>@string/power_diagnostic</item>
+        <item>@string/communication_configuration</item>
     </string-array>
 
     <string-array name="guardian_setup_checks">
-        <item>Guardian Registration</item>
-        <item>Network Signal Test</item>
-        <item>Audio Parameter Config</item>
-        <item>Microphone Capture Test</item>
-        <item>Storage Inspector</item>
-        <item>Guardian Installation Location</item>
+        <item>@string/guardian_registration</item>
+        <item>@string/network_test</item>
+        <item>@string/audio_parameter_config</item>
+        <item>@string/microphone_title</item>
+        <item>@string/storage_title</item>
+        <item>@string/guardian_site_title</item>
     </string-array>
 
     <string-array name="guardian_optional_checks">
-        <item>Add Photo(s)</item>
-        <item>Confirm CheckIn Status</item>
+        <item>@string/add_photos_title</item>
+        <item>@string/guardian_checkin_check</item>
     </string-array>
 
     <string-array name="bitrate_entries">

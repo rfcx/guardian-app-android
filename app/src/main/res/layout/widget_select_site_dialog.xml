@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_padding_normal"
-        android:text="Select site to create new report"/>
+        android:text="@string/select_site_to_create_new_report"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/siteListView"

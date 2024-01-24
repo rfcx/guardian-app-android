@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.remote.common.Result
 import org.rfcx.incidents.data.remote.guardian.registration.GuardianRegisterResponse
 import org.rfcx.incidents.domain.guardian.registration.OfflineRegistrationParams
@@ -37,7 +38,7 @@ class GuardianRegisterViewModel(
     private val sendRegistrationOnlineUseCase: SendRegistrationOnlineUseCase
 ) : ViewModel() {
 
-    private val _registerTextState: MutableStateFlow<String> = MutableStateFlow("")
+    private val _registerTextState: MutableStateFlow<Int> = MutableStateFlow(R.string.not_registered)
     val registerTextState = _registerTextState.asStateFlow()
 
     private val _registerButtonState: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -72,9 +73,9 @@ class GuardianRegisterViewModel(
                         RegistrationSyncWorker.enqueue()
                     }
                     if (it && !waitingForRegistration) {
-                        _registerTextState.tryEmit("Your Guardian is already registered")
+                        _registerTextState.tryEmit(R.string.already_registered)
                     } else if (!waitingForRegistration) {
-                        _registerTextState.tryEmit("Your Guardian is not registered")
+                        _registerTextState.tryEmit(R.string.not_registered)
                     }
                 }
             }
@@ -105,7 +106,7 @@ class GuardianRegisterViewModel(
                 withContext(Dispatchers.IO) {
                     waitingForRegistration = true
                     _registerButtonState.tryEmit(false)
-                    _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
+                    _registerTextState.tryEmit(R.string.registering)
                     sendInstructionCommandUseCase.launch(
                         InstructionParams(
                             InstructionType.SET,
@@ -127,8 +128,8 @@ class GuardianRegisterViewModel(
                 _registerButtonState.tryEmit(false)
                 sendRegistrationOnlineUseCase.launch(OnlineRegistrationParams(env, GuardianRegisterRequest(guid, null, null))).collectLatest { result ->
                     when (result) {
-                        is Result.Error -> _registerTextState.tryEmit("Register failed: ${result.throwable.message}")
-                        Result.Loading -> _registerTextState.tryEmit("Registration Request Sent. Awaiting Response.")
+                        is Result.Error -> _registerTextState.tryEmit(R.string.register_failed)
+                        Result.Loading -> _registerTextState.tryEmit(R.string.registering)
                         is Result.Success -> {
                             withContext(Dispatchers.IO) {
                                 sendInstructionCommandUseCase.launch(

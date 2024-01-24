@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.R
 import org.rfcx.incidents.data.guardian.deploy.UnSyncedExistException
 import org.rfcx.incidents.data.preferences.Preferences
 import org.rfcx.incidents.data.remote.common.Result
@@ -88,7 +89,7 @@ class DeploymentListViewModel(
     private val _noDeploymentVisibilityState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val noDeploymentVisibilityState = _noDeploymentVisibilityState.asStateFlow()
 
-    private val _noDeploymentTextContent: MutableStateFlow<String> = MutableStateFlow("")
+    private val _noDeploymentTextContent: MutableStateFlow<Int?> = MutableStateFlow(R.string.deployment_no_content)
     val noDeploymentTextContent = _noDeploymentTextContent.asStateFlow()
 
     private val _unsyncedAlertState: MutableStateFlow<Int> = MutableStateFlow(0)
@@ -130,7 +131,7 @@ class DeploymentListViewModel(
     private fun filterWithDeployment(streams: List<Stream>, registration: List<GuardianRegistration>, filter: FilterDeployment = FilterDeployment.ALL) {
         when (filter) {
             FilterDeployment.ALL -> {
-                _noDeploymentTextContent.tryEmit("you don't have any deployments or registrations")
+                _noDeploymentTextContent.tryEmit(R.string.deployment_no_content)
                 val tempDeployments = streams.filter { it.deployment != null }
                 if (!isLoadingMore && !isMapScreen) {
                     _noDeploymentVisibilityState.tryEmit(tempDeployments.isEmpty() && registration.isEmpty())
@@ -144,7 +145,7 @@ class DeploymentListViewModel(
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.SYNCED -> {
-                _noDeploymentTextContent.tryEmit("you don't have any synced deployments or registrations")
+                _noDeploymentTextContent.tryEmit(R.string.deployment_no_content_synced)
                 val tempDeployments = streams.filter { it.deployment != null }
                     .filter {
                         it.deployment!!.syncState ==
@@ -163,7 +164,7 @@ class DeploymentListViewModel(
                 _markers.tryEmit(tempDeployments.map { it.toDeploymentPin() } + tempStream.map { it.toSitePin() })
             }
             FilterDeployment.UNSYNCED -> {
-                _noDeploymentTextContent.tryEmit("you don't have any unsynced deployments or registrations")
+                _noDeploymentTextContent.tryEmit(R.string.deployment_no_content_unsynced)
                 val tempDeployments = streams.filter { it.deployment != null }
                     .filter {
                         it.deployment!!.syncState ==

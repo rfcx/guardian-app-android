@@ -238,7 +238,7 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dic</string>
-    <string name="not_found">extraviado</string>
+    <string name="not_found">Nada encontrada</string>
     <string name="response_by">1 respuesta de</string>
     <string name="responses_by">respuestas por</string>
     <string name="response">1 respuesta</string>
@@ -278,7 +278,7 @@
     <string name="up_to_date">actualizado</string>
     <string name="file_update">actualizar v%s</string>
     <string name="file_install">instalar v%s</string>
-    <string name="file_version">V% s (% s instalado)</string>
+    <string name="file_version">V%s (%s instalado)</string>
     <string name="software_title">Actualización de software</string>
     <string name="software_no_item">Primero descargue el software de la página de software Guardian\nPerfil -> Software Guardian -> Descargue los APK que necesita</string>
     <string name="classifier_title">Subir clasificador</string>
@@ -444,5 +444,39 @@
     <string name="sat_guardian_desc_14">Tome una foto de la antena satelital, directamente mirando hacia el cielo, ninguno de los radiales (patas) tocando el árbol, cableada atada al soporte y a 1 metro de distancia de la caja Guardian.</string>
     <string name="sat_guardian_desc_15">Tome una fotografía de la antena GPS colocada sobre una rama horizontal con 2 tornillos.</string>
     <string name="gsm_guardian_desc_1">Tome una foto de la antena GSM apuntando hacia el cielo, cable atado al soporte que está atornillado a la rama con 2 tornillos.</string>
+    <string name="select_site_to_create_new_report">Seleccione el sitio para crear un nuevo informe</string>
+    <string name="download_software">Descargar software</string>
+    <string name="download_classifier">Descargar clasificador</string>
+    <string name="guardian">Guardian</string>
+    <string name="deployment_no_content">no tienes implementaciones ni registros</string>
+    <string name="deployment_no_content_synced">no tienes implementaciones o registros sincronizados</string>
+    <string name="deployment_no_content_unsynced">no tienes ninguna implementación o registro no sincronizado</string>
+    <string name="searching_for_nearby_n_guardians">Buscando \nGuardianes cercanos</string>
+    <string name="why_can_t_i_see_a_guardian">¿Por qué no puedo ver a un Guardián?</string>
+    <string name="connect">Conectar</string>
+    <string name="retry">Intentar nuevamente</string>
+    <string name="guardian_registration">Registro de Guardian</string>
+    <string name="assembly">Amar</string>
+    <string name="setup">Configuración</string>
+    <string name="optional">Opcional</string>
+    <string name="already_registered">Tu Guardian ya está registrado</string>
+    <string name="not_registered">Tu Guardian no está registrado</string>
+    <string name="registering">Solicitud de registro enviada. Esperando respuesta.</string>
+    <string name="sim_card_not_detected">Tarjeta SIM no detectada</string>
+    <string name="satellite_module_not_detected">Módulo satélite no detectado</string>
+    <string name="register_failed">Registro fallido</string>
+    <string name="in_testing">en pruebas</string>
+    <string name="ready_to_test">Listo para probar</string>
+    <string name="testing_failed">prueba fallida</string>
+    <string name="test_download_result">Descarga de %.2f kb/s</string>
+    <string name="test_upload_result">%.2f kb/s de carga</string>
+    <string name="site">Sitio</string>
+    <string name="project">Proyecto</string>
+    <string name="take">Llevar</string>
+    <string name="choose">Elegir</string>
+    <string name="checklist">Lista de Verificación</string>
+    <string name="edit_site_name_hint">Nombre del sitio</string>
+    <string name="change">Cambiar</string>
+    <string name="save">Ahorrar</string>
 
 </resources>

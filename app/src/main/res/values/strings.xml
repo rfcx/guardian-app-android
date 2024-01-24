@@ -351,6 +351,11 @@
     <string name="file_install">install v%s</string>
     <string name="file_version">v%s (%s installed)</string>
 
+    <string name="checklist">Checklist</string>
+    <string name="assembly">Assembly</string>
+    <string name="setup">Setup</string>
+    <string name="optional">Optional</string>
+
     <!-- SoftwareUpdateFragment -->
     <string name="software_title">Software Update</string>
     <string name="software_no_item">Download softwares from Guardian softwares page first\nProfile -> Guardian software -> Download APKs you needed</string>
@@ -397,14 +402,21 @@
     <string name="ok">OK</string>
     <string name="bad">Bad</string>
     <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
+    <string name="in_testing">in testing</string>
+    <string name="ready_to_test">ready to test</string>
+    <string name="testing_failed">testing failed</string>
+    <string name="test_download_result">%.2f kb/s download</string>
+    <string name="test_upload_result">%.2f kb/s upload</string>
 
     <!-- Communication Configuration -->
     <string name="communication_configuration">Communication Configuration</string>
     <string name="back">back</string>
     <string name="plus" translatable="false">+</string>
     <string name="sim_card_detected">SIM Card detected</string>
+    <string name="sim_card_not_detected">SIM Card not detected</string>
     <string name="phone_number">phone number:</string>
     <string name="satellite_module_detected">Satellite module detected</string>
+    <string name="satellite_module_not_detected">Satellite module not detected</string>
     <string name="swarm_id">swarm id:</string>
     <string name="satellite_gps_detected">Satellite GPS detected</string>
     <string name="guardian_local_time">Guardian local time:</string>
@@ -418,11 +430,16 @@
     <string name="there_is_no_off_time_in_this_project">There is no off time in this project</string>
 
     <!-- Guardian Registration -->
+    <string name="guardian_registration">Guardian Registration</string>
     <string name="register_guardian">Register Guardian with RFCx</string>
     <string name="let_s_register_your_guardian">Let\'s register your Guardian</string>
     <string name="production">Production</string>
     <string name="staging">Staging</string>
     <string name="register">Register</string>
+    <string name="already_registered">Your Guardian is already registered</string>
+    <string name="not_registered">Your Guardian is not registered</string>
+    <string name="registering">Registration Request Sent. Awaiting Response.</string>
+    <string name="register_failed">Register failed</string>
 
     <!-- Guardian Audio Parameter -->
     <string name="audio_parameter_config">Audio Parameter Config</string>
@@ -508,6 +525,9 @@
     <string name="deployments">Deployments</string>
     <string name="map">Map View</string>
     <string name="deploy_new_guardian">Connect to Guardian</string>
+    <string name="deployment_no_content">you don\'t have any deployments or registrations</string>
+    <string name="deployment_no_content_synced">you don\'t have any synced deployments or registrations</string>
+    <string name="deployment_no_content_unsynced">you don\'t have any unsynced deployments or registrations</string>
 
     <!-- Deployment Detail -->
 
@@ -552,5 +572,20 @@
     <string name="sat_guardian_desc_15">Take a photo of the GPS antenna flat on a horizontal branch with 2 screws.</string>
     <string name="gsm_guardian_desc_1">Take a photo of the GSM antenna pointing towards the sky, cable tied to the mount which is screwed to the branch with 2 screws.</string>
     <string name="offline_mode">Offline mode</string>
+    <string name="select_site_to_create_new_report">Select site to create new report</string>
+    <string name="download_software">Download Software</string>
+    <string name="download_classifier">Download Classifier</string>
+    <string name="guardian">Guardian</string>
+    <string name="searching_for_nearby_n_guardians">Searching for Nearby\n Guardians</string>
+    <string name="why_can_t_i_see_a_guardian">Why can\'t I see a Guardian</string>
+    <string name="connect">connect</string>
+    <string name="retry">retry</string>
+    <string name="site">Site</string>
+    <string name="project">Project</string>
+    <string name="take">Take</string>
+    <string name="choose">Choose</string>
+    <string name="edit_site_name_hint">Site name</string>
+    <string name="change">Change</string>
+    <string name="save">Save</string>
 
 </resources>
