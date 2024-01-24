@@ -80,7 +80,7 @@
 	<string name="now">Ahora</string>
 
     <string name="last_step">Informar último paso</string>
-    <string name="tab_to_record_label">Toque y mantenga el boton para grabar audio.</string>
+    <string name="tab_to_record_label">Mantenga presionado el botón para grabar notas</string>
 
     <!-- Invitation -->
 
@@ -122,8 +122,8 @@
 	<string name="no_internet_connection">No hay Internet, por favor intente de nuevo.</string>
 	
 	<!--Event value-->
-    <string name="unable_to_submit_no_internet_connection">No se puede enviar mientras no hay conexión.</string>
-    <string name="unable_to_submit_on_airplane_mode">No se puede enviar mientras estás en modo avión.</string>
+    <string name="unable_to_submit_no_internet_connection">No se puede enviar mientras no hay conexión</string>
+    <string name="unable_to_submit_on_airplane_mode">No se puede enviar mientras estás en modo avión</string>
     <string name="chainsaw">motosierra</string>
 	<string name="gunshot">bala</string>
     <string name="human_voice">Disparo, disparos</string>
@@ -136,7 +136,7 @@
 	<!--Profile -->
     <string name="profile_sign_out_label">desconectar</string>
 	<string name="profile_aditional_label">Adicional</string>
-	<string name="profile_app_version_label">Version de aplicacion</string>
+	<string name="profile_app_version_label">Versión de aplicación</string>
 	<string name="profile_feedback_label">Realimentación</string>
 
     <string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
@@ -164,26 +164,26 @@
     <string name="sending">Enviando</string>
     <string name="sent">Enviado</string>
     <string name="create_report">Crear reporte</string>
-    <string name="open_in_maps">Abierto en mapas</string>
+    <string name="open_in_maps">Abrir en mapas</string>
     <string name="guardian_event_detail">Detalle del evento</string>
-    <string name="not_have_events">No hay eventos desde el último incidente.</string>
-    <string name="create_report_steps">Informe</string>
+    <string name="not_have_events">No hay eventos desde el último incidente</string>
+    <string name="create_report_steps">Reporte</string>
     <string name="create_report_title_one_step">1 paso restante</string>
-    <string name="create_report_title">Faltan %d pasos</string>
+    <string name="create_report_title">%d pasos restantes</string>
     <string name="what_time">¿A qué hora investigaste?</string>
     <string name="do_not_future_time">El tiempo de investigación no puede ser en el futuro.</string>
-    <string name="when_investigate">¿Cuándo investigaste?</string>
+    <string name="when_investigate">¿Qué investigaste?</string>
     <string name="today">Hoy</string>
     <string name="edit">Editar</string>
     <string name="other_date">Otro...</string>
-    <string name="what_investigate">¿Qué investigaste? <i>Seleccione todo lo que corresponda</i></string>
-    <string name="logging">Inicio sesión</string>
-    <string name="poaching">Caza furtiva</string>
-    <string name="what_evidence">¿Qué <b>evidencia de registro</b> encontró? <i>Seleccione todo lo que corresponda</i></string>
+    <string name="what_investigate">¿A qué hora investigaste?<i>Seleccione todas las que correspondan</i></string>
+    <string name="logging">la explotación forestal</string>
+    <string name="poaching">la caza</string>
+    <string name="what_evidence">¿Qué <b>evidencia de registro</b> encontró? <i>Seleccione todas las que correspondan</i></string>
     <string name="cut_down_trees">Cortar árboles</string>
     <string name="cleared_areas">Áreas despejadas</string>
     <string name="logging_equipment">Equipo de registro</string>
-    <string name="loggers_at_site">Registradores en el sitio</string>
+    <string name="loggers_at_site">Taladores en el siti</string>
     <string name="illegal_camps">Campamentos ilegales</string>
     <string name="fires_burned_areas">Incendios/áreas quemadas</string>
     <string name="what_scale">¿Cuál fue la <b>escala de la operación de tala</b>?</string>
@@ -192,15 +192,15 @@
     <string name="what_scale_poaching">¿Cuál fue la <b>escala de la operación de caza furtiva</b>?</string>
     <string name="small_poaching">Pequeño (individual, informal)</string>
     <string name="large_poaching">Grande (grupo, coordinado)</string>
-    <string name="what_poaching_evidence">¿Qué <b>evidencias de caza furtiva</b> encontraste? <i>Seleccione todo lo que corresponda</i></string>
+    <string name="what_poaching_evidence">¿Qué <b>evidencias de caza furtiva</b> encontraste? <i>Seleccione todas las que correspondan</i></string>
     <string name="bullet_shells">Casquillos de bala/restos de armas</string>
     <string name="footprints">Huellas (humanas)</string>
     <string name="dog_tracks">Huellas de perros</string>
-    <string name="what_action">¿Qué <b>medida</b> se tomó? <i>Seleccione todo lo que corresponda</i></string>
+    <string name="what_action">¿Qué <b>medidas</b> se tomaron? <i>Seleccione todas las que correspondan</i></string>
     <string name="confiscated_equipment">Equipo confiscado</string>
-    <string name="collected_evidence">evidencia recopilada</string>
+    <string name="collected_evidence">Evidencia recopilada</string>
     <string name="issue_a_warning">Emitir una advertencia</string>
-    <string name="damaged_machinery">Maquinaria averiada</string>
+    <string name="damaged_machinery">Maquinaria dañada</string>
     <string name="add_evidence">Agregar evidencia</string>
     <string name="save_draft">Guardar borrador</string>
     <string name="add_photos">Fotos (hasta 5)</string>
@@ -222,10 +222,10 @@
     <string name="hot">Caliente</string>
     <string name="audio_not_found">Audio no encontrado</string>
     <string name="satellite_audio_not_found">Audio no disponible para Guardianes satélite</string>
-    <string name="investigated_at">investigado en</string>
+    <string name="investigated_at">Investigado en</string>
     <string name="received_at">Recibido en</string>
     <string name="action">Acción</string>
-    <string name="small_scale_text">Pequeña escala</string>
+    <string name="small_scale_text">Pequeño escala</string>
     <string name="large_scale_text">Gran escala</string>
     <string name="additional_evidence">Evidencia adicional</string>
     <string name="seconds">segundos</string>
