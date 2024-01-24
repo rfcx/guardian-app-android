@@ -64,14 +64,6 @@
     <string name="system_options_subtitle">Kies geluiden, trillingen en belangrijkheid</string>
 
 
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
-
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-
     <string name="last_month">Laatste \nMonth</string>
     <string name="last_week">Laatste \nWeek</string>
     <string name="last_24_hours">Laatste \n24 uur</string>
@@ -98,18 +90,12 @@
 
     <string name="see_report_detail">Zie detail</string>
     <string name="report_time_second">Net nu</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
 
-    <string name="common_ok">OK</string>
     <string name="common_none">Geen</string>
 
     <!-- Status -->
 
     <!-- Override string res from matisse Image picker library -->
-    <string name="button_ok">OK</string>
     <!-- Override string res from matisse Image picker library -->
 
     <!-- Alerts -->

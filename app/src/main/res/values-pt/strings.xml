@@ -21,15 +21,7 @@
     <string name="skip">Pular</string>
     <string name="done">Feito</string>
     <string name="coordinates">Coordenadas</string>
-    
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
-    
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-    
+
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Entrar</string>
     <string name="forgot_your_password">Esqueceu a senha?</string>
@@ -86,24 +78,18 @@
 
     <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
     <string name="pls_off_air_plane_mode">Por favor desligue o modo avião</string>
-    <string name="common_ok">Está bem</string>
-    
+
     <string name="location">Localização</string>
     
     <string name="menu_profile">Perfil</string>
     
     <string name="see_report_detail">veja Detalhe</string>
     <string name="report_time_second">Agora mesmo</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
-	
-	<!-- Status -->
+
+    <!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Está bem</string>
-	<!-- Override string res from matisse Image picker library -->
+    <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
 	<string name="yesterday">Ontem</string>

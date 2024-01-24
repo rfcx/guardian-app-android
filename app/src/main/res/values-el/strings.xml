@@ -47,13 +47,7 @@
     <!-- Settings -->
 	<string name="dialog_loading">Φόρτωση…</string>
     <string name="notifications">Ειδοποιήσεις</string>
-	<string name="dd_coordinates">DD</string>
-	<string name="ddm_coordinates">DDM</string>
-	<string name="dms_coordinates">DMS</string>
-	<string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-	<string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-	<string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-	<string name="last_month">Τελευταία\nΜήνας</string>
+    <string name="last_month">Τελευταία\nΜήνας</string>
 	<string name="last_week">Τελευταία\nεβδομάδα</string>
 	<string name="last_24_hours">Τελευταία\n24 ώρες</string>
 	<string name="now">Τώρα</string>
@@ -73,19 +67,13 @@
 	<string name="menu_profile">ΠΡΟΦΙΛ</string>
 	<string name="see_report_detail">Δείτε Λεπτομέρειες</string>
 	<string name="report_time_second">Μόλις τώρα</string>
-	<string name="report_minutes_format">%dm</string>
-	<string name="report_hr_format">%dh</string>
-	<string name="report_day_format">%dd</string>
-	<string name="report_week_format">%dw</string>
-	<string name="common_ok">Εντάξει</string>
-	<string name="common_none">Κανένας</string>
+    <string name="common_none">Κανένας</string>
 	
 	<!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Εντάξει</string>
-	
-	<!-- Alerts -->
+
+    <!-- Alerts -->
 	<string name="yesterday">Χθες</string>
 	<string name="no_internet_connection">Χωρίς διαδίκτυο. Ξαναπροσπαθήστε.</string>
 	

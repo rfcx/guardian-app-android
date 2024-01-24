@@ -16,15 +16,7 @@
     <string name="skip">Lewati</string>
     <string name="done">Selesai</string>
     <string name="coordinates">Koordinat</string>
-    
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
-    
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-    
+
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
     <string name="forgot_your_password">Lupa kata sandi?</string>
@@ -81,24 +73,18 @@
 
     <string name="in_air_plane_mode">Tidak dapat menentukan lokasi Anda</string>
     <string name="pls_off_air_plane_mode">Harap matikan mode pesawat</string>
-    <string name="common_ok">Oke</string>
-    
+
     <string name="location">Tempat</string>
     
     <string name="menu_profile">Profil</string>
     
     <string name="see_report_detail">Lihat Detil</string>
     <string name="report_time_second">Baru saja</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
-	
-	<!-- Status -->
+
+    <!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Oke</string>
-	<!-- Override string res from matisse Image picker library -->
+    <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
 	<string name="yesterday">Kemarin</string>
