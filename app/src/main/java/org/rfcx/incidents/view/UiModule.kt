@@ -26,7 +26,6 @@ import org.rfcx.incidents.view.guardian.checklist.storage.HeatmapAudioCoverageVi
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
-import org.rfcx.incidents.view.login.SetUserNameViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
 import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
@@ -63,7 +62,6 @@ object UiModule {
 
     var loginModule = module {
         viewModel { LoginViewModel(androidContext(), get(), get(), get(), get()) }
-        viewModel { SetUserNameViewModel(androidContext(), get()) }
         viewModel { SetProjectsViewModel(get()) }
     }
 
