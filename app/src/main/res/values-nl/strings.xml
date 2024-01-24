@@ -178,7 +178,6 @@
     <string name="unsent">Opeenvolgende (in de wachtrij)</string>
     <string name="sending">Bezig met verzenden</string>
     <string name="sent">Verzonden</string>
-    <string name="incident_ref">#%s</string>
     <string name="not_submitted_reports_yet">U heeft nog geen rapporten ingediend</string>
 
     <!-- GuardianEventDetailFragment -->

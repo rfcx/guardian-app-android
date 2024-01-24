@@ -125,8 +125,6 @@
     <string name="hot">Terhangat</string>
     <string name="audio_not_found">Audio tidak ditemui</string>
     <string name="satellite_audio_not_found">Tiada audio untuk satelit Guardians</string>
-    <string name="satellite">"Sat "</string>
-    <string name="cell">Sel</string>
     <string name="investigated_at">Disiasat di</string>
     <string name="received_at">Diterima di</string>
     <string name="action">Tindakan</string>
