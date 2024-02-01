@@ -39,7 +39,7 @@
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_normal"
                     android:layout_marginEnd="@dimen/margin_padding_large"
-                    android:hint="Site name"
+                    android:hint="@string/edit_site_name_hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_padding_small"
                     android:background="@color/transparent"
-                    android:text="Change"
+                    android:text="@string/change"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_small"
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_normal"
-                    android:text="Altitude"
+                    android:text="@string/altitude"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/coordinatesValueTextView" />
 
@@ -151,7 +151,7 @@
             android:layout_marginStart="@dimen/margin_padding_large"
             android:layout_marginEnd="@dimen/margin_padding_large"
             android:layout_marginBottom="@dimen/margin_padding_normal"
-            android:text="Save"
+            android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

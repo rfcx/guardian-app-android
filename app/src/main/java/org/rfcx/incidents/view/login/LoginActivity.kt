@@ -48,9 +48,6 @@ class LoginActivity : BaseActivity(), LoginListener {
         val selectedProject = preferenceHelper.getString(Preferences.SELECTED_PROJECT, "")
 
         when {
-            getUserNickname().substring(0, 1) == "+" -> {
-                openSetUserNameFragmentFragment()
-            }
             selectedProject == "" -> {
                 openSetProjectsFragment()
             }
@@ -68,14 +65,6 @@ class LoginActivity : BaseActivity(), LoginListener {
     override fun openMain() {
         MainActivity.startActivity(this@LoginActivity, getEventFromIntentIfHave(intent))
         finish()
-    }
-
-    override fun openSetUserNameFragmentFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(
-                binding.loginContainer.id, SetUserNameFragment(),
-                "SetUserNameFragment"
-            ).commit()
     }
 
     override fun openSetProjectsFragment() {
@@ -106,7 +95,6 @@ class LoginActivity : BaseActivity(), LoginListener {
 
 interface LoginListener {
     fun openMain()
-    fun openSetUserNameFragmentFragment()
     fun openSetProjectsFragment()
     fun openLoginFragment()
     fun handleOpenPage()

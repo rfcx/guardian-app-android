@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Guardian</string>
     <string name="email">Emel</string>
     <string name="password">Kata laluan</string>
     <string name="pls_fill_email">Sila isi emel</string>
@@ -11,12 +10,9 @@
     <string name="forgot_your_password">Lupa kata laluan?</string>
     <string name="skip">Langkah</string>
     <string name="login_sign_in_button_label">Daftar masuk</string>
-    <string name="invitation_submit_button_label">Hantar</string>
     <string name="cancel">Batal</string>
     <string name="continue_text">Sambung</string>
-    <string name="report_title">Laporan</string>
     <string name="report_submit_button_label">Hantar</string>
-    <string name="report_note">nota</string>
     <string name="report_note_hint">Tulis nota di sini</string>
     <string name="receive_alert_notification">Terima notifikasi peringatan</string>
     <string name="system_options">Pilihan sistem</string>
@@ -129,8 +125,6 @@
     <string name="hot">Terhangat</string>
     <string name="audio_not_found">Audio tidak ditemui</string>
     <string name="satellite_audio_not_found">Tiada audio untuk satelit Guardians</string>
-    <string name="satellite">"Sat "</string>
-    <string name="cell">Sel</string>
     <string name="investigated_at">Disiasat di</string>
     <string name="received_at">Diterima di</string>
     <string name="action">Tindakan</string>

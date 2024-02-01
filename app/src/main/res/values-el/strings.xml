@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- LoginActivity -->
-	<string name="app_name_label">RFCx Guardian</string>
-	<string name="email">E-mail</string>
+    <string name="email">E-mail</string>
 	<string name="password">Password</string>
 	<string name="login">Σύνδεση</string>
-	<string name="connect_with_sms">Συνεχίστε με τον αριθμό τηλεφώνου</string>
-	<string name="pls_fill_email">Παρακαλώ, συμπληρώστε το email</string>
+    <string name="pls_fill_email">Παρακαλώ, συμπληρώστε το email</string>
 	<string name="pls_fill_password">Παρακαλώ, συμπληρώστε τον κωδικό πρόσβασης</string>
 	<string name="incorrect_username_password">Λανθασμένο όνομα χρήστη ή κωδικού πρόσβασης</string>
 	<string name="an_error_occurred">Μη διαθέσιμη υπηρεσία</string>
@@ -15,132 +13,67 @@
 	<string name="next">Επόμενο</string>
 	<string name="skip">Παράλειψη</string>
 	<string name="done">Έγινε</string>
-	<string name="available_in_settings">Μπορείτε επίσης να βρείτε αυτό το μάθημα στην καρτέλα Προφίλ</string>
-	<string name="name_of_guardian">Όνομα της περιοχής</string>
-	<string name="enable_tracking_when">Ενεργοποίηση ιχνηλάτησης όταν είστε σε περιπολία για να αναφέρετε την τοποθεσία σας</string>
-	<string name="when_the_event">Όταν εντοπίστηκε το συμβάν</string>
-	<string name="number_of_reviews">Αριθμός επιβεβαιωμένων ελέγχων</string>
-	<string name="boxes_indicate_possible">Τα τετράγωνα υποδεικνύουν πιθανά συμβάντα με αλυσοπρίονο</string>
-	<string name="confirm_it">Επιβεβαίωση - είναι αλυσοπρίονο</string>
-	<string name="reject_it">Απόρριψη - ΔΕΝ είναι αλυσοπρίονο</string>
-	<string name="create_new_reports">Δημιουργία νέων αναφορών</string>
-	<string name="view_reports">Προβολή αναφορών ανά περιοχή</string>
-	<string name="required">Απαραίτητο!</string>
-	<string name="app_intro">Εισαγωγή εφαρμογής</string>
-	<string name="coordinates">Συντεταγμένες</string>
+    <string name="required">Απαραίτητο!</string>
+    <string name="coordinates">Συντεταγμένες</string>
 	
 	<!--new Login Activite-->
 	<string name="login_sign_in_button_label">Συνδεθείτε</string>
-	<string name="invitation_submit_button_label">Υποβολή</string>
-	<string name="within_month">Εντός μήνα</string>
-	<string name="within_week">Εντός εβδομάδας</string>
-	<string name="within_24_hours">Εντός 24ώρου</string>
-	<string name="at_that_time">Εκείνη τη στιγμή</string>
-	<string name="forgot_your_password">Ξεχάσατε τον κωδικό σας</string>
+    <string name="forgot_your_password">Ξεχάσατε τον κωδικό σας</string>
 	<string name="reset_password">Επαναφορά του κωδικού πρόσβασής</string>
 	<string name="enter_email">Συμπληρώστε το email σας για να λάβετε σύνδεσμο επιλογής νέου κωδικού</string>
 	<string name="cancel">Ακύρωση</string>
 	<string name="reset_link_send">Σύνδεσμος επιλογής νέου κωδικού απεστάλη στο email σας.</string>
 	<string name="reset">Επαναφορά</string>
-	<string name="what_we_call_you">Πώς να σας προσφωνούμε;</string>
-	<string name="please_tell_name">Πείτε μας το όνομά σας</string>
-	<string name="hint_name">Ονομα</string>
-	<string name="terms_and_service">Έχω διαβάσει και συμφωνώ με τους Όρους Χρήσης</string>
-	<string name="continue_text">Συνέχεια</string>
+    <string name="continue_text">Συνέχεια</string>
 	
 	<!-- common error -->
 	<string name="error_common">Παρουσιάστηκε σφάλμα. Παρακαλώ προσπαθήστε ξανά.</string>
-	<string name="location_permission_msg">Το Ranger App θα ήθελε να χρησιμοποιήσει την τοποθεσία σας.</string>
-	<string name="record_audio_permission_msg">Το Ranger App θα ήθελε να ηχογραφεί</string>
+    <string name="record_audio_permission_msg">Το Ranger App θα ήθελε να ηχογραφεί</string>
 	<string name="camera_permission_msg">Ranger App θα θέλατε να χρησιμοποιήσετε τη φωτογραφική μηχανή σας</string>
 	<string name="read_storage_permission_msg">Η κάμερα είναι απαραίτητη κατά την προσθήκη φωτογραφιών σε εκθέσεις</string>
 	<string name="go_to_setting">Ρυθμίσεις</string>
 	
 	<!-- message list -->
-	<string name="please_set_guardian_group">Επιλέξτε έργο</string>
-	<string name="sent_to">αποστολή προς</string>
-	
-	<!-- report -->
-	<string name="report_title">Αναφορά</string>
-	<string name="report_what_label">ΤΙ;</string>
-	<string name="report_when_label">ΠΟΤΕ;</string>
-	<string name="report_submit_button_label">Υποβολή</string>
-	<string name="report_record_label">ΚΑΤΑΓΡΑΦΗ ΣΗΜΕΙΩΣΕΩΝ (Προαιρετικό)</string>
-	<string name="report_attach_image_label">ΦΩΤΟΓΡΑΦΙΕΣ (Προαιρετικό)</string>
-	<string name="report_location_null">Η τοποθεσία δεν βρέθηκε. Ξαναπροσπαθήστε.</string>
-	<string name="report_note_label">Σημειώσεις (προαιρετικό)</string>
-	<string name="report_note">Σημειώσεις</string>
-	<string name="report_note_hint">Προσθέστε σημειώσεις εδώ</string>
+
+    <!-- report -->
+    <string name="report_submit_button_label">Υποβολή</string>
+    <string name="report_note_hint">Προσθέστε σημειώσεις εδώ</string>
 	<string name="some_photo_already_exists">Υπάρχουν ήδη κάποιες φωτογραφίες</string>
 	<string name="these_photos_already_exists">Αυτές οι φωτογραφίες υπάρχουν ήδη</string>
 	<string name="this_photo_already_exists">Αυτή η φωτογραφία υπάρχει ήδη</string>
-	<string name="expires_in_24h">λήγει σε 24 ώρες</string>
-	
-	<!-- Notification -->
-	<string name="notification_location_loading">Φόρτωση τοποθεσίας ...</string>
-	<string name="notification_location_not_availability">Ενεργοποιήστε την τοποθεσία συσκευής!</string>
-	
-	<!-- Settings -->
+
+    <!-- Notification -->
+
+    <!-- Settings -->
 	<string name="dialog_loading">Φόρτωση…</string>
-	<string name="location_tracking_label">Ιχνηλάτηση τοποθεσίας</string>
-	<string name="location_tracking_on_label">Ενεργοποιημένο (ΟΝ)</string>
-	<string name="location_tracking_off_label">Απενεργοποιημένο (OFF)</string>
-	<string name="guardian_group_label">Εργα</string>
-	<string name="notifications">Ειδοποιήσεις</string>
-	<string name="dd_coordinates">DD</string>
-	<string name="ddm_coordinates">DDM</string>
-	<string name="dms_coordinates">DMS</string>
-	<string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-	<string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-	<string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-	<string name="last_month">Τελευταία\nΜήνας</string>
+    <string name="notifications">Ειδοποιήσεις</string>
+    <string name="last_month">Τελευταία\nΜήνας</string>
 	<string name="last_week">Τελευταία\nεβδομάδα</string>
 	<string name="last_24_hours">Τελευταία\n24 ώρες</string>
 	<string name="now">Τώρα</string>
 	<string name="tab_to_record_label">Πατήστε και κρατήστε πατημένο το κουμπί για να σημειώσεις ρεκόρ</string>
-	<string name="new_password">Νέος κωδικός πρόσβασης</string>
-	<string name="new_password_again">Επιβεβαιώστε τον νέο κωδικό</string>
-	<string name="change_password">Αλλαξε κωδικό</string>
-	
-	<!-- Invitation -->
-	<string name="invitation_title">Συνδεθείτε με μία περιοχή</string>
-	<string name="invitation_desc">Εισάγετε τον κωδικό πρόσκλησής σας</string>
-	<string name="hint_code">Κώδικας</string>
-	<string name="invalid_invite_code">Μη έγκυρος κωδικός πρόσκλησης</string>
-	<string name="switch_account">αλλαγή λογαριασμού</string>
-	
-	<!-- Report -->
-	<string name="empty_list_description">Δεν υπήρξαν συμβάντα πρόσφατα. Απολαύστε την ημέρα σας :)</string>
-	<string name="menu_camera">Κάμερα</string>
+
+    <!-- Invitation -->
+
+    <!-- Report -->
+    <string name="menu_camera">Κάμερα</string>
 	<string name="menu_gallery">Συλλογή φωτογραφιών</string>
 	
 	<!-- Report list -->
-	<string name="report_list_title">Ιστορικό αναφορών</string>
-	<string name="report_list_empty_message">Δεν έχετε κάποια αναφορά</string>
-	<string name="images_sync_format">%d φωτογραφίες (συγχρονίζονται)</string>
-	<string name="images_unsync_format">%1d φωτογραφίες (%2d χωρίς συγχρονισμό)</string>
-	<string name="report_detail_title">Λεπτομέρειες αναφοράς</string>
-	<string name="in_air_plane_mode">Αδυναμία προσδιορισμού τοποθεσίας</string>
+    <string name="in_air_plane_mode">Αδυναμία προσδιορισμού τοποθεσίας</string>
 	<string name="pls_off_air_plane_mode">Aπενεργοποιήστε τη λειτουργία πτήσης</string>
 	<string name="location">Τοποθεσία</string>
-	<string name="audio_notes">Ηχητικές σημειώσεις</string>
-	<string name="photos">Φωτογραφίες</string>
+    <string name="photos">Φωτογραφίες</string>
 	<string name="menu_profile">ΠΡΟΦΙΛ</string>
 	<string name="see_report_detail">Δείτε Λεπτομέρειες</string>
 	<string name="report_time_second">Μόλις τώρα</string>
-	<string name="report_minutes_format">%dm</string>
-	<string name="report_hr_format">%dh</string>
-	<string name="report_day_format">%dd</string>
-	<string name="report_week_format">%dw</string>
-	<string name="common_ok">Εντάξει</string>
-	<string name="common_none">Κανένας</string>
+    <string name="common_none">Κανένας</string>
 	
 	<!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Εντάξει</string>
-	
-	<!-- Alerts -->
+
+    <!-- Alerts -->
 	<string name="yesterday">Χθες</string>
 	<string name="no_internet_connection">Χωρίς διαδίκτυο. Ξαναπροσπαθήστε.</string>
 	
@@ -148,25 +81,15 @@
 	<string name="chainsaw">αλυσοπρίονο</string>
 	<string name="gunshot">πυροβολισμός</string>
 	<string name="vehicle">όχημα</string>
-	<string name="trespasser">παραβάτης</string>
-	<string name="other">άλλο</string>
+    <string name="other">άλλο</string>
 	
 	<!--Profile -->
-	<string name="profile_receive_noti_label">μέσω push-button ειδοποίησης</string>
-	<string name="profile_receive_noti_by_email">μέσω e-mail</string>
-	<string name="profile_sign_out_label">Αποσύνδεση</string>
-	<string name="please_enter_your_new_password">Εισάγετε το νέο κωδικό πρόσβασης</string>
-	<string name="please_confirm_your_new_password">Επιβεβαιώστε το νέο κωδικό πρόσβασης</string>
-	<string name="password_must_have_at_least_6_characters">Ο κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 6 χαρακτήρες</string>
-	<string name="confirm_password_does_not_match">Δεν ταιριάζει ο κωδικός επιβεβαίωσης</string>
-	<string name="password_changed_successfully">Ο κωδικός πρόσβασης έχει αλλάξει με επιτυχία.</string>
-	<string name="something_is_wrong">Κάτι πήγε στραβά. Ξανάπροσπάθησε αργότερα.</string>
+    <string name="profile_sign_out_label">Αποσύνδεση</string>
+    <string name="something_is_wrong">Κάτι πήγε στραβά. Ξανάπροσπάθησε αργότερα.</string>
 	<string name="profile_aditional_label">Πρόσθετος</string>
 	<string name="profile_app_version_label">Έκδοση εφαρμογής</string>
 	<string name="profile_feedback_label">Σχόλια</string>
-	<string name="profile_rate_app_label">Αξιολογήστε την εφαρμογή</string>
-	<string name="save_changed">Αποθήκευση αλλαγών</string>
-	<string name="please_try_again_later">Παρακαλώ προσπάθησε ξανά αργότερα.</string>
+    <string name="please_try_again_later">Παρακαλώ προσπάθησε ξανά αργότερα.</string>
 	<string name="feedback_submitted">Τα σχόλια υποβλήθηκαν. Ευχαριστούμε για το χρόνο σας :)</string>
 	<string name="feedback_submission_failed">Η υποβολή σχολίων απέτυχε! Παρακαλώ ξαναπροσπαθήστε.</string>
 	<string name="snackbar_retry">Ξαναδοκιμάστε</string>
@@ -175,12 +98,8 @@
 	<string name="app_feedback_share_ideas">Αφήστε σχόλιά για την εφαρμογή ή να μοιραστείτε τις ιδέες σας</string>
 	<string name="maximum_number_of_attachments">Μέγιστος επιλέξιμος αριθμός. Αφαιρέσετε στοιχεία πριν προσθέσετε περισσότερα συνημμένα.</string>
 	<string name="account">Λογαριασμός</string>
-	<string name="change_profile_photo">Αλλαγή φωτογραφίας προφίλ</string>
-	<string name="edit_profile">Επεξεργασία προφίλ</string>
-	
-	<!--Guardian Group List-->
-	<string name="guardian_group_list">Λίστα Έργων</string>
-	<string name="notification_tracking_title">Ενεργοποίηση ιχνηλάτησης εν υπηρεσία</string>
+
+    <!--Guardian Group List-->
+    <string name="notification_tracking_title">Ενεργοποίηση ιχνηλάτησης εν υπηρεσία</string>
 	<string name="notification_traking_message_format">%d λεπτά καταγράφηκαν</string>
-	<string name="error_unsubscribe_by_email">Διαγραφή από %s απέτυχε</string>
 </resources>

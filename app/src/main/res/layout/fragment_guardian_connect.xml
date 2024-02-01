@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_normal"
         android:textAlignment="center"
-        android:text="Searching for Nearby\n Guardians"
+        android:text="@string/searching_for_nearby_n_guardians"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -44,7 +44,7 @@
         android:id="@+id/connectInstructionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Why can\'t I see a Guardian"
+        android:text="@string/why_can_t_i_see_a_guardian"
         android:drawableEnd="@drawable/ic_help"
         android:drawablePadding="@dimen/margin_padding_xsmall"
         android:layout_marginBottom="@dimen/margin_padding_small"
@@ -61,7 +61,7 @@
         android:layout_marginEnd="@dimen/margin_padding_large"
         android:layout_marginBottom="@dimen/margin_padding_normal"
         android:enabled="false"
-        android:text="connect"
+        android:text="@string/connect"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -84,7 +84,7 @@
         android:layout_marginStart="@dimen/margin_padding_large"
         android:layout_marginEnd="@dimen/margin_padding_large"
         android:layout_marginBottom="@dimen/margin_padding_normal"
-        android:text="retry"
+        android:text="@string/retry"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent" />
 

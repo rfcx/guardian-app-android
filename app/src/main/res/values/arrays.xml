@@ -14,24 +14,24 @@
 
     <!--  Guardian  -->
     <string-array name="guardian_assembly_checks">
-        <item>Software Update</item>
-        <item>Classifier Upload</item>
-        <item>Power Diagnostics</item>
-        <item>Communication Configuration</item>
+        <item>@string/software_title</item>
+        <item>@string/classifier_title</item>
+        <item>@string/power_diagnostic</item>
+        <item>@string/communication_configuration</item>
     </string-array>
 
     <string-array name="guardian_setup_checks">
-        <item>Guardian Registration</item>
-        <item>Network Signal Test</item>
-        <item>Audio Parameter Config</item>
-        <item>Microphone Capture Test</item>
-        <item>Storage Inspector</item>
-        <item>Guardian Installation Location</item>
+        <item>@string/guardian_registration</item>
+        <item>@string/network_test</item>
+        <item>@string/audio_parameter_config</item>
+        <item>@string/microphone_title</item>
+        <item>@string/storage_title</item>
+        <item>@string/guardian_site_title</item>
     </string-array>
 
     <string-array name="guardian_optional_checks">
-        <item>Add Photo(s)</item>
-        <item>Confirm CheckIn Status</item>
+        <item>@string/add_photos_title</item>
+        <item>@string/guardian_checkin_check</item>
     </string-array>
 
     <string-array name="bitrate_entries">
@@ -130,71 +130,71 @@
     </string-array>
 
     <string-array name="sat_guardian_placeholders">
-        <item>antenna connection</item>
-        <item>cable tied box</item>
-        <item>solar panel connection 1</item>
-        <item>solar panel connection 2</item>
-        <item>solar panel connection 3</item>
-        <item>solar panel connection 4</item>
-        <item>view of solar panels</item>
-        <item>baseplate without guardian</item>
-        <item>baseplate with guardian</item>
-        <item>arm angle</item>
-        <item>canopy above solar panels</item>
-        <item>mic and cover</item>
-        <item>canopy above swarm antenna</item>
-        <item>swarm antenna attachment</item>
-        <item>gps antenna attachment</item>
+        <item>@string/sat_guardian_placeholder_1</item>
+        <item>@string/sat_guardian_placeholder_2</item>
+        <item>@string/sat_guardian_placeholder_3</item>
+        <item>@string/sat_guardian_placeholder_4</item>
+        <item>@string/sat_guardian_placeholder_5</item>
+        <item>@string/sat_guardian_placeholder_6</item>
+        <item>@string/sat_guardian_placeholder_7</item>
+        <item>@string/sat_guardian_placeholder_8</item>
+        <item>@string/sat_guardian_placeholder_9</item>
+        <item>@string/sat_guardian_placeholder_10</item>
+        <item>@string/sat_guardian_placeholder_11</item>
+        <item>@string/sat_guardian_placeholder_12</item>
+        <item>@string/sat_guardian_placeholder_13</item>
+        <item>@string/sat_guardian_placeholder_14</item>
+        <item>@string/sat_guardian_placeholder_15</item>
     </string-array>
 
     <string-array name="cell_guardian_placeholders">
-        <item>antenna connection</item>
-        <item>cable tied box</item>
-        <item>solar panel connection 1</item>
-        <item>solar panel connection 2</item>
-        <item>solar panel connection 3</item>
-        <item>solar panel connection 4</item>
-        <item>view of solar panels</item>
-        <item>baseplate without guardian</item>
-        <item>baseplate with guardian</item>
-        <item>arm angle</item>
-        <item>canopy above solar panels</item>
-        <item>mic and cover</item>
-        <item>gsm antenna</item>
+        <item>@string/sat_guardian_placeholder_1</item>
+        <item>@string/sat_guardian_placeholder_2</item>
+        <item>@string/sat_guardian_placeholder_3</item>
+        <item>@string/sat_guardian_placeholder_4</item>
+        <item>@string/sat_guardian_placeholder_5</item>
+        <item>@string/sat_guardian_placeholder_6</item>
+        <item>@string/sat_guardian_placeholder_7</item>
+        <item>@string/sat_guardian_placeholder_8</item>
+        <item>@string/sat_guardian_placeholder_9</item>
+        <item>@string/sat_guardian_placeholder_10</item>
+        <item>@string/sat_guardian_placeholder_11</item>
+        <item>@string/sat_guardian_placeholder_12</item>
+        <item>@string/gsm_guardian_placeholder_1</item>
     </string-array>
 
     <string-array name="sat_guardian_guideline_texts">
-        <item>Take a photo showing the antennas are securely in the right connections, as well as the base plate adaptor connecting to the Guardian is secure and pointing towards the sky.</item>
-        <item>Show two cable ties securing the frame to the Guardian.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Show all solar panels are secured to the frame using the bolts, show all panels and some background.</item>
-        <item>Show base plate orientation and number of screws and whether flat or vertical. Showing at least 6 to 8 screws securing the baseplate.</item>
-        <item>Show the baseplate is flatly mounted, either horizontally on an adequately sized branch or vertically on the trunk with the Guardian attached.</item>
-        <item>Take a photo of the arm being angled 45 downs, if used.</item>
-        <item>Set your camera phone to a 10 second timer, place the camera on top of the panels facing the sky and take a photo of what is directly above the panels. (There should be ample clear sky)</item>
-        <item>Take a photo of the microphone cover cable tied to the mic mount.</item>
-        <item>Take a photo of the canopy above the satellite antenna (you should ideally show no to very little canopy cover)</item>
-        <item>Take a photo of the satellite antenna, directly facing towards the sky, none of the radials (legs) touching the tree, cabled tied to the mount and 1 meter away from the Guardian box</item>
-        <item>Take a photo of the GPS antenna flat on a horizontal branch with 2 screws.</item>
+        <item>@string/sat_guardian_desc_1</item>
+        <item>@string/sat_guardian_desc_2</item>
+        <item>@string/sat_guardian_desc_3</item>
+        <item>@string/sat_guardian_desc_4</item>
+        <item>@string/sat_guardian_desc_5</item>
+        <item>@string/sat_guardian_desc_6</item>
+        <item>@string/sat_guardian_desc_7</item>
+        <item>@string/sat_guardian_desc_8</item>
+        <item>@string/sat_guardian_desc_9</item>
+        <item>@string/sat_guardian_desc_10</item>
+        <item>@string/sat_guardian_desc_11</item>
+        <item>@string/sat_guardian_desc_12</item>
+        <item>@string/sat_guardian_desc_13</item>
+        <item>@string/sat_guardian_desc_14</item>
+        <item>@string/sat_guardian_desc_15</item>
     </string-array>
 
     <string-array name="cell_guardian_guideline_texts">
-        <item>Take a photo showing the antennas are securely in the right connections, as well as the base plate adaptor connecting to the Guardian is secure and pointing towards the sky.</item>
-        <item>Show two cable ties securing the frame to the Guardian.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</item>
-        <item>Show all solar panels are secured to the frame using the bolts, show all panels and some background.</item>
-        <item>Show base plate orientation and number of screws and whether flat or vertical. Showing at least 6 to 8 screws securing the baseplate.</item>
-        <item>Show the baseplate is flatly mounted, either horizontally on an adequately sized branch or vertically on the trunk with the Guardian attached.</item>
-        <item>Take a photo of the arm being angled 45 downs, if used.</item>
-        <item>Set your camera phone to a 10 second timer, place the camera on top of the panels facing the sky and take a photo of what is directly above the panels. (There should be ample clear sky)</item>
-        <item>Take a photo of the microphone cover cable tied to the mic mount.</item>
-        <item>Take a photo of the GSM antenna pointing towards the sky, cable tied to the mount which is screwed to the branch with 2 screws.</item>
+        <item>@string/sat_guardian_desc_1</item>
+        <item>@string/sat_guardian_desc_2</item>
+        <item>@string/sat_guardian_desc_3</item>
+        <item>@string/sat_guardian_desc_4</item>
+        <item>@string/sat_guardian_desc_5</item>
+        <item>@string/sat_guardian_desc_6</item>
+        <item>@string/sat_guardian_desc_7</item>
+        <item>@string/sat_guardian_desc_8</item>
+        <item>@string/sat_guardian_desc_9</item>
+        <item>@string/sat_guardian_desc_10</item>
+        <item>@string/sat_guardian_desc_11</item>
+        <item>@string/sat_guardian_desc_12</item>
+        <item>@string/gsm_guardian_desc_1</item>
     </string-array>
 
     <string-array name="sat_guardian_photos">

@@ -181,7 +181,7 @@
                 android:paddingTop="@dimen/margin_padding_small"
                 android:paddingEnd="@dimen/margin_padding_normal"
                 android:paddingBottom="@dimen/margin_padding_small"
-                android:text="Guardian"
+                android:text="@string/guardian"
                 android:textAllCaps="false"
                 android:textColor="@color/text_secondary"/>
 
@@ -193,7 +193,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{onClickSoftware}"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Download Software"/>
+                android:text="@string/download_software"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/classifierTextView"
@@ -203,7 +203,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{onClickClassifier}"
                 android:padding="@dimen/margin_padding_normal"
-                android:text="Download Classifier"/>
+                android:text="@string/download_classifier"/>
 
             <View
                 android:layout_width="match_parent"

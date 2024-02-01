@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name_label">RFCx Guardian</string>
+    <string name="app_name_label" translatable="false">RFCx Guardian</string>
 
     <!-- LoginActivity -->
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="connect_with_facebook">Continue with facebook</string>
-    <string name="connect_with_sms">Continue with phone number</string>
     <string name="pls_fill_email">Please fill email</string>
     <string name="pls_fill_password">Please fill password</string>
     <string name="incorrect_username_password">Incorrect username or password</string>
@@ -20,22 +18,10 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
-    <string name="available_in_settings">You can also find this Tutorial in the Profile tab</string>
-    <string name="name_of_guardian">Name of site</string>
-    <string name="enable_tracking_when">Enable tracking when you are on patrol to report your position</string>
-    <string name="when_the_event">When the event was detected</string>
-    <string name="number_of_reviews">Number of confirmed reviews</string>
-    <string name="boxes_indicate_possible">Boxes indicate possible chainsaw events</string>
-    <string name="confirm_it">Confirm it is  a chainsaw</string>
-    <string name="reject_it">Reject it is NOT a chainsaw</string>
-    <string name="create_new_reports">Create new reports</string>
-    <string name="view_reports">View reports by location</string>
-    <string name="app_intro">App intro</string>
     <string name="coordinates">Coordinates</string>
 
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Sign in</string>
-    <string name="invitation_submit_button_label">Submit</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="reset_password">Reset your password</string>
     <string name="enter_email">Enter your email to receive reset link</string>
@@ -43,51 +29,28 @@
     <string name="reset_link_send">Reset link send to your email.</string>
     <string name="reset">Reset</string>
 
-    <string name="what_we_call_you">What should we call you?</string>
-    <string name="please_tell_name">Please tell us your name</string>
-    <string name="hint_name">Name</string>
-
-    <string name="terms_and_service">I have read and agree to these Terms of Service</string>
     <string name="continue_text">Continue</string>
 
     <!-- common error -->
     <string name="error_common">An error occurred. Please try again.</string>
-    <string name="location_permission_msg">Ranger App would like to use your location</string>
-    <string name="record_audio_permission_msg">Ranger App would like to record audio</string>
-    <string name="camera_permission_msg">Ranger App would like to use your camera</string>
-    <string name="read_storage_permission_msg">Ranger App would like to read your storage</string>
+    <string name="record_audio_permission_msg">Guardian App would like to record audio</string>
+    <string name="camera_permission_msg">Guardian App would like to use your camera</string>
+    <string name="read_storage_permission_msg">Guardian App would like to read your storage</string>
     <string name="go_to_setting">Settings</string>
 
     <!-- message list -->
-    <string name="please_set_guardian_group">Please set projects</string>
-    <string name="sent_to">sent to</string>
 
     <!-- report -->
-    <string name="report_title">Report</string>
-    <string name="report_what_label">WHAT?</string>
-    <string name="report_when_label">WHEN?</string>
     <string name="report_submit_button_label">Submit</string>
-    <string name="report_record_label">RECORD AUDIO NOTES (Optional)</string>
-    <string name="report_attach_image_label">PHOTOS (Optional)</string>
-    <string name="report_location_null">Location not found. Please try again.</string>
-    <string name="report_note_label">Notes (Optional)</string>
-    <string name="report_note">Notes</string>
     <string name="report_note_hint">Put some notes here</string>
     <string name="some_photo_already_exists">Some photo already exists</string>
     <string name="these_photos_already_exists">These photos already exist</string>
     <string name="this_photo_already_exists">This photo already exists</string>
-    <string name="expires_in_24h">expires in 24h</string>
 
     <!-- Notification -->
-    <string name="notification_location_loading">Loading location…</string>
-    <string name="notification_location_not_availability">Please enable your device\'s location settings</string>
 
     <!-- Settings -->
     <string name="dialog_loading">Loading…</string>
-    <string name="location_tracking_label">Location tracking</string>
-    <string name="location_tracking_on_label">On</string>
-    <string name="location_tracking_off_label">Off</string>
-    <string name="guardian_group_label">Projects</string>
     <string name="receive_alert_notification">Receive alert notification</string>
     <string name="system_options">System Options</string>
     <string name="system_options_subtitle">Choose sounds, vibration, and importance</string>
@@ -101,54 +64,35 @@
     <string name="perform_test">Perform test</string>
     <string name="least_one_event">You need at least one event in your currently selected project to be able send a test</string>
 
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
+    <string name="dd_coordinates" translatable="false">DD</string>
+    <string name="ddm_coordinates" translatable="false">DDM</string>
+    <string name="dms_coordinates" translatable="false">DMS</string>
 
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
+    <string name="dd_coordinates_format" translatable="false">0.00000°N 0.00000°E</string>
+    <string name="ddm_coordinates_format" translatable="false">0°0.0000\'N 0°0.0000\'E</string>
+    <string name="dms_coordinates_format" translatable="false">0°0\'0.0\"N 0°0\'0.0\"E</string>
 
     <string name="last_month">Last\nMonth</string>
     <string name="last_week">Last\nWeek</string>
     <string name="last_24_hours">Last\n24 hours</string>
     <string name="now">Now</string>
-    <string name="within_month">Within a month</string>
-    <string name="within_week">Within a week</string>
-    <string name="within_24_hours">Within 24 hours</string>
-    <string name="at_that_time">At that moment</string>
 
     <string name="tab_to_record_label">Tap and hold the button to record notes</string>
-    <string name="new_password">New password</string>
-    <string name="new_password_again">Confirm new password</string>
-    <string name="change_password">Change password</string>
 
     <!-- Invitation -->
-    <string name="invitation_title">Connect to a site</string>
-    <string name="invitation_desc">Please enter your invitation code</string>
-    <string name="hint_code">Code</string>
-    <string name="invalid_invite_code">Invalid invite code</string>
-    <string name="switch_account">switch account</string>
 
     <!-- Report -->
-    <string name="empty_list_description">There were no incidents recently.\nEnjoy your day :)</string>
 
     <string name="menu_camera">Camera</string>
     <string name="menu_gallery">Gallery</string>
 
     <!-- Report list -->
-    <string name="report_list_title">Report History</string>
-    <string name="report_list_empty_message">You do not have any reports</string>
-    <string name="images_sync_format">%d photos (synced)</string>
-    <string name="images_unsync_format">%1d photos (%2d unsynced)</string>
-    <string name="report_detail_title">Report detail</string>
 
     <string name="in_air_plane_mode">Unable to determine your location</string>
     <string name="pls_off_air_plane_mode">Please turn off airplane mode</string>
 
     <string name="location">Location</string>
     <string name="photos">Photos</string>
-    <string name="audio_notes">Audio notes</string>
 
     <string name="menu_new_events">New Events</string>
     <string name="menu_submitted_reports">Submitted Reports</string>
@@ -157,18 +101,18 @@
 
     <string name="see_report_detail">See Detail</string>
     <string name="report_time_second">Just now</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
+    <string name="report_minutes_format" translatable="false">%dm</string>
+    <string name="report_hr_format" translatable="false">%dh</string>
+    <string name="report_day_format" translatable="false">%dd</string>
+    <string name="report_week_format" translatable="false">%dw</string>
 
-    <string name="common_ok">OK</string>
+    <string name="common_ok" translatable="false">OK</string>
     <string name="common_none">None</string>
 
     <!-- Status -->
 
     <!-- Override string res from matisse Image picker library -->
-    <string name="button_ok">OK</string>
+    <string name="button_ok" translatable="false">OK</string>
     <!-- Override string res from matisse Image picker library -->
 
     <!-- Alerts -->
@@ -185,24 +129,14 @@
     <string name="dog_bark">Bark</string>
     <string name="elephant">Elephant</string>
     <string name="fire">Fire</string>
-    <string name="trespasser">trespasser</string>
     <string name="other">other</string>
 
     <!--Profile -->
-    <string name="profile_receive_noti_label">by push notification</string>
-    <string name="profile_receive_noti_by_email">by email</string>
     <string name="profile_sign_out_label">Sign out</string>
-    <string name="please_enter_your_new_password">Please enter your new password</string>
-    <string name="please_confirm_your_new_password">Please confirm your new password</string>
-    <string name="password_must_have_at_least_6_characters">Password must have at least 6 characters</string>
-    <string name="confirm_password_does_not_match">Confirm password does not match</string>
-    <string name="password_changed_successfully">The password has been changed successfully.</string>
     <string name="something_is_wrong">Something went wrong. Please try again later.</string>
     <string name="profile_aditional_label">Additional</string>
     <string name="profile_app_version_label">App version</string>
     <string name="profile_feedback_label">Feedback</string>
-    <string name="profile_rate_app_label">Rate the app</string>
-    <string name="save_changed">Save Changes</string>
     <string name="please_try_again_later">Please try again later</string>
 
     <string name="feedback_submitted">Feedback submitted. Thank you for your time :)</string>
@@ -214,17 +148,12 @@
     <string name="maximum_number_of_attachments">You have reached max selectable. Try remove some items before adding more attachments.</string>
     <string name="account">Account</string>
 
-    <string name="change_profile_photo">Change profile photo</string>
-    <string name="edit_profile">Edit Profile</string>
-
     <!--Guardian Group List-->
-    <string name="guardian_group_list">Project List</string>
 
     <string name="notification_tracking_title">On-duty and tracking enabled</string>
     <string name="notification_traking_message_format">%d minutes recorded</string>
 
     <string name="required">Required!</string>
-    <string name="error_unsubscribe_by_email">Unsubscribe from %s fail.</string>
     <string name="detected_at">detected at</string>
 
     <!-- SetProjectsFragment -->
@@ -242,7 +171,7 @@
     <!-- EventsFragment -->
     <string name="all_projects">All projects</string>
     <string name="not_have_permission">You don’t have permission to use this project. Ask the project owner to change your role.</string>
-    <string name="num_more_then_99">99+</string>
+    <string name="num_more_then_99" translatable="false">99+</string>
     <string name="not_have_stream">No sites in this project</string>
 
     <!-- DraftReportsFragment -->
@@ -253,7 +182,7 @@
     <string name="unsent">Queued</string>
     <string name="sending">Sending</string>
     <string name="sent">Sent</string>
-    <string name="incident_ref">#%s</string>
+    <string name="incident_ref" translatable="false">#%s</string>
     <string name="not_submitted_reports_yet">You haven’t submitted any reports yet</string>
 
     <!-- GuardianEventDetailFragment -->
@@ -328,7 +257,6 @@
     <string name="add_notes">Text notes</string>
     <string name="add_notes_required">Text notes*</string>
     <string name="upload_voice_notes">Voice notes</string>
-    <string name="none_collected">None collected</string>
 
     <string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
     <string name="submit_report">Submit report</string>
@@ -345,11 +273,11 @@
 
     <string name="assets">Assets:</string>
     <string name="note">Note: %s</string>
-    <string name="tracking_line">#e55e5e</string>
+    <string name="tracking_line" translatable="false">#e55e5e</string>
 
-    <string name="hr">hr</string>
-    <string name="hrs">hrs</string>
-    <string name="min">min</string>
+    <string name="hr" translatable="false">hr</string>
+    <string name="hrs" translatable="false">hrs</string>
+    <string name="min" translatable="false">min</string>
 
     <!-- Theme App -->
     <string name="dark_theme">Dark</string>
@@ -364,8 +292,8 @@
     <string name="audio_not_found">Audio not found</string>
     <string name="satellite_audio_not_found">Audio not available for satellite Guardians</string>
 
-    <string name="satellite">Sat</string>
-    <string name="cell">Cell</string>
+    <string name="satellite" translatable="false">Sat</string>
+    <string name="cell" translatable="false">Cell</string>
 
     <string name="investigated_at">Investigated at</string>
     <string name="received_at">Received at</string>
@@ -423,6 +351,11 @@
     <string name="file_install">install v%s</string>
     <string name="file_version">v%s (%s installed)</string>
 
+    <string name="checklist">Checklist</string>
+    <string name="assembly">Assembly</string>
+    <string name="setup">Setup</string>
+    <string name="optional">Optional</string>
+
     <!-- SoftwareUpdateFragment -->
     <string name="software_title">Software Update</string>
     <string name="software_no_item">Download softwares from Guardian softwares page first\nProfile -> Guardian software -> Download APKs you needed</string>
@@ -469,14 +402,21 @@
     <string name="ok">OK</string>
     <string name="bad">Bad</string>
     <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">Satellite Background Noise in this range usually indicates a disconnected antenna\n\nPlease refer to your installation instructions for additional information</string>
+    <string name="in_testing">in testing</string>
+    <string name="ready_to_test">ready to test</string>
+    <string name="testing_failed">testing failed</string>
+    <string name="test_download_result">%.2f kb/s download</string>
+    <string name="test_upload_result">%.2f kb/s upload</string>
 
     <!-- Communication Configuration -->
     <string name="communication_configuration">Communication Configuration</string>
     <string name="back">back</string>
-    <string name="plus">+</string>
+    <string name="plus" translatable="false">+</string>
     <string name="sim_card_detected">SIM Card detected</string>
+    <string name="sim_card_not_detected">SIM Card not detected</string>
     <string name="phone_number">phone number:</string>
     <string name="satellite_module_detected">Satellite module detected</string>
+    <string name="satellite_module_not_detected">Satellite module not detected</string>
     <string name="swarm_id">swarm id:</string>
     <string name="satellite_gps_detected">Satellite GPS detected</string>
     <string name="guardian_local_time">Guardian local time:</string>
@@ -490,11 +430,16 @@
     <string name="there_is_no_off_time_in_this_project">There is no off time in this project</string>
 
     <!-- Guardian Registration -->
+    <string name="guardian_registration">Guardian Registration</string>
     <string name="register_guardian">Register Guardian with RFCx</string>
     <string name="let_s_register_your_guardian">Let\'s register your Guardian</string>
     <string name="production">Production</string>
     <string name="staging">Staging</string>
     <string name="register">Register</string>
+    <string name="already_registered">Your Guardian is already registered</string>
+    <string name="not_registered">Your Guardian is not registered</string>
+    <string name="registering">Registration Request Sent. Awaiting Response.</string>
+    <string name="register_failed">Register failed</string>
 
     <!-- Guardian Audio Parameter -->
     <string name="audio_parameter_config">Audio Parameter Config</string>
@@ -529,7 +474,7 @@
     <!-- Guardian Storage -->
     <string name="storage_title">Storage Inspector</string>
     <string name="audio_coverage">Audio Coverage</string>
-    <string name="hour_less_than_10">0%d</string>
+    <string name="hour_less_than_10" translatable="false">0%d</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="external_storage">External Storage</string>
     <string name="see_audio_coverage">See Audio Coverage</string>
@@ -538,7 +483,7 @@
     <string name="checkin_title">Confirm CheckIn Status</string>
     <string name="guardian_checkin_check">Guardian Checkin Check</string>
     <string name="protocol">Protocol</string>
-    <string name="dash">-</string>
+    <string name="dash" translatable="false">-</string>
     <string name="last_checkin">Last checkin</string>
     <string name="in_queue">In queue</string>
     <string name="wait_until_the_checkin_get_published">*Wait until the checkin get published</string>
@@ -580,6 +525,9 @@
     <string name="deployments">Deployments</string>
     <string name="map">Map View</string>
     <string name="deploy_new_guardian">Connect to Guardian</string>
+    <string name="deployment_no_content">you don\'t have any deployments or registrations</string>
+    <string name="deployment_no_content_synced">you don\'t have any synced deployments or registrations</string>
+    <string name="deployment_no_content_unsynced">you don\'t have any unsynced deployments or registrations</string>
 
     <!-- Deployment Detail -->
 
@@ -589,5 +537,55 @@
     <!-- Edit Location -->
     <string name="edit_location_title">Edit location</string>
     <string name="fill_name">Please fill the name</string>
+
+    <!-- Images -->
+    <string name="sat_guardian_placeholder_1">antenna connection</string>
+    <string name="sat_guardian_placeholder_2">cable tied box</string>
+    <string name="sat_guardian_placeholder_3">solar panel connection 1</string>
+    <string name="sat_guardian_placeholder_4">solar panel connection 2</string>
+    <string name="sat_guardian_placeholder_5">solar panel connection 3</string>
+    <string name="sat_guardian_placeholder_6">solar panel connection 4</string>
+    <string name="sat_guardian_placeholder_7">view of solar panels</string>
+    <string name="sat_guardian_placeholder_8">baseplate without guardian</string>
+    <string name="sat_guardian_placeholder_9">baseplate with guardian</string>
+    <string name="sat_guardian_placeholder_10">arm angle</string>
+    <string name="sat_guardian_placeholder_11">canopy above solar panels</string>
+    <string name="sat_guardian_placeholder_12">mic and cover</string>
+    <string name="sat_guardian_placeholder_13">canopy above swarm antenna</string>
+    <string name="sat_guardian_placeholder_14">swarm antenna attachment</string>
+    <string name="sat_guardian_placeholder_15">gps antenna attachment</string>
+    <string name="gsm_guardian_placeholder_1">gsm antenna</string>
+    <string name="sat_guardian_desc_1">Take a photo showing the antennas are securely in the right connections, as well as the base plate adaptor connecting to the Guardian is secure and pointing towards the sky.</string>
+    <string name="sat_guardian_desc_2">Show two cable ties securing the frame to the Guardian.</string>
+    <string name="sat_guardian_desc_3">Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</string>
+    <string name="sat_guardian_desc_4">Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</string>
+    <string name="sat_guardian_desc_5">Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</string>
+    <string name="sat_guardian_desc_6">Take a photo of each of the 4 solar panels connections showing they are completely pushed into the frame plug.</string>
+    <string name="sat_guardian_desc_7">Show all solar panels are secured to the frame using the bolts, show all panels and some background.</string>
+    <string name="sat_guardian_desc_8">Show base plate orientation and number of screws and whether flat or vertical. Showing at least 6 to 8 screws securing the baseplate.</string>
+    <string name="sat_guardian_desc_9">Show the baseplate is flatly mounted, either horizontally on an adequately sized branch or vertically on the trunk with the Guardian attached.</string>
+    <string name="sat_guardian_desc_10">Take a photo of the arm being angled 45 downs, if used.</string>
+    <string name="sat_guardian_desc_11">Set your camera phone to a 10 second timer, place the camera on top of the panels facing the sky and take a photo of what is directly above the panels. (There should be ample clear sky)</string>
+    <string name="sat_guardian_desc_12">Take a photo of the microphone cover cable tied to the mic mount.</string>
+    <string name="sat_guardian_desc_13">Take a photo of the canopy above the satellite antenna (you should ideally show no to very little canopy cover)</string>
+    <string name="sat_guardian_desc_14">Take a photo of the satellite antenna, directly facing towards the sky, none of the radials (legs) touching the tree, cabled tied to the mount and 1 meter away from the Guardian box</string>
+    <string name="sat_guardian_desc_15">Take a photo of the GPS antenna flat on a horizontal branch with 2 screws.</string>
+    <string name="gsm_guardian_desc_1">Take a photo of the GSM antenna pointing towards the sky, cable tied to the mount which is screwed to the branch with 2 screws.</string>
+    <string name="offline_mode">Offline mode</string>
+    <string name="select_site_to_create_new_report">Select site to create new report</string>
+    <string name="download_software">Download Software</string>
+    <string name="download_classifier">Download Classifier</string>
+    <string name="guardian">Guardian</string>
+    <string name="searching_for_nearby_n_guardians">Searching for Nearby\n Guardians</string>
+    <string name="why_can_t_i_see_a_guardian">Why can\'t I see a Guardian</string>
+    <string name="connect">connect</string>
+    <string name="retry">retry</string>
+    <string name="site">Site</string>
+    <string name="project">Project</string>
+    <string name="take">Take</string>
+    <string name="choose">Choose</string>
+    <string name="edit_site_name_hint">Site name</string>
+    <string name="change">Change</string>
+    <string name="save">Save</string>
 
 </resources>

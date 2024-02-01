@@ -1,5 +1,6 @@
 package org.rfcx.incidents.view.guardian.checklist.network
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.rfcx.incidents.R
 import org.rfcx.incidents.domain.guardian.socket.GetAdminMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.GetGuardianMessageUseCase
 import org.rfcx.incidents.domain.guardian.socket.InstructionParams
@@ -22,6 +24,7 @@ import org.rfcx.incidents.util.socket.PingUtils.getSwarmId
 import org.rfcx.incidents.util.socket.PingUtils.getSwarmNetwork
 
 class NetworkTestViewModel(
+    private val context: Context,
     private val getGuardianMessageUseCase: GetGuardianMessageUseCase,
     private val getAdminMessageUseCase: GetAdminMessageUseCase,
     private val sendInstructionCommandUseCase: SendInstructionCommandUseCase
@@ -69,10 +72,10 @@ class NetworkTestViewModel(
     private val _satPerfectState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val satPerfectState = _satPerfectState.asStateFlow()
 
-    private val _downloadTestState: MutableStateFlow<String> = MutableStateFlow("read to test")
+    private val _downloadTestState: MutableStateFlow<String> = MutableStateFlow(context.getString(R.string.ready_to_test))
     val downloadTestState = _downloadTestState.asStateFlow()
 
-    private val _uploadTestState: MutableStateFlow<String> = MutableStateFlow("read to test")
+    private val _uploadTestState: MutableStateFlow<String> = MutableStateFlow(context.getString(R.string.ready_to_test))
     val uploadTestState = _uploadTestState.asStateFlow()
 
     private val _testButtonState: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -126,8 +129,8 @@ class NetworkTestViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             // show waiting ui
             _testButtonState.tryEmit(false)
-            _downloadTestState.tryEmit("in testing")
-            _uploadTestState.tryEmit("in testing")
+            _downloadTestState.tryEmit(context.getString(R.string.in_testing))
+            _uploadTestState.tryEmit(context.getString(R.string.in_testing))
             sendInstructionCommandUseCase.launch(InstructionParams(InstructionType.CTRL, InstructionCommand.SPEED_TEST))
         }
     }
@@ -210,18 +213,18 @@ class NetworkTestViewModel(
     private fun setDownloadUpdateState(speedTest: SpeedTest) {
         if (speedTest.isTesting) {
             _testButtonState.tryEmit(false)
-            _downloadTestState.tryEmit("in testing")
-            _uploadTestState.tryEmit("in testing")
+            _downloadTestState.tryEmit(context.getString(R.string.in_testing))
+            _uploadTestState.tryEmit(context.getString(R.string.in_testing))
         } else if (speedTest.isFailed) {
-            _downloadTestState.tryEmit("testing failed")
-            _uploadTestState.tryEmit("testing failed")
+            _downloadTestState.tryEmit(context.getString(R.string.testing_failed))
+            _uploadTestState.tryEmit(context.getString(R.string.testing_failed))
         } else if (speedTest.downloadSpeed == -1.0 && speedTest.uploadSpeed == -1.0) {
-            _downloadTestState.tryEmit(String.format("ready to test", speedTest.downloadSpeed))
-            _uploadTestState.tryEmit(String.format("ready to test", speedTest.uploadSpeed))
+            _downloadTestState.tryEmit(context.getString(R.string.ready_to_test))
+            _uploadTestState.tryEmit(context.getString(R.string.ready_to_test))
         } else {
             _testButtonState.tryEmit(true)
-            _downloadTestState.tryEmit(String.format("%.2f kb/s download", speedTest.downloadSpeed))
-            _uploadTestState.tryEmit(String.format("%.2f kb/s upload", speedTest.uploadSpeed))
+            _downloadTestState.tryEmit(String.format(context.getString(R.string.test_download_result), speedTest.downloadSpeed))
+            _uploadTestState.tryEmit(String.format(context.getString(R.string.test_upload_result), speedTest.uploadSpeed))
         }
     }
 }

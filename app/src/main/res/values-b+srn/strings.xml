@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Guardian</string>
     <string name="pls_fill_email">Skrifi yu computer nen</string>
     <string name="incorrect_username_password">A nen (a password) sa yu poti no bun</string>
     <string name="an_error_occurred">A programma no man drai nownowde</string>
@@ -8,7 +7,6 @@
     <string name="set_alerts">Poti a marki in a faki fu san yu wan kisi wan dyendyen</string>
     <string name="choose_which_projects">Piki fu sortu project yu wani wan dyendyen</string>
     <string name="login_sign_in_button_label">Opo a papira fu a computer fu wroko (kebroiki yu password)</string>
-    <string name="invitation_submit_button_label">Seni a skrifi fu yu gwe</string>
     <string name="cancel">Tapu</string>
     <string name="continue_text">Go doro</string>
     <string name="receive_alert_notification">Kisi wan dyendyen</string>
@@ -118,8 +116,6 @@
     <string name="system_default">A fasi fa a computer seti</string>
     <string name="theme">A leri fu sabi</string>
     <string name="display">A tafra fu si ala sani</string>
-    <string name="cell">A faki</string>
-    <string name="satellite">SAT</string>
     <string name="audio_not_found">Ala sani tiri</string>
     <string name="satellite_audio_not_found">Ala sani de tiri</string>
     <string name="hot">A faya</string>

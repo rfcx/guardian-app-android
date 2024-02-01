@@ -4,8 +4,6 @@
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
     <string name="login">Masuk</string>
-    <string name="connect_with_facebook">Lanjutkan dengan facebook</string>
-    <string name="connect_with_sms">Lanjutkan dengan nomor telepon</string>
     <string name="pls_fill_email">Silakan masukan alamat email</string>
     <string name="pls_fill_password">Silakan masukan kata sandi</string>
     <string name="incorrect_username_password">Nama pengguna atau kata sandi salah</string>
@@ -17,82 +15,39 @@
     <string name="next">Berikutnya</string>
     <string name="skip">Lewati</string>
     <string name="done">Selesai</string>
-    <string name="available_in_settings">Anda juga dapat menemukan Tutorial ini di tab Profil</string>
-    <string name="name_of_guardian">Nama situs</string>
-    <string name="enable_tracking_when">Aktifkan pelacakan ketika Anda berpatroli untuk melaporkan posisi Anda</string>
-    <string name="when_the_event">Ketika acara terdeteksi</string>
-    <string name="number_of_reviews">Jumlah dikonfirmasi ulasan</string>
-    <string name="boxes_indicate_possible">Kotak menunjukkan kemungkinan peristiwa gergaji</string>
-    <string name="confirm_it">Konfirmasi itu adalah gergaji</string>
-    <string name="reject_it">Menolaknya TIDAK gergaji</string>
-    <string name="create_new_reports">Membuat laporan baru</string>
-    <string name="view_reports">Lihat laporan berdasarkan lokasi</string>
-    <string name="app_intro">App Intro</string>
     <string name="coordinates">Koordinat</string>
-    
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
-    
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-    
+
     <!--new Login Activite-->
     <string name="login_sign_in_button_label">Masuk</string>
-    <string name="invitation_submit_button_label">Kirim</string>
     <string name="forgot_your_password">Lupa kata sandi?</string>
     <string name="reset_password">Mereset password Anda</string>
     <string name="enter_email">Masukkan email Anda untuk menerima link yang ulang</string>
     <string name="cancel">Batalkan</string>
     <string name="reset_link_send">Tautan penyetelan ulang kirim ke email Anda.</string>
     <string name="reset">Ulang</string>
-    
-    <string name="what_we_call_you">Apa yang harus kita sebut Anda?</string>
-    <string name="please_tell_name">Silakan beritahu kami nama Anda</string>
-    <string name="hint_name">Nama</string>
-    
-    <string name="terms_and_service">Saya telah membaca dan menyetujui Ketentuan Layanan ini</string>
+
     <string name="continue_text">Lanjut</string>
     
     <!-- common error -->
     <string name="error_common">terjadi kesalahan, silahkan coba lagi</string>
-    <string name="location_permission_msg">Aplikasi Ranger ingin menggunakan lokasi Anda</string>
     <string name="record_audio_permission_msg">App Ranger ingin merekam audio</string>
     <string name="camera_permission_msg">Aplikasi Ranger ingin menggunakan kamera Anda</string>
     <string name="read_storage_permission_msg">Aplikasi Ranger ingin membaca penyimpanan Anda</string>
     <string name="go_to_setting">Pengaturan</string>
 	
 	<!-- message list -->
-	<string name="please_set_guardian_group">Silakan proyek set</string>
-    <string name="sent_to">kirim ke</string>
 
     <!-- report -->
-    <string name="report_title">laporan</string>
-	<string name="report_what_label">APA?</string>
-    <string name="report_when_label">KAPAN?</string>
     <string name="report_submit_button_label">menyerahkan</string>
-    <string name="report_record_label">CATATAN PEREKAM (Opsional)</string>
-    <string name="report_attach_image_label">FOTO (Opsional)</string>
-    <string name="report_location_null">Lokasi tidak ditemukan. Silakan coba lagi.</string>
-    <string name="report_note_label">Catatan (Opsional)</string>
-    <string name="report_note">Catatan</string>
     <string name="report_note_hint">Tulis beberapa catatan di sini</string>
     <string name="some_photo_already_exists">Beberapa foto sudah ada</string>
     <string name="these_photos_already_exists">Foto ini sudah ada</string>
     <string name="this_photo_already_exists">foto ini sudah ada</string>
-    <string name="expires_in_24h">berakhir di 24h</string>
-    
+
     <!-- Notification -->
-	<string name="notification_location_loading">Memuat lokasi…</string>
-    <string name="notification_location_not_availability">Silakan nyalakan lokasi perangkat!</string>
 
     <!-- Settings -->
     <string name="dialog_loading">Memuat…</string>
-	<string name="location_tracking_label">Pelacakan lokasi</string>
-    <string name="location_tracking_on_label">Di</string>
-    <string name="location_tracking_off_label">Mati</string>
-	<string name="guardian_group_label">Proyek</string>
     <string name="notifications">Pemberitahuan</string>
     <string name="start_demo">Kirim pemberitahuan uji</string>
     <string name="notification_will_sent">Pemberitahuan akan dikirim dalam waktu 30 detik untuk memverifikasi bahwa Anda dapat menerima pemberitahuan</string>
@@ -103,57 +58,33 @@
     <string name="last_week">Terakhir\nMinggu</string>
     <string name="last_24_hours">Terakhir\n24 jam</string>
     <string name="now">Sekarang</string>
-    <string name="within_month">Dalam satu bulan</string>
-    <string name="within_week">Dalam waktu seminggu</string>
-    <string name="within_24_hours">Dalam 24 jam</string>
-    <string name="at_that_time">Pada saat itu</string>
 
     <string name="tab_to_record_label">Tekan dan tahan tombol untuk merekam</string>
-    <string name="new_password">Kata sandi baru</string>
-    <string name="new_password_again">Konfirmasi password baru</string>
-    <string name="change_password">Ganti kata sandi</string>
-    
-	<!-- Invitation -->
-    <string name="invitation_title">Hubungkan ke suatu tempat</string>
-    <string name="invitation_desc">Silakan masukkan kode undangan Anda</string>
-    <string name="hint_code">Kode</string>
-    <string name="invalid_invite_code">Kode mengundang valid</string>
-    <string name="switch_account">Ganti akun</string>
-    
+
+    <!-- Invitation -->
+
     <!-- Report -->
-	<string name="empty_list_description">Tidak ada insiden baru-baru ini.\nNikmati harimu :)</string>
-	
-	<!-- Symbols -->
+
+    <!-- Symbols -->
     <string name="menu_camera">Kamera</string>
     <string name="menu_gallery">Galeri</string>
     
     <!-- Report list -->
-    <string name="report_list_title">Riwayat laporan</string>
-    <string name="report_list_empty_message">Anda tidak memiliki laporan</string>
-    <string name="images_sync_format">%d gambar (disinkronkan)</string>
-    <string name="images_unsync_format">%1d gambar (%2d belum disinkronkan)</string>
-    <string name="report_detail_title">laporan rinci</string>
-    
+
     <string name="in_air_plane_mode">Tidak dapat menentukan lokasi Anda</string>
     <string name="pls_off_air_plane_mode">Harap matikan mode pesawat</string>
-    <string name="common_ok">Oke</string>
-    
+
     <string name="location">Tempat</string>
     
     <string name="menu_profile">Profil</string>
     
     <string name="see_report_detail">Lihat Detil</string>
     <string name="report_time_second">Baru saja</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
-	
-	<!-- Status -->
+
+    <!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Oke</string>
-	<!-- Override string res from matisse Image picker library -->
+    <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
 	<string name="yesterday">Kemarin</string>
@@ -168,19 +99,14 @@
     <string name="dog_bark">Gonggongan anjing</string>
     <string name="elephant">Gajah</string>
     <string name="fire">Api</string>
-    <string name="trespasser">penyusup</string>
     <string name="other">lainnya</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">by pemberitahuan push</string>
-    <string name="profile_receive_noti_by_email">melalui email</string>
     <string name="profile_sign_out_label">Keluar</string>
     <string name="profile_aditional_label">Tambahan</string>
     <string name="profile_app_version_label">Versi aplikasi</string>
     <string name="profile_feedback_label">Saran</string>
-    <string name="profile_rate_app_label">Menilai aplikasi</string>
-    <string name="save_changed">Simpan perubahan</string>
-    
+
     <string name="feedback_submitted">Umpan balik yang disampaikan. Terima kasih atas waktu Anda :)</string>
     <string name="feedback_submission_failed">Pengiriman umpan balik gagal! Silakan coba lagi.</string>
     <string name="snackbar_retry">Mencoba kembali</string>
@@ -188,22 +114,12 @@
     <string name="from">Dari:</string>
     <string name="app_feedback_share_ideas">Meninggalkan umpan balik aplikasi atau berbagi ide</string>
     <string name="maximum_number_of_attachments">Anda telah mencapai max dipilih. Cobalah menghapus beberapa item sebelum menambahkan lebih lampiran.</string>
-    
-    <string name="please_enter_your_new_password">Masukkan password baru anda</string>
-    <string name="please_confirm_your_new_password">Silahkan konfirmasi password baru anda</string>
-    <string name="password_must_have_at_least_6_characters">Password harus memiliki minimal 6 karakter</string>
-    <string name="confirm_password_does_not_match">Konfirmasi sandi tidak cocok</string>
-    <string name="password_changed_successfully">Password telah berhasil diubah.</string>
+
     <string name="something_is_wrong">Ada yang salah. Silakan coba lagi nanti.</string>
     <string name="account">Akun</string>
     <string name="please_try_again_later">Silakan coba lagi nanti</string>
-    
-    <string name="change_profile_photo">Ganti foto profil</string>
-    <string name="edit_profile">Sunting profil</string>
-	
-	<!--Guardian Group List-->
-    <string name="guardian_group_list">Proyek daftar</string>
-	<string name="audio_notes">Catatan audio</string>
+
+    <!--Guardian Group List-->
     <string name="photos">Foto</string>
 	<string name="common_none">Tidak ada</string>
     
@@ -211,7 +127,6 @@
     <string name="notification_traking_message_format">%d menit direkam</string>
 	
 	<string name="required">Yg dibutuhkan!</string>
-    <string name="error_unsubscribe_by_email">Berhenti berlangganan dari %s gagal.</string>
     <string name="detected_at">terdeteksi di</string>
     
     <!-- SetProjectsFragment -->
@@ -300,11 +215,6 @@
     <string name="note">Catatan: %s</string>
     <string name="recent">Terkini</string>
     <string name="hot">Hot</string>
-    <string name="is_today">Hari ini, %1s - %2s %3s</string>
-    <string name="is_yesterday_today">"Kemarin %1s - Hari ini %2s %3s"</string>
-    <string name="is_yesterday">Kemarin, %1s - %2s %3s</string>
-    <string name="is_other_today">%1s - Hari ini, %2s %3s</string>
-    <string name="is_other_yesterday">%1s - Kemarin, %2s %3s</string>
     <string name="audio_not_found">Audio tidak ditemukan</string>
     <string name="not_found">tidak ditemukan</string>
     <string name="satellite_audio_not_found">Audio tidak tersedia untuk satelit Guardian</string>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.rfcx.incidents.R
 import org.rfcx.incidents.databinding.FragmentGuardianChecklistBinding
 import org.rfcx.incidents.service.deploy.DeploymentSyncWorker
 import org.rfcx.incidents.view.guardian.GuardianDeploymentEventListener
@@ -32,7 +33,7 @@ class GuardianCheckListFragment : Fragment(), (Int, String) -> Unit {
         super.onViewCreated(view, savedInstanceState)
 
         mainEvent?.showToolbar()
-        mainEvent?.setToolbarTitle("Checklist")
+        mainEvent?.setToolbarTitle(getString(R.string.checklist))
         mainEvent?.showThreeDots()
 
         binding.guardianCheckListRecyclerView.apply {

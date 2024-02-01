@@ -35,7 +35,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.simModuleState ? `Sim card detected` : `Sim card not detected`}"
+            android:text="@{viewModel.simModuleState ? @string/sim_card_detected : @string/sim_card_not_detected}"
             app:layout_constraintBottom_toBottomOf="@id/simDetectionCheckbox"
             app:layout_constraintStart_toEndOf="@+id/simDetectionCheckbox"
             app:layout_constraintTop_toTopOf="@id/simDetectionCheckbox" />
@@ -220,7 +220,7 @@
             style="@style/RangerText.Subhead.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.satModuleState ? `Satellite module detected` : `Satellite module not detected`}"
+            android:text="@{viewModel.satModuleState ? @string/satellite_module_detected : @string/satellite_module_not_detected}"
             app:layout_constraintBottom_toBottomOf="@id/satDetectionCheckbox"
             app:layout_constraintStart_toEndOf="@+id/satDetectionCheckbox"
             app:layout_constraintTop_toTopOf="@id/satDetectionCheckbox" />

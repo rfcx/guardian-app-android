@@ -26,7 +26,6 @@ import org.rfcx.incidents.view.guardian.checklist.storage.HeatmapAudioCoverageVi
 import org.rfcx.incidents.view.guardian.connect.GuardianConnectViewModel
 import org.rfcx.incidents.view.login.LoginViewModel
 import org.rfcx.incidents.view.login.SetProjectsViewModel
-import org.rfcx.incidents.view.login.SetUserNameViewModel
 import org.rfcx.incidents.view.profile.FeedbackViewModel
 import org.rfcx.incidents.view.profile.ProfileViewModel
 import org.rfcx.incidents.view.profile.SubscribeProjectsViewModel
@@ -63,19 +62,18 @@ object UiModule {
 
     var loginModule = module {
         viewModel { LoginViewModel(androidContext(), get(), get(), get(), get()) }
-        viewModel { SetUserNameViewModel(androidContext(), get()) }
         viewModel { SetProjectsViewModel(get()) }
     }
 
     var guardianModule = module {
         viewModel { GuardianDeploymentViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { GuardianConnectViewModel(get()) }
-        viewModel { GuardianCheckListViewModel(get(), get(), get()) }
+        viewModel { GuardianCheckListViewModel(androidContext(), get(), get(), get()) }
         viewModel { GuardianFileDownloadViewModel(androidContext(), get(), get(), get(), get()) }
         viewModel { SoftwareUpdateViewModel(get(), get(), get()) }
         viewModel { ClassifierUploadViewModel(get(), get(), get(), get()) }
         viewModel { PowerDiagnosticViewModel(get(), get()) }
-        viewModel { NetworkTestViewModel(get(), get(), get()) }
+        viewModel { NetworkTestViewModel(androidContext(), get(), get(), get()) }
         viewModel { CommunicationViewModel(get(), get(), get(), get(), get()) }
         viewModel { GuardianRegisterViewModel(get(), get(), get(), get()) }
         viewModel { GuardianAudioParameterViewModel(get(), get()) }

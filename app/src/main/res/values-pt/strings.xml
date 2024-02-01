@@ -3,98 +3,58 @@
     <!-- LoginActivity -->
     <string name="email">Email</string>
     <string name="password">Senha</string>
-    <string name="login">Usuário</string>
-    <string name="connect_with_facebook">Continue com o Facebook</string>
-    <string name="connect_with_sms">Continue com o número de telefone</string>
-    <string name="pls_fill_email">Por favor insira um email</string>
-    <string name="pls_fill_password">Por favor insira a senha</string>
-    <string name="incorrect_username_password">Usuário ou senha incorretos</string>
+    <string name="login">Entrar</string>
+    <string name="pls_fill_email">Informar email</string>
+    <string name="pls_fill_password">Informar senha</string>
+    <string name="incorrect_username_password">Nome de usuário incorreto ou senha</string>
     <string name="an_error_occurred">Serviço indisponível</string>
+    <string name="dark_theme">Escuro</string>
+    <string name="light_theme">Luz</string>
+    <string name="system_default">Sistema padrão</string>
+    <string name="theme">Tema</string>
+    <string name="display">Mostrar</string>
     <string name="or">OU</string>
-    <string name="powered_by">Distribuído por</string>
+    <string name="powered_by">Distríbuido por</string>
     
     <!-- LoginActivity -->
     <string name="next">Próximo</string>
     <string name="skip">Pular</string>
     <string name="done">Feito</string>
-    <string name="available_in_settings">Você também pode encontrar este tutorial na guia Perfil</string>
-    <string name="name_of_guardian">Nome do local</string>
-    <string name="enable_tracking_when">Ativar rastreamento quando você está em patrulha para relatar sua posição</string>
-    <string name="when_the_event">Quando o evento foi detectado</string>
-    <string name="number_of_reviews">Número de comentários confirmados</string>
-    <string name="boxes_indicate_possible">Caixas de indicar possíveis eventos de motosserra</string>
-    <string name="confirm_it">Confirme que é uma motosserra</string>
-    <string name="reject_it">Rejeitá-la não é uma serra elétrica</string>
-    <string name="create_new_reports">Criar novos relatórios</string>
-    <string name="view_reports">Visualizar relatórios por localização</string>
-    <string name="app_intro">App Intro</string>
     <string name="coordinates">Coordenadas</string>
-    
-    <string name="dd_coordinates">DD</string>
-    <string name="ddm_coordinates">DDM</string>
-    <string name="dms_coordinates">DMS</string>
-    
-    <string name="dd_coordinates_format">0.00000°N 0.00000°E</string>
-    <string name="ddm_coordinates_format">0°0.0000\'N 0°0.0000\'E</string>
-    <string name="dms_coordinates_format">0°0\'0.0\"N 0°0\'0.0\"E</string>
-    
+
     <!--new Login Activite-->
-    <string name="login_sign_in_button_label">Assinar em </string>
-    <string name="invitation_submit_button_label">Enviar</string>
-    <string name="forgot_your_password">Esqueceu sua senha</string>
+    <string name="login_sign_in_button_label">Entrar</string>
+    <string name="forgot_your_password">Esqueceu a senha?</string>
     <string name="reset_password">Redefinir sua senha</string>
     <string name="enter_email">Digite seu email para receber link de redefinição</string>
     <string name="cancel">Cancelar</string>
     <string name="reset_link_send">Repor ligação enviar para o seu e-mail.</string>
     <string name="reset">Redefinir</string>
-    
-    <string name="what_we_call_you">O que devemos chamá-lo?</string>
-    <string name="please_tell_name">Por favor, diga-nos o seu nome</string>
-    <string name="hint_name">Nome</string>
-    
-    <string name="terms_and_service">Eu li e concordo com os Termos de Serviço</string>
+
     <string name="continue_text">Continuar</string>
     
     <!-- common error -->
     <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
-    <string name="location_permission_msg">O aplicativo Ranger gostaria de usar sua localização</string>
-    <string name="record_audio_permission_msg">O aplicativo Ranger gostaria de gravar áudio</string>
-    <string name="camera_permission_msg">O aplicativo Ranger gostaria de usar sua câmera</string>
-    <string name="read_storage_permission_msg">O aplicativo Ranger gostaria de ler o seu armazenamento</string>
+    <string name="record_audio_permission_msg">O aplicativo Guardiangostaria de gravar áudio</string>
+    <string name="camera_permission_msg">O aplicativo Guardian gostaria de usar sua câmera</string>
+    <string name="read_storage_permission_msg">O aplicativo Guardian gostaria de ler o seu armazenamento</string>
     <string name="go_to_setting">Definições</string>
 	
 	<!-- message list -->
-	<string name="please_set_guardian_group">Por favor projecto conjunto</string>
-    <string name="sent_to">enviar para</string>
 
     <!-- report -->
-    <string name="report_title">Relatório</string>
-	<string name="report_what_label">O QUE?</string>
-    <string name="report_when_label">QUANDO?</string>
     <string name="report_submit_button_label">Submeter</string>
-    <string name="report_record_label">GRAVAR ÁUDIO (Opcional)</string>
-    <string name="report_attach_image_label">FOTOS (Opcional)</string>
-    <string name="report_location_null">Localização não encontrada. Tente novamente.</string>
-    <string name="report_note_label">Notas (Opcional)</string>
-    <string name="report_note">Notas</string>
     <string name="report_note_hint">Coloque algumas notas aqui</string>
     <string name="some_photo_already_exists">Algumas fotos já existe</string>
     <string name="these_photos_already_exists">Essas fotos já existem</string>
     <string name="this_photo_already_exists">Esta foto já existe</string>
-    <string name="expires_in_24h">expira em 24h</string>
-    
+
     <!-- Notification -->
-	<string name="notification_location_loading">Carregando localização…</string>
 
     <!-- Settings -->
     <string name="dialog_loading">Carregando…</string>
-    <string name="notification_location_not_availability">Ative a localização do dispositivo!</string>
-	<string name="location_tracking_label">Rastreamento de localização</string>
-    <string name="location_tracking_on_label">Ligado</string>
-    <string name="location_tracking_off_label">Desligado</string>
-	<string name="guardian_group_label">Projetos</string>
     <string name="notifications">Notificações</string>
-    <string name="start_demo">Enviar um notificação de teste</string>
+    <string name="start_demo">Mandar notificação de teste</string>
     <string name="notification_will_sent">A notificação será enviada no prazo de 30 segundos para verificar se você pode receber alertas</string>
     <string name="perform_test">Realizar teste</string>
     <string name="least_one_event">Você precisa de pelo menos um evento em seu projeto atualmente selecionado para poder enviar um teste</string>
@@ -103,57 +63,33 @@
     <string name="last_week">Última\nSemana</string>
     <string name="last_24_hours">Último\n24 horas</string>
     <string name="now">Atual</string>
-    <string name="within_month">Dentro de um mês</string>
-    <string name="within_week">Dentro de uma semana</string>
-    <string name="within_24_hours">Dentro de 24 horas</string>
-    <string name="at_that_time">Naquele momento</string>
 
-    <string name="tab_to_record_label">Toque e segure o botão para gravar áudio.</string>
-    <string name="new_password">Nova senha</string>
-    <string name="new_password_again">Confirme a nova senha</string>
-    <string name="change_password">Mudar senha</string>
-    
-	<!-- Invitation -->
-    <string name="invitation_title">Conectar a uma localidade.</string>
-    <string name="invitation_desc">Por favor insira o seu código de convite</string>
-    <string name="hint_code">Código</string>
-    <string name="invalid_invite_code">convite código inválido</string>
-    <string name="switch_account">mudar de conta</string>
-    
+    <string name="tab_to_record_label">Aperte e segure para gravar notas</string>
+
+    <!-- Invitation -->
+
     <!-- Report -->
-	<string name="empty_list_description">Não houve incidentes recentemente.\nAproveite seu dia :)</string>
-	
-	<!-- Symbols -->
+
+    <!-- Symbols -->
     <string name="menu_camera">Câmera</string>
     <string name="menu_gallery">Galeria</string>
     
     <!-- Report list -->
-    <string name="report_list_title">Histórico de relatório</string>
-    <string name="report_list_empty_message">Você não tem nenhum relatório</string>
-    <string name="images_sync_format">%d imagens (sincronizado)</string>
-    <string name="images_unsync_format">%1d imagens (%2d ainda não sincronizado)</string>
-    <string name="report_detail_title">relatório detalhado</string>
-    
+
     <string name="in_air_plane_mode">Não foi possível determinar a sua localização</string>
     <string name="pls_off_air_plane_mode">Por favor desligue o modo avião</string>
-    <string name="common_ok">Está bem</string>
-    
+
     <string name="location">Localização</string>
     
     <string name="menu_profile">Perfil</string>
     
     <string name="see_report_detail">veja Detalhe</string>
     <string name="report_time_second">Agora mesmo</string>
-    <string name="report_minutes_format">%dm</string>
-    <string name="report_hr_format">%dh</string>
-    <string name="report_day_format">%dd</string>
-    <string name="report_week_format">%dw</string>
-	
-	<!-- Status -->
+
+    <!-- Status -->
 	
 	<!-- Override string res from matisse Image picker library -->
-	<string name="button_ok">Está bem</string>
-	<!-- Override string res from matisse Image picker library -->
+    <!-- Override string res from matisse Image picker library -->
     
     <!-- Alerts -->
 	<string name="yesterday">Ontem</string>
@@ -164,19 +100,14 @@
     <string name="chainsaw">Motoserra</string>
     <string name="gunshot">Arma de fogo</string>
     <string name="vehicle">Veículo</string>
-    <string name="trespasser">invasor</string>
     <string name="other">outro</string>
     
     <!--Profile -->
-    <string name="profile_receive_noti_label">por notificação push</string>
-    <string name="profile_receive_noti_by_email">por email</string>
     <string name="profile_sign_out_label">Sair</string>
     <string name="profile_aditional_label">Adicional</string>
-    <string name="profile_app_version_label">Versão do aplicativo</string>
+    <string name="profile_app_version_label">Versão do app</string>
     <string name="profile_feedback_label">Comentários</string>
-    <string name="profile_rate_app_label">Avalie o aplicativo</string>
-    <string name="save_changed">Salvar alterações</string>
-    
+
     <string name="feedback_submitted">Comentários enviados. Obrigado pelo seu tempo :)</string>
     <string name="feedback_submission_failed">Feedback submissão falhou! Por favor, tente novamente.</string>
     <string name="snackbar_retry">Tentar novamente</string>
@@ -184,22 +115,12 @@
     <string name="from">De:</string>
     <string name="app_feedback_share_ideas">Deixar classificação aplicativo ou compartilhar suas ideias</string>
     <string name="maximum_number_of_attachments">Você chegou selecionável máx. Tente remover alguns itens antes de adicionar mais anexos.</string>
-    
-    <string name="please_enter_your_new_password">Por favor digite sua nova senha</string>
-    <string name="please_confirm_your_new_password">Por favor, confirme sua nova senha</string>
-    <string name="password_must_have_at_least_6_characters">A senha deve ter pelo menos 6 caracteres</string>
-    <string name="confirm_password_does_not_match">Confirmar senha não corresponde</string>
-    <string name="password_changed_successfully">A senha foi alterada com sucesso.</string>
+
     <string name="something_is_wrong">Algo deu errado. Por favor, tente novamente mais tarde.</string>
     <string name="account">Conta</string>
     <string name="please_try_again_later">tente novamente mais tarde.</string>
-    
-    <string name="change_profile_photo">Alterar foto do perfil</string>
-    <string name="edit_profile">Editar Perfil</string>
-	
-	<!--Guardian Group List-->
-    <string name="guardian_group_list">Lista de projetos</string>
-	<string name="audio_notes">Notas de áudio</string>
+
+    <!--Guardian Group List-->
     <string name="photos">Foto</string>
 	<string name="common_none">NDA</string>
     
@@ -207,66 +128,69 @@
     <string name="notification_traking_message_format">%d minutos gravado</string>
 	
 	<string name="required">Requeridos!</string>
-    <string name="error_unsubscribe_by_email">Cancelar inscrição de %s falhou.</string>
     <string name="detected_at">detectado no</string>
     
     <!-- SetProjectsFragment -->
     <string name="set_alerts">Alertas definidos</string>
     <string name="choose_which_projects">Escolha quais os projetos para receber notificações de alerta</string>
-	<string name="not_have_permission">Você não tem permissão para usar este projeto. Peça para o administrador mudar o seu perfil de acesso.</string>
+	<string name="not_have_permission">Você não tem permissão para usar este projeto. Pergunte ao proprietário para mudar a sua função.</string>
     <string name="not_have_stream">Sem localidades neste projeto</string>
     <string name="not_have_draft_reports">"Você não tem nenhum rascunho "</string>
     <string name="not_submitted_reports_yet">Você ainda não submeteu relatórios</string>
-    <string name="guardian_event_detail">Detalhe da Ocorrência</string>
+    <string name="guardian_event_detail">Detalhes do registro</string>
     <string name="create_report">Criar Relatório</string>
-    <string name="open_in_maps">Abrir nos Mapas</string>
-    <string name="create_report_steps">Criar Relatório</string>
-    <string name="when_investigate">Quando ocorreu a sua vistoria?</string>
-    <string name="what_time">A que horas você efetuou a patrulha?</string>
+    <string name="open_in_maps">Abrir no mapa</string>
+    <string name="create_report_steps">Relátorio</string>
+    <string name="when_investigate">O que você investigou?</string>
+    <string name="what_time">Que horas você investigou?</string>
     <string name="today">Hoje</string>
-    <string name="what_evidence">Que evidência de madeireiros encontrou?  <i>Selecione tudo que for relacionado </i></string>
+    <string name="what_evidence">Quais as <b>evidências de desmatamento</b>  você encontrou?<i>Selecione todos para aplicar</i></string>
     <string name="cut_down_trees">Árvores derrubadas</string>
-    <string name="cleared_areas">Limpeza de área</string>
-    <string name="logging_equipment">Serraria Móvel</string>
+    <string name="cleared_areas">Áreas abertas</string>
+    <string name="logging_equipment">Equipamento de desmatamento</string>
     <string name="loggers_at_site">Madeireiros no local</string>
     <string name="illegal_camps">Acampamento Ilegal</string>
-    <string name="fires_burned_areas">Fogo/Queimadas</string>
+    <string name="fires_burned_areas">Fogo/área queimada</string>
+    <string name="all_projects">Todos os projetos</string>
+    <string name="can_not_open_the_report">Não é possível abrir o relatório que já foi enviado.</string>
+    <string name="damage">Dano:</string>
+    <string name="do_not_past_time">O tempo de investigação não pode ser antes dos eventos</string>
     <string name="how_much_damage">"Qual a extensão do dano na área?  "</string>
     <string name="no_visible">Não há desmatamento/corte visível</string>
     <string name="small_trees_cut_down">Pequena - alguns paus derrubados (um caminhão)</string>
     <string name="medium_trees_cut_down">Moderada - desmatamento (2 a 5 caminhões de madeira)</string>
     <string name="large_area_clear_cut">Expressiva - limpeza de área (+5 caminhões de madeira)</string>
-    <string name="what_scale">Qual foi a escala da atividade?</string>
-    <string name="small">Pequena (subsistência, agricultura)</string>
+    <string name="what_scale">Qual o tamanho da operação do desmatamento?</string>
+    <string name="small">Pequeno (roçado, retirar)</string>
     <string name="large">Grande (escala comercial, equipamento pesado, etc…)</string>
-    <string name="what_action">Que ação tomou? <i>Selecione tudo que for relacionado</i></string>
-    <string name="collected_evidence">Recolhimento de provas/evidências</string>
-    <string name="confiscated_equipment">Confisco de equipamento</string>
-    <string name="issue_a_warning">Avisar pra não voltar/fazer isso de novo</string>
+    <string name="what_action">Qual ação foi tomada? <i>Selecione todos para aplicar</i></string>
+    <string name="collected_evidence">Coleta de evidência</string>
+    <string name="confiscated_equipment">Equipamento confiscado</string>
+    <string name="issue_a_warning">Aviso foi anunciado</string>
     <string name="add_evidence">Adicionar prova/evidência</string>
 	<string name="save_draft">Salvar rascunho</string>
     <string name="add_photos">Fotos (até 5)</string>
     <string name="add_notes">Anotação</string>
     <string name="upload_voice_notes">"Gravação de relatório"</string>
-    <string name="are_you_sure">Are you sure you want to submit a report without any photos or notes?</string>
+    <string name="are_you_sure">Você está certo que quer submeter o relatório sem nenhuma foto ou</string>
     <string name="menu_new_events">Novas Ocorrências</string>
     <string name="menu_submitted_reports">Relatórios Enviados</string>
     <string name="menu_draft_reports">Rascunhos</string>
     <string name="audio_not_found">Áudio não encontrado</string>
     <string name="not_found">não encontrado</string>
     <string name="refresh">atualizar</string>
-    <string name="what_investigate">"Quando ocorreu a sua patrulha? <i>Selecionar tudo o que tiver relação</i>"</string>
-    <string name="submit_report">Enviar relatório</string>
+    <string name="what_investigate">O que você investigou? <i>Selecione todos para aplicar</i></string>
+    <string name="submit_report">Submeter relatório</string>
     <string name="add_notes_required">Anotação*</string>
 	<string name="select">Selecionar</string>
-    <string name="failed_receive_notification">Falha no recebimento de notificação de %s</string>
-    <string name="failed_unsubscribe_receive_notification">Falha em descadastrar recebimento de notificação de %s</string>
+    <string name="failed_receive_notification">Falha em receber notificação de %s</string>
+    <string name="failed_unsubscribe_receive_notification">Falha em cancelar a assinatura e receber notificação de %s</string>
     <string name="receive_alert_notification">Receba uma notificação de alerta</string>
     <string name="unsent">"Na fila"</string>
     <string name="sending">Enviando</string>
     <string name="sent">Enviado</string>
-    <string name="unable_to_submit_on_airplane_mode">Impossível enviar no modo avião</string>
-    <string name="unable_to_submit_no_internet_connection">Impossível enviar sem conexão</string>
+    <string name="unable_to_submit_on_airplane_mode">Não é possível enviar  em modo avião</string>
+    <string name="unable_to_submit_no_internet_connection">Não é possível enviar sem conexão</string>
     <string name="network_not_available">Rede indisponível</string>
     <string name="no_content_project">"Não há projeto acessível nesta conta Por favor entre em contato com o Administrador ou peça para criar um novo projeto/nova área "</string>
     <string name="project_could_not_refreshed">O projeto não pôde ser atualizado</string>
@@ -274,29 +198,29 @@
     <string name="logging_scale">Escala de desmatamento:</string>
     <string name="note">Anotação: %s</string>
     <string name="assets">Material:</string>
-	<string name="damaged_machinery">Estraguei o maquinário (trator, caminhão)</string>
+	<string name="damaged_machinery">Equipamento destruído</string>
     <string name="other_text">Outros</string>
 	<string name="logout">Desligar</string>
-    <string name="not_have_events">Nenhum caso desde a última vez</string>
+    <string name="not_have_events">Nenhum evento desde o último registro</string>
     <string name="last_step">Último passo</string>
     <string name="other_date">Outro…</string>
     <string name="edit">Alterar</string>
-    <string name="do_not_future_time">O tempo da patrulha não pode ser no futuro</string>
-    <string name="logging">Madeireira</string>
+    <string name="do_not_future_time">Hora da investigação não pode ser no futuro</string>
+    <string name="logging">Desmatamento</string>
     <string name="poaching">Caça ilegal</string>
     <string name="what_scale_poaching">Qual é o tamanho da operação de caça ilegal?</string>
-    <string name="small_poaching">"Pequena (individual, informal)  "</string>
+    <string name="small_poaching">"Pequeno (individual, informal)  "</string>
     <string name="large_poaching">"Grande (coordenada, grupo)  "</string>
-    <string name="what_poaching_evidence">Que provas de caça ilegal você encontrou? <i>Selecionar tudo o que tiver relação</i></string>
-    <string name="bullet_shells">Cápsulas de balas / projéteis / restos de armas</string>
-    <string name="footprints">"Pegadas humanas  "</string>
-    <string name="dog_tracks">"Marcas de cachorros  "</string>
-    <string name="small_text">Pequena</string>
+    <string name="what_poaching_evidence">Que provas de caça ilegal você encontrou? <i>Selecione todos para aplicar</i></string>
+    <string name="bullet_shells">Estojo de munição, projéteis</string>
+    <string name="footprints">Pegadas (humanas)</string>
+    <string name="dog_tracks">Pegadas de cães</string>
+    <string name="small_text">Pequeno</string>
     <string name="large_text">Grande</string>
     <string name="recent">Recente</string>
-    <string name="hot">Hot</string>
+    <string name="hot">Quente</string>
     <string name="system_options">Opções de Sistema</string>
-    <string name="system_options_subtitle">Escolher toques, vibrações e importância</string>
+    <string name="system_options_subtitle">Escolher sons, vibrações e importância</string>
     <string name="events">Eventos</string>
     <string name="no_projects_selected">Nenhum projeto selecionado</string>
     <string name="other_project">, &amp; %d outros projeto</string>
@@ -305,17 +229,15 @@
     <string name="dog_bark">Latido</string>
     <string name="elephant">Elefante</string>
     <string name="fire">Incêndio</string>
-    <string name="create_report_title">%d  passos faltando</string>
+    <string name="create_report_title">%d passos faltando</string>
     <string name="create_report_title_one_step">1 passo faltando</string>
     <string name="poaching_scale">Tamanho do estrago:</string>
-    <string name="can_not_play_audio">Não é possível tocar o áudio, por favor tente</string>
-    <string name="satellite_audio_not_found">Áudio não disponível para Guardians à Satélite</string>
-    <string name="satellite">Set</string>
-    <string name="cell">Célula</string>
-    <string name="investigated_at">Investigado às</string>
-    <string name="received_at">Recebido às</string>
+    <string name="can_not_play_audio">Não é possível reproduzir o áudio, tentar novamente depois.</string>
+    <string name="satellite_audio_not_found">Áudio não disponível para Guardiões de satélite</string>
+    <string name="investigated_at">Investigado em</string>
+    <string name="received_at">Recebido em</string>
     <string name="action">Ação</string>
-    <string name="small_scale_text">Pequena escala</string>
+    <string name="small_scale_text">Pequeno escala</string>
     <string name="large_scale_text">Grande escala</string>
     <string name="additional_evidence">Evidência adicional</string>
     <string name="seconds">segundos</string>
@@ -347,5 +269,214 @@
     <string name="response">1 resposta</string>
     <string name="responses">respostas</string>
     <string name="and">e</string>
+    <string name="classifier_download_title">Download do classificador</string>
+    <string name="software_download_title">Download de software</string>
+    <string name="download">Download</string>
+    <string name="unavailable">Indisponível</string>
+    <string name="file_delete">excluir v%s</string>
+    <string name="installed_guardian_file">(atual v%s instalado)</string>
+    <string name="up_to_date">atualizado</string>
+    <string name="file_update">atualizar v%s</string>
+    <string name="file_install">instalar v%s</string>
+    <string name="file_version">v%s (%s instalado)</string>
+    <string name="software_title">Atualização de software</string>
+    <string name="software_no_item">Baixe primeiro os softwares da página de softwares do Guardian\nPerfil -> Software Guardian -> Baixe os APKs necessários</string>
+    <string name="classifier_title">Upload do classificador</string>
+    <string name="classifier_service_reboot_message">Parece que você está tendo problemas com o upload.\nTente reiniciar o serviço?</string>
+    <string name="restart">Reiniciar</string>
+    <string name="no">Não</string>
+    <string name="go_back">Volte</string>
+    <string name="classifier_no_item"><![CDATA[Baixe os classificadores da página de classificadores do Guardian primeiro\nPerfil -> Classificador -> Baixe os classificadores necessários]]></string>
+    <string name="classifier_no_active">Ative um classificador para prosseguir para a próxima etapa</string>
+    <string name="power_diagnostic">Diagnóstico de força</string>
+    <string name="sentinel_module_detect">Módulo sentinela detectado</string>
+    <string name="sentinel_module_not_detect">Módulo Sentinel não detectado</string>
+    <string name="power_diag_warning_solar">Comece a anexar os painéis solares\npara observar o feedback</string>
+    <string name="system_voltage">Voltagem do sistema</string>
+    <string name="battery_voltage">Voltagem da bateria</string>
+    <string name="internal_battery">Bateria interna</string>
+    <string name="main_battery">Bateria principal</string>
+    <string name="power">Força</string>
+    <string name="current">Corrente</string>
+    <string name="voltage">Voltagem</string>
+    <string name="sentinel_module_detected">Módulo sentinela detectado</string>
+    <string name="power_diag_label">Valores de entrada dos painéis solares</string>
+    <string name="network_test">Teste do sinal de rede</string>
+    <string name="lt_93_bad"><![CDATA[< -93 Ruim]]></string>
+    <string name="lt_97_ok"><![CDATA[< -97 OK]]></string>
+    <string name="lt_100_ok"><![CDATA[< -100 Bom]]></string>
+    <string name="lt_104_perfect"><![CDATA[< -104 Perfeito]]></string>
+    <string name="lt_110_error"><![CDATA[< -110 Erro]]></string>
+    <string name="cell_data_transfer">Transferência de dados celulares</string>
+    <string name="no_internet_connection_guardian">Sem conexão com a internet</string>
+    <string name="cell_signal_strength">Força do sinal celular</string>
+    <string name="test">teste</string>
+    <string name="background_noise">Barulho de fundo</string>
+    <string name="error">erro</string>
+    <string name="perfect">Perfeito</string>
+    <string name="good">Bom</string>
+    <string name="ok">OK</string>
+    <string name="bad">Ruim</string>
+    <string name="satellite_background_noise_in_this_range_usually_indicates_a_disconnected_antenna_n_nplease_refer_to_your_installation_instructions_for_additional_information">O ruído de fundo do satélite nesta faixa geralmente indica uma antena desconectada\n\nConsulte as instruções de instalação para obter informações adicionais</string>
+    <string name="communication_configuration">Configuração de comunicação</string>
+    <string name="back">voltar</string>
+    <string name="sim_card_detected">Cartão SIM detectado</string>
+    <string name="phone_number">número de telefone:</string>
+    <string name="satellite_module_detected">Módulo satélite detectado</string>
+    <string name="swarm_id">ID do swarm:</string>
+    <string name="satellite_gps_detected">Satélite GPS detectado</string>
+    <string name="guardian_local_time">Hora local do Guardião:</string>
+    <string name="guardian_timezone">Fuso horário do Guardião:</string>
+    <string name="cell_data_only">Somente dados de celular</string>
+    <string name="cell_data_sms_fallback_experimental">Dados de celular + SMS reserva (experimental)</string>
+    <string name="satellite_only">Somente satélite</string>
+    <string name="off_times_local_times">Horas livres (horas locais)</string>
+    <string name="manual">Manual</string>
+    <string name="auto">Auto</string>
+    <string name="there_is_no_off_time_in_this_project">Não há tempo livre neste projeto</string>
+    <string name="register_guardian">Registro do Guardião</string>
+    <string name="let_s_register_your_guardian">Vamos cadastrar seu Guardião</string>
+    <string name="production">Produção</string>
+    <string name="staging">Encenação</string>
+    <string name="register">Registro</string>
+    <string name="audio_parameter_config">Configurar paramêtros de áudio</string>
+    <string name="file_format">Formato do arquivo</string>
+    <string name="sample_rate">Taxa de amostra</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="duration">Duração do ciclo de gravação (por arquivo)</string>
+    <string name="sample_ratio">Ciclo(s) pulados entre gravações</string>
+    <string name="recording_schedule">Cronograma de gravação</string>
+    <string name="schedule_start_time">Selecione o horário de início</string>
+    <string name="schedule_stop_time">Selecione o horário de parada</string>
+    <string name="select_cycle_s_to_skip_between_recordings">Selecione o ciclo(s) para pular entre as gravações</string>
+    <string name="microphone_title">Teste de microfone</string>
+    <string name="unknown_error">erro desconhecido</string>
+    <string name="choose_speed">Escolha a velocidade do espectrograma</string>
+    <string name="choose_freq">Escolha a escala de frequência do espectrograma</string>
+    <string name="choose_color">Escolha a cor do espectrograma</string>
+    <string name="choose_play_back">Escolha a reprodução de áudio</string>
+    <string name="mic_recorder_warn">O serviço de gravador ainda não foi iniciado.\nTente novamente mais tarde.</string>
+    <string name="microphone_test">Teste de microfone</string>
+    <string name="speed">Velocidade</string>
+    <string name="frequency_scale">Escala de frequência</string>
+    <string name="color">Cor</string>
+    <string name="playback">Reproduzir</string>
+    <string name="begin_mic_test">Começar teste do microfone</string>
+    <string name="halt_mic_test">Parar teste do microfone</string>
+    <string name="restart_mic_test">Recomeçar teste do microfone</string>
+    <string name="dialog_start_service_mic">Parece que você está tendo problemas com o microfone.\nTente reiniciar o serviço?</string>
+    <string name="storage_title">Inspeção de armazenamento</string>
+    <string name="audio_coverage">Cobertura de áudio</string>
+    <string name="internal_storage">Armazenamento interno</string>
+    <string name="external_storage">Armazenamento externo</string>
+    <string name="see_audio_coverage">Veja cobertura do áudio</string>
+    <string name="checkin_title">Confirmação do status do check-in</string>
+    <string name="guardian_checkin_check">Check in de Guardian check</string>
+    <string name="protocol">Protocolo</string>
+    <string name="last_checkin">Último check in</string>
+    <string name="in_queue">Na fila</string>
+    <string name="wait_until_the_checkin_get_published">Espere até o checkin ser publicado</string>
+    <string name="photo_title">Adicionar fotos</string>
+    <string name="guardian_site_title">Local de instalação do Guardião</string>
+    <string name="offline_mode">Modo offline</string>
+    <string name="search_box_hint">Pesquise local, endereço ou latitude/longitude</string>
+    <string name="no_result_found">Nenhum resultado localizado</string>
+    <string name="search_or_create_box_hint">Buscar sítio ou criar um novo</string>
+    <string name="create_site">Criar \"%s\"</string>
+    <string name="no_deployments">Nenhuma implantação</string>
+    <string name="more_than">Você está %s no site</string>
+    <string name="within">Você está a 20m do sítio</string>
+    <string name="selected_location">Local selecionado</string>
+    <string name="take_other">Tire qualquer outra foto que seja útil para realocar o dispositivo ou caracterizar o local</string>
+    <string name="photo_taken">Fotos tiradas: %d / %d</string>
+    <string name="missing_dialog_title">Quer continuar?</string>
+    <string name="button_continue">continuar</string>
+    <string name="follow_missing">As fotos seguintes estão faltando:</string>
+    <string name="unsent_title">Registro de Guardião não enviado</string>
+    <string name="there_is_no_unsent_registration">Não há registro não enviado.</string>
+    <string name="refresh_title">Tem certeza de recarregar?</string>
+    <string name="refresh_message">Se você continuar recarregando, perderá as implantações e imagens atuais não sincronizadas.</string>
+    <string name="continue_name">Continuar</string>
+    <string name="unsynced">não sincronizado</string>
+    <string name="synced">sincronizado</string>
+    <string name="all">todos</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="altitude">altitude</string>
+    <string name="deployment_key">chave de implantação</string>
+    <string name="delete">excluir</string>
+    <string name="registration">Cadastro</string>
+    <string name="deployments">Implantações</string>
+    <string name="map">Visão do mapa</string>
+    <string name="deploy_new_guardian">Conecte-se ao Guardião</string>
+    <string name="add_photos_title">Adicionar fotos</string>
+    <string name="edit_location_title">Editar localização</string>
+    <string name="fill_name">Por favor preencha o nome</string>
+    <string name="sat_guardian_placeholder_1">conexão de antena</string>
+    <string name="sat_guardian_placeholder_2">caixa amarrada a cabo</string>
+    <string name="sat_guardian_placeholder_3">conexão do painel solar 1</string>
+    <string name="sat_guardian_placeholder_4">conexão do painel solar 2</string>
+    <string name="sat_guardian_placeholder_5">conexão do painel solar 3</string>
+    <string name="sat_guardian_placeholder_6">conexão do painel solar 4</string>
+    <string name="sat_guardian_placeholder_7">vista dos painéis solares</string>
+    <string name="sat_guardian_placeholder_8">placa de base sem guardião</string>
+    <string name="sat_guardian_placeholder_9">placa de base com guardião</string>
+    <string name="sat_guardian_placeholder_10">ângulo do braço</string>
+    <string name="sat_guardian_placeholder_11">dossel acima dos painéis solares</string>
+    <string name="sat_guardian_placeholder_12">microfone e capa</string>
+    <string name="sat_guardian_placeholder_13">dossel acima da antena de swarm</string>
+    <string name="sat_guardian_placeholder_14">acessório de antena de swarm</string>
+    <string name="sat_guardian_placeholder_15">acessório de antena gps</string>
+    <string name="gsm_guardian_placeholder_1">antena gsm</string>
+    <string name="sat_guardian_desc_1">Tire uma foto mostrando que as antenas estão seguras nas conexões corretas, bem como que o adaptador da placa de base conectado ao Guardian está seguro e apontando para o céu.</string>
+    <string name="sat_guardian_desc_2">Mostre duas abraçadeiras que prendem a estrutura ao Guardian.</string>
+    <string name="sat_guardian_desc_3">Tire uma foto de cada uma das 4 conexões dos painéis solares, mostrando que elas estão completamente inseridas no plugue da estrutura.</string>
+    <string name="sat_guardian_desc_4">Tire uma foto de cada uma das 4 conexões dos painéis solares, mostrando que elas estão completamente inseridas no plugue da estrutura.</string>
+    <string name="sat_guardian_desc_5">Tire uma foto de cada uma das 4 conexões dos painéis solares, mostrando que elas estão completamente inseridas no plugue da estrutura.</string>
+    <string name="sat_guardian_desc_6">Tire uma foto de cada uma das 4 conexões dos painéis solares, mostrando que elas estão completamente inseridas no plugue da estrutura.</string>
+    <string name="sat_guardian_desc_7">Mostre que todos os painéis solares estão presos à estrutura com parafusos, mostre todos os painéis e algum fundo.</string>
+    <string name="sat_guardian_desc_8">Mostre a orientação da placa de base e o número de parafusos e se são planos ou verticais. Mostrando pelo menos 6 a 8 parafusos que prendem a placa de base.</string>
+    <string name="sat_guardian_desc_9">Mostre que a placa de base está montada de forma plana, horizontalmente em um galho de tamanho adequado ou verticalmente no tronco com o Guardian conectado.</string>
+    <string name="sat_guardian_desc_10">Tire uma foto do braço com um ângulo de 45 para baixo, se usado.</string>
+    <string name="sat_guardian_desc_11">Defina o cronômetro da câmera do seu telefone para 10 segundos, coloque a câmera em cima dos painéis voltados para o céu e tire uma foto do que está diretamente acima dos painéis. (Deve haver amplo céu claro)</string>
+    <string name="sat_guardian_desc_12">Tire uma foto do cabo da tampa do microfone amarrado ao suporte do microfone.</string>
+    <string name="sat_guardian_desc_13">Tire uma foto da cobertura acima da antena de satélite (o ideal é mostrar não ou muito pouca cobertura da cobertura)</string>
+    <string name="sat_guardian_desc_14">Tire uma foto da antena parabólica, voltada diretamente para o céu, nenhuma das radiais (pernas) tocando a árvore, cabeada amarrada ao suporte e a 1 metro de distância da caixa Guardian</string>
+    <string name="sat_guardian_desc_15">Tire uma foto da antena GPS plana em um galho horizontal com 2 parafusos.</string>
+    <string name="gsm_guardian_desc_1">Tire uma foto da antena GSM apontando para o céu, cabo amarrado no suporte que é parafusado no ramal com 2 parafusos.</string>
+    <string name="select_site_to_create_new_report">Selecione o site para criar o novo relatório</string>
+    <string name="download_software">Baixar software</string>
+    <string name="download_classifier">Baixar classificador</string>
+    <string name="guardian">Guardião</string>
+    <string name="deployment_no_content">você não tem implantações ou registros</string>
+    <string name="deployment_no_content_synced">você não tem implantações ou registros sincronizados</string>
+    <string name="deployment_no_content_unsynced">você não tem implantações ou registros não sincronizados</string>
+    <string name="searching_for_nearby_n_guardians">Procurando por \nGuardiões próximos</string>
+    <string name="why_can_t_i_see_a_guardian">Por que não acho um Guardião?</string>
+    <string name="connect">Conectar</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="guardian_registration">Registro do Guardião</string>
+    <string name="assembly">Montagem</string>
+    <string name="setup">Configuração</string>
+    <string name="optional">Opcional</string>
+    <string name="already_registered">Seu Guardian já está cadastrado</string>
+    <string name="not_registered">Seu Guardian não está registrado</string>
+    <string name="registering">Solicitação de registro enviada. Esperando resposta.</string>
+    <string name="sim_card_not_detected">Cartão SIM não detectado</string>
+    <string name="satellite_module_not_detected">Módulo de satélite não detectado</string>
+    <string name="register_failed">Falha no registro</string>
+    <string name="in_testing">em testes</string>
+    <string name="ready_to_test">pronto para testar</string>
+    <string name="testing_failed">teste falhou</string>
+    <string name="test_download_result">%.2f kb/s de download</string>
+    <string name="test_upload_result">Carregamento de %,2f kb/s</string>
+    <string name="site">Site</string>
+    <string name="project">Projeto</string>
+    <string name="take">Pegar</string>
+    <string name="choose">Escolher</string>
+    <string name="checklist">Lista de controle</string>
+    <string name="edit_site_name_hint">Nome do site</string>
+    <string name="change">Mudar</string>
+    <string name="save">Salvar</string>
 
 </resources>

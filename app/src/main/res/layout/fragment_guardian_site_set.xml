@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_normal"
-                    android:text="Site"
+                    android:text="@string/site"
                     android:textSize="@dimen/text_xsmall"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -166,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_normal"
-                    android:text="Altitude"
+                    android:text="@string/altitude"
                     android:textSize="@dimen/text_xsmall"
                     app:layout_constraintStart_toStartOf="@id/guidelineVertical"
                     app:layout_constraintTop_toBottomOf="@id/siteValueTextView" />
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_large"
                     android:layout_marginTop="@dimen/margin_padding_normal"
-                    android:text="Project"
+                    android:text="@string/project"
                     android:textSize="@dimen/text_xsmall"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/altitudeValue" />

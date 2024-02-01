@@ -50,7 +50,7 @@
         android:background="?selectableItemBackgroundBorderless"
         app:icon="@drawable/ic_clipboard_check_outline"
         app:iconTintColor="@color/color_bottom_icon_tint"
-        app:title="Deployments"
+        app:title="@string/deployments"
         app:titleColor="@color/bottom_bar_icon_default_tint"
         app:titleColorSelected="@color/color_bottom_icon_tint" />
 	
