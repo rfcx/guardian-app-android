@@ -29,7 +29,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:enabled="true"
-            android:text="deactivate"
+            android:text="@string/deactivate"
             android:layout_marginStart="@dimen/margin_padding_small"
             android:textSize="@dimen/text_xxsmall"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
             android:layout_gravity="center"
             android:enabled="true"
             android:layout_marginStart="@dimen/margin_padding_small"
-            android:text="activate"
+            android:text="@string/activate"
             android:textSize="@dimen/text_xxsmall"
             android:layout_weight="1"
             android:visibility="gone" />

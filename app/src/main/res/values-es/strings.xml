@@ -6,7 +6,7 @@
 	<string name="login">Entrar</string>
     <string name="pls_fill_email">Llenar correo electrónico</string>
 	<string name="pls_fill_password">Llenar contraseña</string>
-	<string name="incorrect_username_password">Usuario o clave incorrecta</string>
+	<string name="incorrect_username_password">Nombre de usuario o contraseña incorrecta</string>
 	<string name="an_error_occurred">Servicio no disponible</string>
     <string name="dark_theme">Oscuro</string>
     <string name="light_theme">Ligero</string>
@@ -14,11 +14,11 @@
     <string name="theme">Tema</string>
     <string name="display">Mostrar</string>
     <string name="or">O</string>
-	<string name="powered_by">Energizado por</string>
+	<string name="powered_by">Desarrollado por</string>
 	
 	<!-- LoginActivity -->
-	<string name="next">Próximo</string>
-	<string name="skip">Omitir</string>
+	<string name="next">Siguiente</string>
+	<string name="skip">Saltar</string>
 	<string name="done">Hecho</string>
     <string name="coordinates">Coordenadas</string>
 
@@ -31,10 +31,10 @@
 	<string name="reset_link_send">Restablecer enlace de enviar a su correo electrónico.</string>
 	<string name="reset">Reiniciar</string>
 
-    <string name="continue_text">Seguir</string>
+    <string name="continue_text">Continuar</string>
 	
 	<!-- common error -->
-	<string name="error_common">Un error ha ocurrido. Por favor intente de nuevo.</string>
+	<string name="error_common">se produce un error. Inténtalo de nuevo</string>
     <string name="record_audio_permission_msg">A Ranger App le gustaria grabar un audio</string>
 	<string name="camera_permission_msg">A Ranger app le gustaria usar su cámara</string>
 	<string name="read_storage_permission_msg">A Ranger app quiere leer tu almacenamiento</string>
@@ -120,7 +120,7 @@
     <string name="other">otro</string>
 	
 	<!--Profile -->
-    <string name="profile_sign_out_label">desconectar</string>
+    <string name="profile_sign_out_label">Cerrar sesión</string>
 	<string name="profile_aditional_label">Adicional</string>
 	<string name="profile_app_version_label">Versión de aplicación</string>
 	<string name="profile_feedback_label">Realimentación</string>
@@ -128,7 +128,7 @@
     <string name="feedback_submitted">Comentarios enviados. Gracias por tu tiempo :)</string>
 	<string name="feedback_submission_failed">envío de comentarios no! Inténtalo de nuevo.</string>
 	<string name="snackbar_retry">Procesar de nuevo</string>
-	<string name="profile_send_feedback">Enviar comentarios</string>
+	<string name="profile_send_feedback">Enviar Comentario</string>
 	<string name="from">De:</string>
 	<string name="app_feedback_share_ideas">Votar aplicación o compartir sus ideas</string>
 	<string name="maximum_number_of_attachments">Usted ha llegado seleccionable máx. Trate de eliminar algunos artículos antes de añadir más elementos adjuntos.</string>
@@ -136,7 +136,7 @@
     <string name="something_is_wrong">Algo salió mal. Por favor, inténtelo de nuevo más tarde.</string>
     <string name="network_not_available">red no disponible</string>
     <string name="no_content_project">No hay ningún proyecto accesible en esta cuenta.\nComuníquese con un administrador\ni cree el proyecto en la plataforma Arbimon.</string>
-    <string name="logout">cerrar sesión</string>
+    <string name="logout">Cerrar sesión</string>
     <string name="select">Seleccionar</string>
     <string name="refresh">actualizar</string>
     <string name="failed_receive_notification">No se pudo recibir la notificación de %s</string>
@@ -145,7 +145,7 @@
     <string name="not_have_permission">No tienes permiso para utilizar este proyecto. Pídale al propietario del proyecto que cambie su función.</string>
     <string name="not_have_stream">No hay sitios en este proyecto.</string>
     <string name="not_have_draft_reports">No tienes ningún borrador de informe.</string>
-    <string name="not_submitted_reports_yet">Aún no has enviado ningún informe</string>
+    <string name="not_submitted_reports_yet">No has enviado ningún informe</string>
     <string name="unsent">Puesto en cola</string>
     <string name="sending">Enviando</string>
     <string name="sent">Enviado</string>
@@ -153,12 +153,12 @@
     <string name="open_in_maps">Abrir en mapas</string>
     <string name="guardian_event_detail">Detalle del evento</string>
     <string name="not_have_events">No hay eventos desde el último incidente</string>
-    <string name="create_report_steps">Reporte</string>
+    <string name="create_report_steps">Relátorio</string>
     <string name="create_report_title_one_step">1 paso restante</string>
     <string name="create_report_title">%d pasos restantes</string>
     <string name="what_time">¿A qué hora investigaste?</string>
     <string name="do_not_future_time">El tiempo de investigación no puede ser en el futuro.</string>
-    <string name="when_investigate">¿Qué investigaste?</string>
+    <string name="when_investigate">¿Cuándo investigaste?</string>
     <string name="today">Hoy</string>
     <string name="edit">Editar</string>
     <string name="other_date">Otro...</string>
@@ -172,13 +172,13 @@
     <string name="loggers_at_site">Taladores en el siti</string>
     <string name="illegal_camps">Campamentos ilegales</string>
     <string name="fires_burned_areas">Incendios/áreas quemadas</string>
-    <string name="what_scale">¿Cuál fue la <b>escala de la operación de tala</b>?</string>
+    <string name="what_scale">¿Cuál fue la <b>escala de la operación maderera</b>?</string>
     <string name="small">Pequeño (subsistencia, agricultura, etc.)</string>
     <string name="large">Grandes (escala comercial, equipo pesado, etc.)</string>
     <string name="what_scale_poaching">¿Cuál fue la <b>escala de la operación de caza furtiva</b>?</string>
     <string name="small_poaching">Pequeño (individual, informal)</string>
     <string name="large_poaching">Grande (grupo, coordinado)</string>
-    <string name="what_poaching_evidence">¿Qué <b>evidencias de caza furtiva</b> encontraste? <i>Seleccione todas las que correspondan</i></string>
+    <string name="what_poaching_evidence">¿Qué <b>evidencia de caza furtiva</b> encontró? <i>Seleccione todas las que correspondan</i></string>
     <string name="bullet_shells">Casquillos de bala/restos de armas</string>
     <string name="footprints">Huellas (humanas)</string>
     <string name="dog_tracks">Huellas de perros</string>
@@ -259,7 +259,7 @@
 	
 	<!-- SetProjectsFragment -->
 	<string name="set_alerts">Establecer alertas</string>
-	<string name="choose_which_projects">Elegir qué proyectos para recibir las notificaciones de alerta</string>
+	<string name="choose_which_projects">Elija qué proyectos recibir notificaciones de alerta</string>
     <string name="all_projects">Todos los proyectos</string>
     <string name="can_not_open_the_report">No se puede abrir el informe que ya se envió.</string>
     <string name="damage">Daño:</string>
@@ -275,7 +275,7 @@
     <string name="unavailable">Indisponible</string>
     <string name="file_delete">eliminar v%s</string>
     <string name="installed_guardian_file">(v%s actuales instalados)</string>
-    <string name="up_to_date">actualizado</string>
+    <string name="up_to_date">A hoy</string>
     <string name="file_update">actualizar v%s</string>
     <string name="file_install">instalar v%s</string>
     <string name="file_version">V%s (%s instalado)</string>
@@ -397,12 +397,12 @@
     <string name="refresh_title">¿Estás seguro de recargar?</string>
     <string name="refresh_message">Si continúa recargando, perderá las implementaciones e imágenes actuales no sincronizadas.</string>
     <string name="continue_name">Continuar</string>
-    <string name="unsynced">no sincronizado</string>
+    <string name="unsynced">Sin sincronizar</string>
     <string name="synced">sincronizado</string>
-    <string name="all">todo</string>
+    <string name="all">Todos</string>
     <string name="latitude">latitud</string>
     <string name="longitude">longitud</string>
-    <string name="altitude">altitud</string>
+    <string name="altitude">Altitud</string>
     <string name="deployment_key">clave de implementación</string>
     <string name="delete">borrar</string>
     <string name="registration">Registro</string>
@@ -449,8 +449,8 @@
     <string name="download_classifier">Descargar clasificador</string>
     <string name="guardian">Guardian</string>
     <string name="deployment_no_content">no tienes implementaciones ni registros</string>
-    <string name="deployment_no_content_synced">no tienes implementaciones o registros sincronizados</string>
-    <string name="deployment_no_content_unsynced">no tienes ninguna implementación o registro no sincronizado</string>
+    <string name="deployment_no_content_synced">No tienes implementaciones ni registros sincronizados</string>
+    <string name="deployment_no_content_unsynced">No tienes implementaciones ni registros no sincronizados</string>
     <string name="searching_for_nearby_n_guardians">Buscando \nGuardianes cercanos</string>
     <string name="why_can_t_i_see_a_guardian">¿Por qué no puedo ver a un Guardián?</string>
     <string name="connect">Conectar</string>
@@ -478,5 +478,9 @@
     <string name="edit_site_name_hint">Nombre del sitio</string>
     <string name="change">Cambiar</string>
     <string name="save">Ahorrar</string>
+    <string name="no_incident_in_this_project">Ningún incidente en este proyecto.</string>
+    <string name="deploy">Desplegar</string>
+    <string name="deactivate">Desactivar</string>
+    <string name="activate">Activar</string>
 
 </resources>
