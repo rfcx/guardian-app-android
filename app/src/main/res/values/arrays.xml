@@ -130,37 +130,37 @@
     </string-array>
 
     <string-array name="sat_guardian_placeholders">
-        <item>@string/sat_guardian_placeholder_1</item>
-        <item>@string/sat_guardian_placeholder_2</item>
-        <item>@string/sat_guardian_placeholder_3</item>
-        <item>@string/sat_guardian_placeholder_4</item>
-        <item>@string/sat_guardian_placeholder_5</item>
-        <item>@string/sat_guardian_placeholder_6</item>
-        <item>@string/sat_guardian_placeholder_7</item>
-        <item>@string/sat_guardian_placeholder_8</item>
-        <item>@string/sat_guardian_placeholder_9</item>
-        <item>@string/sat_guardian_placeholder_10</item>
-        <item>@string/sat_guardian_placeholder_11</item>
-        <item>@string/sat_guardian_placeholder_12</item>
-        <item>@string/sat_guardian_placeholder_13</item>
-        <item>@string/sat_guardian_placeholder_14</item>
-        <item>@string/sat_guardian_placeholder_15</item>
+        <item>antenna connection</item>
+        <item>cable tied box</item>
+        <item>solar panel connection 1</item>
+        <item>solar panel connection 2</item>
+        <item>solar panel connection 3</item>
+        <item>solar panel connection 4</item>
+        <item>view of solar panels</item>
+        <item>baseplate without guardian</item>
+        <item>baseplate with guardian</item>
+        <item>arm angle</item>
+        <item>canopy above solar panels</item>
+        <item>mic and cover</item>
+        <item>canopy above swarm antenna</item>
+        <item>swarm antenna attachment</item>
+        <item>gps antenna attachment</item>
     </string-array>
 
     <string-array name="cell_guardian_placeholders">
-        <item>@string/sat_guardian_placeholder_1</item>
-        <item>@string/sat_guardian_placeholder_2</item>
-        <item>@string/sat_guardian_placeholder_3</item>
-        <item>@string/sat_guardian_placeholder_4</item>
-        <item>@string/sat_guardian_placeholder_5</item>
-        <item>@string/sat_guardian_placeholder_6</item>
-        <item>@string/sat_guardian_placeholder_7</item>
-        <item>@string/sat_guardian_placeholder_8</item>
-        <item>@string/sat_guardian_placeholder_9</item>
-        <item>@string/sat_guardian_placeholder_10</item>
-        <item>@string/sat_guardian_placeholder_11</item>
-        <item>@string/sat_guardian_placeholder_12</item>
-        <item>@string/gsm_guardian_placeholder_1</item>
+        <item>antenna connection</item>
+        <item>cable tied box</item>
+        <item>solar panel connection 1</item>
+        <item>solar panel connection 2</item>
+        <item>solar panel connection 3</item>
+        <item>solar panel connection 4</item>
+        <item>view of solar panels</item>
+        <item>baseplate without guardian</item>
+        <item>baseplate with guardian</item>
+        <item>arm angle</item>
+        <item>canopy above solar panels</item>
+        <item>mic and cover</item>
+        <item>gsm antenna</item>
     </string-array>
 
     <string-array name="sat_guardian_guideline_texts">

@@ -24,7 +24,7 @@
         android:layout_marginEnd="@dimen/margin_padding_large"
         android:layout_marginBottom="@dimen/margin_padding_normal"
         android:enabled="false"
-        android:text="deploy"
+        android:text="@string/deploy"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

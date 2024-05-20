@@ -34,7 +34,7 @@
     <string name="continue_text">Continuar</string>
     
     <!-- common error -->
-    <string name="error_common">Ocorreu um erro. Por favor, tente de novo.</string>
+    <string name="error_common">isso produz um erro. Intenção de novo</string>
     <string name="record_audio_permission_msg">O aplicativo Guardiangostaria de gravar áudio</string>
     <string name="camera_permission_msg">O aplicativo Guardian gostaria de usar sua câmera</string>
     <string name="read_storage_permission_msg">O aplicativo Guardian gostaria de ler o seu armazenamento</string>
@@ -44,7 +44,7 @@
 
     <!-- report -->
     <string name="report_submit_button_label">Submeter</string>
-    <string name="report_note_hint">Coloque algumas notas aqui</string>
+    <string name="report_note_hint">Colocar notas aqui</string>
     <string name="some_photo_already_exists">Algumas fotos já existe</string>
     <string name="these_photos_already_exists">Essas fotos já existem</string>
     <string name="this_photo_already_exists">Esta foto já existe</string>
@@ -111,7 +111,7 @@
     <string name="feedback_submitted">Comentários enviados. Obrigado pelo seu tempo :)</string>
     <string name="feedback_submission_failed">Feedback submissão falhou! Por favor, tente novamente.</string>
     <string name="snackbar_retry">Tentar novamente</string>
-    <string name="profile_send_feedback">Enviar comentários</string>
+    <string name="profile_send_feedback">Enviar Opinião</string>
     <string name="from">De:</string>
     <string name="app_feedback_share_ideas">Deixar classificação aplicativo ou compartilhar suas ideias</string>
     <string name="maximum_number_of_attachments">Você chegou selecionável máx. Tente remover alguns itens antes de adicionar mais anexos.</string>
@@ -122,7 +122,7 @@
 
     <!--Guardian Group List-->
     <string name="photos">Foto</string>
-	<string name="common_none">NDA</string>
+	<string name="common_none">Nenhum</string>
     
     <string name="notification_tracking_title">Em serviço e rastreamento habilitado</string>
     <string name="notification_traking_message_format">%d minutos gravado</string>
@@ -131,12 +131,12 @@
     <string name="detected_at">detectado no</string>
     
     <!-- SetProjectsFragment -->
-    <string name="set_alerts">Alertas definidos</string>
-    <string name="choose_which_projects">Escolha quais os projetos para receber notificações de alerta</string>
+    <string name="set_alerts">Programar alarme</string>
+    <string name="choose_which_projects">Escolha quais projetos para receber alertas de notificações</string>
 	<string name="not_have_permission">Você não tem permissão para usar este projeto. Pergunte ao proprietário para mudar a sua função.</string>
     <string name="not_have_stream">Sem localidades neste projeto</string>
-    <string name="not_have_draft_reports">"Você não tem nenhum rascunho "</string>
-    <string name="not_submitted_reports_yet">Você ainda não submeteu relatórios</string>
+    <string name="not_have_draft_reports">Você não tem nenhum rascunhos de relatórios</string>
+    <string name="not_submitted_reports_yet">Você ainda não enviou nenhum relatório</string>
     <string name="guardian_event_detail">Detalhes do registro</string>
     <string name="create_report">Criar Relatório</string>
     <string name="open_in_maps">Abrir no mapa</string>
@@ -162,26 +162,26 @@
     <string name="large_area_clear_cut">Expressiva - limpeza de área (+5 caminhões de madeira)</string>
     <string name="what_scale">Qual o tamanho da operação do desmatamento?</string>
     <string name="small">Pequeno (roçado, retirar)</string>
-    <string name="large">Grande (escala comercial, equipamento pesado, etc…)</string>
+    <string name="large">Grande (comercial, equipamento pesado, etc)</string>
     <string name="what_action">Qual ação foi tomada? <i>Selecione todos para aplicar</i></string>
     <string name="collected_evidence">Coleta de evidência</string>
     <string name="confiscated_equipment">Equipamento confiscado</string>
     <string name="issue_a_warning">Aviso foi anunciado</string>
-    <string name="add_evidence">Adicionar prova/evidência</string>
+    <string name="add_evidence">Adicionar evidência</string>
 	<string name="save_draft">Salvar rascunho</string>
     <string name="add_photos">Fotos (até 5)</string>
     <string name="add_notes">Anotação</string>
-    <string name="upload_voice_notes">"Gravação de relatório"</string>
-    <string name="are_you_sure">Você está certo que quer submeter o relatório sem nenhuma foto ou</string>
-    <string name="menu_new_events">Novas Ocorrências</string>
+    <string name="upload_voice_notes">Notas de voz</string>
+    <string name="are_you_sure">Você está certo que quer submeter o relatório sem nenhuma foto ou notas?</string>
+    <string name="menu_new_events">Novos Eventos</string>
     <string name="menu_submitted_reports">Relatórios Enviados</string>
-    <string name="menu_draft_reports">Rascunhos</string>
+    <string name="menu_draft_reports">Rascunhos de Relatórios</string>
     <string name="audio_not_found">Áudio não encontrado</string>
     <string name="not_found">não encontrado</string>
     <string name="refresh">atualizar</string>
     <string name="what_investigate">O que você investigou? <i>Selecione todos para aplicar</i></string>
     <string name="submit_report">Submeter relatório</string>
-    <string name="add_notes_required">Anotação*</string>
+    <string name="add_notes_required">Notas de texto*</string>
 	<string name="select">Selecionar</string>
     <string name="failed_receive_notification">Falha em receber notificação de %s</string>
     <string name="failed_unsubscribe_receive_notification">Falha em cancelar a assinatura e receber notificação de %s</string>
@@ -202,16 +202,16 @@
     <string name="other_text">Outros</string>
 	<string name="logout">Desligar</string>
     <string name="not_have_events">Nenhum evento desde o último registro</string>
-    <string name="last_step">Último passo</string>
+    <string name="last_step">Último passo do relatório</string>
     <string name="other_date">Outro…</string>
     <string name="edit">Alterar</string>
     <string name="do_not_future_time">Hora da investigação não pode ser no futuro</string>
     <string name="logging">Desmatamento</string>
     <string name="poaching">Caça ilegal</string>
-    <string name="what_scale_poaching">Qual é o tamanho da operação de caça ilegal?</string>
-    <string name="small_poaching">"Pequeno (individual, informal)  "</string>
-    <string name="large_poaching">"Grande (coordenada, grupo)  "</string>
-    <string name="what_poaching_evidence">Que provas de caça ilegal você encontrou? <i>Selecione todos para aplicar</i></string>
+    <string name="what_scale_poaching">Qual o tamanho da operação de caça?</string>
+    <string name="small_poaching">"Pequena (individual, informal)"</string>
+    <string name="large_poaching">"Grande (grupos, coordenados)"</string>
+    <string name="what_poaching_evidence">Quais evidências de caça você encontrou? <i>Selecione todos para aplicar</i></string>
     <string name="bullet_shells">Estojo de munição, projéteis</string>
     <string name="footprints">Pegadas (humanas)</string>
     <string name="dog_tracks">Pegadas de cães</string>
@@ -402,13 +402,13 @@
     <string name="all">todos</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
-    <string name="altitude">altitude</string>
+    <string name="altitude">Altitude</string>
     <string name="deployment_key">chave de implantação</string>
     <string name="delete">excluir</string>
     <string name="registration">Cadastro</string>
     <string name="deployments">Implantações</string>
-    <string name="map">Visão do mapa</string>
-    <string name="deploy_new_guardian">Conecte-se ao Guardião</string>
+    <string name="map">Ver mapa</string>
+    <string name="deploy_new_guardian">Conectar ao Guadião</string>
     <string name="add_photos_title">Adicionar fotos</string>
     <string name="edit_location_title">Editar localização</string>
     <string name="fill_name">Por favor preencha o nome</string>
@@ -448,9 +448,9 @@
     <string name="download_software">Baixar software</string>
     <string name="download_classifier">Baixar classificador</string>
     <string name="guardian">Guardião</string>
-    <string name="deployment_no_content">você não tem implantações ou registros</string>
-    <string name="deployment_no_content_synced">você não tem implantações ou registros sincronizados</string>
-    <string name="deployment_no_content_unsynced">você não tem implantações ou registros não sincronizados</string>
+    <string name="deployment_no_content">Você não tem nenhuma implementação ou registros</string>
+    <string name="deployment_no_content_synced">Você não tem nenhuma implementação sincronizada ou registros</string>
+    <string name="deployment_no_content_unsynced">Você não possuí implementações instaladas ou registradas</string>
     <string name="searching_for_nearby_n_guardians">Procurando por \nGuardiões próximos</string>
     <string name="why_can_t_i_see_a_guardian">Por que não acho um Guardião?</string>
     <string name="connect">Conectar</string>
@@ -478,5 +478,9 @@
     <string name="edit_site_name_hint">Nome do site</string>
     <string name="change">Mudar</string>
     <string name="save">Salvar</string>
+    <string name="no_incident_in_this_project">Nenhum incidente neste projeto</string>
+    <string name="deploy">Implementar</string>
+    <string name="deactivate">Desativar</string>
+    <string name="activate">Ativar</string>
 
 </resources>

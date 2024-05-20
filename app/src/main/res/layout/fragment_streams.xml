@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_padding_small"
         android:gravity="center"
-        android:text="No incident in this project"
+        android:text="@string/no_incident_in_this_project"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

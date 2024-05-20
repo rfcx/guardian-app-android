@@ -518,7 +518,7 @@
     <string name="all">all</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
-    <string name="altitude">altitude</string>
+    <string name="altitude">Altitude</string>
     <string name="deployment_key">deployment key</string>
     <string name="delete">delete</string>
     <string name="registration">Registration</string>
@@ -587,5 +587,9 @@
     <string name="edit_site_name_hint">Site name</string>
     <string name="change">Change</string>
     <string name="save">Save</string>
+    <string name="no_incident_in_this_project">No incident in this project</string>
+    <string name="deploy">deploy</string>
+    <string name="deactivate">deactivate</string>
+    <string name="activate">activate</string>
 
 </resources>
