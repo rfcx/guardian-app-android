@@ -3,7 +3,7 @@
     <string name="app_name" translatable="false">Guardian</string>
 
     <string name="auth0_client_id" translatable="false">BhesDnKTjs6ahr7s44d7GJ6IovFIrMKj</string>
-    <string name="auth0_domain" translatable="false">auth.rfcx.org</string>
+    <string name="auth0_domain" translatable="false">rfcx.eu.auth0.com</string>
     <string name="auth0_scheme" translatable="false">rfcx</string>
     <string name="auth0_audience" translatable="false">https://rfcx.eu.auth0.com/userinfo</string>
     <string name="auth0_scopes" translatable="false">openid email profile offline_access</string>
