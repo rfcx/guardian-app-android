@@ -12,7 +12,7 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
-    compileSdkVersion 33
+    compileSdk 34
     flavorDimensions "mode"
     dataBinding {
         enabled = true
@@ -26,7 +26,7 @@ android {
         versionCode 62
         versionName '1.2.1'
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdk 34
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
