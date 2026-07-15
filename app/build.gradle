@@ -29,6 +29,9 @@ android {
         targetSdk 34
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Self-hosted PostHog (track.rfcx.org, RFCx project). Public client token.
+        buildConfigField 'String', 'POSTHOG_API_KEY', '"phc_zQeWTDJUoE3tXnEcNZPMpC5DL353MDturnpsdtaQEQpe"'
+        buildConfigField 'String', 'POSTHOG_HOST', '"https://track.rfcx.org"'
     }
     buildTypes {
         debug {
@@ -111,7 +114,10 @@ dependencies {
 
     // Add the Firebase Crashlytics SDK.
     implementation 'com.google.firebase:firebase-crashlytics:18.3.5'
-    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+    // firebase-analytics removed 2026-07-15 — product analytics is self-hosted
+    // PostHog now (below); Crashlytics/Config/Messaging/Firestore/Storage stay.
+    // Self-hosted product analytics (track.rfcx.org). Replaces Firebase Analytics.
+    implementation 'com.posthog:posthog-android:3.+'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'

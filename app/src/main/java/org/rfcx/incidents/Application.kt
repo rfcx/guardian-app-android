@@ -12,6 +12,8 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
+import com.posthog.android.PostHogAndroid
+import com.posthog.android.PostHogAndroidConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -41,6 +43,7 @@ class Application : MultiDexApplication(), LifecycleObserver {
 
         MultiDex.install(this)
 
+        setupPostHog()
         AppRealm.init(this)
         setupKoin()
         ResponseCleanupWorker.enqueuePeriodically()
@@ -80,6 +83,22 @@ class Application : MultiDexApplication(), LifecycleObserver {
             DataModule.remoteModule,
             DataModule.dataModule
         )
+    }
+
+    // Self-hosted PostHog product analytics (replaces Firebase Analytics).
+    // Conservative config, consistent with the other rfcx clients: no screen-view
+    // autocapture (screens are sent manually via Analytics.trackScreen), no deep
+    // link autocapture, no session replay. App lifecycle events are kept.
+    private fun setupPostHog() {
+        val config = PostHogAndroidConfig(
+            apiKey = BuildConfig.POSTHOG_API_KEY,
+            host = BuildConfig.POSTHOG_HOST
+        ).apply {
+            captureScreenViews = false
+            captureDeepLinks = false
+            sessionReplay = false
+        }
+        PostHogAndroid.setup(this, config)
     }
 
     private fun setupKoin() {
