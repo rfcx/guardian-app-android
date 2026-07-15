@@ -97,6 +97,9 @@ class Application : MultiDexApplication(), LifecycleObserver {
             captureScreenViews = false
             captureDeepLinks = false
             sessionReplay = false
+            // We don't use PostHog feature flags/surveys here — skip the preload
+            // network call (conservative). Event capture is unaffected.
+            preloadFeatureFlags = false
         }
         PostHogAndroid.setup(this, config)
     }
