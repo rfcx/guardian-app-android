@@ -95,8 +95,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    // Aligned to lifecycle 2.6.1 (2026-07-15): Koin 3.4.3 transitively pulls
+    // androidx.lifecycle 2.6.1, so pin our lifecycle artifacts to match. The old
+    // lifecycle-extensions:2.1.0 is removed/empty in modern lifecycle; its
+    // ProcessLifecycleOwner now lives in lifecycle-process, and Transformations.map
+    // was replaced by the LiveData.map extension (migrated in the ViewModels).
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-process:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
 
     /* viewpager2 */
     implementation "androidx.viewpager2:viewpager2:1.0.0-alpha01"
@@ -117,7 +124,10 @@ dependencies {
     // firebase-analytics removed 2026-07-15 — product analytics is self-hosted
     // PostHog now (below); Crashlytics/Config/Messaging/Firestore/Storage stay.
     // Self-hosted product analytics (track.rfcx.org). Replaces Firebase Analytics.
-    implementation 'com.posthog:posthog-android:3.+'
+    // Pinned to 3.22.0 — the last posthog-android that keeps minSdk 21 (3.23+
+    // raised the library minSdk to 23, which fails the manifest merge against
+    // this app's minSdkVersion 21). Same PostHog API surface we use.
+    implementation 'com.posthog:posthog-android:3.22.0'
 
     /* stetho */
     implementation 'com.facebook.stetho:stetho:1.5.0'
@@ -149,17 +159,18 @@ dependencies {
     implementation('com.github.bumptech.glide:okhttp3-integration:4.11.0') {
         exclude group: 'glide-parent'
     }
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.2'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
     implementation 'id.zelory:compressor:3.0.1'
     implementation 'com.github.omkar-tenkale:Gligar:78d8110102e0be4e1e2f939b5307ae5f645e6761'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
     //Dependency Injection Koin
-    implementation "org.koin:koin-core:2.0.1"
-    implementation "org.koin:koin-core-ext:2.0.1"
-    implementation "org.koin:koin-android:2.0.1"
-    implementation "org.koin:koin-androidx-scope:2.0.1"
-    implementation "org.koin:koin-androidx-viewmodel:2.0.1"
+    // Migrated 2.0.1 -> 3.4.3 (2026-07-15): the old org.koin:*:2.0.1 artifacts were
+    // JCenter-only and are gone. Koin 3 moved to io.insert-koin, folded
+    // koin-core-ext into koin-core, and merged koin-androidx-scope/-viewmodel into
+    // koin-android. Our DSL usage is unchanged; 3.4.3 targets Kotlin 1.8.
+    implementation "io.insert-koin:koin-core:3.4.3"
+    implementation "io.insert-koin:koin-android:3.4.3"
 
     //RXJava
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"

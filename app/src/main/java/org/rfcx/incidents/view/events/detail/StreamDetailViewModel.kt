@@ -2,8 +2,8 @@ package org.rfcx.incidents.view.events.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import io.reactivex.observers.DisposableSingleObserver
 import org.rfcx.incidents.data.local.EventDb
 import org.rfcx.incidents.data.local.StreamDb
@@ -30,7 +30,7 @@ class StreamDetailViewModel(
     fun getStream(serverId: String): Stream? = streamDb.get(serverId, false)
 
     fun getEventsByStream(streamId: String): LiveData<List<Event>> {
-        return Transformations.map(eventDb.getEventsAsync(streamId).asLiveData()) { it }
+        return eventDb.getEventsAsync(streamId).asLiveData().map { it }
     }
 
     fun saveLocation(tracking: Tracking, coordinate: Coordinate) {

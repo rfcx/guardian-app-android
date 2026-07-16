@@ -7,9 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -54,7 +55,7 @@ class EventViewModel(
 
     fun getStream(streamId: String): Stream? = streamDb.get(streamId, false)
 
-    private val exoPlayer by lazy { ExoPlayerFactory.newSimpleInstance(context) }
+    private val exoPlayer by lazy { SimpleExoPlayer.Builder(context).build() }
     private var _playerState: MutableLiveData<Int> = MutableLiveData()
     val playerState: LiveData<Int>
         get() = _playerState
@@ -102,7 +103,7 @@ class EventViewModel(
     }
 
     private val exoPlayerListener = object : Player.EventListener {
-        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        override fun onPlaybackStateChanged(playbackState: Int) {
             _playerState.value = playbackState
             when (playbackState) {
                 Player.STATE_READY -> {
@@ -116,8 +117,8 @@ class EventViewModel(
             }
         }
 
-        override fun onPlayerError(error: ExoPlaybackException?) {
-            FirebaseCrashlytics.getInstance().log(error?.message.toString())
+        override fun onPlayerError(error: ExoPlaybackException) {
+            FirebaseCrashlytics.getInstance().log(error.message.toString())
             _playerError.value = error
         }
     }
@@ -149,13 +150,14 @@ class EventViewModel(
             DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
         val audioFile = File(this.context.getExternalFilesDir(null).toString(), audioUrl)
         val mediaSource = if (audioFile.exists()) {
-            ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.fromFile(audioFile))
+            ProgressiveMediaSource.Factory(descriptorFactory).createMediaSource(MediaItem.fromUri(Uri.fromFile(audioFile)))
         } else {
-            ExtractorMediaSource.Factory(descriptorFactory).createMediaSource(Uri.parse(audioUrl))
+            ProgressiveMediaSource.Factory(descriptorFactory).createMediaSource(MediaItem.fromUri(Uri.parse(audioUrl)))
         }
 
         exoPlayer.playWhenReady = true
-        exoPlayer.prepare(mediaSource)
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
         exoPlayer.addListener(exoPlayerListener)
         _playerState.value = Player.STATE_BUFFERING
     }
