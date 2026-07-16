@@ -3,8 +3,8 @@ package org.rfcx.incidents.view.events
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.Dispatchers
@@ -152,6 +152,6 @@ class StreamsViewModel(
     }
 
     fun getTrackingFromLocal(): LiveData<List<Tracking>> {
-        return Transformations.map(trackingDb.getAllResultsAsync().asLiveData()) { it }
+        return trackingDb.getAllResultsAsync().asLiveData().map { it }
     }
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -96,7 +96,7 @@ class MainActivityViewModel(
     }
 
     fun getResponses(): LiveData<List<Response>> {
-        return Transformations.map(responseDb.getAllResultsAsync().asLiveData()) { it }
+        return responseDb.getAllResultsAsync().asLiveData().map { it }
     }
 
     fun getResponsesFlow() {
